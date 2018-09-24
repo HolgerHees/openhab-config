@@ -1,0 +1,526 @@
+sitemap haus label="Main Menu"
+{
+	Frame label="Hauptkategorien" {
+		Group item=Lights label="Lampen [MAP(group_light.map):%d]" {
+			Frame label="Alle" {
+				Switch item=Lights label="Alle Lampen" mappings=[OFF="Aus",ON="An"]
+			}
+			Frame label="Etagen" {
+				Group item=Lights_FF label="EG Lampen [MAP(group_light.map):%d]" {
+					Frame label="Wohnzimmer & Küche" {
+						Slider item=Light_FF_Livingroom_Hue_Brightness label="Wohnzimmer Indirekt"
+						Text label="Wohnz. Indirekt anpassen" icon="selfautomode" visibility=[Light_FF_Livingroom_Hue_Brightness>0] {
+							Frame label="Gruppe" {
+								Slider item=Light_FF_Livingroom_Hue_Brightness label="Alle Lampen [%d %%]"
+								Colorpicker item=Light_FF_Livingroom_Hue_Color label="Alle Lampen"
+							}
+							Frame label="Einzeln" {
+								Slider item=Light_FF_Livingroom_Hue_Brightness4 label="Küche Tresen [%d %%]"
+								Colorpicker item=Light_FF_Livingroom_Hue_Color4 label="Küche Tresen"
+								Slider item=Light_FF_Livingroom_Hue_Brightness3 label="Stehlampe oben [%d %%]"
+								Colorpicker item=Light_FF_Livingroom_Hue_Color3 label="Stehlampe oben"
+								Slider item=Light_FF_Livingroom_Hue_Brightness2 label="Stehlampe unten [%d %%]"
+								Colorpicker item=Light_FF_Livingroom_Hue_Color2 label="Stehlampe unten"
+								Slider item=Light_FF_Livingroom_Hue_Brightness1 label="Couchecke [%d %%]"
+								Colorpicker item=Light_FF_Livingroom_Hue_Color1 label="Couchecke"
+							}
+						}
+						Slider item=Light_FF_Livingroom_Diningtable label="Wohnzimmer Esstisch"
+						Slider item=Light_FF_Livingroom_Couch label="Wohnzimmer Couch"
+						Slider item=Light_FF_Kitchen_Ceiling label="Küche"
+						Switch item=Light_FF_Kitchen_Cupboard label="Küchenschrank"
+					}
+					Frame label="Sonstiges" {
+						Switch item=Light_FF_Floor_Ceiling label="Flur"
+						Switch item=Light_FF_Floor_Mirror label="Flur Spiegel"
+						Slider item=Light_FF_Floor_Hue_Brightness label="Flur Indirekt"
+						Colorpicker item=Light_FF_Floor_Hue_Color visibility=[Light_FF_Floor_Hue_Brightness>0]
+						Switch item=Light_FF_Guestroom_Ceiling label="Gästezimmer"
+						Switch item=Light_FF_GuestWC_Ceiling label="Gäste WC"
+						Switch item=Light_FF_GuestWC_Mirror label="Gäste WC Spiegel"
+						Switch item=Light_FF_Boxroom_Ceiling label="Abstellkammer"
+						Switch item=Light_FF_Utilityroom_Ceiling label="HWR"
+						Switch item=Light_FF_Garage label="Schuppen"
+					}
+				}
+				Group item=Lights_SF label="OG Lampen [MAP(group_light.map):%d]" {
+					Frame label="Schlafzimmer & Ankleide" {
+						Switch item=Light_SF_Bedroom_Ceiling label="Schlafzimmer"
+						Switch item=Light_SF_Bedroom_Left label="Schlafzimmer Bett Fenster"
+						Switch item=Light_SF_Bedroom_Right label="Schlafzimmer Bett Wand"
+						Switch item=Light_SF_Dressingroom_Ceiling label="Ankleide"
+					}
+					Frame label="Badezimmer" {
+						Switch item=Light_SF_Bathroom_Ceiling label="Badezimmer"
+						Switch item=Light_SF_Bathroom_Mirror label="Badezimmer Spiegel"
+					}
+					Frame label="Sonstiges" {
+						Switch item=Light_SF_Floor_Ceiling label="Flur oben"
+						Switch item=Light_SF_Attic label="Dachboden"
+						Switch item=Light_SF_Child1_Ceiling label="Kind 1"
+						Switch item=Light_SF_Child2_Ceiling label="Kind 2"
+					}
+				}
+			}
+            Frame label="Etagen" {
+				Group item=Lights_Outdoor label="Aussen Lampen [MAP(group_light.map):%d]" {
+                    Slider item=Light_Outdoor_Terrace_Manual label="Terasse"
+                    Switch item=Light_Outdoor_Frontdoor_Manual label="Haustür"
+                    Switch item=Light_Outdoor_Carport_Manual label="Carport"
+                    Switch item=Light_Outdoor_Garage_Streedside_Manual label="Schuppentür vorne"
+                    Switch item=Light_Outdoor_Garage_Gardenside_Manual label="Schuppentür hinten"
+				}
+			}
+		}
+		Group item=Shutters label="Rollläden [MAP(group_rollershutter.map):%d]" {
+			Frame label="Alle" {
+				Switch item=Shutters label="Rollläden" mappings=[UP="Hoch",DOWN="Runter"]
+			}
+			Frame label="Etagen" {
+				Group item=Shutters_FF label="EG Rollläden [MAP(group_rollershutter.map):%d]"
+				Group item=Shutters_SF label="OG Rollläden [MAP(group_rollershutter.map):%d]"
+			}
+			Frame label="Beschattung" {
+				Switch item=Shutters_SOUTH label="Südseite" mappings=[UP="Hoch",DOWN="Runter"]
+				Switch item=Shutters_WEST label="Westseite" mappings=[UP="Hoch",DOWN="Runter"]
+			}
+		}
+	}
+	Frame label="Steuern" {
+		Group label="Garten [%s]" icon="garden" item=GardenStatus valuecolor=[=="Alles normal"="#26cb00",!="Alles normal"="red"] {
+			Frame label="Allgemein • Letztes klingeln [%1$tH:%1$tM:%1$tS, %1$td.%1$tm]" item=Bell_Last_Change{
+				Switch item=Dooropener_Timer
+				Text label="Kameras" icon="selfcamera"
+				{
+					Image url="http://127.0.0.1/cameraStrasseImage" label="Strasse" refresh=2000
+					Image url="http://127.0.0.1/cameraAutomowerImage" label="Automower" refresh=5000
+				}
+			}
+			Frame label="Licht Bewegungsmelder" {
+				Switch item=Motiondetector_Outdoor_Switch label="Aktiv"
+				Group item=Motiondetector_Counter label="Einstellungen"
+				/*Text label="Terasse" {
+                    Text item=Light_Outdoor_Terrace_Manual label="Licht manuell [%s]"
+                    Text item=Light_Outdoor_Terrace label="Licht RAW [%s]"
+                    Text item=State_Outdoorlights label="Licht (ASTRO) [%s]"
+                    Text item=Motiondetector_Outdoor_Terrace_Switch label="BM aktiv [%s]"
+                    Text item=Motiondetector_Outdoor_Terrace1
+                    Text item=Motiondetector_Outdoor_Terrace2
+				}*/
+			}
+			Frame label="Licht & Steckdosen" {
+                Group item=Lights_Outdoor label="Lampen [MAP(group_light.map):%d]"
+				Group item=Sockets_Outdoor label="Steckdosen [MAP(group_socket.map):%d]" {
+					Switch item=Socket_Streedside
+					Switch item=Socket_Gardenside
+				}
+                Group label="Bewässerung [MAP(group_watering.map):%d]" item=Watering_Circuits {
+                    Group item=Watering_Circuits label="Bewässerungskreise [%d]" {
+                        Frame label="Garten" {
+                            Switch item=Watering_Gardenside_Lawn_left label="Rasen links"
+                            Switch item=Watering_Gardenside_Lawn_right label="Rasen rechts"
+                            Switch item=Watering_Gardenside_Beds_front label="Beete Terasse & Hecke"
+                            /*Switch item=Watering_Gardenside_Beds_back label="Beete hinten"*/
+                        }
+                        Frame label="Strasse" {
+                            Switch item=Watering_Streetside_Lawn label="Rasen"
+                            Switch item=Watering_Streetside_Beds label="Beete & Hecke"
+                        }
+                    }
+                    Setpoint item=Watering_Program_Duration step=1.0 minValue=10 maxValue=60
+                    Switch item=Watering_Program_Start
+                    Text item=Watering_Program_State
+                }
+			}
+		}
+		Group label="Roboter [%s]" item=RoboterStatus icon="selfautomode" valuecolor=[=="Alles normal"="#26cb00",!="Alles normal"="red"] {
+            Frame label="Haus" {
+                Text label="Roomba" item=roomba_StatusFormatted {
+                    Frame label="Status" {
+                        Text item=roomba_batPct
+                        Text item=roomba_StatusFormatted
+                        Selection item=roomba_command mappings=[start="Start",stop="Stop",pause="Pause",dock="Dock",resume="Weiter"]
+                        Switch item=roomba_auto mappings=[ON="Auto", OFF="Man"]
+                    }
+                    Frame label="Reinigung" {
+                        Text label="Karte" icon="map"
+                        {
+                            Image url="http://127.0.0.1/roomba/map_notext.png" refresh=2000
+                        }
+                        Text item=roomba_mssnM
+                        Text item=roomba_sqm
+                    }
+                    Frame label="Infos" {
+                        Text item=roomba_full
+                        Text item=roomba_bin_present
+                        Text item=roomba_rssi
+                        Text item=roomba_errorFormatted
+                    }
+                    Frame label="Sonstiges" {
+                        Text label="Settings" icon="settings" {
+                            Frame label="Settings" {
+                                Selection item=roomba_boost mappings=[auto="Auto",eco="Eco",performance="Performance"]
+                                Selection item=roomba_passes mappings=[auto="Auto",one="Ein",two="Zwei"]
+                                Switch item=roomba_edgeClean
+                                Switch item=roomba_binPause
+                            }
+                            Frame label="Info" {
+                                Text item=roomba_noAutoPasses
+                                Text item=roomba_twoPass
+                                Text item=roomba_carpetBoost
+                                Text item=roomba_vacHigh
+                            }
+                        }
+                        Text item=roomba_lastcommand
+                        Text item=roomba_mission
+                        Text item=roomba_initiator
+                        Text item=roomba_expireM
+                        Text item=roomba_rechrgM
+                        Text item=roomba_status
+                        Text item=roomba_phase
+                    }
+                    
+                    //Text label="Map" {
+                        //Image icon="map" url="http://your_OH_ip_address:port/static/map.png" label="Map" refresh=1000
+                        //Webview icon="map" url="http://your_OH_ip_address:port/static/roomba_map.html" height=21 label="Map"
+                    //}
+                }
+            }
+            Frame label="Garten" {
+				Text label="Kamera" icon="selfcamera"
+				{
+					Image url="http://127.0.0.1/cameraAutomowerImage" label="Automower" refresh=5000
+				}
+                Text label="Automower" item=MowerStatus {
+                    Frame label="Status" {
+                        Text item=MowerBattery
+                        Text item=MowerStatusFormatted
+                        Switch item=MowerStarted mappings=[ON="Start", OFF="Stop"]
+                        Switch item=MowerMode mappings=[HOME="Home", AUTO="Auto", MAN="Man"]
+                    }
+                    Frame label="Infos" {
+                        Text item=MowerTimerStatusFormatted
+                        Text item=MowerWlanSignal
+                        Text item=MowerErrorCode
+                        Text item=MowerErrorMessage
+                        Text item=MowerErrorDate
+                        Text item=MowerHours
+                    }
+                }
+            }
+		}
+	}
+	Frame label="Sonstiges"
+	{
+		Group label="Status [%s]" icon="selfinfo" item=RoomStatus valuecolor=[=="Alles geschlossen"="#26cb00",!="Alles geschlossen"="red"]
+        {
+			Frame label="Steuerung"
+			{
+				Switch item=State_Notify label="Benachrichtigung"
+				Group label="Programme [%s]" icon="selfautomode" item=AutoStatus valuecolor=[AutoStatus=="Inaktiv"="red"]{
+					Frame label="Rollläden" {
+						Switch item=Auto_Rollershutter icon="selfautomode"
+						Switch item=Auto_Sunprotection visibility=[Auto_Rollershutter==ON] icon="selfautomode"
+						Group item=Shutters visibility=[Auto_Rollershutter==ON]
+					}
+					Frame label="Beleuchtung" {
+						Switch item=Auto_Lighting icon="selfautomode"
+						Group item=Lights visibility=[Auto_Lighting==ON]
+					}
+					Frame label="Weihnachten" {
+						Switch item=Auto_Christmas icon="selfautomode"
+						Switch item=Socket_Livingroom visibility=[Auto_Christmas==ON]
+						Switch item=Socket_Floor visibility=[Auto_Christmas==ON]
+					}
+					Frame label="Dachboden" {
+						Switch item=Auto_Attic_Light label="Modus" mappings=[1="OFF", 2="W", 3="B"] icon="selfautomode"
+						Switch item=Socket_Attic visibility=[Auto_Attic_Light!=1]
+					}
+				}
+                Text label="Szenen" icon="selfautomode" {
+                    Frame label="Wohnen" {
+                        Switch item=Scene1 label="Fernsehen" icon="selfcouch"
+                    }
+                    Frame label="Sonstiges" {
+                        Switch item=Scene2 label="Aufstehen" icon="selfbedwakeup"
+                        Switch item=Scene3 label="Schlafen gehen" icon="selfbedsleep"
+                        Switch item=Scene4 label="Schlafen" icon="selfbedsleep"
+                    }
+                }
+			}
+			Frame label="Status"
+			{ 
+				Text label="Präsenz & Schlafen" icon="selfautomode"
+                {
+                    Switch item=State_Present label="Jemand anwesend [%s]"
+                    Switch item=State_Sleeping label="Jemand schläft [%s]"
+                    Switch item=Scene7 label="Tablet Reload [%s]"
+                    Switch item=Scene8 label="Tablet Wakeup [%s]"
+                    Switch item=Scene9 label="Tablet Light Theme [%s]"
+                }
+				Text label="Beschattung & Beleuchtung" icon="sun"
+                {
+					Frame label="Sonstiges"
+					{
+                        Text item=State_Outdoorlights label="Aussenbeleuchtung aktiv [%s]"
+                        Text item=State_Rollershutter label="Rollläden sollten unten sein [%s]"
+                    }
+					Frame label="Sonnenschutz"
+					{
+                        Text item=State_Sunprotection_Attic label="Beschattung Dachboden [%s]"
+                        Text item=State_Sunprotection_Bathroom label="Beschattung Badezimmer [%s]"
+                        Text item=State_Sunprotection_Dressingroom label="Beschattung Ankleide [%s]"
+                        Text item=State_Sunprotection_Bedroom label="Beschattung Schlafzimmer [%s]"
+                        Text item=State_Sunprotection_Livingroom label="Beschattung Wohnzimmer [%s]"
+                    }
+				}
+			}
+			Frame label="Info"
+			{
+				Text label="Sonnenauf & Untergang" icon="sun" {
+                    Frame label="Tageszeiten"
+                    {
+                        Text item=Dawn_Time
+                        Text item=Sunrise_Time
+                        Text item=Sunset_Time
+                        Text item=Dusk_Time
+                    }
+                    Frame label="Sonnenstand"
+                    {
+                        Text item=Sun_Azimuth        
+                        Text item=Sun_Elevation      
+                        Text item=Total_Radiation    
+                        Text item=Diffuse_Radiation  
+                    }
+                    Frame label="Details"
+                    {
+                        Text item=Zodiac_Name          
+                        Text item=Season             
+                        Text item=MoonPhase          
+                        Text item=FullMoon         
+                        Text item=NewMoon          
+                        Text item=Eclipse_Time       
+                    }
+                    Frame label="Begin & Ende"
+                    {
+                        Text item=Spring_Time		
+                        Text item=Summer_Time		
+                        Text item=Autumn_Time		
+                        Text item=Winter_Time		
+                    }
+				}
+            }
+		}
+        Group item=SensorInfo label="Sensoren [%s]" valuecolor=[=="Alles normal"="#26cb00",=="Giessen"="#cbcb00",!="Alles normal"="red"]{
+            Frame label="Temperatur & Feuchtigkeit"
+            {
+                Group item=Air_FF_Livingroom_Message label="EG [%s]"{
+                    Frame label="Daten" {
+                        Text item=Air_FF_Livingroom_Message 
+                        Text item=Air_FF_Boxroom_Message 
+                        Text item=Air_FF_Guestroom_Message 
+                        Text item=Air_FF_GuestWC_Message 
+                        Text item=Air_FF_Floor_Message 
+                        Text item=Air_FF_Utilityroom_Message 
+                    }
+                    Frame label="Auswertung" {
+                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="https://smartmarvin.de/static/grafana/temperatures_eg.html?fromItem=Chart_From" height=18
+                    }
+                }
+                Group item=Air_SF_Bedroom_Message label="OG [%s]"{
+                    Frame label="Daten" {
+                        Text item=Air_SF_Bedroom_Message 
+                        Text item=Air_SF_Dressingroom_Message 
+                        Text item=Air_SF_Child1_Message 
+                        Text item=Air_SF_Child2_Message 
+                        Text item=Air_SF_Bathroom_Message 
+                        Text item=Air_SF_Floor_Message 
+                        Text item=Air_SF_Attic_Message 
+                    }
+                    Frame label="Auswertung" {
+                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="https://smartmarvin.de/static/grafana/temperatures_og.html?fromItem=Chart_From" height=18
+                    }
+                }
+                Group item=Air_Garden_Message label="Garten & Schuppen [%s]"{
+                    Frame label="Daten" {
+                        Text item=Air_FF_Garage_Message 
+                        Group item=Air_Garden_Message label="Garten (Terasse) [%s]"{
+                            Frame {
+                                Text item=Heating_Temperature_Outdoor label="Garten (Schatten) [%.1f °C]"
+                                Text item=Air_Garden_Message label="Garten (Terasse) [%s]"
+                                Text item=Temperature_Garden_Forecast4 label="Garten (in 4 Std) [%.1f °C]"
+                                Text item=Temperature_Garden_Forecast8 label="Garten (in 8 Std) [%.1f °C]"
+                            }
+                            Frame {
+                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="https://smartmarvin.de/static/grafana/temperatures_garden_details.html?fromItem=Chart_From" height=9
+                            }
+                        }
+                        Text item=Rain_Garden_Message
+                        Text item=Wind_Message 
+                    }
+                    Frame label="Auswertung" {
+                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="https://smartmarvin.de/static/grafana/temperatures_garden.html?fromItem=Chart_From" height=36
+                    }
+                }
+                Group item=PlantSensorInfo label="Pflanzen [%s]" valuecolor=[=="Feucht genug"="#26cb00",=="Giessen"="#cbcb00",=="Jetzt Giessen"="red"]{
+                    Frame label="Daten" {
+                        Text item=SoilMoistSensor1
+                        Text item=SoilMoistSensor2
+                        Text item=SoilMoistSensor3
+                        Text item=SoilMoistSensor4
+                        Text item=Air_Wireless_Message label="Luft [%s]" visibility=[Auto_Attic_Light!=1]
+                    }
+                    Frame label="Auswertung" {
+                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="https://smartmarvin.de/static/grafana/pflanzen.html?fromItem=Chart_From" height=18
+                    }
+                }
+            }
+            Frame label="Bewegung • [%1$tH:%1$tM:%1$tS, %1$td.%1$tm]" item=Security_Last_Change
+            {
+                Group item=Sensor_Indoor label="Innen [MAP(group_motion.map):%d]" valuecolor=[!=CLOSED="red"]
+                Group item=Sensor_Outdoor label="Aussen [MAP(group_motion.map):%d]" valuecolor=[!=CLOSED="red"]
+                Text label="Kameras" icon="selfcamera"
+                {
+                    Image url="http://127.0.0.1/cameraStrasseImage" label="Strasse Video" refresh=2000
+                    Image url="http://127.0.0.1/cameraAutomowerImage" label="Automower" refresh=5000
+                }
+            }
+            Frame label="Fenster & Türen"
+            {
+                Group item=Sensor_Doors_FF label="EG Türen [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="red"]
+                Group item=Sensor_Window_FF label="EG Fenster [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="red"]
+                Group item=Sensor_Window_SF label="OG Fenster [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="red"]
+            }
+        }
+		Group label="Technik [%s]" icon="house" item=MainStatus valuecolor=[=="Alles normal"="#26cb00",=="Lüftung"="#cbcb00",!="Alles normal"="red"]
+		{
+            Frame label="Technik" {
+                Group item=Ventilation_Fan_Level label="Lüftung [MAP(level_de.map):%d]" icon="selfairing" {
+                    Frame label="Steuerung" {
+                        Switch item=Ventilation_Auto_Mode label="Modus" mappings=[1="Auto", 0="Manuell"]
+                        Switch item=Ventilation_Fan_Level label="Stufe" mappings=[1="A", 2="1", 3="2", 4="3"]
+                        Setpoint item=Ventilation_Comfort_Temperature label="Komforttemperatur [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        Switch item=Ventilation_Control mappings=[1="App", 0="CCEase"]
+                    }
+                    Frame label="Sensordaten" {
+                        Text item=Ventilation_Outdoor_Temperature_Message
+                        Text item=Ventilation_Indoor_Temperature_Message
+                        Text item=Ventilation_Fan_Message
+                        Text item=Ventilation_Bypass
+                        Text item=Ventilation_Filter_Runtime_Message
+    /*Switch Ventilation_Filter_Reset	"Filterreset" (Lueftung) {comfoair="filter_reset"}*/
+    /*Switch Ventilation_Error_Reset	"Fehlerreset" (Lueftung) {comfoair="error_reset"}*/
+                        Text item=Ventilation_State_Message
+                    }
+                }			
+                Group item=Heating_Operating_Mode label="Heizung [MAP(heating_de.map):%d]" icon="fire-on"{
+                    Frame label="Steuerung" {
+                        Switch item=Heating_Auto_Mode label="Modus" mappings=[1="Auto", 0="Manuell"]
+                        Switch item=Heating_Operating_Mode label="Betrieb" mappings=[1.000000="WW", 2.000000="HZ", 3.000000="RD"]  visibility=[Heating_Auto_Mode==0]
+                        Text item=Heating_Operating_Mode visibility=[Heating_Auto_Mode==1]
+                        Setpoint item=Temperature_Room_Target label="Komforttemperatur [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        Switch item=Heating_Livingroom_Circuit label="WZ Kreis"
+                    }
+                    Frame label="Sensordaten" {
+                        Text item=Heating_Demand label="Berechnungsdetails (Tag) [MAP(yes_no_de.map):%d]" icon="fire-on"{
+                            Frame {
+                                Text item=Air_FF_Livingroom_Message 
+                                Text item=Air_SF_Bedroom_Message 
+                                Text item=Heating_Demand label="Heizungsbedarf [MAP(yes_no_de.map):%d]"
+                                Text item=Heating_Charged_Message label="Charge [%s]"
+                                Text item=Heating_Zone_Message label="Ziel [%s]"
+                                Text item=Heating_Forecast_HU_Message label="Ist / FC [%s]"
+                                Text item=Heating_Current_CD_Message label="Ist [CD %s]"
+                                Text item=Heating_Forecast4_CD_Message label="FC4 [%s]"
+                                Text item=Heating_Forecast8_CD_Message label="FC8 [%s]"
+                                Text item=Heating_Reduction_Message label="R. [%s]"
+                                Text item=Heating_Max_LR_Message label="M. [%s]"
+                                Text item=Heating_Night_Offset_Message label="Nacht [%s]"
+                            }
+                            Frame {
+                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="https://smartmarvin.de/static/grafana/heating_details.html?fromItem=Chart_From" height=36
+                            }
+                        }
+                        Text item=Heating_Temperature_Room_Target
+                        Text item=Heating_Power_Message
+                        Text item=Heating_Temperature_Outdoor_Message
+                        Text item=Heating_Temperature_Offset_Message
+                        Text item=Heating_Temperature_Boiler_Message
+                        Text item=Heating_Temperature_Wather_Storage
+                        Text item=Heating_Burner_Starts_Message
+                        Text item=Heating_Burner_Hours_Message
+                        Text item=Heating_Common_Fault
+                    }
+                    Frame label="Auswertung" {
+                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="https://smartmarvin.de/static/grafana/heating_overview.html?fromItem=Chart_From" height=36
+                    }
+                }
+            }
+            Frame label="Versorgung" {
+                Group item=Electricity_Current_Daily_Consumption label="Strom [%.2f KWh]"{
+                    Frame label="Daten" {
+                        Text item=Electricity_Current_Daily_Consumption
+                        Text item=Electricity_Current_Consumption
+                        Text item=Electricity_Annual_Consumption
+                        Text item=Electricity_Meter
+                        Text item=Electricity_Forecast
+                    }
+                    Frame label="Auswertung" {
+                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="https://smartmarvin.de/static/grafana/consumption_energy.html?fromItem=Chart_From" height=18
+                    }
+                }
+                Group item=Gas_Current_Daily_Consumption label="Gas [%.2f m³]" {
+                    Frame label="Daten" {
+                        Text item=Gas_Current_Daily_Consumption
+                        Text item=Gas_Current_Consumption
+                        Text item=Gas_Annual_Consumption
+                        Text item=Gas_Current_Count
+                        Text item=Gas_Forecast
+                    }
+                    Frame label="Auswertung" {
+                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="https://smartmarvin.de/static/grafana/consumption_gas.html?fromItem=Chart_From" height=18
+                    }
+                }
+                Group item=Heating_Solar_Power_Current_Daily label="Solar [%.1f KW]" icon="sun"{
+                    Frame label="Daten" {
+                        Text item=Heating_Solar_State_Message
+                        Text item=Heating_Temperature_Solar_Message
+                        Text item=Heating_Temperature_Wather_Storage
+                        Text item=Heating_Solar_Hours_Message
+                        Text item=Heating_Solar_Power_Message
+                    }
+                    Frame label="Auswertung" {
+                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="https://smartmarvin.de/static/grafana/solar.html?fromItem=Chart_From" height=27
+                    }
+                
+                }
+            }
+            Frame label="Sonstiges" {
+                Group item=Lights_Outdoor_Controlled label="Lampen (RAW)"
+                Group label="Schalten (RAW) [MAP(group_socket.map):%d]" icon="selfsocket" item=Sockets {
+                    Frame label="Wohnen" {
+                        Switch item=Socket_Bassbox label="Bassbox"
+                        Switch item=Socket_GuestWC label="Gäste WC Radio"
+                        Switch item=Socket_Livingroom label="Wohnz. neben Stehlampe"
+                        Switch item=Socket_Floor label="Flur unter Treppe"
+						Switch item=Socket_Attic label="Dachboden"
+                    }
+                    Frame label="Garten" {
+                        Switch item=Socket_Streedside label="Aussen vorne"
+                        Switch item=Socket_Gardenside label="Aussen hinten"
+                    }
+                }
+            }
+		}
+	}
+}

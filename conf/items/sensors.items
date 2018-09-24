@@ -1,0 +1,124 @@
+//########### TEMPERATURE ##########
+Group Temperatures
+Group Temperatures_FF
+Group Temperatures_SF
+Group Temperatures_Outdoor
+Group Humidity
+Group Humidity_FF
+Group Humidity_SF
+Group Humidity_Outdoor
+
+Number Temperature_FF_Livingroom_Raw		"Wohnzimmer [%.1f °C]"				<selftemperature>					{ knx="0/7/1" }
+Number Temperature_FF_Livingroom 			"Wohnzimmer"				<selftemperature> (PersistentChart,PersistentHistory,Temperatures,Temperatures_FF) ["CurrentTemperature"]
+Number Humidity_FF_Livingroom_Raw 			"Wohnzimmer [%.1f %%]"				<chart>								{ knx="0/7/2" }
+Number Humidity_FF_Livingroom 				"Wohnzimmer"				<chart>			  (PersistentChart,PersistentHistory,Humidity,Humidity_FF) ["CurrentHumidity"]
+String Air_FF_Livingroom_Message 			"Wohnzimmer [%s]"					<selftemperature>
+Number Temperature_FF_Boxroom_Raw  			"Abstellkammer [%.1f °C]"			<selftemperature>					{ knx="0/7/3" }
+Number Temperature_FF_Boxroom 				"Abstellkammer"			<selftemperature> (PersistentChart,PersistentHistory,Temperatures,Temperatures_FF) ["CurrentTemperature"]
+Number Humidity_FF_Boxroom_Raw  			"Abstellkammer [%.1f %%]"			<chart>								{ knx="0/7/4" }
+Number Humidity_FF_Boxroom 					"Abstellkammer"			<chart>			  (PersistentChart,PersistentHistory,Humidity,Humidity_FF) ["CurrentHumidity"]
+String Air_FF_Boxroom_Message 				"Abstellkammer [%s]"				<selftemperature>
+Number Temperature_FF_Guestroom_Raw  		"Gästezimmer [%.1f °C]"				<selftemperature>					{ knx="0/7/5" }
+Number Temperature_FF_Guestroom 			"Gästezimmer"				<selftemperature> (PersistentChart,PersistentHistory,Temperatures,Temperatures_FF) ["CurrentTemperature"]
+Number Humidity_FF_Guestroom_Raw  			"Gästezimmer [%.1f %%]"				<chart>								{ knx="0/7/6" }
+Number Humidity_FF_Guestroom 				"Gästezimmer"				<chart>			  (PersistentChart,PersistentHistory,Humidity,Humidity_FF) ["CurrentHumidity"]
+String Air_FF_Guestroom_Message 			"Gästezimmer [%s]"					<selftemperature>
+Number Temperature_FF_GuestWC_Raw  			"Gäste WC [%.1f °C]"				<selftemperature>					{ knx="0/7/7" }
+Number Temperature_FF_GuestWC 				"Gäste WC"				<selftemperature> (PersistentChart,PersistentHistory,Temperatures,Temperatures_FF) ["CurrentTemperature"]
+Number Humidity_FF_GuestWC_Raw  			"Gäste WC [%.1f %%]"				<chart>								{ knx="0/7/8" }
+Number Humidity_FF_GuestWC 					"Gäste WC"				<chart>			  (PersistentChart,PersistentHistory,Humidity,Humidity_FF) ["CurrentHumidity"]
+String Air_FF_GuestWC_Message 				"Gäste WC [%s]"						<selftemperature>
+Number Temperature_FF_Floor_Raw  			"Flur EG [%.1f °C]"					<selftemperature>					{ knx="0/7/9" }
+Number Temperature_FF_Floor 				"Flur unten"					<selftemperature> (PersistentChart,PersistentHistory,Temperatures,Temperatures_FF) ["CurrentTemperature"]
+Number Humidity_FF_Floor_Raw  				"Flur EG [%.1f %%]"					<chart>								{ knx="0/7/10" }
+Number Humidity_FF_Floor 					"Flur unten"					<chart>			  (PersistentChart,PersistentHistory,Humidity,Humidity_FF) ["CurrentHumidity"]
+String Air_FF_Floor_Message 				"Flur EG [%s]"						<selftemperature>
+Number Temperature_FF_Utilityroom_Raw  		"HWR [%.1f °C]"						<selftemperature>					{ knx="0/7/11" }
+Number Temperature_FF_Utilityroom 			"HWR"						<selftemperature> (PersistentChart,PersistentHistory,Temperatures,Temperatures_FF) ["CurrentTemperature"]
+Number Humidity_FF_Utilityroom_Raw  		"HWR [%.1f %%]"						<chart>								{ knx="0/7/12" }
+Number Humidity_FF_Utilityroom 				"HWR"						<chart>			  (PersistentChart,PersistentHistory,Humidity,Humidity_FF) ["CurrentHumidity"]
+String Air_FF_Utilityroom_Message 			"HWR [%s]"							<selftemperature>
+Number Temperature_FF_Garage_Raw  			"Schuppen [%.1f °C]"				<selftemperature>					{ knx="0/7/13" }
+Number Temperature_FF_Garage 				"Schuppen"				<selftemperature> (PersistentChart,PersistentHistory,Temperatures,Temperatures_Outdoor) ["CurrentTemperature"]
+Number Humidity_FF_Garage_Raw  				"Schuppen [%.1f %%]"				<chart>								{ knx="0/7/14" }
+Number Humidity_FF_Garage 					"Schuppen"				<chart>			  (PersistentChart,PersistentHistory,Humidity,Humidity_Outdoor) ["CurrentHumidity"]
+String Air_FF_Garage_Message 				"Schuppen [%s]"						<selftemperature>
+Number Temperature_SF_Bedroom_Raw  			"Schlafzimmer [%.1f °C]"			<selftemperature>					{ knx="1/7/1" }
+Number Temperature_SF_Bedroom 				"Schlafzimmer"			<selftemperature> (PersistentChart,PersistentHistory,Temperatures,Temperatures_SF) ["CurrentTemperature"]
+Number Humidity_SF_Bedroom_Raw  			"Schlafzimmer [%.1f %%]"			<chart>								{ knx="1/7/2" }
+Number Humidity_SF_Bedroom 					"Schlafzimmer"			<chart>			  (PersistentChart,PersistentHistory,Humidity,Humidity_SF) ["CurrentHumidity"]
+String Air_SF_Bedroom_Message 				"Schlafzimmer [%s]"					<selftemperature>
+Number Temperature_SF_Dressingroom_Raw  	"Ankleide [%.1f °C]"				<selftemperature>					{ knx="1/7/3" }
+Number Temperature_SF_Dressingroom 			"Ankleide"				<selftemperature> (PersistentChart,PersistentHistory,Temperatures,Temperatures_SF) ["CurrentTemperature"]
+Number Humidity_SF_Dressingroom_Raw  		"Ankleide [%.1f %%]"				<chart>								{ knx="1/7/4" }
+Number Humidity_SF_Dressingroom 			"Ankleide"				<chart>			  (PersistentChart,PersistentHistory,Humidity,Humidity_SF) ["CurrentHumidity"]
+String Air_SF_Dressingroom_Message 			"Ankleide [%s]"						<selftemperature>
+Number Temperature_SF_Child1_Raw  			"Kind 1 [%.1f °C]"					<selftemperature>					{ knx="1/7/5" }
+Number Temperature_SF_Child1 				"Kindzimmer eins"					<selftemperature> (PersistentChart,PersistentHistory,Temperatures,Temperatures_SF) ["CurrentTemperature"]
+Number Humidity_SF_Child1_Raw  				"Kind 1 [%.1f %%]"					<chart>								{ knx="1/7/6" }
+Number Humidity_SF_Child1 					"Kindzimmer eins"					<chart>			  (PersistentChart,PersistentHistory,Humidity,Humidity_SF) ["CurrentHumidity"]
+String Air_SF_Child1_Message 				"Kind 1 [%s]"						<selftemperature>
+Number Temperature_SF_Child2_Raw 	 		"Kind 2 [%.1f °C]"					<selftemperature>					{ knx="1/7/7" }
+Number Temperature_SF_Child2	 			"Kindzimmer zwei"					<selftemperature> (PersistentChart,PersistentHistory,Temperatures,Temperatures_SF) ["CurrentTemperature"]
+Number Humidity_SF_Child2_Raw 	 			"Kind 2 [%.1f %%]"					<chart>								{ knx="1/7/8" }
+Number Humidity_SF_Child2	 				"Kindzimmer zwei"					<chart>			  (PersistentChart,PersistentHistory,Humidity,Humidity_SF) ["CurrentHumidity"]
+String Air_SF_Child2_Message 				"Kind 2 [%s]"						<selftemperature>
+Number Temperature_SF_Bathroom_Raw  		"Badezimmer [%.1f °C]"				<selftemperature>					{ knx="1/7/9" }
+Number Temperature_SF_Bathroom 				"Badezimmer"				<selftemperature> (PersistentChart,PersistentHistory,Temperatures,Temperatures_SF) ["CurrentTemperature"]
+Number Humidity_SF_Bathroom_Raw  			"Badezimmer [%.1f %%]"				<chart>								{ knx="1/7/10" }
+Number Humidity_SF_Bathroom 				"Badezimmer"				<chart>			  (PersistentChart,PersistentHistory,Humidity,Humidity_SF) ["CurrentHumidity"]
+String Air_SF_Bathroom_Message 				"Badezimmer [%s]"					<selftemperature>
+Number Temperature_SF_Floor_Raw  			"Flur OG [%.1f °C]"					<selftemperature>					{ knx="1/7/11" }
+Number Temperature_SF_Floor 				"Flur oben"					<selftemperature> (PersistentChart,PersistentHistory,Temperatures,Temperatures_SF) ["CurrentTemperature"]
+Number Humidity_SF_Floor_Raw  				"Flur OG [%.1f %%]"					<chart>								{ knx="1/7/12" }
+Number Humidity_SF_Floor 					"Flur oben"					<chart>			  (PersistentChart,PersistentHistory,Humidity,Humidity_SF) ["CurrentHumidity"]
+String Air_SF_Floor_Message 				"Flur OG [%s]"						<selftemperature>
+Number Temperature_SF_Attic_Raw  			"Dachboden [%.1f °C]"				<selftemperature>					{ knx="1/7/13" }
+Number Temperature_SF_Attic 				"Dachboden"				<selftemperature> (PersistentChart,PersistentHistory,Temperatures,Temperatures_SF) ["CurrentTemperature"]
+Number Humidity_SF_Attic_Raw  				"Dachboden [%.1f %%]"				<chart>								{ knx="1/7/14" }
+Number Humidity_SF_Attic 					"Dachboden"				<chart>			  (PersistentChart,PersistentHistory,Humidity,Humidity_SF) ["CurrentHumidity"]
+String Air_SF_Attic_Message  				"Dachboden [%s]"					<selftemperature>
+
+Number Temperature_Wireless 					"Funk [%.1f °C]" 				<selftemperature>	(PersistentChart,PersistentHistory)	{s300th="address=5;datapoint=TEMPERATURE"}
+Number Humidity_Wireless 						"Funk [%.1f %%]" 				<chart>				(PersistentChart,PersistentHistory) {s300th="address=5;datapoint=HUMIDITY"}
+String Air_Wireless_Message 					"Flur [%s]"						<selftemperature>
+
+Number Temperature_Garden 						"Garten"				<selftemperature> 	(PersistentChart,PersistentHistory,Temperatures,Temperatures_Outdoor) ["CurrentTemperature"] {s300th="address=ks300;datapoint=TEMPERATURE"}
+Number Humidity_Garden 							"Garten"				<chart> 			(PersistentChart,PersistentHistory,Humidity,Humidity_Outdoor) ["CurrentHumidity"]	{s300th="address=ks300;datapoint=HUMIDITY"}
+String Air_Garden_Message						"Garten Aktuell [%s]"			<selftemperature>
+
+Number Wind_Garden 								"Wind [%d m/s]"					<selfwind>											{s300th="address=ks300;datapoint=WIND"}
+Number Wind_Garden_Converted					"Wind [%d km/h]"				<selfwind>			(PersistentHistory)
+Number Wind_Garden_Current 						"Wind [%d]"						<selfwind>			(PersistentChart)
+
+Number Rain_Garden_Counter 						"Regen Zähler [%d]"				<chart>				(PersistentHistory)				{s300th="address=ks300;datapoint=RAIN"}
+Number Regen_State_Garden 						"Regen Status [%d]"				<chart>												{s300th="address=ks300;datapoint=IS_RAINING"}
+Number Rain_Garden_Current 						"Regen [%.1f]"					<chart>				(PersistentChart)
+Number Rain_Garden_Current_Daily 				"Regen (heute) [%.1f]"			<chart>				(PersistentChart)
+
+Number Cloud_Cover_Current						"Wolken [%d]" 					<selftemperature>
+Number Cloud_Cover_Forecast4					"Wolken (Vorhersage 4Std) [%d]"	<selftemperature>
+Number Temperature_Garden_Forecast4				"Garten (Vorhersage 4Std) [%.1f °C]" <selftemperature>	(PersistentChart,PersistentHistory,Temperatures,Temperatures_Outdoor)
+Number Cloud_Cover_Forecast8					"Wolken (Vorhersage 8Std) [%d]"	<selftemperature>
+Number Temperature_Garden_Forecast8				"Garten (Vorhersage 8Std) [%.1f °C]" <selftemperature>	(PersistentChart,PersistentHistory,Temperatures,Temperatures_Outdoor)
+String Wind_Direction							"Windrichtung [%s]"				<selfwind>
+String Wind_Message								"Wind [%s]"						<selfwind>
+
+String Rain_Garden_Message						"Regen [%s]"					<selfrain>
+
+Number Temperature_Room_Target	                "Ziel [%.1f °C]"				<selftemperature>
+
+//########### PLANT SENSORS ##########
+
+String SensorInfo       "Sensoren Status  [%s]"      <selfinfo>
+String PlantSensorInfo  "Planzen Status [%s]" <selfrain>
+
+Group SoilMoistSensor
+
+Number SoilMoistSensor1 "Pflanze 1 [%d]" <selfrain> (PersistentChart,PersistentHistory,SoilMoistSensor)
+Number SoilMoistSensor2 "Pflanze 2 [%d]" <selfrain> (PersistentChart,PersistentHistory,SoilMoistSensor)
+Number SoilMoistSensor3 "Pflanze 3 [%d]" <selfrain> (PersistentChart,PersistentHistory,SoilMoistSensor)
+Number SoilMoistSensor4 "Pflanze 4 [%d]" <selfrain> (PersistentChart,PersistentHistory,SoilMoistSensor)
+Number SoilMoistSensor5 "Pflanze 5 [%d]" <selfrain> (PersistentChart,PersistentHistory,SoilMoistSensor)
+Number SoilMoistSensor6 "Pflanze 6 [%d]" <selfrain> (PersistentChart,PersistentHistory)
+

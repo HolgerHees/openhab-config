@@ -1,0 +1,14 @@
+//########### GAS ##########
+Number Gas_Pulse_Counter																			(PersistentHistory)				{ knx="<13.001:0/4/6" }
+Number Gas_Current_Count						"Zählerstand [%.2f m³]"			<selfgas>			(PersistentHistory)
+Number Gas_Current_Daily_Consumption 			"Tagesverbrauch [%.2f m³]"		<selfgas>           (PersistentChart)
+Number Gas_Current_Consumption 					"Aktueller Verbrauch [%.2f m³]"	<selfgas>			(PersistentChart)
+Number Gas_Annual_Consumption 					"Aktuelle Periode [%.2f m³]"	<selfgas>
+String Gas_Forecast 							"Hochrechnung [%s]"				<selfgas>
+
+//########### ELECTRICITY ##########
+Number Electricity_Meter						"Zählerstand [%.2f KWh]"		<selfenergy>		(PersistentHistory)
+Number Electricity_Current_Daily_Consumption	"Tagesverbrauch [%.2f KWh]"		<selfenergy>        (PersistentChart)
+Number Electricity_Current_Consumption 			"Aktueller Verbrauch [%d Watt]"	<selfenergy>		(PersistentChart)
+Number Electricity_Annual_Consumption 			"Aktuelle Periode [%.2f KWh]"	<selfenergy>
+String Electricity_Forecast 					"Hochrechnung [%s]"				<selfenergy>

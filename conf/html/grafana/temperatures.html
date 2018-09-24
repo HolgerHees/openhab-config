@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-type" CONTENT="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="css/panel.css" />
+    <script src="js/smarthome-grafana.js"></script>
+    <script src="js/smarthome-grafana-user-defaults.js"></script>
+    <script src="js/helper.js"></script>
+    <style>
+    .panel-container { height: 12.5%; }
+    </style>
+</head>
+
+<body>
+</body>
+
+<script>
+    listener = new InitializedListener();
+    addGrafanaPanel("EG_Temperatures"       , listener.generateParams( "temperaturen-and-feuchtigkeit", 1,1,1 ) );
+    addGrafanaPanel("EG_Humidity"           , listener.generateParams( "temperaturen-and-feuchtigkeit", 5,5,5 ) );
+    addGrafanaPanel("OG_Temperatures"       , listener.generateParams( "temperaturen-and-feuchtigkeit", 2,2,2 ) );
+    addGrafanaPanel("OG_Humidity"           , listener.generateParams( "temperaturen-and-feuchtigkeit", 6,6,6 ) );
+    addGrafanaPanel("Garden_Temperatures"   , listener.generateParams( "temperaturen-and-feuchtigkeit", 4,4,4 ) );
+    addGrafanaPanel("Garden_Humidity"       , listener.generateParams( "temperaturen-and-feuchtigkeit", 7,7,7 ) );
+    addGrafanaPanel("Garden_Rain"           , listener.generateParams( "temperaturen-and-feuchtigkeit", 8,10,11 ) );
+    addGrafanaPanel("Garden_Wind"           , listener.generateParams( "temperaturen-and-feuchtigkeit", 9,9,9 ) );
+    listener.initIFrames();
+</script>
+
+</html>

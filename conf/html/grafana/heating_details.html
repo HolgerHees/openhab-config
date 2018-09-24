@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-type" CONTENT="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="css/panel.css" />
+    <script src="js/smarthome-grafana.js"></script>
+    <script src="js/smarthome-grafana-user-defaults.js"></script>
+    <script src="js/helper.js"></script>
+    <style>
+    .panel-container { height: 25%; }
+    </style>
+</head>
+
+<body>
+</body>
+
+<script>
+    listener = new InitializedListener();
+    addGrafanaPanel("Outdoor_Temperatures"  , listener.generateParams( "heating", 2,2,2 ) );
+    addGrafanaPanel("Indoor_Temperatures"   , listener.generateParams( "heating", 3,3,3 ) );
+    addGrafanaPanel("Charged"               , listener.generateParams( "heating", 4,4,4 ) );
+    addGrafanaPanel("Power"                 , listener.generateParams( "heating", 5,5,5 ) );
+    listener.initIFrames();
+</script>
+
+</html>

@@ -1,0 +1,21 @@
+html .header {
+    display: none;
+}
+.gridster-desktop {
+	margin: 10px 10px;
+}
+.mvWidget.mvBackButton {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 7vw;
+}
+.mvWidget.mvPaperUI {
+    position: fixed;
+    top: 0;
+    left: 7.5vw;
+    right: 0;
+    bottom: 0;
+}
+

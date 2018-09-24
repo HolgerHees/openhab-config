@@ -1,0 +1,35 @@
+Switch State_Sleeping							"Alle schlafen"	    			<selfinfo>			(PersistentHistory)
+Switch State_Present							"Jemand anwesend"				<selfinfo>			(PersistentHistory)
+Switch State_Holger_Present                     "Holger anwesend"               <selfinfo>          (PersistentHistory)                                                                         
+
+Switch State_Outdoorlights						"Aussenbeleuchtung Aktiv"		<selflight>
+Switch State_Rollershutter						"Rollläden geschlossen"			<selfrollershutter>
+Switch State_Sunprotection_Attic				"Rollladen Dachboden geschlossen"	<selfrollershutter>
+Switch State_Sunprotection_Bathroom				"Rollladen Badezimmer geschlossen"	<selfrollershutter>
+Switch State_Sunprotection_Dressingroom			"Rollladen Ankleide geschlossen"	<selfrollershutter>
+Switch State_Sunprotection_Bedroom				"Rollladen Schlafzimmer geschlossen"<selfrollershutter>
+Switch State_Sunprotection_Livingroom			"Rollläden Wohnzimmer geschlossen"	<selfrollershutter>
+
+String MainStatus								"Status [%s]"					<selferror>
+String RoomStatus								"Status [%s]"					<selferror>
+String GardenStatus								"Status [%s]"					<selferror>
+String AutoStatus								"Status [%s]"					<selferror>
+String RoboterStatus							"Status [%s]"					<selferror>
+
+Switch Scene1									"Scene 1"						<settings>         ["Switchable"]
+Switch Scene2									"Scene 2"						<settings>         ["Switchable"]
+Switch Scene3									"Scene 3"						<settings>         ["Switchable"]
+Switch Scene4									"Scene 4"						<settings>         ["Switchable"]
+Switch Scene5									"Scene 5"						<settings>         ["Switchable"]
+Switch Scene6									"Scene 6"						<settings>         ["Switchable"]
+Switch Scene7									"Scene 7"						<settings>         ["Switchable"]
+Switch Scene8									"Scene 8"						<settings>         ["Switchable"]
+Switch Scene9									"Scene 9"						<settings>         ["Switchable"]
+
+Number Auto_Attic_Light							"Mode [%d]"						<settings>
+Switch Auto_Christmas							"Weihnachtsmodus"				<settings>
+Switch Auto_Lighting							"Beleuchtung Automatik"			<settings>
+Switch Auto_Rollershutter						"Rollläden Automatik"			<settings>
+Switch Auto_Sunprotection						"Beschattung Automatik"			<settings>
+
+String Chart_From                               "Zeitraum"                      <selfcalendar>
