@@ -325,7 +325,7 @@ sitemap haus label="Main Menu"
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="https://smartmarvin.de/static/grafana/temperatures_eg.html?fromItem=Chart_From" height=18
+                        Webview url="/static/grafana/temperatures_eg.html?fromItem=Chart_From" height=18
                     }
                 }
                 Group item=Air_SF_Bedroom_Message label="OG [%s]"{
@@ -340,7 +340,7 @@ sitemap haus label="Main Menu"
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="https://smartmarvin.de/static/grafana/temperatures_og.html?fromItem=Chart_From" height=18
+                        Webview url="/static/grafana/temperatures_og.html?fromItem=Chart_From" height=18
                     }
                 }
                 Group item=Air_Garden_Message label="Garten & Schuppen [%s]"{
@@ -355,7 +355,7 @@ sitemap haus label="Main Menu"
                             }
                             Frame {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="https://smartmarvin.de/static/grafana/temperatures_garden_details.html?fromItem=Chart_From" height=9
+                                Webview url="/static/grafana/temperatures_garden_details.html?fromItem=Chart_From" height=9
                             }
                         }
                         Text item=Rain_Garden_Message
@@ -363,7 +363,7 @@ sitemap haus label="Main Menu"
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="https://smartmarvin.de/static/grafana/temperatures_garden.html?fromItem=Chart_From" height=36
+                        Webview url="/static/grafana/temperatures_garden.html?fromItem=Chart_From" height=36
                     }
                 }
                 Group item=PlantSensorInfo label="Pflanzen [%s]" valuecolor=[=="Feucht genug"="#26cb00",=="Giessen"="#cbcb00",=="Jetzt Giessen"="red"]{
@@ -376,7 +376,7 @@ sitemap haus label="Main Menu"
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="https://smartmarvin.de/static/grafana/pflanzen.html?fromItem=Chart_From" height=18
+                        Webview url="/static/grafana/pflanzen.html?fromItem=Chart_From" height=18
                     }
                 }
             }
@@ -444,7 +444,7 @@ sitemap haus label="Main Menu"
                             }
                             Frame {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="https://smartmarvin.de/static/grafana/heating_details.html?fromItem=Chart_From" height=36
+                                Webview url="/static/grafana/heating_details.html?fromItem=Chart_From" height=36
                             }
                         }
                         Text item=Heating_Temperature_Room_Target
@@ -459,7 +459,7 @@ sitemap haus label="Main Menu"
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="https://smartmarvin.de/static/grafana/heating_overview.html?fromItem=Chart_From" height=36
+                        Webview url="/static/grafana/heating_overview.html?fromItem=Chart_From" height=36
                     }
                 }
             }
@@ -474,7 +474,7 @@ sitemap haus label="Main Menu"
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="https://smartmarvin.de/static/grafana/consumption_energy.html?fromItem=Chart_From" height=18
+                        Webview url="/static/grafana/consumption_energy.html?fromItem=Chart_From" height=18
                     }
                 }
                 Group item=Gas_Current_Daily_Consumption label="Gas [%.2f m³]" {
@@ -487,7 +487,7 @@ sitemap haus label="Main Menu"
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="https://smartmarvin.de/static/grafana/consumption_gas.html?fromItem=Chart_From" height=18
+                        Webview url="/static/grafana/consumption_gas.html?fromItem=Chart_From" height=18
                     }
                 }
                 Group item=Heating_Solar_Power_Current_Daily label="Solar [%.1f KW]" icon="sun"{
@@ -500,7 +500,7 @@ sitemap haus label="Main Menu"
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="https://smartmarvin.de/static/grafana/solar.html?fromItem=Chart_From" height=27
+                        Webview url="/static/grafana/solar.html?fromItem=Chart_From" height=27
                     }
                 
                 }

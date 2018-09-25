@@ -1,6 +1,6 @@
 
 // the prefix that is used for each Grafana panel URL
-SMARTHOME_GRAFANA_DEFAULTS["urlPrefix"] = "https://smartmarvin.de/grafana";
+SMARTHOME_GRAFANA_DEFAULTS["urlPrefix"] = "/grafana";
 
 // use "false" so actual pages are loaded (or comment the line)
 SMARTHOME_GRAFANA_DEFAULTS["debug"] = "false";

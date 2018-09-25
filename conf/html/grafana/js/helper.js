@@ -44,7 +44,7 @@ function InitializedListener()
         {
             iframes[i].onload = function() {
                 var cssLink = this.contentWindow.document.createElement("link");
-                cssLink.href = "https://smartmarvin.de/static/grafana/css/grafana.css"; 
+                cssLink.href = "/static/grafana/css/grafana.css"; 
                 cssLink.rel = "stylesheet"; 
                 cssLink.type = "text/css"; 
                 this.contentWindow.document.head.appendChild(cssLink);
