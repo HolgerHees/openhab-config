@@ -5,7 +5,7 @@ echo Launching the openHAB runtime...
 DIRNAME=`dirname "$0"`
 
 #export JAVA_HOME="/dataDisk/java/"
-export JAVA_OPTS="${JAVA_OPTS} -Dgnu.io.rxtx.SerialPorts=/dev/ttyOpenHabLueftung:/dev/ttyOpenHabFunk -Xbootclasspath/a:/dataDisk/jython/jython.jar -Dpython.home=/dataDisk/jython -Dpython.path=/dataDisk/openhab-runtime/python"
+export JAVA_OPTS="${JAVA_OPTS} -Dgnu.io.rxtx.SerialPorts=/dev/ttyOpenHabLueftung:/dev/ttyOpenHabFunk -Xbootclasspath/a:/opt/jython/dist/jython.jar -Dpython.home=/opt/jython/dist -Dpython.path=/dataDisk/openhab-runtime/python"
 #export JYTHONPATH="${DIRNAME}/python"
 export OPENHAB_HOME="${DIRNAME}"
 export OPENHAB_CONF="${DIRNAME}/conf"
