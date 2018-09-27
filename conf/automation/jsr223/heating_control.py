@@ -644,7 +644,7 @@ class CalculateChargeLevelRule:
         #logInfo("hc_dbg","effectiveSouthRadiation: "+effectiveSouthRadiation )
         #logInfo("hc_dbg","effectiveWestRadiation: "+effectiveWestRadiation )
         
-        if effectiveSouthRadiation > 0.0 || effectiveWestRadiation > 0.0:
+        if effectiveSouthRadiation > 0.0 or effectiveWestRadiation > 0.0:
             atticRef = heatingBedroomTarget - 1.0
             if getItemState("State_Sunprotection_Attic") == ON:
                 if effectiveSouthRadiation < 3.7 or currentAtticTemp < atticRef or currentOutdoorTemp < atticRef:
