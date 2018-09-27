@@ -51,7 +51,7 @@ def getCloudData( self, cloudCoverItem ):
     if not isOutdatetForecast(self,False):
         cloudCover = getItemState(cloudCoverItem).doubleValue()
     else:
-        self.log.info("Forecast: ERROR • Fall back to full cloud cover.")
+        self.log.info(u"Forecast: ERROR • Fall back to full cloud cover.")
         cloudCover = 9.0
 
     return cloudCover
