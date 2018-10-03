@@ -92,8 +92,8 @@ sitemap haus label="Main Menu"
 				Switch item=Dooropener_Timer
 				Text label="Kameras" icon="selfcamera"
 				{
-					Image url="http://127.0.0.1/cameraStrasseImage" label="Strasse" refresh=2000
-					Image url="http://127.0.0.1/cameraAutomowerImage" label="Automower" refresh=5000
+					Image url="https://127.0.0.1/cameraStrasseImage" label="Strasse" refresh=2000
+					Image url="https://127.0.0.1/cameraAutomowerImage" label="Automower" refresh=5000
 				}
 			}
 			Frame label="Licht Bewegungsmelder" {
@@ -145,7 +145,7 @@ sitemap haus label="Main Menu"
                     Frame label="Reinigung" {
                         Text label="Karte" icon="map"
                         {
-                            Image url="http://127.0.0.1/roomba/map_notext.png" refresh=2000
+                            Image url="https://127.0.0.1/roomba/map_notext.png" refresh=2000
                         }
                         Text item=roomba_mssnM
                         Text item=roomba_sqm
@@ -189,7 +189,7 @@ sitemap haus label="Main Menu"
             Frame label="Garten" {
 				Text label="Kamera" icon="selfcamera"
 				{
-					Image url="http://127.0.0.1/cameraAutomowerImage" label="Automower" refresh=5000
+					Image url="https://127.0.0.1/cameraAutomowerImage" label="Automower" refresh=5000
 				}
                 Text label="Automower" item=MowerStatus {
                     Frame label="Status" {
@@ -386,8 +386,8 @@ sitemap haus label="Main Menu"
                 Group item=Sensor_Outdoor label="Aussen [MAP(group_motion.map):%d]" valuecolor=[!=CLOSED="red"]
                 Text label="Kameras" icon="selfcamera"
                 {
-                    Image url="http://127.0.0.1/cameraStrasseImage" label="Strasse Video" refresh=2000
-                    Image url="http://127.0.0.1/cameraAutomowerImage" label="Automower" refresh=5000
+                    Image url="https://127.0.0.1/cameraStrasseImage" label="Strasse Video" refresh=2000
+                    Image url="https://127.0.0.1/cameraAutomowerImage" label="Automower" refresh=5000
                 }
             }
             Frame label="Fenster & Türen"
