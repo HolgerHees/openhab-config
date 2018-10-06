@@ -16,8 +16,8 @@
 
 <script>
     listener = new InitializedListener();
-    addGrafanaPanel("Feuchtigkeit", listener.generateParams( "pflanzen", 1,1,1 ) );
-    addGrafanaPanel("Temperaturen", listener.generateParams( "pflanzen", 2,2,2 ) );
+    addGrafanaPanel("Feuchtigkeit", listener.generateParams( "plants/pflanzen", 1,1,1 ) );
+    addGrafanaPanel("Temperaturen", listener.generateParams( "plants/pflanzen", 2,2,2 ) );
     listener.initIFrames();
 </script>
 

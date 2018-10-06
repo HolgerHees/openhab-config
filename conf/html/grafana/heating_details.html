@@ -16,10 +16,10 @@
 
 <script>
     listener = new InitializedListener();
-    addGrafanaPanel("Outdoor_Temperatures"  , listener.generateParams( "heating", 2,2,2 ) );
-    addGrafanaPanel("Indoor_Temperatures"   , listener.generateParams( "heating", 3,3,3 ) );
-    addGrafanaPanel("Charged"               , listener.generateParams( "heating", 4,4,4 ) );
-    addGrafanaPanel("Power"                 , listener.generateParams( "heating", 5,5,5 ) );
+    addGrafanaPanel("Outdoor_Temperatures"  , listener.generateParams( "heating/heating", 2,2,2 ) );
+    addGrafanaPanel("Indoor_Temperatures"   , listener.generateParams( "heating/heating", 3,3,3 ) );
+    addGrafanaPanel("Charged"               , listener.generateParams( "heating/heating", 4,4,4 ) );
+    addGrafanaPanel("Power"                 , listener.generateParams( "heating/heating", 5,5,5 ) );
     listener.initIFrames();
 </script>
 

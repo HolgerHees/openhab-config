@@ -16,8 +16,8 @@
 
 <script>
     listener = new InitializedListener();
-    addGrafanaPanel("EG_Temperatures"       , listener.generateParams( "temperaturen-and-feuchtigkeit", 1,1,1 ) );
-    addGrafanaPanel("EG_Humidity"           , listener.generateParams( "temperaturen-and-feuchtigkeit", 5,5,5 ) );
+    addGrafanaPanel("EG_Temperatures"       , listener.generateParams( "temperatures/temperaturen-and-feuchtigkeit", 1,1,1 ) );
+    addGrafanaPanel("EG_Humidity"           , listener.generateParams( "temperatures/temperaturen-and-feuchtigkeit", 5,5,5 ) );
     listener.initIFrames();
 </script>
 

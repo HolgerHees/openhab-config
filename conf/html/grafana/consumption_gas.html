@@ -16,8 +16,8 @@
 
 <script>
     listener = new InitializedListener();
-    addGrafanaPanel("Consumption_Gas", listener.generateParams( "verbrauchsubersicht", 4,6,2 ) );
-    addGrafanaPanel("Consumption_Gas_Last_Year", listener.generateParams( "verbrauchsubersicht", 9,8,7 ) );
+    addGrafanaPanel("Consumption_Gas", listener.generateParams( "consumption/verbrauchsubersicht", 4,6,2 ) );
+    addGrafanaPanel("Consumption_Gas_Last_Year", listener.generateParams( "consumption/verbrauchsubersicht", 9,8,7 ) );
     listener.initIFrames();
 </script>
 
