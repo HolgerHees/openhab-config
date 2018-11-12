@@ -794,8 +794,7 @@ def forcedBufferCheckNeeded( self, now, referenceTargetDiff, currentCoolingPower
             else:
                 # 25 (0) => 60 (0)
                 # 40 (15) => 120 (60)
-                minutes = ( (currentCoolingPowerPerMinute - 25) * 60 / 15 ) + 60
-                
+                minutes = int( round( ( (currentCoolingPowerPerMinute - 25) * 60 / 15 ) + 60 ) )
                 # Too much forced heating > 90 minutes
                 if itemLastUpdateOlderThen("Heating_Demand",now.minusMinutes(minutes)):
                     self.log.info(u"Buffer  : Stop forced check • TIME LIMIT EXCEEDED" )
@@ -808,14 +807,14 @@ def forcedBufferCheckNeeded( self, now, referenceTargetDiff, currentCoolingPower
     else:
         # Not cold enough
         if currentCoolingPowerPerMinute < 25.0:
-            self.log.info(u"Buffer  : No forced check • COOLING MUST BE MORE THEN -{} W/min".format(MIN_COOLING_POWER_PER_MINUTE_TO_FORCE_BUFFER_HEATING) )
+            self.log.info(u"Buffer  : No forced check • COOLING MUST BE MORE THEN -{} W/min".format(25.0) )
             self.forcedBufferReferenceTemperature = None
         # Is not the right time. Only in the morning
-        elif not self.nightModeActive or not isNightModeTime(self,now.plusMinutes( LAZY_NIGHT_MODE_OFFSET_TIME )):
+        elif not self.nightModeActive or isNightModeTime(self,now.plusMinutes( LAZY_NIGHT_MODE_OFFSET_TIME )):
             self.log.info(u"Buffer  : No forced check • NOT THE RIGHT TIME" )
             self.forcedBufferReferenceTemperature = None
         # heating was active in the past 20 hours
-        elif not itemLastUpdateOlderThen("Heating_Demand",now.minusMinutes(1200)):
+        elif not itemLastUpdateOlderThen("Heating_Demand",now.minusMinutes(1080)): # 18 hours
             self.log.info(u"Buffer  : No forced check • WAS ACTIVE IN THE PAST" )
             self.forcedBufferReferenceTemperature = None
         else:
