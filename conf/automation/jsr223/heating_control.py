@@ -10,8 +10,6 @@ outdatetForecast = None
 openFFContacts = None
 openSFContacts = None
 
-LAZY_NIGHT_MODE_OFFSET_TIME = 120
-
 MAX_LAZY_CHARGE_LEVEL_TIME_SLOT = 35 #35min
 
 BEDROOM_REDUCTION = 3.0
@@ -144,13 +142,45 @@ def getStableValue( self, item, checkTimeRange ):
     # round to 1 decimal point like all "final" temperatures
     return round( value, 1 )
 
+#def getCurrentHeatingPowerPerMinuteTest( self ):
+    #2018-11-22 16:07:15.051 [INFO ] [heating_control.CalculateChargeLevel] - Heating : Diff 3.6°C • VL 35.5°C • RL 31.9°C
+    #2018-11-22 16:07:15.053 [INFO ] [heating_control.CalculateChargeLevel] -         : Speed 100.0% • Volume 0.54 m³ • HU 37.0 W/min.⇧
+
+#    pumpSpeed = 100.0
+#    if pumpSpeed == 0.0:
+#        return 0.0, pumpSpeed
+    
+#    _referencePower = 1162 # per Watt je m³/K
+#    _maxVolume = 1.2 # 1200l max Volumenstrom of a Vitodens 200-W Typ B2HA with 13kW
+
+#    outValue = 35.5
+#    inValue = 31.9
+#    circulationDiff = outValue - inValue
+#    pumpVolume = round( ( _maxVolume * pumpSpeed ) / 100.0, 2 )
+#    currentHeatingPowerPerMinute = round( ( _referencePower * pumpVolume * circulationDiff ) / 60.0, 1 )
+
+#    self.log.info(u"XXX : Diff {}°C • VL {}°C • RL {}°C".format(circulationDiff,outValue,inValue))
+#    self.log.info(u"XXX : Speed {}% • Volume {} m³ • HU {} W/min.⇧".format(pumpSpeed,pumpVolume,currentHeatingPowerPerMinute))
+
+#@rule("heating_control.py")
+#class TestRule:
+#    def __init__(self):
+#        self.triggers = [CronTrigger("*/15 * * * * ?")]
+#
+#    def execute(self, module, input):
+#        getCurrentHeatingPowerPerMinuteTest(self)
+#        pass
+
 def getCurrentHeatingPowerPerMinute( self, maxHeatingPowerPerMinute ):
     pumpSpeed = getItemState("Heating_Circuit_Pump_Speed").doubleValue()
     if pumpSpeed == 0.0:
         return 0.0, pumpSpeed
     
-    _referencePower = 1143 # per Watt je m³/K
-    _maxVolume = 0.54
+    # To warmup 1 liter of wather you need 4,182 Kilojoule
+    # 1 Wh == 3,6 kJ
+    # 1000 l * 4,182 kJ / 3,6kJ = 1161,66666667
+    _referencePower = 1162 # per Watt je m³/K
+    _maxVolume = 1.2 # 1200l max Volumenstrom of a Vitodens 200-W Typ B2HA with 13kW
 
     outValue = getItemState("Heating_Temperature_Pipe_Out").doubleValue()
     inValue = getItemState("Heating_Temperature_Pipe_In").doubleValue()
@@ -158,8 +188,8 @@ def getCurrentHeatingPowerPerMinute( self, maxHeatingPowerPerMinute ):
     pumpVolume = round( ( _maxVolume * pumpSpeed ) / 100.0, 2 )
     currentHeatingPowerPerMinute = round( ( _referencePower * pumpVolume * circulationDiff ) / 60.0, 1 )
 
-    #self.log.info("hc_inf","Heating : Diff "+circulationDiff+"°C • VL " + outValue + "°C • RL " + inValue + "°C")
-    #self.log.info("hc_dbg","        : Speed "+pumpSpeed+"% • Volume "+pumpVolume+" m³ • HU " + currentHeatingPowerPerMinute + " W/min. (" + calculatedHeatingPowerPerMinute + " W/min.) ⇧")
+    self.log.info(u"Heating : Diff {}°C • VL {}°C • RL {}°C".format(circulationDiff,outValue,inValue))
+    self.log.info(u"        : Speed {}% • Volume {} m³ • HU {} W/min.⇧".format(pumpSpeed,pumpVolume,currentHeatingPowerPerMinute))
 
     return currentHeatingPowerPerMinute, pumpSpeed
 
@@ -784,6 +814,16 @@ def calculateCoolingDownMinutes( self, additionalChargeLevel, currentCoolingPowe
         nightModeCoolingDownMinutes = 120
     return nightModeCoolingDownMinutes
 
+def getForcedBufferTimeOffset(self,currentCoolingPowerPerMinute):
+    # 25 (0) => 60 (0)
+    # 40 (15) => 120 (60)
+    #minutes = int( round( ( (currentCoolingPowerPerMinute - 25) * 60 / 15 ) + 60 ) )
+
+    # 25 (0) => 30 (0)
+    # 60 (35) => 120 (90)
+    minutes = int( round( ( (currentCoolingPowerPerMinute - 25) * 90 / 35 ) + 30 ) )
+    return minutes
+
 def forcedBufferCheckNeeded( self, now, isHeatingDemand, referenceTargetDiff, currentCoolingPowerPerMinute ):
     if isHeatingDemand:
         if self.forcedBufferReferenceTemperature != None:
@@ -792,9 +832,8 @@ def forcedBufferCheckNeeded( self, now, isHeatingDemand, referenceTargetDiff, cu
                 self.log.info(u"Buffer  : Stop forced check • ROOM IS WARMING UP" )
                 self.forcedBufferReferenceTemperature = None
             else:
-                # 25 (0) => 60 (0)
-                # 40 (15) => 120 (60)
-                minutes = int( round( ( (currentCoolingPowerPerMinute - 25) * 60 / 15 ) + 60 ) )
+                minutes = getForcedBufferTimeOffset(self,currentCoolingPowerPerMinute)
+                
                 # Too much forced heating > 90 minutes
                 if itemLastUpdateOlderThen("Heating_Demand",now.minusMinutes(minutes)):
                     self.log.info(u"Buffer  : Stop forced check • TIME LIMIT EXCEEDED" )
@@ -809,17 +848,20 @@ def forcedBufferCheckNeeded( self, now, isHeatingDemand, referenceTargetDiff, cu
         if currentCoolingPowerPerMinute < 25.0:
             self.log.info(u"Buffer  : No forced check • COOLING MUST BE MORE THEN -{} W/min".format(25.0) )
             self.forcedBufferReferenceTemperature = None
-        # Is not the right time. Only in the morning
-        elif not self.nightModeActive or isNightModeTime(self,now.plusMinutes( LAZY_NIGHT_MODE_OFFSET_TIME )):
-            self.log.info(u"Buffer  : No forced check • NOT THE RIGHT TIME" )
-            self.forcedBufferReferenceTemperature = None
-        # heating was active in the past 20 hours
-        elif not itemLastUpdateOlderThen("Heating_Demand",now.minusMinutes(1080)): # 18 hours
-            self.log.info(u"Buffer  : No forced check • WAS ACTIVE IN THE PAST" )
-            self.forcedBufferReferenceTemperature = None
         else:
-            self.log.info(u"Buffer  : Force check to prevent cold floors" )
-            self.forcedBufferReferenceTemperature = getItemState("Heating_Reference").doubleValue()
+            minutes = getForcedBufferTimeOffset(self,currentCoolingPowerPerMinute)
+            
+            # Is not the right time. Only in the morning
+            if not self.nightModeActive or isNightModeTime(self,now.plusMinutes( minutes )):
+                self.log.info(u"Buffer  : No forced check • NOT THE RIGHT TIME" )
+                self.forcedBufferReferenceTemperature = None
+            # heating was active in the past 20 hours
+            elif not itemLastUpdateOlderThen("Heating_Demand",now.minusMinutes(720)): # 12 hours
+                self.log.info(u"Buffer  : No forced check • WAS ACTIVE IN THE PAST" )
+                self.forcedBufferReferenceTemperature = None
+            else:
+                self.log.info(u"Buffer  : Force check to prevent cold floors" )
+                self.forcedBufferReferenceTemperature = getItemState("Heating_Reference").doubleValue()
 
     return self.forcedBufferReferenceTemperature != None
 
@@ -933,7 +975,7 @@ def controlHeating( self, now, heatingDemand ):
                 self.activeHeatingOperatingMode = 2
                 sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
                 self.log.info(u"       : Switch to 'Heizung mit WW' after {} minutes 'Reduziert'{}".format(timeInterval,forceRetryMsg))
-    
+
 @rule("heating_control.py")
 class CalculateChargeLevelRule:
     def __init__(self):
@@ -1113,8 +1155,8 @@ class HeatingCheckRule:
                     # it is too warm inside, but outside it is very cold, so we need some buffer heating to avoid cold floors
                     forceBufferCheck = forcedBufferCheckNeeded(self, now, isHeatingDemand, referenceTargetDiff, currentCoolingPowerPerMinute)
                 
-                    if referenceTargetDiff == 0.0 or forceBufferCheck:
-                        if isBufferHeating( self, isHeatingDemand, zoneLevelInPercent, startZoneLevel, stopZoneLevel ):
+                    if forceBufferCheck or referenceTargetDiff == 0.0:
+                        if forceBufferCheck or isBufferHeating( self, isHeatingDemand, zoneLevelInPercent, startZoneLevel, stopZoneLevel ):
                             heatingDemand = 1
                             heatingType = u"BUFFER HEATING NEEDED"
                         else:

@@ -520,6 +520,12 @@ sitemap haus label="Main Menu"
                         Switch item=Socket_Gardenside label="Aussen hinten"
                     }
                 }
+                Text label="Server" icon="selfcomputer"{
+                    Frame label="Auswertung" {
+                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="/static/grafana/server.html?fromItem=Chart_From" height=72
+                    }
+                }
             }
 		}
 	}
