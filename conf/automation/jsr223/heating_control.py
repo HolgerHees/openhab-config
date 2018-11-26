@@ -852,7 +852,7 @@ def forcedBufferCheckNeeded( self, now, isHeatingDemand, referenceTargetDiff, cu
             minutes = getForcedBufferTimeOffset(self,currentCoolingPowerPerMinute)
             
             # Is not the right time. Only in the morning
-            if not self.nightModeActive or isNightModeTime(self,now.plusMinutes( minutes )):
+            if not self.nightModeActive or now.getHourOfDay() > 12 or isNightModeTime(self,now.plusMinutes( minutes )):
                 self.log.info(u"Buffer  : No forced check • NOT THE RIGHT TIME" )
                 self.forcedBufferReferenceTemperature = None
             # heating was active in the past 20 hours
