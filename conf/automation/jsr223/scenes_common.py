@@ -73,6 +73,9 @@ class Scene4Rule:
     def execute(self, module, input):
         sendCommand("Lights_Indoor", OFF)
 
+        if getItemState("Motiondetector_Outdoor_Switch") == OFF:
+            sendCommand("Motiondetector_Outdoor_Switch", ON)
+
         postUpdate("Scene4", OFF)
 
 
