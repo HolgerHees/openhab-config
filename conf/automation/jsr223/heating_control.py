@@ -12,7 +12,8 @@ openSFContacts = None
 
 BEDROOM_REDUCTION = 3.0
 MIN_HEATING_TIME = 30 # 'Heizen mit WW' sollte mindestens 30 min aktiv sein
-    
+LAZY_TIME = 30 # Time in minutes before any heating has an impect
+
 def isOutdatetForecast(self, recheck = False):
     global outdatetForecast
     if recheck or outdatetForecast is None:
@@ -493,11 +494,11 @@ def isNightModeTime(self,reference):
     if _isMorning:
         # Monday - Friday
         if day <= 5:
-            if hour < 6 or ( hour == 6 and minute <= 15 ):
+            if hour < 6 or ( hour == 6 and minute <= 30 ):
                 _nightModeActive = True
         # Saturday and Sunday
         else:
-            if hour < 8 or ( hour == 8 and minute <= 15 ):
+            if hour < 8 or ( hour == 8 and minute <= 30 ):
                 _nightModeActive = True
     # Evening
     else:
@@ -516,38 +517,32 @@ def isNightMode( self, now, isHeatingDemand, coolingDownMinutes, heatingUpMinute
     reference = now
     hourOfTheDay = reference.getHourOfDay()
     
-    if not nightModeActive:
+    if not nightModeActive or hourOfTheDay > 12:
         startOffset = coolingDownMinutes if coolingDownMinutes > 0 else 0
+        minStartOffset = MIN_HEATING_TIME + LAZY_TIME
+        
+        # if heating not active, check if the night mode is far enough for a new heating cycle
+        if not isHeatingDemand and startOffset < minStartOffset:
+            startOffset = minStartOffset
 
-        # if heating not active, check if the nightmode is far enough for a new heating cycle
-        if not isHeatingDemand and startOffset < MIN_HEATING_TIME:
-            startOffset = MIN_HEATING_TIME
-            msg = u"start offset is {} min ({} min. => {} min.)".format(startOffset,coolingDownMinutes,MIN_HEATING_TIME)
-        else:
-            msg = u"start offset is {} min.".format(startOffset)
+        msg = u"start offset is {} min.".format(startOffset)
         
         reference = reference.plusMinutes( startOffset )
     else:
         endOffset = heatingUpMinutes if heatingUpMinutes > 0 else 0
 
-        # check early enough to have enough time for lazy warming uo
-        # add max 2 hours time offset for lazy warming up after heating
+        # check early enough to have enough time for lazy warming up
+        # add time offset for lazy warming up after heating
         if not isHeatingDemand and endOffset > 0:
-            lazyOffset = endOffset * 3
-            if lazyOffset > 120:
-                lazyOffset = 120
-            
-            endOffset = endOffset + lazyOffset
+            endOffset = endOffset + LAZY_TIME
 
-            msg = u"end offset is {} min ({} min. + {} min.)".format(endOffset,heatingUpMinutes,lazyOffset)
-        else:
-            msg = u"end offset is {} min.".format(endOffset)
+        msg = u"end offset is {} min.".format(endOffset)
         
         reference = reference.plusMinutes( endOffset )
         
     _isNightMode = isNightModeTime(self,reference)
     
-    self.log.info(u"        : Night mode {} • {}".format(msg, u"ON" if _isNightMode else u"OFF" ))
+    self.log.info(u"        : Night mode {} • {}".format(u"ON" if _isNightMode else u"OFF",msg))
 
     return _isNightMode
 
@@ -738,8 +733,8 @@ def calculateAdjustedTotalChargeLevel(self, currentLivingroomTemp, currentBedroo
         postUpdate("Heating_Reference", _referenceLivingroomTemp )
     return _totalChargeLevel
 
-def calculateNightReduction(self, now, isHeatingDemand, nightModeCoolingDownMinutes, nightModeHeatingUpMinutes):
-    self.nightModeActive = isNightMode( self, now, isHeatingDemand, nightModeCoolingDownMinutes, nightModeHeatingUpMinutes, self.nightModeActive )
+def calculateNightReduction(self, now, isHeatingDemand, coolingDownMinutes, heatingUpMinutes):
+    self.nightModeActive = isNightMode( self, now, isHeatingDemand, coolingDownMinutes, heatingUpMinutes, self.nightModeActive )
     return 2.0 if self.nightModeActive else 0.0
   
 def calculateTargetTemperatures(self, heatingTarget, nightReduction):
@@ -776,13 +771,8 @@ def calculateStopZoneLevel(self, startZoneLevel, currentCoolingPowerPerMinute, c
 def calculateHeatingUpMinutes(self, missingChargeLevel, availableHeatingPowerPerMinute):
     return int( round( missingChargeLevel / availableHeatingPowerPerMinute ) )
 
-def calculateCoolingDownMinutes( self, additionalChargeLevel, currentCoolingPowerPerMinute):        
-    nightModeCoolingDownMinutes = 120
-    if currentCoolingPowerPerMinute > 0.0:
-        nightModeCoolingDownMinutes = int( round( additionalChargeLevel / currentCoolingPowerPerMinute ) )
-    if nightModeCoolingDownMinutes > 120:
-        nightModeCoolingDownMinutes = 120
-    return nightModeCoolingDownMinutes
+def calculateCoolingDownMinutes( self, chargeLevel, currentCoolingPowerPerMinute):
+    return int( round( chargeLevel / currentCoolingPowerPerMinute ) ) if currentCoolingPowerPerMinute > 0.0 else 0
 
 def getForcedBufferTimeOffset(self,currentCoolingPowerPerMinute):
     # 25 (0) => 60 (0)
@@ -822,7 +812,7 @@ def forcedBufferHeatingCheck( self, now, isHeatingDemand, referenceTargetDiff, c
             minutes = getForcedBufferTimeOffset(self,currentCoolingPowerPerMinute)
             
             # Is not the right time. Only in the morning
-            if not self.nightModeActive or now.getHourOfDay() > 12 or isNightModeTime(self,now.plusMinutes( minutes )):
+            if not self.nightModeActive or now.getHourOfDay() > 12 or isNightModeTime(self,now.plusMinutes( minutes + LAZY_TIME )):
                 self.log.info(u"Buffer  : No forced check • NOT THE RIGHT TIME" )
                 self.forcedBufferReferenceTemperature = None
             # heating was active in the past 20 hours
