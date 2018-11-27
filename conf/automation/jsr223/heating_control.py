@@ -517,7 +517,7 @@ def isNightMode( self, now, isHeatingDemand, coolingDownMinutes, heatingUpMinute
     reference = now
     hourOfTheDay = reference.getHourOfDay()
     
-    if not nightModeActive or hourOfTheDay > 12:
+    if not nightModeActive:
         startOffset = coolingDownMinutes if coolingDownMinutes > 0 else 0
         minStartOffset = MIN_HEATING_TIME + LAZY_TIME
         
@@ -527,7 +527,11 @@ def isNightMode( self, now, isHeatingDemand, coolingDownMinutes, heatingUpMinute
 
         msg = u"start offset is {} min.".format(startOffset)
         
-        reference = reference.plusMinutes( startOffset )
+        if hourOfTheDay > 12:
+            reference = reference.plusMinutes( startOffset )
+            _isNightMode = isNightModeTime(self,reference)
+        else:
+            _isNightMode = nightModeActive
     else:
         endOffset = heatingUpMinutes if heatingUpMinutes > 0 else 0
 
@@ -538,9 +542,11 @@ def isNightMode( self, now, isHeatingDemand, coolingDownMinutes, heatingUpMinute
 
         msg = u"end offset is {} min.".format(endOffset)
         
-        reference = reference.plusMinutes( endOffset )
-        
-    _isNightMode = isNightModeTime(self,reference)
+        if hourOfTheDay < 12:
+            reference = reference.plusMinutes( endOffset )
+            _isNightMode = isNightModeTime(self,reference)
+        else:
+            _isNightMode = nightModeActive
     
     self.log.info(u"        : Night mode {} • {}".format(u"ON" if _isNightMode else u"OFF",msg))
 
