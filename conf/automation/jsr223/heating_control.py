@@ -11,7 +11,8 @@ openFFContacts = None
 openSFContacts = None
 
 BEDROOM_REDUCTION = 3.0
-
+MIN_HEATING_TIME = 30 # 'Heizen mit WW' sollte mindestens 30 min aktiv sein
+    
 def isOutdatetForecast(self, recheck = False):
     global outdatetForecast
     if recheck or outdatetForecast is None:
@@ -47,14 +48,11 @@ def getOpenWindows( self, reference, recheck = False ):
     return len(openFFContacts), len(openSFContacts)
 
 def getCloudData( self, cloudCoverItem ):
-    cloudCover = 0.0
     if not isOutdatetForecast(self,False):
-        cloudCover = getItemState(cloudCoverItem).doubleValue()
-    else:
-        self.log.info(u"Forecast: ERROR • Fall back to full cloud cover.")
-        cloudCover = 9.0
+        return getItemState(cloudCoverItem).doubleValue()
 
-    return cloudCover
+    self.log.info(u"Forecast: ERROR • Fall back to full cloud cover.")
+    return 9.0
 
 def getSunData( self, time ):
 
@@ -98,10 +96,8 @@ def getSunData( self, time ):
 def cleanupChargeLevel( self, totalChargeLevel, _cleanableChargeDiff ):
 
     _totalChargeLevel = totalChargeLevel - _cleanableChargeDiff
-    if _totalChargeLevel < 0.0:
-        _totalChargeLevel = 0.0
 
-    return round( _totalChargeLevel, 1 )
+    return round( _totalChargeLevel, 1 ) if _totalChargeLevel > 0.0 else 0.0
 
 def getStableValue( self, item, checkTimeRange ):
 
@@ -521,24 +517,21 @@ def isNightMode( self, now, isHeatingDemand, coolingDownMinutes, heatingUpMinute
     hourOfTheDay = reference.getHourOfDay()
     
     if not nightModeActive:
-        startOffset = coolingDownMinutes
-        if startOffset <= 0:
-            startOffset = 0
+        startOffset = coolingDownMinutes if coolingDownMinutes > 0 else 0
 
-        # add 30 min offset to avoid falling below min heating time
-        if not isHeatingDemand and startOffset < 60:
-            startOffset = 60
-            msg = u"start offset is {} min ({} min. => 60 min.)".format(startOffset,coolingDownMinutes)
+        # if heating not active, check if the nightmode is far enough for a new heating cycle
+        if not isHeatingDemand and startOffset < MIN_HEATING_TIME:
+            startOffset = MIN_HEATING_TIME
+            msg = u"start offset is {} min ({} min. => {} min.)".format(startOffset,coolingDownMinutes,MIN_HEATING_TIME)
         else:
             msg = u"start offset is {} min.".format(startOffset)
         
         reference = reference.plusMinutes( startOffset )
     else:
-        endOffset = heatingUpMinutes
-        if endOffset <= 0:
-            endOffset = 0
+        endOffset = heatingUpMinutes if heatingUpMinutes > 0 else 0
 
-        # add 1 hours offset because of lazy heating
+        # check early enough to have enough time for lazy warming uo
+        # add max 2 hours time offset for lazy warming up after heating
         if not isHeatingDemand and endOffset > 0:
             lazyOffset = endOffset * 3
             if lazyOffset > 120:
@@ -747,9 +740,7 @@ def calculateAdjustedTotalChargeLevel(self, currentLivingroomTemp, currentBedroo
 
 def calculateNightReduction(self, now, isHeatingDemand, nightModeCoolingDownMinutes, nightModeHeatingUpMinutes):
     self.nightModeActive = isNightMode( self, now, isHeatingDemand, nightModeCoolingDownMinutes, nightModeHeatingUpMinutes, self.nightModeActive )
-    if self.nightModeActive:
-        return 2.0
-    return 0.0
+    return 2.0 if self.nightModeActive else 0.0
   
 def calculateTargetTemperatures(self, heatingTarget, nightReduction):
     _targetLivingroomTemp = round( heatingTarget - nightReduction, 1 )
@@ -853,7 +844,6 @@ def controlHeating( self, now, heatingDemand ):
     # 4 - Normal
     
     minNurWWChangeMinutes = 15 # 'Nur WW' sollte mindestens 15 min aktiv sein
-    minMitWWChangeMinutes = 30 # 'Heizen mit WW' sollte mindestens 30 min aktiv sein
     
     currentOperatingMode = getItemState("Heating_Operating_Mode").intValue()
     
@@ -862,10 +852,7 @@ def controlHeating( self, now, heatingDemand ):
         self.activeHeatingOperatingMode = currentOperatingMode
     
     forceRetry = self.activeHeatingOperatingMode != currentOperatingMode
-    if forceRetry:
-        forceRetryMsg = " (RETRY)"
-    else:
-        forceRetryMsg = ""
+    forceRetryMsg = u" (RETRY)" if forceRetry else u""
     
     self.log.info(u"Current : {}".format(Transformation.transform("MAP", "heating_de.map", str(currentOperatingMode) )) )
     
@@ -891,7 +878,7 @@ def controlHeating( self, now, heatingDemand ):
         #if Heating_Circuit_Pump_Speed.state > 0:
         # Temperatur sollte seit XX min OK sein und Brenner sollte entweder nicht laufen oder mindestens XX min am Stück gelaufen sein
         if not isHeatingRequested:
-            isRunningLongEnough = itemLastUpdateOlderThen("Heating_Operating_Mode",now.minusMinutes(minMitWWChangeMinutes))
+            isRunningLongEnough = itemLastUpdateOlderThen("Heating_Operating_Mode",now.minusMinutes(MIN_HEATING_TIME))
             
             if currentPowerState == 0 or forceRetry or isRunningLongEnough:
                 self.activeHeatingOperatingMode = 1
