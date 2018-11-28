@@ -882,7 +882,7 @@ def controlHeating( self, now, heatingDemand ):
     forceRetry = self.activeHeatingOperatingMode != currentOperatingMode
     forceRetryMsg = u" (RETRY)" if forceRetry else u""
     
-    self.log.info(u"Current : {}".format(Transformation.transform("MAP", "heating_de.map", str(currentOperatingMode) )) )
+    self.log.info(u"Active  : {}".format(Transformation.transform("MAP", "heating_de.map", str(currentOperatingMode) )) )
     
     # Nur WW
     if currentOperatingMode == 1:
