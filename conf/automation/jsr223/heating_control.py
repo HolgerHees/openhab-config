@@ -1,18 +1,24 @@
 import math
 from org.joda.time import DateTime, DateTimeZone
+from org.joda.time.format import DateTimeFormat
 
-from marvin.helper import rule, getNow, getGroupMember, itemLastUpdateOlderThen, getHistoricItemState, getHistoricItemEntry, getItemState, getItem, postUpdate, postUpdateIfChanged, sendCommand
+from marvin.helper import rule, getNow, getGroupMember, itemLastUpdateOlderThen, getItemLastUpdate, getHistoricItemState, getHistoricItemEntry, getItemState, getItem, postUpdate, postUpdateIfChanged, sendCommand
 from openhab.triggers import CronTrigger, ItemStateChangeTrigger
 from openhab.actions import Transformation
 
-activeHeatingOperatingMode = -1
+OFFSET_FORMATTER = DateTimeFormat.forPattern("HH:mm")
+
+BEDROOM_REDUCTION = 3.0
+MIN_HEATING_TIME = 30 # 'Heizen mit WW' should be active at least for 30 min.
+
 outdatetForecast = None
 openFFContacts = None
 openSFContacts = None
 
-BEDROOM_REDUCTION = 3.0
-MIN_HEATING_TIME = 30 # 'Heizen mit WW' sollte mindestens 30 min aktiv sein
-LAZY_TIME = 30 # Time in minutes before any heating has an impect
+# Time after heating to see the full effect
+def getLazyTimeOffset(self,heatingMinutes):
+    minutes = int( round( heatingMinutes / 3.0 ) ) + 30
+    return minutes if minutes < 90 else 90
 
 def isOutdatetForecast(self, recheck = False):
     global outdatetForecast
@@ -519,36 +525,39 @@ def isNightMode( self, now, isHeatingDemand, coolingDownMinutes, heatingUpMinute
     
     if not nightModeActive:
         startOffset = coolingDownMinutes if coolingDownMinutes > 0 else 0
-        minStartOffset = MIN_HEATING_TIME + LAZY_TIME
+        minStartOffset = MIN_HEATING_TIME + getLazyTimeOffset(self,MIN_HEATING_TIME)
         
         # if heating not active, check if the night mode is far enough for a new heating cycle
         if not isHeatingDemand and startOffset < minStartOffset:
             startOffset = minStartOffset
 
-        msg = u"start offset is {} min.".format(startOffset)
-        
         if hourOfTheDay > 12:
             reference = reference.plusMinutes( startOffset )
             _isNightMode = isNightModeTime(self,reference)
         else:
             _isNightMode = nightModeActive
+            
+        msg = u"start check at {} • {} min.".format(OFFSET_FORMATTER.print(reference),startOffset)
+        
     else:
         endOffset = heatingUpMinutes if heatingUpMinutes > 0 else 0
+        lazyTime = 0
 
         # check early enough to have enough time for lazy warming up
         # add time offset for lazy warming up after heating
         if not isHeatingDemand and endOffset > 0:
-            endOffset = endOffset + LAZY_TIME
+            lazyTime = getLazyTimeOffset(self,endOffset)
+            endOffset = endOffset + lazyTime
 
-        msg = u"end offset is {} min.".format(endOffset)
-        
         if hourOfTheDay < 12:
             reference = reference.plusMinutes( endOffset )
             _isNightMode = isNightModeTime(self,reference)
         else:
             _isNightMode = nightModeActive
     
-    self.log.info(u"        : Night mode {} • {}".format(u"ON" if _isNightMode else u"OFF",msg))
+        msg = u"end check at {} • {} min. • {} min. lazy".format(OFFSET_FORMATTER.print(reference),endOffset,lazyTime)
+        
+    self.log.info(u"        : Night mode {}".format(msg))
 
     return _isNightMode
 
@@ -574,8 +583,8 @@ def logHeatingUpDownMinutesAndLazyReduction(self, nightModeHeatingUpMinutes, nig
     self.log.info(u"        : Max. LR {}°C • {}".format(possibleLazyReduction,_nightOffsetMessage) )
     postUpdateIfChanged("Heating_Night_Offset_Message", _nightOffsetMessage )
 
-def logHeatingReductionAndTemperatures(self, lazyReduction, outdoorReduction, currentLivingroomTemp, targetLivingroomTemp, currentBedroomTemp, targetBedroomTemp):
-    _heatingReductionsMessage = u"LR {}° ⇩ • OR {}°C ⇩".format(lazyReduction,outdoorReduction)
+def logHeatingReductionAndTemperatures(self, lazyReduction, outdoorReduction, nightReduction, currentLivingroomTemp, targetLivingroomTemp, currentBedroomTemp, targetBedroomTemp):
+    _heatingReductionsMessage = u"LR {}° ⇩ • OR {}°C ⇩• NR {}°C ⇩".format(lazyReduction,outdoorReduction,nightReduction)
     self.log.info(u"Effects : {}".format(_heatingReductionsMessage ))
     postUpdateIfChanged("Heating_Reduction_Message", _heatingReductionsMessage )
 
@@ -774,60 +783,83 @@ def calculateStopZoneLevel(self, startZoneLevel, currentCoolingPowerPerMinute, c
 
     return stopZoneLevel
 
-def calculateHeatingUpMinutes(self, missingChargeLevel, availableHeatingPowerPerMinute):
-    return int( round( missingChargeLevel / availableHeatingPowerPerMinute ) )
+def calculateForcedBufferHeatingTime(self, now, lastUpdate, slotHeatingPower, availableHeatingPowerPerMinute):
+  
+    # when was the last heating job
+    lastUpdateBeforeInMinutes = int( round( ( now.getMillis() - lastUpdate.getMillis() ) / 1000.0 / 60.0 ) )
 
-def calculateCoolingDownMinutes( self, chargeLevel, currentCoolingPowerPerMinute):
-    return int( round( chargeLevel / currentCoolingPowerPerMinute ) ) if currentCoolingPowerPerMinute > 0.0 else 0
+    if lastUpdateBeforeInMinutes < 360:
+        return 0, lastUpdateBeforeInMinutes
+      
+    # how long do we need to heat up 0.1°
+    neededMinutesPerSlot = int( round( slotHeatingPower / availableHeatingPowerPerMinute ) )
+    
+    # 6 hours => 1
+    # 12 hours => 2
+    # 18 hours => 3
+    # -------------
+    # multiplied, depending how long ago the last heating job was running
+    # 360 (0) => 1 (0)
+    # 1080 (720) => 3 (2)
+    factor = ( (lastUpdateBeforeInMinutes - 360.0) * 2.0 / 720.0 ) + 1.0
+    
+    # how long should the next heating job running
+    minutes = int( round( neededMinutesPerSlot * ( factor if factor < 3.0 else 3.0 ) ) )
 
-def getForcedBufferTimeOffset(self,currentCoolingPowerPerMinute):
-    # 25 (0) => 60 (0)
-    # 40 (15) => 120 (60)
-    #minutes = int( round( ( (currentCoolingPowerPerMinute - 25) * 60 / 15 ) + 60 ) )
+    return minutes, lastUpdateBeforeInMinutes
 
-    # 25 (0) => 30 (0)
-    # 60 (35) => 120 (90)
-    minutes = int( round( ( (currentCoolingPowerPerMinute - 25) * 90 / 35 ) + 30 ) )
-    return minutes
-
-def forcedBufferHeatingCheck( self, now, isHeatingDemand, referenceTargetDiff, currentCoolingPowerPerMinute ):
+def forcedBufferHeatingCheck( self, now, isHeatingDemand, referenceTargetDiff, slotHeatingPower, availableHeatingPowerPerMinute, currentCoolingPowerPerMinute ):
     if isHeatingDemand:
         if self.forcedBufferReferenceTemperature != None:
             # Room is warming up, so we have to stop previously forced checks
             if self.forcedBufferReferenceTemperature < getItemState("Heating_Reference").doubleValue():
-                self.log.info(u"Buffer  : Stop forced check • ROOM IS WARMING UP" )
+                self.log.info(u"        : Stop forced buffer • room is warming up" )
                 self.forcedBufferReferenceTemperature = None
             else:
-                minutes = getForcedBufferTimeOffset(self,currentCoolingPowerPerMinute)
+                # should never happen, ecept we reload the rule
+                maxRuntime = self.forcedBufferTime if self.forcedBufferTime > 0 else MIN_HEATING_TIME
                 
                 # Too much forced heating > 90 minutes
-                if itemLastUpdateOlderThen("Heating_Demand",now.minusMinutes(minutes)):
-                    self.log.info(u"Buffer  : Stop forced check • TIME LIMIT EXCEEDED" )
+                if itemLastUpdateOlderThen("Heating_Demand",now.minusMinutes( maxRuntime )):
+                    self.log.info(u"        : Stop forced buffer • runtime limit exceeded" )
                     self.forcedBufferReferenceTemperature = None
                 else:
-                    self.log.info(u"Buffer  : Continue forced heating • max {} min".format(minutes) )
+                    self.log.info(u"        : Continue forced heating • max {} min".format(maxRuntime) )
         else:
             # Keep everything like it is. This leaves the forcedBufferCheckActive untouched
-            self.log.info(u"Buffer  : No forced check • IS HEATING" )
+            self.log.info(u"        : No forced buffer • is heating already" )
     else:
         # Not cold enough
         if currentCoolingPowerPerMinute < 25.0:
-            self.log.info(u"Buffer  : No forced check • COOLING MUST BE MORE THEN -{} W/min".format(25.0) )
+            self.log.info(u"        : No forced buffer • not cold enough • max -{} W/min".format(25.0) )
             self.forcedBufferReferenceTemperature = None
         else:
-            minutes = getForcedBufferTimeOffset(self,currentCoolingPowerPerMinute)
+            lastHeating = getItemLastUpdate("Heating_Demand")
+            heatingMinutes, lastUpdateBeforeInMinutes = calculateForcedBufferHeatingTime(self, now, lastHeating, slotHeatingPower, availableHeatingPowerPerMinute)
             
-            # Is not the right time. Only in the morning
-            if not self.nightModeActive or now.getHourOfDay() > 12 or isNightModeTime(self,now.plusMinutes( minutes + LAZY_TIME )):
-                self.log.info(u"Buffer  : No forced check • NOT THE RIGHT TIME" )
-                self.forcedBufferReferenceTemperature = None
-            # heating was active in the past 20 hours
-            elif not itemLastUpdateOlderThen("Heating_Demand",now.minusMinutes(720)): # 12 hours
-                self.log.info(u"Buffer  : No forced check • WAS ACTIVE IN THE PAST" )
-                self.forcedBufferReferenceTemperature = None
+            if heatingMinutes > 0:              
+                # Is not the right time. Only in the morning
+                if not self.nightModeActive or now.getHourOfDay() > 12:
+                    self.log.info(u"        : No forced buffer • not the right time to heat {} min.".format(heatingMinutes) )
+                    self.forcedBufferReferenceTemperature = None
+                else:
+                    # how much lazy time should we apply, depends on the amount of heated up energy
+                    lazyMinutes = getLazyTimeOffset(self,heatingMinutes)
+                    
+                    #self.log.info(u"{} {}".format(heatingMinutes,lazyMinutes))
+
+                    # Is still in the night
+                    if isNightModeTime(self,now.plusMinutes( heatingMinutes + lazyMinutes )):
+                        self.log.info(u"        : No forced buffer • morning check at {} • {} min. • {} min. lazy".format( OFFSET_FORMATTER.print(now.plusMinutes(heatingMinutes)), heatingMinutes + lazyMinutes, lazyMinutes ) )
+                        self.forcedBufferReferenceTemperature = None
+                    # heating was active in the past 20 hours
+                    else:
+                        self.log.info(u"        : Force buffer to prevent cold floors" )
+                        self.forcedBufferReferenceTemperature = getItemState("Heating_Reference").doubleValue()
+                        self.forcedBufferTime = heatingMinutes
             else:
-                self.log.info(u"Buffer  : Force check to prevent cold floors" )
-                self.forcedBufferReferenceTemperature = getItemState("Heating_Reference").doubleValue()
+                self.log.info(u"        : No forced buffer • was running at {} • {} min.".format(OFFSET_FORMATTER.print(lastHeating),lastUpdateBeforeInMinutes) )
+                self.forcedBufferReferenceTemperature = None
 
     return self.forcedBufferReferenceTemperature != None
 
@@ -1003,6 +1035,7 @@ class HeatingCheckRule:
         ]
         self.nightModeActive = False
         self.forcedBufferReferenceTemperature = None
+        self.forcedBufferTime = -1
         self.activeHeatingOperatingMode = -1
 
     def execute(self, module, input):
@@ -1085,20 +1118,14 @@ class HeatingCheckRule:
         # Calculate reduction based on available energy (=> Calculation of additionalChargeLevel) to lazy warmup the house later
         # EXPECTED WARMUP ON ENERGY LEFTOVERS
         possibleLazyReduction = round( ( additionalChargeLevel / baseHeatingPower ) * 100.0 ) / 100.0
-
-        # Calculate expected duration to reach target temperature
-        heatingUpMinutes = calculateHeatingUpMinutes(self, missingChargeLevel, availableHeatingPowerPerMinute)
-        
-        # Calculate expected duration until we should heat again.
-        coolingDownMinutes = calculateCoolingDownMinutes(self, additionalChargeLevel, currentCoolingPowerPerMinute)
-        
-        # Log messages
-        logHeatingUpDownMinutesAndLazyReduction(self, heatingUpMinutes, coolingDownMinutes, possibleLazyReduction)
         
         # Calculate night reduction
         # Night reduction start is earlier on higher coolingDownMinutes
         # and night reduction stops earlier on higher heatingUpMinutes
-        nightReduction = calculateNightReduction(self, now, isHeatingDemand, coolingDownMinutes, heatingUpMinutes)
+        _heatingUpMinutes = int( round( missingChargeLevel / availableHeatingPowerPerMinute ) )
+        _coolingDownMinutes = int( round( additionalChargeLevel / currentCoolingPowerPerMinute ) ) if currentCoolingPowerPerMinute > 0.0 else 0
+        logHeatingUpDownMinutesAndLazyReduction(self, _heatingUpMinutes, _coolingDownMinutes, possibleLazyReduction)
+        nightReduction = calculateNightReduction(self, now, isHeatingDemand, _coolingDownMinutes, _heatingUpMinutes)
         
         # Calculate wanted target temperatures in livingroom and bedroom based on night reduction and bedroom/livingroom offset
         targetLivingroomTemp, targetBedroomTemp = calculateTargetTemperatures(self, heatingTarget, nightReduction)
@@ -1114,7 +1141,7 @@ class HeatingCheckRule:
         lazyReduction = 0.0 if isBufferHeatingNeeded else math.floor( possibleLazyReduction * 10.0 ) / 10.0
 
         # Some logs
-        logHeatingReductionAndTemperatures(self, lazyReduction, outdoorReduction, currentLivingroomTemp, targetLivingroomTemp, currentBedroomTemp, targetBedroomTemp)
+        logHeatingReductionAndTemperatures(self, lazyReduction, outdoorReduction, nightReduction, currentLivingroomTemp, targetLivingroomTemp, currentBedroomTemp, targetBedroomTemp)
         
         ### Analyse result
         if getItemState("Heating_Auto_Mode").intValue() == 1:
@@ -1131,14 +1158,17 @@ class HeatingCheckRule:
                     heatingType = u"HEATING NEEDED"
                 else:
                     # it is too warm inside, but outside it is very cold, so we need some buffer heating to avoid cold floors
-                    forceBufferHeating = forcedBufferHeatingCheck(self, now, isHeatingDemand, referenceTargetDiff, currentCoolingPowerPerMinute)
+                    forceBufferHeating = forcedBufferHeatingCheck(self, now, isHeatingDemand, referenceTargetDiff, slotHeatingPower, availableHeatingPowerPerMinute, currentCoolingPowerPerMinute)
                 
-                    if forceBufferHeating or referenceTargetDiff == 0.0:
-                        if forceBufferHeating or isBufferHeatingNeeded:
+                    if forceBufferHeating:
+                        heatingDemand = 1
+                        heatingType = u"FORCED BUFFER HEATING NEEDED"
+                    elif referenceTargetDiff == 0.0:
+                        if isBufferHeatingNeeded:
                             heatingDemand = 1
                             heatingType = u"BUFFER HEATING NEEDED"
                         else:
-                            heatingType = u"NO HEATING NEEDED • TARGET REACHED"
+                            heatingType = u"NO HEATING NEEDED • BUFFER FULL"
                     else:
                         heatingType = u"NO HEATING NEEDED • TOO WARM"
                 
