@@ -17,8 +17,8 @@ openSFContacts = None
 
 # Time after heating to see the full effect
 def getLazyTimeOffset(self,heatingMinutes):
-    minutes = int( round( heatingMinutes / 3.0 ) ) + 30
-    return minutes if minutes < 90 else 90
+    minutes = int( round( heatingMinutes / 3.0 ) ) + 60
+    return minutes if minutes < 120 else 120
 
 def isOutdatetForecast(self, recheck = False):
     global outdatetForecast
@@ -525,7 +525,8 @@ def isNightMode( self, now, isHeatingDemand, coolingDownMinutes, heatingUpMinute
     
     if not nightModeActive:
         startOffset = coolingDownMinutes if coolingDownMinutes > 0 else 0
-        minStartOffset = MIN_HEATING_TIME + getLazyTimeOffset(self,MIN_HEATING_TIME)
+        #minStartOffset = MIN_HEATING_TIME + getLazyTimeOffset(self,MIN_HEATING_TIME)
+        minStartOffset = getLazyTimeOffset(self,MIN_HEATING_TIME)
         
         # if heating not active, check if the night mode is far enough for a new heating cycle
         if not isHeatingDemand and startOffset < minStartOffset:
