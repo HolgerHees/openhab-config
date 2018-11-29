@@ -7,7 +7,6 @@ from openhab.triggers import CronTrigger, ItemStateChangeTrigger
 from openhab.actions import Transformation
 
 OFFSET_FORMATTER = DateTimeFormat.forPattern("HH:mm")
-JOB_TIME_FORMATTER = DateTimeFormat.forPattern("HH:mm:ss")
 
 BEDROOM_REDUCTION = 3.0
 MIN_HEATING_TIME = 30 # 'Heizen mit WW' should be active at least for 30 min.
@@ -1006,7 +1005,7 @@ class CalculateChargeLevelRule:
         # some logs
         self.log.info(u"        : CD {} W/min. ({}%) ⇧ • HU {} W/min. ({}°C) ⇩ • {} W charged".format(currentHeatingPowerPerMinute,currentPumpSpeedInPercent,( currentCoolingPowerPerMinute * -1 ),currentOutdoorTemp,totalChargeLevel) )
 
-        self.log.info(u"<<< {}".format(JOB_TIME_FORMATTER.print(now)))
+        self.log.info(u"<<<")
 
 @rule("heating_control.py")
 class HeatingCheckRule:
@@ -1169,4 +1168,4 @@ class HeatingCheckRule:
             self.log.info(u"Demand  : SKIPPED • MANUAL MODE ACTIVE")
             postUpdateIfChanged("Heating_Demand", 0 )
 
-        self.log.info(u"<<< {}".format(JOB_TIME_FORMATTER.print(now)))
+        self.log.info(u"<<<")

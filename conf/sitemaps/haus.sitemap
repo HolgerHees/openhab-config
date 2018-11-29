@@ -433,7 +433,7 @@ sitemap haus label="Main Menu"
                                 Webview url="/static/grafana/heating_details.html?fromItem=Chart_From" height=36
                             }
                             Frame {
-                                Webview url="/static/kibana/heating_logs.html" height=36
+                                Webview url="/static/logs/heating.html" height=36
                             }
                         }
                         Text item=Heating_Temperature_Room_Target

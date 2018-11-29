@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+      html, body { 
+          height: 100%; margin: 0; overflow: hidden;
+          font-family: "Open Sans", Helvetica, Arial, sans-serif;
+          font-weight: 400;
+          font-size: 12px;
+          background-color: white;
+          color: #2D2D2D;
+      }
+      body.phone {
+          background-color: black;
+          color: white;
+      }
+      #result {
+          display: table;
+          width: 100%;
+      }
+      
+      #result .row {
+          display: table-row;
+      }
+
+      #result .column {
+          display: table-cell;
+          padding: 1px 3px;
+      }
+      #result .column.separator {
+          padding: 0;
+          border-top: 1px solid #666;
+      }
+    </style>
+</head>
+<body>
+<div id="result">
+</div>
+<script>
+  var isPhone = ( navigator.userAgent.indexOf("Android") != -1 && navigator.userAgent.indexOf("Mobile") != -1 );
+  
+  if( isPhone ) document.getElementsByTagName("body")[0].className="phone";
+      
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "/elasticsearch/_all/_search?sort=@timestamp:desc&size=100&q=group:openhab%20AND%20level:INFO%20AND%20(class:*CalculateChargeLevel*%20OR%20class:*HeatingCheck*)");
+  xhr.onload = function() 
+  {  
+      var data = JSON.parse(this.response);
+      //console.log(data);
+      
+      var tableElement = document.getElementById("result");
+      
+      var tableContent = "";
+      
+      for( i = 0; i < data.hits.hits.length; i++ )
+      {
+          var entry = data.hits.hits[i];
+          //console.log(entry._source["@timestamp"] + " " + entry._source["message"] );
+          
+          tableContent += "<div class=\"row\">";
+          
+          var parts = entry._source["message"].split(":");
+          
+          if( parts[0] == ">>>" )
+          {
+              tableContent += "<div class=\"column separator\"></div>";
+              tableContent += "<div class=\"column separator\"></div>";
+          }
+          else if( parts[0] == "<<<" )
+          {
+              var dt = new Date( Date.parse(entry._source["@timestamp"]) );
+              
+              tableContent += "<div class=\"column\"></div>";
+              tableContent += "<div class=\"column\">" + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds() + "</div>";
+          }
+          else
+          {
+              tableContent += "<div class=\"column\">" + parts[0] + "</div>";
+              tableContent += "<div class=\"column\">" + parts[1] + "</div>";
+          }
+          
+          tableContent += "</div>";
+      }
+      
+      tableElement.innerHTML = tableContent;
+  }
+  xhr.send();
+</script>
+</body>
+</html>
