@@ -16,14 +16,14 @@
 
 <script>
     listener = new InitializedListener();
-    addGrafanaPanel("CPU_Utilisation", listener.generateParams( "server/server", 2,2,2 ) );
-    addGrafanaPanel("CPU_Load", listener.generateParams( "server/server", 4,4,4 ) );
-    addGrafanaPanel("Net_IO", listener.generateParams( "server/server", 10,10,10 ) );
-    addGrafanaPanel("Disk_IO", listener.generateParams( "server/server", 6,6,6 ) );
-    addGrafanaPanel("Memory", listener.generateParams( "server/server", 8,8,8 ) );
-    addGrafanaPanel("Data_Raid", listener.generateParams( "server/server", 12,12,12 ) );
-    addGrafanaPanel("Data_Disk", listener.generateParams( "server/server", 14,14,14 ) );
-    addGrafanaPanel("Root", listener.generateParams( "server/server", 16,16,16 ) );
+    addGrafanaPanel("CPU_Utilisation", listener.generateParams( "server-health/server-health", 2,2,2 ) );
+    addGrafanaPanel("CPU_Load", listener.generateParams( "server-health/server-health", 4,4,4 ) );
+    addGrafanaPanel("Net_IO", listener.generateParams( "server-health/server-health", 10,10,10 ) );
+    addGrafanaPanel("Disk_IO", listener.generateParams( "server-health/server-health", 6,6,6 ) );
+    addGrafanaPanel("Memory", listener.generateParams( "server-health/server-health", 8,8,8 ) );
+    addGrafanaPanel("Data_Raid", listener.generateParams( "server-health/server-health", 12,12,12 ) );
+    addGrafanaPanel("Data_Disk", listener.generateParams( "server-health/server-health", 14,14,14 ) );
+    addGrafanaPanel("Root", listener.generateParams( "server-health/server-health", 16,16,16 ) );
     listener.initIFrames();
 </script>
 
