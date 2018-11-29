@@ -7,6 +7,7 @@ from openhab.triggers import CronTrigger, ItemStateChangeTrigger
 from openhab.actions import Transformation
 
 OFFSET_FORMATTER = DateTimeFormat.forPattern("HH:mm")
+JOB_TIME_FORMATTER = DateTimeFormat.forPattern("HH:mm:ss")
 
 BEDROOM_REDUCTION = 3.0
 MIN_HEATING_TIME = 30 # 'Heizen mit WW' should be active at least for 30 min.
@@ -573,38 +574,25 @@ def getHeatingTargetDiff( self, currentLivingroomTemp, targetLivingroomTemp, cur
     return round( difference, 1 )
 
 def logChargeMessages(self, additionalChargeLevel, currentChargeLevel, totalChargeLevel, zoneLevelInPercent):
-    _chargeLevelMessage = u"{} W Current • {} W Total".format(currentChargeLevel,totalChargeLevel) 
-    postUpdateIfChanged("Heating_Max_LR_Message", _chargeLevelMessage )
-    self.log.info(u"Charged : {} • {}%".format(_chargeLevelMessage,zoneLevelInPercent) )
-    _currentChargedMessage = u"{} W • {}%".format(additionalChargeLevel,zoneLevelInPercent)
-    postUpdateIfChanged("Heating_Charged_Message", _currentChargedMessage )
+    self.log.info(u"Charged : {} W Current • {} W Total • {}%".format(currentChargeLevel,totalChargeLevel,zoneLevelInPercent) )
 
 def logHeatingUpDownMinutesAndLazyReduction(self, nightModeHeatingUpMinutes, nightModeCoolingDownMinutes, possibleLazyReduction):
-    _nightOffsetMessage = u"NHU {} min. ⇧ • NCD {} min. ⇩".format(nightModeHeatingUpMinutes,nightModeCoolingDownMinutes)
-    self.log.info(u"        : Max. LR {}°C • {}".format(possibleLazyReduction,_nightOffsetMessage) )
-    postUpdateIfChanged("Heating_Night_Offset_Message", _nightOffsetMessage )
+    self.log.info(u"        : Max. LR {}°C • NHU {} min. ⇧ • NCD {} min. ⇩".format(possibleLazyReduction,nightModeHeatingUpMinutes,nightModeCoolingDownMinutes) )
 
 def logHeatingReductionAndTemperatures(self, lazyReduction, outdoorReduction, nightReduction, currentLivingroomTemp, targetLivingroomTemp, currentBedroomTemp, targetBedroomTemp):
-    _heatingReductionsMessage = u"LR {}° ⇩ • OR {}°C ⇩• NR {}°C ⇩".format(lazyReduction,outdoorReduction,nightReduction)
-    self.log.info(u"Effects : {}".format(_heatingReductionsMessage ))
-    postUpdateIfChanged("Heating_Reduction_Message", _heatingReductionsMessage )
-
+    self.log.info(u"Effects : LR {}° ⇩ • OR {}°C ⇩• NR {}°C ⇩".format(lazyReduction,outdoorReduction,nightReduction ))
     self.log.info(u"Rooms   : Livingroom {}°C (⇒ {}°C) • Bedroom {}°C (⇒ {}°)".format(currentLivingroomTemp,targetLivingroomTemp,currentBedroomTemp,targetBedroomTemp))
         
 def calculateCurrentForecast8CoolingPowerPerMinute(self, now, currentOutdoorForecast8Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, ffOpenWindowCount15, sfOpenWindowCount15):
     _sunPower, _effectiveSouthRadiation, _effectiveWestRadiation = getSunPowerPerMinute( self, u"Forecast: 8h •", now.plusMinutes(480), "Cloud_Cover_Forecast8", True )
     _currentForecast8CoolingPowerPerMinute = getCoolingPowerPerMinute( self, u"        :", currentOutdoorForecast8Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, _sunPower, ffOpenWindowCount15, sfOpenWindowCount15 )
-    _forecast8CDMessage = u"CD {} W/min. ({}°C) ⇩".format(( _currentForecast8CoolingPowerPerMinute * -1 ),currentOutdoorForecast8Temp)
-    self.log.info(u"        : {}".format(_forecast8CDMessage) )
-    postUpdateIfChanged("Heating_Forecast8_CD_Message", _forecast8CDMessage )
+    self.log.info(u"        : CD {} W/min. ({}°C) ⇩".format(( _currentForecast8CoolingPowerPerMinute * -1 ),currentOutdoorForecast8Temp) )
     return _currentForecast8CoolingPowerPerMinute
 
 def calculateCurrentForecast4CoolingPowerPerMinute(self, now, currentOutdoorForecast4Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, ffOpenWindowCount15, sfOpenWindowCount15):
     _sunPower, _effectiveSouthRadiation, _effectiveWestRadiation = getSunPowerPerMinute( self, u"Forecast: 4h •", now.plusMinutes(240), "Cloud_Cover_Forecast4", True )
     _currentForecast4CoolingPowerPerMinute = getCoolingPowerPerMinute( self, u"        :", currentOutdoorForecast4Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, _sunPower, ffOpenWindowCount15, sfOpenWindowCount15 )
-    _forecast4CDMessage = u"CD {} W/min. ({}°C) ⇩".format(( _currentForecast4CoolingPowerPerMinute * -1 ),currentOutdoorForecast4Temp)
-    self.log.info(u"        : {}".format(_forecast4CDMessage) )
-    postUpdateIfChanged("Heating_Forecast4_CD_Message", _forecast4CDMessage )
+    self.log.info(u"        : CD {} W/min. ({}°C) ⇩".format(( _currentForecast4CoolingPowerPerMinute * -1 ),currentOutdoorForecast4Temp) )
     return _currentForecast4CoolingPowerPerMinute
 
 def calculateOutdoorReduction(self, currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, currentForecast8CoolingPowerPerMinute):
@@ -644,10 +632,8 @@ def calculateAvailableHeatingPowerPerMinute(self, maxHeatingPowerPerMinute, curr
         _possibleHeatingPowerPerMinute = round( ( maxHeatingPowerPerMinute * _possiblePumpSpeedInPercent ) / 100.0, 1 )
         _possibleSuffix = u" POSSIBLE"
         
-    _currentCDMessage = u"CD {} W/min. ({}°C) ⇩".format(( currentCoolingPowerPerMinute * -1 ),currentOutdoorTemp)
-    _possibleHUMessage = u"HU {} W/min. ({}%){} ⇧".format(_possibleHeatingPowerPerMinute,_possiblePumpSpeedInPercent,_possibleSuffix)
-    self.log.info(u"        : {} • {}".format(_currentCDMessage,_possibleHUMessage) )
-    postUpdateIfChanged("Heating_Forecast_HU_Message", _possibleHUMessage )
+    self.log.info(u"        : CD {} W/min. ({}°C) ⇩ • HU {} W/min. ({}%){} ⇧".format(( currentCoolingPowerPerMinute * -1 ),currentOutdoorTemp,_possibleHeatingPowerPerMinute,_possiblePumpSpeedInPercent,_possibleSuffix) )
+
     return round( _possibleHeatingPowerPerMinute - currentCoolingPowerPerMinute, 1 )
 
 def _calculateCurrentCoolingPowerPerMinute(self, now, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, isChargeLevelCalculation ):
@@ -780,7 +766,6 @@ def calculateStopZoneLevel(self, startZoneLevel, currentCoolingPowerPerMinute, c
         _zoneMessage = u"{}% • too warm outside".format(stopZoneLevel)
   
     self.log.info(u"Zone    : {}".format(_zoneMessage) )
-    postUpdateIfChanged("Heating_Zone_Message", _zoneMessage )
 
     return stopZoneLevel
 
@@ -990,10 +975,10 @@ class CalculateChargeLevelRule:
         self.triggers = [CronTrigger("15 * * * * ?")]
 
     def execute(self, module, input):
-        self.log.info(u">>>")
-
         now = getNow()
         
+        self.log.info(u">>>")
+
         currentLivingroomTemp = getStableValue( self, "Temperature_FF_Livingroom", 10 )
         currentBedroomTemp = getStableValue( self, "Temperature_SF_Bedroom", 10 )
         currentAtticTemp = getStableValue( self, "Temperature_SF_Attic", 10 )
@@ -1019,13 +1004,9 @@ class CalculateChargeLevelRule:
         postUpdateIfChanged("Heating_Charged", totalChargeLevel )
 
         # some logs
-        currentHUMessage = u"{} W/min. ({}%) ⇧".format(currentHeatingPowerPerMinute,currentPumpSpeedInPercent)
-        currentCDMessage = u"{} W/min. ({}°C) ⇩".format(( currentCoolingPowerPerMinute * -1 ),currentOutdoorTemp)
-        self.log.info(u"        : CD {} • HU {} • {} W charged".format(currentCDMessage,currentHUMessage,totalChargeLevel) )
-        postUpdateIfChanged("Heating_Current_HU_Message", currentHUMessage )
-        postUpdateIfChanged("Heating_Current_CD_Message", currentCDMessage )
+        self.log.info(u"        : CD {} W/min. ({}%) ⇧ • HU {} W/min. ({}°C) ⇩ • {} W charged".format(currentHeatingPowerPerMinute,currentPumpSpeedInPercent,( currentCoolingPowerPerMinute * -1 ),currentOutdoorTemp,totalChargeLevel) )
 
-        self.log.info(u"<<<")
+        self.log.info(u"<<< {}".format(JOB_TIME_FORMATTER.print(now)))
 
 @rule("heating_control.py")
 class HeatingCheckRule:
@@ -1040,12 +1021,12 @@ class HeatingCheckRule:
         self.activeHeatingOperatingMode = -1
 
     def execute(self, module, input):
+        now = getNow()
+
         self.log.info(u">>>")
         
         startZoneLevel = 0
         
-        now = getNow()
-
         # not changed since 6 hours.
         forecast4Item = "Temperature_Garden_Forecast4"
         forecast8Item = "Temperature_Garden_Forecast8"
@@ -1188,4 +1169,4 @@ class HeatingCheckRule:
             self.log.info(u"Demand  : SKIPPED • MANUAL MODE ACTIVE")
             postUpdateIfChanged("Heating_Demand", 0 )
 
-        self.log.info(u"<<<")
+        self.log.info(u"<<< {}".format(JOB_TIME_FORMATTER.print(now)))

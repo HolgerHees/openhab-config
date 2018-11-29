@@ -7,16 +7,6 @@ Number Heating_Temperature_Livingroom_Target	"Ziel Wohnzimmer"				<settings>			(
 Number Heating_Temperature_Bedroom_Target		"Ziel Schlafzimmer"				<settings>			(PersistentHistory)
 Number Heating_Charged							"Geladen [%.1f]"				<settings>			(PersistentChart,PersistentHistory)
 Number Heating_Reference						"Referenz [%.1f]"				<settings>
-String Heating_Charged_Message					"Geladen [%s]"					<settings>
-String Heating_Zone_Message						"Zone [%s]"						<settings>
-String Heating_Max_LR_Message					"Max. LR [%s]"					<settings>
-String Heating_Night_Offset_Message				"Nacht Modus [%s]"				<settings>
-String Heating_Reduction_Message				"Reduzierungen [%s]"			<settings>
-String Heating_Current_HU_Message				"HU [%s]"						<settings>
-String Heating_Current_CD_Message				"CD [%s]"						<settings>
-String Heating_Forecast_HU_Message				"HU [%s]"						<settings>
-String Heating_Forecast4_CD_Message				"CD [%s]"						<settings>
-String Heating_Forecast8_CD_Message				"CD [%s]"						<settings>
 Number Heating_Demand							"Heizung [%d]"					<settings>
 Number Solar_Power								"Solar Power [%.1f]"			<settings>			(PersistentChart,PersistentHistory,Solar_Temperatures)
 

@@ -429,22 +429,11 @@ sitemap haus label="Main Menu"
                     Frame label="Sensordaten" {
                         Text item=Heating_Demand label="Berechnungsdetails (Tag) [MAP(yes_no_de.map):%d]" icon="fire-on"{
                             Frame {
-                                Text item=Air_FF_Livingroom_Message 
-                                Text item=Air_SF_Bedroom_Message 
-                                Text item=Heating_Demand label="Heizungsbedarf [MAP(yes_no_de.map):%d]"
-                                Text item=Heating_Charged_Message label="Charge [%s]"
-                                Text item=Heating_Zone_Message label="Ziel [%s]"
-                                Text item=Heating_Forecast_HU_Message label="Ist / FC [%s]"
-                                Text item=Heating_Current_CD_Message label="Ist [CD %s]"
-                                Text item=Heating_Forecast4_CD_Message label="FC4 [%s]"
-                                Text item=Heating_Forecast8_CD_Message label="FC8 [%s]"
-                                Text item=Heating_Reduction_Message label="R. [%s]"
-                                Text item=Heating_Max_LR_Message label="M. [%s]"
-                                Text item=Heating_Night_Offset_Message label="Nacht [%s]"
-                            }
-                            Frame {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                                 Webview url="/static/grafana/heating_details.html?fromItem=Chart_From" height=36
+                            }
+                            Frame {
+                                Webview url="/static/kibana/heating_logs.html" height=36
                             }
                         }
                         Text item=Heating_Temperature_Room_Target
