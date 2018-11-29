@@ -854,7 +854,7 @@ def forcedBufferHeatingCheck( self, now, isHeatingDemand, referenceTargetDiff, s
                         self.forcedBufferReferenceTemperature = None
                     # heating was active in the past 20 hours
                     else:
-                        self.log.info(u"        : Force buffer to prevent cold floors" )
+                        self.log.info(u"        : Force buffer to prevent cold floors until {} • {} min.".format(OFFSET_FORMATTER.print(now.plusMinutes(heatingMinutes)),heatingMinutes) )
                         self.forcedBufferReferenceTemperature = getItemState("Heating_Reference").doubleValue()
                         self.forcedBufferTime = heatingMinutes
             else:
