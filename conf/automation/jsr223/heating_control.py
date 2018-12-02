@@ -10,6 +10,7 @@ OFFSET_FORMATTER = DateTimeFormat.forPattern("HH:mm")
 
 BEDROOM_REDUCTION = 3.0
 MIN_HEATING_TIME = 30 # 'Heizen mit WW' should be active at least for 30 min.
+MIN_ONLY_WW_TIME = 15 # 'Nur WW' should be active at least for 15 min.
 
 outdatetForecast = None
 openFFContacts = None
@@ -449,7 +450,7 @@ def getCoolingPowerPerMinute( self, logPrefix, outdoorTemperature, livingroomTem
     leakingMsg = round( ( leakingPowerInW / 60.0 ) * -10.0 ) / 10.0
     windowMsg = round( ( ( egExchangePower + ogExchangePower ) / 60.0 ) * -10.0 ) / 10.0
 
-    self.log.info(u"{} Building {} • Air {} • Leak {} • Window {} • Sun {}".format(logPrefix, baseMsg, ventilationMsg, leakingMsg, windowMsg, sunPower) )
+    self.log.info(u"{} Wall {} • Air {} • Leak {} • Window {} • Sun {}".format(logPrefix, baseMsg, ventilationMsg, leakingMsg, windowMsg, sunPower) )
 
     totalPower = ( floorPower + egPower + ogPower + atticPower ) + ventilationPowerInW + leakingPowerInW + egExchangePower + ogExchangePower
 
@@ -572,16 +573,6 @@ def getHeatingTargetDiff( self, currentLivingroomTemp, targetLivingroomTemp, cur
 
     return round( difference, 1 )
 
-def logChargeMessages(self, additionalChargeLevel, currentChargeLevel, totalChargeLevel, zoneLevelInPercent):
-    self.log.info(u"Charged : {} W Current • {} W Total • {}%".format(currentChargeLevel,totalChargeLevel,zoneLevelInPercent) )
-
-def logHeatingUpDownMinutesAndLazyReduction(self, nightModeHeatingUpMinutes, nightModeCoolingDownMinutes, possibleLazyReduction):
-    self.log.info(u"        : Max. LR {}°C • NHU {} min. ⇧ • NCD {} min. ⇩".format(possibleLazyReduction,nightModeHeatingUpMinutes,nightModeCoolingDownMinutes) )
-
-def logHeatingReductionAndTemperatures(self, lazyReduction, outdoorReduction, nightReduction, currentLivingroomTemp, targetLivingroomTemp, currentBedroomTemp, targetBedroomTemp):
-    self.log.info(u"Effects : LR {}° ⇩ • OR {}°C ⇩• NR {}°C ⇩".format(lazyReduction,outdoorReduction,nightReduction ))
-    self.log.info(u"Rooms   : Livingroom {}°C (⇒ {}°C) • Bedroom {}°C (⇒ {}°)".format(currentLivingroomTemp,targetLivingroomTemp,currentBedroomTemp,targetBedroomTemp))
-        
 def calculateCurrentForecast8CoolingPowerPerMinute(self, now, currentOutdoorForecast8Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, ffOpenWindowCount15, sfOpenWindowCount15):
     _sunPower, _effectiveSouthRadiation, _effectiveWestRadiation = getSunPowerPerMinute( self, u"Forecast: 8h •", now.plusMinutes(480), "Cloud_Cover_Forecast8", True )
     _currentForecast8CoolingPowerPerMinute = getCoolingPowerPerMinute( self, u"        :", currentOutdoorForecast8Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, _sunPower, ffOpenWindowCount15, sfOpenWindowCount15 )
@@ -753,20 +744,16 @@ def calculateCurrentZoneLevel(self, additionalChargeLevel, slotHeatingPower, ava
 
 def calculateStopZoneLevel(self, startZoneLevel, currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, slotHeatingPower):
     stopZoneLevel = 0
+    maxLazyChargeLevel = 0
     _zoneMessage = ""
     if currentCoolingPowerPerMinute > 0.0 and currentForecast4CoolingPowerPerMinute > 0.0:
-        # calculate max charge level for 35min
-        maxLazyChargeLevel = round( 35 * currentForecast4CoolingPowerPerMinute, 1 )
+        # calculate max charge level for 30 min
+        maxLazyChargeLevel = round( MIN_HEATING_TIME * currentForecast4CoolingPowerPerMinute, 1 )
         if maxLazyChargeLevel < slotHeatingPower:
             maxLazyChargeLevel = slotHeatingPower
         stopZoneLevel = int( round( maxLazyChargeLevel * 100.0 / slotHeatingPower ) )
-        _zoneMessage = u"{} W • {}% ... {}%".format(maxLazyChargeLevel,startZoneLevel,stopZoneLevel)
-    else:
-        _zoneMessage = u"{}% • too warm outside".format(stopZoneLevel)
   
-    self.log.info(u"Zone    : {}".format(_zoneMessage) )
-
-    return stopZoneLevel
+    return stopZoneLevel, maxLazyChargeLevel
 
 def calculateForcedBufferHeatingTime(self, now, lastUpdate, slotHeatingPower, availableHeatingPowerPerMinute):
   
@@ -848,15 +835,13 @@ def forcedBufferHeatingCheck( self, now, isHeatingDemand, referenceTargetDiff, s
 
     return self.forcedBufferReferenceTemperature != None
 
-def controlHeating( self, now, heatingDemand ):
+def controlHeating( self, now, heatingDemand, heatingTarget, currentOutdoorTemp, currentLivingroomTemp ):
 
     # 0 - Abschalten
     # 1 - Nur WW
     # 2 - Heizen mit WW
     # 3 - Reduziert
     # 4 - Normal
-    
-    minNurWWChangeMinutes = 15 # 'Nur WW' sollte mindestens 15 min aktiv sein
     
     currentOperatingMode = getItemState("Heating_Operating_Mode").intValue()
     
@@ -865,7 +850,7 @@ def controlHeating( self, now, heatingDemand ):
         self.activeHeatingOperatingMode = currentOperatingMode
     
     forceRetry = self.activeHeatingOperatingMode != currentOperatingMode
-    forceRetryMsg = u" (RETRY)" if forceRetry else u""
+    forceRetryMsg = u" • RETRY" if forceRetry else u""
     
     self.log.info(u"Active  : {}".format(Transformation.transform("MAP", "heating_de.map", str(currentOperatingMode) )) )
     
@@ -873,15 +858,16 @@ def controlHeating( self, now, heatingDemand ):
     if currentOperatingMode == 1:
         # Temperatur sollte seit XX min nicht OK sein und 'Nur WW' sollte mindestens XX min aktiv sein um 'flattern' zu vermeiden
         if isHeatingRequested:
-            isRunningLongEnough = itemLastUpdateOlderThen("Heating_Operating_Mode", now.minusMinutes(minNurWWChangeMinutes))
+            isRunningLongEnough = itemLastUpdateOlderThen("Heating_Operating_Mode", now.minusMinutes(MIN_ONLY_WW_TIME))
             
             if forceRetry or isRunningLongEnough:
                 self.activeHeatingOperatingMode = 2
                 sendCommand("Heating_Operating_Mode", self.activeHeatingOperatingMode)
             elif not isRunningLongEnough:
-                forceRetryMsg = u" (SKIPPED)"
+                runtimeInMinutes = int( round( ( now.getMillis() - getItemLastUpdate("Heating_Operating_Mode").getMillis() ) / 1000.0 / 60.0 ) )
+                forceRetryMsg = u" • SKIPPED • offtime is {} min.".format(runtimeInMinutes)
 
-            self.log.info(u"        : Switch to 'Heizung mit WW' after 'Nur WW'{}".format(forceRetryMsg))
+            self.log.info(u"Switch  : Nur WW => Heizen mit WW{}".format(forceRetryMsg))
 
     # Heizen mit WW
     elif currentOperatingMode == 2:
@@ -898,9 +884,10 @@ def controlHeating( self, now, heatingDemand ):
                 sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
                 sendCommand("Heating_Livingroom_Circuit",ON)
             elif not isRunningLongEnough:
-                forceRetryMsg = u" (SKIPPED)"
+                runtimeInMinutes = int( round( ( now.getMillis() - getItemLastUpdate("Heating_Operating_Mode").getMillis() ) / 1000.0 / 60.0 ) )
+                forceRetryMsg = u" • SKIPPED • runtime is {} min.".format(runtimeInMinutes)
 
-            self.log.info(u"        : Switch to 'Nur WW' after 'Heizung mit WW'{}".format(forceRetryMsg))
+            self.log.info(u"Switch  : Heizen mit WW => Nur WW{}".format(forceRetryMsg))
               
         # Brenner läuft nicht
         elif currentPowerState == 0:
@@ -931,20 +918,19 @@ def controlHeating( self, now, heatingDemand ):
                 self.activeHeatingOperatingMode = 3
                 sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
                 sendCommand("Heating_Livingroom_Circuit",ON)
-                self.log.info(u"        : Switch to 'Reduziert' after 'Heizung mit WW'{}".format(forceRetryMsg))
+                self.log.info(u"Switch  : Heizen mit WW => Reduziert{}".format(forceRetryMsg))
         else:
-            livingroomTemperature = getItemState("Temperature_FF_Livingroom").doubleValue()
-            targetTemperature = getItemState("Temperature_Room_Target").doubleValue() + 0.2
+            targetTemperature = heatingTarget + 0.2
             
             #// Wenn Kreis an... Überprüfe ob es im WZ zu warm ist
             if getItemState("Heating_Livingroom_Circuit") == ON:
-                if livingroomTemperature > targetTemperature and itemLastUpdateOlderThen("Heating_Operating_Mode",now.minusMinutes(10)):
+                if currentLivingroomTemp > targetTemperature and itemLastUpdateOlderThen("Heating_Operating_Mode",now.minusMinutes(10)):
                     sendCommand("Heating_Livingroom_Circuit",OFF)
-                    self.log.info(u"        : Switch Wohnzimmerkreis OFF{}".format(forceRetryMsg))
+                    self.log.info(u"Switch  : Wohnzimmerkreis OFF{}".format(forceRetryMsg))
             # Wenn Kreis aus... überprüfe ob es im WZ zu kalt ist
-            elif livingroomTemperature < targetTemperature:
+            elif currentLivingroomTemp < targetTemperature:
                 sendCommand("Heating_Livingroom_Circuit",ON)
-                self.log.info(u"        : Switch Wohnzimmerkreis ON{}".format(forceRetryMsg))
+                self.log.info(u"Switch  : Wohnzimmerkreis ON{}".format(forceRetryMsg))
     
     # Reduziert
     elif currentOperatingMode == 3:
@@ -952,13 +938,13 @@ def controlHeating( self, now, heatingDemand ):
         if not isHeatingRequested:
             self.activeHeatingOperatingMode = 1
             sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
-            self.log.info(u"        : Switch to 'Nur WW' after 'Reduziert'. Temperature reached max value{}".format(forceRetryMsg))
+            self.log.info(u"Switch  : Reduziert => Nur WW. Temperature reached max value{}".format(forceRetryMsg))
         else:
             # 'timeInterval' ist zwischen 10 und 60 min, je nach Aussentemperatur
             
             timeInterval = 10
-            if getItemState("Heating_Temperature_Outdoor").doubleValue() > 0:
-                timeInterval = int( math.floor( ( ( getItemState("Heating_Temperature_Outdoor").doubleValue() * 50.0 ) / 20.0 ) + 10.0 ) )
+            if currentOutdoorTemp > 0:
+                timeInterval = int( math.floor( ( ( currentOutdoorTemp * 50.0 ) / 20.0 ) + 10.0 ) )
                 if timeInterval > 60:
                     timeInterval = 60
             
@@ -966,7 +952,7 @@ def controlHeating( self, now, heatingDemand ):
             if forceRetry or itemLastUpdateOlderThen("Heating_Operating_Mode",now.minusMinutes(timeInterval) ):
                 self.activeHeatingOperatingMode = 2
                 sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
-                self.log.info(u"        : Switch to 'Heizung mit WW' after {} minutes 'Reduziert'{}".format(timeInterval,forceRetryMsg))
+                self.log.info(u"Switch  : Reduziert => Heizen mit WW • after {} min.{}".format(timeInterval,forceRetryMsg))
 
 @rule("heating_control.py")
 class CalculateChargeLevelRule:
@@ -1091,21 +1077,25 @@ class HeatingCheckRule:
         zoneLevelInPercent = calculateCurrentZoneLevel(self, additionalChargeLevel, slotHeatingPower, availableHeatingPowerPerMinute, baseHeatingPower)
     
         # Zone Level (BUFFER LEVEL) to stop buffer heating. Is based on cooling power.
-        stopZoneLevel = calculateStopZoneLevel(self, startZoneLevel, currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, slotHeatingPower)
+        stopZoneLevel, _maxLazyChargeLevel = calculateStopZoneLevel(self, startZoneLevel, currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, slotHeatingPower)
 
         # Some log messages about charge values
-        logChargeMessages(self, additionalChargeLevel, currentChargeLevel, totalChargeLevel, zoneLevelInPercent)
-
-        # Calculate reduction based on available energy (=> Calculation of additionalChargeLevel) to lazy warmup the house later
-        # EXPECTED WARMUP ON ENERGY LEFTOVERS
-        possibleLazyReduction = round( ( additionalChargeLevel / baseHeatingPower ) * 100.0 ) / 100.0
+        _totalLazyChargeMsg = u" ({} W)".format(totalChargeLevel) if currentChargeLevel != totalChargeLevel else u""
+        self.log.info(u"Charged : {} W{} Total • {}% of Zone: {} W • {}% ... {}%".format( currentChargeLevel, _totalLazyChargeMsg, zoneLevelInPercent, _maxLazyChargeLevel, startZoneLevel, stopZoneLevel) )
+          
+        # Calculate reduction based on available energy (=> Calculation of currentChargeLevel) to lazy warmup the house later
+        # EXPECTED WARMUP TO REACH TARGET.
+        # Here we calculate lazy reduction to reach 'referenceTargetDiff == 0' earlier        
+        # Then we are able to check with 'isBufferHeating' if additionalChargeLevel is enough to stop heating 
+        lazyReduction = round( ( ( currentChargeLevel - additionalChargeLevel ) / baseHeatingPower ) * 10.0 ) / 10.0
+        #lazyReduction = 0.0 if isBufferHeatingNeeded else math.floor( _possibleLazyReduction * 10.0 ) / 10.0
         
         # Calculate night reduction
         # Night reduction start is earlier on higher coolingDownMinutes
         # and night reduction stops earlier on higher heatingUpMinutes
         _heatingUpMinutes = int( round( missingChargeLevel / availableHeatingPowerPerMinute ) )
         _coolingDownMinutes = int( round( additionalChargeLevel / currentCoolingPowerPerMinute ) ) if currentCoolingPowerPerMinute > 0.0 else 0
-        logHeatingUpDownMinutesAndLazyReduction(self, _heatingUpMinutes, _coolingDownMinutes, possibleLazyReduction)
+        self.log.info(u"        : NHU {} min. ⇧ • NCD {} min. ⇩".format(_heatingUpMinutes,_coolingDownMinutes) )
         nightReduction = calculateNightReduction(self, now, isHeatingDemand, _coolingDownMinutes, _heatingUpMinutes)
         
         # Calculate wanted target temperatures in livingroom and bedroom based on night reduction and bedroom/livingroom offset
@@ -1114,15 +1104,9 @@ class HeatingCheckRule:
         # Calculate missing degrees to reach target temperature
         heatingTargetDiff = getHeatingTargetDiff( self, currentLivingroomTemp, targetLivingroomTemp, currentBedroomTemp, targetBedroomTemp )
         
-        # Check if buffer heating is needed
-        isBufferHeatingNeeded = isBufferHeating( self, isHeatingDemand, zoneLevelInPercent, startZoneLevel, stopZoneLevel )
-        
-        # Calculate lazy reduction
-        # Can be disabled if the zone is too low.
-        lazyReduction = 0.0 if isBufferHeatingNeeded else math.floor( possibleLazyReduction * 10.0 ) / 10.0
-
         # Some logs
-        logHeatingReductionAndTemperatures(self, lazyReduction, outdoorReduction, nightReduction, currentLivingroomTemp, targetLivingroomTemp, currentBedroomTemp, targetBedroomTemp)
+        self.log.info(u"Effects : LR {}° ⇩ • OR {}°C ⇩• NR {}°C ⇩".format(lazyReduction,outdoorReduction,nightReduction ))
+        self.log.info(u"Rooms   : Livingroom {}°C (⇒ {}°C) • Bedroom {}°C (⇒ {}°)".format(currentLivingroomTemp,targetLivingroomTemp,currentBedroomTemp,targetBedroomTemp))
         
         ### Analyse result
         if getItemState("Heating_Auto_Mode").intValue() == 1:
@@ -1145,6 +1129,9 @@ class HeatingCheckRule:
                         heatingDemand = 1
                         heatingType = u"FORCED BUFFER HEATING NEEDED"
                     elif referenceTargetDiff == 0.0:
+                        # Check if buffer heating is needed
+                        isBufferHeatingNeeded = isBufferHeating( self, isHeatingDemand, zoneLevelInPercent, startZoneLevel, stopZoneLevel )
+        
                         if isBufferHeatingNeeded:
                             heatingDemand = 1
                             heatingType = u"BUFFER HEATING NEEDED"
@@ -1163,7 +1150,7 @@ class HeatingCheckRule:
             postUpdateIfChanged("Heating_Demand", heatingDemand )
         
             ### Call heating control
-            controlHeating(self,now,heatingDemand)
+            controlHeating(self,now,heatingDemand,heatingTarget,currentOutdoorTemp,currentLivingroomTemp)
         else:
             self.log.info(u"Demand  : SKIPPED • MANUAL MODE ACTIVE")
             postUpdateIfChanged("Heating_Demand", 0 )

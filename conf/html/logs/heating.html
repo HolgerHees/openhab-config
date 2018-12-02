@@ -31,6 +31,9 @@
           padding: 0;
           border-top: 1px solid #666;
       }
+      #result .column.time {
+          font-weight: 600;
+      }
     </style>
 </head>
 <body>
@@ -71,12 +74,12 @@
               var dt = new Date( Date.parse(entry._source["@timestamp"]) );
               
               tableContent += "<div class=\"column\"></div>";
-              tableContent += "<div class=\"column\">" + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds() + "</div>";
+              tableContent += "<div class=\"column time\">" + ( dt.getHours() < 10 ? "0" : "" ) + dt.getHours() + ":" + ( dt.getMinutes() < 10 ? "0" : "" ) + dt.getMinutes() + ":" + ( dt.getSeconds() < 10 ? "0" : "" ) + dt.getSeconds() + "</div>";
           }
           else
           {
               tableContent += "<div class=\"column\">" + parts[0] + "</div>";
-              tableContent += "<div class=\"column\">" + parts[1] + "</div>";
+              tableContent += "<div class=\"column\">" + parts.slice(1).join(":") + "</div>";
           }
           
           tableContent += "</div>";
