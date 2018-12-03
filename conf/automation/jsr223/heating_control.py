@@ -765,6 +765,7 @@ class HeatingCheckRule(HeatingHelper):
             _possibleHeatingPowerPerMinute = currentHeatingPowerPerMinute
             _possiblePumpSpeedMsg = u"{}%".format(currentPumpSpeedInPercent)
         else:
+            # Estimation is based on 100% heating pump speed and a max heating water temperature of 32°C
             _possibleHeatingPowerPerMinute, _possiblePumpVolume = self.getHeatingPowerPerMinute( 100.0, 32.0, currentLivingroomTemp )
             _possiblePumpSpeedMsg = u"POSSIBLE"
             
