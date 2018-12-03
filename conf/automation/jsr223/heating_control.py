@@ -305,8 +305,8 @@ class HeatingHelper:
         return currentHeatingPowerPerMinute, pumpVolume
     
     def getCurrentHeatingPowerPerMinute( self ):
-        pumpSpeed = getItemState("Heating_Circuit_Pump_Speed").doubleValue()
-        if pumpSpeed == 0.0:
+        pumpSpeed = getItemState("Heating_Circuit_Pump_Speed").intValue()
+        if pumpSpeed == 0:
             return 0.0, pumpSpeed
         
         currentHeatingPowerPerMinute, pumpVolume = self.getHeatingPowerPerMinute(pumpSpeed,outValue,inValue)
@@ -568,10 +568,19 @@ class HeatingCheckRule(HeatingHelper):
         
         isHeatingDemand = getItemState("Heating_Demand").intValue() == 1
 
-        # Get Needed enegy to warmup the house by one dergees
+        # Get open windows during the last 15 min
+        ffOpenWindowCount15, sfOpenWindowCount15 = self.getOpenWindows( now.minusMinutes(15) )
+
+        # Get Needed energy to warmup the house by one degrees
         baseHeatingPower = self.getNeededEnergyForOneDegrees( currentLivingroomTemp,currentBedroomTemp)
         # Get Heating power for 0.1 °C
         slotHeatingPower = round( baseHeatingPower * 0.1, 1 )
+
+        # Calculate cooling power in 8h
+        currentForecast8CoolingPowerPerMinute = self.calculateCurrentForecast8CoolingPowerPerMinute( now, currentOutdoorForecast8Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, ffOpenWindowCount15, sfOpenWindowCount15)
+
+        # Calculate cooling power in 4h
+        currentForecast4CoolingPowerPerMinute = self.calculateCurrentForecast4CoolingPowerPerMinute( now, currentOutdoorForecast4Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, ffOpenWindowCount15, sfOpenWindowCount15)
 
         # Calculate the "real" heating power based on the pump speed.
         currentHeatingPowerPerMinute, currentPumpSpeedInPercent = self.getCurrentHeatingPowerPerMinute()
@@ -579,36 +588,27 @@ class HeatingCheckRule(HeatingHelper):
         # Calculate current cooling power per minute, based on temperature differences, sun power and open windows
         currentCoolingPowerPerMinute = self.calculateCurrentCoolingPowerPerMinute( now, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp)
         
-        # Calculate "available" heating power. Thats means current or possible heating power - curent cooling power
+        # Calculate "available" heating power. Thats means current or possible heating power - current cooling power
         # This is the leftover to warmup the house
         availableHeatingPowerPerMinute = self.calculateAvailableHeatingPowerPerMinute( currentOutdoorTemp, currentHeatingPowerPerMinute, currentCoolingPowerPerMinute, currentPumpSpeedInPercent,currentLivingroomTemp)
-        
-        # Get open windows during the last 15 min
-        ffOpenWindowCount15, sfOpenWindowCount15 = self.getOpenWindows( now.minusMinutes(15) )
-        
-        # Calculate cooling power in 4h
-        currentForecast4CoolingPowerPerMinute = self.calculateCurrentForecast4CoolingPowerPerMinute( now, currentOutdoorForecast4Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, ffOpenWindowCount15, sfOpenWindowCount15)
-    
-        # Calculate cooling power in 8h
-        currentForecast8CoolingPowerPerMinute = self.calculateCurrentForecast8CoolingPowerPerMinute( now, currentOutdoorForecast8Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, ffOpenWindowCount15, sfOpenWindowCount15)
-        
+
         # Calculate reduction based on the current sun heating or the expected (forecast based) sun heating
         # This reduces the target temperature by the expected sun warmup and stops heating earlier, because sun heating is lazy.
         # EXPECTED LAZY SUN WARMUP
         outdoorReduction = self.calculateOutdoorReduction( currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, currentForecast8CoolingPowerPerMinute)
         
-        # Calculate the charge level ajusted by possible heated up 0.1°C levels
+        # Calculate the charge level adjusted by possible heated up 0.1°C levels
         # currentChargeLevel - means the current house charge level
         # additionalChargeLevel - Value higher than 0 means we have more energy than needed to reach our target temperature
         # missingChargeLevel - Value higher than 0 means we need more energy to reach our target temperature
         currentChargeLevel, additionalChargeLevel, missingChargeLevel = self.calculcateCurrentChargeLevel(totalChargeLevel, currentLivingroomTemp, baseHeatingPower, heatingTarget, outdoorReduction)
     
-        # Current Zone Level (BUFFER LEVEL). 100% means enough energy to warmup the hous by 0.1°C (slot)
+        # Current Zone Level (BUFFER LEVEL). 100% means enough energy to warmup the house by 0.1°C (slot)
         # Can be more then 100%
         zoneLevelInPercent = self.calculateCurrentZoneLevel( additionalChargeLevel, slotHeatingPower, availableHeatingPowerPerMinute, baseHeatingPower)
     
         # Zone Level (BUFFER LEVEL) to stop buffer heating. Is based on cooling power.
-        stopZoneLevel, _maxLazyChargeLevel = self.calculateStopZoneLevel( startZoneLevel, currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, slotHeatingPower)
+        stopZoneLevel, _maxLazyChargeLevel = self.calculateStopZoneLevel( currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, slotHeatingPower)
 
         # Some log messages about charge values
         _totalLazyChargeMsg = u" ({} W)".format(totalChargeLevel) if currentChargeLevel != totalChargeLevel else u""
@@ -767,7 +767,7 @@ class HeatingCheckRule(HeatingHelper):
         else:
             # Estimation is based on 100% heating pump speed and a max heating water temperature of 32°C
             _possibleHeatingPowerPerMinute, _possiblePumpVolume = self.getHeatingPowerPerMinute( 100.0, 32.0, currentLivingroomTemp )
-            _possiblePumpSpeedMsg = u"POSSIBLE"
+            _possiblePumpSpeedMsg = u"FC"
             
         self.log.info(u"        : CD {} W/min. ({}°C) ⇩ • HU {} W/min. ({}) ⇧".format(( currentCoolingPowerPerMinute * -1 ),currentOutdoorTemp,_possibleHeatingPowerPerMinute,_possiblePumpSpeedMsg) )
 
@@ -858,14 +858,12 @@ class HeatingCheckRule(HeatingHelper):
         self.log.info(u"Slot    : {} KW/K • {} W/0.1K • {} min. ⇧".format(_baseHeatingPowerInKW,slotHeatingPower,_timeToHeatSlot) )
         return int( round( ( additionalChargeLevel * 100.0 ) / slotHeatingPower ) )
 
-    def calculateStopZoneLevel(self, startZoneLevel, currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, slotHeatingPower):
+    def calculateStopZoneLevel(self, currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute,slotHeatingPower):
         if currentCoolingPowerPerMinute > 0.0 and currentForecast4CoolingPowerPerMinute > 0.0:
-            # calculate max charge level for 30 min
-            maxLazyChargeLevel = round( MIN_HEATING_TIME * currentForecast4CoolingPowerPerMinute, 1 )
-            if maxLazyChargeLevel < slotHeatingPower:
-                maxLazyChargeLevel = slotHeatingPower
-            stopZoneLevel = int( round( maxLazyChargeLevel * 100.0 / slotHeatingPower ) )
-            return stopZoneLevel, maxLazyChargeLevel
+            # calculate max charge level for 45 min
+            neededLazyChargeLevel = round( ( MIN_HEATING_TIME + MIN_ONLY_WW_TIME ) * currentForecast4CoolingPowerPerMinute, 1 )
+            stopZoneLevel = int( round( neededLazyChargeLevel * 100.0 / slotHeatingPower ) )
+            return stopZoneLevel, neededLazyChargeLevel
         return 0,0
 
     def isBufferHeating( self, isHeatingDemand, zoneLevel, startZoneLevel, stopZoneLevel ):
