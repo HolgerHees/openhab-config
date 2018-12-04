@@ -353,22 +353,13 @@ class HeatingHelper:
         #if atticPower < 0.0: atticPower = 0.0
 
         # *** Calculate power loss by ventilation ***
-        #_ventilationLevel = getItemState("Ventilation_Incoming").intValue()
-        #_ventilationTempDiff = getItemState("Ventilation_Indoor_Outgoing_Temperature").doubleValue() - getItemState("Ventilation_Indoor_Incoming_Temperature").doubleValue()        
         _ventilationLevel = getItemState("Ventilation_Outgoing").intValue()
         _ventilationTempDiff = getItemState("Ventilation_Outdoor_Outgoing_Temperature").doubleValue() - getItemState("Ventilation_Outdoor_Incoming_Temperature").doubleValue()
-
-        ventilationOffset = 0
+        # apply outdoor temperature changes to ventilation in / out difference
         if outdoorTempReference != outdoorTemperature:
-            # getting colder
-            if outdoorTempReference > outdoorTemperature:
-                ventilationOffset = ( outdoorTempReference - outdoorTemperature ) / 4
-            else:
-                pass
-        _ventilationTempDiff = _ventilationTempDiff + ventilationOffset
-        #self.log.info(u"{}".format(ventilationOffset))
-        #if _ventilationTempDiff < 0.0: _ventilationTempDiff = 0.0
-        
+            ventilationOffset = ( outdoorTempReference - outdoorTemperature ) / 4
+            if _ventilationTempDiff + ventilationOffset > 0:
+                _ventilationTempDiff = _ventilationTempDiff + ventilationOffset
         # Ventilation Power
         # 15% => 40m³/h		XX => ?
         # 100% => 350m³/h		85 => 310
