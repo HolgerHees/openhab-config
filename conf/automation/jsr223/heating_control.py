@@ -268,8 +268,8 @@ class HeatingHelper:
         _lowerVolume = 231.8911
         _upperVolume = 216.5555
 
-        _lowerFloorPower = 8840.2507013889
-        _upperFloorPower = 5821.6669694445
+        _lowerFloorPower = 10380.7042847222
+        _upperFloorPower = 5876.25113611111
 
         _lowerDensity = ( ( livingroomTemperature - 15.0 ) * ( _minDensity - maxDensity ) / 15.0 ) + maxDensity
         if _lowerDensity < _minDensity:
@@ -309,6 +309,9 @@ class HeatingHelper:
         if pumpSpeed == 0:
             return 0.0, pumpSpeed
         
+        outValue = getItemState("Heating_Temperature_Pipe_Out").doubleValue()
+        inValue = getItemState("Heating_Temperature_Pipe_In").doubleValue()
+
         currentHeatingPowerPerMinute, pumpVolume = self.getHeatingPowerPerMinute(pumpSpeed,outValue,inValue)
 
         self.log.info(u"Heating : Diff {}°C • VL {}°C • RL {}°C".format(circulationDiff,outValue,inValue))
@@ -330,10 +333,11 @@ class HeatingHelper:
         _e = 0.07
         _f = 15.0
 
-        _floorUValue = 17.1337491
-        _egUValue = 53.28108965
-        _ogUValue = 43.8325976
-        _atticUValue = 14.3699714
+        # https://www.ubakus.de/u-wert-rechner/
+        _floorUValue = 24.0798636
+        _egUValue = 56.78375865
+        _ogUValue = 46.6798656
+        _atticUValue = 15.6883174
 
         # https://www.u-wert.net
         floorPower = _floorUValue * ( livingroomTemperature - outdoorTemperature )
@@ -475,7 +479,7 @@ class CalculateChargeLevelRule(HeatingHelper):
 
         # some logs
         self.log.info(u"        : CD {} W/min. ({}°C) ⇧ • HU {} W/min. ({}%) ⇩".format(( currentCoolingPowerPerMinute * -1 ),currentOutdoorTemp,currentHeatingPowerPerMinute,currentPumpSpeedInPercent) )
-        self.log.info(u"Charged : {} W Total".format(totalChargeLevel) )
+        self.log.info(u"Charged : {} W total incl. buffer".format(totalChargeLevel) )
 
         self.log.info(u"<<<")
 
@@ -544,7 +548,7 @@ class HeatingCheckRule(HeatingHelper):
 
         self.log.info(u">>>")
         
-        startZoneLevel = 0
+        minBufferChargeLevel = 0
         
         # not changed since 6 hours.
         forecast4Item = "Temperature_Garden_Forecast4"
@@ -603,16 +607,20 @@ class HeatingCheckRule(HeatingHelper):
         # missingChargeLevel - Value higher than 0 means we need more energy to reach our target temperature
         currentChargeLevel, additionalChargeLevel, missingChargeLevel = self.calculcateCurrentChargeLevel(totalChargeLevel, currentLivingroomTemp, baseHeatingPower, heatingTarget, outdoorReduction)
     
-        # Current Zone Level (BUFFER LEVEL). 100% means enough energy to warmup the house by 0.1°C (slot)
-        # Can be more then 100%
-        zoneLevelInPercent = self.calculateCurrentZoneLevel( additionalChargeLevel, slotHeatingPower, availableHeatingPowerPerMinute, baseHeatingPower)
-    
         # Zone Level (BUFFER LEVEL) to stop buffer heating. Is based on cooling power.
-        stopZoneLevel, _maxLazyChargeLevel = self.calculateStopZoneLevel( currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, slotHeatingPower)
+        maxBufferChargeLevel = self.calculateMaxBufferChargeLevel( currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, slotHeatingPower)
 
         # Some log messages about charge values
+        _timeToHeatSlot = int( round( slotHeatingPower / availableHeatingPowerPerMinute ) )
+        _baseHeatingPowerInKW = round( baseHeatingPower / 1000.0, 1 )
+        self.log.info(u"Slot    : {} KW/K • {} W/0.1K • {} min. ⇧".format(_baseHeatingPowerInKW,slotHeatingPower,_timeToHeatSlot) )
+
+        _timeToHeatBuffer = int( round( maxBufferChargeLevel / availableHeatingPowerPerMinute ) )
+        _bufferFilledInPercent = int( round( additionalChargeLevel * 100 / maxBufferChargeLevel, 0 ) )
+        self.log.info(u"Buffer  : {}% filled • {} W ... {} W • {} min. ⇧".format( _bufferFilledInPercent, minBufferChargeLevel, maxBufferChargeLevel, _timeToHeatBuffer) )
+
         _totalLazyChargeMsg = u" ({} W)".format(totalChargeLevel) if currentChargeLevel != totalChargeLevel else u""
-        self.log.info(u"Charged : {} W{} Total • {}% of Zone: {} W • {}% ... {}%".format( currentChargeLevel, _totalLazyChargeMsg, zoneLevelInPercent, _maxLazyChargeLevel, startZoneLevel, stopZoneLevel) )
+        self.log.info(u"Charged : {} W{} total incl. buffer".format( currentChargeLevel, _totalLazyChargeMsg) )
           
         # Calculate reduction based on available energy (=> Calculation of currentChargeLevel) to lazy warmup the house later
         # EXPECTED WARMUP TO REACH TARGET.
@@ -661,7 +669,7 @@ class HeatingCheckRule(HeatingHelper):
                         heatingType = u"FORCED BUFFER HEATING NEEDED"
                     elif referenceTargetDiff == 0.0:
                         # Check if buffer heating is needed
-                        isBufferHeatingNeeded = self.isBufferHeating( isHeatingDemand, zoneLevelInPercent, startZoneLevel, stopZoneLevel )
+                        isBufferHeatingNeeded = self.isBufferHeating( isHeatingDemand, additionalChargeLevel, minBufferChargeLevel, maxBufferChargeLevel )
         
                         if isBufferHeatingNeeded:
                             heatingDemand = 1
@@ -709,13 +717,13 @@ class HeatingCheckRule(HeatingHelper):
         return _targetLivingroomTemp, _targetBedroomTemp
 
     def calculateCurrentForecast8CoolingPowerPerMinute(self, now, currentOutdoorForecast8Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, ffOpenWindowCount15, sfOpenWindowCount15):
-        _sunPower, _effectiveSouthRadiation, _effectiveWestRadiation = self.getSunPowerPerMinute( u"Forecast: 8h •", now.plusMinutes(480), "Cloud_Cover_Forecast8", True )
+        _sunPower, _effectiveSouthRadiation, _effectiveWestRadiation = self.getSunPowerPerMinute( u"FC 8h   :", now.plusMinutes(480), "Cloud_Cover_Forecast8", True )
         _currentForecast8CoolingPowerPerMinute = self.getCoolingPowerPerMinute( u"        :", currentOutdoorForecast8Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, _sunPower, ffOpenWindowCount15, sfOpenWindowCount15 )
         self.log.info(u"        : CD {} W/min. ({}°C) ⇩".format(( _currentForecast8CoolingPowerPerMinute * -1 ),currentOutdoorForecast8Temp) )
         return _currentForecast8CoolingPowerPerMinute
 
     def calculateCurrentForecast4CoolingPowerPerMinute(self, now, currentOutdoorForecast4Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, ffOpenWindowCount15, sfOpenWindowCount15):
-        _sunPower, _effectiveSouthRadiation, _effectiveWestRadiation = self.getSunPowerPerMinute( u"Forecast: 4h •", now.plusMinutes(240), "Cloud_Cover_Forecast4", True )
+        _sunPower, _effectiveSouthRadiation, _effectiveWestRadiation = self.getSunPowerPerMinute( u"FC 4h   :", now.plusMinutes(240), "Cloud_Cover_Forecast4", True )
         _currentForecast4CoolingPowerPerMinute = self.getCoolingPowerPerMinute( u"        :", currentOutdoorForecast4Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, _sunPower, ffOpenWindowCount15, sfOpenWindowCount15 )
         self.log.info(u"        : CD {} W/min. ({}°C) ⇩".format(( _currentForecast4CoolingPowerPerMinute * -1 ),currentOutdoorForecast4Temp) )
         return _currentForecast4CoolingPowerPerMinute
@@ -852,31 +860,25 @@ class HeatingCheckRule(HeatingHelper):
         self.nightModeActive = self.isNightMode(  now, isHeatingDemand, coolingDownMinutes, heatingUpMinutes, self.nightModeActive )
         return 2.0 if self.nightModeActive else 0.0
       
-    def calculateCurrentZoneLevel(self, additionalChargeLevel, slotHeatingPower, availableHeatingPowerPerMinute, baseHeatingPower):
-        _timeToHeatSlot = int( round( slotHeatingPower / availableHeatingPowerPerMinute ) )
-        _baseHeatingPowerInKW = round( baseHeatingPower / 1000.0, 1 )
-        self.log.info(u"Slot    : {} KW/K • {} W/0.1K • {} min. ⇧".format(_baseHeatingPowerInKW,slotHeatingPower,_timeToHeatSlot) )
-        return int( round( ( additionalChargeLevel * 100.0 ) / slotHeatingPower ) )
-
-    def calculateStopZoneLevel(self, currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute,slotHeatingPower):
+    def calculateMaxBufferChargeLevel(self, currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute,slotHeatingPower):
         if currentCoolingPowerPerMinute > 0.0 and currentForecast4CoolingPowerPerMinute > 0.0:
             # calculate max charge level for 45 min
             neededLazyChargeLevel = round( ( MIN_HEATING_TIME + MIN_ONLY_WW_TIME ) * currentForecast4CoolingPowerPerMinute, 1 )
-            stopZoneLevel = int( round( neededLazyChargeLevel * 100.0 / slotHeatingPower ) )
-            return stopZoneLevel, neededLazyChargeLevel
-        return 0,0
+            #stopZoneLevel = int( round( neededLazyChargeLevel * 100.0 / slotHeatingPower ) )
+            return neededLazyChargeLevel
+        return 0
 
-    def isBufferHeating( self, isHeatingDemand, zoneLevel, startZoneLevel, stopZoneLevel ):
+    def isBufferHeating( self, isHeatingDemand, currentBufferChargeLevel, minBufferChargeLevel, maxBufferChargeLevel ):
         # Currently no buffer heating
         if not isHeatingDemand:
-            # No heating needed if buffer is changed more than startZoneLevel
-            if zoneLevel > startZoneLevel:
+            # No heating needed if buffer is changed more than minBufferChargeLevel
+            if currentBufferChargeLevel > minBufferChargeLevel:
                 return False
         # Stop buffer heating if buffer more than 70% charged
-        elif zoneLevel > stopZoneLevel:
+        elif currentBufferChargeLevel > maxBufferChargeLevel:
             return False
 
-        return stopZoneLevel > 0
+        return maxBufferChargeLevel > 0
 
     def calculateForcedBufferHeatingTime(self, now, lastUpdate, slotHeatingPower, availableHeatingPowerPerMinute):
       
@@ -925,8 +927,8 @@ class HeatingCheckRule(HeatingHelper):
                 self.log.info(u"        : No forced buffer • is heating already" )
         else:
             # Not cold enough
-            if currentCoolingPowerPerMinute < 25.0:
-                self.log.info(u"        : No forced buffer • not cold enough • max -{} W/min".format(25.0) )
+            if currentCoolingPowerPerMinute < 20.0:
+                self.log.info(u"        : No forced buffer • not cold enough • max -{} W/min".format(20.0) )
                 self.forcedBufferReferenceTemperature = None
             else:
                 lastHeating = getItemLastUpdate("Heating_Demand")
