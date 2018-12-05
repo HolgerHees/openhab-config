@@ -9,8 +9,9 @@ from openhab.actions import Transformation
 OFFSET_FORMATTER = DateTimeFormat.forPattern("HH:mm")
 
 BEDROOM_REDUCTION = 3.0
-MIN_HEATING_TIME = 30 # 'Heizen mit WW' should be active at least for 30 min.
+MIN_HEATING_TIME = 15 # 'Heizen mit WW' should be active at least for 15 min.
 MIN_ONLY_WW_TIME = 15 # 'Nur WW' should be active at least for 15 min.
+LAZY_OFFSET = 60 # Offset time until any heating has an effect
 
 outdatetForecast = None
 openFFContacts = None
@@ -677,7 +678,7 @@ class HeatingCheckRule(HeatingHelper):
                     heatingType = u"HEATING NEEDED"
                 else:
                     # it is too warm inside, but outside it is very cold, so we need some buffer heating to avoid cold floors
-                    forceBufferHeating = self.forcedBufferHeatingCheck( now, isHeatingDemand, referenceTargetDiff, slotHeatingPower, availableHeatingPowerPerMinute, currentCoolingPowerPerMinute)
+                    forceBufferHeating = self.forcedBufferHeatingCheck( now, isHeatingDemand, referenceTargetDiff, slotHeatingPower, availableHeatingPowerPerMinute, currentCoolingPowerPerMinute,maxBufferChargeLevel)
                 
                     if forceBufferHeating:
                         heatingDemand = 1
@@ -717,7 +718,7 @@ class HeatingCheckRule(HeatingHelper):
 
     # Time after heating to see the full effect
     def getLazyTimeOffset(self,heatingMinutes):
-        minutes = int( round( heatingMinutes / 3.0 ) ) + 60
+        minutes = int( round( heatingMinutes / 3.0 ) ) + LAZY_OFFSET
         return minutes if minutes < 120 else 120
 
     def getHeatingTargetDiff( self, currentLivingroomTemp, targetLivingroomTemp, currentBedroomTemp, targetBedroomTemp ):
@@ -882,7 +883,7 @@ class HeatingCheckRule(HeatingHelper):
     def calculateMaxBufferChargeLevel(self, currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute,slotHeatingPower):
         if currentCoolingPowerPerMinute > 0.0 and currentForecast4CoolingPowerPerMinute > 0.0:
             # calculate max charge level for 45 min
-            neededLazyChargeLevel = round( ( MIN_HEATING_TIME + MIN_ONLY_WW_TIME ) * currentForecast4CoolingPowerPerMinute, 1 )
+            neededLazyChargeLevel = round( ( ( LAZY_OFFSET / 2.0 ) + MIN_ONLY_WW_TIME ) * currentForecast4CoolingPowerPerMinute, 1 )
             #stopZoneLevel = int( round( neededLazyChargeLevel * 100.0 / slotHeatingPower ) )
             return neededLazyChargeLevel
         return 0
@@ -899,7 +900,7 @@ class HeatingCheckRule(HeatingHelper):
 
         return maxBufferChargeLevel > 0
 
-    def calculateForcedBufferHeatingTime(self, now, lastUpdate, slotHeatingPower, availableHeatingPowerPerMinute):
+    def calculateForcedBufferHeatingTime(self, now, lastUpdate, availableHeatingPowerPerMinute, maxBufferChargeLevel):
       
         # when was the last heating job
         lastUpdateBeforeInMinutes = int( round( ( now.getMillis() - lastUpdate.getMillis() ) / 1000.0 / 60.0 ) )
@@ -908,23 +909,24 @@ class HeatingCheckRule(HeatingHelper):
             return 0, lastUpdateBeforeInMinutes
           
         # how long do we need to heat up 0.1°
-        neededMinutesPerSlot = int( round( slotHeatingPower / availableHeatingPowerPerMinute ) )
+        neededMinutesPerSlot = int( round( maxBufferChargeLevel / availableHeatingPowerPerMinute ) )
         
         # 6 hours => 1
-        # 12 hours => 2
-        # 18 hours => 3
+        # 12 hours => 1.5
+        # 18 hours => 2
         # -------------
         # multiplied, depending how long ago the last heating job was running
         # 360 (0) => 1 (0)
-        # 1080 (720) => 3 (2)
-        factor = ( (lastUpdateBeforeInMinutes - 360.0) * 2.0 / 720.0 ) + 1.0
+        # 1080 (720) => 2 (1)
+        factor = 2.0 if lastUpdateBeforeInMinutes > 1080 else ( (lastUpdateBeforeInMinutes - 360.0) * 1.0 / 720.0 ) + 1.0
+        #self.log.info(u"{} {}".format(lastUpdateBeforeInMinutes,factor ))
         
         # how long should the next heating job running
         minutes = int( round( neededMinutesPerSlot * ( factor if factor < 3.0 else 3.0 ) ) )
 
         return minutes, lastUpdateBeforeInMinutes
 
-    def forcedBufferHeatingCheck( self, now, isHeatingDemand, referenceTargetDiff, slotHeatingPower, availableHeatingPowerPerMinute, currentCoolingPowerPerMinute ):
+    def forcedBufferHeatingCheck( self, now, isHeatingDemand, referenceTargetDiff, slotHeatingPower, availableHeatingPowerPerMinute, currentCoolingPowerPerMinute, maxBufferChargeLevel ):
         if isHeatingDemand:
             if self.forcedBufferReferenceTemperature != None:
                 # Room is warming up, so we have to stop previously forced checks
@@ -932,7 +934,7 @@ class HeatingCheckRule(HeatingHelper):
                     self.log.info(u"        : Stop forced buffer • room is warming up" )
                     self.forcedBufferReferenceTemperature = None
                 else:
-                    # should never happen, ecept we reload the rule
+                    # should never happen, except we reload the rule
                     maxRuntime = self.forcedBufferTime if self.forcedBufferTime > 0 else MIN_HEATING_TIME
                     
                     # Too much forced heating > 90 minutes
@@ -951,7 +953,7 @@ class HeatingCheckRule(HeatingHelper):
                 self.forcedBufferReferenceTemperature = None
             else:
                 lastHeating = getItemLastUpdate("Heating_Demand")
-                heatingMinutes, lastUpdateBeforeInMinutes = self.calculateForcedBufferHeatingTime( now, lastHeating, slotHeatingPower, availableHeatingPowerPerMinute)
+                heatingMinutes, lastUpdateBeforeInMinutes = self.calculateForcedBufferHeatingTime( now, lastHeating, availableHeatingPowerPerMinute, maxBufferChargeLevel)
                 
                 if heatingMinutes > 0:              
                     # Is not the right time. Only in the morning
