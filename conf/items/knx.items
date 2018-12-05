@@ -95,6 +95,9 @@ Switch Socket_Streedside						"Aussensteckdosen vorne"				<selfsocket>	(Outdoor,
 Switch Socket_Gardenside						"Aussensteckdosen hinten"				<selfsocket>	(Outdoor,Sockets_Outdoor,Sockets)	 { knx="2/1/2+<2/1/3" }
 Switch Socket_Attic								"Dachbodensteckdose"					<selfsocket>	(SF_Attic,Sockets)					 { knx="1/1/8+<1/1/9" }
 
+Switch Socket_Mobile_1							"Mobile Steckdose 1"					<selfsocket>	(Sockets)					         { channel="hue:0010:00178821ff34:socket1:switch" }
+Switch Socket_Mobile_2							"Mobile Steckdose 2"					<selfsocket>	(Sockets)					         { channel="hue:0010:00178821ff34:socket2:switch" }
+
 //####### Shutters ########
 Group:Rollershutter:OR(UP, DOWN)	Shutters	"Alle Rollläden"						<selfrollershutter>
 Group:Rollershutter:OR(UP, DOWN)	Shutters_FF	"EG Rollläden" 							<selfrollershutter>
