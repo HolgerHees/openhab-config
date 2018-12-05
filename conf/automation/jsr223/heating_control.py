@@ -314,7 +314,7 @@ class HeatingHelper:
 
         currentHeatingPowerPerMinute, pumpVolume = self.getHeatingPowerPerMinute(pumpSpeed,outValue,inValue)
 
-        self.log.info(u"Heating : Diff {}°C • VL {}°C • RL {}°C".format(circulationDiff,outValue,inValue))
+        self.log.info(u"Heating : Diff {}°C • VL {}°C • RL {}°C".format((outValue - inValue),outValue,inValue))
         self.log.info(u"        : Speed {}% • Volume {} m³ • HU {} W/min.⇧".format(pumpSpeed,pumpVolume,currentHeatingPowerPerMinute))
 
         return currentHeatingPowerPerMinute, pumpSpeed
@@ -644,10 +644,19 @@ class HeatingCheckRule(HeatingHelper):
         # Calculate missing degrees to reach target temperature
         heatingTargetDiff = self.getHeatingTargetDiff( currentLivingroomTemp, targetLivingroomTemp, currentBedroomTemp, targetBedroomTemp )
         
+        # Switch livingroom circuit off if it is too warm
+        currentLivingRoomCircuit = getItemState("Heating_Livingroom_Circuit")
+        livingRoomCircuit = currentLivingRoomCircuit
+        if currentLivingRoomCircuit == ON:
+            if currentLivingroomTemp > targetLivingroomTemp + 0.2:
+                livingRoomCircuit = OFF
+        elif currentLivingroomTemp <= targetLivingroomTemp:
+            livingRoomCircuit = ON
+
         # Some logs
-        self.log.info(u"Effects : LR {}° ⇩ • OR {}°C ⇩• NR {}°C ⇩".format(lazyReduction,outdoorReduction,nightReduction ))
+        self.log.info(u"Effects : LR {}° ⇩ • OR {}°C ⇩ • NR {}°C ⇩ • LRC {}".format(lazyReduction,outdoorReduction,nightReduction, livingRoomCircuit ))
         self.log.info(u"Rooms   : Livingroom {}°C (⇒ {}°C) • Bedroom {}°C (⇒ {}°)".format(currentLivingroomTemp,targetLivingroomTemp,currentBedroomTemp,targetBedroomTemp))
-        
+               
         ### Analyse result
         if getItemState("Heating_Auto_Mode").intValue() == 1:
             heatingDemand = 0
@@ -688,9 +697,13 @@ class HeatingCheckRule(HeatingHelper):
             self.log.info(u"Demand  : {}".format(heatingType) )
 
             postUpdateIfChanged("Heating_Demand", heatingDemand )
+
+            if currentLivingRoomCircuit != livingRoomCircuit:
+                sendCommand("Heating_Livingroom_Circuit",livingRoomCircuit)
+                self.log.info(u"Switch  : Livingroom circuit {}".format(livingRoomCircuit))
         
             ### Call heating control
-            self.controlHeating(now,heatingDemand,heatingTarget,currentOutdoorTemp,currentLivingroomTemp)
+            self.controlHeating(now,heatingDemand,heatingTarget,currentOutdoorTemp)
         else:
             self.log.info(u"Demand  : SKIPPED • MANUAL MODE ACTIVE")
             postUpdateIfChanged("Heating_Demand", 0 )
@@ -961,7 +974,7 @@ class HeatingCheckRule(HeatingHelper):
 
         return self.forcedBufferReferenceTemperature != None
 
-    def controlHeating( self, now, heatingDemand, heatingTarget, currentOutdoorTemp, currentLivingroomTemp ):
+    def controlHeating( self, now, heatingDemand, heatingTarget, currentOutdoorTemp ):
 
         # 0 - Abschalten
         # 1 - Nur WW
@@ -1008,7 +1021,6 @@ class HeatingCheckRule(HeatingHelper):
                 if currentPowerState == 0 or forceRetry or isRunningLongEnough:
                     self.activeHeatingOperatingMode = 1
                     sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
-                    sendCommand("Heating_Livingroom_Circuit",ON)
                 elif not isRunningLongEnough:
                     runtimeInMinutes = int( round( ( now.getMillis() - getItemLastUpdate("Heating_Operating_Mode").getMillis() ) / 1000.0 / 60.0 ) )
                     forceRetryMsg = u" • SKIPPED • runtime is {} min.".format(runtimeInMinutes)
@@ -1043,20 +1055,7 @@ class HeatingCheckRule(HeatingHelper):
                 if burnerStarts > 1:
                     self.activeHeatingOperatingMode = 3
                     sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
-                    sendCommand("Heating_Livingroom_Circuit",ON)
                     self.log.info(u"Switch  : Heizen mit WW => Reduziert{}".format(forceRetryMsg))
-            else:
-                targetTemperature = heatingTarget + 0.2
-                
-                #// Wenn Kreis an... Überprüfe ob es im WZ zu warm ist
-                if getItemState("Heating_Livingroom_Circuit") == ON:
-                    if currentLivingroomTemp > targetTemperature and itemLastUpdateOlderThen("Heating_Operating_Mode",now.minusMinutes(10)):
-                        sendCommand("Heating_Livingroom_Circuit",OFF)
-                        self.log.info(u"Switch  : Wohnzimmerkreis OFF{}".format(forceRetryMsg))
-                # Wenn Kreis aus... überprüfe ob es im WZ zu kalt ist
-                elif currentLivingroomTemp < targetTemperature:
-                    sendCommand("Heating_Livingroom_Circuit",ON)
-                    self.log.info(u"Switch  : Wohnzimmerkreis ON{}".format(forceRetryMsg))
         
         # Reduziert
         elif currentOperatingMode == 3:
