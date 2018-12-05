@@ -644,15 +644,20 @@ class HeatingCheckRule(HeatingHelper):
         # Calculate missing degrees to reach target temperature
         heatingTargetDiff = self.getHeatingTargetDiff( currentLivingroomTemp, targetLivingroomTemp, currentBedroomTemp, targetBedroomTemp )
         
-        # Switch livingroom circuit off if it is too warm
         currentLivingRoomCircuit = getItemState("Heating_Livingroom_Circuit")
         livingRoomCircuit = currentLivingRoomCircuit
-        if currentLivingRoomCircuit == ON:
-            if currentLivingroomTemp > targetLivingroomTemp + 0.2:
-                livingRoomCircuit = OFF
-        elif currentLivingroomTemp <= targetLivingroomTemp:
+        
+        if now.getHourOfDay() == 0 and reference.getMinuteOfHour() == 0:
+            # switch at least once a day
             livingRoomCircuit = ON
-
+        else:
+            # Switch livingroom circuit off if it is too warm
+            if currentLivingRoomCircuit == ON:
+                if currentLivingroomTemp > targetLivingroomTemp + 0.2:
+                    livingRoomCircuit = OFF
+            elif currentLivingroomTemp <= targetLivingroomTemp:
+                livingRoomCircuit = ON
+            
         # Some logs
         self.log.info(u"Effects : LR {}° ⇩ • OR {}°C ⇩ • NR {}°C ⇩ • LRC {}".format(lazyReduction,outdoorReduction,nightReduction, livingRoomCircuit ))
         self.log.info(u"Rooms   : Livingroom {}°C (⇒ {}°C) • Bedroom {}°C (⇒ {}°)".format(currentLivingroomTemp,targetLivingroomTemp,currentBedroomTemp,targetBedroomTemp))
