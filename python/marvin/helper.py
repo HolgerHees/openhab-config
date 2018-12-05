@@ -241,7 +241,7 @@ def getFilteredChildItems(itemOrName, state):
 
 def getItemState(itemOrName):
     name = _getItemName(itemOrName)
-    state = items[name]
+    state = items.get(name)
     if state is None:
         raise NotInitialisedException("Item state for '" + name + "' not found")
     return state
