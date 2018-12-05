@@ -508,6 +508,10 @@ sitemap haus label="Main Menu"
                         Switch item=Socket_Streedside label="Aussen vorne"
                         Switch item=Socket_Gardenside label="Aussen hinten"
                     }
+                    Frame label="Mobile" {
+                        Switch item=Socket_Mobile_1 label="Steckdose 1"
+                        Switch item=Socket_Mobile_2 label="Steckdose 2"
+                    }
                 }
                 Text label="Server" icon="selfcomputer"{
                     Frame label="Auswertung" {
