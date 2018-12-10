@@ -583,20 +583,19 @@ class HeatingCheckRule(HeatingHelper):
         
         minBufferChargeLevel = 0
         
-        # not changed since 6 hours.
-        forecast4Item = "Temperature_Garden_Forecast4"
-        forecast8Item = "Temperature_Garden_Forecast8"
-        if self.isOutdatetForecast(True):
-            self.log.info(u"Forecast: ERROR • Fall back to current temperature.")
-            forecast4Item = "Temperature_Garden"
-            forecast8Item = "Temperature_Garden"
-
         currentLivingroomTemp = self.getStableValue( now, "Temperature_FF_Livingroom", 10 )
         currentBedroomTemp = self.getStableValue( now, "Temperature_SF_Bedroom", 10 )
         currentAtticTemp = self.getStableValue( now, "Temperature_SF_Attic", 10 )
         currentOutdoorTemp = self.getStableValue( now, "Temperature_Garden", 10 )
-        currentOutdoorForecast4Temp = self.getStableValue( now, forecast4Item, 10 )
-        currentOutdoorForecast8Temp = self.getStableValue( now, forecast8Item, 10 )	
+
+        # not changed since 6 hours.
+        if self.isOutdatetForecast(True):
+            self.log.info(u"Forecast: ERROR • Fall back to current temperature.")
+            currentOutdoorForecast4Temp = currentOutdoorTemp
+            currentOutdoorForecast8Temp = currentOutdoorTemp
+        else:
+            currentOutdoorForecast4Temp = round( getItemState("Temperature_Garden_Forecast4").doubleValue(), 1 )
+            currentOutdoorForecast8Temp = round( getItemState("Temperature_Garden_Forecast8").doubleValue(), 1 )
             
         heatingTarget = round( getItemState("Temperature_Room_Target").doubleValue(), 1 )
 
