@@ -28,8 +28,6 @@ class HeatingHelper:
         value = 0.0
         duration = 0
         
-        #self.log.info("test",""+now.minusMinutes(checkTimeRange) + " " + minTimestamp)
-
         while True:
             entry = getHistoricItemEntry(itemName, currentEndTime )
 
@@ -55,8 +53,6 @@ class HeatingHelper:
 
         referenceKey = u"{}-{}".format(itemName,checkTimeRange)
         referenceValue = HeatingHelper.stableReferences.get( referenceKey )
-        
-        #self.log.info(u"{} {} {}".format(referenceKey,referenceValue,value))
         
         if referenceKey != None:
             # warming up - avg should be 80% above the current level
@@ -140,14 +136,6 @@ class HeatingHelper:
         if isBreak: azimut = math.acos(y) / K
         else: azimut = 360.0 - math.acos(y) / K
 
-        #_elevation = getItemState("Sun_Elevation")
-        #_azimut = getItemState("Sun_Azimuth")
-
-        #self.log.info("ELEVATION: " + str(elevation) )
-        #self.log.info("ELEVATION: " + str(_elevation) )
-        #self.log.info("AZIMUT: " + str(azimut) )
-        #self.log.info("AZIMUT: " + str(_azimut) )
-
         return elevation, azimut
 
     def getSunPowerPerMinute( self, logPrefix, referenceTime, cloudCoverItem, isForecast ):
@@ -170,7 +158,6 @@ class HeatingHelper:
             # 350° (160) => 1 (2)           
             westX = ( ( azimut - 190.0 ) * 2.0 / 160.0 ) - 1.0
             westMultiplier = ( math.pow( westX, 10.0 ) * -1.0 ) + 1.0
-            #self.log.info(u"{} {}".format(westX,westMultiplier))
 
         southActive = southMultiplier > 0.0
         westActive  = westMultiplier > 0.0
@@ -197,8 +184,6 @@ class HeatingHelper:
             _effectiveSouthRadiation = _currentRadiation * 0.37 * southMultiplier
             _effectiveWestRadiation = _currentRadiation * 0.37 * westMultiplier
             
-            #self.log.info(u"{} {}".format(_effectiveSouthRadiation,_effectiveWestRadiation))
-
             # Südseite bis ca. 16 Uhr
             if _effectiveSouthRadiation > 0.0:
                 # 0 means 0% down
@@ -250,13 +235,6 @@ class HeatingHelper:
         # 15°C => -0.0606
 
         # https://www.ubakus.de/u-wert-rechner/
-        # Cwirk = c x ρ x dwirk x A
-        # Cwirk = wirksame Wärmespeicherfähikeit in J/K
-        # c = spezifische Wärmekapazität in J/(kg x K)
-        # ρ = Rohdichte in kg/m3
-        # dwirk = wirksame Bauteildicke in m
-        # A = Bauteilfläche in m2
-        
         _minDensity = 1.1644
         maxDensity = 1.2250
         _cAir = 1.005 # KJ / KG
@@ -323,24 +301,13 @@ class HeatingHelper:
         # 0.3 steilheit
         # niveau 12k
         # 20° => 36°
-        # -20^ => 47°
-        
-        # 15° => 32°
-        # 10° => 34°
-        # 5° => 36°
-        # 0° => 38°
-        # -5° => 40°
-        # -10° => 42°
-        # -15° => 44°
-        
+        # -20^ => 47°        
         if currentOutdoorTemp > 15.0: 
             maxVL = 32
         elif currentOutdoorTemp < -15.0:
             maxVL = 44 
         else:
             maxVL = ( ( currentOutdoorTemp - 15.0 ) * -0.4 ) + 32.0
-
-        #self.log.info(u"{} {}".format(maxVL,currentOutdoorTemp))
 
         _possibleHeatingPowerPerMinute, _possiblePumpVolume = self.getHeatingPowerPerMinute( 100.0, maxVL, temperature_Pipe_In )
         
@@ -958,7 +925,6 @@ class HeatingCheckRule(HeatingHelper):
         factor = ( lastUpdateBeforeInMinutes / 60.0 ) * 3.0 / 24.0
 
         if factor > 3.0: factor = 3.0
-        #self.log.info(u"{} {}".format(lastUpdateBeforeInMinutes,factor ))
 
         targetBufferChargeLevel = round( maxBufferChargeLevel * factor, 1 )
 
