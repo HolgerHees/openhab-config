@@ -662,6 +662,9 @@ class HeatingCheckRule(HeatingHelper):
         # Zone Level (BUFFER LEVEL) to stop buffer heating. Is based on cooling power.
         maxBufferChargeLevel = self.calculateMaxBufferChargeLevel( currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, slotHeatingPower )
 
+        heatingUpMinutes = int( round( missingChargeLevel / availableHeatingPowerPerMinute ) )
+        coolingDownMinutes = int( round( additionalChargeLevel / currentCoolingPowerPerMinute ) ) if currentCoolingPowerPerMinute > 0.0 else 0
+
         # Some log messages about charge values
         _timeToHeatSlot = int( round( slotHeatingPower / availableHeatingPowerPerMinute ) )
         _baseHeatingPowerInKW = round( baseHeatingPower / 1000.0, 1 )
@@ -672,7 +675,11 @@ class HeatingCheckRule(HeatingHelper):
         self.log.info(u"Buffer  : {}% filled • {} W ... {} W • {} min. ⇧".format( _bufferFilledInPercent, minBufferChargeLevel, maxBufferChargeLevel, _timeToHeatBuffer) )
 
         _totalLazyChargeMsg = u" ({} W)".format(totalChargeLevel) if currentChargeLevel != totalChargeLevel else u""
-        self.log.info(u"Charged : {} W{} total incl. buffer".format( currentChargeLevel, _totalLazyChargeMsg) )
+        if heatingUpMinutes > 0:
+            chargeMsg = u"{} min. ⇧".format(heatingUpMinutes)
+        else:
+            chargeMsg = u"{} min. ⇩".format(coolingDownMinutes)
+        self.log.info(u"Charged : {} W{} total incl. buffer • {}".format( currentChargeLevel, _totalLazyChargeMsg, chargeMsg) )
           
         # Calculate reduction based on available energy (=> Calculation of currentChargeLevel) to lazy warmup the house later
         # EXPECTED WARMUP TO REACH TARGET.
@@ -684,10 +691,7 @@ class HeatingCheckRule(HeatingHelper):
         # Calculate night reduction
         # Night reduction start is earlier on higher coolingDownMinutes
         # and night reduction stops earlier on higher heatingUpMinutes
-        _heatingUpMinutes = int( round( missingChargeLevel / availableHeatingPowerPerMinute ) )
-        _coolingDownMinutes = int( round( additionalChargeLevel / currentCoolingPowerPerMinute ) ) if currentCoolingPowerPerMinute > 0.0 else 0
-        self.log.info(u"        : NHU {} min. ⇧ • NCD {} min. ⇩".format(_heatingUpMinutes,_coolingDownMinutes) )
-        nightReduction = self.calculateNightReduction( now, isHeatingActive, _coolingDownMinutes, _heatingUpMinutes)
+        nightReduction = self.calculateNightReduction( now, isHeatingActive, coolingDownMinutes, heatingUpMinutes)
         
         # Calculate wanted target temperatures in livingroom and bedroom based on night reduction and bedroom/livingroom offset
         targetLivingroomTemp, targetBedroomTemp = self.calculateTargetTemperatures( heatingTarget, nightReduction)
@@ -697,7 +701,7 @@ class HeatingCheckRule(HeatingHelper):
         
         # Some logs
         self.log.info(u"Effects : LR {}° ⇩ • OR {}°C ⇩ • NR {}°C ⇩ • LRC {}".format(lazyReduction,outdoorReduction,nightReduction,currentLivingRoomCircuit ))
-        self.log.info(u"Rooms   : Livingroom {}°C (⇒ {}°C) • Bedroom {}°C (⇒ {}°)".format(currentLivingroomTemp,targetLivingroomTemp,currentBedroomTemp,targetBedroomTemp))
+        self.log.info(u"Rooms   : Living {}°C (⇒ {}°C) • Sleeping {}°C (⇒ {}°C)".format(currentLivingroomTemp,targetLivingroomTemp,currentBedroomTemp,targetBedroomTemp))
                
         # prepare for wakeup. is needed to calculate correct night end time and force buffer time in the morning
         # use possible night mode reduced temp if night mode is not ending during the next 4 hours 
