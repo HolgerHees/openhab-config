@@ -426,11 +426,11 @@ class HeatingHelper:
         _referenceLivingroomTemp = self.getStableValue( now, "Temperature_FF_Livingroom", 20 )
         if _referenceLivingroomTemp != _referenceTemp:
             if _referenceLivingroomTemp < _referenceTemp:
-                self.log.info(u"Cleanup : Reference {} adjusted".format(_referenceLivingroomTemp) )
+                self.log.info(u"Cleanup : Reference to {} adjusted".format(_referenceLivingroomTemp) )
             elif _referenceLivingroomTemp > _referenceTemp:
                 _heatedUpTempDiff = _referenceLivingroomTemp - _referenceTemp
                 _totalChargeLevel = self._cleanupChargeLevel( _totalChargeLevel, baseHeatingPower * _heatedUpTempDiff )
-                self.log.info(u"Cleanup : Reference {} and Charged {} adjusted".format(_referenceLivingroomTemp,_totalChargeLevel) )
+                self.log.info(u"Cleanup : Reference to {} and Charged to {} adjusted".format(_referenceLivingroomTemp,_totalChargeLevel) )
             postUpdate("Heating_Reference", _referenceLivingroomTemp )
         return _totalChargeLevel
     
