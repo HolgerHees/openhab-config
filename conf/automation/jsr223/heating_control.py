@@ -458,6 +458,21 @@ class HeatingHelper:
         return currentHeatingPowerPerMinute, currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, baseHeatingPower
  
 @rule("heating_control.py")
+class MoveCircuitSwitchRule(HeatingHelper):
+    def __init__(self):
+        self.triggers = [CronTrigger("0 0 0 * * ?")]
+
+    def execute(self, module, input):
+        # switch after 2 days of inactivity livingroom circuit once to avoid ventile damages
+        if itemLastUpdateOlderThen("Heating_Livingroom_Circuit", getNow().minusMinutes(60*24*2)):
+            if getItemState("Heating_Livingroom_Circuit") == OFF:
+                self.log.info(u"Toogle  : Livingroom circuit ON")
+                sendCommand("Heating_Livingroom_Circuit",ON)
+                time.sleep(10)
+                self.log.info(u"Toogle  : Livingroom circuit OFF")
+                sendCommand("Heating_Livingroom_Circuit",OFF)
+        
+@rule("heating_control.py")
 class CalculateChargeLevelRule(HeatingHelper):
     def __init__(self):
         self.triggers = [CronTrigger("15 * * * * ?")]
@@ -685,27 +700,18 @@ class HeatingCheckRule(HeatingHelper):
         self.log.info(u"Effects : LR {}° ⇩ • OR {}°C ⇩ • NR {}°C ⇩ • LRC {}".format(lazyReduction,outdoorReduction,nightReduction,currentLivingRoomCircuit ))
         self.log.info(u"Rooms   : Livingroom {}°C (⇒ {}°C) • Bedroom {}°C (⇒ {}°)".format(currentLivingroomTemp,targetLivingroomTemp,currentBedroomTemp,targetBedroomTemp))
                
-        livingRoomCircuit = currentLivingRoomCircuit      
-        if now.getHourOfDay() == 0 and now.getMinuteOfHour() == 2:
-            if livingRoomCircuit == OFF:
-                self.log.info(u"Toogle  : Livingroom circuit ON")
-                sendCommand("Heating_Livingroom_Circuit",ON)
-                time.sleep(10)
-                self.log.info(u"Toogle  : Livingroom circuit OFF")
-                sendCommand("Heating_Livingroom_Circuit",OFF)
-        else:
-            # prepare for wakeup. is needed to calculate correct night end time and force buffer time in the morning
-            # use possible night mode reduced temp if night mode is not ending during the next 4 hours 
-            # otherwise use normal temp
-            referenceTarget = targetLivingroomTemp if self.isNightModeTime(now.plusMinutes(240)) else heatingTarget
-            
-            # Switch livingroom circuit off if it is too warm
-            if isLivingRoomCircuitActive:
-                if currentLivingroomTemp > referenceTarget + 0.2:
-                    livingRoomCircuit = OFF
-                    #livingRoomCircuit = ON
-            elif currentLivingroomTemp <= referenceTarget:
-                livingRoomCircuit = ON
+        # prepare for wakeup. is needed to calculate correct night end time and force buffer time in the morning
+        # use possible night mode reduced temp if night mode is not ending during the next 4 hours 
+        # otherwise use normal temp
+        referenceTarget = targetLivingroomTemp if self.isNightModeTime(now.plusMinutes(240)) else heatingTarget
+        newLivingRoomCircuit = currentLivingRoomCircuit
+        # Switch livingroom circuit off if it is too warm
+        if isLivingRoomCircuitActive:
+            if currentLivingroomTemp > referenceTarget + 0.2:
+                newLivingRoomCircuit = OFF
+                #newLivingRoomCircuit = ON
+        elif currentLivingroomTemp <= referenceTarget:
+            newLivingRoomCircuit = ON
             
         ### Analyse result
         if getItemState("Heating_Auto_Mode").intValue() == 1:
@@ -748,9 +754,9 @@ class HeatingCheckRule(HeatingHelper):
 
             postUpdateIfChanged("Heating_Demand", heatingDemand )
 
-            if currentLivingRoomCircuit != livingRoomCircuit:
-                self.log.info(u"Switch  : Livingroom circuit {}".format(livingRoomCircuit))
-                sendCommand("Heating_Livingroom_Circuit",livingRoomCircuit)
+            if currentLivingRoomCircuit != newLivingRoomCircuit:
+                self.log.info(u"Switch  : Livingroom circuit {}".format(newLivingRoomCircuit))
+                sendCommand("Heating_Livingroom_Circuit",newLivingRoomCircuit)
         
             ### Call heating control
             self.controlHeating(now, currentOperatingMode, heatingDemand, lastHeatingChange, currentOutdoorTemp)
