@@ -16,7 +16,7 @@ from openhab.jsr223 import scope, get_scope, get_automation_manager
 #from openhab.log import logging
 from openhab.triggers import ItemStateUpdateTrigger, ItemStateChangeTrigger
 
-from org.slf4j import Logger, LoggerFactory
+from org.slf4j import LoggerFactory
 
 LOG_PREFIX = "org.eclipse.smarthome.automation.custom"
 
