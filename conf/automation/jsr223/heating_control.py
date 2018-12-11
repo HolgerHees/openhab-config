@@ -20,16 +20,27 @@ class HeatingHelper:
     openFFContacts = None
     openSFContacts = None
     
-    def getStableValue( self, now, itemName, checkTimeRange ):
+    def getStableValue( self, now, itemName, checkTimeRange, cached = False ):
+        
+        cacheKey = u"{}-{}".format(itemName,checkTimeRange)
+         
+        if cached:
+            cacheValue = HeatingHelper.stableReferences.get( cacheKey )
+            if cacheValue != None:
+                return cacheValue
+        
         currentEndTime = now
         currentEndTimeMillis = currentEndTime.getMillis()
         minTimeMillis = currentEndTimeMillis - ( checkTimeRange * 60 * 1000 )
 
         value = 0.0
         duration = 0
+
+        # get and cache "real" item to speedup getHistoricItemEntry. Otherwise "getHistoricItemEntry" will lookup the item by its name every time
+        item = getItem(itemName)
         
         while True:
-            entry = getHistoricItemEntry(itemName, currentEndTime )
+            entry = getHistoricItemEntry(item, currentEndTime )
 
             currentStartMillis = entry.getTimestamp().getTime()
 
@@ -51,12 +62,11 @@ class HeatingHelper:
 
         value = ( value / duration )
 
-        referenceKey = u"{}-{}".format(itemName,checkTimeRange)
-        referenceValue = HeatingHelper.stableReferences.get( referenceKey )
+        cacheValue = HeatingHelper.stableReferences.get( cacheKey )
         
-        if referenceKey != None:
+        if cacheValue != None:
             # warming up - avg should be 80% above the current level
-            if value > referenceValue:
+            if value > cacheValue:
                 # 21.07 => 21.0
                 # 21.08 => 21.1
                 value = round( value - 0.03, 1 )
@@ -68,7 +78,7 @@ class HeatingHelper:
         else:
             value = round( value, 1 )
             
-        HeatingHelper.stableReferences[ referenceKey ] = value
+        HeatingHelper.stableReferences[ cacheKey ] = value
         
         return value
 
@@ -77,29 +87,32 @@ class HeatingHelper:
             HeatingHelper.outdatetForecast = itemLastUpdateOlderThen("Temperature_Garden_Forecast4", getNow().minusMinutes(360) )
         return HeatingHelper.outdatetForecast
 
-    def getOpenWindows( self, reference, recheck = False ):
-        if recheck or HeatingHelper.openSFContacts is None:
+    def getOpenWindows( self, checkedTime, cached = False ):
+        if cached == False or HeatingHelper.openSFContacts is None:
             # should be at least 2 minutes open
             initialReference = getNow().minusMinutes(2)
-
+            
             HeatingHelper.openFFContacts = []
-            door = getItem("Door_FF_Floor")
-            if door.getState() == OPEN and itemLastUpdateOlderThen(door,initialReference):
-                HeatingHelper.openFFContacts.append(door)
-            for sensor in getGroupMember("Sensor_Window_FF"):
-                if sensor.getName() != "Window_FF_Garage" and sensor.getState() == OPEN and itemLastUpdateOlderThen(sensor,initialReference):
-                    HeatingHelper.openFFContacts.append(sensor)
+            if getItemState("Door_FF_Floor") == OPEN:
+                door = getItem("Door_FF_Floor")
+                if itemLastUpdateOlderThen(door,initialReference):
+                    HeatingHelper.openFFContacts.append(door)
+            if getItemState("Sensor_Window_FF") == OPEN:
+                for sensor in getGroupMember("Sensor_Window_FF"):
+                    if sensor.getName() != "Window_FF_Garage" and sensor.getState() == OPEN and itemLastUpdateOlderThen(sensor,initialReference):
+                        HeatingHelper.openFFContacts.append(sensor)
 
             HeatingHelper.openSFContacts = []
-            for sensor in getGroupMember("Sensor_Window_SF"):
-                if sensor.getName() != "Window_SF_Attic" and sensor.getState() == OPEN and itemLastUpdateOlderThen(sensor,initialReference):
-                    HeatingHelper.openSFContacts.append(sensor)
+            if getItemState("Sensor_Window_SF") == OPEN:
+                for sensor in getGroupMember("Sensor_Window_SF"):
+                    if sensor.getName() != "Window_SF_Attic" and sensor.getState() == OPEN and itemLastUpdateOlderThen(sensor,initialReference):
+                        HeatingHelper.openSFContacts.append(sensor)
 
-        if reference is not None:
-            _ffOpenWindowCount = len(filter(lambda window: itemLastUpdateOlderThen(window,reference), HeatingHelper.openFFContacts))
-            _sfOpenWindowCount = len(filter(lambda window: itemLastUpdateOlderThen(window,reference), HeatingHelper.openSFContacts))
+        if checkedTime is not None:
+            _ffOpenWindowCount = len(filter(lambda window: itemLastUpdateOlderThen(window,checkedTime), HeatingHelper.openFFContacts))
+            _sfOpenWindowCount = len(filter(lambda window: itemLastUpdateOlderThen(window,checkedTime), HeatingHelper.openSFContacts))
             return _ffOpenWindowCount, _sfOpenWindowCount
-            
+        
         return len(HeatingHelper.openFFContacts), len(HeatingHelper.openSFContacts)
 
     def _getCloudData( self, cloudCoverItem ):
@@ -387,10 +400,9 @@ class HeatingHelper:
 
         return coolingPower
 
-    def calculateCurrentCoolingPowerPerMinute(self, now, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, isChargeLevelCalculation ):
+    def calculateCurrentCoolingPowerPerMinute(self, now, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, ffOpenWindowCount, sfOpenWindowCount ):
         _sunPower, _effectiveSouthRadiation, _effectiveWestRadiation = self.getSunPowerPerMinute( u"Current :", now, "Cloud_Cover_Current", False )
-        _ffOpenWindowCount, _sfOpenWindowCount = self.getOpenWindows( None, isChargeLevelCalculation == True )
-        _currentCoolingPowerPerMinute = self.getCoolingPowerPerMinute( u"        :", currentOutdoorTemp, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, _sunPower, _ffOpenWindowCount, _sfOpenWindowCount )
+        _currentCoolingPowerPerMinute = self.getCoolingPowerPerMinute( u"        :", currentOutdoorTemp, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, _sunPower, ffOpenWindowCount, sfOpenWindowCount )
         return _currentCoolingPowerPerMinute, _sunPower, _effectiveSouthRadiation, _effectiveWestRadiation
 
     def _cleanupChargeLevel( self, totalChargeLevel, _cleanableChargeDiff ):
@@ -490,8 +502,10 @@ class CalculateChargeLevelRule(HeatingHelper):
         currentLivingRoomCircuit = getItemState("Heating_Livingroom_Circuit")
         isLivingRoomCircuitActive = currentLivingRoomCircuit == ON
 
+        ffOpenWindowCount, sfOpenWindowCount = self.getOpenWindows( None )
+
         # Calculate current cooling power per minute, based on temperature differences, sun power and open windows
-        currentCoolingPowerPerMinute, sunPower, effectiveSouthRadiation, effectiveWestRadiation = self.calculateCurrentCoolingPowerPerMinute( now, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, True)
+        currentCoolingPowerPerMinute, sunPower, effectiveSouthRadiation, effectiveWestRadiation = self.calculateCurrentCoolingPowerPerMinute( now, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, ffOpenWindowCount, sfOpenWindowCount )
         
         self.setSunStates( currentOutdoorTemp, currentAtticTemp, currentBedroomTemp, currentLivingroomTemp, sunPower, effectiveSouthRadiation, effectiveWestRadiation )
 
@@ -583,10 +597,10 @@ class HeatingCheckRule(HeatingHelper):
         
         minBufferChargeLevel = 0
         
-        currentLivingroomTemp = self.getStableValue( now, "Temperature_FF_Livingroom", 10 )
-        currentBedroomTemp = self.getStableValue( now, "Temperature_SF_Bedroom", 10 )
-        currentAtticTemp = self.getStableValue( now, "Temperature_SF_Attic", 10 )
-        currentOutdoorTemp = self.getStableValue( now, "Temperature_Garden", 10 )
+        currentLivingroomTemp = self.getStableValue( now, "Temperature_FF_Livingroom", 10, True )
+        currentBedroomTemp = self.getStableValue( now, "Temperature_SF_Bedroom", 10, True )
+        currentAtticTemp = self.getStableValue( now, "Temperature_SF_Attic", 10, True )
+        currentOutdoorTemp = self.getStableValue( now, "Temperature_Garden", 10, True )
 
         # not changed since 6 hours.
         if self.isOutdatetForecast(True):
@@ -610,7 +624,8 @@ class HeatingCheckRule(HeatingHelper):
         isLivingRoomCircuitActive = currentLivingRoomCircuit == ON
         
         # Get open windows during the last 15 min
-        ffOpenWindowCount15, sfOpenWindowCount15 = self.getOpenWindows( now.minusMinutes(15) )
+        ffOpenWindowCount, sfOpenWindowCount = self.getOpenWindows( None, True )
+        ffOpenWindowCount15, sfOpenWindowCount15 = self.getOpenWindows( now.minusMinutes(15), True )
 
         # Calculate cooling power in 8h
         currentForecast8CoolingPowerPerMinute = self.calculateCurrentForecast8CoolingPowerPerMinute( now, currentOutdoorTemp, currentOutdoorForecast8Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, ffOpenWindowCount15, sfOpenWindowCount15)
@@ -619,7 +634,7 @@ class HeatingCheckRule(HeatingHelper):
         currentForecast4CoolingPowerPerMinute = self.calculateCurrentForecast4CoolingPowerPerMinute( now, currentOutdoorTemp, currentOutdoorForecast4Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, ffOpenWindowCount15, sfOpenWindowCount15)
 
         # Calculate current cooling power per minute, based on temperature differences, sun power and open windows
-        currentCoolingPowerPerMinute, _, _, _ = self.calculateCurrentCoolingPowerPerMinute( now, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, False)
+        currentCoolingPowerPerMinute, _, _, _ = self.calculateCurrentCoolingPowerPerMinute( now, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, ffOpenWindowCount, sfOpenWindowCount )
 
         # Get Needed energy to warmup the house by one degrees
         baseHeatingPower = self.getNeededEnergyForOneDegrees( currentLivingroomTemp, currentBedroomTemp, True )
@@ -640,11 +655,6 @@ class HeatingCheckRule(HeatingHelper):
             currentHeatingPowerPerMinute, currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, baseHeatingPower = self.adjustPower( currentHeatingPowerPerMinute, currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, baseHeatingPower, currentLivingroomTemp, currentBedroomTemp )
 
         # Calculate reduction based on the current sun heating or the expected (forecast based) sun heating
-        # This reduces the target temperature by the expected sun warmup and stops heating earlier, because sun heating is lazy.
-        # EXPECTED LAZY SUN WARMUP
-        # can happen after cooling (power) adjustment, because :
-        # - outdoor reduction happens only if cooling is negative
-        # - power djustment happens only if cooling is positive
         outdoorReduction = self.calculateOutdoorReduction( currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, currentForecast8CoolingPowerPerMinute)
 
         slotHeatingPower = round( baseHeatingPower * 0.1, 1 )
@@ -772,9 +782,7 @@ class HeatingCheckRule(HeatingHelper):
     def getHeatingTargetDiff( self, currentLivingroomTemp, targetLivingroomTemp, currentBedroomTemp, targetBedroomTemp ):
         livingroomDifference = targetLivingroomTemp - currentLivingroomTemp
         bedroomDifference = targetBedroomTemp - currentBedroomTemp
-
         difference = livingroomDifference if livingroomDifference > bedroomDifference else bedroomDifference
-        
         return round( difference, 1 )
 
     def calculateTargetTemperatures(self, heatingTarget, nightReduction):
@@ -853,46 +861,42 @@ class HeatingCheckRule(HeatingHelper):
         return _nightModeActive
 
     def isNightMode( self, now, isHeatingActive, coolingDownMinutes, heatingUpMinutes, nightModeActive ):
+        hourOfTheDay = now.getHourOfDay()
         reference = now
-        hourOfTheDay = reference.getHourOfDay()
         
-        # - "real" night mode is active
-        # - "real" night mode will end in during the next 6 hours
-        _nightModeTimeIsEnding = self.isNightModeTime(now) and not self.isNightModeTime(now.plusMinutes(360))
-        
-        if not nightModeActive:
-            startOffset = coolingDownMinutes if coolingDownMinutes > 0 else 0
+        # check night mode end only in the morning, 6 hours before wakeup
+        if hourOfTheDay < 12 and not self.isNightModeTime(now.plusMinutes(360)):
+            if nightModeActive:
+                endOffset = heatingUpMinutes if heatingUpMinutes > 0 else 0
+                lazyTime = 0
 
-            minStartOffset = int( round( MIN_HEATING_TIME / 3.0 ) ) + LAZY_OFFSET
-            
-            # if heating not active, check if the night mode is far enough for a new heating cycle
-            if not isHeatingActive and startOffset < minStartOffset:
-                startOffset = minStartOffset
+                # check early enough to have enough time for lazy warming up
+                # add time offset for lazy warming up after heating
+                if not isHeatingActive and endOffset > 0:
+                    endOffset = endOffset + LAZY_OFFSET
 
-            if not _nightModeTimeIsEnding:
-                reference = reference.plusMinutes( startOffset )
-                _isNightMode = self.isNightModeTime(reference)
-            else:
-                _isNightMode = nightModeActive
-                
-            msg = u"start check at {} • {} min.".format(OFFSET_FORMATTER.print(reference),startOffset)
-            
-        else:
-            endOffset = heatingUpMinutes if heatingUpMinutes > 0 else 0
-            lazyTime = 0
-
-            # check early enough to have enough time for lazy warming up
-            # add time offset for lazy warming up after heating
-            if not isHeatingActive and endOffset > 0:
-                endOffset = endOffset + LAZY_OFFSET
-
-            if _nightModeTimeIsEnding:
                 reference = reference.plusMinutes( endOffset )
                 _isNightMode = self.isNightModeTime(reference)
+                msg = u"end check at {} • {} min. • {} min. lazy".format(OFFSET_FORMATTER.print(reference),endOffset,lazyTime)
             else:
                 _isNightMode = nightModeActive
-        
-            msg = u"end check at {} • {} min. • {} min. lazy".format(OFFSET_FORMATTER.print(reference),endOffset,lazyTime)
+                msg = u"already ended"
+        else:
+            if not nightModeActive:
+                startOffset = coolingDownMinutes if coolingDownMinutes > 0 else 0
+
+                minStartOffset = int( round( MIN_HEATING_TIME / 3.0 ) ) + LAZY_OFFSET
+                
+                # if heating not active, check if the night mode is far enough for a new heating cycle
+                if not isHeatingActive and startOffset < minStartOffset:
+                    startOffset = minStartOffset
+
+                reference = reference.plusMinutes( startOffset )
+                _isNightMode = self.isNightModeTime(reference)
+                msg = u"start check at {} • {} min.".format(OFFSET_FORMATTER.print(reference),startOffset)
+            else:
+                _isNightMode = nightModeActive
+                msg = u"already started"
             
         self.log.info(u"        : Night mode {}".format(msg))
 
