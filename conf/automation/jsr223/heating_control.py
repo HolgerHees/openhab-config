@@ -453,11 +453,11 @@ class HeatingHelper:
 
         if currentHeatingPowerPerMinute > 0:
             currentHeatingPowerPerMinute = round( currentHeatingPowerPerMinute * currentHeatingArea, 1 )
-            self.log.info(u"        : ⇒ HU adjusted to {} W/min. ⇧".format(round(currentHeatingPowerPerMinute,1)))
+            self.log.info(u"        : ⇒ HU adjusted to {} W/min. ⇧".format(currentHeatingPowerPerMinute))
 
         if currentCoolingPowerPerMinute > 0:
             currentCoolingPowerPerMinute = round( currentCoolingPowerPerMinute * currentCoolingArea, 1 )
-            self.log.info(u"        : ⇒ CD adjusted to {} W/min. ⇩".format(round(currentCoolingPowerPerMinute,1) * -1))
+            self.log.info(u"        : ⇒ CD adjusted to {} W/min. ⇩".format(currentCoolingPowerPerMinute * -1))
 
         if currentForecast4CoolingPowerPerMinute > 0:
             currentForecast4CoolingPowerPerMinute = round( currentForecast4CoolingPowerPerMinute * currentCoolingArea, 1 )
@@ -794,13 +794,13 @@ class HeatingCheckRule(HeatingHelper):
         return _targetLivingroomTemp, _targetBedroomTemp
 
     def calculateCurrentForecast8CoolingPowerPerMinute(self, now, currentOutdoorTemp, currentOutdoorForecast8Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, ffOpenWindowCount15, sfOpenWindowCount15):
-        _sunPower, _effectiveSouthRadiation, _effectiveWestRadiation = self.getSunPowerPerMinute( u"FC 8h   :", now.plusMinutes(480), "Cloud_Cover_Forecast8", True )
+        _sunPower, _, _ = self.getSunPowerPerMinute( u"FC 8h   :", now.plusMinutes(480), "Cloud_Cover_Forecast8", True )
         _currentForecast8CoolingPowerPerMinute = self.getCoolingPowerPerMinute( u"        :", currentOutdoorTemp, currentOutdoorForecast8Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, _sunPower, ffOpenWindowCount15, sfOpenWindowCount15 )
         self.log.info(u"        : CD {} W/min. ({}°C) ⇩".format(( _currentForecast8CoolingPowerPerMinute * -1 ),currentOutdoorForecast8Temp) )
         return _currentForecast8CoolingPowerPerMinute
 
     def calculateCurrentForecast4CoolingPowerPerMinute(self, now, currentOutdoorTemp, currentOutdoorForecast4Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, ffOpenWindowCount15, sfOpenWindowCount15):
-        _sunPower, _effectiveSouthRadiation, _effectiveWestRadiation = self.getSunPowerPerMinute( u"FC 4h   :", now.plusMinutes(240), "Cloud_Cover_Forecast4", True )
+        _sunPower, _, _ = self.getSunPowerPerMinute( u"FC 4h   :", now.plusMinutes(240), "Cloud_Cover_Forecast4", True )
         _currentForecast4CoolingPowerPerMinute = self.getCoolingPowerPerMinute( u"        :", currentOutdoorTemp, currentOutdoorForecast4Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, _sunPower, ffOpenWindowCount15, sfOpenWindowCount15 )
         self.log.info(u"        : CD {} W/min. ({}°C) ⇩".format(( _currentForecast4CoolingPowerPerMinute * -1 ),currentOutdoorForecast4Temp) )
         return _currentForecast4CoolingPowerPerMinute

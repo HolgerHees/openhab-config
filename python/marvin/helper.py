@@ -13,11 +13,15 @@ from org.joda.time import DateTime
 
 from openhab.actions import Mail, Pushover #, XMPP
 from openhab.jsr223 import scope, get_scope, get_automation_manager
-from openhab.log import logging
+#from openhab.log import logging
 from openhab.triggers import ItemStateUpdateTrigger, ItemStateChangeTrigger
 
+from org.slf4j import Logger, LoggerFactory
+
 LOG_PREFIX = "org.eclipse.smarthome.automation.custom"
-log = logging.getLogger(LOG_PREFIX)
+
+#log = logging.getLogger(LOG_PREFIX)
+log = LoggerFactory.getLogger(LOG_PREFIX)
 
 scope.scriptExtension.importPreset("RuleSimple")
 scriptExtension = scope.scriptExtension
@@ -51,7 +55,8 @@ class rule(object):
         subclass = type(clazz.__name__, (clazz, SimpleRule), dict(__init__=init))
         subclass.execute = proxy.executeWrapper(clazz.execute)
         
-        subclass.log = logging.getLogger( LOG_PREFIX + "." + filePackage + "." + classPackage )
+        #subclass.log = logging.getLogger( LOG_PREFIX + "." + filePackage + "." + classPackage )
+        subclass.log = LoggerFactory.getLogger( LOG_PREFIX + "." + filePackage + "." + classPackage )
 
         get_automation_manager().addRule(subclass())
 
