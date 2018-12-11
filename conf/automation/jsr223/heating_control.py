@@ -502,6 +502,7 @@ class CalculateChargeLevelRule(HeatingHelper):
         currentLivingRoomCircuit = getItemState("Heating_Livingroom_Circuit")
         isLivingRoomCircuitActive = currentLivingRoomCircuit == ON
 
+        # Get current open windows
         ffOpenWindowCount, sfOpenWindowCount = self.getOpenWindows( None )
 
         # Calculate current cooling power per minute, based on temperature differences, sun power and open windows
@@ -623,7 +624,7 @@ class HeatingCheckRule(HeatingHelper):
         currentLivingRoomCircuit = getItemState("Heating_Livingroom_Circuit")
         isLivingRoomCircuitActive = currentLivingRoomCircuit == ON
         
-        # Get open windows during the last 15 min
+        # Get current open windows and the ones during the last 15 min
         ffOpenWindowCount, sfOpenWindowCount = self.getOpenWindows( None, True )
         ffOpenWindowCount15, sfOpenWindowCount15 = self.getOpenWindows( now.minusMinutes(15), True )
 
