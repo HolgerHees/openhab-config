@@ -95,7 +95,10 @@ class ManualRule:
 
         if receivedCommand == OFF or receivedCommand == PercentType.ZERO:
             #self.log.info("A0 " + (motionDetectorSwitch.state == OFF))
-            sendCommandIfChanged(motionDetectorSwitch,ON)
+
+            # don't enable motion detector autmatically if we switch off a outdoor light manually
+            #sendCommandIfChanged(motionDetectorSwitch,ON)
+            pass
         else:
             #self.log.info("B0 " + (motionDetectorSwitch.state == OFF))
             sendCommandIfChanged(motionDetectorSwitch,OFF)
@@ -186,16 +189,17 @@ class TerraceManualKnxRule:
         # Wait until received command has updatet item state
         time.sleep(1)
 
-        if input["command"] == ON:
+        if input["command"] == OFF:
+            if getItemState("Light_Outdoor_Terrace_Manual") != 0 or getItemState("Light_Outdoor_Terrace_Manual") != OFF:
+                postUpdate("Light_Outdoor_Terrace_Manual", OFF )
+
+            # don't enable motion detector autmatically if we switch off a outdoor light manually
+            #sendCommandIfChanged("Motiondetector_Outdoor_Terrace_Switch",ON)
+        else:
             if getItemState("Light_Outdoor_Terrace_Manual") == PercentType.ZERO or getItemState("Light_Outdoor_Terrace_Manual") == OFF:
                 postUpdate("Light_Outdoor_Terrace_Manual", ON )
 
             sendCommandIfChanged("Motiondetector_Outdoor_Terrace_Switch",OFF)
-        else:
-            if getItemState("Light_Outdoor_Terrace_Manual") != 0 or getItemState("Light_Outdoor_Terrace_Manual") != OFF:
-                postUpdate("Light_Outdoor_Terrace_Manual", OFF )
-
-            sendCommandIfChanged("Motiondetector_Outdoor_Terrace_Switch",ON)
 
 
 @rule("lights_outdoor_control.py")
