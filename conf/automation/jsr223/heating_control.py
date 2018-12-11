@@ -82,8 +82,8 @@ class HeatingHelper:
         
         return value
 
-    def isOutdatetForecast(self, recheck = False):
-        if recheck or HeatingHelper.outdatetForecast is None:
+    def isOutdatetForecast(self, cached = False):
+        if cached == False or HeatingHelper.outdatetForecast is None:
             HeatingHelper.outdatetForecast = itemLastUpdateOlderThen("Temperature_Garden_Forecast4", getNow().minusMinutes(360) )
         return HeatingHelper.outdatetForecast
 
@@ -116,11 +116,11 @@ class HeatingHelper:
         return len(HeatingHelper.openFFContacts), len(HeatingHelper.openSFContacts)
 
     def _getCloudData( self, cloudCoverItem ):
-        if not self.isOutdatetForecast(False):
-            return getItemState(cloudCoverItem).doubleValue()
-
-        self.log.info(u"Forecast: ERROR • Fall back to full cloud cover.")
-        return 9.0
+        if self.isOutdatetForecast(True):
+            self.log.info(u"Forecast: ERROR • Fall back to full cloud cover.")
+            return 9.0
+        
+        return getItemState(cloudCoverItem).doubleValue()
 
     def _getSunData( self, time ):
 
@@ -603,7 +603,7 @@ class HeatingCheckRule(HeatingHelper):
         currentOutdoorTemp = self.getStableValue( now, "Temperature_Garden", 10, True )
 
         # not changed since 6 hours.
-        if self.isOutdatetForecast(True):
+        if self.isOutdatetForecast():
             self.log.info(u"Forecast: ERROR • Fall back to current temperature.")
             currentOutdoorForecast4Temp = currentOutdoorTemp
             currentOutdoorForecast8Temp = currentOutdoorTemp
