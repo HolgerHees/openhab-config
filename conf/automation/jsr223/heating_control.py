@@ -400,8 +400,7 @@ class HeatingHelper:
 
         currentHeatingPowerPerMinute, pumpVolume, maxHeatingPowerPerMinute = self.getHeatingPowerPerMinute(activeRooms,pumpSpeed,outValue,inValue)
 
-        self.log.info(u"Heating : Diff {}°C • VL {}°C • RL {}°C".format((outValue - inValue),outValue,inValue))
-        self.log.info(u"        : Speed {}% • Volume {} m³ • HU {} W/min.⇧".format(pumpSpeed,pumpVolume,currentHeatingPowerPerMinute))
+        self.log.info(u"        : Diff {}°C • VL {}°C • RL {}°C • {}% ({} m³)".format((outValue - inValue),outValue,inValue,pumpSpeed,pumpVolume))
         
         return currentHeatingPowerPerMinute, pumpSpeed, maxHeatingPowerPerMinute
 
