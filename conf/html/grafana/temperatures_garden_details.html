@@ -7,7 +7,7 @@
     <script src="js/smarthome-grafana-user-defaults.js"></script>
     <script src="js/helper.js"></script>
     <style>
-    .panel-container { height: 100%; }
+    .panel-container { height: 33%; }
     </style>
 </head>
 
@@ -17,6 +17,8 @@
 <script>
     listener = new InitializedListener();
     addGrafanaPanel("Garden_Temperatures_Details"   , listener.generateParams( "temperatures/temperaturen-and-feuchtigkeit", 3,3,3 ) );
+    addGrafanaPanel("Garden_Temperatures"   , listener.generateParams( "temperatures/temperaturen-and-feuchtigkeit", 4,4,4 ) );
+    addGrafanaPanel("Garden_Temperatures_Last_Year"   , listener.generateParams( "temperatures/temperaturen-and-feuchtigkeit", 12,12,12 ) );
     listener.initIFrames();
 </script>
 

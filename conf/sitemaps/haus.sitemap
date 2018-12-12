@@ -355,7 +355,7 @@ sitemap haus label="Main Menu"
                             }
                             Frame {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/temperatures_garden_details.html?fromItem=Chart_From" height=9
+                                Webview url="/static/grafana/temperatures_garden_details.html?fromItem=Chart_From" height=27
                             }
                         }
                         Text item=Rain_Garden_Message
