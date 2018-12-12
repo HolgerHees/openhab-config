@@ -27,6 +27,12 @@ class MotiondetectorOutdoorSwitchRule:
             sendCommand("Light_Outdoor_Carport_Manual",OFF)
             sendCommand("Light_Outdoor_Terrace_Manual",0)
             sendCommand("Light_Outdoor_Garage_Gardenside_Manual",OFF)
+
+            postUpdate("Motiondetector_Outdoor_Garage_Streetside_Switch",ON)
+            postUpdate("Motiondetector_Outdoor_Frontdoor_Switch",ON)
+            postUpdate("Motiondetector_Outdoor_Carport_Switch",ON)
+            postUpdate("Motiondetector_Outdoor_Terrace_Switch",ON)
+            postUpdate("Motiondetector_Outdoor_Garage_Gardenside_Switch",ON)
         else:
             postUpdate("Motiondetector_Outdoor_Garage_Streetside_Switch",OFF)
             postUpdate("Motiondetector_Outdoor_Frontdoor_Switch",OFF)
