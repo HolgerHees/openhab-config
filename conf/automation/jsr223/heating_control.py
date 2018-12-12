@@ -87,34 +87,6 @@ class HeatingHelper:
             HeatingHelper.outdatetForecast = itemLastUpdateOlderThen("Temperature_Garden_Forecast4", getNow().minusMinutes(360) )
         return HeatingHelper.outdatetForecast
 
-    def getOpenWindows( self, checkedTime, cached = False ):
-        if cached == False or HeatingHelper.openSFContacts is None:
-            # should be at least 2 minutes open
-            initialReference = getNow().minusMinutes(2)
-            
-            HeatingHelper.openFFContacts = []
-            if getItemState("Door_FF_Floor") == OPEN:
-                door = getItem("Door_FF_Floor")
-                if itemLastUpdateOlderThen(door,initialReference):
-                    HeatingHelper.openFFContacts.append(door)
-            if getItemState("Sensor_Window_FF") == OPEN:
-                for sensor in getGroupMember("Sensor_Window_FF"):
-                    if sensor.getName() != "Window_FF_Garage" and sensor.getState() == OPEN and itemLastUpdateOlderThen(sensor,initialReference):
-                        HeatingHelper.openFFContacts.append(sensor)
-
-            HeatingHelper.openSFContacts = []
-            if getItemState("Sensor_Window_SF") == OPEN:
-                for sensor in getGroupMember("Sensor_Window_SF"):
-                    if sensor.getName() != "Window_SF_Attic" and sensor.getState() == OPEN and itemLastUpdateOlderThen(sensor,initialReference):
-                        HeatingHelper.openSFContacts.append(sensor)
-
-        if checkedTime is not None:
-            _ffOpenWindowCount = len(filter(lambda window: itemLastUpdateOlderThen(window,checkedTime), HeatingHelper.openFFContacts))
-            _sfOpenWindowCount = len(filter(lambda window: itemLastUpdateOlderThen(window,checkedTime), HeatingHelper.openSFContacts))
-            return _ffOpenWindowCount, _sfOpenWindowCount
-        
-        return len(HeatingHelper.openFFContacts), len(HeatingHelper.openSFContacts)
-
     def _getCloudData( self, cloudCoverItem ):
         if self.isOutdatetForecast(True):
             self.log.info(u"Forecast: ERROR • Fall back to full cloud cover.")
@@ -151,7 +123,7 @@ class HeatingHelper:
 
         return elevation, azimut
 
-    def getSunPowerPerMinute( self, logPrefix, referenceTime, cloudCoverItem, isForecast ):
+    def getSunPowerPerMinute( self, logPrefix, activeRooms, referenceTime, cloudCoverItem, isForecast ):
 
         cloudCover = self._getCloudData( cloudCoverItem )
         elevation, azimut = self._getSunData( referenceTime )
@@ -209,12 +181,15 @@ class HeatingHelper:
             if _effectiveWestRadiation > 0.0:
                 # 0 means 0% down
                 if isForecast or getItemState("Shutters_SF_Bedroom") == PercentType.ZERO:
-                        _activeRadiation = _activeRadiation + ( ( 0.615 * 1.00 * 3.0 ) * _effectiveWestRadiation )
+                   _activeRadiation = _activeRadiation + ( ( 0.615 * 1.00 * 3.0 ) * _effectiveWestRadiation )
                 if isForecast or getItemState("Shutters_FF_Kitchen") == PercentType.ZERO:
-                        _activeRadiation = _activeRadiation + ( ( 0.645 * 1.01 * 2.0 ) * _effectiveWestRadiation )
-                if isForecast or getItemState("Shutters_FF_Livingroom_Terrace") == PercentType.ZERO:
+                    _activeRadiation = _activeRadiation + ( ( 0.645 * 1.01 * 2.0 ) * _effectiveWestRadiation )
+                    
+                # exclude inactive rooms from sun power to exclude their effects from further calculation
+                if activeRooms.get("livingroom"):
+                    if isForecast or getItemState("Shutters_FF_Livingroom_Terrace") == PercentType.ZERO:
                         _activeRadiation = _activeRadiation + ( ( 0.625 * 2.13 * 3.0 ) * _effectiveWestRadiation )
-                if isForecast or getItemState("Shutters_FF_Livingroom_Couch") == PercentType.ZERO:
+                    if isForecast or getItemState("Shutters_FF_Livingroom_Couch") == PercentType.ZERO:
                         _activeRadiation = _activeRadiation + ( ( 0.655 * 2.13 * 2.0 ) * _effectiveWestRadiation )
             
             _activeRadiation = round( _activeRadiation / 60.0, 1 )
@@ -237,49 +212,39 @@ class HeatingHelper:
 
         self.log.info(u"{} Azimut {}° • Elevation {}° • Clouds {} octas{}".format(logPrefix, sunAzimutMsg, sunElevationMsg, cloudCover, activeMsg) )
 
-        return _activeRadiation, _effectiveSouthRadiation, _effectiveWestRadiation
+        return _activeRadiation, _activeRadiation, _effectiveSouthRadiation, _effectiveWestRadiation
+       
+    def getOpenWindows( self, checkedTime, cached = False ):
+        if cached == False or HeatingHelper.openSFContacts is None:
+            # should be at least 2 minutes open
+            initialReference = getNow().minusMinutes(2)
+            
+            HeatingHelper.openFFContacts = []
+            if getItemState("Door_FF_Floor") == OPEN:
+                door = getItem("Door_FF_Floor")
+                if itemLastUpdateOlderThen(door,initialReference):
+                    HeatingHelper.openFFContacts.append(door)
+            if getItemState("Sensor_Window_FF") == OPEN:
+                for sensor in getGroupMember("Sensor_Window_FF"):
+                    if sensor.getName() != "Window_FF_Garage" and sensor.getState() == OPEN and itemLastUpdateOlderThen(sensor,initialReference):
+                        HeatingHelper.openFFContacts.append(sensor)
 
-    def getNeededEnergyForOneDegrees( self, livingroomTemperature, bedroomTemperature, isLivingRoomCircuitActive ):
+            HeatingHelper.openSFContacts = []
+            if getItemState("Sensor_Window_SF") == OPEN:
+                for sensor in getGroupMember("Sensor_Window_SF"):
+                    if sensor.getName() != "Window_SF_Attic" and sensor.getState() == OPEN and itemLastUpdateOlderThen(sensor,initialReference):
+                        HeatingHelper.openSFContacts.append(sensor)
 
-        # 15°C => 1.2250
-        # 30°C => 1.1644
+        if checkedTime is not None:
+            _ffOpenWindowCount = filter(lambda window: itemLastUpdateOlderThen(window,checkedTime), HeatingHelper.openFFContacts)
+            _sfOpenWindowCount = filter(lambda window: itemLastUpdateOlderThen(window,checkedTime), HeatingHelper.openSFContacts)
+        else:
+            _ffOpenWindowCount = HeatingHelper.openFFContacts
+            _sfOpenWindowCount = HeatingHelper.openSFContacts
+            
+        return { "ffCount": len(_ffOpenWindowCount), "totalFfCount": 6, "sfCount": len(_sfOpenWindowCount), "totalSfCount": 5 }
 
-        # 0°C  => 0
-        # 15°C => -0.0606
-
-        # https://www.ubakus.de/u-wert-rechner/
-        _minDensity = 1.1644
-        maxDensity = 1.2250
-        _cAir = 1.005 # KJ / KG
-        _jouleKWRatio = 3.6
-
-        _lowerVolume = 231.8911
-        _upperVolume = 216.5555
-
-        _lowerFloorPower = 16978.9524375
-        if not isLivingRoomCircuitActive:
-            # livingroom                          floor,             outdoor wall,      17cm &             11cm indoor wall   and ceiling
-            _lowerFloorPower = _lowerFloorPower - 1806.89166666667 - 741.544222222222 - 295.185916666667 - 130.277583333333 - 1399.25791666667
-        
-        _upperFloorPower = 6468.41981666667
-
-        _lowerDensity = ( ( livingroomTemperature - 15.0 ) * ( _minDensity - maxDensity ) / 15.0 ) + maxDensity
-        if _lowerDensity < _minDensity: _lowerDensity = _minDensity
-        elif _lowerDensity > maxDensity: _lowerDensity = maxDensity
-
-        _upperDensity = ( ( bedroomTemperature - 15.0 ) * ( _minDensity - maxDensity ) / 15.0 ) + maxDensity
-        if _upperDensity < _minDensity: _upperDensity = _minDensity
-        elif _upperDensity > maxDensity: _upperDensity = maxDensity
-
-        _lowerAirPower = _lowerVolume * _lowerDensity * _cAir / _jouleKWRatio
-        _upperAirPower = _upperVolume * _upperDensity * _cAir / _jouleKWRatio
-
-        lowerPower = _lowerFloorPower + _lowerAirPower
-        upperPower = _upperFloorPower + _upperAirPower
-
-        return lowerPower + upperPower
-
-    def getHeatingPowerPerMinute( self, pumpSpeed, temperature_Pipe_Out, temperature_Pipe_In):
+    def getHeatingPowerPerMinute( self, activeRooms, pumpSpeed, temperature_Pipe_Out, temperature_Pipe_In):
         # To warmup 1 liter of wather you need 4,182 Kilojoule
         # 1 Wh == 3,6 kJ
         # 1000 l * 4,182 kJ / 3,6kJ = 1161,66666667
@@ -290,43 +255,17 @@ class HeatingHelper:
         circulationDiff = temperature_Pipe_Out - temperature_Pipe_In
         pumpVolume = round( ( _maxVolume * pumpSpeed ) / 100.0, 2 )
         currentHeatingPowerPerMinute = round( ( _referencePower * pumpVolume * circulationDiff ) / 60.0, 1 )
-        return currentHeatingPowerPerMinute, pumpVolume
+        
+        maxHeatingPowerPerMinute = currentHeatingPowerPerMinute
+        
+        # remove inactive rooms from heating power to exclude their effects from further calculation
+        if not activeRooms.get("livingroom"):
+            # Livingroom is 23.2049195152831% of the whole heating area
+            currentHeatingPowerPerMinute = round( currentHeatingPowerPerMinute * 0.768, 1 )
+      
+        return currentHeatingPowerPerMinute, pumpVolume, maxHeatingPowerPerMinute
     
-    def getCurrentHeatingPowerPerMinute( self ):
-        pumpSpeed = getItemState("Heating_Circuit_Pump_Speed").intValue()
-        if pumpSpeed == 0: 
-            return 0.0, pumpSpeed
-        
-        outValue = getItemState("Heating_Temperature_Pipe_Out").doubleValue()
-        inValue = getItemState("Heating_Temperature_Pipe_In").doubleValue()
-
-        currentHeatingPowerPerMinute, pumpVolume = self.getHeatingPowerPerMinute(pumpSpeed,outValue,inValue)
-
-        self.log.info(u"Heating : Diff {}°C • VL {}°C • RL {}°C".format((outValue - inValue),outValue,inValue))
-        self.log.info(u"        : Speed {}% • Volume {} m³ • HU {} W/min.⇧".format(pumpSpeed,pumpVolume,currentHeatingPowerPerMinute))
-
-        return currentHeatingPowerPerMinute, pumpSpeed
-
-    def getPossibleHeatingPower( self, isLivingRoomCircuitActive, currentLivingroomTemp, currentBedroomTemp, currentOutdoorTemp ):
-        # Estimation is based on 100% heating pump speed and a avg temperature difference 16.1°C between in and out water
-        temperature_Pipe_In = currentLivingroomTemp if isLivingRoomCircuitActive and currentLivingroomTemp < currentBedroomTemp else currentBedroomTemp
-        
-        # 0.3 steilheit
-        # niveau 12k
-        # 20° => 36°
-        # -20^ => 47°        
-        if currentOutdoorTemp > 15.0: 
-            maxVL = 32
-        elif currentOutdoorTemp < -15.0:
-            maxVL = 44 
-        else:
-            maxVL = ( ( currentOutdoorTemp - 15.0 ) * -0.4 ) + 32.0
-
-        _possibleHeatingPowerPerMinute, _possiblePumpVolume = self.getHeatingPowerPerMinute( 100.0, maxVL, temperature_Pipe_In )
-        
-        return _possibleHeatingPowerPerMinute, 0
-
-    def getCoolingPowerPerMinute( self, logPrefix, outdoorTempReference, outdoorTemperature, livingroomTemperature, bedroomTemperature, atticTemperature, sunPower, ffOpenWindowCount, sfOpenWindowCount ):
+    def getCoolingPowerPerMinute( self, logPrefix, activeRooms, outdoorTempReference, outdoorTemperature, livingroomTemperature, bedroomTemperature, atticTemperature, sunPower, sunPowerMax, openWindow ):
 
         densitiyAir = 1.2041
         cAir = 1.005
@@ -379,31 +318,125 @@ class HeatingHelper:
         _leakingUpperPowerInKJ = _leakingUpperUValue * _leakingUpperTemperatureDiff
 
         leakingPowerInW = ( _leakingLowerPowerInKJ + _leakingUpperPowerInKJ ) / 3.6
+        totalPower = ( floorPower + egPower + ogPower + atticPower ) + ventilationPowerInW + leakingPowerInW
 
-        # Open Window Power
-        _maxEgOpenWindow = 6.0
-        _maxOgOpenWindow = 5.0
+        maxTotalPower = totalPower
+        # remove inactive room from cooling power to exclude their effects from further calculation
+        if not activeRooms.get("livingroom"):
+            # Livingroom is 14.7970287546333% or 21.539624 W/h/K of the whole house UValue
+            totalPower = round( totalPower * 0.852, 1 )
 
-        egExchangePower = ( ( egPower * ffOpenWindowCount ) / _maxEgOpenWindow ) * 2.0
-        ogExchangePower = ( ( ogPower * sfOpenWindowCount ) / _maxOgOpenWindow ) * 2.0
+        # open window cooling always applies completely and ignoring deactivated rooms, because of the inhouse air circulation related on this windows
+        egExchangePower = ( ( (egPower + floorPower) * openWindow["ffCount"] ) / openWindow["totalFfCount"] ) * 2.0
+        ogExchangePower = ( ( (ogPower + atticPower) * openWindow["sfCount"] ) / openWindow["totalSfCount"] ) * 2.0
 
+        # sunPower and openWindow are already adjusted to exclude inactive rooms
+        coolingPower = round( ( (totalPower + egExchangePower + ogExchangePower) / 60.0 ) - sunPower, 1 )
+        maxCoolingPower = round( ( (maxTotalPower + egExchangePower + ogExchangePower) / 60.0 ) - sunPowerMax, 1 )
+
+        # log messages
         baseMsg = round( ( ( floorPower + egPower + ogPower + atticPower ) / 60.0 ) * -10.0 ) / 10.0
         ventilationMsg = round( ( ( ventilationPowerInW / 60.0 ) * -10.0 ) ) / 10.0
         leakingMsg = round( ( leakingPowerInW / 60.0 ) * -10.0 ) / 10.0
         windowMsg = round( ( ( egExchangePower + ogExchangePower ) / 60.0 ) * -10.0 ) / 10.0
+        self.log.info(u"{} Wall {} • Air {} • Leak {} • Window {} • Sun {}".format(logPrefix, baseMsg, ventilationMsg, leakingMsg, windowMsg, sunPowerMax) )
 
-        self.log.info(u"{} Wall {} • Air {} • Leak {} • Window {} • Sun {}".format(logPrefix, baseMsg, ventilationMsg, leakingMsg, windowMsg, sunPower) )
+        return coolingPower, maxCoolingPower
 
-        totalPower = ( floorPower + egPower + ogPower + atticPower ) + ventilationPowerInW + leakingPowerInW + egExchangePower + ogExchangePower
+    def getNeededEnergyForOneDegrees( self, activeRooms, livingroomTemperature, bedroomTemperature ):
 
-        coolingPower = round( ( totalPower / 60.0 ) - sunPower, 1 )
+        # 15°C => 1.2250
+        # 30°C => 1.1644
 
-        return coolingPower
+        # 0°C  => 0
+        # 15°C => -0.0606
 
-    def calculateCurrentCoolingPowerPerMinute(self, now, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, ffOpenWindowCount, sfOpenWindowCount ):
-        _sunPower, _effectiveSouthRadiation, _effectiveWestRadiation = self.getSunPowerPerMinute( u"Current :", now, "Cloud_Cover_Current", False )
-        _currentCoolingPowerPerMinute = self.getCoolingPowerPerMinute( u"        :", currentOutdoorTemp, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, _sunPower, ffOpenWindowCount, sfOpenWindowCount )
-        return _currentCoolingPowerPerMinute, _sunPower, _effectiveSouthRadiation, _effectiveWestRadiation
+        # https://www.ubakus.de/u-wert-rechner/
+        _minDensity = 1.1644
+        maxDensity = 1.2250
+        _cAir = 1.005 # KJ / KG
+        _jouleKWRatio = 3.6
+
+        _lowerVolume = 231.8911
+        _upperVolume = 216.5555
+
+        _lowerFloorPower = 16978.9524375       
+        _upperFloorPower = 6468.41981666667
+
+        _lowerDensity = ( ( livingroomTemperature - 15.0 ) * ( _minDensity - maxDensity ) / 15.0 ) + maxDensity
+        if _lowerDensity < _minDensity: _lowerDensity = _minDensity
+        elif _lowerDensity > maxDensity: _lowerDensity = maxDensity
+
+        _upperDensity = ( ( bedroomTemperature - 15.0 ) * ( _minDensity - maxDensity ) / 15.0 ) + maxDensity
+        if _upperDensity < _minDensity: _upperDensity = _minDensity
+        elif _upperDensity > maxDensity: _upperDensity = maxDensity
+
+        _lowerAirPower = _lowerVolume * _lowerDensity * _cAir / _jouleKWRatio
+        _upperAirPower = _upperVolume * _upperDensity * _cAir / _jouleKWRatio
+
+        lowerPower = _lowerFloorPower + _lowerAirPower
+        upperPower = _upperFloorPower + _upperAirPower
+        
+        totalPower = lowerPower + upperPower
+
+        maxPower = totalPower
+        
+        # remove inactive rooms from needed power to exclude their effects from further calculation
+        if not activeRooms.get("livingroom"):
+            # livingroom                           floor,             outdoor wall,      17cm &             11cm indoor wall   and ceiling
+            #kcalc
+            #_lowerFloorPower = _lowerFloorPower - 1806.89166666667 - 741.544222222222 - 295.185916666667 - 130.277583333333 - 1399.25791666667
+            totalPower = totalPower - 4373.15730556
+
+        return totalPower, maxPower
+
+    def getCurrentHeatingPowerPerMinute( self, activeRooms ):
+        pumpSpeed = getItemState("Heating_Circuit_Pump_Speed").intValue()
+        if pumpSpeed == 0: 
+            return 0.0, pumpSpeed, 0.0
+        
+        outValue = getItemState("Heating_Temperature_Pipe_Out").doubleValue()
+        inValue = getItemState("Heating_Temperature_Pipe_In").doubleValue()
+
+        currentHeatingPowerPerMinute, pumpVolume, maxHeatingPowerPerMinute = self.getHeatingPowerPerMinute(activeRooms,pumpSpeed,outValue,inValue)
+
+        self.log.info(u"Heating : Diff {}°C • VL {}°C • RL {}°C".format((outValue - inValue),outValue,inValue))
+        self.log.info(u"        : Speed {}% • Volume {} m³ • HU {} W/min.⇧".format(pumpSpeed,pumpVolume,currentHeatingPowerPerMinute))
+        
+        return currentHeatingPowerPerMinute, pumpSpeed, maxHeatingPowerPerMinute
+
+    def getPossibleHeatingPowerPerMinute( self, activeRooms, currentLivingroomTemp, currentBedroomTemp, currentOutdoorTemp ):
+        # Estimation is based on 100% heating pump speed and a avg temperature difference 16.1°C between in and out water
+        temperature_Pipe_In = currentLivingroomTemp if activeRooms.get("livingroom") and currentLivingroomTemp < currentBedroomTemp else currentBedroomTemp
+        
+        # 0.3 steilheit
+        # niveau 12k
+        # 20° => 36°
+        # -20^ => 47°        
+        if currentOutdoorTemp > 15.0: 
+            maxVL = 32
+        elif currentOutdoorTemp < -15.0:
+            maxVL = 44 
+        else:
+            maxVL = ( ( currentOutdoorTemp - 15.0 ) * -0.4 ) + 32.0
+
+        _possibleHeatingPowerPerMinute, _, _maxHeatingPowerPerMinute = self.getHeatingPowerPerMinute( activeRooms, 100.0, maxVL, temperature_Pipe_In )
+        
+        return _possibleHeatingPowerPerMinute, 0, _maxHeatingPowerPerMinute
+
+    def getCurrentCoolingPowerPerMinute(self, activeRooms, now, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, openWindow ):
+        _sunPower, _sunPowerMax, _effectiveSouthRadiation, _effectiveWestRadiation = self.getSunPowerPerMinute( u"Current :", activeRooms, now, "Cloud_Cover_Current", False )
+        _coolingPowerPerMinute, _maxPowerPerMinute = self.getCoolingPowerPerMinute( u"        :", activeRooms, currentOutdoorTemp, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, _sunPower, _sunPowerMax, openWindow )
+        
+        return _coolingPowerPerMinute, _sunPower, _effectiveSouthRadiation, _effectiveWestRadiation, _maxPowerPerMinute
+
+    def getCurrentForecastCoolingPowerPerMinute(self, hours, activeRooms, now, currentOutdoorTemp, currentOutdoorForecastTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, openWindow ):
+        _sunPower, _sunPowerMax, _, _ = self.getSunPowerPerMinute( u"FC {}h   :".format(hours), activeRooms, now.plusMinutes(hours*60), u"Cloud_Cover_Forecast{}".format(hours), True )
+        _coolingPowerPerMinute, _maxPowerPerMinute = self.getCoolingPowerPerMinute( u"        :", activeRooms, currentOutdoorTemp, currentOutdoorForecastTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, _sunPower, _sunPowerMax, openWindow )
+        if _coolingPowerPerMinute != _maxPowerPerMinute:
+            self.log.info(u"        : ⇲ CD -{} W/min. ⇩".format(_maxPowerPerMinute))
+        self.log.info(u"        : CD -{} W/min. ({}°C) ⇩".format(_coolingPowerPerMinute,currentOutdoorForecastTemp) )
+        return _coolingPowerPerMinute, _maxPowerPerMinute
 
     def _cleanupChargeLevel( self, totalChargeLevel, _cleanableChargeDiff ):
 
@@ -446,28 +479,21 @@ class HeatingHelper:
             postUpdate("Heating_Reference", _referenceLivingroomTemp )
         return _totalChargeLevel
     
-    def adjustPower( self, currentHeatingPowerPerMinute, currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, baseHeatingPower, currentLivingroomTemp, currentBedroomTemp ):
-        # maybe exclude livingroom from calculation
-        currentHeatingArea = 0.716 # Livingroom is 28,4457911462567% of the whole area
-        currentCoolingArea = 0.779 # Livingroom is 22,0582116131553% of the whole volume
+    def logPowerAdjustments( self, currentCoolingPowerPerMinute, maxCoolingPowerPerMinute, currentHeatingPowerPerMinute, maxHeatingPowerPerMinute, baseHeatingPower, maxHeatingPower ):
+        msg = None
+        if currentCoolingPowerPerMinute != maxCoolingPowerPerMinute:
+            msg = u"CD -{} W/min. ⇩".format(maxCoolingPowerPerMinute)
 
-        if currentHeatingPowerPerMinute > 0:
-            currentHeatingPowerPerMinute = round( currentHeatingPowerPerMinute * currentHeatingArea, 1 )
-            self.log.info(u"        : ⇒ HU adjusted to {} W/min. ⇧".format(currentHeatingPowerPerMinute))
-
-        if currentCoolingPowerPerMinute > 0:
-            currentCoolingPowerPerMinute = round( currentCoolingPowerPerMinute * currentCoolingArea, 1 )
-            self.log.info(u"        : ⇒ CD adjusted to {} W/min. ⇩".format(currentCoolingPowerPerMinute * -1))
-
-        if currentForecast4CoolingPowerPerMinute > 0:
-            currentForecast4CoolingPowerPerMinute = round( currentForecast4CoolingPowerPerMinute * currentCoolingArea, 1 )
-        #_currentForecast8CoolingPowerPerMinute = currentForecast8CoolingPowerPerMinute * currentCoolingArea
-
-        _baseHeatingPower = self.getNeededEnergyForOneDegrees( currentLivingroomTemp, currentBedroomTemp, False )
-        self.log.info(u"        : ⇒ Slot adjusted to {} KW/K from {} KW/K".format(round( _baseHeatingPower / 1000.0, 1 ),round( baseHeatingPower / 1000.0, 1 )))
-        baseHeatingPower = _baseHeatingPower
+        if currentHeatingPowerPerMinute != maxHeatingPowerPerMinute:
+            if msg != None: msg = u"{} • ".format(msg)
+            msg = u"{}HU {} W/min. ⇧".format(msg,maxHeatingPowerPerMinute)
             
-        return currentHeatingPowerPerMinute, currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, baseHeatingPower
+        if baseHeatingPower != maxHeatingPower:
+            if msg != None: msg = u"{} • ".format(msg)
+            msg = u"{}Slot {} KW/K".format(msg,round( maxHeatingPower / 1000.0, 1 ))
+            
+        if msg != None:
+            self.log.info(u"        : ⇲ {}".format(msg))
  
 @rule("heating_control.py")
 class MoveCircuitSwitchRule(HeatingHelper):
@@ -501,27 +527,31 @@ class CalculateChargeLevelRule(HeatingHelper):
 
         currentLivingRoomCircuit = getItemState("Heating_Livingroom_Circuit")
         isLivingRoomCircuitActive = currentLivingRoomCircuit == ON
+        activeRooms = { "livingroom": isLivingRoomCircuitActive }
 
         # Get current open windows
-        ffOpenWindowCount, sfOpenWindowCount = self.getOpenWindows( None )
+        openWindow = self.getOpenWindows( None )
 
         # Calculate current cooling power per minute, based on temperature differences, sun power and open windows
-        currentCoolingPowerPerMinute, sunPower, effectiveSouthRadiation, effectiveWestRadiation = self.calculateCurrentCoolingPowerPerMinute( now, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, ffOpenWindowCount, sfOpenWindowCount )
+        currentCoolingPowerPerMinute, sunPower, effectiveSouthRadiation, effectiveWestRadiation, maxCoolingPowerPerMinute = self.getCurrentCoolingPowerPerMinute( activeRooms, now, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, openWindow )
         
-        self.setSunStates( currentOutdoorTemp, currentAtticTemp, currentBedroomTemp, currentLivingroomTemp, sunPower, effectiveSouthRadiation, effectiveWestRadiation )
-
         # Get Needed energy to warmup the house by one degrees
-        baseHeatingPower = self.getNeededEnergyForOneDegrees( currentLivingroomTemp, currentBedroomTemp, True )
+        baseHeatingPower, maxHeatingPower = self.getNeededEnergyForOneDegrees( activeRooms, currentLivingroomTemp, currentBedroomTemp )
 
         # Calculate the "real" heating power based on the pump speed.
-        currentHeatingPowerPerMinute, currentPumpSpeedInPercent = self.getCurrentHeatingPowerPerMinute()
+        currentHeatingPowerPerMinute, currentPumpSpeedInPercent, maxHeatingPowerPerMinute = self.getCurrentHeatingPowerPerMinute( activeRooms )
         
+        self.logPowerAdjustments( currentCoolingPowerPerMinute, maxCoolingPowerPerMinute, currentHeatingPowerPerMinute, maxHeatingPowerPerMinute, baseHeatingPower, maxHeatingPower )
+            
         # some logs
         self.log.info(u"        : CD {} W/min. ({}°C) ⇩ • HU {} W/min. ({}%) ⇧".format(( currentCoolingPowerPerMinute * -1 ),currentOutdoorTemp,currentHeatingPowerPerMinute,currentPumpSpeedInPercent) )
 
-        if not isLivingRoomCircuitActive:
-            currentHeatingPowerPerMinute, currentCoolingPowerPerMinute, _, baseHeatingPower = self.adjustPower( currentHeatingPowerPerMinute, currentCoolingPowerPerMinute, 0, baseHeatingPower, currentLivingroomTemp, currentBedroomTemp )
-            
+        slotHeatingPower = round( baseHeatingPower * 0.1, 1 )
+        
+        self.log.info(u"Slot    : {} KW/K • {} W/0.1K".format(round( baseHeatingPower / 1000.0, 1 ),slotHeatingPower ) )
+
+        self.setSunStates( currentOutdoorTemp, currentAtticTemp, currentBedroomTemp, currentLivingroomTemp, sunPower, effectiveSouthRadiation, effectiveWestRadiation )
+
         # Get the house charge level. If we detect a house warmup, we remove "adjust" the needed amount energy for heating up in 0.1°C levels
         totalChargeLevel = self.calculateAdjustedTotalChargeLevel( now, baseHeatingPower )
     
@@ -623,37 +653,36 @@ class HeatingCheckRule(HeatingHelper):
 
         currentLivingRoomCircuit = getItemState("Heating_Livingroom_Circuit")
         isLivingRoomCircuitActive = currentLivingRoomCircuit == ON
-        
+        activeRooms = { "livingroom": isLivingRoomCircuitActive }
+
         # Get current open windows and the ones during the last 15 min
-        ffOpenWindowCount, sfOpenWindowCount = self.getOpenWindows( None, True )
-        ffOpenWindowCount15, sfOpenWindowCount15 = self.getOpenWindows( now.minusMinutes(15), True )
+        openWindow = self.getOpenWindows( None, True )
+        openWindow15 = self.getOpenWindows( now.minusMinutes(15), True )
 
         # Calculate cooling power in 8h
-        currentForecast8CoolingPowerPerMinute = self.calculateCurrentForecast8CoolingPowerPerMinute( now, currentOutdoorTemp, currentOutdoorForecast8Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, ffOpenWindowCount15, sfOpenWindowCount15)
+        currentForecast8CoolingPowerPerMinute, maxForecast8CoolingPowerPerMinute = self.getCurrentForecastCoolingPowerPerMinute( 8, activeRooms, now, currentOutdoorTemp, currentOutdoorForecast8Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, openWindow15)
 
         # Calculate cooling power in 4h
-        currentForecast4CoolingPowerPerMinute = self.calculateCurrentForecast4CoolingPowerPerMinute( now, currentOutdoorTemp, currentOutdoorForecast4Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, ffOpenWindowCount15, sfOpenWindowCount15)
+        currentForecast4CoolingPowerPerMinute, maxForecast4CoolingPowerPerMinute = self.getCurrentForecastCoolingPowerPerMinute( 4, activeRooms, now, currentOutdoorTemp, currentOutdoorForecast4Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, openWindow15)
 
         # Calculate current cooling power per minute, based on temperature differences, sun power and open windows
-        currentCoolingPowerPerMinute, _, _, _ = self.calculateCurrentCoolingPowerPerMinute( now, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, ffOpenWindowCount, sfOpenWindowCount )
+        currentCoolingPowerPerMinute, _, _, _, maxCoolingPowerPerMinute = self.getCurrentCoolingPowerPerMinute( activeRooms, now, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, openWindow )
 
         # Get Needed energy to warmup the house by one degrees
-        baseHeatingPower = self.getNeededEnergyForOneDegrees( currentLivingroomTemp, currentBedroomTemp, True )
+        baseHeatingPower, maxHeatingPower = self.getNeededEnergyForOneDegrees( activeRooms, currentLivingroomTemp, currentBedroomTemp )
 
         # Calculate the "real" heating power based on the pump speed.
-        currentHeatingPowerPerMinute, currentPumpSpeedInPercent = self.getCurrentHeatingPowerPerMinute()
+        currentHeatingPowerPerMinute, currentPumpSpeedInPercent, maxHeatingPowerPerMinute = self.getCurrentHeatingPowerPerMinute( activeRooms )
         if currentHeatingPowerPerMinute == 0:
-            currentHeatingPowerPerMinute, currentPumpSpeedInPercent = self.getPossibleHeatingPower( isLivingRoomCircuitActive, currentLivingroomTemp, currentBedroomTemp, currentOutdoorTemp )
+            currentHeatingPowerPerMinute, currentPumpSpeedInPercent, maxHeatingPowerPerMinute = self.getPossibleHeatingPowerPerMinute( activeRooms, currentLivingroomTemp, currentBedroomTemp, currentOutdoorTemp )
             _currentPumpSpeedMsg = u"FC"
         else:
-            currentHeatingPowerPerMinute = currentHeatingPowerPerMinute
             _currentPumpSpeedMsg = u"{}%".format(currentPumpSpeedInPercent)
         
+        self.logPowerAdjustments( currentCoolingPowerPerMinute, maxCoolingPowerPerMinute, currentHeatingPowerPerMinute, maxHeatingPowerPerMinute, baseHeatingPower, maxHeatingPower )
+
         # some logs
         self.log.info(u"        : CD {} W/min. ({}°C) ⇩ • HU {} W/min. ({}) ⇧".format(( currentCoolingPowerPerMinute * -1 ),currentOutdoorTemp,currentHeatingPowerPerMinute,_currentPumpSpeedMsg) )
-
-        if not isLivingRoomCircuitActive:
-            currentHeatingPowerPerMinute, currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, baseHeatingPower = self.adjustPower( currentHeatingPowerPerMinute, currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, baseHeatingPower, currentLivingroomTemp, currentBedroomTemp )
 
         # Calculate reduction based on the current sun heating or the expected (forecast based) sun heating
         outdoorReduction = self.calculateOutdoorReduction( currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, currentForecast8CoolingPowerPerMinute)
@@ -733,7 +762,7 @@ class HeatingCheckRule(HeatingHelper):
             heatingType = ""
 
             ### Check heating demand
-            if ffOpenWindowCount15 + sfOpenWindowCount15 < 2:
+            if openWindow15["ffCount"] + openWindow15["sfCount"] < 2:
 
                 referenceTargetDiff = round( heatingTargetDiff - lazyReduction - outdoorReduction, 1 )
                 
@@ -792,18 +821,6 @@ class HeatingCheckRule(HeatingHelper):
         postUpdateIfChanged("Heating_Temperature_Livingroom_Target", _targetLivingroomTemp )
         postUpdateIfChanged("Heating_Temperature_Bedroom_Target", _targetBedroomTemp )
         return _targetLivingroomTemp, _targetBedroomTemp
-
-    def calculateCurrentForecast8CoolingPowerPerMinute(self, now, currentOutdoorTemp, currentOutdoorForecast8Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, ffOpenWindowCount15, sfOpenWindowCount15):
-        _sunPower, _, _ = self.getSunPowerPerMinute( u"FC 8h   :", now.plusMinutes(480), "Cloud_Cover_Forecast8", True )
-        _currentForecast8CoolingPowerPerMinute = self.getCoolingPowerPerMinute( u"        :", currentOutdoorTemp, currentOutdoorForecast8Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, _sunPower, ffOpenWindowCount15, sfOpenWindowCount15 )
-        self.log.info(u"        : CD {} W/min. ({}°C) ⇩".format(( _currentForecast8CoolingPowerPerMinute * -1 ),currentOutdoorForecast8Temp) )
-        return _currentForecast8CoolingPowerPerMinute
-
-    def calculateCurrentForecast4CoolingPowerPerMinute(self, now, currentOutdoorTemp, currentOutdoorForecast4Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, ffOpenWindowCount15, sfOpenWindowCount15):
-        _sunPower, _, _ = self.getSunPowerPerMinute( u"FC 4h   :", now.plusMinutes(240), "Cloud_Cover_Forecast4", True )
-        _currentForecast4CoolingPowerPerMinute = self.getCoolingPowerPerMinute( u"        :", currentOutdoorTemp, currentOutdoorForecast4Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, _sunPower, ffOpenWindowCount15, sfOpenWindowCount15 )
-        self.log.info(u"        : CD {} W/min. ({}°C) ⇩".format(( _currentForecast4CoolingPowerPerMinute * -1 ),currentOutdoorForecast4Temp) )
-        return _currentForecast4CoolingPowerPerMinute
 
     def getOutdoorDependingReduction( self, coolingPowerPerMinute ):
         # more than zeor means cooling => no reduction
@@ -881,7 +898,7 @@ class HeatingCheckRule(HeatingHelper):
                 msg = u"end check at {} • {} min. • {} min. lazy".format(OFFSET_FORMATTER.print(reference),endOffset,lazyTime)
             else:
                 _isNightMode = nightModeActive
-                msg = u"already ended"
+                msg = u"ended"
         else:
             if not nightModeActive:
                 startOffset = coolingDownMinutes if coolingDownMinutes > 0 else 0
@@ -897,7 +914,7 @@ class HeatingCheckRule(HeatingHelper):
                 msg = u"start check at {} • {} min.".format(OFFSET_FORMATTER.print(reference),startOffset)
             else:
                 _isNightMode = nightModeActive
-                msg = u"already started"
+                msg = u"started"
             
         self.log.info(u"        : Night mode {}".format(msg))
 
