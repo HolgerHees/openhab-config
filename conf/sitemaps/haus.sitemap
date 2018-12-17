@@ -229,8 +229,11 @@ sitemap haus label="Main Menu"
 					}
 					Frame label="Weihnachten" {
 						Switch item=Auto_Christmas icon="selfautomode"
-						Switch item=Socket_Livingroom visibility=[Auto_Christmas==ON]
+						Switch item=Socket_Livingroom_Couch visibility=[Auto_Christmas==ON]
+						Switch item=Socket_Livingroom_Fireplace visibility=[Auto_Christmas==ON]
 						Switch item=Socket_Floor visibility=[Auto_Christmas==ON]
+						Switch item=Socket_Mobile_1 visibility=[Auto_Christmas==ON]
+						Switch item=Socket_Mobile_2 visibility=[Auto_Christmas==ON]
 					}
 					Frame label="Dachboden" {
 						Switch item=Auto_Attic_Light label="Modus" mappings=[1="OFF", 2="W", 3="B"] icon="selfautomode"
@@ -498,9 +501,10 @@ sitemap haus label="Main Menu"
                 Group item=Lights_Outdoor_Controlled label="Lampen (RAW)"
                 Group label="Schalten (RAW) [MAP(group_socket.map):%d]" icon="selfsocket" item=Sockets {
                     Frame label="Wohnen" {
-                        Switch item=Socket_Bassbox label="Bassbox"
+                        Switch item=Socket_Livingroom_Bassbox label="Bassbox"
                         Switch item=Socket_GuestWC label="Gäste WC Radio"
-                        Switch item=Socket_Livingroom label="Wohnz. neben Stehlampe"
+                        Switch item=Socket_Livingroom_Couch label="Wohnz. neben Stehlampe"
+                        Switch item=Socket_Livingroom_Fireplace label="Wohnz. Kamin"
                         Switch item=Socket_Floor label="Flur unter Treppe"
 						Switch item=Socket_Attic label="Dachboden"
                     }

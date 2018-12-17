@@ -87,13 +87,16 @@ Switch Light_Outdoor_Garage_Gardenside 													<selflight>		(Lights_Outdoor
 Group:Switch:OR(ON, OFF) Sockets 				"Steckdosen"							<selfsocket>
 Group:Switch:OR(ON, OFF) Sockets_Outdoor		"Gartensteckdosen"						<selfsocket>
 
-Switch Socket_Bassbox 							"Bassbox"								<selfsocket>	(FF_Livingroom,Sockets)				 { knx="0/1/3+<0/1/4" }
-Switch Socket_Livingroom 						"Wohnzimmersteckdose Stehlampe"			<selfsocket>	(FF_Livingroom,Sockets)				 { knx="0/1/5+<0/1/6" }
+Switch Socket_Livingroom_Bassbox				"Wohnzimmersteckdose Bassbox"			<selfsocket>	(FF_Livingroom,Sockets)				 { knx="0/1/3+<0/1/4" }
+Switch Socket_Livingroom_Couch  				"Wohnzimmersteckdose Stehlampe"			<selfsocket>	(FF_Livingroom,Sockets)				 { knx="0/1/5+<0/1/6" }
+Switch Socket_Livingroom_Fireplace				"Wohnzimmersteckdose Kamin"    			<selfsocket>	(FF_Livingroom,Sockets)				 { knx="0/1/9+<0/1/10" }
 Switch Socket_Floor 							"Flursteckdose"					        <selfsocket>	(FF_Floor,Sockets)					 { knx="0/1/7+<0/1/8" }
 Switch Socket_GuestWC 							"WC Radio"								<selfsocket>	(FF_GuestWC,Sockets)				 { knx="0/1/1+<0/1/2" }
+Switch Socket_Bathroom_Left						"Badezimmer links"						<selfsocket>	(SF_Bathroom,Sockets)				 { knx="1/1/0+<1/1/1" }
+Switch Socket_Bathroom_Right					"Badezimmer links"						<selfsocket>	(SF_Bathroom,Sockets)				 { knx="1/1/2+<1/1/3" }
+Switch Socket_Attic								"Dachbodensteckdose"					<selfsocket>	(SF_Attic,Sockets)					 { knx="1/1/8+<1/1/9" }
 Switch Socket_Streedside						"Aussensteckdosen vorne"				<selfsocket>	(Outdoor,Sockets_Outdoor,Sockets)	 { knx="2/1/0+<2/1/1" }
 Switch Socket_Gardenside						"Aussensteckdosen hinten"				<selfsocket>	(Outdoor,Sockets_Outdoor,Sockets)	 { knx="2/1/2+<2/1/3" }
-Switch Socket_Attic								"Dachbodensteckdose"					<selfsocket>	(SF_Attic,Sockets)					 { knx="1/1/8+<1/1/9" }
 
 Switch Socket_Mobile_1							"Mobile Steckdose 1"					<selfsocket>	(Sockets)					         { channel="hue:0010:00178821ff34:socket1:switch" }
 Switch Socket_Mobile_2							"Mobile Steckdose 2"					<selfsocket>	(Sockets)					         { channel="hue:0010:00178821ff34:socket2:switch" }
