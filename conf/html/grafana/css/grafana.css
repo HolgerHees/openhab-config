@@ -1,3 +1,7 @@
+.panel.panel--solo {
+    position: fixed !important;
+}
+
 .graph-legend {
     margin: 0;
 }
