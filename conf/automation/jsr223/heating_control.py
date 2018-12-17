@@ -9,10 +9,10 @@ from openhab.actions import Transformation
 
 OFFSET_FORMATTER = DateTimeFormat.forPattern("HH:mm")
 
-BEDROOM_REDUCTION = 3.0
+BEDROOM_REDUCTION = 2.5
 MIN_HEATING_TIME = 15 # 'Heizen mit WW' should be active at least for 15 min.
 MIN_ONLY_WW_TIME = 15 # 'Nur WW' should be active at least for 15 min.
-LAZY_OFFSET = 60 # Offset time until any heating has an effect
+LAZY_OFFSET = 90 # Offset time until any heating has an effect
 
 class HeatingHelper:
     stableReferences = {}
@@ -279,7 +279,7 @@ class HeatingHelper:
         _f = 15.0
 
         # https://www.ubakus.de/u-wert-rechner/
-        _floorUValue = 24.697296
+        _floorUValue = 24.799056
         _egUValue = 58.08226065
         _ogUValue = 43.9353196
         _atticUValue = 18.8523478
@@ -323,8 +323,8 @@ class HeatingHelper:
         maxTotalPower = totalPower
         # remove inactive room from cooling power to exclude their effects from further calculation
         if not activeRooms.get("livingroom"):
-            # Livingroom is 14.7970287546333% or 21.539624 W/h/K of the whole house UValue
-            totalPower = round( totalPower * 0.852, 1 )
+            # Livingroom is 14.7448138257267% or 21.4786205 W/h/K of the whole house UValue
+            totalPower = round( totalPower * 0.853, 1 )
 
         # open window cooling always applies completely and ignoring deactivated rooms, because of the inhouse air circulation related on this windows
         egExchangePower = ( ( (egPower + floorPower) * openWindow["ffCount"] ) / openWindow["totalFfCount"] ) * 2.0
@@ -360,8 +360,8 @@ class HeatingHelper:
         _lowerVolume = 231.8911
         _upperVolume = 216.5555
 
-        _lowerFloorPower = 16978.9524375       
-        _upperFloorPower = 6468.41981666667
+        _lowerFloorPower = 15379.708453125
+        _upperFloorPower = 6784.08459444445
 
         _lowerDensity = ( ( livingroomTemperature - 15.0 ) * ( _minDensity - maxDensity ) / 15.0 ) + maxDensity
         if _lowerDensity < _minDensity: _lowerDensity = _minDensity
@@ -383,10 +383,7 @@ class HeatingHelper:
         
         # remove inactive rooms from needed power to exclude their effects from further calculation
         if not activeRooms.get("livingroom"):
-            # livingroom                           floor,             outdoor wall,      17cm &             11cm indoor wall   and ceiling
-            #kcalc
-            #_lowerFloorPower = _lowerFloorPower - 1806.89166666667 - 741.544222222222 - 295.185916666667 - 130.277583333333 - 1399.25791666667
-            totalPower = totalPower - 4373.15730556
+            totalPower = totalPower - 6012.96212326389
 
         return totalPower, maxPower
 
@@ -404,20 +401,28 @@ class HeatingHelper:
         
         return currentHeatingPowerPerMinute, pumpSpeed, maxHeatingPowerPerMinute
 
-    def getPossibleHeatingPowerPerMinute( self, activeRooms, currentLivingroomTemp, currentBedroomTemp, currentOutdoorTemp ):
+    def getPossibleHeatingPowerPerMinute( self, activeRooms, now, currentLivingroomTemp, currentBedroomTemp, currentOutdoorTemp, lastHeatingChange ):
         # Estimation is based on 100% heating pump speed and a avg temperature difference 16.1°C between in and out water
-        temperature_Pipe_In = currentLivingroomTemp if activeRooms.get("livingroom") and currentLivingroomTemp < currentBedroomTemp else currentBedroomTemp
+        temperature_Pipe_In = ( ( currentLivingroomTemp + currentBedroomTemp ) / 2 ) if activeRooms.get("livingroom") else currentBedroomTemp
         
-        # 0.3 steilheit
-        # niveau 12k
-        # 20° => 36°
-        # -20^ => 47°        
-        if currentOutdoorTemp > 15.0: 
-            maxVL = 32
-        elif currentOutdoorTemp < -15.0:
-            maxVL = 44 
+        if lastHeatingChange.getMillis() < now.minusHours(12).getMillis():
+            # 0.3 steilheit
+            # niveau 12k
+            # 20° => 36°
+            # -20^ => 47°   
+            
+            # 15 (0) => 32 (0)
+            # -15 (-30) => 44 (12)
+            if currentOutdoorTemp > 15.0: 
+                maxVL = 32
+            elif currentOutdoorTemp < -15.0:
+                maxVL = 44 
+            else:
+                maxVL = ( ( currentOutdoorTemp - 15.0 ) * -0.4 ) + 32.0
         else:
-            maxVL = ( ( currentOutdoorTemp - 15.0 ) * -0.4 ) + 32.0
+            maxVL = temperature_Pipe_In + 11.5
+          
+        #self.log.info(u"{} {}".format( maxVL, temperature_Pipe_In ))
 
         _possibleHeatingPowerPerMinute, _, _maxHeatingPowerPerMinute = self.getHeatingPowerPerMinute( activeRooms, 100.0, maxVL, temperature_Pipe_In )
         
@@ -673,7 +678,7 @@ class HeatingCheckRule(HeatingHelper):
         # Calculate the "real" heating power based on the pump speed.
         currentHeatingPowerPerMinute, currentPumpSpeedInPercent, maxHeatingPowerPerMinute = self.getCurrentHeatingPowerPerMinute( activeRooms )
         if currentHeatingPowerPerMinute == 0:
-            currentHeatingPowerPerMinute, currentPumpSpeedInPercent, maxHeatingPowerPerMinute = self.getPossibleHeatingPowerPerMinute( activeRooms, currentLivingroomTemp, currentBedroomTemp, currentOutdoorTemp )
+            currentHeatingPowerPerMinute, currentPumpSpeedInPercent, maxHeatingPowerPerMinute = self.getPossibleHeatingPowerPerMinute( activeRooms, now, currentLivingroomTemp, currentBedroomTemp, currentOutdoorTemp, lastHeatingChange )
             _currentPumpSpeedMsg = u"FC"
         else:
             _currentPumpSpeedMsg = u"{}%".format(currentPumpSpeedInPercent)
@@ -770,7 +775,7 @@ class HeatingCheckRule(HeatingHelper):
                     heatingType = u"HEATING NEEDED"
                 else:
                     # it is too warm inside, but outside it is very cold, so we need some buffer heating to avoid cold floors
-                    forceBufferHeating = self.forcedBufferHeatingCheck( now, isHeatingActive, lastHeatingChange, slotHeatingPower, availableHeatingPowerPerMinute, additionalChargeLevel, maxBufferChargeLevel )
+                    forceBufferHeating = self.forcedBufferHeatingCheck( now, isHeatingActive, lastHeatingChange, slotHeatingPower, availableHeatingPowerPerMinute, additionalChargeLevel )
                 
                     if forceBufferHeating:
                         heatingDemand = 1
@@ -926,8 +931,8 @@ class HeatingCheckRule(HeatingHelper):
     def calculateMaxBufferChargeLevel(self, currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute,slotHeatingPower):
         if currentCoolingPowerPerMinute > 0.0 and currentForecast4CoolingPowerPerMinute > 0.0:
             # calculate max charge level for 45 min
-            #neededLazyChargeLevel = round( ( ( LAZY_OFFSET * 0.75 ) + MIN_ONLY_WW_TIME ) * currentForecast4CoolingPowerPerMinute, 1 )
-            neededLazyChargeLevel = round( LAZY_OFFSET * ( currentCoolingPowerPerMinute + currentForecast4CoolingPowerPerMinute ) / 2.0, 1 )
+            #neededLazyChargeLevel = round( LAZY_OFFSET * ( currentCoolingPowerPerMinute + currentForecast4CoolingPowerPerMinute ) / 2.0, 1 )
+            neededLazyChargeLevel = round( slotHeatingPower * 0.75, 1 )
             #stopZoneLevel = int( round( neededLazyChargeLevel * 100.0 / slotHeatingPower ) )
             
             return neededLazyChargeLevel
@@ -945,7 +950,7 @@ class HeatingCheckRule(HeatingHelper):
 
         return maxBufferChargeLevel > 0
 
-    def calculateForcedBufferHeatingTime(self, now, lastUpdate, maxBufferChargeLevel ):
+    def calculateForcedBufferHeatingTime(self, now, lastUpdate, slotHeatingPower ):
       
         # when was the last heating job
         lastUpdateBeforeInMinutes = int( round( ( now.getMillis() - lastUpdate.getMillis() ) / 1000.0 / 60.0 ) )
@@ -956,11 +961,11 @@ class HeatingCheckRule(HeatingHelper):
 
         if factor > 3.0: factor = 3.0
 
-        targetBufferChargeLevel = round( maxBufferChargeLevel * factor, 1 )
+        targetBufferChargeLevel = round( slotHeatingPower * factor, 1 )
 
         return round( targetBufferChargeLevel, 1 ), lastUpdateBeforeInMinutes
 
-    def forcedBufferHeatingCheck( self, now, isHeatingActive, lastHeatingChange, slotHeatingPower, availableHeatingPowerPerMinute, additionalChargeLevel, maxBufferChargeLevel ):
+    def forcedBufferHeatingCheck( self, now, isHeatingActive, lastHeatingChange, slotHeatingPower, availableHeatingPowerPerMinute, additionalChargeLevel ):
 
         if isHeatingActive:
             if self.forcedBufferReferenceTemperature != None:
@@ -970,7 +975,7 @@ class HeatingCheckRule(HeatingHelper):
                     self.forcedBufferReferenceTemperature = None
                 else:
                     if self.forcedBufferReferenceDate != -1:
-                        targetBufferChargeLevel, lastUpdateBeforeInMinutes = self.calculateForcedBufferHeatingTime( now, self.forcedBufferReferenceDate, maxBufferChargeLevel )
+                        targetBufferChargeLevel, lastUpdateBeforeInMinutes = self.calculateForcedBufferHeatingTime( now, self.forcedBufferReferenceDate, slotHeatingPower )
                     else:
                         targetBufferChargeLevel = slotHeatingPower
                     
@@ -984,7 +989,7 @@ class HeatingCheckRule(HeatingHelper):
                 # Keep everything like it is. This leaves the forcedBufferCheckActive untouched
                 self.log.info(u"        : No forced buffer • is heating" )
         else:
-            targetBufferChargeLevel, lastUpdateBeforeInMinutes = self.calculateForcedBufferHeatingTime( now, lastHeatingChange, maxBufferChargeLevel )
+            targetBufferChargeLevel, lastUpdateBeforeInMinutes = self.calculateForcedBufferHeatingTime( now, lastHeatingChange, slotHeatingPower )
 
             heatingMinutes = int( round( ( targetBufferChargeLevel / availableHeatingPowerPerMinute ) ) )
         
