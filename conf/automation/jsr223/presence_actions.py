@@ -1,7 +1,7 @@
 import urllib2
 
 from marvin.helper import rule, getItemState, postUpdate
-from openhab.triggers import ItemStateChangeTrigger
+from core.triggers import ItemStateChangeTrigger
 
 
 @rule("presence_actions.py")

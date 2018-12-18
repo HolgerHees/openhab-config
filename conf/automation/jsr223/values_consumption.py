@@ -2,9 +2,9 @@ from org.joda.time import DateTime
 from org.joda.time.format import DateTimeFormat
 
 from marvin.helper import rule, getNow, getHistoricItemEntry, getHistoricItemState, getItemLastUpdate, getItemState, postUpdate, postUpdateIfChanged
-from openhab.triggers import CronTrigger, ItemStateChangeTrigger
+from core.triggers import CronTrigger, ItemStateChangeTrigger
 
-startGasZaehlerStand = 5675.81
+startGasZaehlerStand = 8075.97
 startGasZaehlerCounter = 0
 
 dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS")

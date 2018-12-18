@@ -1,5 +1,5 @@
 from marvin.helper import rule, getNow, itemStateOlderThen, sendNotification, sendMail, postUpdate
-from openhab.triggers import ItemStateChangeTrigger
+from core.triggers import ItemStateChangeTrigger
 
 
 @rule("door_bell_notification.py")

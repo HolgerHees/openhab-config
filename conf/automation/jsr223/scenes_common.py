@@ -1,5 +1,5 @@
 from marvin.helper import rule, getItem, getItemState, sendCommand, postUpdate
-from openhab.triggers import ItemCommandTrigger
+from core.triggers import ItemCommandTrigger
 
 
 @rule("scenes_common.py")

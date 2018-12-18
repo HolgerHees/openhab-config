@@ -18,8 +18,7 @@
 #    ]
   
 #  def execute(self, module, input):
-#    log.info(u"test executed")
-
+#    self.log.info(u"test executed")
 
 
 #log.info(u"{}".format(test))

@@ -1,5 +1,5 @@
 from marvin.helper import rule, getNow, itemLastUpdateOlderThen, sendNotification, getItemState, postUpdateIfChanged
-from openhab.triggers import CronTrigger, ItemStateChangeTrigger
+from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 
 @rule("values_error_messages.py")

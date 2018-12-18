@@ -1,6 +1,6 @@
 from marvin.helper import log, rule, createTimer, itemLastUpdateNewerThen, getNow, getFilteredChildItems, getGroupMember, getItemLastUpdate, getItemState, postUpdate, \
     postUpdateIfChanged, sendCommand, sendNotification
-from openhab.triggers import ItemStateChangeTrigger
+from core.triggers import ItemStateChangeTrigger
 
 awayCheckDuration = 15.0
 timerAway = None

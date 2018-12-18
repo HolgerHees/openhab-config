@@ -1,6 +1,6 @@
 from marvin.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen, itemStateNewerThen, getNow
-from openhab.actions import Transformation
-from openhab.triggers import CronTrigger, ItemStateChangeTrigger
+from core.actions import Transformation
+from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 
 @rule("roboter_robonect.py")

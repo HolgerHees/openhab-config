@@ -1,7 +1,7 @@
 import math
 
 from marvin.helper import rule, createTimer, getNow, getGroupMember, getItemState, postUpdate, sendCommand
-from openhab.triggers import ItemCommandTrigger
+from core.triggers import ItemCommandTrigger
 
 @rule("scenes_wathering.py")
 class ScenesWatheringRule:

@@ -1,7 +1,7 @@
 import time
 
 from marvin.helper import rule, createTimer, getItemState, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged
-from openhab.triggers import ItemCommandTrigger, ItemStateChangeTrigger
+from core.triggers import ItemCommandTrigger, ItemStateChangeTrigger
 
 manualMappings = [
     ["Light_Outdoor_Frontdoor_Manual","Light_Outdoor_Frontdoor", "Motiondetector_Outdoor_Frontdoor_Switch","Motiondetector_Outdoor_Frontdoor"],

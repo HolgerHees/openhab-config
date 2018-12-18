@@ -1,7 +1,7 @@
 import time
 
 from marvin.helper import rule, getNow, itemLastUpdateOlderThen, getItemState, sendNotification, postUpdate, postUpdateIfChanged, sendCommand
-from openhab.triggers import CronTrigger, ItemStateChangeTrigger
+from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 
 @rule("roboter_roomba.py")

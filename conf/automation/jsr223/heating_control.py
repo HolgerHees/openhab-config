@@ -4,8 +4,8 @@ from org.joda.time import DateTime, DateTimeZone
 from org.joda.time.format import DateTimeFormat
 
 from marvin.helper import rule, getNow, getGroupMember, itemLastUpdateOlderThen, getItemLastUpdate, getHistoricItemState, getHistoricItemEntry, getItemState, getMaxItemState, getItem, postUpdate, postUpdateIfChanged, sendCommand
-from openhab.triggers import CronTrigger, ItemStateChangeTrigger
-from openhab.actions import Transformation
+from core.triggers import CronTrigger, ItemStateChangeTrigger
+from core.actions import Transformation
 
 OFFSET_FORMATTER = DateTimeFormat.forPattern("HH:mm")
 

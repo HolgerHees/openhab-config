@@ -1,5 +1,5 @@
 from marvin.helper import rule, getItemState, postUpdateIfChanged
-from openhab.triggers import ItemStateChangeTrigger
+from core.triggers import ItemStateChangeTrigger
 
 
 @rule("auto.py")

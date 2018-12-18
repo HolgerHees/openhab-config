@@ -1,5 +1,5 @@
 from marvin.helper import rule, getItemState, postUpdate, sendCommand
-from openhab.triggers import ItemStateChangeTrigger
+from core.triggers import ItemStateChangeTrigger
 
 @rule("rollershutter_auto.py")
 class RollershutterCleanupRule:

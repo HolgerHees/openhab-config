@@ -1,5 +1,5 @@
 from marvin.helper import rule, getNow, itemStateNewerThen, itemStateOlderThen, postUpdateIfChanged
-from openhab.triggers import CronTrigger
+from core.triggers import CronTrigger
 
 @rule("values_depending_on_brightness.py")
 class ValuesDependingOnBrightnessRule:

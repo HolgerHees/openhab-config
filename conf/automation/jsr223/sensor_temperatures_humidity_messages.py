@@ -1,5 +1,5 @@
 from marvin.helper import rule, getNow, getItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged
-from openhab.triggers import CronTrigger, ItemStateChangeTrigger
+from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 infoConfig = [
     ["Air_FF_Livingroom_Message", "Temperature_FF_Livingroom", "Humidity_FF_Livingroom", "Heating_Temperature_Livingroom_Target"],

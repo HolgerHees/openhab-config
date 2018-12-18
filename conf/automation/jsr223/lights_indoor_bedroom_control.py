@@ -1,5 +1,5 @@
 from marvin.helper import rule, sendCommand
-from openhab.triggers import ItemStateChangeTrigger
+from core.triggers import ItemStateChangeTrigger
 
 
 @rule("lights_indoor_bedroom_control.py")

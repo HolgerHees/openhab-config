@@ -12,10 +12,10 @@ from org.eclipse.smarthome.model.persistence.extensions import PersistenceExtens
 from org.eclipse.smarthome.core.thing import ChannelUID
 from org.joda.time import DateTime
 
-from openhab.actions import Mail, Pushover #, XMPP
-from openhab.jsr223 import scope, get_scope, get_automation_manager
-#from openhab.log import logging
-from openhab.triggers import ItemStateUpdateTrigger, ItemStateChangeTrigger
+from core.actions import Mail, Pushover #, XMPP
+from core.jsr223 import scope, get_scope, get_automation_manager
+#from core.log import logging
+from core.triggers import ItemStateUpdateTrigger, ItemStateChangeTrigger
 
 from org.slf4j import LoggerFactory
 
@@ -38,6 +38,7 @@ class rule(object):
     def __init__(self, name,profile=None):
         self.name = name
         self.profile = profile
+        
     def __call__(self, clazz):
         proxy = self
         
@@ -46,16 +47,20 @@ class rule(object):
 
         def init(self, *args, **kwargs):
             SimpleRule.__init__(self)
-            proxy.set_uid_prefix(self,classPackage,filePackage)
+            #proxy.set_uid_prefix(self,classPackage,filePackage)
             clazz.__init__(self, *args, **kwargs)
 
             self.triggerItems = {}
+            _triggers = []
             for trigger in self.triggers:
                 try:
                     self.triggerItems[ trigger.getConfiguration().get("itemName") ] = True
                 except NotImplementedError:
                     # openhab 2.4
                     self.triggerItems[ trigger.trigger.getConfiguration().get("itemName") ] = True
+                    _triggers.append(trigger.trigger)
+            if len(_triggers) > 0:
+                self.triggers = _triggers
 
         subclass = type(clazz.__name__, (clazz, SimpleRule), dict(__init__=init))
         subclass.execute = proxy.executeWrapper(clazz.execute)

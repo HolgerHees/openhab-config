@@ -1,5 +1,5 @@
 from marvin.helper import rule, getItemState, postUpdateIfChanged
-from openhab.triggers import ItemStateChangeTrigger
+from core.triggers import ItemStateChangeTrigger
 
 
 @rule("scenes_wathering_messages.py")
@@ -13,7 +13,7 @@ class ScenesWatheringMessagesRule:
 
     def execute(self, module, input):
         active = []
-
+        
         if getItemState("Watering_Circuits") == ON:
             active.append(u"Bewässerung")
 

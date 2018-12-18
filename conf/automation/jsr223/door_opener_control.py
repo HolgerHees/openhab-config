@@ -1,5 +1,5 @@
 from marvin.helper import rule, createTimer, getItemState, postUpdate, postUpdateIfChanged
-from openhab.triggers import ItemStateChangeTrigger
+from core.triggers import ItemStateChangeTrigger
 
 
 @rule("door_opener_control.py")

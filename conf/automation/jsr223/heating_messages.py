@@ -1,5 +1,5 @@
 from marvin.helper import rule, getNow, getItemState, getHistoricItemState, postUpdate, postUpdateIfChanged
-from openhab.triggers import CronTrigger, ItemStateChangeTrigger
+from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 
 @rule("heating_messages.py")

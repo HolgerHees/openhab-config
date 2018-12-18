@@ -1,5 +1,5 @@
 from marvin.helper import rule, getFilteredChildItems, getItemState, sendCommand
-from openhab.triggers import CronTrigger, ItemStateChangeTrigger
+from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 
 @rule("lights_indoor_auto.py")

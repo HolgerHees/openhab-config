@@ -1,5 +1,5 @@
 from marvin.helper import rule, sendNotification, getItemState, postUpdateIfChanged
-from openhab.triggers import CronTrigger, ItemStateChangeTrigger
+from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 @rule("roboter_messages.py")
 class RoboterMessagesRule:

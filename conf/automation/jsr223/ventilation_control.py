@@ -2,7 +2,7 @@ import math
 
 from marvin.helper import rule, getNow, itemLastUpdateOlderThen, getItemState, postUpdate, postUpdateIfChanged, \
     sendCommand
-from openhab.triggers import CronTrigger, ItemCommandTrigger, ItemStateChangeTrigger
+from core.triggers import CronTrigger, ItemCommandTrigger, ItemStateChangeTrigger
 
 autoChangeInProgress = False
 

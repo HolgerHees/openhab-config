@@ -1,5 +1,5 @@
 from marvin.helper import rule, getItemState, sendCommand, postUpdateIfChanged
-from openhab.triggers import ItemCommandTrigger, ItemStateChangeTrigger
+from core.triggers import ItemCommandTrigger, ItemStateChangeTrigger
 from org.eclipse.smarthome.core.types import UnDefType
 
 @rule("lights_indoor_livingroom_control.py")

@@ -1,5 +1,5 @@
 from marvin.helper import rule, postUpdate
-from openhab.triggers import ItemStateChangeTrigger
+from core.triggers import ItemStateChangeTrigger
 
 @rule("receiver_control.py")
 class ReceiverControlRule:
