@@ -1,3 +1,29 @@
+#from org.eclipse.smarthome.automation import Rule as SmarthomeRule
+#from marvin.helper import log, rule
+#from core.jsr223 import scope
+#from core.triggers import CronTrigger,ItemStateUpdateTrigger 
+
+#SimpleRule = scope.SimpleRule
+
+#log.info(u"{}".format(SimpleRule))
+
+#uid_field = type(SimpleRule).getClass(SimpleRule).getDeclaredField(SimpleRule, "uid")
+
+#@rule("_test.py")
+#class EventMonitorRule:
+#  def __init__(self):
+#    self.triggers = [
+#        ItemStateUpdateTrigger("Lights"),
+#        CronTrigger("*/15 * * * * ?")
+#    ]
+  
+#  def execute(self, module, input):
+#    log.info(u"test executed")
+
+
+
+#log.info(u"{}".format(test))
+
 #from marvin.helper import log, rule, getItemState, getItemLastUpdate, itemLastUpdateOlderThen, getNow
 
 #log.info( getItemState("State_Present") )

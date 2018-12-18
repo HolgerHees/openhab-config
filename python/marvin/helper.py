@@ -5,6 +5,7 @@ import threading
 
 #from java.util import UUID
 #import datetime
+from java.lang import NoSuchFieldException
 from org.eclipse.smarthome.automation import Rule as SmarthomeRule
 
 from org.eclipse.smarthome.model.persistence.extensions import PersistenceExtensions
@@ -50,7 +51,11 @@ class rule(object):
 
             self.triggerItems = {}
             for trigger in self.triggers:
-                self.triggerItems[ trigger.getConfiguration().get("itemName") ] = True
+                try:
+                    self.triggerItems[ trigger.getConfiguration().get("itemName") ] = True
+                except NotImplementedError:
+                    # openhab 2.4
+                    self.triggerItems[ trigger.trigger.getConfiguration().get("itemName") ] = True
 
         subclass = type(clazz.__name__, (clazz, SimpleRule), dict(__init__=init))
         subclass.execute = proxy.executeWrapper(clazz.execute)
@@ -80,7 +85,12 @@ class rule(object):
         return classPackage
     
     def set_uid_prefix(self, rule, className, fileName):
-        uid_field = type(SmarthomeRule).getClass(SmarthomeRule).getDeclaredField(SmarthomeRule, "uid")
+        
+        try:
+            uid_field = type(SmarthomeRule).getClass(SmarthomeRule).getDeclaredField(SmarthomeRule, "uid")
+        except NoSuchFieldException:
+            # openhab 2.4
+            uid_field = type(SimpleRule).getClass(SimpleRule).getDeclaredField(SimpleRule, "uid")
         uid_field.setAccessible(True)
         #uid_field.set(rule, "{}-{}".format(prefix, str(UUID.randomUUID())))
         #st = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
