@@ -1,26 +1,39 @@
+#import time
+
 #from org.eclipse.smarthome.automation import Rule as SmarthomeRule
-#from marvin.helper import log, rule
+#from marvin.helper import log, rule, sendCommand
 #from core.jsr223 import scope
-#from core.triggers import CronTrigger,ItemStateUpdateTrigger 
-
-#SimpleRule = scope.SimpleRule
-
-#log.info(u"{}".format(SimpleRule))
-
-#uid_field = type(SimpleRule).getClass(SimpleRule).getDeclaredField(SimpleRule, "uid")
+#from core.triggers import CronTrigger, ItemStateUpdateTrigger, ItemStateChangeTrigger
 
 #@rule("_test.py")
-#class EventMonitorRule:
+#class EventMonitorRule1:
 #  def __init__(self):
 #    self.triggers = [
-#        ItemStateUpdateTrigger("Lights"),
-#        CronTrigger("*/15 * * * * ?")
+#        ItemStateUpdateTrigger("Motiondetector_Outdoor_Frontdoor","OPEN")
 #    ]
-  
+#  
 #  def execute(self, module, input):
-#    self.log.info(u"test executed")
+#    self.log.info(u"test executed1")
+
+#@rule("_test.py")
+#class EventMonitorRule2:
+#  def __init__(self):
+#    self.triggers = [
+#        ItemStateChangeTrigger("Motiondetector_Outdoor_Frontdoor",state="OPEN")
+#    ]
+#  
+#  def execute(self, module, input):
+#    self.log.info(u"test executed2")
 
 
+
+#sendCommand("Motiondetector_Outdoor_Frontdoor",OPEN)
+#log.info(u"3")
+#time.sleep(5)
+#sendCommand("Motiondetector_Outdoor_Frontdoor",CLOSED)
+#log.info(u"4")
+
+ 
 #log.info(u"{}".format(test))
 
 #from marvin.helper import log, rule, getItemState, getItemLastUpdate, itemLastUpdateOlderThen, getNow

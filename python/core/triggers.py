@@ -30,7 +30,7 @@ class ItemStateUpdateTrigger(Trigger):
         self.trigger = TriggerBuilder.create().withId(triggerName).withTypeUID("core.ItemStateUpdateTrigger").withConfiguration(Configuration(config)).build()
 
 class ItemStateChangeTrigger(Trigger):
-    def __init__(self, itemName, previousState=None, state=None, triggerName=None):
+    def __init__(self, itemName, state=None, triggerName=None, previousState=None):
         triggerName = triggerName or uuid.uuid1().hex
         config = { "itemName": itemName }
         if state is not None:
