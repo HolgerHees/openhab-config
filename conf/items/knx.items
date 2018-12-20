@@ -111,9 +111,9 @@ Switch State_Holiday							"Urlaubsmodus" 							<selfshield> 	(Security) 						
 
 Group:Contact:OR(OPEN, CLOSED) 	Sensor_Outdoor	"Aussen Bewegungsmelder [%d]"			<selfmotion>	(Security) ["MotionDetector"]
 Group:Contact:OR(OPEN, CLOSED) 	Sensor_Indoor	"EG Bewegungsmelder [%d]"				<selfmotion>	(Security) ["MotionDetector"]
-Group:Contact:OR(OPEN, CLOSED) 	Sensor_Doors_FF	"EG Türen [%d]"							<door>			(Security,Openingcontacts) ["Door","OpenState"]
-Group:Contact:OR(OPEN, CLOSED) 	Sensor_Window_FF	"EG Fenster [%d]"					<contact>		(Security,Openingcontacts) ["Window","OpenState"]
-Group:Contact:OR(OPEN, CLOSED) 	Sensor_Window_SF	"OG Fenster [%d]"					<contact>		(Security,Openingcontacts) ["Window","OpenState"]
+Group:Contact:OR(OPEN, CLOSED) 	Sensor_Doors_FF	"EG Türen [%d]"							<door>			(Security,Openingcontacts) ["Door","Sensor","OpenState"]
+Group:Contact:OR(OPEN, CLOSED) 	Sensor_Window_FF	"EG Fenster [%d]"					<contact>		(Security,Openingcontacts) ["Window","Sensor","OpenState"]
+Group:Contact:OR(OPEN, CLOSED) 	Sensor_Window_SF	"OG Fenster [%d]"					<contact>		(Security,Openingcontacts) ["Window","Sensor","OpenState"]
 
 Contact Door_FF_Floor 							"Haustür [MAP(de.map):%s]" 				<door>			(FF_Floor,Sensor_Doors_FF) ["FrontDoor"] { channel="knx:device:bridge:contacts_door:main" }
 Contact Door_FF_Garage1 						"Schuppentür Strasse [MAP(de.map):%s]" 	<door>			(FF_Garage,Sensor_Doors_FF) ["GarageDoor"] { channel="knx:device:bridge:contacts_door:garageStreedside" }
