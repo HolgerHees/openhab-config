@@ -9,14 +9,14 @@ Group:Switch:OR(ON, OFF) Lights_Outdoor_Controlled "Aussen Lampen (gesteuert)" 	
 Switch Light_FF_Floor_Ceiling 					"Flur Licht" 							<selflight>		(FF_Floor, Lights_FF)	{ channel="knx:device:bridge:lights_ff:floorCeiling" }
 Switch Light_FF_Floor_Mirror 					"Flur Spiegel" 							<selflight>		(FF_Floor, Lights_FF)	{ channel="knx:device:bridge:lights_ff:floorMirror" }
 Dimmer Light_FF_Floor_Hue_Brightness			"Flur Treppen Licht"					<selflight>		(FF_Floor, Lights_FF)	["Setpoint"]	{ channel="hue:0210:00178821ff34:5:color" }
-Color Light_FF_Floor_Hue_Color					"Flur Treppen Farbe"					<colorwheel>										{ channel="hue:0210:00178821ff34:5:color"}
+Color Light_FF_Floor_Hue_Color					"Flur Treppen Farbe"					<colorwheel>	["ColorTemperature"] { channel="hue:0210:00178821ff34:5:color"}
 
 Dimmer Lights_FF_Livingroom_Ceiling             "Wohnzimmer Decken Licht"				<selflight>                                                  
 Dimmer Light_FF_Livingroom_Diningtable 			"Wohnzimmer Esstisch Licht"				<selfslider>	(FF_Livingroom, Lights_FF) ["Setpoint"] { channel="knx:device:bridge:lights_ff:livingroomDiningtable" }
 Dimmer Light_FF_Livingroom_Couch 				"Wohnzimmer Couch Licht" 				<selfslider>	(FF_Livingroom, Lights_FF) ["Setpoint"] { channel="knx:device:bridge:lights_ff:livingroomCouch" }
 
 Dimmer Light_FF_Livingroom_Hue_Brightness		"Wohnzimmer Indirektes Licht"   		<selfslider>	(FF_Livingroom, Lights_FF) ["Setpoint"]       
-Color Light_FF_Livingroom_Hue_Color				"Wohnzimmer Indirekte Farbe"			<colorwheel>
+Color Light_FF_Livingroom_Hue_Color				"Wohnzimmer Indirekte Farbe"			<colorwheel>    ["ColorTemperature"]
 
 Dimmer Light_FF_Livingroom_Hue_Brightness1		"Wohnzimmer Bassbox Licht"				<selfslider>										{ channel="hue:0210:00178821ff34:1:color"}
 Color Light_FF_Livingroom_Hue_Color1			"Wohnzimmer Bassbox Farbe"				<colorwheel>										{ channel="hue:0210:00178821ff34:1:color"}
