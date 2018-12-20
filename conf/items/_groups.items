@@ -1,2 +1,23 @@
 Group PersistentHistory
 Group PersistentChart
+
+Group gFF 										"Erdgeschoss"							<groundfloor>         ["GroundFloor"]
+Group gSF 										"Obergeschoss"							<firstfloor>          ["FirstFloor"]
+Group Outdoor									"Garten"								<garden>              ["Garden"]
+
+Group FF_GuestWC 								"Gäste WC" 								<bath> 			(gFF) ["Room"] { synonyms="Gäste WC, Gäste Toilette" }
+Group FF_Utilityroom 							"HWR" 									<energy> 		(gFF) ["Room"] { synonyms="HWR, Hauswirtschaftsraum" }
+Group FF_Boxroom 								"Abstellkammer" 						<office> 		(gFF) ["Room"] { synonyms="Kammer,Abstellkammer,Vorratsraum" }
+Group FF_Kitchen 								"Küche" 								<kitchen> 		(gFF) ["Kitchen"]
+Group FF_Livingroom 							"Wohnzimmer" 							<sofa> 			(gFF) ["LivingRoom"]
+Group FF_Guestroom 								"Gästezimmer" 							<office> 		(gFF) ["Room"] { synonyms="Gästezimmer,Bastelzimmer" }
+Group FF_Floor 	    							"Flur" 									<corridor> 		(gFF) ["Floor"]
+Group FF_Garage									"Schuppen" 								<corridor> 		(gFF) ["Garage"]
+
+Group SF_Bathroom 								"Badezimmer" 							<bath> 			(gSF) ["Bathroom"]
+Group SF_Dressingroom 							"Ankleide" 								<wardrobe> 		(gSF) ["Room"] { synonyms="Ankleide" }
+Group SF_Bedroom 								"Schlafzimmer" 							<bedroom> 		(gSF) ["Bedroom"]
+Group SF_Child1 								"Kind 1" 								<boy1> 			(gSF) ["Room"] { synonyms="Sportraum,Sportzimmer" }
+Group SF_Child2 								"Kind 2" 								<boy1> 			(gSF) ["Room"] { synonyms="Trockenzimmer,hinteres Kinderzimmer" }
+Group SF_Floor 	    							"Flur" 									<corridor> 		(gSF) ["Floor"]
+Group SF_Attic									"Dachboden" 							<corridor> 		(gSF) ["Attic"]
