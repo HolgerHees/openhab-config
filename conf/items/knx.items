@@ -1,5 +1,5 @@
 //####### Lights ########
-Group:Switch:OR(ON, OFF) Lights 				"Alle Lampen"							<selflight> ["Lights"]                      
+Group:Switch:OR(ON, OFF) Lights 				"Alle Lampen"							<selflight> ["Light"]                      
 Group:Switch:OR(ON, OFF) Lights_Indoor 			"Innen Lampen"							<selflight>		(Lights)                                 
 Group:Switch:OR(ON, OFF) Lights_FF 				"EG Lampen" 							<selflight>		(Lights_Indoor)
 Group:Switch:OR(ON, OFF) Lights_SF 				"OG Lampen" 							<selflight>		(Lights_Indoor)
