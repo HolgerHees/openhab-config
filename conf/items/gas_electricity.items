@@ -1,5 +1,5 @@
 //########### GAS ##########
-Number Gas_Pulse_Counter																			(PersistentHistory)				{ knx="<13.001:0/4/6" }
+Number Gas_Pulse_Counter																			(PersistentHistory)				{ channel="knx:device:bridge:other:gasCounter" }
 Number Gas_Current_Count						"Zählerstand [%.2f m³]"			<selfgas>			(PersistentHistory)
 Number Gas_Current_Daily_Consumption 			"Tagesverbrauch [%.2f m³]"		<selfgas>           (PersistentChart)
 Number Gas_Current_Consumption 					"Aktueller Verbrauch [%.2f m³]"	<selfgas>			(PersistentChart)

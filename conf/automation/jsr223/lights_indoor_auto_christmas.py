@@ -16,7 +16,7 @@ class LightsOnRule:
             hour = now.getHourOfDay()
             minute = now.getMinuteOfHour()
 
-            if (hour == 16 and minute == 0) or (hour < 10 and getItemState("State_Sleeping") == OFF or getItemState("State_Present") == ON):
+            if (hour == 16 and minute == 0) or (hour < 10 and getItemState("State_Sleeping") == OFF and getItemState("State_Present") == ON):
                 sendCommand("Socket_Floor", ON)
                 sendCommand("Socket_Livingroom_Couch", ON)
                 sendCommand("Socket_Livingroom_Fireplace", ON)
@@ -39,8 +39,7 @@ class LightsOffRule:
             hour = now.getHourOfDay()
             minute = now.getMinuteOfHour()
 
-            if (getItemState("State_Present") == OFF and ((hour > 3 and hour < 10) or (hour == 22 and minute == 0))) or getItemState(
-                    "State_Sleeping") == ON:
+            if (getItemState("State_Present") == OFF and ((hour > 3 and hour < 10) or (hour == 22 and minute == 0))) or getItemState("State_Sleeping") == ON:
                 sendCommand("Socket_Floor", OFF)
                 sendCommand("Socket_Livingroom_Couch", OFF)
                 sendCommand("Socket_Livingroom_Fireplace", OFF)
