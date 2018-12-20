@@ -63,7 +63,7 @@ Switch Light_Outdoor_Garage_Streedside 													<selflight>		(Lights_Outdoor
 Switch Light_Outdoor_Garage_Gardenside 													<selflight>		(Lights_Outdoor_Controlled)    		{ channel="knx:device:bridge:lights_outdoor:garageGardenside" }
 
 //####### Sockets ########
-Group:Switch:OR(ON, OFF) Sockets 				"Steckdosen"							<selfsocket>
+Group:Switch:OR(ON, OFF) Sockets 				"Steckdosen"							<selfsocket> ["PowerOutlet"]
 Group:Switch:OR(ON, OFF) Sockets_Outdoor		"Gartensteckdosen"						<selfsocket>
 
 Switch Socket_Livingroom_Bassbox				"Wohnzimmersteckdose Bassbox"			<selfsocket>	(FF_Livingroom,Sockets)	["Status","Speaker"]	 { channel="knx:device:bridge:sockets_ff:livingroomBassbox" }
