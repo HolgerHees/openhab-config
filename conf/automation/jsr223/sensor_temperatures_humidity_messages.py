@@ -92,7 +92,7 @@ class InfoValueRule:
                 self.triggers.append(ItemStateChangeTrigger(entry[3]))
 
     def processRawValue(self, valueItem, rawState, calibrationDiff, finalDiff):
-        value = (round(rawState.doubleValue() * 10.0) / 10.0) + calibrationDiff + finalDiff
+        value = round(round(rawState.doubleValue(),1) + calibrationDiff + finalDiff, 1)
         return postUpdateIfChanged(valueItem, value)
 
     def updateInfoMessage(self, infoItem, temperatureItem, humidityItem, temperatureTargetItem=None):
