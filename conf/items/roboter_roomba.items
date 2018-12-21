@@ -1,9 +1,9 @@
 /* Roomba items */
 Switch roomba_auto              "Auto Steuerung"            <selfautomode>
-Switch roomba_cleaning_state    "Reinigt"                   <selfautomode>
+Switch roomba_cleaning_state    "Reinigt"                   <selfautomode> ["State","CleaningRobot"]
 
 /* Roomba Commands */
-String roomba_command           "Roomba"                    <roomba>        {mqtt=">[mosquitto:/roomba/command:command:*:${command}]", autoupdate="false"}
+String roomba_command           "Roomba"                    <roomba>  ["Control","CleaningRobot"] {mqtt=">[mosquitto:/roomba/command:command:*:${command}]", autoupdate="false"}
 
 /* Settings */
 String roomba_boost             "Boost"                     <roomba>

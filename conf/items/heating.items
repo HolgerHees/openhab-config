@@ -2,7 +2,7 @@
 Group Heating_Temperatures
 Group Solar_Temperatures
 
-Switch Heating_Livingroom_Circuit				"Wohnzimmer Kreis"				<settings>				{fs20="C04B00"}
+Switch Heating_Livingroom_Circuit				"Wohnzimmer Kreis"				<settings>			{ channel="knx:device:bridge:other:livingroomHeating" }
 Number Heating_Temperature_Livingroom_Target	"Ziel Wohnzimmer"				<settings>			(PersistentHistory)
 Number Heating_Temperature_Bedroom_Target		"Ziel Schlafzimmer"				<settings>			(PersistentHistory)
 Number Heating_Charged							"Geladen [%.1f]"				<settings>			(PersistentChart,PersistentHistory)

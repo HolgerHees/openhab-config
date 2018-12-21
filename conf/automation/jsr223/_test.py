@@ -1,9 +1,15 @@
 #import time
 
 #from org.eclipse.smarthome.automation import Rule as SmarthomeRule
-#from marvin.helper import log, rule, sendCommand
+#from marvin.helper import log, getGroupMember
 #from core.jsr223 import scope
 #from core.triggers import CronTrigger, ItemStateUpdateTrigger, ItemStateChangeTrigger
+
+#member = getGroupMember("FF_Livingroom")
+
+#for item in member:
+#    log.info(u"{}".format(item))
+
 
 #@rule("_test.py")
 #class EventMonitorRule1:

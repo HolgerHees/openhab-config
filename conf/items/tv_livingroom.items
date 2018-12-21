@@ -27,7 +27,7 @@ Switch SAT_KEY_ONE	        	{http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%
 Switch SAT_KEY_ZDFNEO	        {http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3A2B7A%%3A3F3%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
 Switch SAT_KEY_3SAT	        	{http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3A2B8E%%3A3F2%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
 
-Switch TV_Online                                                         {channel="network:pingdevice:livingroomTV:online"}
+Switch TV_Online                                                         ["Status"] {channel="network:pingdevice:livingroomTV:online"}
 Switch TV_KEY_POWER					"An / Aus" <settings>				 {http=">[*:GET:http://192.168.0.132:5000/api/key_power]", autoupdate="false"} 
 Switch TV_KEY_VOLUMEUP	        	"Lauter" <settings>				     {http=">[*:GET:http://192.168.0.132:5000/api/key_volumeup]", autoupdate="false"} 
 Switch TV_KEY_VOLUMEDOWN			"Leiser" <settings>				     {http=">[*:GET:http://192.168.0.132:5000/api/key_volumedown]", autoupdate="false"} 

@@ -345,7 +345,16 @@ var MV = {
         
         function updateItem(scope,item)
 		{
-			scope.vm.watchedValues[item.name] = ( item == null ? [ 'N/A', 'N/A' ] : [ item.state, item.transformedState ? item.transformedState : item.state ] );
+            let state = item.state
+            let transformedState = item.transformedState ? item.transformedState : item.state
+            
+            // remove units like °C
+            if( item.type.indexOf(":") != -1 )
+            {
+                state = state.substr(0,state.indexOf(" "))
+                transformedState = transformedState.substr(0,transformedState.indexOf(" "))
+            }
+			scope.vm.watchedValues[item.name] = ( item == null ? [ 'N/A', 'N/A' ] : [ state, transformedState ] );
 		}
         
         function triggerListener(scope,item)
