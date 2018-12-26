@@ -50,11 +50,11 @@ class HueBrightnessRule:
 class HueBrightnessBackwardRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("Light_FF_Livingroom_Hue_Brightness1"),
-            ItemStateChangeTrigger("Light_FF_Livingroom_Hue_Brightness2"),
-            ItemStateChangeTrigger("Light_FF_Livingroom_Hue_Brightness3"),
-            ItemStateChangeTrigger("Light_FF_Livingroom_Hue_Brightness4"),
-            ItemStateChangeTrigger("Light_FF_Livingroom_Hue_Brightness5")
+            ItemCommandTrigger("Light_FF_Livingroom_Hue_Brightness1"),
+            ItemCommandTrigger("Light_FF_Livingroom_Hue_Brightness2"),
+            ItemCommandTrigger("Light_FF_Livingroom_Hue_Brightness3"),
+            ItemCommandTrigger("Light_FF_Livingroom_Hue_Brightness4"),
+            ItemCommandTrigger("Light_FF_Livingroom_Hue_Brightness5")
         ]
 
     def execute(self, module, input):
@@ -90,11 +90,11 @@ class HueColorRule:
 class HueColorBackwardRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("Light_FF_Livingroom_Hue_Color1"),
-            ItemStateChangeTrigger("Light_FF_Livingroom_Hue_Color2"),
-            ItemStateChangeTrigger("Light_FF_Livingroom_Hue_Color3"),
-            ItemStateChangeTrigger("Light_FF_Livingroom_Hue_Color4"),
-            ItemStateChangeTrigger("Light_FF_Livingroom_Hue_Color5")
+            ItemCommandTrigger("Light_FF_Livingroom_Hue_Color1"),
+            ItemCommandTrigger("Light_FF_Livingroom_Hue_Color2"),
+            ItemCommandTrigger("Light_FF_Livingroom_Hue_Color3"),
+            ItemCommandTrigger("Light_FF_Livingroom_Hue_Color4"),
+            ItemCommandTrigger("Light_FF_Livingroom_Hue_Color5")
         ]
 
     def execute(self, module, input):
