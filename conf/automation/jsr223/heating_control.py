@@ -510,7 +510,7 @@ class MoveCircuitSwitchRule(HeatingHelper):
             if getItemState("Heating_Livingroom_Circuit") == OFF:
                 self.log.info(u"Toogle  : Livingroom circuit ON")
                 sendCommand("Heating_Livingroom_Circuit",ON)
-                time.sleep(10)
+                time.sleep(120)
                 self.log.info(u"Toogle  : Livingroom circuit OFF")
                 sendCommand("Heating_Livingroom_Circuit",OFF)
         

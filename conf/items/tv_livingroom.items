@@ -1,32 +1,3 @@
-Switch Sat_Power				{http=">[ON:GET:http://192.168.0.102/web/powerstate?newstate=4] >[OFF:GET:http://192.168.0.102/web/powerstate?newstate=5]", autoupdate="false"} 
-Switch SAT_KEY_ARD  	        {http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3A283D%%3A3FB%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_ZDF	        	{http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3A2B66%%3A3F3%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_RTL	        	{http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3AEF10%%3A421%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_SAT1	        	{http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3AEF74%%3A3F9%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_PRO7        	    {http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3AEF75%%3A3F9%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_SERVUSTV	        {http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3A1332%%3A3EF%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A%%3AServusTV+HD]", autoupdate="false"} 
-Switch SAT_KEY_VOX	        	{http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3AEF11%%3A421%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_KABEL1	        {http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3AEF76%%3A3F9%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_DMAX	        	{http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3A151A%%3A455%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_TLC	        	{http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3A2774%%3A409%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_N24	        	{http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3A5274%%3A41D%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_NTV	        	{http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3AEF14%%3A421%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A%%3An-tv+HD]", autoupdate="false"} 
-Switch SAT_KEY_TAGESSCHAU24	    {http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3A2887%%3A40F%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_PRO7MAX	        {http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3AEF78%%3A3F9%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_SAT1GOLD	        {http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3A30D4%%3A413%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_SIXX	        	{http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3AEF77%%3A3F9%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_RTL2	        	{http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3AEF15%%3A421%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_NITRO	        {http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3A2EAF%%3A411%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_SUPERRTL	        {http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3A2E9B%%3A411%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_TELE5	        {http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3A1519%%3A455%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_WELTDERWUNDER	{http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A1%%3A332F%%3A45B%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_ARTE	        	{http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3A283E%%3A3FB%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_ZDFINFO	        {http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3A2BA2%%3A3F2%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_PHOENIX	        {http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3A285B%%3A401%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_ONE	        	{http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3A2888%%3A40F%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_ZDFNEO	        {http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3A2B7A%%3A3F3%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-Switch SAT_KEY_3SAT	        	{http=">[*:GET:http://192.168.0.102/web/zap?sRef=1%%3A0%%3A19%%3A2B8E%%3A3F2%%3A1%%3AC00000%%3A0%%3A0%%3A0%%3A]", autoupdate="false"} 
-
 Switch TV_Online                                                         ["Status"] {channel="network:pingdevice:livingroomTV:online"}
 Switch TV_KEY_POWER					"An / Aus" <settings>				 {http=">[*:GET:http://192.168.0.132:5000/api/key_power]", autoupdate="false"} 
 Switch TV_KEY_VOLUMEUP	        	"Lauter" <settings>				     {http=">[*:GET:http://192.168.0.132:5000/api/key_volumeup]", autoupdate="false"} 
