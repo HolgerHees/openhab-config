@@ -43,6 +43,7 @@ class HueBrightnessRule:
         sendCommand("Light_FF_Livingroom_Hue_Brightness2", input["command"])
         sendCommand("Light_FF_Livingroom_Hue_Brightness3", input["command"])
         sendCommand("Light_FF_Livingroom_Hue_Brightness4", input["command"])
+        sendCommand("Light_FF_Livingroom_Hue_Brightness5", input["command"])
 
 
 @rule("lights_indoor_livingroom_control.py")
@@ -52,7 +53,8 @@ class HueBrightnessBackwardRule:
             ItemStateChangeTrigger("Light_FF_Livingroom_Hue_Brightness1"),
             ItemStateChangeTrigger("Light_FF_Livingroom_Hue_Brightness2"),
             ItemStateChangeTrigger("Light_FF_Livingroom_Hue_Brightness3"),
-            ItemStateChangeTrigger("Light_FF_Livingroom_Hue_Brightness4")
+            ItemStateChangeTrigger("Light_FF_Livingroom_Hue_Brightness4"),
+            ItemStateChangeTrigger("Light_FF_Livingroom_Hue_Brightness5")
         ]
 
     def execute(self, module, input):
@@ -65,6 +67,8 @@ class HueBrightnessBackwardRule:
             value = getItemState("Light_FF_Livingroom_Hue_Brightness3").intValue()
         if getItemState("Light_FF_Livingroom_Hue_Brightness4").intValue() > value:
             value = getItemState("Light_FF_Livingroom_Hue_Brightness4").intValue()
+        if getItemState("Light_FF_Livingroom_Hue_Brightness5").intValue() > value:
+            value = getItemState("Light_FF_Livingroom_Hue_Brightness5").intValue()
 
         postUpdateIfChanged("Light_FF_Livingroom_Hue_Brightness", value)
 
@@ -76,9 +80,10 @@ class HueColorRule:
 
     def execute(self, module, input):
         sendCommand("Light_FF_Livingroom_Hue_Color1", input["command"])
-        sendCommand("Light_FF_Livingroom_Hue_Color1", input["command"])
-        sendCommand("Light_FF_Livingroom_Hue_Color1", input["command"])
-        sendCommand("Light_FF_Livingroom_Hue_Color1", input["command"])
+        sendCommand("Light_FF_Livingroom_Hue_Color2", input["command"])
+        sendCommand("Light_FF_Livingroom_Hue_Color3", input["command"])
+        sendCommand("Light_FF_Livingroom_Hue_Color4", input["command"])
+        sendCommand("Light_FF_Livingroom_Hue_Color5", input["command"])
 
 
 @rule("lights_indoor_livingroom_control.py")
@@ -88,12 +93,14 @@ class HueColorBackwardRule:
             ItemStateChangeTrigger("Light_FF_Livingroom_Hue_Color1"),
             ItemStateChangeTrigger("Light_FF_Livingroom_Hue_Color2"),
             ItemStateChangeTrigger("Light_FF_Livingroom_Hue_Color3"),
-            ItemStateChangeTrigger("Light_FF_Livingroom_Hue_Color4")
+            ItemStateChangeTrigger("Light_FF_Livingroom_Hue_Color4"),
+            ItemStateChangeTrigger("Light_FF_Livingroom_Hue_Color5")
         ]
 
     def execute(self, module, input):
         state = getItemState("Light_FF_Livingroom_Hue_Color1")
         if getItemState("Light_FF_Livingroom_Hue_Color2") == state \
                 and getItemState("Light_FF_Livingroom_Hue_Color3") == state \
-                and getItemState("Light_FF_Livingroom_Hue_Color3") == state:
+                and getItemState("Light_FF_Livingroom_Hue_Color4") == state \
+                and getItemState("Light_FF_Livingroom_Hue_Color5") == state:
             postUpdateIfChanged("Light_FF_Livingroom_Hue_Color", state)

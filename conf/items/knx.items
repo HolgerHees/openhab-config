@@ -8,8 +8,8 @@ Group:Switch:OR(ON, OFF) Lights_Outdoor_Controlled "Aussen (gesteuert)" 	    	<s
 
 Switch Light_FF_Floor_Ceiling 					"Flur Decke" 						<selflight>	(FF_Floor, Lights_FF)	{ channel="knx:device:bridge:lights_ff:floorCeiling" }
 Switch Light_FF_Floor_Mirror 					"Flur Spiegel" 						<selflight>	(FF_Floor, Lights_FF)	{ channel="knx:device:bridge:lights_ff:floorMirror" }
-Dimmer Light_FF_Floor_Hue_Brightness			"Flur Treppe"				<selflight>	(FF_Floor, Lights_FF)	["Setpoint"]	{ channel="hue:0210:00178821ff34:5:color" }
-Color Light_FF_Floor_Hue_Color					"Flur Treppen Farbe"				<colorwheel>	["ColorTemperature"] { channel="hue:0210:00178821ff34:5:color"}
+Dimmer Light_FF_Floor_Hue_Brightness			"Flur Treppe"				<selflight>	(FF_Floor, Lights_FF)	["Setpoint"]	{ channel="hue:0210:default:lamp4:color" }
+Color Light_FF_Floor_Hue_Color					"Flur Treppen Farbe"				<colorwheel>	["ColorTemperature"] { channel="hue:0210:default:lamp4:color"}
 
 Dimmer Lights_FF_Livingroom_Ceiling             "Wohnzimmer Decken"			<selflight>                                                  
 Dimmer Light_FF_Livingroom_Diningtable "Wohnzimmer Esstisch" <selfslider> (FF_Livingroom, Lights_FF) ["Setpoint"] { channel="knx:device:bridge:lights_ff:livingroomDiningtable" }
@@ -18,14 +18,16 @@ Dimmer Light_FF_Livingroom_Couch "Wohnzimmer Couch" 	<selfslider> (FF_Livingroom
 Dimmer Light_FF_Livingroom_Hue_Brightness		"Wohnzimmer Indirekt"   		<selfslider>	(FF_Livingroom, Lights_FF) ["Setpoint"]       
 Color Light_FF_Livingroom_Hue_Color				"Wohnzimmer Indirekte Farbe"			<colorwheel>    ["ColorTemperature"]
 
-Dimmer Light_FF_Livingroom_Hue_Brightness1		"Wohnzimmer Bassbox"				<selfslider>	{ channel="hue:0210:00178821ff34:1:color"}
-Color Light_FF_Livingroom_Hue_Color1			"Wohnzimmer Bassbox Farbe"				<colorwheel>	{ channel="hue:0210:00178821ff34:1:color"}
-Dimmer Light_FF_Livingroom_Hue_Brightness2		"Wohnzimmer Stehlampe unten"			<selfslider>	{ channel="hue:0210:00178821ff34:2:color"}
-Color Light_FF_Livingroom_Hue_Color2			"Wohnzimmer Stehlampe Farbe unten"		<colorwheel>	{ channel="hue:0210:00178821ff34:2:color"}
-Dimmer Light_FF_Livingroom_Hue_Brightness3		"Wohnzimmer Stehlampe oben"				<selfslider>	{ channel="hue:0210:00178821ff34:3:color"}
-Color Light_FF_Livingroom_Hue_Color3			"Wohnzimmer Stehlampe Farbe oben"		<colorwheel>	{ channel="hue:0210:00178821ff34:3:color"}
-Dimmer Light_FF_Livingroom_Hue_Brightness4		"Wohnzimmer Tresen"				<selfslider>	{ channel="hue:0210:00178821ff34:4:color"}
-Color Light_FF_Livingroom_Hue_Color4			"Wohnzimmer Tresen Farbe"				<colorwheel>	{ channel="hue:0210:00178821ff34:4:color"}
+Dimmer Light_FF_Livingroom_Hue_Brightness1		"Wohnzimmer Bassbox"				<selfslider>	{ channel="hue:0210:default:lamp1:color"}
+Color Light_FF_Livingroom_Hue_Color1			"Wohnzimmer Bassbox Farbe"				<colorwheel>	{ channel="hue:0210:default:lamp1:color"}
+Dimmer Light_FF_Livingroom_Hue_Brightness2		"Wohnzimmer Stehlampe unten"			<selfslider>	{ channel="hue:0210:default:lamp2:color"}
+Color Light_FF_Livingroom_Hue_Color2			"Wohnzimmer Stehlampe Farbe unten"		<colorwheel>	{ channel="hue:0210:default:lamp2:color"}
+Dimmer Light_FF_Livingroom_Hue_Brightness3		"Wohnzimmer Stehlampe oben"				<selfslider>	{ channel="hue:0210:default:lamp3:color"}
+Color Light_FF_Livingroom_Hue_Color3			"Wohnzimmer Stehlampe Farbe oben"		<colorwheel>	{ channel="hue:0210:default:lamp3:color"}
+Dimmer Light_FF_Livingroom_Hue_Brightness4		"Wohnzimmer Tresen"				<selfslider>	{ channel="hue:0210:default:strip1:color"}
+Color Light_FF_Livingroom_Hue_Color4			"Wohnzimmer Tresen Farbe"				<colorwheel>	{ channel="hue:0210:default:strip1:color"}
+Dimmer Light_FF_Livingroom_Hue_Brightness5		"Wohnzimmer Regal"				<selfslider>	{ channel="hue:0210:default:strip2:color"}
+Color Light_FF_Livingroom_Hue_Color5			"Wohnzimmer Regal Farbe"				<colorwheel>	{ channel="hue:0210:default:strip2:color"}
 
 Dimmer Light_FF_Kitchen_Ceiling 				"Küche Decke" 	<selfslider> (FF_Kitchen, Lights_FF)	["Setpoint"]	{ channel="knx:device:bridge:lights_ff:kitchenCeiling" }
 Switch Light_FF_Kitchen_Cupboard 				"Küche Schrank" <selflight>		(FF_Kitchen, Lights_FF)	{ channel="knx:device:bridge:lights_ff:kitchenCupboard" }
@@ -76,8 +78,8 @@ Switch Socket_Bathroom_Right		"Badezimmer rechts"		<selfsocket>	(SF_Bathroom,Soc
 Switch Socket_Attic					"Dachboden"	<selfsocket>	(SF_Attic,Sockets)				 { channel="knx:device:bridge:sockets_sf:attic" }
 Switch Socket_Streedside			"Aussen vorne" <selfsocket>	(Outdoor,Sockets_Outdoor,Sockets) { channel="knx:device:bridge:sockets_outdoor:streedside" }
 Switch Socket_Gardenside			"Aussen hinten" <selfsocket>	(Outdoor,Sockets_Outdoor,Sockets) { channel="knx:device:bridge:sockets_outdoor:gardenside" }
-Switch Socket_Mobile_1				"Mobile 1" <selfsocket>	(Sockets)					         { channel="hue:0010:00178821ff34:socket1:switch" }
-Switch Socket_Mobile_2				"Mobile 2" <selfsocket>	(Sockets)					         { channel="hue:0010:00178821ff34:socket2:switch" }
+Switch Socket_Mobile_1				"Mobile 1" <selfsocket>	(Sockets)					         { channel="hue:0010:default:socket1:switch" }
+Switch Socket_Mobile_2				"Mobile 2" <selfsocket>	(Sockets)					         { channel="hue:0010:default:socket2:switch" }
 
 //####### Shutters ########
 Group:Rollershutter:OR(UP, DOWN)	Shutters	"Alle" <selfrollershutter> ["Blinds"]

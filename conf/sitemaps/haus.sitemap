@@ -17,6 +17,8 @@ sitemap haus label="Main Menu"
 							Frame label="Einzeln" {
 								Slider item=Light_FF_Livingroom_Hue_Brightness4 label="Küche Tresen [%d %%]"
 								Colorpicker item=Light_FF_Livingroom_Hue_Color4 label="Küche Tresen"
+								Slider item=Light_FF_Livingroom_Hue_Brightness5 label="Bücherregal [%d %%]"
+								Colorpicker item=Light_FF_Livingroom_Hue_Color5 label="Bücherregal"
 								Slider item=Light_FF_Livingroom_Hue_Brightness3 label="Stehlampe oben [%d %%]"
 								Colorpicker item=Light_FF_Livingroom_Hue_Color3 label="Stehlampe oben"
 								Slider item=Light_FF_Livingroom_Hue_Brightness2 label="Stehlampe unten [%d %%]"
