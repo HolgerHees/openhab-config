@@ -31,9 +31,7 @@ class PhoneCheckRule:
         
     def execute(self, module, input):
         itemName = input['event'].getItemName()
-        itemState = getItemState(itemName).toString()
-        
-        sendNotification(u"{}".format(itemName), u"{}".format(itemState))
+        sendNotification(u"{}".format(itemName), u"{}".format(input['command']))
 
 @rule("presence_detection.py")
 class LeavingCheckRule:
