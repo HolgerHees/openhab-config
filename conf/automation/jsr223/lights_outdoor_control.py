@@ -216,7 +216,6 @@ class LightOutdoorControlRule:
         
         global controlTimestamps
         now = getNow().getMillis()
-        
         last = controlTimestamps.get(itemName,0)
         
         # No Motion Detector related events
