@@ -1,6 +1,7 @@
 Switch State_Sleeping							"Alle schlafen"	    			<selfinfo>			(PersistentHistory) ["State"] { synonyms="Schlafen" }
 Switch State_Present							"Jemand anwesend"				<selfinfo>			(PersistentHistory) ["Presence"]
-Switch State_Holger_Present                     "Holger anwesend"               <selfinfo>          (PersistentHistory) ["Presence"] { synonyms="Holger" }                                                       
+Switch State_Holger_Present                     "Holger anwesend"               <selfinfo>          (PersistentHistory) { channel="network:pingdevice:phone1:online" }                                                       
+Switch State_Sandra_Present                     "Sandra anwesend"               <selfinfo>          (PersistentHistory) { channel="network:pingdevice:phone2:online" }                                                
 
 Switch State_Outdoorlights						"Aussenbeleuchtung Aktiv"		<selflight>
 Switch State_Rollershutter						"Rollläden geschlossen"			<selfrollershutter>

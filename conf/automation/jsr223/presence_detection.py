@@ -22,6 +22,20 @@ def checkMotion(historicDate, itemName, offset):
 
 
 @rule("presence_detection.py")
+class PhoneCheckRule:
+    def __init__(self):
+        self.triggers = [
+            ItemStateChangeTrigger("State_Holger_Present"),
+            ItemStateChangeTrigger("State_Sandra_Present")
+        ]
+        
+    def execute(self, module, input):
+        itemName = input['event'].getItemName()
+        itemState = getItemState(itemName).toString()
+        
+        sendNotification(u"{}".format(itemName), u"{}".format(itemState))
+
+@rule("presence_detection.py")
 class LeavingCheckRule:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("Door_FF_Floor")]
