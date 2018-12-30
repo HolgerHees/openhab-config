@@ -4,7 +4,6 @@ Group:Switch:OR(ON, OFF) Lights_Indoor 			"Innen"							<selflight>		(Lights) ["
 Group:Switch:OR(ON, OFF) Lights_FF 				"EG" 							<selflight>		(Lights_Indoor) ["Light"] { synonyms="Lampe,Lampen" }
 Group:Switch:OR(ON, OFF) Lights_SF 				"OG" 							<selflight>		(Lights_Indoor) ["Light"] { synonyms="Lampe,Lampen" }
 Group:Switch:OR(ON, OFF) Lights_Outdoor 		"Aussen" 						<selflight>		(Lights) ["Light"] { synonyms="Lampe,Lampen" }
-Group:Switch:OR(ON, OFF) Lights_Outdoor_Controlled "Aussen (gesteuert)" 	    	<selflight>
 
 Switch Light_FF_Floor_Ceiling 					"Flur Decke" 						<selflight>	(FF_Floor, Lights_FF)	{ channel="knx:device:bridge:lights_ff:floorCeiling" }
 Switch Light_FF_Floor_Mirror 					"Flur Spiegel" 						<selflight>	(FF_Floor, Lights_FF)	{ channel="knx:device:bridge:lights_ff:floorMirror" }
@@ -52,17 +51,11 @@ Switch Light_SF_Attic 							"Dachboden" 	<selflight>		(SF_Attic, Lights_SF)	{ c
 Switch Light_SF_Bedroom_Left_Long_Pressed 		"Schlafz. Bett Fenster (lang)" 			<selflight>		{ channel="knx:device:bridge:other:bedroomLeftLongPressed" }
 Switch Light_SF_Bedroom_Right_Long_Pressed		"Schlafz. Bett Wand (lang)" 			<selflight>		{ channel="knx:device:bridge:other:bedroomRightLongPressed" }
 
-Dimmer Light_Outdoor_Terrace_Manual 			"Terrasse"						<selfslider>	(Outdoor, Lights_Outdoor)        
-Switch Light_Outdoor_Frontdoor_Manual 			"Haustür" 						<selflight>		(Outdoor, Lights_Outdoor)       
-Switch Light_Outdoor_Carport_Manual 			"Carport" 						<selflight>		(Outdoor, Lights_Outdoor)     
-Switch Light_Outdoor_Garage_Streedside_Manual 	"Schuppentür vorne" 				<selflight>		(Outdoor, Lights_Outdoor)          
-Switch Light_Outdoor_Garage_Gardenside_Manual 	"Schuppentür hinten" 			<selflight>		(Outdoor, Lights_Outdoor)         
-
-Dimmer Light_Outdoor_Terrace 								<selfslider>	(Lights_Outdoor_Controlled)	{ channel="knx:device:bridge:lights_outdoor:outdoorTerrace" }
-Switch Light_Outdoor_Frontdoor 								<selflight>		(Lights_Outdoor_Controlled)	{ channel="knx:device:bridge:lights_outdoor:frontdoor" }
-Switch Light_Outdoor_Carport 								<selflight>		(Lights_Outdoor_Controlled)	{ channel="knx:device:bridge:lights_outdoor:carport" }
-Switch Light_Outdoor_Garage_Streedside 						<selflight>		(Lights_Outdoor_Controlled) { channel="knx:device:bridge:lights_outdoor:garageStreedside" }
-Switch Light_Outdoor_Garage_Gardenside 						<selflight>		(Lights_Outdoor_Controlled) { channel="knx:device:bridge:lights_outdoor:garageGardenside" }
+Dimmer Light_Outdoor_Terrace 					"Terrasse"	<selfslider>	(Outdoor, Lights_Outdoor)	{ channel="knx:device:bridge:lights_outdoor:outdoorTerrace" }
+Switch Light_Outdoor_Frontdoor 					"Haustür"	<selflight>		(Outdoor, Lights_Outdoor)	{ channel="knx:device:bridge:lights_outdoor:frontdoor" }
+Switch Light_Outdoor_Carport 					"Carport"	<selflight>		(Outdoor, Lights_Outdoor)	{ channel="knx:device:bridge:lights_outdoor:carport" }
+Switch Light_Outdoor_Garage_Streedside 		"Schuppentür vorne"	<selflight>		(Outdoor, Lights_Outdoor) { channel="knx:device:bridge:lights_outdoor:garageStreedside" }
+Switch Light_Outdoor_Garage_Gardenside 		"Schuppentür hinten"	<selflight>		(Outdoor, Lights_Outdoor) { channel="knx:device:bridge:lights_outdoor:garageGardenside" }
 
 //####### Sockets ########
 Group:Switch:OR(ON, OFF) Sockets 			"Alle"							<selfsocket> ["PowerOutlet"]

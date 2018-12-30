@@ -21,4 +21,4 @@ class SceneContactNotificationsRule:
             else:
                 group = u"Fenster"
 
-            sendNotification(group, u"{} {}".format(item.getLabel(),getItemState(itemName).toString()))
+            sendNotification(group, u"{} {}".format(item.getLabel(),input['event'].getItemState().toString()))

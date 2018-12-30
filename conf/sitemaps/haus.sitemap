@@ -66,11 +66,11 @@ sitemap haus label="Main Menu"
 			}
             Frame label="Etagen" {
 				Group item=Lights_Outdoor label="Aussen Lampen [MAP(group_light.map):%d]" {
-                    Slider item=Light_Outdoor_Terrace_Manual label="Terasse"
-                    Switch item=Light_Outdoor_Frontdoor_Manual label="Haustür"
-                    Switch item=Light_Outdoor_Carport_Manual label="Carport"
-                    Switch item=Light_Outdoor_Garage_Streedside_Manual label="Schuppentür vorne"
-                    Switch item=Light_Outdoor_Garage_Gardenside_Manual label="Schuppentür hinten"
+                    Slider item=Light_Outdoor_Terrace label="Terasse"
+                    Switch item=Light_Outdoor_Frontdoor label="Haustür"
+                    Switch item=Light_Outdoor_Carport label="Carport"
+                    Switch item=Light_Outdoor_Garage_Streedside label="Schuppentür vorne"
+                    Switch item=Light_Outdoor_Garage_Gardenside label="Schuppentür hinten"
 				}
 			}
 		}
@@ -101,14 +101,6 @@ sitemap haus label="Main Menu"
 			Frame label="Licht Bewegungsmelder" {
 				Switch item=Motiondetector_Outdoor_Switch label="Aktiv"
 				Group item=Motiondetector_Counter label="Einstellungen"
-				/*Text label="Terasse" {
-                    Text item=Light_Outdoor_Terrace_Manual label="Licht manuell [%s]"
-                    Text item=Light_Outdoor_Terrace label="Licht RAW [%s]"
-                    Text item=State_Outdoorlights label="Licht (ASTRO) [%s]"
-                    Text item=Motiondetector_Outdoor_Terrace_Switch label="BM aktiv [%s]"
-                    Text item=Motiondetector_Outdoor_Terrace1
-                    Text item=Motiondetector_Outdoor_Terrace2
-				}*/
 			}
 			Frame label="Licht & Steckdosen" {
                 Group item=Lights_Outdoor label="Lampen [MAP(group_light.map):%d]"
@@ -500,7 +492,7 @@ sitemap haus label="Main Menu"
                 }
             }
             Frame label="Sonstiges" {
-                Group item=Lights_Outdoor_Controlled label="Lampen (RAW)"
+                Group item=Lights_Outdoor label="Lampen (RAW)"
                 Group label="Schalten (RAW) [MAP(group_socket.map):%d]" icon="selfsocket" item=Sockets {
                     Frame label="Wohnen" {
                         Switch item=Socket_Livingroom_Bassbox label="Bassbox"
