@@ -3,7 +3,7 @@ import math
 from org.joda.time import DateTime, DateTimeZone
 from org.joda.time.format import DateTimeFormat
 
-from marvin.helper import rule, getNow, getGroupMember, itemLastUpdateOlderThen, getItemLastUpdate, getHistoricItemState, getHistoricItemEntry, getItemState, getMaxItemState, getItem, postUpdate, postUpdateIfChanged, sendCommand
+from marvin.helper import rule, getNow, getGroupMember, itemLastUpdateOlderThen, getItemLastUpdate, getHistoricItemState, getHistoricItemEntry, getItemState, getMaxItemState, getItem, postUpdate, postUpdateIfChanged, sendCommand, createTimer
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 from core.actions import Transformation
 
@@ -504,15 +504,17 @@ class MoveCircuitSwitchRule(HeatingHelper):
     def __init__(self):
         self.triggers = [CronTrigger("0 0 0 * * ?")]
 
+    def callback(self):
+        self.log.info(u"Toogle  : Livingroom circuit OFF")
+        sendCommand("Heating_Livingroom_Circuit",OFF)
+    
     def execute(self, module, input):
         # switch after 2 days of inactivity livingroom circuit once to avoid ventile damages
         if itemLastUpdateOlderThen("Heating_Livingroom_Circuit", getNow().minusMinutes(60*24*2)):
             if getItemState("Heating_Livingroom_Circuit") == OFF:
                 self.log.info(u"Toogle  : Livingroom circuit ON")
                 sendCommand("Heating_Livingroom_Circuit",ON)
-                time.sleep(120)
-                self.log.info(u"Toogle  : Livingroom circuit OFF")
-                sendCommand("Heating_Livingroom_Circuit",OFF)
+                createTimer(120, self.callback)
         
 @rule("heating_control.py")
 class CalculateChargeLevelRule(HeatingHelper):
