@@ -251,6 +251,8 @@ sitemap haus label="Main Menu"
                 {
                     Switch item=State_Present label="Jemand anwesend [%s]"
                     Switch item=State_Sleeping label="Jemand schläft [%s]"
+                    Text item=State_Holger_Present label="Holger anwesend [%s]"
+                    Text item=State_Sandra_Present label="Sandra anwesend [%s]"
                     Switch item=Scene7 label="Tablet Reload [%s]"
                     Switch item=Scene8 label="Tablet Wakeup [%s]"
                     Switch item=Scene9 label="Tablet Light Theme [%s]"

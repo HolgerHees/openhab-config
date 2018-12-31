@@ -1,7 +1,7 @@
 #import time
 
 #from org.eclipse.smarthome.automation import Rule as SmarthomeRule
-#from marvin.helper import log, getGroupMember
+#from marvin.helper import log, getGroupMember, sendCommand
 #from core.jsr223 import scope
 #from core.triggers import CronTrigger, ItemStateUpdateTrigger, ItemStateChangeTrigger
 
@@ -32,12 +32,9 @@
 #    self.log.info(u"test executed2")
 
 
-
-#sendCommand("Motiondetector_Outdoor_Frontdoor",OPEN)
-#log.info(u"3")
+#sendCommand("Motiondetector_Outdoor_Terrace1",OPEN)
 #time.sleep(5)
-#sendCommand("Motiondetector_Outdoor_Frontdoor",CLOSED)
-#log.info(u"4")
+#sendCommand("Motiondetector_Outdoor_Terrace1",CLOSED)
 
  
 #log.info(u"{}".format(test))
