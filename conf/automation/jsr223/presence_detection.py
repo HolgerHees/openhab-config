@@ -6,7 +6,16 @@ awayCheckDuration = 15.0
 timerAway = None
 
 
-'''@rule("presence_detection.py")
+'''
+
+def checkMotion(historicDate, itemName, offset):
+    # Is still active (motion detected)
+    if getItemState(itemName) == OPEN:
+        return True
+
+    return itemLastUpdateNewerThen(itemName, historicDate.plusMillis(offset))
+
+@rule("presence_detection.py")
 class LeavingCheckRule:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("Door_FF_Floor")]
@@ -64,14 +73,6 @@ class LeavingCheckRule:
             sendNotification(u"Tür", u"Willkommen")'''
 
 
-def checkMotion(historicDate, itemName, offset):
-    # Is still active (motion detected)
-    if getItemState(itemName) == OPEN:
-        return True
-
-    return itemLastUpdateNewerThen(itemName, historicDate.plusMillis(offset))
-
-
 @rule("presence_detection.py")
 class PresenceCheckRule:
     def __init__(self):
@@ -97,20 +98,32 @@ class PresenceCheckRule:
                 sendNotification(u"Tür", u"Auf Wiedersehen")
 
 @rule("presence_detection.py")
-class PresenceChangeRule:
+class LeavingRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("State_Present")]
+        self.triggers = [ItemStateChangeTrigger("State_Present","OFF")]
 
     def execute(self, module, input):
-        if input['event'].getItemState() == OFF:
-            if postUpdateIfChanged("State_Sleeping",OFF):
-                self.log.error("Presence Detection: Sleeping state was ON but presence detection was OFF")
+        if postUpdateIfChanged("State_Sleeping",OFF):
+            self.log.error("Presence Detection: Sleeping state was ON but presence detection was OFF")
 
-            postUpdateIfChanged("State_Notify", ON)
+        postUpdateIfChanged("State_Notify", ON)
 
 
 @rule("presence_detection.py")
-class MotionCheckRule:
+class UnexpectedMotionRule:
+    def __init__(self):
+        self.triggers = [
+            ItemStateChangeTrigger("Motiondetector_FF_Floor","OPEN"),
+            ItemStateChangeTrigger("Motiondetector_FF_Livingroom","OPEN"),
+            ItemStateChangeTrigger("Motiondetector_SF_Floor","OPEN")
+        ]
+
+    def execute(self, module, input):
+        if getItemState("State_Present") == OFF:
+            sendNotification(u"Unexpected Motion", u"{}".format(input['event'].getItemName()))
+
+@rule("presence_detection.py")
+class WakeupRule:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("Motiondetector_FF_Floor","OPEN"),
@@ -121,14 +134,12 @@ class MotionCheckRule:
         ]
 
     def execute(self, module, input):
-        #self.log.info(u"motion check {}".format(getItemState("Shutters_FF") == PercentType.ZERO))
-        
         if getItemState("State_Present") == ON and getItemState("State_Sleeping") ==  ON:
             if getItemState("TV_Online") == ON or getItemState("Lights_FF") == ON or getItemState("Shutters_FF") == PercentType.ZERO:
                 postUpdate("State_Sleeping", OFF)
 
 @rule("presence_detection.py") 
-class SleepingCheckRule:
+class SleepingRule:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("Lights_Indoor", "OFF")]
         self.timerSleep = None
