@@ -68,6 +68,8 @@ class HueBrightnessRule:
         
         sendCommand("Light_FF_Livingroom_Hue_Brightness5", input["command"])
         lastUpdate["Light_FF_Livingroom_Hue_Brightness5"] = now
+        
+        sendCommand("State_Lightprogram", 0)
 
 
 @rule("lights_indoor_livingroom_control.py")
@@ -109,6 +111,8 @@ class HueBrightnessBackwardRule:
                 value = hue5
 
             postUpdateIfChanged("Light_FF_Livingroom_Hue_Brightness", value)
+            
+            sendCommand("State_Lightprogram", 0)
 
 
 @rule("lights_indoor_livingroom_control.py")
@@ -134,6 +138,8 @@ class HueColorRule:
         
         sendCommand("Light_FF_Livingroom_Hue_Color5", input["command"])
         lastUpdate["Light_FF_Livingroom_Hue_Color5"] = now
+        
+        sendCommand("State_Lightprogram", 0)
 
 
 @rule("lights_indoor_livingroom_control.py")
@@ -168,6 +174,8 @@ class HueColorBackwardRule:
                     and color4 == itemCommand \
                     and color5 == itemCommand:
                 postUpdateIfChanged("Light_FF_Livingroom_Hue_Color", itemCommand)
+                
+            sendCommand("State_Lightprogram", 0)
 
 @rule("lights_indoor_livingroom_control.py")
 class HueColorProgramRule:
@@ -190,64 +198,73 @@ class HueColorProgramRule:
         return [u"{}".format(red),u"{}".format(green),u"{}".format(blue)]
     
     def callbackFaded(self,step,data):
-        if getItemState("State_Lightprogram").intValue() > 0 and getItemState("Light_FF_Livingroom_Hue_Brightness").intValue() > 0:
+        if getItemState("State_Lightprogram").intValue() == 0:
+            return
             
-            if step == 1:
-                fromColor1 = getItemState("Light_FF_Livingroom_Hue_Color1").toString().split(",")
-                fromColor2 = getItemState("Light_FF_Livingroom_Hue_Color2").toString().split(",")
-                fromColor3 = getItemState("Light_FF_Livingroom_Hue_Color3").toString().split(",")
-                fromColor4 = getItemState("Light_FF_Livingroom_Hue_Color4").toString().split(",")
-                fromColor5 = getItemState("Light_FF_Livingroom_Hue_Color5").toString().split(",")
-                data = [fromColor1,fromColor2,fromColor3,fromColor4,fromColor5]
+        if step == 1:
+            fromColor1 = getItemState("Light_FF_Livingroom_Hue_Color1").toString().split(",")
+            fromColor2 = getItemState("Light_FF_Livingroom_Hue_Color2").toString().split(",")
+            fromColor3 = getItemState("Light_FF_Livingroom_Hue_Color3").toString().split(",")
+            fromColor4 = getItemState("Light_FF_Livingroom_Hue_Color4").toString().split(",")
+            fromColor5 = getItemState("Light_FF_Livingroom_Hue_Color5").toString().split(",")
+            data = [fromColor1,fromColor2,fromColor3,fromColor4,fromColor5]
 
-            color1 = data[0]
-            color2 = data[1]
-            color3 = data[2]
-            color4 = data[3]
-            color5 = data[4]
+        color1 = data[0]
+        color2 = data[1]
+        color3 = data[2]
+        color4 = data[3]
+        color5 = data[4]
+        
+        currentColor1 = getItemState("Light_FF_Livingroom_Hue_Color1").toString().split(",")
+        currentColor2 = getItemState("Light_FF_Livingroom_Hue_Color2").toString().split(",")
+        currentColor3 = getItemState("Light_FF_Livingroom_Hue_Color3").toString().split(",")
+        currentColor4 = getItemState("Light_FF_Livingroom_Hue_Color4").toString().split(",")
+        currentColor5 = getItemState("Light_FF_Livingroom_Hue_Color5").toString().split(",")
+        
+        if step == self.steps:
+            newColor1 = color2
+            newColor2 = color3
+            newColor3 = color4
+            newColor4 = color5
+            newColor5 = color1
+        else:
+            newColor1 = self.fade( step, color1, color2, currentColor1 )
+            newColor2 = self.fade( step, color2, color3, currentColor2 )
+            newColor3 = self.fade( step, color3, color4, currentColor3 )
+            newColor4 = self.fade( step, color4, color5, currentColor4 )
+            newColor5 = self.fade( step, color5, color1, currentColor5 )
             
-            currentColor1 = getItemState("Light_FF_Livingroom_Hue_Color1").toString().split(",")
-            currentColor2 = getItemState("Light_FF_Livingroom_Hue_Color2").toString().split(",")
-            currentColor3 = getItemState("Light_FF_Livingroom_Hue_Color3").toString().split(",")
-            currentColor4 = getItemState("Light_FF_Livingroom_Hue_Color4").toString().split(",")
-            currentColor5 = getItemState("Light_FF_Livingroom_Hue_Color5").toString().split(",")
-            
-            if step == self.steps:
-                newColor1 = color2
-                newColor2 = color3
-                newColor3 = color4
-                newColor4 = color5
-                newColor5 = color1
-            else:
-                newColor1 = self.fade( step, color1, color2, currentColor1 )
-                newColor2 = self.fade( step, color2, color3, currentColor2 )
-                newColor3 = self.fade( step, color3, color4, currentColor3 )
-                newColor4 = self.fade( step, color4, color5, currentColor4 )
-                newColor5 = self.fade( step, color5, color1, currentColor5 )
-                
-            #self.log.info(u"{} {} {}".format(color1,color2,newColor1))
+        self.log.info(u"{} {} {}".format(color1,color2,newColor1))
 
-            sendCommand("Light_FF_Livingroom_Hue_Color1",u"{},{},{}".format(newColor1[0],newColor1[1],newColor1[2]))
-            sendCommand("Light_FF_Livingroom_Hue_Color2",u"{},{},{}".format(newColor2[0],newColor2[1],newColor2[2]))
-            sendCommand("Light_FF_Livingroom_Hue_Color3",u"{},{},{}".format(newColor3[0],newColor3[1],newColor3[2]))
-            sendCommand("Light_FF_Livingroom_Hue_Color4",u"{},{},{}".format(newColor4[0],newColor4[1],newColor4[2]))
-            sendCommand("Light_FF_Livingroom_Hue_Color5",u"{},{},{}".format(newColor5[0],newColor5[1],newColor5[2]))
-            
-            if step < self.steps:
-                timer = createTimer(2, self.callbackFaded, [step + 1, data] )
-                timer.start()
-            else:
-                self.timer = createTimer(30, self.callbackFaded, [1,[]] )
-                self.timer.start()'''
+        global lastUpdate
+        now = getNow().getMillis()
+        
+        sendCommand("Light_FF_Livingroom_Hue_Color1",u"{},{},{}".format(newColor1[0],newColor1[1],newColor1[2]))
+        lastUpdate["Light_FF_Livingroom_Hue_Color1"] = now
+        
+        sendCommand("Light_FF_Livingroom_Hue_Color2",u"{},{},{}".format(newColor2[0],newColor2[1],newColor2[2]))
+        lastUpdate["Light_FF_Livingroom_Hue_Color2"] = now
+        
+        sendCommand("Light_FF_Livingroom_Hue_Color3",u"{},{},{}".format(newColor3[0],newColor3[1],newColor3[2]))
+        lastUpdate["Light_FF_Livingroom_Hue_Color3"] = now
+        
+        sendCommand("Light_FF_Livingroom_Hue_Color4",u"{},{},{}".format(newColor4[0],newColor4[1],newColor4[2]))
+        lastUpdate["Light_FF_Livingroom_Hue_Color4"] = now
+        
+        sendCommand("Light_FF_Livingroom_Hue_Color5",u"{},{},{}".format(newColor5[0],newColor5[1],newColor5[2]))
+        lastUpdate["Light_FF_Livingroom_Hue_Color5"] = now
+        
+        if step < self.steps:
+            self.timer = createTimer(2, self.callbackFaded, [step + 1, data] )
+            self.timer.start()
+        else:
+            self.timer = createTimer(30, self.callbackFaded, [1,[]] )
+            self.timer.start()'''
     
     def callback(self):
         if getItemState("State_Lightprogram").intValue() == 0:
             return
         
-        if getItemState("Light_FF_Livingroom_Hue_Brightness").intValue() == 0:
-            postUpdate("State_Lightprogram", 0)
-            return
-
         color1 = getItemState("Light_FF_Livingroom_Hue_Color1")
         color2 = getItemState("Light_FF_Livingroom_Hue_Color2")
         color3 = getItemState("Light_FF_Livingroom_Hue_Color3")
@@ -280,7 +297,14 @@ class HueColorProgramRule:
             self.timer.cancel()
             self.timer = None
         
-        if input["event"].getItemState().intValue() > 0:
+        itemState = input["event"].getItemState().intValue()
+        
+        if itemState > 0:
 
             self.timer = createTimer(1, self.callback)
             self.timer.start()
+
+        '''elif itemState == 2:
+
+            self.timer = createTimer(1, self.callbackFaded, [1,[]])
+            self.timer.start()'''
