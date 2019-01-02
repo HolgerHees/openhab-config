@@ -1,4 +1,4 @@
-from marvin.helper import rule, getItemState, sendCommand, postUpdateIfChanged, getNow, createTimer
+from marvin.helper import rule, getItemState, sendCommand, postUpdate, postUpdateIfChanged, getNow, createTimer
 from core.triggers import ItemCommandTrigger, ItemStateChangeTrigger
 from org.eclipse.smarthome.core.types import UnDefType
 
@@ -241,33 +241,39 @@ class HueColorProgramRule:
                 self.timer.start()'''
     
     def callback(self):
-        if getItemState("State_Lightprogram").intValue() > 0 and getItemState("Light_FF_Livingroom_Hue_Brightness").intValue() > 0:
-            color1 = getItemState("Light_FF_Livingroom_Hue_Color1")
-            color2 = getItemState("Light_FF_Livingroom_Hue_Color2")
-            color3 = getItemState("Light_FF_Livingroom_Hue_Color3")
-            color4 = getItemState("Light_FF_Livingroom_Hue_Color4")
-            color5 = getItemState("Light_FF_Livingroom_Hue_Color5")
-                
-            global lastUpdate
-            now = getNow().getMillis()
+        if getItemState("State_Lightprogram").intValue() == 0:
+            return
         
-            sendCommand("Light_FF_Livingroom_Hue_Color1",color2)
-            lastUpdate["Light_FF_Livingroom_Hue_Color1"] = now
+        if getItemState("Light_FF_Livingroom_Hue_Brightness").intValue() == 0:
+            postUpdate("State_Lightprogram", 0)
+            return
+
+        color1 = getItemState("Light_FF_Livingroom_Hue_Color1")
+        color2 = getItemState("Light_FF_Livingroom_Hue_Color2")
+        color3 = getItemState("Light_FF_Livingroom_Hue_Color3")
+        color4 = getItemState("Light_FF_Livingroom_Hue_Color4")
+        color5 = getItemState("Light_FF_Livingroom_Hue_Color5")
             
-            sendCommand("Light_FF_Livingroom_Hue_Color2",color3)
-            lastUpdate["Light_FF_Livingroom_Hue_Color2"] = now
-            
-            sendCommand("Light_FF_Livingroom_Hue_Color3",color4)
-            lastUpdate["Light_FF_Livingroom_Hue_Color3"] = now
-            
-            sendCommand("Light_FF_Livingroom_Hue_Color4",color5)
-            lastUpdate["Light_FF_Livingroom_Hue_Color4"] = now
-            
-            sendCommand("Light_FF_Livingroom_Hue_Color5",color1)
-            lastUpdate["Light_FF_Livingroom_Hue_Color5"] = now
-                        
-            self.timer = createTimer(30, self.callback )
-            self.timer.start()
+        global lastUpdate
+        now = getNow().getMillis()
+    
+        sendCommand("Light_FF_Livingroom_Hue_Color1",color2)
+        lastUpdate["Light_FF_Livingroom_Hue_Color1"] = now
+        
+        sendCommand("Light_FF_Livingroom_Hue_Color2",color3)
+        lastUpdate["Light_FF_Livingroom_Hue_Color2"] = now
+        
+        sendCommand("Light_FF_Livingroom_Hue_Color3",color4)
+        lastUpdate["Light_FF_Livingroom_Hue_Color3"] = now
+        
+        sendCommand("Light_FF_Livingroom_Hue_Color4",color5)
+        lastUpdate["Light_FF_Livingroom_Hue_Color4"] = now
+        
+        sendCommand("Light_FF_Livingroom_Hue_Color5",color1)
+        lastUpdate["Light_FF_Livingroom_Hue_Color5"] = now
+                    
+        self.timer = createTimer(30, self.callback )
+        self.timer.start()
             
     def execute(self, module, input):
         if self.timer != None:
