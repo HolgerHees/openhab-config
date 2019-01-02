@@ -1,4 +1,4 @@
-from marvin.helper import rule, getItemState, sendCommand, postUpdateIfChanged, getNow
+from marvin.helper import rule, getItemState, sendCommand, postUpdateIfChanged, getNow, createTimer
 from core.triggers import ItemCommandTrigger, ItemStateChangeTrigger
 from org.eclipse.smarthome.core.types import UnDefType
 
@@ -170,3 +170,35 @@ class HueColorBackwardRule:
                     and color4 == itemCommand \
                     and color5 == itemCommand:
                 postUpdateIfChanged("Light_FF_Livingroom_Hue_Color", itemCommand)
+
+@rule("lights_indoor_livingroom_control.py")
+class HueColorProgramRule:
+    def __init__(self):
+        self.triggers = [ItemStateChangeTrigger("State_Lightprogram")]
+        self.timer = None
+
+    def callback(self):
+        if getItemState("State_Lightprogram").intValue() > 0 and getItemState("Light_FF_Livingroom_Hue_Brightness").intValue() > 0:
+            cmd2 = getItemState("Light_FF_Livingroom_Hue_Color1")
+            cmd3 = getItemState("Light_FF_Livingroom_Hue_Color2")
+            cmd4 = getItemState("Light_FF_Livingroom_Hue_Color3")
+            cmd5 = getItemState("Light_FF_Livingroom_Hue_Color4")
+            cmd1 = getItemState("Light_FF_Livingroom_Hue_Color5")
+            
+            sendCommand("Light_FF_Livingroom_Hue_Color1",cmd1)
+            sendCommand("Light_FF_Livingroom_Hue_Color2",cmd2)
+            sendCommand("Light_FF_Livingroom_Hue_Color3",cmd3)
+            sendCommand("Light_FF_Livingroom_Hue_Color4",cmd4)
+            sendCommand("Light_FF_Livingroom_Hue_Color5",cmd5)
+            
+            self.timer = createTimer(30, self.callback)
+            self.timer.start()
+
+    def execute(self, module, input):
+        if self.timer != None:
+            self.timer.cancel()
+            self.timer = None
+        
+        if input["event"].getItemState().intValue() > 0:
+            self.timer = createTimer(1, self.callback)
+            self.timer.start()
