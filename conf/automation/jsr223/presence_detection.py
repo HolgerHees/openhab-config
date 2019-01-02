@@ -2,11 +2,11 @@ from marvin.helper import log, rule, createTimer, itemLastUpdateNewerThen, getNo
     postUpdateIfChanged, sendCommand, sendNotification, getItemLastUpdate
 from core.triggers import ItemStateChangeTrigger
 
-awayCheckDuration = 15.0
+'''awayCheckDuration = 15.0
 timerAway = None
 
 
-'''def checkMotion(historicDate, itemName, offset):
+def checkMotion(historicDate, itemName, offset):
     # Is still active (motion detected)
     if getItemState(itemName) == OPEN:
         return True
