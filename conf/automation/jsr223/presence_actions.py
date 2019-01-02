@@ -12,7 +12,7 @@ class AutoWakeupRule:
         ]
 
     def execute(self, module, input):
-        if input["event"].getItemState() != 1:
+        if input["event"].getItemState().intValue() != 1:
             urllib2.urlopen("http://192.168.0.40:5000/sleep").read()
         else:
             urllib2.urlopen("http://192.168.0.40:5000/wakeup").read()

@@ -103,10 +103,8 @@ class Scene6Rule:
         if getItemState("TV_Online") == ON:
             if input["command"] == OFF:
                 sendCommand("TV_Online", OFF)
-                sendCommand("Sat_Power", OFF)
         else:
             if input["command"] == ON:
                 sendCommand("TV_Online", ON)
-                sendCommand("Sat_Power", ON)
 
         postUpdate("Scene6", OFF)
