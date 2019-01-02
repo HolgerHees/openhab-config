@@ -30,7 +30,7 @@ class RollershutterAutoRule:
                 if getItemState("Window_SF_Child2") == CLOSED: sendCommand("Shutters_SF_Child2", DOWN)
                 if getItemState("Window_SF_Bathroom") == CLOSED: sendCommand("Shutters_SF_Bathroom", DOWN)
                 if getItemState("Window_SF_Attic") == CLOSED: sendCommand("Shutters_SF_Attic", DOWN)
-            elif getItemState("State_Present") == OFF:
+            elif getItemState("State_Presence").intValue() == 0:
                 sendCommand("Shutters", UP)
 
 
@@ -92,7 +92,7 @@ class LivingroomSunprotectionRule:
         self.triggers = [ItemStateChangeTrigger("State_Sunprotection_Livingroom")]
 
     def execute(self, module, input):
-        if getItemState("Auto_Sunprotection") == ON and getItemState("State_Present") == OFF:
+        if getItemState("Auto_Sunprotection") == ON and getItemState("State_Presence").intValue() == 0:
             if getItemState("State_Sunprotection_Livingroom") == ON:
                 sendCommand("Shutters_FF_Kitchen", DOWN)
                 sendCommand("Shutters_FF_Livingroom_Couch", DOWN)

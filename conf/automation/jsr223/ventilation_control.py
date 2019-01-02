@@ -125,7 +125,7 @@ class FilterFanLevelRule:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("Ventilation_Auto_Mode"),
-            ItemStateChangeTrigger("State_Sleeping"),
+            ItemStateChangeTrigger("State_Presence"),
             CronTrigger("0 */1 * * * ?"),
         ]
 
@@ -138,7 +138,7 @@ class FilterFanLevelRule:
         raumTemperatur = getItemState("Temperature_FF_Livingroom").doubleValue()
         zielTemperatur = getItemState("Ventilation_Comfort_Temperature").doubleValue()
 
-        if getItemState("State_Sleeping") == ON:
+        if getItemState("State_Presence").intValue() == 2:
             newLevel = 2
         else:
             newLevel = 3
@@ -152,7 +152,7 @@ class FilterFanLevelRule:
             # Raumtemperatur ist viel zu warm und kann mit Aussenluft gekühlt werden
             # Lüftung sollte also nicht in den Sparmodus geschickt werden auch wenn man abwesend ist
             elif raumTemperatur < zielTemperatur + 1 or aussenTemperatur >= raumTemperatur:
-                if getItemState("State_Present") == OFF and itemLastUpdateOlderThen("State_Present", getNow().minusMinutes(60)):
+                if getItemState("State_Presence").intValue() == 0 and itemLastUpdateOlderThen("State_Presence", getNow().minusMinutes(60)):
                     newLevel = 2
 
         # Wenn der aktuelle Level Stufe 'A' (also 1) ist, sollte vor einem erneuten umschalten gewartet werden damit ein

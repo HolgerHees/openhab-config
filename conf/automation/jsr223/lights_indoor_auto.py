@@ -5,22 +5,21 @@ from core.triggers import CronTrigger, ItemStateChangeTrigger
 @rule("lights_indoor_auto.py")
 class WakeupRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("State_Sleeping", "OFF")]
+        self.triggers = [ItemStateChangeTrigger("State_Presence", state="1", previousState="2" )]
 
     def execute(self, module, input):
-        if (getItemState("Lights_FF") == OFF or (
-                        len(getFilteredChildItems("Lights_FF", ON)) == 1 and getItemState("Light_FF_Floor_Ceiling") == ON)) and getItemState(
+        if (getItemState("Lights_FF") == OFF or (len(getFilteredChildItems("Lights_FF", ON)) == 1 and getItemState("Light_FF_Floor_Ceiling") == ON)) and getItemState(
             "Shutters_FF") == DOWN:
             sendCommand("Light_FF_Livingroom_Diningtable", 100)
 
 
 @rule("lights_indoor_auto.py")
-class HolidayEveningRule:
+class AwayEveningRule:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("State_Outdoorlights", "ON")]
 
     def execute(self, module, input):
-        if getItemState("Auto_Lighting") == ON and getItemState("State_Present") == OFF:
+        if getItemState("Auto_Lighting") == ON and getItemState("State_Presence").intValue() == 0:
             sendCommand("Light_FF_Floor_Hue_Brightness", 30)
             sendCommand("Light_FF_Livingroom_Hue_Brightness4", 30)
 
@@ -31,7 +30,7 @@ class HolidayGoSleepingRule:
         self.triggers = [CronTrigger("0 0 22 * * ?")]
 
     def execute(self, module, input):
-        if getItemState("Auto_Lighting") == ON and getItemState("State_Present") == OFF:
+        if getItemState("Auto_Lighting") == ON and getItemState("State_Presence").intValue() == 0:
             sendCommand("Light_FF_Floor_Hue_Brightness", OFF)
             sendCommand("Light_FF_Livingroom_Hue_Brightness4", OFF)
             sendCommand("Light_FF_Floor_Ceiling", ON)
@@ -43,5 +42,5 @@ class HolidayNightRule:
         self.triggers = [CronTrigger("0 30 22 * * ?")]
 
     def execute(self, module, input):
-        if getItemState("Auto_Lighting") == ON and getItemState("State_Present") == OFF:
+        if getItemState("Auto_Lighting") == ON and getItemState("State_Presence").intValue() == 0:
             sendCommand("Light_FF_Floor_Ceiling", OFF)

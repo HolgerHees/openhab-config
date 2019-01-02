@@ -249,10 +249,9 @@ sitemap haus label="Main Menu"
 			{ 
 				Text label="Präsenz & Schlafen" icon="selfautomode"
                 {
-                    Switch item=State_Present label="Jemand anwesend [%s]"
-                    Switch item=State_Sleeping label="Jemand schläft [%s]"
-                    Text item=State_Holger_Present label="Holger anwesend [%s]"
-                    Text item=State_Sandra_Present label="Sandra anwesend [%s]"
+                    Switch item=State_Presence label="Präsenz" mappings=[0="Abwesend", 1="Anwesend", 2="Schlafend"]
+                    Text item=State_Holger_Presence label="Holger anwesend [%s]"
+                    Text item=State_Sandra_Presence label="Sandra anwesend [%s]"
                     Switch item=Scene7 label="Tablet Reload [%s]"
                     Switch item=Scene8 label="Tablet Wakeup [%s]"
                     Switch item=Scene9 label="Tablet Light Theme [%s]"

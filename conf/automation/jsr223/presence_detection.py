@@ -6,9 +6,7 @@ awayCheckDuration = 15.0
 timerAway = None
 
 
-'''
-
-def checkMotion(historicDate, itemName, offset):
+'''def checkMotion(historicDate, itemName, offset):
     # Is still active (motion detected)
     if getItemState(itemName) == OPEN:
         return True
@@ -77,8 +75,8 @@ class LeavingCheckRule:
 class PresenceCheckRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("State_Holger_Present"),
-            ItemStateChangeTrigger("State_Sandra_Present")
+            ItemStateChangeTrigger("State_Holger_Presence"),
+            ItemStateChangeTrigger("State_Sandra_Presence")
         ]
         
     def execute(self, module, input):
@@ -87,25 +85,22 @@ class PresenceCheckRule:
         
         sendNotification(u"{}".format(itemName), u"{}".format(itemState))
         
-        holgerPhone = itemState if itemName == "State_Holger_Present" else getItemState("State_Holger_Present")
-        sandraPhone = itemState if itemName == "State_Sandra_Present" else getItemState("State_Sandra_Present")
+        holgerPhone = itemState if itemName == "State_Holger_Presence" else getItemState("State_Holger_Presence")
+        sandraPhone = itemState if itemName == "State_Sandra_Presence" else getItemState("State_Sandra_Presence")
         
         if holgerPhone == ON or sandraPhone == ON:
-            if postUpdateIfChanged("State_Present",ON):
+            if postUpdateIfChanged("State_Presence",1):
                 sendNotification(u"Tür", u"Willkommen")
         else:
-            if postUpdateIfChanged("State_Present",OFF):
+            if postUpdateIfChanged("State_Presence",0):
                 sendNotification(u"Tür", u"Auf Wiedersehen")
 
 @rule("presence_detection.py")
 class LeavingRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("State_Present","OFF")]
+        self.triggers = [ItemStateChangeTrigger("State_Presence","0")]
 
     def execute(self, module, input):
-        if postUpdateIfChanged("State_Sleeping",OFF):
-            self.log.error("Presence Detection: Sleeping state was ON but presence detection was OFF")
-
         postUpdateIfChanged("State_Notify", ON)
 
 
@@ -119,7 +114,7 @@ class UnexpectedMotionRule:
         ]
 
     def execute(self, module, input):
-        if getItemState("State_Present") == OFF:
+        if getItemState("State_Presence").intValue() == 0:
             sendNotification(u"Unexpected Motion", u"{}".format(input['event'].getItemName()))
 
 @rule("presence_detection.py")
@@ -134,9 +129,9 @@ class WakeupRule:
         ]
 
     def execute(self, module, input):
-        if getItemState("State_Present") == ON and getItemState("State_Sleeping") ==  ON:
+        if getItemState("State_Presence").intValue() == 2:
             if getItemState("TV_Online") == ON or getItemState("Lights_FF") == ON or getItemState("Shutters_FF") == PercentType.ZERO:
-                postUpdate("State_Sleeping", OFF)
+                postUpdate("State_Presence", 1)
 
 @rule("presence_detection.py") 
 class SleepingRule:
@@ -144,44 +139,11 @@ class SleepingRule:
         self.triggers = [ItemStateChangeTrigger("Lights_Indoor", "OFF")]
         self.timerSleep = None
 
-    '''def callback(self):
-        global timerAway
-
-        # Precence/Away/Motiondetector still active or flapping
-        if timerAway is not None or itemLastUpdateNewerThen("Motiondetector_FF_Floor", getNow().minusSeconds(int(awayCheckDuration))):
-            self.timerSleep = createTimer(awayCheckDuration, self.callback)
-            self.timerSleep.start()
-        else:
-            self.timerSleep = None
-            postUpdateIfChanged("State_Sleeping", ON)'''
-
     def execute(self, module, input):
-        #if self.timerSleep is not None:
-        #    self.timerSleep.cancel()
-        #    self.timerSleep = None
-
-        #self.log.info("test 0 " + str(getItemState("State_Present")) + " " + str(getItemState("State_Sleeping")))
-        #self.log.info("test 1 " + str(getItemState("TV_Online")) + " " + str(len(getFilteredChildItems("Shutters", PercentType.ZERO))))
-
-        if getItemState("State_Present") == ON and getItemState("State_Sleeping") == OFF:
+        if getItemState("State_Presence").intValue() == 1:
             if getItemState("TV_Online") == OFF and getItemState("Shutters_FF") != PercentType.ZERO:
 
                 # last motion was in upper floor
                 diff = getItemLastUpdate("Motiondetector_FF_Floor").getMillis() - getItemLastUpdate("Motiondetector_SF_Floor").getMillis()
                 if diff > 100:
-                    postUpdateIfChanged("State_Sleeping", ON)
-                
-                # Motiondetector_SF_Floor.lastUpdate.isAfter( Motiondetector_FF_Floor.lastUpdate )
-                #if getItemState("TV_Online") == OFF and len(getFilteredChildItems("Shutters", PercentType.ZERO)) == 11:
-                #if getItemState("TV_Online") == OFF \
-                #   and len(getFilteredChildItems("Shutters_FF", PercentType.ZERO)) == 0 \
-                #   and ( len(getFilteredChildItems("Shutters_SF", PercentType.ZERO)) == 0 or getItemState("State_Outdoorlights") == ON ):
-                #    self.callback()
-                    
-                    
-#sendCommand("State_Sleeping",OFF)
-#def test():
-#    sendCommand("Light_SF_Floor_Ceiling",ON)
-#    sendCommand("Scene4",ON)
-#Timer(5, test ).start()
-
+                    postUpdateIfChanged("State_Presence", 2)

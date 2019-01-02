@@ -7,6 +7,7 @@ import threading
 #import datetime
 from java.lang import NoSuchFieldException
 from org.eclipse.smarthome.automation import Rule as SmarthomeRule
+from org.eclipse.smarthome.core.types import UnDefType
 
 from org.eclipse.smarthome.model.persistence.extensions import PersistenceExtensions
 from org.eclipse.smarthome.core.thing import ChannelUID
@@ -289,17 +290,19 @@ def getMaxItemState(itemOrName, refDate):
 
 # *** Item updates ***
 def _checkForUpdates(itemOrName, state):
-    if isinstance(state, basestring):
-        if getItemState(itemOrName).toString() == state:
+    currentState = getItemState(itemOrName)
+    if type(currentState) is not UnDefType:
+        if isinstance(state, basestring):
+            if currentState.toString() == state:
+                return False
+        elif isinstance(state, int):
+            if currentState.doubleValue() == float(state):
+                return False
+        elif isinstance(state, float):
+            if currentState.doubleValue() == state:
+                return False
+        elif currentState == state:
             return False
-    elif isinstance(state, int):
-        if getItemState(itemOrName).doubleValue() == float(state):
-            return False
-    elif isinstance(state, float):
-        if getItemState(itemOrName).doubleValue() == state:
-            return False
-    elif getItemState(itemOrName) == state:
-        return False
 
     return True
 

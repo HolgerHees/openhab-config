@@ -8,12 +8,11 @@ from core.triggers import ItemStateChangeTrigger
 class AutoWakeupRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("State_Present"),
-            ItemStateChangeTrigger("State_Sleeping")
+            ItemStateChangeTrigger("State_Presence")
         ]
 
     def execute(self, module, input):
-        if getItemState("State_Present") == OFF or getItemState("State_Sleeping") == ON:
+        if input["event"].getItemState() != 1:
             urllib2.urlopen("http://192.168.0.40:5000/sleep").read()
         else:
             urllib2.urlopen("http://192.168.0.40:5000/wakeup").read()
