@@ -23,10 +23,10 @@ Dimmer Light_FF_Livingroom_Hue_Brightness2		"Wohnzimmer Stehlampe unten"			<self
 Color Light_FF_Livingroom_Hue_Color2			"Wohnzimmer Stehlampe Farbe unten"		<colorwheel>	{ channel="hue:0210:default:lamp2:color"}
 Dimmer Light_FF_Livingroom_Hue_Brightness3		"Wohnzimmer Stehlampe oben"				<selfslider>	{ channel="hue:0210:default:lamp3:color"}
 Color Light_FF_Livingroom_Hue_Color3			"Wohnzimmer Stehlampe Farbe oben"		<colorwheel>	{ channel="hue:0210:default:lamp3:color"}
-Dimmer Light_FF_Livingroom_Hue_Brightness4		"Wohnzimmer Tresen"				<selfslider>	{ channel="hue:0210:default:strip1:color"}
-Color Light_FF_Livingroom_Hue_Color4			"Wohnzimmer Tresen Farbe"				<colorwheel>	{ channel="hue:0210:default:strip1:color"}
-Dimmer Light_FF_Livingroom_Hue_Brightness5		"Wohnzimmer Regal"				<selfslider>	{ channel="hue:0210:default:strip2:color"}
-Color Light_FF_Livingroom_Hue_Color5			"Wohnzimmer Regal Farbe"				<colorwheel>	{ channel="hue:0210:default:strip2:color"}
+Dimmer Light_FF_Livingroom_Hue_Brightness5		"Wohnzimmer Regal"				<selfslider>	{ channel="hue:0210:default:strip1:color"}
+Color Light_FF_Livingroom_Hue_Color5			"Wohnzimmer Regal Farbe"				<colorwheel>	{ channel="hue:0210:default:strip1:color"}
+Dimmer Light_FF_Livingroom_Hue_Brightness4		"Wohnzimmer Tresen"				<selfslider>	{ channel="hue:0210:default:strip2:color"}
+Color Light_FF_Livingroom_Hue_Color4			"Wohnzimmer Tresen Farbe"				<colorwheel>	{ channel="hue:0210:default:strip2:color"}
 
 Dimmer Light_FF_Kitchen_Ceiling 				"Küche Decke" 	<selfslider> (FF_Kitchen, Lights_FF)	["Setpoint"]	{ channel="knx:device:bridge:lights_ff:kitchenCeiling" }
 Switch Light_FF_Kitchen_Cupboard 				"Küche Schrank" <selflight>		(FF_Kitchen, Lights_FF)	{ channel="knx:device:bridge:lights_ff:kitchenCupboard" }
