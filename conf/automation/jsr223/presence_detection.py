@@ -142,8 +142,7 @@ class SleepingRule:
     def execute(self, module, input):
         if getItemState("State_Presence").intValue() == 1:
             if getItemState("TV_Online") == OFF and getItemState("Shutters_FF") != PercentType.ZERO:
-
                 # last motion was in upper floor
-                diff = getItemLastUpdate("Motiondetector_FF_Floor").getMillis() - getItemLastUpdate("Motiondetector_SF_Floor").getMillis()
+                diff = getItemLastUpdate("Motiondetector_SF_Floor").getMillis() - getItemLastUpdate("Motiondetector_FF_Floor").getMillis()
                 if diff > 100:
                     postUpdateIfChanged("State_Presence", 2)
