@@ -156,8 +156,6 @@ class HueColorBackwardRule:
         if getNow().getMillis() - last > 1000:
             itemCommand = input['event'].getItemCommand()
             
-            #self.log.info(u"{}".format(itemCommand))
-            
             color1 = itemCommand if itemName == "Light_FF_Livingroom_Hue_Color1" else getItemState("Light_FF_Livingroom_Hue_Color1")
             color2 = itemCommand if itemName == "Light_FF_Livingroom_Hue_Color2" else getItemState("Light_FF_Livingroom_Hue_Color2")
             color3 = itemCommand if itemName == "Light_FF_Livingroom_Hue_Color3" else getItemState("Light_FF_Livingroom_Hue_Color3")
@@ -176,7 +174,7 @@ class HueColorProgramRule:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("State_Lightprogram")]
         self.timer = None
-        self.steps = 6
+    '''    self.steps = 6
 
     def fade(self,step,fromColor,toColor,currentColor):
         
@@ -240,7 +238,7 @@ class HueColorProgramRule:
                 timer.start()
             else:
                 self.timer = createTimer(30, self.callbackFaded, [1,[]] )
-                self.timer.start()
+                self.timer.start()'''
     
     def callback(self):
         if getItemState("State_Lightprogram").intValue() > 0 and getItemState("Light_FF_Livingroom_Hue_Brightness").intValue() > 0:
@@ -250,12 +248,24 @@ class HueColorProgramRule:
             color4 = getItemState("Light_FF_Livingroom_Hue_Color4")
             color5 = getItemState("Light_FF_Livingroom_Hue_Color5")
                 
+            global lastUpdate
+            now = getNow().getMillis()
+        
             sendCommand("Light_FF_Livingroom_Hue_Color1",color2)
-            sendCommand("Light_FF_Livingroom_Hue_Color2",color3)
-            sendCommand("Light_FF_Livingroom_Hue_Color3",color4)
-            sendCommand("Light_FF_Livingroom_Hue_Color4",color5)
-            sendCommand("Light_FF_Livingroom_Hue_Color5",color1)
+            lastUpdate["Light_FF_Livingroom_Hue_Color1"] = now
             
+            sendCommand("Light_FF_Livingroom_Hue_Color2",color3)
+            lastUpdate["Light_FF_Livingroom_Hue_Color2"] = now
+            
+            sendCommand("Light_FF_Livingroom_Hue_Color3",color4)
+            lastUpdate["Light_FF_Livingroom_Hue_Color3"] = now
+            
+            sendCommand("Light_FF_Livingroom_Hue_Color4",color5)
+            lastUpdate["Light_FF_Livingroom_Hue_Color4"] = now
+            
+            sendCommand("Light_FF_Livingroom_Hue_Color5",color1)
+            lastUpdate["Light_FF_Livingroom_Hue_Color5"] = now
+                        
             self.timer = createTimer(30, self.callback )
             self.timer.start()
             
