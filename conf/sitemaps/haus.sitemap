@@ -13,7 +13,7 @@ sitemap haus label="Main Menu"
 							Frame label="Gruppe" {
 								Slider item=Light_FF_Livingroom_Hue_Brightness label="Alle Lampen [%d %%]"
 								Colorpicker item=Light_FF_Livingroom_Hue_Color label="Alle Lampen"
-                                Switch item=State_Lightprogram label="Programm" mappings=[0="Aus", 1="Ein"]
+                                Switch item=State_Lightprogram label="Programm" mappings=[0="Aus", 1="1", 2="2"]
 							}
 							Frame label="Einzeln" {
 								Slider item=Light_FF_Livingroom_Hue_Brightness4 label="Küche Tresen [%d %%]"
