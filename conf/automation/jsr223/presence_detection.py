@@ -1,5 +1,4 @@
-from marvin.helper import log, rule, createTimer, itemLastUpdateNewerThen, getNow, getFilteredChildItems, getGroupMember, getItemLastUpdate, getItemState, postUpdate, \
-    postUpdateIfChanged, sendCommand, sendNotification, getItemLastUpdate
+from marvin.helper import log, rule, createTimer, itemLastUpdateNewerThen, getNow, getFilteredChildItems, getGroupMember, getItemLastUpdate, getItemState, postUpdate, postUpdateIfChanged, sendCommand, sendNotification, getItemLastUpdate
 from core.triggers import ItemStateChangeTrigger
 
 '''awayCheckDuration = 15.0
@@ -70,7 +69,6 @@ class LeavingCheckRule:
         elif postUpdateIfChanged("State_Present",ON):
             sendNotification(u"Tür", u"Willkommen")'''
 
-
 @rule("presence_detection.py")
 class PresenceCheckRule:
     def __init__(self):
@@ -89,33 +87,29 @@ class PresenceCheckRule:
         sandraPhone = itemState if itemName == "State_Sandra_Presence" else getItemState("State_Sandra_Presence")
         
         if holgerPhone == ON or sandraPhone == ON:
-            if postUpdateIfChanged("State_Presence",1):
+            if getItemState("State_Presence").intValue() == 0:
+                postUpdate("State_Presence",1)
                 sendNotification(u"Tür", u"Willkommen")
         else:
-            if postUpdateIfChanged("State_Presence",0):
-                sendNotification(u"Tür", u"Auf Wiedersehen")
+            if getItemState("State_Presence").intValue() != 0:
+                postUpdate("State_Presence",0)
+                lightMsg = u"- LICHT an" if getItemState("Lights_Indoor") != OFF else u""
+                windowMsg = u"- FENSTER offen" if getItemState("Openingcontacts") != CLOSED else u""
 
-@rule("presence_detection.py")
-class LeavingRule:
-    def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("State_Presence","0")]
+                sendNotification(u"Tür", u"Auf Wiedersehen{}{}".format(lightMsg,windowMsg))
 
-    def execute(self, module, input):
-        postUpdateIfChanged("State_Notify", ON)
+#@rule("presence_detection.py")
+#class UnexpectedMotionRule:
+#    def __init__(self):
+#        self.triggers = [
+#            ItemStateChangeTrigger("Motiondetector_FF_Floor","OPEN"),
+#            ItemStateChangeTrigger("Motiondetector_FF_Livingroom","OPEN"),
+#            ItemStateChangeTrigger("Motiondetector_SF_Floor","OPEN")
+#        ]
 
-
-@rule("presence_detection.py")
-class UnexpectedMotionRule:
-    def __init__(self):
-        self.triggers = [
-            ItemStateChangeTrigger("Motiondetector_FF_Floor","OPEN"),
-            ItemStateChangeTrigger("Motiondetector_FF_Livingroom","OPEN"),
-            ItemStateChangeTrigger("Motiondetector_SF_Floor","OPEN")
-        ]
-
-    def execute(self, module, input):
-        if getItemState("State_Presence").intValue() == 0:
-            sendNotification(u"Unexpected Motion", u"{}".format(input['event'].getItemName()))
+#    def execute(self, module, input):
+#        if getItemState("State_Presence").intValue() == 0:
+#            sendNotification(u"Unexpected Motion", u"{}".format(input['event'].getItemName()))
 
 @rule("presence_detection.py")
 class WakeupRule:
@@ -136,13 +130,10 @@ class WakeupRule:
 @rule("presence_detection.py") 
 class SleepingRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("Lights_Indoor", "OFF")]
-        self.timerSleep = None
+        self.triggers = [ ItemStateChangeTrigger("Scene4","ON") ]
 
     def execute(self, module, input):
         if getItemState("State_Presence").intValue() == 1:
-            if getItemState("TV_Online") == OFF and getItemState("Shutters_FF") != PercentType.ZERO:
-                # last motion was in upper floor
-                diff = getItemLastUpdate("Motiondetector_SF_Floor").getMillis() - getItemLastUpdate("Motiondetector_FF_Floor").getMillis()
-                if diff > 100:
-                    postUpdateIfChanged("State_Presence", 2)
+            postUpdate("State_Presence", 2)
+            
+        postUpdate("Scene4", OFF)

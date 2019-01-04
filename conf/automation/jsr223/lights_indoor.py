@@ -1,19 +1,43 @@
 from marvin.helper import rule, getFilteredChildItems, getItemState, sendCommand
-from core.triggers import CronTrigger, ItemStateChangeTrigger
+from core.triggers import CronTrigger, ItemStateChangeTrigger 
 
+arrivingFlag = False
 
-@rule("lights_indoor_auto.py")
-class WakeupRule:
+@rule("lights_indoor.py")
+class Arriving1Rule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("State_Presence", state="1", previousState="2" )]
+        self.triggers = [ItemStateChangeTrigger("State_Presence")]
 
     def execute(self, module, input):
-        if (getItemState("Lights_FF") == OFF or (len(getFilteredChildItems("Lights_FF", ON)) == 1 and getItemState("Light_FF_Floor_Ceiling") == ON)) and getItemState(
-            "Shutters_FF") == DOWN:
-            sendCommand("Light_FF_Livingroom_Diningtable", 100)
+        global arrivingFlag
+        arrivingFlag = input["event"].getItemState().intValue() == 1 and input["oldState"].intValue() == 0
 
 
-@rule("lights_indoor_auto.py")
+@rule("lights_indoor.py")
+class Arriving2Rule:
+    def __init__(self):
+        self.triggers = [ItemStateChangeTrigger("Door_FF_Floor","OPEN")]
+
+    def execute(self, module, input):
+        global arrivingFlag
+
+        # should happen only once
+        if arrivingFlag == True:
+            if getItemState("State_Outdoorlights") == ON:
+                sendCommand("Light_FF_Floor_Ceiling",ON)
+            arrivingFlag = False
+
+        
+@rule("lights_indoor.py")
+class SleepingRule:
+    def __init__(self):
+        self.triggers = [ItemStateChangeTrigger("State_Presence", "2" )]
+
+    def execute(self, module, input):
+        sendCommandIfChanged("Lights_Indoor", OFF)
+
+
+@rule("lights_indoor.py")
 class AwayEveningRule:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("State_Outdoorlights", "ON")]
@@ -24,7 +48,7 @@ class AwayEveningRule:
             sendCommand("Light_FF_Livingroom_Hue_Brightness4", 30)
 
 
-@rule("lights_indoor_auto.py")
+@rule("lights_indoor.py")
 class HolidayGoSleepingRule:
     def __init__(self):
         self.triggers = [CronTrigger("0 0 22 * * ?")]
@@ -36,7 +60,7 @@ class HolidayGoSleepingRule:
             sendCommand("Light_FF_Floor_Ceiling", ON)
 
 
-@rule("lights_indoor_auto.py")
+@rule("lights_indoor.py")
 class HolidayNightRule:
     def __init__(self):
         self.triggers = [CronTrigger("0 30 22 * * ?")]

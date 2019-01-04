@@ -16,7 +16,17 @@ timerMappings = {}
 controlTimestamps = {}
 
 # Main MotionDetector Switch
-@rule("lights_outdoor_control.py")
+@rule("lights_outdoor.py")
+class MotiondetectorOutdoorSwitchSleepingRule:
+    def __init__(self):
+        self.triggers = [ItemStateChangeTrigger("State_Presence","2")]
+        
+    def execute(self, module, input):
+        sendCommandIfChanged("Motiondetector_Outdoor_Switch", ON)
+        
+
+# Main MotionDetector Switch
+@rule("lights_outdoor.py")
 class MotiondetectorOutdoorSwitchRule:
     def __init__(self):
         self.triggers = [ItemCommandTrigger("Motiondetector_Outdoor_Switch")]
@@ -61,7 +71,7 @@ class MotiondetectorOutdoorSwitchRule:
 
 
 # Individual MotionDetector Switchs
-@rule("lights_outdoor_control.py")
+@rule("lights_outdoor.py")
 class MotiondetectorOutdoorIndividualSwitchRule:
     def __init__(self):
         self.triggers = [
@@ -122,7 +132,7 @@ class MotiondetectorOutdoorIndividualSwitchRule:
         controlTimestamps["Motiondetector_Outdoor_Switch"] = now
 
 # Light Control Events
-@rule("lights_outdoor_control.py")
+@rule("lights_outdoor.py")
 class LightOutdoorControlRule:
     def __init__(self):
         self.triggers = [
@@ -158,7 +168,7 @@ class LightOutdoorControlRule:
                     break
 
 # Motion Detector Events
-@rule("lights_outdoor_control.py")
+@rule("lights_outdoor.py")
 class MotionDetectorRule:
     def __init__(self):
         self.triggers = []
@@ -202,7 +212,7 @@ class MotionDetectorRule:
 
 
 # Terasse Motion Detector Events
-@rule("lights_outdoor_control.py")
+@rule("lights_outdoor.py")
 class TerasseMotionDetectorRule:
     def __init__(self):
         self.triggers = [

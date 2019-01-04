@@ -11,4 +11,4 @@ class LightsIndoorBedroomControlRule:
         ]
 
     def execute(self, module, input):
-        sendCommand("Lights_Indoor", OFF)
+        sendCommand("Scene4", ON)

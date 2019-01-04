@@ -3,6 +3,7 @@ from core.triggers import ItemCommandTrigger
 
 
 @rule("scenes_common.py")
+# watch tv
 class Scene1Rule:
     def __init__(self):
         self.triggers = [ItemCommandTrigger("Scene1","ON")]
@@ -24,6 +25,7 @@ class Scene1Rule:
 
 
 @rule("scenes_common.py")
+# wakeup
 class Scene2Rule:
     def __init__(self):
         self.triggers = [ItemCommandTrigger("Scene2","ON")]
@@ -38,6 +40,7 @@ class Scene2Rule:
 
 
 @rule("scenes_common.py")
+# go to bed
 class Scene3Rule:
     def __init__(self):
         self.triggers = [ItemCommandTrigger("Scene3","ON")]
@@ -61,22 +64,7 @@ class Scene3Rule:
         postUpdate("Scene3", OFF)
 
 
-@rule("scenes_common.py")
-class Scene4Rule:
-    def __init__(self):
-        self.triggers = [
-            ItemCommandTrigger("Scene4","ON"),
-            ItemCommandTrigger("Light_SF_Bedroom_Left_Long_Pressed", "ON"),
-            ItemCommandTrigger("Light_SF_Bedroom_Right_Long_Pressed", "ON")
-        ]
-
-    def execute(self, module, input):
-        sendCommand("Lights_Indoor", OFF)
-
-        if getItemState("Motiondetector_Outdoor_Switch") == OFF:
-            sendCommand("Motiondetector_Outdoor_Switch", ON)
-
-        postUpdate("Scene4", OFF)
+# Scene4, Sleeping scene => is handled in presence_detection
 
 
 @rule("scenes_common.py")
@@ -108,3 +96,37 @@ class Scene6Rule:
                 sendCommand("TV_Online", ON)
 
         postUpdate("Scene6", OFF)
+
+
+@rule("scenes_common.py")
+class ReloadRule:
+    def __init__(self):
+        self.triggers = [ItemStateChangeTrigger("Scene7")]
+
+    def execute(self, module, input):
+        urllib2.urlopen("http://192.168.0.40:5000/reload").read()
+        postUpdate("Scene7", OFF)
+
+
+@rule("scenes_common.py")
+class WakeupRule:
+    def __init__(self):
+        self.triggers = [ItemStateChangeTrigger("Scene8")]
+
+    def execute(self, module, input):
+        if getItemState("Scene8") == OFF:
+            urllib2.urlopen("http://192.168.0.40:5000/sleep").read()
+        else:
+            urllib2.urlopen("http://192.168.0.40:5000/wakeup").read()
+
+
+@rule("scenes_common.py")
+class ThemeRule:
+    def __init__(self):
+        self.triggers = [ItemStateChangeTrigger("Scene9")]
+
+    def execute(self, module, input):
+        if getItemState("Scene9") == OFF:
+            urllib2.urlopen("http://192.168.0.40:5000/disableLightTheme").read()
+        else:
+            urllib2.urlopen("http://192.168.0.40:5000/enableLightTheme").read()
