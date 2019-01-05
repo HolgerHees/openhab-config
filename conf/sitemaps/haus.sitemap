@@ -3,7 +3,7 @@ sitemap haus label="Main Menu"
 	Frame label="Hauptkategorien" {
 		Group item=Lights label="Lampen [MAP(group_light.map):%d]" {
 			Frame label="Alle" {
-				Switch item=Lights label="Alle Lampen" mappings=[OFF="Aus",ON="An"]
+				Switch item=Lights_Indoor label="Alle Lampen" mappings=[OFF="Aus",ON="An"]
 			}
 			Frame label="Etagen" {
 				Group item=Lights_FF label="EG Lampen [MAP(group_light.map):%d]" {

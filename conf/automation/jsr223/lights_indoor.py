@@ -1,31 +1,23 @@
-from marvin.helper import rule, getFilteredChildItems, getItemState, sendCommand
+from marvin.helper import rule, getFilteredChildItems, getItemState, sendCommand, sendCommandIfChanged
 from core.triggers import CronTrigger, ItemStateChangeTrigger 
 
-arrivingFlag = False
-
 @rule("lights_indoor.py")
-class Arriving1Rule:
+class ArrivingRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("State_Presence")]
+        self.triggers = [
+            ItemStateChangeTrigger("State_Presence"),
+            ItemStateChangeTrigger("Door_FF_Floor","OPEN")
+        ]
+        self.isArriving = False
 
     def execute(self, module, input):
-        global arrivingFlag
-        arrivingFlag = input["event"].getItemState().intValue() == 1 and input["oldState"].intValue() == 0
-
-
-@rule("lights_indoor.py")
-class Arriving2Rule:
-    def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("Door_FF_Floor","OPEN")]
-
-    def execute(self, module, input):
-        global arrivingFlag
-
-        # should happen only once
-        if arrivingFlag == True:
-            if getItemState("State_Outdoorlights") == ON:
-                sendCommand("Light_FF_Floor_Ceiling",ON)
-            arrivingFlag = False
+        if input["event"].getItemName() == "Door_FF_Floor":
+            if self.isArriving:
+                if getItemState("State_Outdoorlights") == ON:
+                    sendCommand("Light_FF_Floor_Ceiling",ON)
+                self.isArriving = False
+        else:
+            self.isArriving = input["event"].getItemState().intValue() == 1 and input["oldState"].intValue() == 0
 
         
 @rule("lights_indoor.py")
