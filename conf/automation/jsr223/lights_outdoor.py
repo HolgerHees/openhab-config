@@ -29,7 +29,8 @@ class MotiondetectorOutdoorSwitchSleepingRule:
 @rule("lights_outdoor.py")
 class MotiondetectorOutdoorSwitchRule:
     def __init__(self):
-        self.triggers = [ItemCommandTrigger("Motiondetector_Outdoor_Switch")]
+        # must be ItemStateChangeTrigger, because it is a physical KNX Button
+        self.triggers = [ItemStateChangeTrigger("Motiondetector_Outdoor_Switch")]
 
     def execute(self, module, input):
         global controlTimestamps
@@ -37,7 +38,7 @@ class MotiondetectorOutdoorSwitchRule:
         last = controlTimestamps.get("Motiondetector_Outdoor_Switch",0)
         
         if now - last > 1000:
-            if input["command"] == ON:
+            if input["event"].getItemState() == ON:
                 global controlTimestamps
                 now = getNow().getMillis()
 
