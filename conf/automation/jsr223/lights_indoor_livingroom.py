@@ -3,6 +3,7 @@ from core.triggers import ItemCommandTrigger, ItemStateChangeTrigger
 from org.eclipse.smarthome.core.types import UnDefType
 
 lastUpdate = {}
+ruleTimeouts = {}
 
 @rule("lights_indoor_livingroom_control.py")
 class CeilingRule:
@@ -10,14 +11,14 @@ class CeilingRule:
         self.triggers = [ItemCommandTrigger("Lights_FF_Livingroom_Ceiling")]
 
     def execute(self, module, input):
-        global lastUpdate
+        global ruleTimeouts
         now = getNow().getMillis()
-            
-        sendCommand("Light_FF_Livingroom_Diningtable", input["command"])
-        lastUpdate["Light_FF_Livingroom_Diningtable"] = now
+        last = ruleTimeouts.get("Ceiling_Main",0)
         
-        sendCommand("Light_FF_Livingroom_Couch", input["command"])
-        lastUpdate["Light_FF_Livingroom_Couch"] = now
+        if now - last > 1000:
+            ruleTimeouts["Ceiling_Backward"] = now
+            sendCommand("Light_FF_Livingroom_Diningtable", input["command"])
+            sendCommand("Light_FF_Livingroom_Couch", input["command"])
 
 
 @rule("lights_indoor_livingroom_control.py")
@@ -29,10 +30,11 @@ class CeilingBackwardRule:
         ]
 
     def execute(self, module, input):
-        global lastUpdate
-        last = lastUpdate.get(input['event'].getItemName(),0)
+        global ruleTimeouts
+        now = getNow().getMillis()
+        last = ruleTimeouts.get("Ceiling_Backward",0)
         
-        if getNow().getMillis() - last > 1000:
+        if now - last > 1000:
             value = 0
         
             # check for UnDefType. Happens if I increase or decrease dimming value manually
@@ -42,6 +44,7 @@ class CeilingBackwardRule:
             if type(getItemState("Light_FF_Livingroom_Couch")) is not UnDefType and getItemState("Light_FF_Livingroom_Couch").intValue() > value:
                 value = getItemState("Light_FF_Livingroom_Couch").intValue()
 
+            ruleTimeouts["Ceiling_Main"] = now
             postUpdateIfChanged("Lights_FF_Livingroom_Ceiling", value)
 
 
@@ -51,25 +54,20 @@ class HueBrightnessRule:
         self.triggers = [ItemCommandTrigger("Light_FF_Livingroom_Hue_Brightness")]
 
     def execute(self, module, input):
-        global lastUpdate
+        global ruleTimeouts
         now = getNow().getMillis()
+        last = ruleTimeouts.get("Livingroom_Hue_Brightness_Main",0)
         
-        sendCommand("Light_FF_Livingroom_Hue_Brightness1", input["command"])
-        lastUpdate["Light_FF_Livingroom_Hue_Brightness1"] = now
-        
-        sendCommand("Light_FF_Livingroom_Hue_Brightness2", input["command"])
-        lastUpdate["Light_FF_Livingroom_Hue_Brightness2"] = now
-        
-        sendCommand("Light_FF_Livingroom_Hue_Brightness3", input["command"])
-        lastUpdate["Light_FF_Livingroom_Hue_Brightness3"] = now
-        
-        sendCommand("Light_FF_Livingroom_Hue_Brightness4", input["command"])
-        lastUpdate["Light_FF_Livingroom_Hue_Brightness4"] = now
-        
-        sendCommand("Light_FF_Livingroom_Hue_Brightness5", input["command"])
-        lastUpdate["Light_FF_Livingroom_Hue_Brightness5"] = now
-        
-        sendCommand("State_Lightprogram", 0)
+        if now - last > 1000:
+            ruleTimeouts["Livingroom_Hue_Brightness_Backward"] = now
+            
+            sendCommand("Light_FF_Livingroom_Hue_Brightness1", input["command"])
+            sendCommand("Light_FF_Livingroom_Hue_Brightness2", input["command"])
+            sendCommand("Light_FF_Livingroom_Hue_Brightness3", input["command"])
+            sendCommand("Light_FF_Livingroom_Hue_Brightness4", input["command"])
+            sendCommand("Light_FF_Livingroom_Hue_Brightness5", input["command"])
+            
+            sendCommand("State_Lightprogram", 0)
 
 
 @rule("lights_indoor_livingroom_control.py")
@@ -84,12 +82,14 @@ class HueBrightnessBackwardRule:
         ]
 
     def execute(self, module, input):
-        itemName = input['event'].getItemName()
+        global ruleTimeouts
+        now = getNow().getMillis()
+        last = ruleTimeouts.get("Livingroom_Hue_Brightness_Backward",0)
         
-        global lastUpdate
-        last = lastUpdate.get(itemName,0)
-
-        if getNow().getMillis() - last > 1000:
+        if now - last > 1000:
+            ruleTimeouts["Livingroom_Hue_Brightness_Main"] = now
+            
+            itemName = input['event'].getItemName()
             itemCommand = input['event'].getItemCommand()
             
             hue1 = itemCommand if itemName == "Light_FF_Livingroom_Hue_Brightness1" else getItemState("Light_FF_Livingroom_Hue_Brightness1")
@@ -121,25 +121,20 @@ class HueColorRule:
         self.triggers = [ItemCommandTrigger("Light_FF_Livingroom_Hue_Color")]
 
     def execute(self, module, input):
-        global lastUpdate
+        global ruleTimeouts
         now = getNow().getMillis()
+        last = ruleTimeouts.get("Livingroom_Hue_Color_Main",0)
         
-        sendCommand("Light_FF_Livingroom_Hue_Color1", input["command"])
-        lastUpdate["Light_FF_Livingroom_Hue_Color1"] = now
-        
-        sendCommand("Light_FF_Livingroom_Hue_Color2", input["command"])
-        lastUpdate["Light_FF_Livingroom_Hue_Color2"] = now
-        
-        sendCommand("Light_FF_Livingroom_Hue_Color3", input["command"])
-        lastUpdate["Light_FF_Livingroom_Hue_Color3"] = now
-        
-        sendCommand("Light_FF_Livingroom_Hue_Color4", input["command"])
-        lastUpdate["Light_FF_Livingroom_Hue_Color4"] = now
-        
-        sendCommand("Light_FF_Livingroom_Hue_Color5", input["command"])
-        lastUpdate["Light_FF_Livingroom_Hue_Color5"] = now
-        
-        sendCommand("State_Lightprogram", 0)
+        if now - last > 1000:
+            ruleTimeouts["Livingroom_Hue_Color_Backward"] = now
+
+            sendCommand("Light_FF_Livingroom_Hue_Color1", input["command"])
+            sendCommand("Light_FF_Livingroom_Hue_Color2", input["command"])
+            sendCommand("Light_FF_Livingroom_Hue_Color3", input["command"])
+            sendCommand("Light_FF_Livingroom_Hue_Color4", input["command"])
+            sendCommand("Light_FF_Livingroom_Hue_Color5", input["command"])
+            
+            sendCommand("State_Lightprogram", 0)
 
 
 @rule("lights_indoor_livingroom_control.py")
@@ -154,12 +149,14 @@ class HueColorBackwardRule:
         ]
 
     def execute(self, module, input):
-        itemName = input['event'].getItemName()
+        global ruleTimeouts
+        now = getNow().getMillis()
+        last = ruleTimeouts.get("Livingroom_Hue_Color_Backward",0)
         
-        global lastUpdate
-        last = lastUpdate.get(itemName,0)
-
-        if getNow().getMillis() - last > 1000:
+        if now - last > 1000:
+            ruleTimeouts["Livingroom_Hue_Color_Main"] = now
+            
+            itemName = input['event'].getItemName()
             itemCommand = input['event'].getItemCommand()
             
             color1 = itemCommand if itemName == "Light_FF_Livingroom_Hue_Color1" else getItemState("Light_FF_Livingroom_Hue_Color1")
@@ -204,23 +201,14 @@ class HueColorProgramRule:
         return [color1,color2,color3,color4,color5]
     
     def _setCurrentColors(self,data):
-        global lastUpdate
-        now = getNow().getMillis()
+        global ruleTimeouts
+        ruleTimeouts["Livingroom_Hue_Color_Backward"] = getNow().getMillis()
         
         sendCommand("Light_FF_Livingroom_Hue_Color1",u"{},{},{}".format(data[0][0],data[0][1],data[0][2]))
-        lastUpdate["Light_FF_Livingroom_Hue_Color1"] = now
-        
         sendCommand("Light_FF_Livingroom_Hue_Color2",u"{},{},{}".format(data[1][0],data[1][1],data[1][2]))
-        lastUpdate["Light_FF_Livingroom_Hue_Color2"] = now
-                
         sendCommand("Light_FF_Livingroom_Hue_Color3",u"{},{},{}".format(data[2][0],data[2][1],data[2][2]))
-        lastUpdate["Light_FF_Livingroom_Hue_Color3"] = now
-        
         sendCommand("Light_FF_Livingroom_Hue_Color4",u"{},{},{}".format(data[3][0],data[3][1],data[3][2]))
-        lastUpdate["Light_FF_Livingroom_Hue_Color4"] = now
-        
         sendCommand("Light_FF_Livingroom_Hue_Color5",u"{},{},{}".format(data[4][0],data[4][1],data[4][2]))
-        lastUpdate["Light_FF_Livingroom_Hue_Color5"] = now
 
     def _fade(self,step,fromColor,toColor,currentColor):
         start = float(fromColor[0])
@@ -283,23 +271,14 @@ class HueColorProgramRule:
         color4 = getItemState("Light_FF_Livingroom_Hue_Color4")
         color5 = getItemState("Light_FF_Livingroom_Hue_Color5")
             
-        global lastUpdate
-        now = getNow().getMillis()
+        global ruleTimeouts
+        ruleTimeouts["Livingroom_Hue_Color_Backward"] = getNow().getMillis()
     
         sendCommand("Light_FF_Livingroom_Hue_Color1",color2)
-        lastUpdate["Light_FF_Livingroom_Hue_Color1"] = now
-        
         sendCommand("Light_FF_Livingroom_Hue_Color2",color3)
-        lastUpdate["Light_FF_Livingroom_Hue_Color2"] = now
-        
         sendCommand("Light_FF_Livingroom_Hue_Color3",color4)
-        lastUpdate["Light_FF_Livingroom_Hue_Color3"] = now
-        
         sendCommand("Light_FF_Livingroom_Hue_Color4",color5)
-        lastUpdate["Light_FF_Livingroom_Hue_Color4"] = now
-        
         sendCommand("Light_FF_Livingroom_Hue_Color5",color1)
-        lastUpdate["Light_FF_Livingroom_Hue_Color5"] = now
                     
         self.timer = createTimer(self.timeout, self.callback )
         self.timer.start()
