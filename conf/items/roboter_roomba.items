@@ -1,4 +1,6 @@
 /* Roomba items */
+Switch roomba_online            "Roomba Online"                             {channel="network:pingdevice:roomba:online"}
+
 Switch roomba_auto              "Auto Steuerung"            <selfautomode>
 Switch roomba_cleaning_state    "Reinigt"                   <selfautomode> ["State","CleaningRobot"]
 

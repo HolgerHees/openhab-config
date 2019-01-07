@@ -53,6 +53,7 @@ class RoombaLastUpdateTimestampRule:
     def __init__(self):
         self.triggers = [
             CronTrigger("0 2,17,32,47 * * * ?"),
+            ItemStateChangeTrigger("roomba_online"),
             ItemStateChangeTrigger("roomba_status")
         ]
 
@@ -60,7 +61,7 @@ class RoombaLastUpdateTimestampRule:
         msg = ""
         cleaning_state = OFF
 
-        if itemLastUpdateOlderThen("roomba_rssi", getNow().minusMinutes(60)):
+        if getItemState("roomba_online") == OFF:
             msg = "Offline"
         else:
             status = getItemState("roomba_status").toString()

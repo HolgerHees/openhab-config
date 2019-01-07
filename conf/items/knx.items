@@ -170,4 +170,4 @@ Switch Watering_Program_Start					"Programm starten"						<selfautomode>	(Wateri
 String Watering_Program_State					"Status [%s]"							<selfinfo>		(Watering)
 
 //####### Common States ########
-Contact		Receiver_State																	["Status","Receiver"]							{ channel="knx:device:bridge:other:receiverState" }
+Contact		Receiver_State														           { channel="knx:device:bridge:other:receiverState" }
