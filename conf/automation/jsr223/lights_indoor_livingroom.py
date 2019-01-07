@@ -25,6 +25,7 @@ class CeilingRule:
 class CeilingBackwardRule:
     def __init__(self):
         self.triggers = [
+            # must be ItemStateChangeTrigger, because it is a physical KNX Button
             ItemStateChangeTrigger("Light_FF_Livingroom_Diningtable"),
             ItemStateChangeTrigger("Light_FF_Livingroom_Couch")
         ]
