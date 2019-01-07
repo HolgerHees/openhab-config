@@ -13,7 +13,7 @@ manualMappings = [
 
 timerDuration = 60.0
 timerMappings = {}
-controlTimestamps = {}
+ruleTimeouts = {}
 
 # Main MotionDetector Switch
 @rule("lights_outdoor.py")
@@ -33,42 +33,29 @@ class MotiondetectorOutdoorSwitchRule:
         self.triggers = [ItemStateChangeTrigger("Motiondetector_Outdoor_Switch")]
 
     def execute(self, module, input):
-        global controlTimestamps
+        global ruleTimeouts
         now = getNow().getMillis()
-        last = controlTimestamps.get("Motiondetector_Outdoor_Switch",0)
+        last = ruleTimeouts.get("Motiondetector_Outdoor_Main_Switch",0)
         
         if now - last > 1000:
-            if input["event"].getItemState() == ON:
-                global controlTimestamps
-                now = getNow().getMillis()
+            itemState = input["event"].getItemState()
+            
+            if itemState == ON:
+                ruleTimeouts["Light_Outdoor"] = now
 
-                # Switch OFF Manual lights and maybe trigger a MotioncontrollSwitch update
                 sendCommand("Light_Outdoor_Garage_Streedside",OFF)
-                controlTimestamps["Light_Outdoor_Garage_Streedside"] = now
-
                 sendCommand("Light_Outdoor_Frontdoor",OFF)
-                controlTimestamps["Light_Outdoor_Frontdoor"] = now
-
                 sendCommand("Light_Outdoor_Carport",OFF)
-                controlTimestamps["Light_Outdoor_Carport"] = now
-
                 sendCommand("Light_Outdoor_Terrace",0)
-                controlTimestamps["Light_Outdoor_Terrace"] = now
-
                 sendCommand("Light_Outdoor_Garage_Gardenside",OFF)
-                controlTimestamps["Light_Outdoor_Garage_Gardenside"] = now
 
-                postUpdate("Motiondetector_Outdoor_Garage_Streetside_Switch",ON)
-                postUpdate("Motiondetector_Outdoor_Frontdoor_Switch",ON)
-                postUpdate("Motiondetector_Outdoor_Carport_Switch",ON)
-                postUpdate("Motiondetector_Outdoor_Terrace_Switch",ON)
-                postUpdate("Motiondetector_Outdoor_Garage_Gardenside_Switch",ON)
-            else:
-                postUpdate("Motiondetector_Outdoor_Garage_Streetside_Switch",OFF)
-                postUpdate("Motiondetector_Outdoor_Frontdoor_Switch",OFF)
-                postUpdate("Motiondetector_Outdoor_Carport_Switch",OFF)
-                postUpdate("Motiondetector_Outdoor_Terrace_Switch",OFF)
-                postUpdate("Motiondetector_Outdoor_Garage_Gardenside_Switch",OFF)
+            ruleTimeouts["Motiondetector_Outdoor_Individual_Switches"] = now
+
+            postUpdate("Motiondetector_Outdoor_Garage_Streetside_Switch",itemState)
+            postUpdate("Motiondetector_Outdoor_Frontdoor_Switch",itemState)
+            postUpdate("Motiondetector_Outdoor_Carport_Switch",itemState)
+            postUpdate("Motiondetector_Outdoor_Terrace_Switch",itemState)
+            postUpdate("Motiondetector_Outdoor_Garage_Gardenside_Switch",itemState)
 
 
 # Individual MotionDetector Switchs
@@ -76,85 +63,63 @@ class MotiondetectorOutdoorSwitchRule:
 class MotiondetectorOutdoorIndividualSwitchRule:
     def __init__(self):
         self.triggers = [
-            ItemCommandTrigger("Motiondetector_Outdoor_Garage_Streetside_Switch"),
-            ItemCommandTrigger("Motiondetector_Outdoor_Frontdoor_Switch"),
-            ItemCommandTrigger("Motiondetector_Outdoor_Carport_Switch"),
-            ItemCommandTrigger("Motiondetector_Outdoor_Terrace_Switch"),
-            ItemCommandTrigger("Motiondetector_Outdoor_Garage_Gardenside_Switch")
+            ItemStateChangeTrigger("Motiondetector_Outdoor_Garage_Streetside_Switch"),
+            ItemStateChangeTrigger("Motiondetector_Outdoor_Frontdoor_Switch"),
+            ItemStateChangeTrigger("Motiondetector_Outdoor_Carport_Switch"),
+            ItemStateChangeTrigger("Motiondetector_Outdoor_Terrace_Switch"),
+            ItemStateChangeTrigger("Motiondetector_Outdoor_Garage_Gardenside_Switch")
         ]
 
     def execute(self, module, input):
-        global controlTimestamps
+        global ruleTimeouts
         now = getNow().getMillis()
         
-        itemName = input['event'].getItemName()
-        itemCommand = input['event'].getItemCommand()
+        last = ruleTimeouts.get("Motiondetector_Outdoor_Individual_Switches",0)
         
-        if itemName == "Motiondetector_Outdoor_Garage_Streetside_Switch":
-            gs = itemCommand
-            sendCommand("Light_Outdoor_Garage_Streedside",OFF)
-            controlTimestamps["Light_Outdoor_Garage_Streedside"] = now
-        else:
-            gs = getItemState("Motiondetector_Outdoor_Garage_Streetside_Switch")
+        if now - last > 1000:
+            ruleTimeouts["Motiondetector_Outdoor_Main_Switch"] = now
+            ruleTimeouts["Light_Outdoor"] = now
+
+            itemName = input['event'].getItemName()
+            itemState = input['event'].getItemState()
             
-        if itemName == "Motiondetector_Outdoor_Frontdoor_Switch":
-            f = itemCommand
-            sendCommand("Light_Outdoor_Frontdoor",OFF)
-            controlTimestamps["Light_Outdoor_Frontdoor"] = now
-        else:
-            f = getItemState("Motiondetector_Outdoor_Frontdoor_Switch")
+            switchState = ON
+            for i, entry in enumerate(manualMappings):
+                if entry[1] == itemName:
+                    sendCommandIfChanged(entry[0],OFF)
+                    if itemState == OFF:
+                        switchState = OFF
+                else:
+                    if getItemState(entry[1]) == OFF:
+                        switchState = OFF
+                        
+            sendCommandIfChanged("Motiondetector_Outdoor_Switch",switchState)
 
-        if itemName == "Motiondetector_Outdoor_Carport_Switch":
-            c = itemCommand
-            sendCommand("Light_Outdoor_Carport",OFF)
-            controlTimestamps["Light_Outdoor_Carport"] = now
-        else:
-            c = getItemState("Motiondetector_Outdoor_Carport_Switch")
-
-        if itemName == "Motiondetector_Outdoor_Terrace_Switch":
-            t = itemCommand
-            sendCommand("Light_Outdoor_Terrace",0)
-            controlTimestamps["Light_Outdoor_Terrace"] = now
-        else:
-            t = getItemState("Motiondetector_Outdoor_Terrace_Switch")
-
-        if itemName == "Motiondetector_Outdoor_Garage_Gardenside_Switch":
-            gg = itemCommand
-            sendCommand("Light_Outdoor_Garage_Gardenside",OFF)
-            controlTimestamps["Light_Outdoor_Garage_Gardenside"] = now
-        else:
-            gg = getItemState("Motiondetector_Outdoor_Garage_Gardenside_Switch")
+            #self.log.info(u"{} {} {} {} {} ".format(gs,f,c,t,gg))
         
-        #self.logInfo("test","B "+receivedCommand)
-        if gs == OFF or f == OFF or c == OFF or t == OFF or gg == OFF:
-            sendCommand("Motiondetector_Outdoor_Switch",OFF)
-        else:
-            sendCommand("Motiondetector_Outdoor_Switch",ON)
-        controlTimestamps["Motiondetector_Outdoor_Switch"] = now
-
 # Light Control Events
 @rule("lights_outdoor.py")
 class LightOutdoorControlRule:
     def __init__(self):
         self.triggers = [
-            ItemCommandTrigger("Light_Outdoor_Garage_Streedside"),
-            ItemCommandTrigger("Light_Outdoor_Frontdoor"),
-            ItemCommandTrigger("Light_Outdoor_Carport"),
-            ItemCommandTrigger("Light_Outdoor_Terrace"),
-            ItemCommandTrigger("Light_Outdoor_Garage_Gardenside")
+            ItemStateChangeTrigger("Light_Outdoor_Garage_Streedside"),
+            ItemStateChangeTrigger("Light_Outdoor_Frontdoor"),
+            ItemStateChangeTrigger("Light_Outdoor_Carport"),
+            ItemStateChangeTrigger("Light_Outdoor_Terrace"),
+            ItemStateChangeTrigger("Light_Outdoor_Garage_Gardenside")
         ]
 
     def execute(self, module, input):
         #self.log.info(u"{}".format(input))
         
-        itemName = input['event'].getItemName()
-        
-        global controlTimestamps
+        global ruleTimeouts
         now = getNow().getMillis()
-        last = controlTimestamps.get(itemName,0)
+        last = ruleTimeouts.get("Light_Outdoor",0)
         
         # No Motion Detector related events
         if now - last > 1000:
+            itemName = input['event'].getItemName()
+        
             global timerMappings
             timer = timerMappings.get(itemName)
             if timer is not None:
@@ -162,9 +127,10 @@ class LightOutdoorControlRule:
             
             for i, entry in enumerate(manualMappings):
                 if entry[0] == itemName:
+                    ruleTimeouts["Motiondetector_Outdoor_Individual_Switches"] = now
                     if postUpdateIfChanged(entry[1],OFF):
-                        sendCommand("Motiondetector_Outdoor_Switch",OFF)
-                        controlTimestamps["Motiondetector_Outdoor_Switch"] = now
+                        ruleTimeouts["Motiondetector_Outdoor_Main_Switch"] = now
+                        sendCommandIfChanged("Motiondetector_Outdoor_Switch",OFF)
                     #self.log.info(u"{} {}".format(itemName,now-last))
                     break
 
@@ -186,12 +152,11 @@ class MotionDetectorRule:
                 timerMappings[entry[0]] = createTimer(timerDuration, self.callback,[entry])
                 timerMappings[entry[0]].start()
             else:
+                global ruleTimeouts
+                ruleTimeouts["Light_Outdoor"] = getNow().getMillis()
+
                 sendCommand(entry[0],OFF)
                 timerMappings[entry[0]] = None
-
-                global controlTimestamps
-                now = getNow().getMillis()
-                controlTimestamps[entry[0]] = now
         else:
             timerMappings[entry[0]] = None
 
@@ -205,11 +170,10 @@ class MotionDetectorRule:
             timerMappings[entry[0]] = createTimer(timerDuration, self.callback, [entry] )
             timerMappings[entry[0]].start()
 
-            sendCommand(entry[0],ON)
+            global ruleTimeouts
+            ruleTimeouts["Light_Outdoor"] = getNow().getMillis()
 
-            global controlTimestamps
-            now = getNow().getMillis()
-            controlTimestamps[entry[0]] = now
+            sendCommand(entry[0],ON)
 
 
 # Terasse Motion Detector Events
@@ -228,12 +192,11 @@ class TerasseMotionDetectorRule:
                 timerMappings["Light_Outdoor_Terrace"] = createTimer(timerDuration, self.callback)
                 timerMappings["Light_Outdoor_Terrace"].start()
             else:
+                global ruleTimeouts
+                ruleTimeouts["Light_Outdoor"] = getNow().getMillis()
+
                 sendCommand("Light_Outdoor_Terrace",0)
                 timerMappings["Light_Outdoor_Terrace"] = None
-
-                global controlTimestamps
-                now = getNow().getMillis()
-                controlTimestamps["Light_Outdoor_Terrace"] = now
         else:
             timerMappings["Light_Outdoor_Terrace"] = None
 
@@ -245,8 +208,8 @@ class TerasseMotionDetectorRule:
             timerMappings["Light_Outdoor_Terrace"] = createTimer(timerDuration, self.callback )
             timerMappings["Light_Outdoor_Terrace"].start()
 
+            global ruleTimeouts
+            ruleTimeouts["Light_Outdoor"] = getNow().getMillis()
+
             sendCommand("Light_Outdoor_Terrace",100)
-            global controlTimestamps
-            now = getNow().getMillis()
-            controlTimestamps["Light_Outdoor_Terrace"] = now
         
