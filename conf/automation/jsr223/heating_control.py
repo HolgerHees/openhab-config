@@ -499,7 +499,7 @@ class HeatingHelper:
         if msg != None:
             self.log.info(u"        : ⇲ {}".format(msg))
  
-@rule("heating_control.py")
+'''@rule("heating_control.py")
 class MoveCircuitSwitchRule(HeatingHelper):
     def __init__(self):
         self.triggers = [CronTrigger("0 0 0 * * ?")]
@@ -514,7 +514,7 @@ class MoveCircuitSwitchRule(HeatingHelper):
             if getItemState("Heating_Livingroom_Circuit") == OFF:
                 self.log.info(u"Toogle  : Livingroom circuit ON")
                 sendCommand("Heating_Livingroom_Circuit",ON)
-                createTimer(120, self.callback)
+                createTimer(120, self.callback)'''
         
 @rule("heating_control.py")
 class CalculateChargeLevelRule(HeatingHelper):
