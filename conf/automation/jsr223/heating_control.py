@@ -377,15 +377,15 @@ class HeatingHelper:
         lowerPower = _lowerFloorPower + _lowerAirPower
         upperPower = _upperFloorPower + _upperAirPower
         
-        totalPower = lowerPower + upperPower
+        neededPower = lowerPower + upperPower
 
-        maxPower = totalPower
+        maxPower = neededPower
         
         # remove inactive rooms from needed power to exclude their effects from further calculation
         if not activeRooms.get("livingroom"):
-            totalPower = totalPower - 6012.96212326389
+            neededPower = neededPower - 6012.96212326389
 
-        return totalPower, maxPower
+        return neededPower, maxPower
 
     def getCurrentHeatingPowerPerMinute( self, activeRooms ):
         pumpSpeed = getItemState("Heating_Circuit_Pump_Speed").intValue()
@@ -694,6 +694,7 @@ class HeatingCheckRule(HeatingHelper):
         outdoorReduction = self.calculateOutdoorReduction( currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, currentForecast8CoolingPowerPerMinute)
 
         slotHeatingPower = round( baseHeatingPower * 0.1, 1 )
+        maxSlotHeatingPower = round( maxHeatingPower * 0.1, 1 )
 
         # Calculate "available" heating power. Thats means current or possible heating power - current cooling power
         # This is the leftover to warmup the house
@@ -777,11 +778,14 @@ class HeatingCheckRule(HeatingHelper):
                     heatingType = u"HEATING NEEDED"
                 else:
                     # it is too warm inside, but outside it is very cold, so we need some buffer heating to avoid cold floors
-                    forceBufferHeating = self.forcedBufferHeatingCheck( now, isHeatingActive, lastHeatingChange, slotHeatingPower, availableHeatingPowerPerMinute, additionalChargeLevel )
+                    # should always be calculated with all rooms ON and maxSlotHeatingPower
+                    forceBufferHeating = self.forcedBufferHeatingCheck( now, isHeatingActive, lastHeatingChange, maxSlotHeatingPower, availableHeatingPowerPerMinute, additionalChargeLevel )
                 
                     if forceBufferHeating:
                         heatingDemand = 1
                         heatingType = u"FORCED BUFFER HEATING NEEDED"
+                        # should always be calculated with all rooms ON
+                        newLivingRoomCircuit = ON
                     elif referenceTargetDiff == 0.0:
                         # Check if buffer heating is needed
                         isBufferHeatingNeeded = self.isBufferHeating( isHeatingActive, additionalChargeLevel, minBufferChargeLevel, maxBufferChargeLevel )
