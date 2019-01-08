@@ -458,10 +458,12 @@ class HeatingHelper:
         _currentSource = "Temperature_FF_Livingroom" if activeRooms["livingroom"] else "Temperature_SF_Bedroom"
         _currentTemp = currentLivingroomTemp if activeRooms["livingroom"] else currentBedroomTemp
 
-        if ( HeatingHelper.lastReferenceSource == None or HeatingHelper.lastReferenceSource == _currentSource ) and _currentTemp > _referenceTemp:
-            _heatedUpTempDiff = currentTemp - _referenceTemp
-            _currentChargeLevel = self._cleanupChargeLevel( _currentChargeLevel, baseHeatingPower * _heatedUpTempDiff )
-        _heatingTargetDiff = heatingTarget - currentTemp - outdoorReduction
+        if HeatingHelper.lastReferenceSource == _currentSource:
+            if _currentTemp > _referenceTemp:
+                _heatedUpTempDiff = _currentTemp - _referenceTemp
+                _currentChargeLevel = self._cleanupChargeLevel( _currentChargeLevel, baseHeatingPower * _heatedUpTempDiff )
+        
+        _heatingTargetDiff = heatingTarget - _currentTemp - outdoorReduction
         if _heatingTargetDiff < 0.0: _heatingTargetDiff = 0.0
         _neededHeatingPower = round( baseHeatingPower * _heatingTargetDiff, 1 )
 
@@ -483,17 +485,18 @@ class HeatingHelper:
         _currentSource = "Temperature_FF_Livingroom" if activeRooms["livingroom"] else "Temperature_SF_Bedroom"
         _currentTemp = self.getStableValue( now, _currentSource, 20 )
         
-        if ( HeatingHelper.lastReferenceSource == None or HeatingHelper.lastReferenceSource == _currentSource ) and _currentTemp != _referenceTemp:
-            self.log.info(u">>>>>>>>>")
-            if _currentTemp < _referenceTemp:
-                self.log.info(u"Cleanup : Reference to {} adjusted".format(_currentTemp) )
-            elif _currentTemp > _referenceTemp:
-                _heatedUpTempDiff = _currentTemp - _referenceTemp
-                _currentChargeLevel = self._cleanupChargeLevel( _currentChargeLevel, baseHeatingPower * _heatedUpTempDiff )
-                self.log.info(u"Cleanup : Reference to {} and Charged to {} adjusted".format(_currentTemp,_currentChargeLevel) )
+        if HeatingHelper.lastReferenceSource == _currentSource:
+            if _currentTemp != _referenceTemp:
+                if _currentTemp < _referenceTemp:
+                    self.log.info(u"Cleanup : Reference to {} adjusted".format(_currentTemp) )
+                elif _currentTemp > _referenceTemp:
+                    _heatedUpTempDiff = _currentTemp - _referenceTemp
+                    _currentChargeLevel = self._cleanupChargeLevel( _currentChargeLevel, baseHeatingPower * _heatedUpTempDiff )
+                    self.log.info(u"Cleanup : Reference to {} and Charged to {} adjusted".format(_currentTemp,_currentChargeLevel) )
+                postUpdate("Heating_Reference", _currentTemp )
+        else:
+            HeatingHelper.lastReferenceSource = _currentSource
             postUpdate("Heating_Reference", _currentTemp )
-
-        HeatingHelper.lastReferenceSource = _currentSource
         
         return _currentChargeLevel
     
