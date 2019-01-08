@@ -19,6 +19,7 @@ class HeatingHelper:
     outdatetForecast = None
     openFFContacts = None
     openSFContacts = None
+    lastReferenceSource = None
     
     def getStableValue( self, now, itemName, checkTimeRange, cached = False ):
         
@@ -448,14 +449,19 @@ class HeatingHelper:
 
         return round( _totalChargeLevel, 1 ) if _totalChargeLevel > 0.0 else 0.0
 
-    def calculcateCurrentChargeLevel(self, totalChargeLevel, currentLivingroomTemp, baseHeatingPower, heatingTarget, outdoorReduction ):        
+    def calculcateCurrentChargeLevel(self, totalChargeLevel, baseHeatingPower, heatingTarget, outdoorReduction, currentLivingroomTemp, currentBedroomTemp, activeRooms ):        
+        _currentChargeLevel = totalChargeLevel
+
         # We have to calculate with cleaned values also if the "CalculateChargeLevelRule" was not cleaning it right now
         _referenceTemp = getItemState("Heating_Reference").doubleValue()
-        _currentChargeLevel = totalChargeLevel
-        if currentLivingroomTemp > _referenceTemp:
-            _heatedUpTempDiff = currentLivingroomTemp - _referenceTemp
+
+        _currentSource = "Temperature_FF_Livingroom" if activeRooms["livingroom"] else "Temperature_SF_Bedroom"
+        _currentTemp = currentLivingroomTemp if activeRooms["livingroom"] else currentBedroomTemp
+
+        if ( HeatingHelper.lastReferenceSource == None or HeatingHelper.lastReferenceSource == _currentSource ) and _currentTemp > _referenceTemp:
+            _heatedUpTempDiff = currentTemp - _referenceTemp
             _currentChargeLevel = self._cleanupChargeLevel( _currentChargeLevel, baseHeatingPower * _heatedUpTempDiff )
-        _heatingTargetDiff = heatingTarget - currentLivingroomTemp - outdoorReduction
+        _heatingTargetDiff = heatingTarget - currentTemp - outdoorReduction
         if _heatingTargetDiff < 0.0: _heatingTargetDiff = 0.0
         _neededHeatingPower = round( baseHeatingPower * _heatingTargetDiff, 1 )
 
@@ -469,19 +475,27 @@ class HeatingHelper:
         
         return _currentChargeLevel, _additionalChargeLevel, _missingChargeLevel
 
-    def calculateAdjustedTotalChargeLevel( self, now, baseHeatingPower ):
-        _totalChargeLevel = getItemState("Heating_Charged").doubleValue()
+    def calculateAdjustedTotalChargeLevel( self, now, baseHeatingPower, activeRooms ):
+        _currentChargeLevel = getItemState("Heating_Charged").doubleValue()
+
         _referenceTemp = getItemState("Heating_Reference").doubleValue()
-        _referenceLivingroomTemp = self.getStableValue( now, "Temperature_FF_Livingroom", 20 )
-        if _referenceLivingroomTemp != _referenceTemp:
-            if _referenceLivingroomTemp < _referenceTemp:
-                self.log.info(u"Cleanup : Reference to {} adjusted".format(_referenceLivingroomTemp) )
-            elif _referenceLivingroomTemp > _referenceTemp:
-                _heatedUpTempDiff = _referenceLivingroomTemp - _referenceTemp
-                _totalChargeLevel = self._cleanupChargeLevel( _totalChargeLevel, baseHeatingPower * _heatedUpTempDiff )
-                self.log.info(u"Cleanup : Reference to {} and Charged to {} adjusted".format(_referenceLivingroomTemp,_totalChargeLevel) )
-            postUpdate("Heating_Reference", _referenceLivingroomTemp )
-        return _totalChargeLevel
+        
+        _currentSource = "Temperature_FF_Livingroom" if activeRooms["livingroom"] else "Temperature_SF_Bedroom"
+        _currentTemp = self.getStableValue( now, _currentSource, 20 )
+        
+        if ( HeatingHelper.lastReferenceSource == None or HeatingHelper.lastReferenceSource == _currentSource ) and _currentTemp != _referenceTemp:
+            self.log.info(u">>>>>>>>>")
+            if _currentTemp < _referenceTemp:
+                self.log.info(u"Cleanup : Reference to {} adjusted".format(_currentTemp) )
+            elif _currentTemp > _referenceTemp:
+                _heatedUpTempDiff = _currentTemp - _referenceTemp
+                _currentChargeLevel = self._cleanupChargeLevel( _currentChargeLevel, baseHeatingPower * _heatedUpTempDiff )
+                self.log.info(u"Cleanup : Reference to {} and Charged to {} adjusted".format(_currentTemp,_currentChargeLevel) )
+            postUpdate("Heating_Reference", _currentTemp )
+
+        HeatingHelper.lastReferenceSource = _currentSource
+        
+        return _currentChargeLevel
     
     def logPowerAdjustments( self, currentCoolingPowerPerMinute, maxCoolingPowerPerMinute, currentHeatingPowerPerMinute, maxHeatingPowerPerMinute, baseHeatingPower, maxHeatingPower ):
         msg = None
@@ -559,7 +573,7 @@ class CalculateChargeLevelRule(HeatingHelper):
         self.setSunStates( currentOutdoorTemp, currentAtticTemp, currentBedroomTemp, currentLivingroomTemp, sunPower, effectiveSouthRadiation, effectiveWestRadiation )
 
         # Get the house charge level. If we detect a house warmup, we remove "adjust" the needed amount energy for heating up in 0.1°C levels
-        totalChargeLevel = self.calculateAdjustedTotalChargeLevel( now, baseHeatingPower )
+        totalChargeLevel = self.calculateAdjustedTotalChargeLevel( now, baseHeatingPower, activeRooms )
     
         # Apply difference between heating power and cooling power to the chage level
         totalChargeLevel = totalChargeLevel - currentCoolingPowerPerMinute + currentHeatingPowerPerMinute
@@ -704,7 +718,7 @@ class HeatingCheckRule(HeatingHelper):
         # currentChargeLevel - means the current house charge level
         # additionalChargeLevel - Value higher than 0 means we have more energy than needed to reach our target temperature
         # missingChargeLevel - Value higher than 0 means we need more energy to reach our target temperature
-        currentChargeLevel, additionalChargeLevel, missingChargeLevel = self.calculcateCurrentChargeLevel(totalChargeLevel, currentLivingroomTemp, baseHeatingPower, heatingTarget, outdoorReduction)
+        currentChargeLevel, additionalChargeLevel, missingChargeLevel = self.calculcateCurrentChargeLevel(totalChargeLevel, baseHeatingPower, heatingTarget, outdoorReduction, currentLivingroomTemp, currentBedroomTemp, activeRooms )
     
         # Zone Level (BUFFER LEVEL) to stop buffer heating. Is based on cooling power.
         maxBufferChargeLevel = self.calculateMaxBufferChargeLevel( currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, slotHeatingPower )
