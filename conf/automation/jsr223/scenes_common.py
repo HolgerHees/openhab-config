@@ -64,7 +64,7 @@ class Scene3Rule:
         postUpdate("Scene3", OFF)
 
 
-# Scene4, Sleeping scene => is handled in presence_detection
+# Scene4 => is handled in presence_detection.py
 
 
 @rule("scenes_common.py")
@@ -98,35 +98,4 @@ class Scene6Rule:
         postUpdate("Scene6", OFF)
 
 
-@rule("scenes_common.py")
-class ReloadRule:
-    def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("Scene7")]
-
-    def execute(self, module, input):
-        urllib2.urlopen("http://192.168.0.40:5000/reload").read()
-        postUpdate("Scene7", OFF)
-
-
-@rule("scenes_common.py")
-class WakeupRule:
-    def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("Scene8")]
-
-    def execute(self, module, input):
-        if getItemState("Scene8") == OFF:
-            urllib2.urlopen("http://192.168.0.40:5000/sleep").read()
-        else:
-            urllib2.urlopen("http://192.168.0.40:5000/wakeup").read()
-
-
-@rule("scenes_common.py")
-class ThemeRule:
-    def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("Scene9")]
-
-    def execute(self, module, input):
-        if getItemState("Scene9") == OFF:
-            urllib2.urlopen("http://192.168.0.40:5000/disableLightTheme").read()
-        else:
-            urllib2.urlopen("http://192.168.0.40:5000/enableLightTheme").read()
+# Scene7, Scene8 & Scene9 => is handled in tablet.py

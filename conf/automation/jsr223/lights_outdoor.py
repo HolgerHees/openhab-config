@@ -29,7 +29,6 @@ class MotiondetectorOutdoorSwitchSleepingRule:
 @rule("lights_outdoor.py")
 class MotiondetectorOutdoorSwitchRule:
     def __init__(self):
-        # must be ItemStateChangeTrigger, because it is a physical KNX Button
         self.triggers = [ItemStateChangeTrigger("Motiondetector_Outdoor_Switch")]
 
     def execute(self, module, input):
@@ -49,8 +48,7 @@ class MotiondetectorOutdoorSwitchRule:
                 sendCommand("Light_Outdoor_Terrace",0)
                 sendCommand("Light_Outdoor_Garage_Gardenside",OFF)
 
-            ruleTimeouts["Motiondetector_Outdoor_Individual_Switches"] = now
-
+            #ruleTimeouts["Motiondetector_Outdoor_Individual_Switches"] = now
             postUpdate("Motiondetector_Outdoor_Garage_Streetside_Switch",itemState)
             postUpdate("Motiondetector_Outdoor_Frontdoor_Switch",itemState)
             postUpdate("Motiondetector_Outdoor_Carport_Switch",itemState)
@@ -63,39 +61,38 @@ class MotiondetectorOutdoorSwitchRule:
 class MotiondetectorOutdoorIndividualSwitchRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("Motiondetector_Outdoor_Garage_Streetside_Switch"),
-            ItemStateChangeTrigger("Motiondetector_Outdoor_Frontdoor_Switch"),
-            ItemStateChangeTrigger("Motiondetector_Outdoor_Carport_Switch"),
-            ItemStateChangeTrigger("Motiondetector_Outdoor_Terrace_Switch"),
-            ItemStateChangeTrigger("Motiondetector_Outdoor_Garage_Gardenside_Switch")
+            ItemCommandTrigger("Motiondetector_Outdoor_Garage_Streetside_Switch"),
+            ItemCommandTrigger("Motiondetector_Outdoor_Frontdoor_Switch"),
+            ItemCommandTrigger("Motiondetector_Outdoor_Carport_Switch"),
+            ItemCommandTrigger("Motiondetector_Outdoor_Terrace_Switch"),
+            ItemCommandTrigger("Motiondetector_Outdoor_Garage_Gardenside_Switch")
         ]
 
     def execute(self, module, input):
         global ruleTimeouts
         now = getNow().getMillis()
         
-        last = ruleTimeouts.get("Motiondetector_Outdoor_Individual_Switches",0)
+        #last = ruleTimeouts.get("Motiondetector_Outdoor_Individual_Switches",0)
+        #if now - last > 1000:
+        ruleTimeouts["Motiondetector_Outdoor_Main_Switch"] = now
+        ruleTimeouts["Light_Outdoor"] = now
+
+        itemName = input['event'].getItemName()
+        itemCommand = input['event'].getItemCommand()
         
-        if now - last > 1000:
-            ruleTimeouts["Motiondetector_Outdoor_Main_Switch"] = now
-            ruleTimeouts["Light_Outdoor"] = now
+        switchState = ON
+        for i, entry in enumerate(manualMappings):
+            if entry[1] == itemName:
+                sendCommandIfChanged(entry[0],OFF)
+                if itemCommand == OFF:
+                    switchState = OFF
+            else:
+                if getItemState(entry[1]) == OFF:
+                    switchState = OFF
+                    
+        sendCommandIfChanged("Motiondetector_Outdoor_Switch",switchState)
 
-            itemName = input['event'].getItemName()
-            itemState = input['event'].getItemState()
-            
-            switchState = ON
-            for i, entry in enumerate(manualMappings):
-                if entry[1] == itemName:
-                    sendCommandIfChanged(entry[0],OFF)
-                    if itemState == OFF:
-                        switchState = OFF
-                else:
-                    if getItemState(entry[1]) == OFF:
-                        switchState = OFF
-                        
-            sendCommandIfChanged("Motiondetector_Outdoor_Switch",switchState)
-
-            #self.log.info(u"{} {} {} {} {} ".format(gs,f,c,t,gg))
+        #self.log.info(u"{} {} {} {} {} ".format(gs,f,c,t,gg))
         
 # Light Control Events
 @rule("lights_outdoor.py")
@@ -127,7 +124,7 @@ class LightOutdoorControlRule:
             
             for i, entry in enumerate(manualMappings):
                 if entry[0] == itemName:
-                    ruleTimeouts["Motiondetector_Outdoor_Individual_Switches"] = now
+                    #ruleTimeouts["Motiondetector_Outdoor_Individual_Switches"] = now
                     if postUpdateIfChanged(entry[1],OFF):
                         ruleTimeouts["Motiondetector_Outdoor_Main_Switch"] = now
                         sendCommandIfChanged("Motiondetector_Outdoor_Switch",OFF)
