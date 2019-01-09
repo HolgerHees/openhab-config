@@ -450,8 +450,11 @@ class HeatingHelper:
         return round( _totalChargeLevel, 1 ) if _totalChargeLevel > 0.0 else 0.0
 
     def _useLivingroomReference( self, currentBedroomTemp, currentLivingroomTemp ):
+        livingroomTarget = getItemState("Heating_Temperature_Livingroom_Target").doubleValue()
+        if livingroomTarget >= currentLivingroomTemp:
+            return True
+        livingroomDiff = livingroomTarget - currentLivingroomTemp
         bedroomDiff = getItemState("Heating_Temperature_Bedroom_Target").doubleValue() - currentBedroomTemp
-        livingroomDiff = getItemState("Heating_Temperature_Livingroom_Target").doubleValue() - currentLivingroomTemp
         return livingroomDiff > bedroomDiff
     
     def calculcateCurrentChargeLevel(self, totalChargeLevel, baseHeatingPower, heatingTarget, outdoorReduction, currentLivingroomTemp, currentBedroomTemp ):        
