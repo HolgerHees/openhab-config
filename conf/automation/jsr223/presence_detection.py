@@ -35,9 +35,9 @@ class PresenceCheckRule:
 #class UnexpectedMotionRule:
 #    def __init__(self):
 #        self.triggers = [
-#            ItemStateChangeTrigger("Motiondetector_FF_Floor","OPEN"),
-#            ItemStateChangeTrigger("Motiondetector_FF_Livingroom","OPEN"),
-#            ItemStateChangeTrigger("Motiondetector_SF_Floor","OPEN")
+#            ItemStateChangeTrigger("Motiondetector_FF_Floor",state="OPEN"),
+#            ItemStateChangeTrigger("Motiondetector_FF_Livingroom",state="OPEN"),
+#            ItemStateChangeTrigger("Motiondetector_SF_Floor",state="OPEN")
 #        ]
 
 #    def execute(self, module, input):
@@ -48,11 +48,11 @@ class PresenceCheckRule:
 class WakeupRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("Motiondetector_FF_Floor","OPEN"),
-            ItemStateChangeTrigger("Motiondetector_FF_Livingroom","OPEN"),
-            ItemStateChangeTrigger("Motiondetector_SF_Floor","OPEN"),
-            ItemStateChangeTrigger("Lights_FF","ON"),
-            ItemStateChangeTrigger("Shutters_FF","0")
+            ItemStateChangeTrigger("Motiondetector_FF_Floor",state="OPEN"),
+            ItemStateChangeTrigger("Motiondetector_FF_Livingroom",state="OPEN"),
+            ItemStateChangeTrigger("Motiondetector_SF_Floor",state="OPEN"),
+            ItemStateChangeTrigger("Lights_FF",state="ON"),
+            ItemStateChangeTrigger("Shutters_FF",state="0")
         ]
 
     def execute(self, module, input):
@@ -63,7 +63,7 @@ class WakeupRule:
 @rule("presence_detection.py") 
 class SleepingRule:
     def __init__(self):
-        self.triggers = [ ItemStateChangeTrigger("Scene4","ON") ]
+        self.triggers = [ ItemStateChangeTrigger("Scene4",state="ON") ]
 
     def execute(self, module, input):
         if getItemState("State_Presence").intValue() == 1:

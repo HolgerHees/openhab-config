@@ -4,7 +4,7 @@ from core.triggers import ItemStateChangeTrigger
 @rule("rollershutter_auto.py")
 class RollershutterCleanupRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("Auto_Rollershutter", "OFF")]
+        self.triggers = [ItemStateChangeTrigger("Auto_Rollershutter", state="OFF")]
 
     def execute(self, module, input):
         postUpdate("Auto_Sunprotection", OFF)

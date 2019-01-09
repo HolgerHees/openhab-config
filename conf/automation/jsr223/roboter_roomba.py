@@ -130,7 +130,7 @@ class RoombaUpdateCommandRule:
 @rule("roboter_roomba.py")
 class RoombaBinFullNotificationRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("roomba_full", "ON")]
+        self.triggers = [ItemStateChangeTrigger("roomba_full", state="ON")]
 
     def execute(self, module, input):
         sendNotification("Roomba", u"Behälter ist voll")
@@ -139,7 +139,7 @@ class RoombaBinFullNotificationRule:
 @rule("roboter_roomba.py")
 class RoombaErrorNotificationRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("roomba_error", "ON")]
+        self.triggers = [ItemStateChangeTrigger("roomba_error", state="ON")]
 
     def execute(self, module, input):
         sendNotification("Roomba", u"Es ist ein Fehler aufgetreten")

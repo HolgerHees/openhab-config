@@ -6,7 +6,7 @@ from core.triggers import ItemCommandTrigger
 # watch tv
 class Scene1Rule:
     def __init__(self):
-        self.triggers = [ItemCommandTrigger("Scene1","ON")]
+        self.triggers = [ItemCommandTrigger("Scene1",command="ON")]
 
     def execute(self, module, input):
         sendCommand("Light_FF_Livingroom_Hue_Brightness", 60)
@@ -28,7 +28,7 @@ class Scene1Rule:
 # wakeup
 class Scene2Rule:
     def __init__(self):
-        self.triggers = [ItemCommandTrigger("Scene2","ON")]
+        self.triggers = [ItemCommandTrigger("Scene2",command="ON")]
 
     def execute(self, module, input):
         sendCommand("Light_FF_Floor_Ceiling", ON)
@@ -43,7 +43,7 @@ class Scene2Rule:
 # go to bed
 class Scene3Rule:
     def __init__(self):
-        self.triggers = [ItemCommandTrigger("Scene3","ON")]
+        self.triggers = [ItemCommandTrigger("Scene3",command="ON")]
 
     def execute(self, module, input):
         sendCommand("Light_FF_Floor_Hue_Brightness", 60)
@@ -70,7 +70,7 @@ class Scene3Rule:
 @rule("scenes_common.py")
 class Scene5Rule:
     def __init__(self):
-        self.triggers = [ItemCommandTrigger("Scene5","ON")]
+        self.triggers = [ItemCommandTrigger("Scene5",command="ON")]
 
     def execute(self, module, input):
         sendCommand("Motiondetector_Outdoor_Carport_Switch", OFF)
@@ -85,7 +85,7 @@ class Scene5Rule:
 @rule("scenes_common.py")
 class Scene6Rule:
     def __init__(self):
-        self.triggers = [ItemCommandTrigger("Scene6","ON")]
+        self.triggers = [ItemCommandTrigger("Scene6",command="ON")]
 
     def execute(self, module, input):
         if getItemState("TV_Online") == ON:
