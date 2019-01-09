@@ -495,8 +495,8 @@ class HeatingHelper:
                     self.log.info(u"Cleanup : Reference to {} and Charged to {} adjusted".format(_currentTemp,_currentChargeLevel) )
                 postUpdate("Heating_Reference", _currentTemp )
         else:
-            HeatingHelper.lastReferenceSource = _currentSource
             postUpdate("Heating_Reference", _currentTemp )
+            HeatingHelper.lastReferenceSource = _currentSource
         
         return _currentChargeLevel
     
@@ -796,7 +796,7 @@ class HeatingCheckRule(HeatingHelper):
                 else:
                     # it is too warm inside, but outside it is very cold, so we need some buffer heating to avoid cold floors
                     # should always be calculated with all rooms ON and maxSlotHeatingPower
-                    forceBufferHeating = self.forcedBufferHeatingCheck( now, isHeatingActive, lastHeatingChange, maxSlotHeatingPower, availableHeatingPowerPerMinute, additionalChargeLevel )
+                    forceBufferHeating = self.forcedBufferHeatingCheck( now, isHeatingActive, lastHeatingChange, maxSlotHeatingPower, availableHeatingPowerPerMinute, additionalChargeLevel, currentLivingroomTemp )
                 
                     if forceBufferHeating:
                         heatingDemand = 1
@@ -988,12 +988,12 @@ class HeatingCheckRule(HeatingHelper):
 
         return round( targetBufferChargeLevel, 1 ), lastUpdateBeforeInMinutes
 
-    def forcedBufferHeatingCheck( self, now, isHeatingActive, lastHeatingChange, slotHeatingPower, availableHeatingPowerPerMinute, additionalChargeLevel ):
+    def forcedBufferHeatingCheck( self, now, isHeatingActive, lastHeatingChange, slotHeatingPower, availableHeatingPowerPerMinute, additionalChargeLevel, currentLivingroomTemp ):
 
         if isHeatingActive:
             if self.forcedBufferReferenceTemperature != None:
                 # Room is warming up, so we have to stop previously forced checks
-                if self.forcedBufferReferenceTemperature < getItemState("Heating_Reference").doubleValue():
+                if self.forcedBufferReferenceTemperature < currentLivingroomTemp:
                     self.log.info(u"        : Stop forced buffer • room is warming up" )
                     self.forcedBufferReferenceTemperature = None
                 else:
@@ -1028,7 +1028,7 @@ class HeatingCheckRule(HeatingHelper):
                 # heating was active in the past 20 hours
                 else:
                     self.log.info(u"        : Force buffer • {} W in {} min. • prevent cold floors".format(targetBufferChargeLevel,heatingMinutes))
-                    self.forcedBufferReferenceTemperature = getItemState("Heating_Reference").doubleValue()
+                    self.forcedBufferReferenceTemperature = currentLivingroomTemp
                     self.forcedBufferReferenceDate = lastHeatingChange
             else:
                 # Last heating older then 24 hours, but still no heating needed. Maybe maxBuffer low.
