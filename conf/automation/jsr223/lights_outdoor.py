@@ -19,7 +19,7 @@ ruleTimeouts = {}
 @rule("lights_outdoor.py")
 class MotiondetectorOutdoorSwitchSleepingRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("State_Presence","2")]
+        self.triggers = [ItemStateChangeTrigger("State_Presence",state="2")]
         
     def execute(self, module, input):
         sendCommandIfChanged("Motiondetector_Outdoor_Switch", ON)
@@ -139,7 +139,7 @@ class MotionDetectorRule:
         self.triggerMappings = {}
         for i, entry in enumerate(manualMappings):
             if entry[2] is not None:
-                self.triggers.append(ItemStateChangeTrigger(entry[2],"OPEN"))
+                self.triggers.append(ItemStateChangeTrigger(entry[2],state="OPEN"))
                 self.triggerMappings[entry[2]]=i
 
     def callback(self,entry):
@@ -178,8 +178,8 @@ class MotionDetectorRule:
 class TerasseMotionDetectorRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("Motiondetector_Outdoor_Terrace1","OPEN"),
-            ItemStateChangeTrigger("Motiondetector_Outdoor_Terrace2","OPEN")
+            ItemStateChangeTrigger("Motiondetector_Outdoor_Terrace1",state="OPEN"),
+            ItemStateChangeTrigger("Motiondetector_Outdoor_Terrace2",state="OPEN")
         ]
 
     def callback(self):
