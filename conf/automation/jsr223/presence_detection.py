@@ -26,8 +26,8 @@ class PresenceCheckRule:
         else:
             if getItemState("State_Presence").intValue() != 0:
                 postUpdate("State_Presence",0)
-                lightMsg = u"- LICHT an" if getItemState("Lights_Indoor") != OFF else u""
-                windowMsg = u"- FENSTER offen" if getItemState("Openingcontacts") != CLOSED else u""
+                lightMsg = u" - LICHT an" if getItemState("Lights_Indoor") != OFF else u""
+                windowMsg = u" - FENSTER offen" if getItemState("Openingcontacts") != CLOSED else u""
 
                 sendNotification(u"Tür", u"Auf Wiedersehen{}{}".format(lightMsg,windowMsg))
 
