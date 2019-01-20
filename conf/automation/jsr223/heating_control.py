@@ -10,6 +10,7 @@ from core.actions import Transformation
 OFFSET_FORMATTER = DateTimeFormat.forPattern("HH:mm")
 
 BEDROOM_REDUCTION = 2.5
+NIGHT_REDUCTION = 2.0
 MIN_HEATING_TIME = 15 # 'Heizen mit WW' should be active at least for 15 min.
 MIN_ONLY_WW_TIME = 15 # 'Nur WW' should be active at least for 15 min.
 LAZY_OFFSET = 90 # Offset time until any heating has an effect
@@ -20,7 +21,8 @@ class HeatingHelper:
     openFFContacts = None
     openSFContacts = None
     lastReferenceSource = None
-    
+    lastReferenceValue = 0.0
+     
     def getStableValue( self, now, itemName, checkTimeRange, cached = False ):
         
         cacheKey = u"{}-{}".format(itemName,checkTimeRange)
@@ -379,7 +381,7 @@ class HeatingHelper:
         upperPower = _upperFloorPower + _upperAirPower
         
         neededPower = lowerPower + upperPower
-
+        
         maxPower = neededPower
         
         # remove inactive rooms from needed power to exclude their effects from further calculation
@@ -454,46 +456,40 @@ class HeatingHelper:
             return True
         livingroomDiff = livingroomTarget - currentLivingroomTemp
         bedroomDiff = bedroomTarget - currentBedroomTemp
-        return livingroomDiff > bedroomDiff
+        return livingroomDiff >= bedroomDiff
     
-    def calculcateCurrentChargeLevel(self, totalChargeLevel, baseHeatingPower, outdoorReduction, currentLivingroomTemp, currentBedroomTemp ):        
+    def calculcateCurrentChargeLevel(self, totalChargeLevel, baseHeatingPower, heatingTargetLivingroomTemp, currentLivingroomTemp, heatingTargetBedroomTemp, currentBedroomTemp, outdoorReduction ):        
         _currentChargeLevel = totalChargeLevel
-
-        # We have to calculate with cleaned values also if the "CalculateChargeLevelRule" was not cleaning it right now
-        _referenceTemp = getItemState("Heating_Reference").doubleValue()
-
-        _livingroomTarget = getItemState("Heating_Temperature_Livingroom_Target").doubleValue()
-        _bedroomTarget = getItemState("Heating_Temperature_Bedroom_Target").doubleValue()
         
-        _useLivingroomReference = self._useLivingroomReference( currentBedroomTemp, _bedroomTarget, currentLivingroomTemp, _livingroomTarget )
+        # heatingTargetLivingroomTemp and heatingTargetBedroomTemp must be without night reduction,
+        # that why we can't use stored target values like Heating_Temperature_Livingroom_Target and Heating_Temperature_Bedroom_Target
+        # we need this, because all upcoming calculations should not consider night reduction
+
+        _useLivingroomReference = self._useLivingroomReference( currentBedroomTemp, heatingTargetBedroomTemp, currentLivingroomTemp, heatingTargetLivingroomTemp )
         _currentSource = "Temperature_FF_Livingroom" if _useLivingroomReference else "Temperature_SF_Bedroom"
         _currentTemp = currentLivingroomTemp if _useLivingroomReference else currentBedroomTemp
-        _targetTemp = _livingroomTarget if _useLivingroomReference else _bedroomTarget
+        _targetTemp = heatingTargetLivingroomTemp if _useLivingroomReference else heatingTargetBedroomTemp
 
         if HeatingHelper.lastReferenceSource == _currentSource:
-            if _currentTemp > _referenceTemp:
-                _heatedUpTempDiff = _currentTemp - _referenceTemp
+            if _currentTemp > HeatingHelper.lastReferenceValue:
+                _heatedUpTempDiff = _currentTemp - HeatingHelper.lastReferenceValue
                 _currentChargeLevel = self._cleanupChargeLevel( _currentChargeLevel, baseHeatingPower * _heatedUpTempDiff )
         
-        _heatingTargetDiff = _targetTemp - _currentTemp - outdoorReduction
-        if _heatingTargetDiff < 0.0: _heatingTargetDiff = 0.0
-        _neededHeatingPower = round( baseHeatingPower * _heatingTargetDiff, 1 )
+        _targetTemperatureDiff = _targetTemp - _currentTemp - outdoorReduction
+        if _targetTemperatureDiff < 0.0: _targetTemperatureDiff = 0.0
+        _neededHeatingPower = baseHeatingPower * _targetTemperatureDiff
 
         ### Energy available after lazy charge calculation 
-        _additionalChargeLevel = round( _currentChargeLevel - _neededHeatingPower, 1 )
-        if _additionalChargeLevel < 0.0: _additionalChargeLevel = 0.0
-
-        ### Needed energy to reach target
-        _missingChargeLevel = round( _neededHeatingPower - _currentChargeLevel, 1 )
-        if _missingChargeLevel < 0.0: _missingChargeLevel = 0.0
+        _targetChargeLevelDiff = round( _currentChargeLevel - _neededHeatingPower, 1 )
         
-        return _currentChargeLevel, _additionalChargeLevel, _missingChargeLevel
+        #self.log.info(u"        : => TARGET: {}°C, CURRENT: {}°C, DIFF: {}°C".format(_targetTemp,_currentTemp,_targetTemperatureDiff))
+        #self.log.info(u"        : => LEVEL: {} W, ADD: {} W, MISS: {} W".format(_currentChargeLevel, _targetChargeLevelDiff, _missingChargeLevel))
+
+        return _currentChargeLevel, _targetChargeLevelDiff
 
     def calculateAdjustedTotalChargeLevel( self, now, baseHeatingPower, currentBedroomTemp, currentLivingroomTemp ):
         _currentChargeLevel = getItemState("Heating_Charged").doubleValue()
 
-        _referenceTemp = getItemState("Heating_Reference").doubleValue()
-        
         _livingroomTarget = getItemState("Heating_Temperature_Livingroom_Target").doubleValue()
         _bedroomTarget = getItemState("Heating_Temperature_Bedroom_Target").doubleValue()
 
@@ -502,18 +498,18 @@ class HeatingHelper:
         _currentTemp = self.getStableValue( now, _currentSource, 20 )
         
         if HeatingHelper.lastReferenceSource == _currentSource:
-            if _currentTemp != _referenceTemp:
-                if _currentTemp < _referenceTemp:
+            if _currentTemp != HeatingHelper.lastReferenceValue:
+                if _currentTemp < HeatingHelper.lastReferenceValue:
                     self.log.info(u"Cleanup : Reference to {} adjusted".format(_currentTemp) )
-                elif _currentTemp > _referenceTemp:
-                    _heatedUpTempDiff = _currentTemp - _referenceTemp
+                elif _currentTemp > HeatingHelper.lastReferenceValue:
+                    _heatedUpTempDiff = _currentTemp - HeatingHelper.lastReferenceValue
                     _currentChargeLevel = self._cleanupChargeLevel( _currentChargeLevel, baseHeatingPower * _heatedUpTempDiff )
                     self.log.info(u"Cleanup : Reference to {} and Charged to {} adjusted".format(_currentTemp,_currentChargeLevel) )
-                postUpdate("Heating_Reference", _currentTemp )
         else:
-            postUpdate("Heating_Reference", _currentTemp )
             HeatingHelper.lastReferenceSource = _currentSource
         
+        HeatingHelper.lastReferenceValue = _currentTemp
+
         return _currentChargeLevel
     
     def logPowerAdjustments( self, currentCoolingPowerPerMinute, maxCoolingPowerPerMinute, currentHeatingPowerPerMinute, maxHeatingPowerPerMinute, baseHeatingPower, maxHeatingPower ):
@@ -682,6 +678,8 @@ class HeatingCheckRule(HeatingHelper):
             currentOutdoorForecast8Temp = round( getItemState("Temperature_Garden_Forecast8").doubleValue(), 1 )
             
         heatingTarget = round( getItemState("Temperature_Room_Target").doubleValue(), 1 )
+        heatingTargetLivingroomTemp = round( heatingTarget, 1 )
+        heatingTargetBedroomTemp = round( heatingTarget - BEDROOM_REDUCTION, 1 )
 
         totalChargeLevel = round( getItemState("Heating_Charged").doubleValue(), 1 )
         
@@ -734,16 +732,21 @@ class HeatingCheckRule(HeatingHelper):
         availableHeatingPowerPerMinute = round( currentHeatingPowerPerMinute - currentCoolingPowerPerMinute, 1 )
 
         # Calculate the charge level adjusted by possible heated up 0.1°C levels
-        # currentChargeLevel - means the current house charge level
-        # additionalChargeLevel - Value higher than 0 means we have more energy than needed to reach our target temperature
-        # missingChargeLevel - Value higher than 0 means we need more energy to reach our target temperature
-        currentChargeLevel, additionalChargeLevel, missingChargeLevel = self.calculcateCurrentChargeLevel(totalChargeLevel, baseHeatingPower, outdoorReduction, currentLivingroomTemp, currentBedroomTemp )
+        # currentChargeLevel - the current house charge level
+        # targetChargeLevelDiff - target releated charge difference
+        #   - positive value means we have more energy than needed to reach our target temperature
+        #   - negavive value means we still need more energy to reach our target temperature
+        currentChargeLevel, targetChargeLevelDiff = self.calculcateCurrentChargeLevel(totalChargeLevel, baseHeatingPower, heatingTargetLivingroomTemp, currentLivingroomTemp, heatingTargetBedroomTemp, currentBedroomTemp, outdoorReduction)
     
         # Zone Level (BUFFER LEVEL) to stop buffer heating. Is based on cooling power.
         maxBufferChargeLevel = self.calculateMaxBufferChargeLevel( currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, slotHeatingPower )
 
-        heatingUpMinutes = int( round( missingChargeLevel / availableHeatingPowerPerMinute ) )
-        coolingDownMinutes = int( round( additionalChargeLevel / currentCoolingPowerPerMinute ) ) if currentCoolingPowerPerMinute > 0.0 else 0
+        if targetChargeLevelDiff >= 0:
+            heatingUpMinutes = 0
+            coolingDownMinutes = int( round( targetChargeLevelDiff / currentCoolingPowerPerMinute ) ) if currentCoolingPowerPerMinute > 0.0 else 0
+        else:
+            heatingUpMinutes = int( round( targetChargeLevelDiff * -1 / availableHeatingPowerPerMinute ) )
+            coolingDownMinutes = 0
 
         # Some log messages about charge values
         _timeToHeatSlot = int( round( slotHeatingPower / availableHeatingPowerPerMinute ) )
@@ -751,7 +754,7 @@ class HeatingCheckRule(HeatingHelper):
         self.log.info(u"Slot    : {} KW/K • {} W/0.1K • {} min. ⇧".format(_baseHeatingPowerInKW,slotHeatingPower,_timeToHeatSlot ) )
 
         _timeToHeatBuffer = int( round( maxBufferChargeLevel / availableHeatingPowerPerMinute ) )
-        _bufferFilledInPercent = int( round( additionalChargeLevel * 100 / maxBufferChargeLevel, 0 ) )
+        _bufferFilledInPercent = int( round( targetChargeLevelDiff * 100 / maxBufferChargeLevel, 0 ) ) if targetChargeLevelDiff > 0 else 0
         self.log.info(u"Buffer  : {}% filled • {} W ... {} W • {} min. ⇧".format( _bufferFilledInPercent, minBufferChargeLevel, maxBufferChargeLevel, _timeToHeatBuffer) )
 
         _totalLazyChargeMsg = u" ({} W)".format(totalChargeLevel) if currentChargeLevel != totalChargeLevel else u""
@@ -760,38 +763,45 @@ class HeatingCheckRule(HeatingHelper):
         else:
             chargeMsg = u"{} min. ⇩".format(coolingDownMinutes)
         self.log.info(u"Charged : {} W{} total incl. buffer • {}".format( currentChargeLevel, _totalLazyChargeMsg, chargeMsg) )
-          
+        
         # Calculate reduction based on available energy (=> Calculation of currentChargeLevel) to lazy warmup the house later
         # EXPECTED WARMUP TO REACH TARGET.
         # Here we calculate lazy reduction to reach 'referenceTargetDiff == 0' earlier        
-        # Then we are able to check with 'isBufferHeating' if additionalChargeLevel is enough to stop heating 
-        # - 0.03 means must be 0.08 to be rounded to 0.1
-        lazyReduction = round( ( ( currentChargeLevel - additionalChargeLevel ) / baseHeatingPower ) - 0.03, 1 )
+        # Then we are able to check with 'isBufferHeating' if targetChargeLevelDiff is enough to stop heating 
+        # + 0.005 to avoid issues based on rounded values like for 0.09999910401 or 0.198695885991 (4433.7 , 2231.4 base )
+        # can happen because currentChargeLevel and targetChargeLevelDiff are already rounded values and baseHeatingPower not
+        _lazyChargedLevel = currentChargeLevel - ( targetChargeLevelDiff if targetChargeLevelDiff > 0 else 0 )
+        #self.log.info(u"{} {} {}".format(_lazyChargedLevel,(_lazyChargedLevel / slotHeatingPower * 0.1),(_lazyChargedLevel / baseHeatingPower)))
+        lazyReduction = math.floor( ( ( _lazyChargedLevel / baseHeatingPower ) + 0.005 ) * 10.0 ) / 10.0
         #lazyReduction = 0.0 if isBufferHeatingNeeded else math.floor( _possibleLazyReduction * 10.0 ) / 10.0
+        
+        # 
         
         # Calculate night reduction
         # Night reduction start is earlier on higher coolingDownMinutes
         # and night reduction stops earlier on higher heatingUpMinutes
         nightReduction = self.calculateNightReduction( now, isHeatingActive, coolingDownMinutes, heatingUpMinutes)
-        
+
         # Calculate wanted target temperatures in livingroom and bedroom based on night reduction and bedroom/livingroom offset
-        targetLivingroomTemp, targetBedroomTemp = self.calculateTargetTemperatures( heatingTarget, nightReduction)
+        _heatingTargetLivingroomTemp = heatingTargetLivingroomTemp
         
-        # Calculate missing degrees to reach target temperature
-        heatingTargetDiff = self.getHeatingTargetDiff( currentLivingroomTemp, targetLivingroomTemp, currentBedroomTemp, targetBedroomTemp )
-        
+        heatingTargetLivingroomTemp -= nightReduction
+        heatingTargetBedroomTemp -= nightReduction
+        postUpdateIfChanged("Heating_Temperature_Livingroom_Target", heatingTargetLivingroomTemp )
+        postUpdateIfChanged("Heating_Temperature_Bedroom_Target", heatingTargetBedroomTemp )
+
         # Some logs
         self.log.info(u"Effects : LR {}° ⇩ • OR {}°C ⇩ • NR {}°C ⇩ • LRC {}".format(lazyReduction,outdoorReduction,nightReduction,currentLivingRoomCircuit ))
-        self.log.info(u"Rooms   : Living {}°C (⇒ {}°C) • Sleeping {}°C (⇒ {}°C)".format(currentLivingroomTemp,targetLivingroomTemp,currentBedroomTemp,targetBedroomTemp))
+        self.log.info(u"Rooms   : Living {}°C (⇒ {}°C) • Sleeping {}°C (⇒ {}°C)".format(currentLivingroomTemp,heatingTargetLivingroomTemp,currentBedroomTemp,heatingTargetBedroomTemp))
                
         # prepare for wakeup. is needed to calculate correct night end time and force buffer time in the morning
         # use possible night mode reduced temp if night mode is not ending during the next 4 hours 
         # otherwise use normal temp
-        referenceTarget = targetLivingroomTemp if self.isNightModeTime(now.plusMinutes(240)) else heatingTarget
+        referenceTarget = heatingTargetLivingroomTemp if self.isNightModeTime(now.plusMinutes(240)) else _heatingTargetLivingroomTemp
         newLivingRoomCircuit = currentLivingRoomCircuit
         # Switch livingroom circuit off if it is too warm
         if isLivingRoomCircuitActive:
-            if currentLivingroomTemp > referenceTarget + 0.2:
+            if currentLivingroomTemp >= referenceTarget + 0.2:
                 newLivingRoomCircuit = OFF
                 #newLivingRoomCircuit = ON
         elif currentLivingroomTemp <= referenceTarget:
@@ -805,6 +815,9 @@ class HeatingCheckRule(HeatingHelper):
             ### Check heating demand
             if openWindow15["ffCount"] + openWindow15["sfCount"] < 2:
 
+                # Calculate missing degrees to reach target temperature
+                heatingTargetDiff = self.getHeatingTargetDiff( currentLivingroomTemp, heatingTargetLivingroomTemp, currentBedroomTemp, heatingTargetBedroomTemp )
+                
                 referenceTargetDiff = round( heatingTargetDiff - lazyReduction - outdoorReduction, 1 )
                 
                 if referenceTargetDiff > 0:
@@ -813,7 +826,7 @@ class HeatingCheckRule(HeatingHelper):
                 else:
                     # it is too warm inside, but outside it is very cold, so we need some buffer heating to avoid cold floors
                     # should always be calculated with all rooms ON and maxSlotHeatingPower
-                    forceBufferHeating = self.forcedBufferHeatingCheck( now, isHeatingActive, lastHeatingChange, maxSlotHeatingPower, availableHeatingPowerPerMinute, additionalChargeLevel, currentLivingroomTemp )
+                    forceBufferHeating = self.forcedBufferHeatingCheck( now, isHeatingActive, lastHeatingChange, maxSlotHeatingPower, availableHeatingPowerPerMinute, targetChargeLevelDiff, currentLivingroomTemp )
                 
                     if forceBufferHeating:
                         heatingDemand = 1
@@ -822,7 +835,7 @@ class HeatingCheckRule(HeatingHelper):
                         newLivingRoomCircuit = ON
                     elif referenceTargetDiff == 0.0:
                         # Check if buffer heating is needed
-                        isBufferHeatingNeeded = self.isBufferHeating( isHeatingActive, additionalChargeLevel, minBufferChargeLevel, maxBufferChargeLevel )
+                        isBufferHeatingNeeded = self.isBufferHeating( isHeatingActive, targetChargeLevelDiff, minBufferChargeLevel, maxBufferChargeLevel )
         
                         if isBufferHeatingNeeded:
                             heatingDemand = 1
@@ -858,13 +871,6 @@ class HeatingCheckRule(HeatingHelper):
         bedroomDifference = targetBedroomTemp - currentBedroomTemp
         difference = livingroomDifference if livingroomDifference > bedroomDifference else bedroomDifference
         return round( difference, 1 )
-
-    def calculateTargetTemperatures(self, heatingTarget, nightReduction):
-        _targetLivingroomTemp = round( heatingTarget - nightReduction, 1 )
-        _targetBedroomTemp = round( heatingTarget - nightReduction - BEDROOM_REDUCTION, 1 )
-        postUpdateIfChanged("Heating_Temperature_Livingroom_Target", _targetLivingroomTemp )
-        postUpdateIfChanged("Heating_Temperature_Bedroom_Target", _targetBedroomTemp )
-        return _targetLivingroomTemp, _targetBedroomTemp
 
     def getOutdoorDependingReduction( self, coolingPowerPerMinute ):
         # more than zeor means cooling => no reduction
@@ -946,12 +952,12 @@ class HeatingCheckRule(HeatingHelper):
         else:
             if not nightModeActive:
                 startOffset = coolingDownMinutes if coolingDownMinutes > 0 else 0
-
-                minStartOffset = int( round( MIN_HEATING_TIME / 3.0 ) ) + LAZY_OFFSET
+                
+                #minStartOffset = int( round( MIN_HEATING_TIME / 3.0 ) ) + LAZY_OFFSET
                 
                 # if heating not active, check if the night mode is far enough for a new heating cycle
-                if not isHeatingActive and startOffset < minStartOffset:
-                    startOffset = minStartOffset
+                if not isHeatingActive and startOffset < LAZY_OFFSET:
+                    startOffset = LAZY_OFFSET
 
                 reference = reference.plusMinutes( startOffset )
                 _isNightMode = self.isNightModeTime(reference)
@@ -966,7 +972,7 @@ class HeatingCheckRule(HeatingHelper):
 
     def calculateNightReduction(self, now, isHeatingActive, coolingDownMinutes, heatingUpMinutes):
         self.nightModeActive = self.isNightMode(  now, isHeatingActive, coolingDownMinutes, heatingUpMinutes, self.nightModeActive )
-        return 2.0 if self.nightModeActive else 0.0
+        return NIGHT_REDUCTION if self.nightModeActive else 0.0
       
     def calculateMaxBufferChargeLevel(self, currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute,slotHeatingPower):
         if currentCoolingPowerPerMinute > 0.0 and currentForecast4CoolingPowerPerMinute > 0.0:
@@ -1005,7 +1011,7 @@ class HeatingCheckRule(HeatingHelper):
 
         return round( targetBufferChargeLevel, 1 ), lastUpdateBeforeInMinutes
 
-    def forcedBufferHeatingCheck( self, now, isHeatingActive, lastHeatingChange, slotHeatingPower, availableHeatingPowerPerMinute, additionalChargeLevel, currentLivingroomTemp ):
+    def forcedBufferHeatingCheck( self, now, isHeatingActive, lastHeatingChange, slotHeatingPower, availableHeatingPowerPerMinute, currentBufferChargeLevel, currentLivingroomTemp ):
 
         if isHeatingActive:
             if self.forcedBufferReferenceTemperature != None:
@@ -1020,7 +1026,7 @@ class HeatingCheckRule(HeatingHelper):
                         targetBufferChargeLevel = slotHeatingPower
                     
                     # Too much forced heating > 90 minutes
-                    if additionalChargeLevel > targetBufferChargeLevel:
+                    if currentBufferChargeLevel > targetBufferChargeLevel:
                         self.log.info(u"        : Stop forced buffer • buffer limit reached" )
                         self.forcedBufferReferenceTemperature = None
                     else:

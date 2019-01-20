@@ -1,4 +1,4 @@
-from marvin.helper import log, rule, createTimer, itemLastUpdateNewerThen, getNow, getFilteredChildItems, getGroupMember, getItemLastUpdate, getItemState, postUpdate, postUpdateIfChanged, sendCommand, sendNotification, getItemLastUpdate
+from marvin.helper import log, rule, createTimer, itemLastUpdateOlderThen, itemLastUpdateNewerThen, getNow, getFilteredChildItems, getGroupMember, getItemLastUpdate, getItemState, postUpdate, postUpdateIfChanged, sendCommand, sendNotification
 from core.triggers import ItemStateChangeTrigger
 
 
@@ -55,10 +55,12 @@ class WakeupRule:
             ItemStateChangeTrigger("Shutters_FF",state="0")
         ]
 
-    def execute(self, module, input):
+    def execute(self, module, input):        
         if getItemState("State_Presence").intValue() == 2:
-            if getItemState("TV_Online") == ON or getItemState("Lights_FF") == ON or getItemState("Shutters_FF") == PercentType.ZERO:
-                postUpdate("State_Presence", 1)
+            # sometimes the "Lights_FF" state switches back and forth for a couple of milliseconds when set "Lights_FF" state to OFF
+            if itemLastUpdateOlderThen("State_Presence",getNow().minusSeconds(5)):
+                if getItemState("TV_Online") == ON or getItemState("Lights_FF") == ON or getItemState("Shutters_FF") == PercentType.ZERO:
+                    postUpdate("State_Presence", 1)
 
 @rule("presence_detection.py") 
 class SleepingRule:
