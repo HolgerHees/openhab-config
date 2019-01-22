@@ -217,7 +217,7 @@ class HeatingHelper:
 
         return _activeRadiation, _activeRadiation, _effectiveSouthRadiation, _effectiveWestRadiation
        
-    def getOpenWindows( self, checkedTime, cached = False ):
+    def getOpenWindows( self, cached = False ):
         if cached == False or HeatingHelper.openSFContacts is None:
             # should be at least 2 minutes open
             initialReference = getNow().minusMinutes(2)
@@ -238,14 +238,7 @@ class HeatingHelper:
                     if sensor.getName() != "Window_SF_Attic" and sensor.getState() == OPEN and itemLastUpdateOlderThen(sensor,initialReference):
                         HeatingHelper.openSFContacts.append(sensor)
 
-        if checkedTime is not None:
-            _ffOpenWindowCount = filter(lambda window: itemLastUpdateOlderThen(window,checkedTime), HeatingHelper.openFFContacts)
-            _sfOpenWindowCount = filter(lambda window: itemLastUpdateOlderThen(window,checkedTime), HeatingHelper.openSFContacts)
-        else:
-            _ffOpenWindowCount = HeatingHelper.openFFContacts
-            _sfOpenWindowCount = HeatingHelper.openSFContacts
-            
-        return { "ffCount": len(_ffOpenWindowCount), "totalFfCount": 6, "sfCount": len(_sfOpenWindowCount), "totalSfCount": 5 }
+        return { "ffCount": len(HeatingHelper.openFFContacts), "totalFfCount": 6, "sfCount": len(HeatingHelper.openSFContacts), "totalSfCount": 5 }
 
     def getHeatingPowerPerMinute( self, activeRooms, pumpSpeed, temperature_Pipe_Out, temperature_Pipe_In):
         # To warmup 1 liter of wather you need 4,182 Kilojoule
@@ -565,7 +558,7 @@ class CalculateChargeLevelRule(HeatingHelper):
         activeRooms = { "livingroom": isLivingRoomCircuitActive }
 
         # Get current open windows
-        openWindow = self.getOpenWindows( None )
+        openWindow = self.getOpenWindows()
 
         # Calculate current cooling power per minute, based on temperature differences, sun power and open windows
         currentCoolingPowerPerMinute, sunPower, effectiveSouthRadiation, effectiveWestRadiation, maxCoolingPowerPerMinute = self.getCurrentCoolingPowerPerMinute( activeRooms, now, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, openWindow )
@@ -693,14 +686,20 @@ class HeatingCheckRule(HeatingHelper):
         activeRooms = { "livingroom": isLivingRoomCircuitActive }
 
         # Get current open windows and the ones during the last 15 min
-        openWindow = self.getOpenWindows( None, True )
-        openWindow15 = self.getOpenWindows( now.minusMinutes(15), True )
+        openWindow = self.getOpenWindows( True )
+        isLongOpenWindow = getItemState("Openingcontacts") == OPEN and itemLastUpdateOlderThen("Openingcontacts",now.minusMinutes(15))
+        if not isLongOpenWindow:
+            longOpenWindow = openWindow.copy()
+            longOpenWindow["ffCount"] = 0
+            longOpenWindow["sfCount"] = 0
+        else:
+            longOpenWindow = openWindow
 
         # Calculate cooling power in 8h
-        currentForecast8CoolingPowerPerMinute, maxForecast8CoolingPowerPerMinute = self.getCurrentForecastCoolingPowerPerMinute( 8, activeRooms, now, currentOutdoorTemp, currentOutdoorForecast8Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, openWindow15)
+        currentForecast8CoolingPowerPerMinute, maxForecast8CoolingPowerPerMinute = self.getCurrentForecastCoolingPowerPerMinute( 8, activeRooms, now, currentOutdoorTemp, currentOutdoorForecast8Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, longOpenWindow)
 
         # Calculate cooling power in 4h
-        currentForecast4CoolingPowerPerMinute, maxForecast4CoolingPowerPerMinute = self.getCurrentForecastCoolingPowerPerMinute( 4, activeRooms, now, currentOutdoorTemp, currentOutdoorForecast4Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, openWindow15)
+        currentForecast4CoolingPowerPerMinute, maxForecast4CoolingPowerPerMinute = self.getCurrentForecastCoolingPowerPerMinute( 4, activeRooms, now, currentOutdoorTemp, currentOutdoorForecast4Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, longOpenWindow)
 
         # Calculate current cooling power per minute, based on temperature differences, sun power and open windows
         currentCoolingPowerPerMinute, _, _, _, maxCoolingPowerPerMinute = self.getCurrentCoolingPowerPerMinute( activeRooms, now, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, openWindow )
@@ -775,8 +774,6 @@ class HeatingCheckRule(HeatingHelper):
         lazyReduction = math.floor( ( ( _lazyChargedLevel / baseHeatingPower ) + 0.005 ) * 10.0 ) / 10.0
         #lazyReduction = 0.0 if isBufferHeatingNeeded else math.floor( _possibleLazyReduction * 10.0 ) / 10.0
         
-        # 
-        
         # Calculate night reduction
         # Night reduction start is earlier on higher coolingDownMinutes
         # and night reduction stops earlier on higher heatingUpMinutes
@@ -811,9 +808,9 @@ class HeatingCheckRule(HeatingHelper):
         if getItemState("Heating_Auto_Mode").intValue() == 1:
             heatingDemand = 0
             heatingType = ""
-
+            
             ### Check heating demand
-            if openWindow15["ffCount"] + openWindow15["sfCount"] < 2:
+            if longOpenWindow["ffCount"] + longOpenWindow["sfCount"] < 2:
 
                 # Calculate missing degrees to reach target temperature
                 heatingTargetDiff = self.getHeatingTargetDiff( currentLivingroomTemp, heatingTargetLivingroomTemp, currentBedroomTemp, heatingTargetBedroomTemp )
