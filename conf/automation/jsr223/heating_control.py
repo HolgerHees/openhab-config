@@ -20,6 +20,8 @@ class HeatingHelper:
     outdatetForecast = None
     openFFContacts = None
     openSFContacts = None
+    longOpenFFContacts = {}
+    longOpenSFContacts = {}
     lastReferenceSource = None
     lastReferenceValue = 0.0
      
@@ -219,26 +221,60 @@ class HeatingHelper:
        
     def getOpenWindows( self, cached = False ):
         if cached == False or HeatingHelper.openSFContacts is None:
+            now = getNow()
             # should be at least 2 minutes open
-            initialReference = getNow().minusMinutes(2)
+            shortReference = now.minusMinutes(2)
+            longStartReference = now.minusMinutes(5)
+            longEndReference = now.minusMinutes(10)
             
-            HeatingHelper.openFFContacts = []
+            HeatingHelper.openFFContacts = {}
             if getItemState("Door_FF_Floor") == OPEN:
                 door = getItem("Door_FF_Floor")
-                if itemLastUpdateOlderThen(door,initialReference):
-                    HeatingHelper.openFFContacts.append(door)
+                if itemLastUpdateOlderThen(door,shortReference):
+                    HeatingHelper.openFFContacts[door.getName()] = door
+                
             if getItemState("Sensor_Window_FF") == OPEN:
                 for sensor in getGroupMember("Sensor_Window_FF"):
-                    if sensor.getName() != "Window_FF_Garage" and sensor.getState() == OPEN and itemLastUpdateOlderThen(sensor,initialReference):
-                        HeatingHelper.openFFContacts.append(sensor)
-
-            HeatingHelper.openSFContacts = []
+                    if sensor.getName() != "Window_FF_Garage" and sensor.getState() == OPEN and itemLastUpdateOlderThen(sensor,shortReference):
+                        HeatingHelper.openFFContacts[sensor.getName()] = sensor
+    
+            # add new contacts
+            for sensorName in set(HeatingHelper.openFFContacts) - set(HeatingHelper.longOpenFFContacts):
+                sensor = HeatingHelper.openFFContacts.get(sensorName)
+                if itemLastUpdateOlderThen(sensor,longStartReference):
+                    HeatingHelper.longOpenFFContacts[sensor.getName()] = sensor
+                    
+            # clean old contacts
+            for sensorName in set(HeatingHelper.longOpenFFContacts) - set(HeatingHelper.openFFContacts):
+                sensor = HeatingHelper.longOpenFFContacts.get(sensorName)
+                if itemLastUpdateOlderThen(sensor,longEndReference):
+                    HeatingHelper.longOpenFFContacts.pop(sensor.getName(),None)
+                
+            HeatingHelper.openSFContacts = {}
             if getItemState("Sensor_Window_SF") == OPEN:
                 for sensor in getGroupMember("Sensor_Window_SF"):
-                    if sensor.getName() != "Window_SF_Attic" and sensor.getState() == OPEN and itemLastUpdateOlderThen(sensor,initialReference):
-                        HeatingHelper.openSFContacts.append(sensor)
+                    if sensor.getName() != "Window_SF_Attic" and sensor.getState() == OPEN and itemLastUpdateOlderThen(sensor,shortReference):
+                        HeatingHelper.openSFContacts[sensor.getName()] = sensor
+                        
+            # add new contacts
+            for sensorName in set(HeatingHelper.openSFContacts) - set(HeatingHelper.longOpenSFContacts):
+                sensor = HeatingHelper.openSFContacts.get(sensorName)
+                if itemLastUpdateOlderThen(sensor,longStartReference):
+                    HeatingHelper.longOpenSFContacts[sensor.getName()] = sensor
+                    
+            # clean old contacts
+            for sensorName in set(HeatingHelper.longOpenSFContacts) - set(HeatingHelper.openSFContacts):
+                sensor = HeatingHelper.longOpenSFContacts.get(sensorName)
+                if itemLastUpdateOlderThen(sensor,longEndReference):
+                    HeatingHelper.longOpenSFContacts.pop(sensor.getName(),None)
 
+            #self.log.info(u"{} {}".format(HeatingHelper.openFFContacts,HeatingHelper.openSFContacts))
+            #self.log.info(u"{} {}".format(HeatingHelper.longOpenFFContacts,HeatingHelper.longOpenSFContacts))
+            
         return { "ffCount": len(HeatingHelper.openFFContacts), "totalFfCount": 6, "sfCount": len(HeatingHelper.openSFContacts), "totalSfCount": 5 }
+    
+    def getLongOpenWindows( self ):
+        return { "ffCount": len(HeatingHelper.longOpenFFContacts), "totalFfCount": 6, "sfCount": len(HeatingHelper.longOpenSFContacts), "totalSfCount": 5 }
 
     def getHeatingPowerPerMinute( self, activeRooms, pumpSpeed, temperature_Pipe_Out, temperature_Pipe_In):
         # To warmup 1 liter of wather you need 4,182 Kilojoule
@@ -687,14 +723,8 @@ class HeatingCheckRule(HeatingHelper):
 
         # Get current open windows and the ones during the last 15 min
         openWindow = self.getOpenWindows( True )
-        isLongOpenWindow = getItemState("Openingcontacts") == OPEN and itemLastUpdateOlderThen("Openingcontacts",now.minusMinutes(15))
-        if not isLongOpenWindow:
-            longOpenWindow = openWindow.copy()
-            longOpenWindow["ffCount"] = 0
-            longOpenWindow["sfCount"] = 0
-        else:
-            longOpenWindow = openWindow
-
+        longOpenWindow = self.getLongOpenWindows()
+        
         # Calculate cooling power in 8h
         currentForecast8CoolingPowerPerMinute, maxForecast8CoolingPowerPerMinute = self.getCurrentForecastCoolingPowerPerMinute( 8, activeRooms, now, currentOutdoorTemp, currentOutdoorForecast8Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, longOpenWindow)
 
