@@ -481,23 +481,23 @@ class HeatingHelper:
         return round( _totalChargeLevel, 1 ) if _totalChargeLevel > 0.0 else 0.0
 
     def _useLivingroomReference( self, currentBedroomTemp, bedroomTarget, currentLivingroomTemp, livingroomTarget ):
-        if livingroomTarget >= currentLivingroomTemp:
-            return True
+        #if livingroomTarget >= currentLivingroomTemp:
+        #    return True
         livingroomDiff = livingroomTarget - currentLivingroomTemp
         bedroomDiff = bedroomTarget - currentBedroomTemp
         return livingroomDiff >= bedroomDiff
     
-    def calculcateCurrentChargeLevel(self, totalChargeLevel, baseHeatingPower, heatingTargetLivingroomTemp, currentLivingroomTemp, heatingTargetBedroomTemp, currentBedroomTemp, outdoorReduction ):        
+    def calculcateCurrentChargeLevel(self, totalChargeLevel, baseHeatingPower, targetLivingroomTemp, currentLivingroomTemp, targetBedroomTemp, currentBedroomTemp, outdoorReduction ):        
         _currentChargeLevel = totalChargeLevel
         
-        # heatingTargetLivingroomTemp and heatingTargetBedroomTemp must be without night reduction,
+        # targetLivingroomTemp and targetBedroomTemp must be without night reduction,
         # that why we can't use stored target values like Heating_Temperature_Livingroom_Target and Heating_Temperature_Bedroom_Target
         # we need this, because all upcoming calculations should not consider night reduction
 
-        _useLivingroomReference = self._useLivingroomReference( currentBedroomTemp, heatingTargetBedroomTemp, currentLivingroomTemp, heatingTargetLivingroomTemp )
+        _useLivingroomReference = self._useLivingroomReference( currentBedroomTemp, targetBedroomTemp, currentLivingroomTemp, targetLivingroomTemp )
         _currentSource = "Temperature_FF_Livingroom" if _useLivingroomReference else "Temperature_SF_Bedroom"
         _currentTemp = currentLivingroomTemp if _useLivingroomReference else currentBedroomTemp
-        _targetTemp = heatingTargetLivingroomTemp if _useLivingroomReference else heatingTargetBedroomTemp
+        _targetTemp = targetLivingroomTemp if _useLivingroomReference else targetBedroomTemp
 
         if HeatingHelper.lastReferenceSource == _currentSource:
             if _currentTemp > HeatingHelper.lastReferenceValue:
@@ -514,7 +514,7 @@ class HeatingHelper:
         #self.log.info(u"        : => TARGET: {}°C, CURRENT: {}°C, DIFF: {}°C".format(_targetTemp,_currentTemp,_targetTemperatureDiff))
         #self.log.info(u"        : => LEVEL: {} W, ADD: {} W, MISS: {} W".format(_currentChargeLevel, _targetChargeLevelDiff, _missingChargeLevel))
 
-        return _currentChargeLevel, _targetChargeLevelDiff
+        return _currentChargeLevel, _targetChargeLevelDiff, _useLivingroomReference
 
     def calculateAdjustedTotalChargeLevel( self, now, baseHeatingPower, currentBedroomTemp, currentLivingroomTemp ):
         _currentChargeLevel = getItemState("Heating_Charged").doubleValue()
@@ -765,7 +765,7 @@ class HeatingCheckRule(HeatingHelper):
         # targetChargeLevelDiff - target releated charge difference
         #   - positive value means we have more energy than needed to reach our target temperature
         #   - negavive value means we still need more energy to reach our target temperature
-        currentChargeLevel, targetChargeLevelDiff = self.calculcateCurrentChargeLevel(totalChargeLevel, baseHeatingPower, heatingTargetLivingroomTemp, currentLivingroomTemp, heatingTargetBedroomTemp, currentBedroomTemp, outdoorReduction)
+        currentChargeLevel, targetChargeLevelDiff, useLivingroomReference = self.calculcateCurrentChargeLevel(totalChargeLevel, baseHeatingPower, heatingTargetLivingroomTemp, currentLivingroomTemp, heatingTargetBedroomTemp, currentBedroomTemp, outdoorReduction)
     
         # Zone Level (BUFFER LEVEL) to stop buffer heating. Is based on cooling power.
         maxBufferChargeLevel = self.calculateMaxBufferChargeLevel( currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, slotHeatingPower )
@@ -843,7 +843,7 @@ class HeatingCheckRule(HeatingHelper):
             if longOpenWindow["ffCount"] + longOpenWindow["sfCount"] < 2:
 
                 # Calculate missing degrees to reach target temperature
-                heatingTargetDiff = self.getHeatingTargetDiff( currentLivingroomTemp, heatingTargetLivingroomTemp, currentBedroomTemp, heatingTargetBedroomTemp )
+                heatingTargetDiff = self.getHeatingTargetDiff( currentLivingroomTemp, heatingTargetLivingroomTemp, currentBedroomTemp, heatingTargetBedroomTemp, useLivingroomReference )
                 
                 referenceTargetDiff = round( heatingTargetDiff - lazyReduction - outdoorReduction, 1 )
                 
@@ -893,10 +893,10 @@ class HeatingCheckRule(HeatingHelper):
 
         self.log.info(u"<<<")
 
-    def getHeatingTargetDiff( self, currentLivingroomTemp, targetLivingroomTemp, currentBedroomTemp, targetBedroomTemp ):
+    def getHeatingTargetDiff( self, currentLivingroomTemp, targetLivingroomTemp, currentBedroomTemp, targetBedroomTemp, useLivingroomReference ):
         livingroomDifference = targetLivingroomTemp - currentLivingroomTemp
         bedroomDifference = targetBedroomTemp - currentBedroomTemp
-        difference = livingroomDifference if livingroomDifference > bedroomDifference else bedroomDifference
+        difference = livingroomDifference if useLivingroomReference else bedroomDifference
         return round( difference, 1 )
 
     def getOutdoorDependingReduction( self, coolingPowerPerMinute ):
