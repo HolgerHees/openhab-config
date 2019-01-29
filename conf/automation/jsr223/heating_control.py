@@ -853,7 +853,7 @@ class HeatingCheckRule(HeatingHelper):
                 else:
                     # it is too warm inside, but outside it is very cold, so we need some buffer heating to avoid cold floors
                     # should always be calculated with all rooms ON and maxSlotHeatingPower
-                    forceBufferHeating = self.forcedBufferHeatingCheck( now, isHeatingActive, lastHeatingChange, maxSlotHeatingPower, availableHeatingPowerPerMinute, targetChargeLevelDiff, currentLivingroomTemp )
+                    forceBufferHeating = self.forcedBufferHeatingCheck( now, isHeatingActive, lastHeatingChange, maxSlotHeatingPower, availableHeatingPowerPerMinute, targetChargeLevelDiff, currentLivingroomTemp, currentCoolingPowerPerMinute )
                 
                     if forceBufferHeating:
                         heatingDemand = 1
@@ -1023,22 +1023,29 @@ class HeatingCheckRule(HeatingHelper):
 
         return maxBufferChargeLevel > 0
 
-    def calculateForcedBufferHeatingTime(self, now, lastUpdate, slotHeatingPower ):
+    def calculateForcedBufferHeatingTime(self, now, lastUpdate, slotHeatingPower, currentCoolingPowerPerMinute ):
       
         # when was the last heating job
         lastUpdateBeforeInMinutes = int( round( ( now.getMillis() - lastUpdate.getMillis() ) / 1000.0 / 60.0 ) )
 
-        # 0 hours => 0
-        # 24 hours => 3
-        factor = ( lastUpdateBeforeInMinutes / 60.0 ) * 3.0 / 24.0
+        # 20W/min => 0
+        # 60W/min => 4
+        
+        maxFactor = currentCoolingPowerPerMinute * 4.0 / 60.0
+        if maxFactor < 0.0:
+          maxFactor = 0.0
 
-        if factor > 3.0: factor = 3.0
+        # 0 hours => 0
+        # 24 hours => factor
+        factor = ( lastUpdateBeforeInMinutes / 60.0 ) * maxFactor / 24.0
+
+        if factor > maxFactor: factor = maxFactor
 
         targetBufferChargeLevel = round( slotHeatingPower * factor, 1 )
 
         return round( targetBufferChargeLevel, 1 ), lastUpdateBeforeInMinutes
 
-    def forcedBufferHeatingCheck( self, now, isHeatingActive, lastHeatingChange, slotHeatingPower, availableHeatingPowerPerMinute, currentBufferChargeLevel, currentLivingroomTemp ):
+    def forcedBufferHeatingCheck( self, now, isHeatingActive, lastHeatingChange, slotHeatingPower, availableHeatingPowerPerMinute, currentBufferChargeLevel, currentLivingroomTemp, currentCoolingPowerPerMinute ):
 
         if isHeatingActive:
             if self.forcedBufferReferenceTemperature != None:
@@ -1048,7 +1055,7 @@ class HeatingCheckRule(HeatingHelper):
                     self.forcedBufferReferenceTemperature = None
                 else:
                     if self.forcedBufferReferenceDate != -1:
-                        targetBufferChargeLevel, lastUpdateBeforeInMinutes = self.calculateForcedBufferHeatingTime( now, self.forcedBufferReferenceDate, slotHeatingPower )
+                        targetBufferChargeLevel, lastUpdateBeforeInMinutes = self.calculateForcedBufferHeatingTime( now, self.forcedBufferReferenceDate, slotHeatingPower, currentCoolingPowerPerMinute )
                     else:
                         targetBufferChargeLevel = slotHeatingPower
                     
@@ -1062,7 +1069,7 @@ class HeatingCheckRule(HeatingHelper):
                 # Keep everything like it is. This leaves the forcedBufferCheckActive untouched
                 self.log.info(u"        : No forced buffer • is heating" )
         else:
-            targetBufferChargeLevel, lastUpdateBeforeInMinutes = self.calculateForcedBufferHeatingTime( now, lastHeatingChange, slotHeatingPower )
+            targetBufferChargeLevel, lastUpdateBeforeInMinutes = self.calculateForcedBufferHeatingTime( now, lastHeatingChange, slotHeatingPower, currentCoolingPowerPerMinute )
 
             heatingMinutes = int( round( ( targetBufferChargeLevel / availableHeatingPowerPerMinute ) ) )
         
