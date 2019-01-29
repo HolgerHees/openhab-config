@@ -1,4 +1,4 @@
-from marvin.helper import rule, getNow, getFilteredChildItems, getItemState, itemLastUpdateOlderThen, sendCommand, sendCommandIfChanged
+from marvin.helper import rule, getNow, getFilteredChildItems, getItemState, itemLastUpdateOlderThen, sendCommand, sendCommandIfChanged, createTimer
 from core.triggers import CronTrigger, ItemStateChangeTrigger 
 
 @rule("lights_indoor.py")
@@ -9,7 +9,11 @@ class ArrivingRule:
             ItemStateChangeTrigger("Door_FF_Floor",state="OPEN")
         ]
         self.isArriving = False
+        self.arrivingTimer = None
 
+    def arrivingCallback(self):
+        self.isArriving = False
+    
     def execute(self, module, input):
         if input["event"].getItemName() == "Door_FF_Floor":
             if self.isArriving:
@@ -20,6 +24,9 @@ class ArrivingRule:
         # it can happen that State_Presence changes after Door_FF_Floor was opened
         elif itemLastUpdateOlderThen("Door_FF_Floor", getNow().minusMinutes(10)):
             self.isArriving = input["event"].getItemState().intValue() == 1 and input["oldState"].intValue() == 0
+            if self.isArriving:
+                self.arrivingTimer = createTimer(60, self.arrivingCallback )
+                self.arrivingTimer.start()
 
         
 @rule("lights_indoor.py")
