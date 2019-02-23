@@ -587,7 +587,8 @@ class CalculateChargeLevelRule(HeatingHelper):
         currentLivingroomTemp = self.getStableValue( now, "Temperature_FF_Livingroom", 10 )
         currentBedroomTemp = self.getStableValue( now, "Temperature_SF_Bedroom", 10 )
         currentAtticTemp = self.getStableValue( now, "Temperature_SF_Attic", 10 )
-        currentOutdoorTemp = self.getStableValue( now, "Temperature_Garden", 10 )
+        #currentOutdoorTemp = self.getStableValue( now, "Temperature_Garden", 10 )
+        currentOutdoorTemp = self.getStableValue( now, "Heating_Temperature_Outdoor", 10 )
 
         currentLivingRoomCircuit = getItemState("Heating_Livingroom_Circuit")
         isLivingRoomCircuitActive = currentLivingRoomCircuit == ON
@@ -695,7 +696,8 @@ class HeatingCheckRule(HeatingHelper):
         currentLivingroomTemp = self.getStableValue( now, "Temperature_FF_Livingroom", 10, True )
         currentBedroomTemp = self.getStableValue( now, "Temperature_SF_Bedroom", 10, True )
         currentAtticTemp = self.getStableValue( now, "Temperature_SF_Attic", 10, True )
-        currentOutdoorTemp = self.getStableValue( now, "Temperature_Garden", 10, True )
+        #currentOutdoorTemp = self.getStableValue( now, "Temperature_Garden", 10, True )
+        currentOutdoorTemp = self.getStableValue( now, "Heating_Temperature_Outdoor", 10 )
 
         # not changed since 6 hours.
         if self.isOutdatetForecast():
@@ -936,7 +938,7 @@ class HeatingCheckRule(HeatingHelper):
         if _isMorning:
             # Monday - Friday
             if day <= 5:
-                if hour < 6 or ( hour == 6 and minute <= 30 ):
+                if hour < 5 or ( hour == 5 and minute <= 30 ):
                     _nightModeActive = True
             # Saturday and Sunday
             else:
