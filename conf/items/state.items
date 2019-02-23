@@ -1,6 +1,6 @@
 Number State_Presence							"Präsenz"				<selfinfo>			(PersistentHistory) ["Presence"]
-Switch State_Holger_Presence                    "Holger anwesend"               <selfinfo>          (PersistentHistory) { channel="network:pingdevice:phone1:online" }                                                       
-Switch State_Sandra_Presence                    "Sandra anwesend"               <selfinfo>          (PersistentHistory) { channel="network:pingdevice:phone2:online" }                                                
+Switch State_Holger_Presence                    "Holger anwesend"       <selfinfo>          (PersistentHistory) { channel="network:pingdevice:phone1:online" }                                                       
+Switch State_Sandra_Presence                    "Sandra anwesend"       <selfinfo>          (PersistentHistory) { channel="network:pingdevice:phone2:online" }                                                
 
 Switch State_Outdoorlights						"Aussenbeleuchtung Aktiv"		<selflight>
 Switch State_Rollershutter						"Rollläden geschlossen"			<selfrollershutter>

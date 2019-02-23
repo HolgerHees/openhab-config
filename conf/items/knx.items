@@ -39,8 +39,15 @@ Switch Light_FF_Garage 							"Schuppen" 	<selflight>		(FF_Garage, Lights_FF)	{ 
 
 Switch Light_SF_Floor_Ceiling 					"Flur oben Decke" 	<selflight>		(SF_Floor, Lights_SF)	{ channel="knx:device:bridge:lights_sf:floorCeiling" }
 Switch Light_SF_Bedroom_Ceiling 				"Schlafzimmer Decke" <selflight>		(SF_Bedroom, Lights_SF)	{ channel="knx:device:bridge:lights_sf:bedroomCeiling" }
-Switch Light_SF_Bedroom_Left 			"Schlafzimmer Nachttisch links" 	<selflight>		(SF_Bedroom, Lights_SF)	{ channel="knx:device:bridge:sockets_sf:bedroomLeft" }
-Switch Light_SF_Bedroom_Right 			"Schlafzimmer Nachttisch rechts" 	<selflight>		(SF_Bedroom, Lights_SF)	{ channel="knx:device:bridge:sockets_sf:bedroomRight" }
+
+Dimmer Light_SF_Bedroom_Left_Hue_Brightness		"Schlafzimmer Nachttisch links"			<selfslider>	(SF_Bedroom, Lights_SF) { channel="hue:0210:default:lamp5:color"}
+Color Light_SF_Bedroom_Left_Hue_Color			"Schlafzimmer Nachttisch links Farbe"	<colorwheel>	{ channel="hue:0210:default:lamp5:color"}
+Dimmer Light_SF_Bedroom_Right_Hue_Brightness	"Schlafzimmer Nachttisch rechts"			<selfslider> (SF_Bedroom, Lights_SF) { channel="hue:0210:default:lamp6:color"}
+Color Light_SF_Bedroom_Right_Hue_Color			"Schlafzimmer Nachttisch rechts Farbe"	<colorwheel>	{ channel="hue:0210:default:lamp6:color"}
+Switch Light_SF_Bedroom_Left 					"Schlafzimmer Nachttisch links" 	<selflight>		(SF_Bedroom, Lights_SF)	{ channel="knx:device:bridge:sockets_sf:bedroomLeft" }
+Switch Light_SF_Bedroom_Right 					"Schlafzimmer Nachttisch rechts" 	<selflight>		(SF_Bedroom, Lights_SF)	{ channel="knx:device:bridge:sockets_sf:bedroomRight" }
+  
+
 Switch Light_SF_Dressingroom_Ceiling			"Ankleide Decke" 	<selflight>		(SF_Dressingroom, Lights_SF) { channel="knx:device:bridge:lights_sf:dressingroomCeiling" }
 Switch Light_SF_Child1_Ceiling 					"Kinderzimmer eins" <selflight>		(SF_Child1, Lights_SF)	{ channel="knx:device:bridge:lights_sf:child1Ceiling" }
 Switch Light_SF_Child2_Ceiling 					"Kinderzimmer zwei" <selflight>		(SF_Child2, Lights_SF)	{ channel="knx:device:bridge:lights_sf:child2Ceiling" }
