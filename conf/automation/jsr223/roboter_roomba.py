@@ -157,13 +157,15 @@ class RoombaNotificationRule:
 @rule("roboter_roomba.py")
 class RoombaAutomaticRule:
     def __init__(self):
-        self.triggers = [CronTrigger("0 2,17,32,47 9-14 ? * MON-FRI")]
+        self.triggers = [CronTrigger("0 2,17,32,47 9-16 ? * MON-FRI")]
 
     def execute(self, module, input):
         if getItemState("State_Presence").intValue() == 0 \
                 and getItemState("roomba_auto") == ON \
                 and getItemState("roomba_status").toString() == "Charging" \
-                and getItemState("roomba_batPct").intValue() >= 100:
+                and getItemState("roomba_batPct").intValue() >= 100 \
+                and getItemState("roomba_error") == OFF \
+                and getItemState("roomba_full") == OFF:
             if itemLastUpdateOlderThen("roomba_cleaning_state", getNow().minusMinutes(360)) \
                     and itemLastUpdateOlderThen("State_Presence", getNow().minusMinutes(60)):
                 sendCommand("roomba_command", "start")
