@@ -157,7 +157,7 @@ class RoombaNotificationRule:
 @rule("roboter_roomba.py")
 class RoombaAutomaticRule:
     def __init__(self):
-        self.triggers = [CronTrigger("0 2,17,32,47 9-16 ? * MON-FRI")]
+        self.triggers = [CronTrigger("0 2,17,32,47 8-15 ? * MON-FRI")]
 
     def execute(self, module, input):
         if getItemState("State_Presence").intValue() == 0 \
