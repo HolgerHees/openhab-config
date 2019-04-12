@@ -13,13 +13,15 @@ class LightsIndoorAutoAtticRule:
     def execute(self, module, input):
         hour = getNow().getHourOfDay()
 
-        if getItemState("Auto_Attic_Light").intValue() == 2:
-            if 5 <= hour < 23:
+        state = getItemState("Auto_Attic_Light").intValue();
+        
+        if state == 2:
+            if hour == 5:
                 sendCommand("Socket_Attic", ON)
-            else:
+            elif hour == 23:
                 sendCommand("Socket_Attic", OFF)
-        elif getItemState("Auto_Attic_Light").intValue() == 3:
-            if 8 <= hour < 20:
+        elif state == 3:
+            if hour == 8:
                 sendCommand("Socket_Attic", ON)
-            else:
+            elif hour == 20:
                 sendCommand("Socket_Attic", OFF)
