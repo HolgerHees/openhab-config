@@ -1,6 +1,6 @@
 import math
 
-from marvin.helper import rule, createTimer, getNow, getGroupMember, getItemState, postUpdate, sendCommand, itemStateOlderThen
+from marvin.helper import rule, createTimer, getNow, getGroupMember, getItemState, postUpdate, sendCommand, getItemLastUpdate
 from core.triggers import ItemCommandTrigger
 
 circuits = [
@@ -39,7 +39,7 @@ class ScenesWatheringRule:
         
     def findStep(self):
         duration = getItemState("Watering_Program_Duration").intValue() * 60.0 * 1000.0
-
+        
         remaining = 0
         activeStep = None
 
@@ -59,7 +59,7 @@ class ScenesWatheringRule:
                     break
             
             if activeStep != None:
-                runtime = getNow().getMillis() - getItemState(activeStep[0]).calendar.getTimeInMillis()
+                runtime = getNow().getMillis() - getItemLastUpdate(activeStep[0]).getMillis()
                 
                 remaining = ( duration * activeStep[2] ) - runtime
                 
@@ -85,6 +85,10 @@ class ScenesWatheringRule:
             return
         
         msg, remaining = self.findStep()
+        
+        if remaining == 0:
+            self.cleanProgressTimer()
+            return
         
         remainingInMinutes = int( math.floor( round( remaining / 1000.0 ) / 60.0 ) )
 
