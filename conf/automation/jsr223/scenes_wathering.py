@@ -1,7 +1,19 @@
 import math
 
-from marvin.helper import rule, createTimer, getNow, getGroupMember, getItemState, postUpdate, sendCommand
+from marvin.helper import rule, createTimer, getNow, getGroupMember, getItemState, postUpdate, sendCommand, itemStateOlderThen
 from core.triggers import ItemCommandTrigger
+
+circuits = [
+    [
+        ['Watering_Streetside_Lawn', u"Strasse", 2.0 / 3.0],
+        ['Watering_Gardenside_Lawn_right', u"Garten rechts", 1.00],
+        ['Watering_Gardenside_Lawn_left', u"Garten links", 1.00]
+    ], [
+        ['Watering_Streetside_Beds']
+    ], [
+        ['Watering_Gardenside_Beds_front']
+    ]
+]
 
 @rule("scenes_wathering.py")
 class ScenesWatheringRule:
@@ -10,7 +22,6 @@ class ScenesWatheringRule:
 
         self.progressTimer = None
         self.currentProgressMsg = ""
-        self.nextStepTime = None
 
     def disableAllCircuits(self):
         for child in getGroupMember("Watering_Circuits"):
@@ -25,72 +36,62 @@ class ScenesWatheringRule:
     def cleanProgressTimer(self):
         self.progressTimer = None
         self.currentProgressMsg = ""
-        self.nextStepTime = None
+        
+    def findStep(self):
+        duration = getItemState("Watering_Program_Duration").intValue() * 60.0 * 1000.0
 
-    def callbackStep(self):
-        duration = getItemState("Watering_Program_Duration").intValue()
+        remaining = 0
+        activeStep = None
 
-        # Finish
-        if getItemState("Watering_Streetside_Lawn") == ON:
-            # self.log.info("1" )
-            self.nextStepTime = None
-            self.disableAllCircuits()
-            postUpdate("Watering_Program_Start", OFF)
-            return -1
-        # Step 3
-        elif getItemState("Watering_Gardenside_Lawn_right") == ON:
-            # self.log.info("2" )
-            duration = duration / 3 * 2
-            sendCommand("Watering_Streetside_Lawn", ON)
-            sendCommand("Watering_Gardenside_Lawn_right", OFF)
-        # Step 2
-        elif getItemState("Watering_Gardenside_Lawn_left") == ON:
-            # self.log.info("3" )
-            sendCommand("Watering_Gardenside_Lawn_right", ON)
-            sendCommand("Watering_Gardenside_Lawn_left", OFF)
-        # Step 1
+        if getItemState("Watering_Circuits") == OFF:
+            for loop in circuits:
+                #self.log.info("start " + loop[0][0])
+                sendCommand(loop[0][0], ON)
+            activeStep = circuits[0][0]
+            remaining = ( duration * activeStep[2] )
         else:
-            # self.log.info("4" )
-            sendCommand("Watering_Streetside_Beds", ON)
-            sendCommand("Watering_Gardenside_Beds_front", ON)
-            sendCommand("Watering_Gardenside_Lawn_left", ON)
-
-        self.nextStepTime = getNow().plusMinutes(duration)
-
-        return duration
+            activeIndex = -1
+            for i in range(len(circuits[0])):
+                step = circuits[0][i]
+                if getItemState(step[0]) == ON:
+                    activeIndex = i
+                    activeStep = step
+                    break
+            
+            if activeStep != None:
+                runtime = getNow().getMillis() - getItemState(activeStep[0]).calendar.getTimeInMillis()
+                
+                remaining = ( duration * activeStep[2] ) - runtime
+                
+                if remaining <= 0:
+                    activeIndex += 1
+                    if activeIndex < len(circuits[0]):
+                        #self.log.info("next " + circuits[0][activeIndex][0])
+                        sendCommand(circuits[0][activeIndex][0], ON)
+                        sendCommand(activeStep[0], OFF)
+                        activeStep = circuits[0][activeIndex]
+                        remaining = ( duration * activeStep[2] )
+                    else:
+                        activeStep = None
+                        #self.log.info("finish")
+                        self.disableAllCircuits()
+            
+        return [ activeStep[1] if activeStep != None else u"", remaining ]
 
     def callbackProgress(self):
-        if self.progressTimer is None:
-            self.nextStepTime = getNow()
-        elif self.currentProgressMsg != getItemState("Watering_Program_State").toString():
+        if self.progressTimer is not None and self.currentProgressMsg != getItemState("Watering_Program_State").toString():
             self.log.info("Cancel Watering Progress Zombie Timer")
             self.cleanProgressTimer()
             return
+        
+        msg, remaining = self.findStep()
+        
+        remainingInMinutes = int( math.floor( round( remaining / 1000.0 ) / 60.0 ) )
 
-        nextStepInSeconds = (self.nextStepTime.getMillis() - getNow().getMillis()) / 1000.0
-
-        if nextStepInSeconds <= 0:
-            nextStepInMinutes = self.callbackStep()
-
-            if nextStepInMinutes == -1:
-                self.cleanProgressTimer()
-                return
+        if remainingInMinutes > 0:
+            msg = u"{} noch {} min".format(msg, remainingInMinutes )
         else:
-            nextStepInMinutes = int(math.floor(nextStepInSeconds / 60.0))
-
-        msg = u""
-
-        if getItemState("Watering_Gardenside_Lawn_left") == ON:
-            msg = u"Garten links "
-        elif getItemState("Watering_Gardenside_Lawn_right") == ON:
-            msg = u"Garten rechts "
-        elif getItemState("Watering_Streetside_Lawn") == ON:
-            msg = u"Strasse "
-
-        if nextStepInMinutes > 0:
-            msg = u"{}noch {} min".format(msg,nextStepInMinutes)
-        else:
-            msg = u"{}gleich fertig".format(msg)
+            msg = u"{} gleich fertig".format(msg)
 
         self.currentProgressMsg = msg
         postUpdate("Watering_Program_State", self.currentProgressMsg)
