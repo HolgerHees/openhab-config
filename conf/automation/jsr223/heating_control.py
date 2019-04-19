@@ -774,18 +774,18 @@ class HeatingCheckRule(HeatingHelper):
 
         if targetChargeLevelDiff >= 0:
             heatingUpMinutes = 0
-            coolingDownMinutes = int( round( targetChargeLevelDiff / currentCoolingPowerPerMinute ) ) if currentCoolingPowerPerMinute > 0.0 else 0
+            coolingDownMinutes = int( round( targetChargeLevelDiff / currentCoolingPowerPerMinute ) ) if currentCoolingPowerPerMinute > 0 else 0
         else:
-            heatingUpMinutes = int( round( targetChargeLevelDiff * -1 / availableHeatingPowerPerMinute ) )
+            heatingUpMinutes = int( round( targetChargeLevelDiff * -1 / availableHeatingPowerPerMinute ) ) if availableHeatingPowerPerMinute > 0 else 0
             coolingDownMinutes = 0
 
         # Some log messages about charge values
-        _timeToHeatSlot = int( round( slotHeatingPower / availableHeatingPowerPerMinute ) )
+        _timeToHeatSlot = int( round( slotHeatingPower / availableHeatingPowerPerMinute ) ) if availableHeatingPowerPerMinute > 0 else 0
         _baseHeatingPowerInKW = round( baseHeatingPower / 1000.0, 1 )
         self.log.info(u"Slot    : {} KW/K • {} W/0.1K • {} min. ⇧".format(_baseHeatingPowerInKW,slotHeatingPower,_timeToHeatSlot ) )
 
-        _timeToHeatBuffer = int( round( maxBufferChargeLevel / availableHeatingPowerPerMinute ) )
-        _bufferFilledInPercent = int( round( targetChargeLevelDiff * 100 / maxBufferChargeLevel, 0 ) ) if targetChargeLevelDiff > 0 else 0
+        _timeToHeatBuffer = int( round( maxBufferChargeLevel / availableHeatingPowerPerMinute ) ) if availableHeatingPowerPerMinute > 0 else 0
+        _bufferFilledInPercent = int( round( targetChargeLevelDiff * 100 / maxBufferChargeLevel, 0 ) ) if targetChargeLevelDiff > 0 and maxBufferChargeLevel > 0 else 0
         self.log.info(u"Buffer  : {}% filled • {} W ... {} W • {} min. ⇧".format( _bufferFilledInPercent, minBufferChargeLevel, maxBufferChargeLevel, _timeToHeatBuffer) )
 
         _totalLazyChargeMsg = u" ({} W)".format(totalChargeLevel) if currentChargeLevel != totalChargeLevel else u""
