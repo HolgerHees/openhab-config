@@ -86,7 +86,7 @@ class ScenesWatheringRule:
         
         msg, remaining = self.findStep()
         
-        if remaining == 0:
+        if remaining <= 0:
             self.cleanProgressTimer()
             return
         
