@@ -12,3 +12,11 @@ Number Electricity_Current_Daily_Consumption	"Tagesverbrauch [%.2f KWh]"		<selfe
 Number Electricity_Current_Consumption 			"Aktueller Verbrauch [%d Watt]"	<selfenergy>		(PersistentChart)
 Number Electricity_Annual_Consumption 			"Aktuelle Periode [%.2f KWh]"	<selfenergy>
 String Electricity_Forecast 					"Hochrechnung [%s]"				<selfenergy>
+
+//########### Solar ##########
+Number Solar_Total_Yield						"Gesamtertrag [%d kWh]"		    <selfenergy>                                        { channel="modbus:data:solarGarage:earnings:total_yield:number" }
+Number Solar_Daily_Yield						"Tagesertrag [%.3f kWh]"	    <selfenergy>        (PersistentChart)               { channel="modbus:data:solarGarage:earnings:daily_yield:number" }
+Number Solar_DC_Current						    "DC Strom [%.2f A]"	            <selfenergy>                                        { channel="modbus:data:solarGarage:power:dc_current:number" } 
+Number Solar_DC_Voltage						    "DC Spannung [%.2f V]"	        <selfenergy>                                        { channel="modbus:data:solarGarage:power:dc_voltage:number" } 
+Number Solar_DC_Power						    "DC Leistung [%d W]"	        <selfenergy>                                        { channel="modbus:data:solarGarage:power:dc_power:number" } 
+Number Solar_AC_Power						    "AC Leistung [%d W]"	        <selfenergy>        (PersistentChart)               { channel="modbus:data:solarGarage:power:ac_power:number" } 

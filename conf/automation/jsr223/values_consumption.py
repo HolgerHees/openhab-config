@@ -91,7 +91,10 @@ class EnergyConsumptionRule2:
 @rule("values_consumption.py")
 class EnergyConsumptionRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("Electricity_Meter")]
+        self.triggers = [
+          ItemStateChangeTrigger("Electricity_Meter"),
+          CronTrigger("0 */5 * * * ?")
+        ]
 
     def execute(self, module, input):
         now = getNow()
