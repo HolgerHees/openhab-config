@@ -83,7 +83,7 @@ String Air_Garden_Message				"Garten Aktuell [%s]"			<selftemperature>
 
 Number Wind_Garden 						"Wind [%d m/s]"					<selfwind>											{s300th="address=ks300;datapoint=WIND"}
 Number Wind_Garden_Converted			"Wind [%d km/h]"				<selfwind>			(PersistentHistory)
-Number:Speed Wind_Garden_Current 		"Wind [%d]"						<selfwind>			(PersistentChart,Outdoor) ["Wind", "Measurement"]
+Number Wind_Garden_Current 		"Wind [%d]"						<selfwind>			(PersistentChart,Outdoor) ["Wind", "Measurement"]
 
 Number Rain_Garden_Counter 				"Regen Zähler [%d]"				<chart>				(PersistentHistory)				{s300th="address=ks300;datapoint=RAIN"}
 Number Regen_State_Garden 				"Regen Status [%d]"				<chart>												{s300th="address=ks300;datapoint=IS_RAINING"}

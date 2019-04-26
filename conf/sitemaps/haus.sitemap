@@ -492,18 +492,22 @@ sitemap haus label="Main Menu"
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/grafana/solar.html?fromItem=Chart_From" height=27
+                        Webview url="/static/grafana/solar_heating.html?fromItem=Chart_From" height=27
                     }
                 
                 }
                 Group item=Solar_Daily_Yield label="PV [%.3f kWh]" icon="sun"{
                     Frame label="Daten" {
                         Text item=Solar_Daily_Yield
-                        Text item=Solar_DC_Power
                         Text item=Solar_AC_Power
+                        Text item=Solar_DC_Power
                         Text item=Solar_DC_Voltage
                         Text item=Solar_DC_Current
                         Text item=Solar_Total_Yield
+                    }
+                    Frame label="Auswertung" {
+                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="/static/grafana/solar_energy.html?fromItem=Chart_From" height=18
                     }
                 }
             }

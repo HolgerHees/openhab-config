@@ -16,9 +16,9 @@
 
 <script>
     listener = new InitializedListener();
-    addGrafanaPanel("Power"       , listener.generateParams( "solar/solar", 2,5,1 ) );
-    addGrafanaPanel("Temperatures", listener.generateParams( "solar/solar", 4,4,4 ) );
-    addGrafanaPanel("Pump_State"  , listener.generateParams( "solar/solar", 3,3,3 ));
+    addGrafanaPanel("Power"       , listener.generateParams( "solar-waerme/solar-waerme", 2,5,1 ) );
+    addGrafanaPanel("Temperatures", listener.generateParams( "solar-waerme/solar-waerme", 4,4,4 ) );
+    addGrafanaPanel("Pump_State"  , listener.generateParams( "solar-waerme/solar-waerme", 3,3,3 ));
     listener.initIFrames();
 </script>
 
