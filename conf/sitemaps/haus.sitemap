@@ -464,6 +464,12 @@ sitemap haus label="Main Menu"
                         Text item=Electricity_Meter
                         Text item=Electricity_Forecast
                     }
+                    Frame label="Neu" {
+                        Text item=Energy_Demand
+                        Text item=Energy_Supply
+                        Text item=Power_Demand
+                        Text item=Power_Supply
+                    }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                         Webview url="/static/grafana/consumption_energy.html?fromItem=Chart_From" height=18

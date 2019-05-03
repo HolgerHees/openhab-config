@@ -4,7 +4,7 @@ from org.joda.time.format import DateTimeFormat
 from marvin.helper import rule, getNow, getHistoricItemEntry, getHistoricItemState, getItemLastUpdate, getItemState, postUpdate, postUpdateIfChanged
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
-startGasZaehlerStand = 8075.97
+startGasZaehlerStand = 8522.67
 startGasZaehlerCounter = 0
 
 dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS")
@@ -145,6 +145,8 @@ class GasConsumptionRule:
         zaehlerStandCurrent = startGasZaehlerStand + ((Aktuell_End - startGasZaehlerCounter) * 0.01)
 
         zaehlerStandSaved = getItemState("Gas_Current_Count").doubleValue()
+        
+        #self.log.info(u"{} {}".format(zaehlerStandCurrent,zaehlerStandSaved))
 
         if zaehlerStandCurrent < zaehlerStandSaved:
             self.log.error("Consumption: Calculation is wrong")
