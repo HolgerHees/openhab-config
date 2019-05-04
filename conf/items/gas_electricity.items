@@ -7,10 +7,15 @@ Number Gas_Annual_Consumption 					"Aktuelle Periode [%.2f m³]"	<selfgas>
 String Gas_Forecast 							"Hochrechnung [%s]"				<selfgas>
 
 //########### ELECTRICITY ##########
-Number Energy_Demand					       	"Wirkenergie Bezug [%.2f KWh]"		<selfenergy>   { channel="knx:device:bridge:other:energyDemand" }
-Number Energy_Supply					       	"Wirkenergie Lieferung [%.2f KWh]"		<selfenergy>   { channel="knx:device:bridge:other:energySupply" }
-Number Power_Demand					        	"Wirkleistung Bezug [%d W]"		<selfenergy>   { channel="knx:device:bridge:other:powerDemand" }
-Number Power_Supply					        	"Wirkleistung Lieferung [%d W]"		<selfenergy>   { channel="knx:device:bridge:other:powerSupply" }
+Number Energy_Demand					       	"Wirkenergie Bezug [%d Watt]"		<selfenergy>   { channel="knx:device:bridge:other:energyDemand" }
+Number Energy_Supply					       	"Wirkenergie Lieferung [%d Watt]"		<selfenergy>   { channel="knx:device:bridge:other:energySupply" }
+Number Power_Demand					        	"Wirkleistung Bezug [%d Watt]"		<selfenergy>   { channel="knx:device:bridge:other:powerDemand" }
+Number Power_Supply					        	"Wirkleistung Lieferung [%d Watt]"		<selfenergy>   { channel="knx:device:bridge:other:powerSupply" }
+
+Number Test_Electricity_Meter_Demand			"Zählerstand Bezug [%.2f KWh]"		<selfenergy>
+Number Test_Electricity_Meter_Supply			"Zählerstand Lieferung [%.2f KWh]"	<selfenergy>
+Number Test_Electricity_Current_Consumption 	"Aktueller Verbrauch [%d Watt]"	<selfenergy>
+Number Test_Electricity_Current_Demand 	        "Aktueller Bezug [%d Watt]"	<selfenergy>
 
 Number Electricity_Meter						"Zählerstand [%.2f KWh]"		<selfenergy>		(PersistentHistory)
 Number Electricity_Current_Daily_Consumption	"Tagesverbrauch [%.2f KWh]"		<selfenergy>        (PersistentChart) ["Energy", "Measurement"]

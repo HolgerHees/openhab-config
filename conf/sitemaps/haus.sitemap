@@ -465,10 +465,19 @@ sitemap haus label="Main Menu"
                         Text item=Electricity_Forecast
                     }
                     Frame label="Neu" {
-                        Text item=Energy_Demand
-                        Text item=Energy_Supply
-                        Text item=Power_Demand
-                        Text item=Power_Supply
+                        Text item=Test_Electricity_Current_Consumption
+                        Text item=Test_Electricity_Current_Demand valuecolor=[>=0="yellow",<0="#26cb00"]
+                        Text item=Test_Electricity_Meter_Demand
+                        Text item=Test_Electricity_Meter_Supply
+                        Text label="Details" icon="selfautomode"{
+                            Frame label="Neu Details" {
+                                Text item=Solar_AC_Power
+                                Text item=Power_Demand
+                                Text item=Power_Supply
+                                Text item=Energy_Demand
+                                Text item=Energy_Supply
+                            }
+                        }
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]

@@ -88,6 +88,52 @@ class EnergyConsumptionRule2:
 
     def execute(self, module, input):'''
 
+referenceCounterDemandValue = 21158037
+referenceCounterSupplyValue = 0
+
+@rule("values_consumption.py")
+class EnergyCounterDemandRuleTest:
+    def __init__(self):
+        self.triggers = [
+          ItemStateChangeTrigger("Energy_Demand")
+        ]
+
+    def execute(self, module, input):
+        zaehlerStandCurrent = getItemState("Energy_Demand").intValue()
+        zaehlerStandTotal = ( referenceCounterDemandValue + zaehlerStandCurrent ) / 1000.0
+        postUpdateIfChanged("Test_Electricity_Meter_Demand",zaehlerStandTotal)
+
+@rule("values_consumption.py")
+class EnergyCounterSupplyRuleTest:
+    def __init__(self):
+        self.triggers = [
+          ItemStateChangeTrigger("Energy_Supply")
+        ]
+
+    def execute(self, module, input):
+        zaehlerStandCurrent = getItemState("Energy_Supply").intValue()
+        zaehlerStandTotal = ( referenceCounterSupplyValue + zaehlerStandCurrent ) / 1000.0
+        postUpdateIfChanged("Test_Electricity_Meter_Supply",zaehlerStandTotal)
+
+@rule("values_consumption.py")
+class EnergyConsumptionRuleTest:
+    def __init__(self):
+        self.triggers = [
+          ItemStateChangeTrigger("Power_Demand"),
+          ItemStateChangeTrigger("Power_Supply"),
+          ItemStateChangeTrigger("Solar_AC_Power")
+    ]
+
+    def execute(self, module, input):
+        powerDemand = getItemState("Power_Demand").intValue()
+        powerSupply = getItemState("Power_Supply").intValue()
+        solarPower = getItemState("Solar_AC_Power").intValue()
+
+        postUpdateIfChanged("Test_Electricity_Current_Consumption",powerDemand - powerSupply + solarPower)
+        
+        postUpdateIfChanged("Test_Electricity_Current_Demand",powerDemand - powerSupply)
+        
+
 @rule("values_consumption.py")
 class EnergyConsumptionRule:
     def __init__(self):
