@@ -797,6 +797,14 @@ body,
 	stroke: var(--primary-color);
     fill: transparent;
 }
+.mvWidget .content.haus .info .energy .demand 
+{
+    color: var(--widget-warn-color);
+}
+.mvWidget .content.haus .info .energy .supply 
+{
+    color: var(--primary-color);
+}
 .mvWidget .content.haus .info .energy .top, 
 .mvWidget .content.haus .info .energy .bottom {
 	flex: 0 0 50%;
