@@ -12,16 +12,27 @@ Number Energy_Supply					       	"Wirkenergie Lieferung [%d Watt]"		<selfenergy>
 Number Power_Demand					        	"Wirkleistung Bezug [%d Watt]"		<selfenergy>   { channel="knx:device:bridge:other:powerDemand" }
 Number Power_Supply					        	"Wirkleistung Lieferung [%d Watt]"		<selfenergy>   { channel="knx:device:bridge:other:powerSupply" }
 
-Number Test_Electricity_Meter_Demand			"Zählerstand Bezug [%.2f KWh]"		<selfenergy>
-Number Test_Electricity_Meter_Supply			"Zählerstand Lieferung [%.2f KWh]"	<selfenergy>
-Number Test_Electricity_Current_Consumption 	"Aktueller Verbrauch [%d Watt]"	<selfenergy>
-Number Test_Electricity_Current_Demand 	        "Aktueller Bezug [%d Watt]"	<selfenergy>
+Number Electricity_Meter_Demand			"Zählerstand Bezug [%.2f KWh]"		<selfenergy>		(PersistentHistory)
+Number Electricity_Meter_Supply			"Zählerstand Lieferung [%.2f KWh]"	<selfenergy>		(PersistentHistory)
+Number Electricity_Current_Consumption 	"Aktueller Verbrauch [%d Watt]"	<selfenergy>		    (PersistentChart,PersistentHistory)
+Number Electricity_Current_Demand 	        "Aktueller Bezug [%d Watt]"	<selfenergy>
 
-Number Electricity_Meter						"Zählerstand [%.2f KWh]"		<selfenergy>		(PersistentHistory)
-Number Electricity_Current_Daily_Consumption	"Tagesverbrauch [%.2f KWh]"		<selfenergy>        (PersistentChart) ["Energy", "Measurement"]
-Number Electricity_Current_Consumption 			"Aktueller Verbrauch [%d Watt]"	<selfenergy>		(PersistentChart)
-Number Electricity_Annual_Consumption 			"Aktuelle Periode [%.2f KWh]"	<selfenergy>
-String Electricity_Forecast 					"Hochrechnung [%s]"				<selfenergy>
+Number Electricity_Current_Daily_Consumption  "Tagesverbrauch [%.2f KWh]"	<selfenergy>        (PersistentChart,PersistentHistory) ["Energy", "Measurement"]
+//Number Electricity_Current_Annual_Consumption "Jahresverbrauch [%.2f KWh]"	<selfenergy>
+
+Number Electricity_Current_Daily_Demand 	   "Tagesbezug [%.2f KWh]"	<selfenergy>
+Number Electricity_Current_Annual_Demand 	   "Jahresbezug [%.2f KWh]"	<selfenergy>
+String Electricity_Current_Annual_Demand_Forecast "Bezugs Hochrechnung [%s]"	<selfenergy>
+
+Number Electricity_Current_Daily_Supply 	   "Tageslieferung [%.2f KWh]"	<selfenergy>
+Number Electricity_Current_Annual_Supply 	   "Jahreslieferung [%.2f KWh]"	<selfenergy>
+String Electricity_Current_Annual_Supply_Forecast "Lieferung Hochrechnung [%s]"	<selfenergy>
+
+//Number Electricity_Meter						"Zählerstand [%.2f KWh]"		<selfenergy>		(PersistentHistory)
+//Number Electricity_Current_Daily_Consumption	"Tagesverbrauch [%.2f KWh]"		<selfenergy>        (PersistentChart) ["Energy", "Measurement"]
+//Number Electricity_Current_Consumption 			"Aktueller Verbrauch [%d Watt]"	<selfenergy>		(PersistentChart)
+//Number Electricity_Annual_Consumption 			"Aktuelle Periode [%.2f KWh]"	<selfenergy>
+//String Electricity_Forecast 					"Hochrechnung [%s]"				<selfenergy>
 
 //########### Solar ##########
 Number Solar_Total_Yield						"Gesamtertrag [%d kWh]"		    <selfenergy>                                            { channel="modbus:data:solarGarage:earnings:total_yield:number" }

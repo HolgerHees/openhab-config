@@ -92,31 +92,82 @@ referenceCounterDemandValue = 21158037
 referenceCounterSupplyValue = 0
 
 @rule("values_consumption.py")
-class EnergyCounterDemandRuleTest:
+class EnergyCounterDemandRule:
     def __init__(self):
         self.triggers = [
-          ItemStateChangeTrigger("Energy_Demand")
+          ItemStateChangeTrigger("Energy_Demand"),
+          CronTrigger("0 */1 * * * ?")
         ]
 
     def execute(self, module, input):
-        zaehlerStandCurrent = getItemState("Energy_Demand").intValue()
-        zaehlerStandTotal = ( referenceCounterDemandValue + zaehlerStandCurrent ) / 1000.0
-        postUpdateIfChanged("Test_Electricity_Meter_Demand",zaehlerStandTotal)
+        now = getNow()
+        
+        demandCurrent = getItemState("Energy_Demand").intValue()
+        zaehlerStandCurrent = ( referenceCounterDemandValue + demandCurrent ) / 1000.0
+        postUpdateIfChanged("Electricity_Meter_Demand",zaehlerStandCurrent)
+        
+        # *** Tagesbezug ***
+        zaehlerStandOld = getHistoricItemState("Electricity_Meter_Demand", now.withTimeAtStartOfDay() ).doubleValue()
+        currentDemand = zaehlerStandCurrent - zaehlerStandOld
+        
+        postUpdateIfChanged("Electricity_Current_Daily_Demand",currentDemand)
+
+        # *** Jahresbezug ***
+        zaehlerStandOld = getHistoricItemState("Electricity_Meter_Demand", now.withDate(now.getYear()-1, 12, 31 )).doubleValue()
+        currentDemand = zaehlerStandCurrent - zaehlerStandOld
+
+        if postUpdateIfChanged("Electricity_Current_Annual_Demand", currentDemand ):
+            # Hochrechnung
+            zaehlerStandCurrentOneYearBefore = getHistoricItemState("Electricity_Meter_Demand", now.minusYears(1) ).doubleValue()
+            forecastDemand = zaehlerStandOld - zaehlerStandCurrentOneYearBefore
+
+            zaehlerStandOldOneYearBefore = getHistoricItemState("Electricity_Meter_Demand", now.withDate(now.getYear()-2, 12, 31 )).doubleValue()
+
+            hochrechnungDemand = int( round( currentDemand + forecastDemand ) )
+            vorjahresDemand = int( round( zaehlerStandOld - zaehlerStandOldOneYearBefore ) )
+            msg = u"{} KWh, {} KWh".format(hochrechnungDemand,vorjahresDemand)
+            postUpdate("Electricity_Current_Annual_Demand_Forecast", msg )
+
 
 @rule("values_consumption.py")
-class EnergyCounterSupplyRuleTest:
+class EnergyCounterSupplyRule:
     def __init__(self):
         self.triggers = [
-          ItemStateChangeTrigger("Energy_Supply")
+          ItemStateChangeTrigger("Energy_Supply"),
+          CronTrigger("0 */1 * * * ?")
         ]
 
     def execute(self, module, input):
-        zaehlerStandCurrent = getItemState("Energy_Supply").intValue()
-        zaehlerStandTotal = ( referenceCounterSupplyValue + zaehlerStandCurrent ) / 1000.0
-        postUpdateIfChanged("Test_Electricity_Meter_Supply",zaehlerStandTotal)
+        now = getNow()
+        
+        supplyCurrent = getItemState("Energy_Supply").intValue()
+        zaehlerStandCurrent = ( referenceCounterSupplyValue + supplyCurrent ) / 1000.0
+        postUpdateIfChanged("Electricity_Meter_Supply",zaehlerStandCurrent)
+
+        # *** Tagesverbrauch ***
+        zaehlerStandOld = getHistoricItemState("Electricity_Meter_Supply", now.withTimeAtStartOfDay() ).doubleValue()
+        currentSupply = zaehlerStandCurrent - zaehlerStandOld
+
+        postUpdateIfChanged("Electricity_Current_Daily_Supply",currentSupply)
+
+        # *** Jahresverbrauch ***
+        zaehlerStandOld = getHistoricItemState("Electricity_Meter_Supply", now.withDate(now.getYear()-1, 12, 31 )).doubleValue()
+        currentSupply = zaehlerStandCurrent - zaehlerStandOld
+
+        if postUpdateIfChanged("Electricity_Current_Annual_Supply", currentSupply ):
+            # Hochrechnung
+            zaehlerStandCurrentOneYearBefore = getHistoricItemState("Electricity_Meter_Supply", now.minusYears(1) ).doubleValue()
+            forecastSupply = zaehlerStandOld - zaehlerStandCurrentOneYearBefore
+
+            zaehlerStandOldOneYearBefore = getHistoricItemState("Electricity_Meter_Supply", now.withDate(now.getYear()-2, 12, 31 )).doubleValue()
+
+            hochrechnungSupply = int( round( currentSupply + forecastSupply ) )
+            vorjahresSupply = int( round( zaehlerStandOld - zaehlerStandOldOneYearBefore ) )
+            msg = u"{} KWh, {} KWh".format(hochrechnungSupply,vorjahresSupply)
+            postUpdate("Electricity_Current_Annual_Supply_Forecast", msg )
 
 @rule("values_consumption.py")
-class EnergyConsumptionRuleTest:
+class EnergyConsumptionRule:
     def __init__(self):
         self.triggers = [
           ItemStateChangeTrigger("Power_Demand"),
@@ -129,53 +180,70 @@ class EnergyConsumptionRuleTest:
         powerSupply = getItemState("Power_Supply").intValue()
         solarPower = getItemState("Solar_AC_Power").intValue()
 
-        postUpdateIfChanged("Test_Electricity_Current_Consumption",powerDemand - powerSupply + solarPower)
+        postUpdateIfChanged("Electricity_Current_Consumption",powerDemand - powerSupply + solarPower)
         
-        postUpdateIfChanged("Test_Electricity_Current_Demand",powerDemand - powerSupply)
-        
+        postUpdateIfChanged("Electricity_Current_Demand",powerDemand - powerSupply)
+
 
 @rule("values_consumption.py")
-class EnergyConsumptionRule:
+class EnergyDailyConsumptionRule:
     def __init__(self):
         self.triggers = [
-          ItemStateChangeTrigger("Electricity_Meter"),
-          CronTrigger("0 */5 * * * ?")
-        ]
+          ItemStateChangeTrigger("Electricity_Current_Daily_Demand"),
+          ItemStateChangeTrigger("Electricity_Current_Daily_Supply"),
+          ItemStateChangeTrigger("Solar_Daily_Yield")
+    ]
 
     def execute(self, module, input):
-        now = getNow()
-        zaehlerStandCurrent = getItemState("Electricity_Meter").doubleValue()
+        dailyEnergyDemand = getItemState("Electricity_Current_Daily_Demand").doubleValue()
+        dailyEnergySupply = getItemState("Electricity_Current_Daily_Supply").doubleValue()
+        dailySolarSupply = getItemState("Solar_Daily_Yield").doubleValue()
 
-        # *** Aktueller Verbrauch ***
-        value5Min = getHistoricReference( self.log, "Electricity_Meter", 300, 360, 900, 300 )
-        
-        # convert kwh to watt/5min
-        # mit 12 multiplizieren da Zählerstand in KW pro Stunde ist
-        watt5Min = int( round( value5Min * 12 * 1000 ) )
+        postUpdateIfChanged("Electricity_Current_Daily_Consumption",dailyEnergyDemand - dailyEnergySupply + dailySolarSupply)
 
-        postUpdateIfChanged("Electricity_Current_Consumption",watt5Min)
 
-        # *** Tagesverbrauch ***
-        zaehlerStandOld = getHistoricItemState("Electricity_Meter", now.withTimeAtStartOfDay() ).doubleValue()
-        currentConsumption = zaehlerStandCurrent - zaehlerStandOld
-
-        postUpdateIfChanged("Electricity_Current_Daily_Consumption",currentConsumption)
-
-        # *** Jahresverbrauch ***
-        zaehlerStandOld = getHistoricItemState("Electricity_Meter", now.withDate(now.getYear()-1, 12, 31 )).doubleValue()
-        currentConsumption = zaehlerStandCurrent - zaehlerStandOld
-
-        if postUpdateIfChanged("Electricity_Annual_Consumption", currentConsumption ):
-            # Hochrechnung
-            zaehlerStandCurrentOneYearBefore = getHistoricItemState("Electricity_Meter", now.minusYears(1) ).doubleValue()
-            forecastConsumtion = zaehlerStandOld - zaehlerStandCurrentOneYearBefore
-
-            zaehlerStandOldOneYearBefore = getHistoricItemState("Electricity_Meter", now.withDate(now.getYear()-2, 12, 31 )).doubleValue()
-
-            hochrechnungVerbrauch = int( round( currentConsumption + forecastConsumtion ) )
-            vorjahresVerbrauch = int( round( zaehlerStandOld - zaehlerStandOldOneYearBefore ) )
-            msg = u"{} KWh, {} KWh".format(hochrechnungVerbrauch,vorjahresVerbrauch)
-            postUpdate("Electricity_Forecast", msg )
+#@rule("values_consumption.py")
+#class EnergyConsumptionRule:
+#    def __init__(self):
+#        self.triggers = [
+#          ItemStateChangeTrigger("Electricity_Meter"),
+#          CronTrigger("0 */5 * * * ?")
+#        ]
+#
+#    def execute(self, module, input):
+#        now = getNow()
+#        zaehlerStandCurrent = getItemState("Electricity_Meter").doubleValue()
+#
+#        # *** Aktueller Verbrauch ***
+#        value5Min = getHistoricReference( self.log, "Electricity_Meter", 300, 360, 900, 300 )
+#        
+#        # convert kwh to watt/5min
+#        # mit 12 multiplizieren da Zählerstand in KW pro Stunde ist
+#        watt5Min = int( round( value5Min * 12 * 1000 ) )
+#
+#        postUpdateIfChanged("Electricity_Current_Consumption",watt5Min)
+#
+#        # *** Tagesverbrauch ***
+#        zaehlerStandOld = getHistoricItemState("Electricity_Meter", now.withTimeAtStartOfDay() ).doubleValue()
+#        currentConsumption = zaehlerStandCurrent - zaehlerStandOld
+#
+#        postUpdateIfChanged("Electricity_Current_Daily_Consumption",currentConsumption)
+#
+#        # *** Jahresverbrauch ***
+#        zaehlerStandOld = getHistoricItemState("Electricity_Meter", now.withDate(now.getYear()-1, 12, 31 )).doubleValue()
+#        currentConsumption = zaehlerStandCurrent - zaehlerStandOld
+#
+#        if postUpdateIfChanged("Electricity_Annual_Consumption", currentConsumption ):
+#            # Hochrechnung
+#            zaehlerStandCurrentOneYearBefore = getHistoricItemState("Electricity_Meter", now.minusYears(1) ).doubleValue()
+#            forecastConsumtion = zaehlerStandOld - zaehlerStandCurrentOneYearBefore
+#
+#            zaehlerStandOldOneYearBefore = getHistoricItemState("Electricity_Meter", now.withDate(now.getYear()-2, 12, 31 )).doubleValue()
+#
+#            hochrechnungVerbrauch = int( round( currentConsumption + forecastConsumtion ) )
+#            vorjahresVerbrauch = int( round( zaehlerStandOld - zaehlerStandOldOneYearBefore ) )
+#            msg = u"{} KWh, {} KWh".format(hochrechnungVerbrauch,vorjahresVerbrauch)
+#            postUpdate("Electricity_Forecast", msg )
 
 
 @rule("values_consumption.py")

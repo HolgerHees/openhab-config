@@ -457,25 +457,48 @@ sitemap haus label="Main Menu"
             }
             Frame label="Versorgung" {
                 Group item=Electricity_Current_Daily_Consumption label="Strom [%.2f KWh]"{
-                    Frame label="Daten" {
+                    Frame label="Verbrauch" {
                         Text item=Electricity_Current_Daily_Consumption
                         Text item=Electricity_Current_Consumption
-                        Text item=Electricity_Annual_Consumption
-                        Text item=Electricity_Meter
-                        Text item=Electricity_Forecast
+                        Text item=Electricity_Current_Demand valuecolor=[>=0="yellow",<0="#26cb00"]
                     }
-                    Frame label="Neu" {
-                        Text item=Test_Electricity_Current_Consumption
-                        Text item=Test_Electricity_Current_Demand valuecolor=[>=0="yellow",<0="#26cb00"]
-                        Text item=Test_Electricity_Meter_Demand
-                        Text item=Test_Electricity_Meter_Supply
-                        Text label="Details" icon="selfautomode"{
-                            Frame label="Neu Details" {
-                                Text item=Solar_AC_Power
+                    Frame label="Details" {
+                        Group label="Bezug [%.2f KWh]" item=Electricity_Current_Daily_Demand {
+                            Frame label="Daten" {
+                                Text item=Electricity_Current_Daily_Demand
+                                Text item=Electricity_Current_Annual_Demand
+                                Text item=Electricity_Meter_Demand
+                                Text item=Electricity_Current_Annual_Demand_Forecast
+                            }
+                            Frame label="Raw" {
                                 Text item=Power_Demand
-                                Text item=Power_Supply
                                 Text item=Energy_Demand
+                            }
+                        }
+                        Group label="Lieferung [%.2f KWh]" item=Electricity_Current_Daily_Supply {
+                            Frame label="Daten" {
+                                Text item=Electricity_Current_Daily_Supply
+                                Text item=Electricity_Current_Annual_Supply
+                                Text item=Electricity_Meter_Supply
+                                Text item=Electricity_Current_Annual_Supply_Forecast
+                            }
+                            Frame label="Raw" {
+                                Text item=Power_Supply
                                 Text item=Energy_Supply
+                            }
+                        }
+                        Group label="Solar [%.2f KWh]" item=Solar_Daily_Yield{
+                            Frame label="Solar" {
+                                Text item=Solar_Daily_Yield
+                                Text item=Solar_AC_Power
+                                Text item=Solar_DC_Power
+                                Text item=Solar_DC_Voltage
+                                Text item=Solar_DC_Current
+                                Text item=Solar_Total_Yield
+                            }
+                            Frame label="Auswertung" {
+                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/grafana/solar_energy.html?fromItem=Chart_From" height=18
                             }
                         }
                     }
@@ -510,20 +533,6 @@ sitemap haus label="Main Menu"
                         Webview url="/static/grafana/solar_heating.html?fromItem=Chart_From" height=27
                     }
                 
-                }
-                Group item=Solar_Daily_Yield label="PV [%.3f kWh]" icon="sun"{
-                    Frame label="Daten" {
-                        Text item=Solar_Daily_Yield
-                        Text item=Solar_AC_Power
-                        Text item=Solar_DC_Power
-                        Text item=Solar_DC_Voltage
-                        Text item=Solar_DC_Current
-                        Text item=Solar_Total_Yield
-                    }
-                    Frame label="Auswertung" {
-                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/grafana/solar_energy.html?fromItem=Chart_From" height=18
-                    }
                 }
             }
             Frame label="Sonstiges" {
