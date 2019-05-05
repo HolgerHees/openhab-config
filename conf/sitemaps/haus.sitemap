@@ -465,10 +465,10 @@ sitemap haus label="Main Menu"
                     Frame label="Details" {
                         Group label="Bezug [%.2f KWh]" item=Electricity_Current_Daily_Demand {
                             Frame label="Daten" {
-                                Text item=Electricity_Current_Daily_Demand
-                                Text item=Electricity_Current_Annual_Demand
-                                Text item=Electricity_Meter_Demand
-                                Text item=Electricity_Current_Annual_Demand_Forecast
+                                Text item=Electricity_Current_Daily_Demand label="Heute [%.2f KWh]"
+                                Text item=Electricity_Current_Annual_Demand label="Periode [%.2f KWh]"
+                                Text item=Electricity_Meter_Demand label="Zählerstand [%.2f KWh]"
+                                Text item=Electricity_Current_Annual_Demand_Forecast label="Hochrechnung [%s]"
                             }
                             Frame label="Raw" {
                                 Text item=Power_Demand
@@ -477,10 +477,10 @@ sitemap haus label="Main Menu"
                         }
                         Group label="Lieferung [%.2f KWh]" item=Electricity_Current_Daily_Supply {
                             Frame label="Daten" {
-                                Text item=Electricity_Current_Daily_Supply
-                                Text item=Electricity_Current_Annual_Supply
-                                Text item=Electricity_Meter_Supply
-                                Text item=Electricity_Current_Annual_Supply_Forecast
+                                Text item=Electricity_Current_Daily_Supply label="Heute [%.2f KWh]"
+                                Text item=Electricity_Current_Annual_Supply label="Periode [%.2f KWh]"
+                                Text item=Electricity_Meter_Supply label="Zählerstand [%.2f KWh]"
+                                Text item=Electricity_Current_Annual_Supply_Forecast label="Hochrechnung [%s]"
                             }
                             Frame label="Raw" {
                                 Text item=Power_Supply
