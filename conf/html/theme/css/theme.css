@@ -793,7 +793,8 @@ body,
 .mvWidget .content.haus .info .energy {
 	display: flex;
 	flex-wrap: wrap;
-	flex-direction: column;
+	flex-direction: row;
+    justify-content: flex-end;
 	stroke: var(--primary-color);
     fill: transparent;
 }
@@ -805,18 +806,20 @@ body,
 {
     color: var(--primary-color);
 }
+.mvWidget .content.haus .info .energy .head, 
 .mvWidget .content.haus .info .energy .top, 
 .mvWidget .content.haus .info .energy .bottom {
-	flex: 0 0 50%;
+	flex-grow: 1;
+}
+.mvWidget .content.haus .info .energy div.top .main {
+    padding-left: 0.3vw;
+    font-size: 1.8vw;
+	line-height: 1.8vw;
 }
 .mvWidget .content.haus .info .energy div.bottom  {
-	line-height: 2.0vw;
+	line-height: 1.4vw;
 }
 .mvWidget .content.haus .info .energy .icon {
-	flex: 0 0 100%;
-	padding-right: 40px;
-	padding-bottom: 14px;
-	padding-top: 5px;
     width: 1.5vw;
     height: 1.5vw;
 }
