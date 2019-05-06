@@ -813,15 +813,15 @@ body,
 }
 .mvWidget .content.haus .info .energy div.top .main {
     padding-left: 0.3vw;
-    font-size: 1.8vw;
-	line-height: 1.8vw;
+    font-size: 2vw;
+	line-height: 2vw;
 }
 .mvWidget .content.haus .info .energy div.bottom  {
 	line-height: 1.4vw;
 }
 .mvWidget .content.haus .info .energy .icon {
-    width: 1.5vw;
-    height: 1.5vw;
+    width: 2vw;
+    height: 2vw;
 }
 .mvWidget .content.haus .info .energy .icon svg {
 	height: 100%;

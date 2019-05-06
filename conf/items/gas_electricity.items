@@ -30,12 +30,16 @@ String Electricity_Current_Annual_Supply_Forecast "Lieferung Hochrechnung [%s]"	
 
 //Number Electricity_Meter						"Zählerstand [%.2f KWh]"		<selfenergy>		(PersistentHistory)
 //Number Electricity_Current_Daily_Consumption	"Tagesverbrauch [%.2f KWh]"		<selfenergy>        (PersistentChart) ["Energy", "Measurement"]
-//Number Electricity_Current_Consumption 			"Aktueller Verbrauch [%d Watt]"	<selfenergy>		(PersistentChart)
-//Number Electricity_Annual_Consumption 			"Aktuelle Periode [%.2f KWh]"	<selfenergy>
+//Number Electricity_Current_Consumption 		"Aktueller Verbrauch [%d Watt]"	<selfenergy>		(PersistentChart)
+//Number Electricity_Annual_Consumption 		"Aktuelle Periode [%.2f KWh]"	<selfenergy>
 //String Electricity_Forecast 					"Hochrechnung [%s]"				<selfenergy>
 
 //########### Solar ##########
-Number Solar_Total_Yield						"Gesamtertrag [%d kWh]"		    <selfenergy>                                            { channel="modbus:data:solarGarage:earnings:total_yield:number" }
+Number Solar_Daily_Consumption 	                "Tagesverbrauch [%.2f KWh]"	    <selfenergy>        (PersistentChart,PersistentHistory)
+Number Solar_Annual_Consumption 	            "Jahresverbrauch [%.2f KWh]"	<selfenergy>
+String Solar_Info                               "Ertrag, Verbrauch [%s]"	    <selfenergy>
+
+Number Solar_Total_Yield						"Gesamtertrag [%d kWh]"		    <selfenergy>        (PersistentHistory)                 { channel="modbus:data:solarGarage:earnings:total_yield:number" }
 Number Solar_Daily_Yield						"Tagesertrag [%.3f kWh]"	    <selfenergy>        (PersistentChart,PersistentHistory) { channel="modbus:data:solarGarage:earnings:daily_yield:number" }
 Number Solar_DC_Current						    "DC Strom [%.2f A]"	            <selfenergy>                                            { channel="modbus:data:solarGarage:power:dc_current:number" } 
 Number Solar_DC_Voltage						    "DC Spannung [%.2f V]"	        <selfenergy>                                            { channel="modbus:data:solarGarage:power:dc_voltage:number" } 

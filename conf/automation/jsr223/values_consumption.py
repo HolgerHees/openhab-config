@@ -7,6 +7,11 @@ from core.triggers import CronTrigger, ItemStateChangeTrigger
 startGasZaehlerStand = 8522.67
 startGasZaehlerCounter = 0
 
+referenceCounterDemandValue = 21158037
+referenceCounterSupplyValue = 0
+
+totalSupply = 3600
+
 dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS")
 
 def getHistoricReference(log, itemName, valueTime, outdatetTime, messureTime, intervalTime):
@@ -81,22 +86,11 @@ class SolarPower5minRule:
         postUpdateIfChanged("Heating_Solar_Power_Current5Min",value5Min)
 
 
-'''@rule("values_consumption.py")
-class EnergyConsumptionRule2:
-    def __init__(self):
-        self.triggers = [CronTrigger("*/15 * * * * ?")]
-
-    def execute(self, module, input):'''
-
-referenceCounterDemandValue = 21158037
-referenceCounterSupplyValue = 0
-
 @rule("values_consumption.py")
 class EnergyCounterDemandRule:
     def __init__(self):
         self.triggers = [
-          ItemStateChangeTrigger("Energy_Demand"),
-          CronTrigger("0 */1 * * * ?")
+          ItemStateChangeTrigger("Energy_Demand")
         ]
 
     def execute(self, module, input):
@@ -133,8 +127,7 @@ class EnergyCounterDemandRule:
 class EnergyCounterSupplyRule:
     def __init__(self):
         self.triggers = [
-          ItemStateChangeTrigger("Energy_Supply"),
-          CronTrigger("0 */1 * * * ?")
+          ItemStateChangeTrigger("Energy_Supply")
         ]
 
     def execute(self, module, input):
@@ -166,13 +159,39 @@ class EnergyCounterSupplyRule:
             msg = u"{} KWh, {} KWh".format(hochrechnungSupply,vorjahresSupply)
             postUpdate("Electricity_Current_Annual_Supply_Forecast", msg )
 
+
+@rule("values_consumption.py")
+class EnergySupplyRule:
+    def __init__(self):
+        self.triggers = [
+          #ItemStateChangeTrigger("Electricity_Meter_Supply"),
+          ItemStateChangeTrigger("Power_Supply")
+          #CronTrigger("0 */5 * * * ?")
+    ]
+
+    def execute(self, module, input):
+        #def getHistoricReference(log, itemName, valueTime, outdatetTime, messureTime, intervalTime):
+        value = getItemState("Power_Supply").intValue()
+        
+        
+        currentPercentage = value * 100.0 / totalSupply
+        
+        possibleIncrease = 70.0 - currentPercentage
+        if possibleIncrease > 0:
+            self.log.info(u"Supply is {} Watt or {} %. Increase of {} %p possible".format(value,currentPercentage,possibleIncrease))
+        else:
+            self.log.info(u"Supply is {} Watt or {} %. No increase possible.".format(value,currentPercentage))
+
+
 @rule("values_consumption.py")
 class EnergyConsumptionRule:
     def __init__(self):
         self.triggers = [
-          ItemStateChangeTrigger("Power_Demand"),
-          ItemStateChangeTrigger("Power_Supply"),
-          ItemStateChangeTrigger("Solar_AC_Power")
+          #ItemStateChangeTrigger("Power_Demand"),
+          #ItemStateChangeTrigger("Power_Supply"),
+          #ItemStateChangeTrigger("Solar_AC_Power")
+          # should be cron based, otherwise it will create until 3 times more values if it is based on ItemStateChangeTrigger
+          CronTrigger("*/15 * * * * ?")
     ]
 
     def execute(self, module, input):
@@ -181,17 +200,18 @@ class EnergyConsumptionRule:
         solarPower = getItemState("Solar_AC_Power").intValue()
 
         postUpdateIfChanged("Electricity_Current_Consumption",powerDemand - powerSupply + solarPower)
-        
         postUpdateIfChanged("Electricity_Current_Demand",powerDemand - powerSupply)
-
+        
 
 @rule("values_consumption.py")
 class EnergyDailyConsumptionRule:
     def __init__(self):
         self.triggers = [
-          ItemStateChangeTrigger("Electricity_Current_Daily_Demand"),
-          ItemStateChangeTrigger("Electricity_Current_Daily_Supply"),
-          ItemStateChangeTrigger("Solar_Daily_Yield")
+          #ItemStateChangeTrigger("Electricity_Current_Daily_Demand"),
+          #ItemStateChangeTrigger("Electricity_Current_Daily_Supply"),
+          #ItemStateChangeTrigger("Solar_Daily_Yield")
+          # should be cron based, otherwise it will create until 3 times more values if it is based on ItemStateChangeTrigger
+          CronTrigger("0 */5 * * * ?")
     ]
 
     def execute(self, module, input):
@@ -200,6 +220,56 @@ class EnergyDailyConsumptionRule:
         dailySolarSupply = getItemState("Solar_Daily_Yield").doubleValue()
 
         postUpdateIfChanged("Electricity_Current_Daily_Consumption",dailyEnergyDemand - dailyEnergySupply + dailySolarSupply)
+
+
+@rule("values_consumption.py")
+class SolarConsumptionRule:
+    def __init__(self):
+        self.triggers = [
+          #ItemStateChangeTrigger("Electricity_Meter_Supply"),
+          #ItemStateChangeTrigger("Solar_Total_Yield"),
+          # should be cron based, otherwise it will create until 3 times more values if it is based on ItemStateChangeTrigger
+          CronTrigger("0 */5 * * * ?")
+    ]
+
+    def execute(self, module, input):
+        now = getNow()
+      
+        currentSupply = getItemState("Electricity_Meter_Supply").doubleValue()
+        currentYield = getItemState("Solar_Total_Yield").doubleValue()
+        
+        # Tagesverbrauch
+        startSupply = getHistoricItemState("Electricity_Meter_Supply", now.withTimeAtStartOfDay() ).doubleValue()
+        startYield = getHistoricItemState("Solar_Total_Yield", now.withTimeAtStartOfDay() ).doubleValue()
+
+        totalSupply = currentSupply - startSupply
+        totalYield = currentYield - startYield
+        dailyConsumption = totalYield - totalSupply
+        
+        #self.log.info(u"{}".format(now.withTimeAtStartOfDay()))
+        #self.log.info(u"A {} {}".format(currentSupply,currentYield))
+        #self.log.info(u"B {} {}".format(startSupply,startYield))
+        #self.log.info(u"C {}".format(dailyConsumption))
+        
+        postUpdateIfChanged("Solar_Daily_Consumption",dailyConsumption)
+        
+        # Jahresverbrauch
+        startSupply = getHistoricItemState("Electricity_Meter_Supply", now.withDate(now.getYear()-1, 12, 31 ) ).doubleValue()
+        startYield = getHistoricItemState("Solar_Total_Yield", now.withDate(now.getYear()-1, 12, 31 ) ).doubleValue()
+
+        totalSupply = currentSupply - startSupply
+        totalYield = currentYield - startYield
+        annualConsumption = totalYield - totalSupply
+        
+        #self.log.info(u"D {} {}".format(startSupply,startYield))
+        #self.log.info(u"E {}".format(annualConsumption))
+        
+        postUpdateIfChanged("Solar_Annual_Consumption",annualConsumption)
+        
+        # Solarinfo
+        dailyYield = getItemState("Solar_Daily_Yield").doubleValue()
+        msg = u"{:.2f} kWh, {:.2f} kWh".format(dailyYield,dailyConsumption)
+        postUpdate("Solar_Info", msg )
 
 
 #@rule("values_consumption.py")

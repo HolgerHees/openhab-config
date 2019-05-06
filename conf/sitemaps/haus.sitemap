@@ -458,9 +458,9 @@ sitemap haus label="Main Menu"
             Frame label="Versorgung" {
                 Group item=Electricity_Current_Daily_Consumption label="Strom [%.2f KWh]"{
                     Frame label="Verbrauch" {
-                        Text item=Electricity_Current_Daily_Consumption
+                        Text item=Electricity_Current_Daily_Consumption label="Tagesverbrauch [%.2f KWh]"
                         Text item=Electricity_Current_Consumption
-                        Text item=Electricity_Current_Demand valuecolor=[>=0="yellow",<0="#26cb00"]
+                        Text item=Electricity_Current_Demand valuecolor=[>=0="#fea400",<0="#26cb00"]
                     }
                     Frame label="Details" {
                         Group label="Bezug [%.2f KWh]" item=Electricity_Current_Daily_Demand {
@@ -487,7 +487,11 @@ sitemap haus label="Main Menu"
                                 Text item=Energy_Supply
                             }
                         }
-                        Group label="Solar [%.2f KWh]" item=Solar_Daily_Yield{
+                        Group label="Solar [%s]" item=Solar_Info{
+                            Frame label="Verbrauch" {
+                                Text item=Solar_Daily_Consumption
+                                Text item=Solar_Annual_Consumption
+                            }
                             Frame label="Solar" {
                                 Text item=Solar_Daily_Yield
                                 Text item=Solar_AC_Power
@@ -520,7 +524,7 @@ sitemap haus label="Main Menu"
                         Webview url="/static/grafana/consumption_gas.html?fromItem=Chart_From" height=18
                     }
                 }
-                Group item=Heating_Solar_Power_Current_Daily label="Solar [%.1f KW]" icon="sun"{
+                Group item=Heating_Solar_Power_Current_Daily label="Wasser [%.1f KW]" icon="selfwater"{
                     Frame label="Daten" {
                         Text item=Heating_Solar_State_Message
                         Text item=Heating_Temperature_Solar_Message

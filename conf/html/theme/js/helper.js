@@ -980,8 +980,7 @@ var MV = {
     function dashboardButtonLinker($location) {
         return {
             restrict: "A",
-            link: function (scope, elem, attrs) {
-                //console.log(scope);
+            link: function (scope, elem, attrs) {                
                 var dashboard = "";
                 if( attrs.dashboard )
                 {
@@ -1002,7 +1001,7 @@ var MV = {
                 elem[0].addEventListener("click", function () {
 					scope.$evalAsync(function(){
                         //console.log("onclick");
-                        $location.url("/view/" + dashboard);
+                        $location.url("/view/" + dashboard + ( attrs.dashboardParameter ? "?" + attrs.dashboardParameter : "" ));
                     });
                 });
             }
@@ -1296,6 +1295,13 @@ var MV = {
             restrict: "A",
             link: function (scope, elem, attrs) 
 			{
+                var pos = document.location.hash.indexOf("?");
+                if( pos != -1 )
+                {
+                    elem[0].src = elem[0].src + "?" + document.location.hash.substr(pos+1);
+                    console.log(document.location.hash.substr(pos+1));
+                }
+                
                 elem[0].style="visibility:hidden";
                 elem[0].addEventListener("load", function()
                 {
