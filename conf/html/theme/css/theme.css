@@ -840,9 +840,10 @@ body,
 .mvWidget .content.haus .info .solar div.top .icon {
     margin-top: -3px;
 	padding: 0 3px 2px 0;
-    width: 2.1vw;
-    height: 2.1vw;
+    width: 1.6vw;
+    height: 1.6vw;
 	text-align: right;
+    margin-left: 0;
 }
 .mvWidget .content.haus .info .solar .icon svg {
     stroke: var(--sub-icon-color);
@@ -854,13 +855,17 @@ body,
     fill: orange;
     filter: brightness(100%);
 }
+.mvWidget .content.haus .info .solar div.top,
+.mvWidget .content.haus .info .solar div.bottom {
+    justify-content: flex-start;
+}
 .mvWidget .content.haus .info .solar div.top .main {
-    font-size: 1.6vw;
-    line-height: 1.6vw;
+    font-size: 1.3vw;
+    line-height: 1.3vw;
 }
 .mvWidget .content.haus .info .solar div.top .sub {
-    font-size: 1.0vw;
-	line-height: 1.0vw;
+    font-size: 0.9vw;
+	line-height: 0.9vw;
     margin: 0 0 0 2px;
 }
 .mvWidget .weatherForecast .raindrop_background_1, 
