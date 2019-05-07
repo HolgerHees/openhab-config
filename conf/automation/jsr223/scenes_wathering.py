@@ -75,6 +75,7 @@ class ScenesWatheringRule:
                         activeStep = None
                         #self.log.info("finish")
                         self.disableAllCircuits()
+                        postUpdate("Watering_Program_Start", OFF)
             
         return [ activeStep[1] if activeStep != None else u"", remaining ]
 
