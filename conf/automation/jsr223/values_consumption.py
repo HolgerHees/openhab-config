@@ -10,7 +10,8 @@ startGasZaehlerCounter = 0
 referenceCounterDemandValue = 21158037
 referenceCounterSupplyValue = 0
 
-totalSupply = 3600
+totalSupply = 3600 # total possible photovoltaic power in watt
+maxTimeSlot = 300 # value timeslot to messure average power consumption
 
 dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS")
 
@@ -65,13 +66,8 @@ def getHistoricReference(log, itemName, valueTime, outdatetTime, messureTime, in
     if value < 0:
         value = 0
 
-    if itemName == 'Electricity_Meter':
-        display_value = int( round( value * 12 * 1000) )
-    else:
-        display_value = value
-
     startTime = DateTime(startTimestampInMillis)
-    log.info( u"Consumption {} messured from {} ({}) to {} ({})".format(display_value,startValue,dateTimeFormatter.print(startTime),endValue,dateTimeFormatter.print(endTime)))
+    log.info( u"Consumption {} messured from {} ({}) to {} ({})".format(value,startValue,dateTimeFormatter.print(startTime),endValue,dateTimeFormatter.print(endTime)))
 
     return value
 
@@ -90,7 +86,8 @@ class SolarPower5minRule:
 class EnergyCounterDemandRule:
     def __init__(self):
         self.triggers = [
-          ItemStateChangeTrigger("Energy_Demand")
+          ItemStateChangeTrigger("Energy_Demand"),
+          CronTrigger("1 0 0 * * ?")
         ]
 
     def execute(self, module, input):
@@ -127,7 +124,8 @@ class EnergyCounterDemandRule:
 class EnergyCounterSupplyRule:
     def __init__(self):
         self.triggers = [
-          ItemStateChangeTrigger("Energy_Supply")
+          ItemStateChangeTrigger("Energy_Supply"),
+          CronTrigger("1 0 0 * * ?")
         ]
 
     def execute(self, module, input):
@@ -164,24 +162,51 @@ class EnergyCounterSupplyRule:
 class EnergySupplyRule:
     def __init__(self):
         self.triggers = [
-          #ItemStateChangeTrigger("Electricity_Meter_Supply"),
-          ItemStateChangeTrigger("Power_Supply")
-          #CronTrigger("0 */5 * * * ?")
-    ]
+          ItemStateChangeTrigger("Electricity_Current_Consumption"),
+          CronTrigger("0 */5 * * * ?")
+        ]
+
+        self.stack = []
 
     def execute(self, module, input):
-        #def getHistoricReference(log, itemName, valueTime, outdatetTime, messureTime, intervalTime):
-        value = getItemState("Power_Supply").intValue()
         
-        
-        currentPercentage = value * 100.0 / totalSupply
-        
-        possibleIncrease = 70.0 - currentPercentage
-        if possibleIncrease > 0:
-            self.log.info(u"Supply is {} Watt or {} %. Increase of {} %p possible".format(value,currentPercentage,possibleIncrease))
-        else:
-            self.log.info(u"Supply is {} Watt or {} %. No increase possible.".format(value,currentPercentage))
+        value = getItemState("Electricity_Current_Consumption").intValue()
 
+        now = getNow().getMillis()
+        
+        if len(self.stack) > 0:
+            avgValue = 0
+            currentTime = now
+            currentTimeSlot = 0
+                  
+            for index, x in enumerate( reversed(self.stack) ):           
+                #self.log.info(u"{}".format(DateTime(currentTime)))
+                
+                # remove values older then 5 minutes
+                if currentTimeSlot >= maxTimeSlot and len(self.stack) > index:
+                    #self.log.info(u"remove samples after index {}".format(len(self.stack)-index))
+                    self.stack = self.stack[len(self.stack)-index:]
+                    break;
+
+                avgValue += x[0] * ( currentTime - x[1] )
+                currentTime = x[1]
+                currentTimeSlot = int( round( (now - currentTime) / 1000.0 ) )
+                  
+            if currentTimeSlot >= maxTimeSlot:
+                avgValue = avgValue / ( now - currentTime )
+                currentPercentage = avgValue * 100.0 / totalSupply
+                possibleIncrease = int( round( 70.0 + currentPercentage ) )
+                if possibleIncrease > 100:
+                    possibleIncrease = 100
+
+                self.log.info(u"Consumption is {} Watt. Increase to {} % power limitation possible. [{} samples in {} seconds]".format( avgValue, possibleIncrease, len(self.stack), currentTimeSlot ))
+                
+                #sendCommand("Solar_Power_Limitation",possibleIncrease)
+            else:
+                self.log.info(u"Power limit calculation not possible. Need more samples. [{} samples in {} seconds]".format( len(self.stack), currentTimeSlot ))
+
+        self.stack.append( [value, now ] )
+        
 
 @rule("values_consumption.py")
 class EnergyConsumptionRule:
@@ -192,7 +217,7 @@ class EnergyConsumptionRule:
           #ItemStateChangeTrigger("Solar_AC_Power")
           # should be cron based, otherwise it will create until 3 times more values if it is based on ItemStateChangeTrigger
           CronTrigger("*/15 * * * * ?")
-    ]
+        ]
 
     def execute(self, module, input):
         powerDemand = getItemState("Power_Demand").intValue()
@@ -212,7 +237,7 @@ class EnergyDailyConsumptionRule:
           #ItemStateChangeTrigger("Solar_Daily_Yield")
           # should be cron based, otherwise it will create until 3 times more values if it is based on ItemStateChangeTrigger
           CronTrigger("0 */5 * * * ?")
-    ]
+        ]
 
     def execute(self, module, input):
         dailyEnergyDemand = getItemState("Electricity_Current_Daily_Demand").doubleValue()
@@ -230,7 +255,7 @@ class SolarConsumptionRule:
           #ItemStateChangeTrigger("Solar_Total_Yield"),
           # should be cron based, otherwise it will create until 3 times more values if it is based on ItemStateChangeTrigger
           CronTrigger("0 */5 * * * ?")
-    ]
+        ]
 
     def execute(self, module, input):
         now = getNow()
@@ -265,11 +290,6 @@ class SolarConsumptionRule:
         #self.log.info(u"E {}".format(annualConsumption))
         
         postUpdateIfChanged("Solar_Annual_Consumption",annualConsumption)
-        
-        # Solarinfo
-        dailyYield = getItemState("Solar_Daily_Yield").doubleValue()
-        msg = u"{:.2f} kWh, {:.2f} kWh".format(dailyYield,dailyConsumption)
-        postUpdate("Solar_Info", msg )
 
 
 #@rule("values_consumption.py")

@@ -456,18 +456,18 @@ sitemap haus label="Main Menu"
                 }
             }
             Frame label="Versorgung" {
-                Group item=Electricity_Current_Daily_Consumption label="Strom [%.2f KWh]"{
+                Group item=Electricity_Current_Daily_Consumption label="Strom [%.2f kWh]"{
                     Frame label="Verbrauch" {
-                        Text item=Electricity_Current_Daily_Consumption label="Tagesverbrauch [%.2f KWh]"
+                        Text item=Electricity_Current_Daily_Consumption label="Tagesverbrauch [%.2f kWh]"
                         Text item=Electricity_Current_Consumption
                         Text item=Electricity_Current_Demand valuecolor=[>=0="#fea400",<0="#26cb00"]
                     }
                     Frame label="Details" {
-                        Group label="Bezug [%.2f KWh]" item=Electricity_Current_Daily_Demand {
+                        Group label="Bezug [%.2f kWh]" item=Electricity_Current_Daily_Demand {
                             Frame label="Daten" {
-                                Text item=Electricity_Current_Daily_Demand label="Heute [%.2f KWh]"
-                                Text item=Electricity_Current_Annual_Demand label="Periode [%.2f KWh]"
-                                Text item=Electricity_Meter_Demand label="Zählerstand [%.2f KWh]"
+                                Text item=Electricity_Current_Daily_Demand label="Heute [%.2f kWh]"
+                                Text item=Electricity_Current_Annual_Demand label="Periode [%.2f kWh]"
+                                Text item=Electricity_Meter_Demand label="Zählerstand [%.2f kWh]"
                                 Text item=Electricity_Current_Annual_Demand_Forecast label="Hochrechnung [%s]"
                             }
                             Frame label="Raw" {
@@ -475,11 +475,11 @@ sitemap haus label="Main Menu"
                                 Text item=Energy_Demand
                             }
                         }
-                        Group label="Lieferung [%.2f KWh]" item=Electricity_Current_Daily_Supply {
+                        Group label="Lieferung [%.2f kWh]" item=Electricity_Current_Daily_Supply {
                             Frame label="Daten" {
-                                Text item=Electricity_Current_Daily_Supply label="Heute [%.2f KWh]"
-                                Text item=Electricity_Current_Annual_Supply label="Periode [%.2f KWh]"
-                                Text item=Electricity_Meter_Supply label="Zählerstand [%.2f KWh]"
+                                Text item=Electricity_Current_Daily_Supply label="Heute [%.2f kWh]"
+                                Text item=Electricity_Current_Annual_Supply label="Periode [%.2f kWh]"
+                                Text item=Electricity_Meter_Supply label="Zählerstand [%.2f kWh]"
                                 Text item=Electricity_Current_Annual_Supply_Forecast label="Hochrechnung [%s]"
                             }
                             Frame label="Raw" {
@@ -487,11 +487,7 @@ sitemap haus label="Main Menu"
                                 Text item=Energy_Supply
                             }
                         }
-                        Group label="Solar [%s]" item=Solar_Info{
-                            Frame label="Verbrauch" {
-                                Text item=Solar_Daily_Consumption
-                                Text item=Solar_Annual_Consumption
-                            }
+                        Group label="Solar [%.2f kWh]" item=Solar_Daily_Yield {
                             Frame label="Solar" {
                                 Text item=Solar_Daily_Yield
                                 Text item=Solar_AC_Power
@@ -499,10 +495,17 @@ sitemap haus label="Main Menu"
                                 Text item=Solar_DC_Voltage
                                 Text item=Solar_DC_Current
                                 Text item=Solar_Total_Yield
+                                Text item=Solar_Power_Limitation
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                                 Webview url="/static/grafana/solar_energy.html?fromItem=Chart_From" height=18
+                            }
+                        }
+                        Group label="Eigenverbrauch [%.2f kWh]" item=Solar_Daily_Consumption {
+                            Frame label="Daten" {
+                                Text item=Solar_Daily_Consumption
+                                Text item=Solar_Annual_Consumption
                             }
                         }
                     }
