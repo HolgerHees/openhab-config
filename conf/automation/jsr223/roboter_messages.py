@@ -18,7 +18,7 @@ class RoboterMessagesRule:
         if getItemState("roomba_status").toString() == "Stuck" or getItemState("roomba_full") == ON:
             active.append("Roomba")
 
-        if getItemState("MowerStatus").intValue() == 7:
+        if getItemState("MowerStatus").intValue() == 7 or getItemState("MowerStatus").intValue() == 8:
             active.append("Mower")
 
         if len(active) == 0:
