@@ -1,7 +1,7 @@
-#from marvin.helper import log, sendCommand
+from marvin.helper import log, sendCommand
 
-#sendCommand("Solar_Power_Limitation",80)
- 
+sendCommand("Solar_Power_Limitation",10)
+
 #import time
 
 #from org.eclipse.smarthome.automation import Rule as SmarthomeRule

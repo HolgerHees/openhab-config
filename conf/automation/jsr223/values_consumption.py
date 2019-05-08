@@ -1,7 +1,7 @@
 from org.joda.time import DateTime
 from org.joda.time.format import DateTimeFormat
 
-from marvin.helper import rule, getNow, getHistoricItemEntry, getHistoricItemState, getItemLastUpdate, getItemState, postUpdate, postUpdateIfChanged
+from marvin.helper import rule, getNow, getHistoricItemEntry, getHistoricItemState, getItemLastUpdate, itemLastUpdateOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 startGasZaehlerStand = 8522.67
@@ -11,7 +11,7 @@ referenceCounterDemandValue = 21158037
 referenceCounterSupplyValue = 0
 
 totalSupply = 3600 # total possible photovoltaic power in watt
-maxTimeSlot = 300 # value timeslot to messure average power consumption
+maxTimeSlot = 300000 # value timeslot to messure average power consumption => 5 min
 
 dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS")
 
@@ -167,13 +167,9 @@ class EnergySupplyRule:
         ]
 
         self.stack = []
-
-    def execute(self, module, input):
+        self.lastLimitationIncrease = 0
         
-        value = getItemState("Electricity_Current_Consumption").intValue()
-
-        now = getNow().getMillis()
-        
+    def getAvgConsumption(self,now,value):        
         if len(self.stack) > 0:
             avgValue = 0
             currentTime = now
@@ -190,24 +186,53 @@ class EnergySupplyRule:
 
                 avgValue += x[0] * ( currentTime - x[1] )
                 currentTime = x[1]
-                currentTimeSlot = int( round( (now - currentTime) / 1000.0 ) )
+                currentTimeSlot = now - currentTime
                   
-            if currentTimeSlot >= maxTimeSlot:
-                avgValue = avgValue / ( now - currentTime )
-                currentPercentage = avgValue * 100.0 / totalSupply
-                possibleIncrease = int( round( 70.0 + currentPercentage ) )
-                if possibleIncrease > 100:
-                    possibleIncrease = 100
-
-                self.log.info(u"Consumption is {} Watt. Increase to {} % power limitation possible. [{} samples in {} seconds]".format( avgValue, possibleIncrease, len(self.stack), currentTimeSlot ))
-                
-                #sendCommand("Solar_Power_Limitation",possibleIncrease)
-            else:
-                self.log.info(u"Power limit calculation not possible. Need more samples. [{} samples in {} seconds]".format( len(self.stack), currentTimeSlot ))
+            avgValue = avgValue / ( now - currentTime )
+        else:
+            avgValue = value
 
         self.stack.append( [value, now ] )
         
+        return avgValue
+        
+    def getPossibleLimitation(self,consumptionValue):
+        currentPercentage = consumptionValue * 100.0 / totalSupply
+        possiblePowerLimitation = int( round( 70.0 + currentPercentage ) )
+        if possiblePowerLimitation > 100:
+            possiblePowerLimitation = 100
+        return possiblePowerLimitation
 
+    def execute(self, module, input):
+      
+        now = getNow().getMillis()
+
+        currentPowerLimitation = getItemState("Solar_Power_Limitation").intValue()
+
+        currentConsumptionValue = getItemState("Electricity_Current_Consumption").intValue()
+        avgConsumptionValue = self.getAvgConsumption(now,currentConsumptionValue)
+
+        possiblePowerLimitation = self.getPossibleLimitation(currentConsumptionValue)
+        possibleAvgPowerLimitation = self.getPossibleLimitation(avgConsumptionValue)
+        
+        self.log.info(u"currentLimit: {}%, currentConsumption: {} Watt, avgConsumption: {} Watt, possibleLimit: {}%, possibleAvgLimit: {}%, stack: {}".format(currentPowerLimitation,currentConsumptionValue,avgConsumptionValue,possiblePowerLimitation,possibleAvgPowerLimitation,len(self.stack)))
+
+        if possiblePowerLimitation >= currentPowerLimitation:
+            self.lastLimitationIncrease = now
+            if possiblePowerLimitation > currentPowerLimitation:
+                sendCommand("Solar_Power_Limitation",possiblePowerLimitation)
+                self.log.info(u"Increase power limitation from {}% to {}%".format( currentPowerLimitation, possiblePowerLimitation ))
+                return
+        elif now - self.lastLimitationIncrease > maxTimeSlot:
+            if possibleAvgPowerLimitation < currentPowerLimitation:
+                sendCommand("Solar_Power_Limitation",possibleAvgPowerLimitation)
+                self.log.info(u"Decrease power limitation from {}% to {}%".format( currentPowerLimitation, possibleAvgPowerLimitation ))
+                return
+            
+        if len(input) == 0 and itemLastUpdateOlderThen("Solar_Power_Limitation",getNow().minusMinutes(4)):
+            sendCommand("Solar_Power_Limitation",currentPowerLimitation)
+            self.log.info(u"Refresh power limitation of {}%".format( currentPowerLimitation ))
+      
 @rule("values_consumption.py")
 class EnergyConsumptionRule:
     def __init__(self):
