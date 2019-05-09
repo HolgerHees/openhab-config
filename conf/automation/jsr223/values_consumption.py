@@ -201,57 +201,84 @@ class EnergySupplyRule:
         possiblePowerLimitation = int( round( 70.0 + currentPercentage ) )
         if possiblePowerLimitation > 100:
             possiblePowerLimitation = 100
+        elif possiblePowerLimitation < 70:
+            possiblePowerLimitation = 70
+            self.log.warn(u"Possible limitation below 70% should never happen. In this case it was {}%".format(possiblePowerLimitation))
         return possiblePowerLimitation
 
     def execute(self, module, input):
       
         now = getNow().getMillis()
+        
+        currentDCPower = getItemState("Solar_DC_Power").intValue()
 
         currentPowerLimitation = getItemState("Solar_Power_Limitation").intValue()
 
         currentConsumptionValue = getItemState("Electricity_Current_Consumption").intValue()
+        # must be called to fill history stack
         avgConsumptionValue = self.getAvgConsumption(now,currentConsumptionValue)
-
-        possiblePowerLimitation = self.getPossibleLimitation(currentConsumptionValue)
-        possibleAvgPowerLimitation = self.getPossibleLimitation(avgConsumptionValue)
         
-        self.log.info(u"currentLimit: {}%, currentConsumption: {} Watt, avgConsumption: {} Watt, possibleLimit: {}%, possibleAvgLimit: {}%, stack: {}".format(currentPowerLimitation,currentConsumptionValue,avgConsumptionValue,possiblePowerLimitation,possibleAvgPowerLimitation,len(self.stack)))
-
-        if possiblePowerLimitation >= currentPowerLimitation:
-            self.lastLimitationIncrease = now
-            if possiblePowerLimitation > currentPowerLimitation:
-                sendCommand("Solar_Power_Limitation",possiblePowerLimitation)
-                self.log.info(u"Increase power limitation from {}% to {}%".format( currentPowerLimitation, possiblePowerLimitation ))
-                return
-        elif now - self.lastLimitationIncrease > maxTimeSlot:
-            if possibleAvgPowerLimitation < currentPowerLimitation:
-                sendCommand("Solar_Power_Limitation",possibleAvgPowerLimitation)
-                self.log.info(u"Decrease power limitation from {}% to {}%".format( currentPowerLimitation, possibleAvgPowerLimitation ))
-                return
+        if currentDCPower > 0:
+            possiblePowerLimitation = self.getPossibleLimitation(currentConsumptionValue)
+            possibleAvgPowerLimitation = self.getPossibleLimitation(avgConsumptionValue)
             
-        if len(input) == 0 and itemLastUpdateOlderThen("Solar_Power_Limitation",getNow().minusMinutes(4)):
-            sendCommand("Solar_Power_Limitation",currentPowerLimitation)
-            self.log.info(u"Refresh power limitation of {}%".format( currentPowerLimitation ))
-      
+            self.log.info(u"currentLimit: {}%, currentConsumption: {}W, avgConsumption: {}W, possibleLimit: {}%, possibleAvgLimit: {}%, stack: {}, li: {}".format(currentPowerLimitation,currentConsumptionValue,avgConsumptionValue,possiblePowerLimitation,possibleAvgPowerLimitation,len(self.stack),(now - self.lastLimitationIncrease)))
+
+            if possiblePowerLimitation >= currentPowerLimitation:
+                self.lastLimitationIncrease = now
+                if possiblePowerLimitation > currentPowerLimitation:
+                    sendCommand("Solar_Power_Limitation",possiblePowerLimitation)
+                    self.log.info(u"Increase power limitation from {}% to {}%".format( currentPowerLimitation, possiblePowerLimitation ))
+                    return
+            elif now - self.lastLimitationIncrease > maxTimeSlot:
+                if possibleAvgPowerLimitation < currentPowerLimitation:
+                    sendCommand("Solar_Power_Limitation",possibleAvgPowerLimitation)
+                    self.log.info(u"Decrease power limitation from {}% to {}%".format( currentPowerLimitation, possibleAvgPowerLimitation ))
+                    return
+                
+            if len(input) == 0 and itemLastUpdateOlderThen("Solar_Power_Limitation",getNow().minusMinutes(4)):
+                sendCommand("Solar_Power_Limitation",currentPowerLimitation)
+                self.log.info(u"Refresh power limitation of {}%".format( currentPowerLimitation ))
+        elif currentPowerLimitation > 0:
+            postUpdate("Solar_Power_Limitation",100)
+            self.log.info(u"Shutdown power limitation")
+
+
 @rule("values_consumption.py")
 class EnergyConsumptionRule:
     def __init__(self):
         self.triggers = [
-          #ItemStateChangeTrigger("Power_Demand"),
-          #ItemStateChangeTrigger("Power_Supply"),
+          ItemStateChangeTrigger("Power_Demand"),
+          ItemStateChangeTrigger("Power_Supply")
+          # Solar_AC_Power is not needed. Change of Solar_AC_Power will mostly result in a Power_Supply change.
+          # Just in the corner case that self consumption will change too will produce wrong values
           #ItemStateChangeTrigger("Solar_AC_Power")
-          # should be cron based, otherwise it will create until 3 times more values if it is based on ItemStateChangeTrigger
-          CronTrigger("*/15 * * * * ?")
+
+          # OLD: should be cron based, otherwise it will create until 3 times more values if it is based on ItemStateChangeTrigger
+          # NEW: cron based trigger sometimems does not work.
+
+          #2019-05-09 16:20:17.889 [vent.ItemStateChangedEvent] - Power_Supply changed from 1377.0 to 1266.0
+          #2019-05-09 16:20:26.750 [vent.ItemStateChangedEvent] - Solar_AC_Power changed from 1751.0 to 921.0
+          #2019-05-09 16:20:34.283 [vent.ItemStateChangedEvent] - Power_Supply changed from 1266.0 to 490.0
+          
+          #2019-05-09 16:20:30.024 [INFO ] [values_consumption.EnergyConsumption] - Skip consumption update. powerDemand: 0, powerSupply: 1266, solarPower: 921
+          #CronTrigger("*/15 * * * * ?")
         ]
 
     def execute(self, module, input):
         powerDemand = getItemState("Power_Demand").intValue()
         powerSupply = getItemState("Power_Supply").intValue()
         solarPower = getItemState("Solar_AC_Power").intValue()
-
-        postUpdateIfChanged("Electricity_Current_Consumption",powerDemand - powerSupply + solarPower)
-        postUpdateIfChanged("Electricity_Current_Demand",powerDemand - powerSupply)
         
+        consumption = powerDemand - powerSupply + solarPower
+        # only update if consumption makes sence
+        if consumption > 0:
+            postUpdateIfChanged("Electricity_Current_Consumption",powerDemand - powerSupply + solarPower)
+        else:
+            self.log.info(u"Skip consumption update. powerDemand: {}, powerSupply: {}, solarPower: {}".format(powerDemand,powerSupply,solarPower))
+        
+        postUpdateIfChanged("Electricity_Current_Demand",powerDemand - powerSupply)
+
 
 @rule("values_consumption.py")
 class EnergyDailyConsumptionRule:

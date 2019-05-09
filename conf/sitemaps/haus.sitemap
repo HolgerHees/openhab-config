@@ -503,6 +503,7 @@ sitemap haus label="Main Menu"
                                 Text item=Solar_DC_Voltage
                                 Text item=Solar_DC_Current
                                 Text item=Solar_Total_Yield
+                                Text item=Solar_Power_Limitation
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
