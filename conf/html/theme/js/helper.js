@@ -1312,6 +1312,21 @@ var MV = {
                     element.style="background: transparent !important;";
 
                     elem[0].style="";
+                    
+                    var css = '.mdl-form {';
+                    css = css + "background-color: black !important;";
+                    css = css + "color: white !important;";
+                    css = css + "}";
+                    css = css + "body { font-family: Roboto; }";
+                    css = css + ".mdl-form__row {border-bottom: 1px solid rgba(38,191,117,.50);}";
+                    css = css + ".mdl-form__label, .mdl-form__text, .mdl-form__value--text-link { font-size:17px; }";
+                    css = css + ".mdl-layout__header { background-color: black !important; border-bottom: 1px solid rgba(38,191,117,.50);}";
+                    //css = css + ".mdl-layout__header { background-color: rgba(38,191,117,.1) !important; border-bottom: 1px solid rgba(38,191,117,.50);}";
+                    
+                    var head = elem[0].contentWindow.document.getElementsByTagName('head')[0];
+                    var style = elem[0].contentWindow.document.createElement('style');
+                    style.appendChild(document.createTextNode(css));
+                    head.appendChild(style);
                 });
             }
         };

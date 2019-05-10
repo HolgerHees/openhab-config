@@ -1,7 +1,7 @@
 function InitializedListener() 
 {
     var isPhone = ( navigator.userAgent.indexOf("Android") != -1 && navigator.userAgent.indexOf("Mobile") != -1 );
-    var theme = isPhone ? 'dark' : 'light';
+    var theme = isPhone || top.document.location.pathname.includes("habpanel") ? 'dark' : 'light';
 
     var timeRange;
     
