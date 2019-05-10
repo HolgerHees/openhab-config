@@ -242,13 +242,13 @@ def getGroupMemberChangeTrigger(itemOrName, state=None, triggerName=None):
 def getChannel(name):
     item = things.getChannel(ChannelUID(name))
     if item is None:
-        raise NotInitialisedException("Channel '" + name + "' not found")
+        raise NotInitialisedException(u"Channel {} not found".format(name))
     return item
 
 def getItem(name):
     item = itemRegistry.getItem(name)
     if item is None:
-        raise NotInitialisedException("Item '" + name + "' not found")
+        raise NotInitialisedException(u"Item {} not found".format(name))
     return item
 
 
@@ -264,7 +264,7 @@ def getItemState(itemOrName):
     name = _getItemName(itemOrName)
     state = items.get(name)
     if state is None:
-        raise NotInitialisedException("Item state for '" + name + "' not found")
+        raise NotInitialisedException(u"Item state for {} not found".format(name))
     return state
 
 
@@ -272,7 +272,7 @@ def getHistoricItemEntry(itemOrName, refDate):
     item = _getItem(itemOrName)
     historicEntry = PersistenceExtensions.historicState(item, refDate, "jdbc")
     if historicEntry is None:
-        raise NotInitialisedException("Item history for '" + item.getName() + "' not found")
+        raise NotInitialisedException(u"Item history for {} before {} not found".format(item.getName(),refDate))
     return historicEntry
 
 
@@ -284,7 +284,7 @@ def getMaxItemState(itemOrName, refDate):
     item = _getItem(itemOrName)
     historicState = PersistenceExtensions.maximumSince(item, refDate, "jdbc")
     if historicState is None:
-        raise NotInitialisedException("Item max state for '" + item.getName() + "' not found")
+        raise NotInitialisedException(u"Item max state for {} before {} not found".format(item.getName(),refDate))
     return historicState.getState()
 
 
