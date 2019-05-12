@@ -5,6 +5,7 @@
  * SmartHomeSubscriber is based on the javascript of the Eclipse SmartHome Basic UI by Vlad Ivanov.
  *
  * @author Wouter Born
+ * @author Holger Hees
  */
 
 /* exported addGrafanaPanel, GrafanaPanel */
@@ -191,150 +192,31 @@ function SmartHomeSubscriber(params) {
         updateInitialized();
     }
 
-    function ChangeListenerEventsource(subscribeLocation) {
-        var
-            _t = this;
-
+    function ChangeListener() {
+        
+        var subscribeLocation = "/rest/events?topics=smarthome/items/*/statechanged";
+        
+        var _t = this;
+            
         _t.navigate = function(){};
         _t.source = new EventSource(subscribeLocation);
-        _t.source.addEventListener("event", function(payload) {
+        _t.source.addEventListener("message", function(payload) {
             if (_t.paused) {
                 return;
             }
 
-            var
-                data = JSON.parse(payload.data),
-                itemName = data.item.name,
-                value;
+            var data = JSON.parse(payload.data);
+            
+            var itemName = data.topic.substr(16);
+            itemName = itemName.substr(0,itemName.indexOf("/"));
+
+            var payload = JSON.parse(data.payload);
 
             if (items[itemName] === undefined) {
                 return;
             }
-
-            if (
-                (typeof(data.label) === "string") &&
-                (data.label.indexOf("[") !== -1) &&
-                (data.label.indexOf("]") !== -1)
-            ) {
-                var
-                    pos = data.label.indexOf("[");
-
-                value = data.label.substr(
-                    pos + 1,
-                    data.label.lastIndexOf("]") - (pos + 1)
-                );
-            } else {
-                value = data.item.state;
-            }
-
-            updateItem(itemName, value);
-        });
-    }
-
-    function ChangeListenerLongpolling() {
-
-        var
-            _t = this;
-
-        function applyChanges(response) {
-            try {
-                response = JSON.parse(response);
-            } catch (e) {
-                return;
-            }
-
-            function walkWidgets(widgets) {
-                widgets.forEach(function(widget) {
-                    if (widget.item === undefined) {
-                        return;
-                    }
-
-                    var
-                        itemName = widget.item.name,
-                        value = widget.item.state;
-
-                    if (items[itemName] !== undefined) {
-                        updateItem(itemName, value);
-                    }
-                });
-            }
-
-            if (response.leaf) {
-                walkWidgets(response.widgets);
-            } else {
-                response.widgets.forEach(function(frameWidget) {
-                    walkWidgets(frameWidget.widgets);
-                });
-            }
-        }
-
-        function start() {
-            var
-                cacheSupression = Math.random().toString(16).slice(2);
-
-            _t.request = ajax({
-                url: "/rest/sitemaps/" + subscription.sitemap + "/" + subscription.page + "?_=" + cacheSupression,
-                headers: {"X-Atmosphere-Transport": "long-polling"},
-                callback: function(request) {
-                    applyChanges(request.responseText);
-                    setTimeout(function() {
-                        start();
-                    }, 1);
-                },
-                error: function() {
-                    // Wait 1s and restart long-polling
-                    setTimeout(function() {
-                        start();
-                    }, 1000);
-                }
-            });
-        }
-
-        start();
-    }
-
-    function ChangeListener() {
-        var
-            _t = this;
-
-        _t.startSubscriber = function(response) {
-            var
-                responseJSON,
-                subscribeLocation,
-                subscribeLocationArray;
-
-            try {
-                responseJSON = JSON.parse(response.responseText);
-            } catch (e) {
-                return;
-            }
-
-            if (responseJSON.status !== "CREATED") {
-                return;
-            }
-
-            try {
-                subscribeLocation = responseJSON.context.headers.Location[0];
-            } catch (e) {
-                return;
-            }
-
-            subscribeLocationArray = subscribeLocation.split("/");
-            subscription.id = subscribeLocationArray[subscribeLocationArray.length - 1];
-
-            if ("EventSource" in window) {
-                ChangeListenerEventsource.call(_t, subscribeLocation +
-                    "?sitemap=" + subscription.sitemap +
-                    "&pageid=" + subscription.page);
-            } else {
-                ChangeListenerLongpolling.call(_t);
-            }
-        };
-
-        ajax({
-            url: "/rest/sitemaps/events/subscribe",
-            type: "POST",
-            callback: _t.startSubscriber
+            
+            updateItem(itemName, payload.value);
         });
     }
 

@@ -1299,7 +1299,6 @@ var MV = {
                 if( pos != -1 )
                 {
                     elem[0].src = elem[0].src + "?" + document.location.hash.substr(pos+1);
-                    console.log(document.location.hash.substr(pos+1));
                 }
                 
                 elem[0].style="visibility:hidden";
