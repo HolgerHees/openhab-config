@@ -210,7 +210,7 @@ class EnergySupplyRule:
       
         now = getNow().getMillis()
         
-        currentDCPower = getItemState("Solar_DC_Power").intValue()
+        currentACPower = getItemState("Solar_AC_Power").intValue()
 
         currentPowerLimitation = getItemState("Solar_Power_Limitation").intValue()
 
@@ -218,7 +218,7 @@ class EnergySupplyRule:
         # must be called to fill history stack
         avgConsumptionValue = self.getAvgConsumption(now,currentConsumptionValue)
         
-        if currentDCPower > 0:
+        if currentACPower > 0:
             possiblePowerLimitation = self.getPossibleLimitation(currentConsumptionValue)
             possibleAvgPowerLimitation = self.getPossibleLimitation(avgConsumptionValue)
             
