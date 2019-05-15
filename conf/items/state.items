@@ -12,6 +12,8 @@ Switch State_Sunprotection_Livingroom			"Rollläden Wohnzimmer geschlossen"	<sel
 
 Number State_Lightprogram			            "Lichtprogram"	<selfautoMode>
 
+Number State_Server 							"Serverstatus [%d]"  			<selferror>
+
 String MainStatus								"Status [%s]"					<selferror>
 String RoomStatus								"Status [%s]"					<selferror>
 String GardenStatus								"Status [%s]"					<selferror>

@@ -25,6 +25,9 @@ class ValuesErrorMessagesRule:
         if getItemState("Heating_Common_Fault").intValue() > 0:
             active.append(u"Heizung")
 
+        if getItemState("State_Server").intValue() > 1:
+            active.append(u"Server")
+
         refDate = getNow().minusMinutes(1440)  # last 24 hours
 
         if itemLastUpdateOlderThen("Temperature_FF_Livingroom", refDate) \
