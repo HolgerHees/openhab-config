@@ -376,6 +376,14 @@ sitemap haus label="Main Menu"
                         Text item=SoilMoistSensor3
                         Text item=SoilMoistSensor4
                         Text item=Air_Wireless_Message label="Luft [%s]" visibility=[Auto_Attic_Light!=1]
+                        Text item=SoilMoistSensorInfo label="Überwachen [%s]"{
+                            Switch item=SoilMoistSensor1Enabled
+                            Switch item=SoilMoistSensor2Enabled
+                            Switch item=SoilMoistSensor3Enabled
+                            Switch item=SoilMoistSensor4Enabled
+                            Switch item=SoilMoistSensor5Enabled
+                            Switch item=SoilMoistSensor6Enabled 
+                        }
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
