@@ -10,7 +10,8 @@ class ValuesErrorMessagesRule:
             ItemStateChangeTrigger("Ventilation_Filter_Error_I"),
             ItemStateChangeTrigger("Ventilation_Filter_Error_E"),
             ItemStateChangeTrigger("Ventilation_Error_Message"),
-            ItemStateChangeTrigger("Heating_Common_Fault")
+            ItemStateChangeTrigger("Heating_Common_Fault"),
+            ItemStateChangeTrigger("State_Server")
         ]
 
     def execute(self, module, input):
