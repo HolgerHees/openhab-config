@@ -4,7 +4,7 @@ from org.joda.time.format import DateTimeFormat
 from marvin.helper import rule, getNow, getHistoricItemEntry, getHistoricItemState, getItemLastUpdate, itemLastUpdateOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
-startGasZaehlerStand = 8522.67
+startGasZaehlerStand = 8564.66
 startGasZaehlerCounter = 0
 
 referenceCounterDemandValue = 21158037
@@ -70,6 +70,11 @@ def getHistoricReference(log, itemName, valueTime, outdatetTime, messureTime, in
     log.info( u"Consumption {} messured from {} ({}) to {} ({})".format(value,startValue,dateTimeFormatter.print(startTime),endValue,dateTimeFormatter.print(endTime)))
 
     return value
+
+
+def solarIsNotWorking(log):
+    #log.info(u"{}".format(itemLastUpdateOlderThen("Solar_DC_Power", getNow().withTimeAtStartOfDay())))
+    return itemLastUpdateOlderThen("Solar_DC_Power", getNow().withTimeAtStartOfDay())
 
 
 @rule("values_consumption.py")
@@ -210,7 +215,7 @@ class EnergySupplyRule:
       
         now = getNow().getMillis()
         
-        currentACPower = getItemState("Solar_AC_Power").intValue()
+        currentACPower = 0 if solarIsNotWorking(self.log) else getItemState("Solar_AC_Power").intValue()
 
         currentPowerLimitation = getItemState("Solar_Power_Limitation").intValue()
 
@@ -268,7 +273,7 @@ class EnergyConsumptionRule:
     def execute(self, module, input):
         powerDemand = getItemState("Power_Demand").intValue()
         powerSupply = getItemState("Power_Supply").intValue()
-        solarPower = getItemState("Solar_AC_Power").intValue()
+        solarPower = 0 if solarIsNotWorking(self.log) else getItemState("Solar_AC_Power").intValue()
         
         consumption = powerDemand - powerSupply + solarPower
         # only update if consumption makes sence
@@ -294,7 +299,7 @@ class EnergyDailyConsumptionRule:
     def execute(self, module, input):
         dailyEnergyDemand = getItemState("Electricity_Current_Daily_Demand").doubleValue()
         dailyEnergySupply = getItemState("Electricity_Current_Daily_Supply").doubleValue()
-        dailySolarSupply = getItemState("Solar_Daily_Yield").doubleValue()
+        dailySolarSupply = 0 if solarIsNotWorking(self.log) else getItemState("Solar_Daily_Yield").doubleValue()
 
         postUpdateIfChanged("Electricity_Current_Daily_Consumption",dailyEnergyDemand - dailyEnergySupply + dailySolarSupply)
 
@@ -358,10 +363,10 @@ class GasConsumptionRule:
 
         zaehlerStandSaved = getItemState("Gas_Current_Count").doubleValue()
         
-        #self.log.info(u"{} {}".format(zaehlerStandCurrent,zaehlerStandSaved))
-
+        self.log.info("{}".format(zaehlerStandCurrent))
+        
         if zaehlerStandCurrent < zaehlerStandSaved:
-            self.log.error("Consumption: Calculation is wrong")
+            self.log.error("Consumption: Calculation is wrong {} {}".format(zaehlerStandCurrent,zaehlerStandSaved))
             return
 
         if zaehlerStandCurrent > zaehlerStandSaved:
