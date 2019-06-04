@@ -1,9 +1,6 @@
-Switch TV_Online                    "Fernseher an"                       {channel="network:pingdevice:livingroomTV:online"}
-Switch TV_KEY_POWER					"An / Aus" <settings>				 {http=">[*:GET:http://192.168.0.132:5000/api/key_power]", autoupdate="false"} 
-Switch TV_KEY_VOLUMEUP	        	"Lauter" <settings>				     {http=">[*:GET:http://192.168.0.132:5000/api/key_volumeup]", autoupdate="false"} 
-Switch TV_KEY_VOLUMEDOWN			"Leiser" <settings>				     {http=">[*:GET:http://192.168.0.132:5000/api/key_volumedown]", autoupdate="false"} 
-Switch TV_KEY_MUTE			        "Lautlos" <settings>				 {http=">[*:GET:http://192.168.0.132:5000/api/key_mute]", autoupdate="false"} 
-Switch TV_KEY_1         			"Kanal 1" <settings>				 {http=">[*:GET:http://192.168.0.132:5000/api/key_1]", autoupdate="false"} 
-Switch TV_KEY_2         			"Kanal 2" <settings>				 {http=">[*:GET:http://192.168.0.132:5000/api/key_2]", autoupdate="false"} 
-Switch TV_KEY_3         			"Kanal 3" <settings>				 {http=">[*:GET:http://192.168.0.132:5000/api/key_3]", autoupdate="false"} 
-Switch TV_KEY_4         			"Kanal 4" <settings>				 {http=">[*:GET:http://192.168.0.132:5000/api/key_4]", autoupdate="false"} 
+Switch TV_KEY_POWER					"An / Aus" <settings>				 {channel="samsungtv:tv:livingroom:power"} 
+Dimmer TV_KEY_VOLUME	        	"Lautstärke" <settings>			     {channel="samsungtv:tv:livingroom:volume"} 
+Switch TV_KEY_MUTE			        "Lautlos" <settings>				 {channel="samsungtv:tv:livingroom:mute"} 
+Number TV_KEY_SOURCE       			"Quelle" <settings>					 {channel="samsungtv:tv:livingroom:sourceId"} 
+String TV_KEY_BROWSER_URL			"Url" <settings>					 {channel="samsungtv:tv:livingroom:url"} 
+Switch TV_KEY_BROWSER_STOP			"Stop Browser" <settings>			 {channel="samsungtv:tv:livingroom:stopBrowser"} 
