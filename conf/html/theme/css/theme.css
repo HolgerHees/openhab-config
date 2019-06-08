@@ -637,6 +637,7 @@ body,
 .mvWidget.mvImagePopup div {
     border: none;
 	height: 100%;
+    padding-bottom: 4%;
 }
 .mvWidget.mvImagePopup div img {
     max-width:100%;
@@ -647,8 +648,8 @@ body,
     border-radius: var(--widget-button-radius);
 }
 .mvWidget.mvImagePopup .popup img {
-    width:640px;
-	height: 480px;
+    width:1280px;
+	height: 720px;
     margin: auto;
 	opacity: 1;
 }
