@@ -581,6 +581,9 @@ sitemap haus label="Main Menu"
                         Switch item=Socket_Mobile_1 label="Steckdose 1"
                         Switch item=Socket_Mobile_2 label="Steckdose 2"
                     }
+                    Frame label="Sonstiges" {
+                        Switch item=TV_KEY_POWER label="Wohnzimmer Fernseher"
+                    }
                 }
                 Text label="Server" icon="selfcomputer"{
                     Frame label="Daten" {
