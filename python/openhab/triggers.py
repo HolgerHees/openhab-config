@@ -72,6 +72,15 @@ class ItemEventTrigger(Trigger):
                 "eventTypes": eventTypes
                 }))
 
+class ThingEventTrigger(Trigger):
+    def __init__(self, eventSource, eventTypes, eventTopic="smarthome/things/*", triggerName=None):
+        triggerName = triggerName or uuid.uuid1().hex
+        Trigger.__init__(self, triggerName, "core.GenericEventTrigger", Configuration({
+                "eventTopic": eventTopic,
+                "eventSource": "smarthome/things/{}/".format(eventSource),
+                "eventTypes": eventTypes
+                }))
+        
 class StartupTrigger(Trigger):
     def __init__(self, triggerName=None):
         triggerName = triggerName or uuid.uuid1().hex

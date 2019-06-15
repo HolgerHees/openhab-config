@@ -110,11 +110,13 @@ class rule(object):
         def appendDetailInfo(self,event):
             if event is not None:
                 if event.getType().startswith("Item"):
-                    return " [Item: " + event.getItemName() + "]"
+                    return u" [Item: {}]".format(event.getItemName())
                 elif event.getType().startswith("Group"):
-                    return " [Group: " + event.getItemName() + "]"
+                    return u" [Group: {}]".format(event.getItemName())
+                elif event.getType().startswith("Thing"):
+                    return u" [Thing: {}]".format(event.getThingUID())
                 else:
-                    return " [" + event.getType() + " " + str(self) + "]"
+                    return u" [Other: {}]".format(event.getType())
             return ""
 
         def func_wrapper(self, module, input):
@@ -122,7 +124,7 @@ class rule(object):
             try:
                 event = input['event']
                 # *** Filter indirect events out (like for groups related to the configured item)
-                if event.getItemName() not in self.triggerItems:
+                if getattr(event,"getItemName",None) is not None and event.getItemName() not in self.triggerItems:
                     self.log.debug("Rule skipped. Event is not related" + appendDetailInfo(self,event) )
                     return
             except KeyError:
