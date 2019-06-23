@@ -44,8 +44,11 @@ Dimmer Light_SF_Bedroom_Left_Hue_Brightness		"Schlafzimmer Nachttisch links"			<
 Color Light_SF_Bedroom_Left_Hue_Color			"Schlafzimmer Nachttisch links Farbe"	<colorwheel>	{ channel="hue:0210:default:lamp5:color"}
 Dimmer Light_SF_Bedroom_Right_Hue_Brightness	"Schlafzimmer Nachttisch rechts"			<selfslider> (SF_Bedroom, Lights_SF) { channel="hue:0210:default:lamp6:color"}
 Color Light_SF_Bedroom_Right_Hue_Color			"Schlafzimmer Nachttisch rechts Farbe"	<colorwheel>	{ channel="hue:0210:default:lamp6:color"}
-Switch Light_SF_Bedroom_Left 					"Schlafzimmer Nachttisch links" 	<selflight>		(SF_Bedroom, Lights_SF)	{ channel="knx:device:bridge:sockets_sf:bedroomLeft" }
-Switch Light_SF_Bedroom_Right 					"Schlafzimmer Nachttisch rechts" 	<selflight>		(SF_Bedroom, Lights_SF)	{ channel="knx:device:bridge:sockets_sf:bedroomRight" }
+
+Switch Light_SF_Bedroom_Left 					"Schlafzimmer Nachttisch links" 	<selflight>		(SF_Bedroom, Lights_SF)	{ channel="knx:device:bridge:other:bedroomLeft" }
+Switch Light_SF_Bedroom_Left_Long_Pressed 		"Schlafz. Bett Fenster (lang)" 			<selflight>		{ channel="knx:device:bridge:other:bedroomLeftLongPressed" }
+Switch Light_SF_Bedroom_Right 					"Schlafzimmer Nachttisch rechts" 	<selflight>		(SF_Bedroom, Lights_SF)	{ channel="knx:device:bridge:other:bedroomRight" }
+Switch Light_SF_Bedroom_Right_Long_Pressed		"Schlafz. Bett Wand (lang)" 			<selflight>		{ channel="knx:device:bridge:other:bedroomRightLongPressed" }
   
 
 Switch Light_SF_Dressingroom_Ceiling			"Ankleide Decke" 	<selflight>		(SF_Dressingroom, Lights_SF) { channel="knx:device:bridge:lights_sf:dressingroomCeiling" }
@@ -54,9 +57,6 @@ Switch Light_SF_Child2_Ceiling 					"Kinderzimmer zwei" <selflight>		(SF_Child2,
 Switch Light_SF_Bathroom_Ceiling 				"Badezimmer Decke" 	<selflight>		(SF_Bathroom, Lights_SF) { channel="knx:device:bridge:lights_sf:bathroomCeiling" }
 Switch Light_SF_Bathroom_Mirror 		"Badezimmer Spiegel"	<selflight>		(SF_Bathroom, Lights_SF) { channel="knx:device:bridge:lights_sf:bathroomMirror" }
 Switch Light_SF_Attic 							"Dachboden" 	<selflight>		(SF_Attic, Lights_SF)	{ channel="knx:device:bridge:lights_sf:attic" }
-
-Switch Light_SF_Bedroom_Left_Long_Pressed 		"Schlafz. Bett Fenster (lang)" 			<selflight>		{ channel="knx:device:bridge:other:bedroomLeftLongPressed" }
-Switch Light_SF_Bedroom_Right_Long_Pressed		"Schlafz. Bett Wand (lang)" 			<selflight>		{ channel="knx:device:bridge:other:bedroomRightLongPressed" }
 
 Dimmer Light_Outdoor_Terrace 					"Terrasse"	<selfslider>	(Outdoor, Lights_Outdoor)	{ channel="knx:device:bridge:lights_outdoor:outdoorTerrace" }
 Switch Light_Outdoor_Frontdoor 					"Haustür"	<selflight>		(Outdoor, Lights_Outdoor)	{ channel="knx:device:bridge:lights_outdoor:frontdoor" }

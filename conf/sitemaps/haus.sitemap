@@ -49,10 +49,8 @@ sitemap haus label="Main Menu"
 				Group item=Lights_SF label="OG Lampen [MAP(group_light.map):%d]" {
 					Frame label="Schlafzimmer & Ankleide" {
 						Switch item=Light_SF_Bedroom_Ceiling label="Schlafzimmer"
-						Switch item=Light_SF_Bedroom_Left label="Schlafzimmer Bett Fenster"
 						Slider item=Light_SF_Bedroom_Left_Hue_Brightness label="Schlafzimmer Bett Fenster HUE"
 						Colorpicker item=Light_SF_Bedroom_Left_Hue_Color label="Schlafzimmer Bett Fenster HUE Farbe" visibility=[Light_SF_Bedroom_Left_Hue_Brightness>0]
-						Switch item=Light_SF_Bedroom_Right label="Schlafzimmer Bett Wand"
 						Slider item=Light_SF_Bedroom_Right_Hue_Brightness label="Schlafzimmer Bett Wand HUE"
 						Colorpicker item=Light_SF_Bedroom_Right_Hue_Color label="Schlafzimmer Bett Wand HUE Farbe" visibility=[Light_SF_Bedroom_Right_Hue_Brightness>0]
 						Switch item=Light_SF_Dressingroom_Ceiling label="Ankleide"
