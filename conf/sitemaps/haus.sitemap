@@ -95,7 +95,7 @@ sitemap haus label="Main Menu"
 		Group label="Garten [%s]" icon="garden" item=GardenStatus valuecolor=[=="Alles normal"="#26cb00",!="Alles normal"="red"] {
 			Frame label="Allgemein • Letztes klingeln [%1$tH:%1$tM:%1$tS, %1$td.%1$tm]" item=Bell_Last_Change{
 				Switch item=Dooropener_Timer
-				Text label="Kameras" icon="selfcamera"
+				Text label="Kameras" icon="camera"
 				{
 					Image url="https://127.0.0.1/cameraStrasseImage" label="Strasse" refresh=2000
 					Image url="https://127.0.0.1/cameraAutomowerImage" label="Automower" refresh=5000
@@ -184,7 +184,7 @@ sitemap haus label="Main Menu"
                 }
             }
             Frame label="Garten" {
-				Text label="Kamera" icon="selfcamera"
+				Text label="Kamera" icon="camera"
 				{
 					Image url="https://127.0.0.1/cameraAutomowerImage" label="Automower" refresh=5000
 				}
@@ -393,7 +393,7 @@ sitemap haus label="Main Menu"
             {
                 Group item=Sensor_Indoor label="Innen [MAP(group_motion.map):%d]" valuecolor=[!=CLOSED="red"]
                 Group item=Sensor_Outdoor label="Aussen [MAP(group_motion.map):%d]" valuecolor=[!=CLOSED="red"]
-                Text label="Kameras" icon="selfcamera"
+                Text label="Kameras" icon="camera"
                 {
                     Image url="https://127.0.0.1/cameraStrasseImage" label="Strasse Video" refresh=2000
                     Image url="https://127.0.0.1/cameraAutomowerImage" label="Automower" refresh=5000
@@ -501,7 +501,7 @@ sitemap haus label="Main Menu"
                                 Webview url="/static/grafana/energy_supply.html?fromItem=Chart_From" icon=none height=18
                             }
                         }
-                        Group label="Solar [%.2f kWh]" item=Solar_Daily_Yield {
+                        Group label="Solar [%.2f kWh]" icon="solarplant" item=Solar_Daily_Yield {
                             Frame label="Solar" {
                                 Text item=Solar_Daily_Yield
                                 Text item=Solar_AC_Power

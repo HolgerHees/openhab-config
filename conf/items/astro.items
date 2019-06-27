@@ -8,13 +8,13 @@ Number   Sun_Elevation                          "Elevation [%.2f]"              
 Number   Total_Radiation                        "Radiation [%.2f]"              <selfinfo>                    { channel="astro:sun:local:radiation#total" }
 Number   Diffuse_Radiation                      "Diffuse Radiation [%.2f]"      <selfinfo>                    { channel="astro:sun:local:radiation#diffuse" }
 String   Zodiac_Name                            "Tierkreis [MAP(zodiac.map):%s]" <selfinfo>                                   { channel="astro:sun:local:zodiac#sign" }
-DateTime Eclipse_Time                           "Sonnenfinsterniss [%1$td.%1$tm.%1$tY %1$tH:%1$tM]" <selfcalendar> { channel="astro:sun:local:eclipse#total" }
+DateTime Eclipse_Time                           "Sonnenfinsterniss [%1$td.%1$tm.%1$tY %1$tH:%1$tM]" <calendar> { channel="astro:sun:local:eclipse#total" }
 String   Season                                 "Jahreszeit [MAP(season.map):%s]" <selfinfo>                                  { channel="astro:sun:local:season#name" }
-DateTime Spring_Time							"Frühlinganfang [%1$td.%1$tm.]"	<selfcalendar>				    { channel="astro:sun:local:season#spring"}
-DateTime Summer_Time							"Sommeranfang [%1$td.%1$tm.]"	<selfcalendar>				        { channel="astro:sun:local:season#summer"}
-DateTime Autumn_Time							"Herbstanfang [%1$td.%1$tm.]"	<selfcalendar>				        { channel="astro:sun:local:season#autumn"}
-DateTime Winter_Time							"Winteranfang [%1$td.%1$tm.]"	<selfcalendar>				        { channel="astro:sun:local:season#winter"}
+DateTime Spring_Time							"Frühlinganfang [%1$td.%1$tm.]"	<calendar>				    { channel="astro:sun:local:season#spring"}
+DateTime Summer_Time							"Sommeranfang [%1$td.%1$tm.]"	<calendar>				        { channel="astro:sun:local:season#summer"}
+DateTime Autumn_Time							"Herbstanfang [%1$td.%1$tm.]"	<calendar>				        { channel="astro:sun:local:season#autumn"}
+DateTime Winter_Time							"Winteranfang [%1$td.%1$tm.]"	<calendar>				        { channel="astro:sun:local:season#winter"}
 
 String   MoonPhase                              "Mondphase [MAP(moon.map):%s]"     <selfinfo>                               { channel="astro:moon:local:phase#name" }
-DateTime   FullMoon                              "Nächster Vollmond [%1$td.%1$tm.]"   <selfcalendar>                        { channel="astro:moon:local:phase#full" }
-DateTime   NewMoon                              "Nächster Neumond [%1$td.%1$tm.]"     <selfcalendar>                        { channel="astro:moon:local:phase#new" }
+DateTime   FullMoon                              "Nächster Vollmond [%1$td.%1$tm.]"   <calendar>                        { channel="astro:moon:local:phase#full" }
+DateTime   NewMoon                              "Nächster Neumond [%1$td.%1$tm.]"     <calendar>                        { channel="astro:moon:local:phase#new" }

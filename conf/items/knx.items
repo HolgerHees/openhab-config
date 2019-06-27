@@ -113,26 +113,26 @@ Switch State_Holiday			    "Urlaubsmodus" 		<selfshield> 	(Security) 							{ ch
 Group:Contact:OR(OPEN, CLOSED) 	Sensor_Outdoor	"Aussen [%d]"			<selfmotion>	(Security) ["MotionDetector"]
 Group:Contact:OR(OPEN, CLOSED) 	Sensor_Indoor	"EG [%d]"				<selfmotion>	(Security) ["MotionDetector"]
 Group:Contact:OR(OPEN, CLOSED) 	Sensor_Doors_FF	"EG Türen [%d]"							<door>			(Security,Openingcontacts) ["Door","Sensor","OpenState"]
-Group:Contact:OR(OPEN, CLOSED) 	Sensor_Window_FF	"EG Fenster [%d]"					<contact>		(Security,Openingcontacts) ["Window","Sensor","OpenState"]
-Group:Contact:OR(OPEN, CLOSED) 	Sensor_Window_SF	"OG Fenster [%d]"					<contact>		(Security,Openingcontacts) ["Window","Sensor","OpenState"]
+Group:Contact:OR(OPEN, CLOSED) 	Sensor_Window_FF	"EG Fenster [%d]"					<selfwindow>		(Security,Openingcontacts) ["Window","Sensor","OpenState"]
+Group:Contact:OR(OPEN, CLOSED) 	Sensor_Window_SF	"OG Fenster [%d]"					<selfwindow>		(Security,Openingcontacts) ["Window","Sensor","OpenState"]
 
 Contact Door_FF_Floor 	"Haustür [MAP(de.map):%s]"             <door> (FF_Floor,Sensor_Doors_FF) ["FrontDoor"] { channel="knx:device:bridge:contacts_door:main" }
 Contact Door_FF_Garage1 "Schuppentür Strasse [MAP(de.map):%s]" <door> (FF_Garage,Sensor_Doors_FF) ["GarageDoor"] { channel="knx:device:bridge:contacts_door:garageStreedside" }
 Contact Door_FF_Garage2 "Schuppentür Garten [MAP(de.map):%s]"  <door> (FF_Garage,Sensor_Doors_FF) ["GarageDoor"] { channel="knx:device:bridge:contacts_door:garageGardenside" }
 
-Contact Window_FF_Livingroom_Terrace "Terasse [MAP(de.map):%s]" 	(FF_Livingroom,Sensor_Window_FF) { channel="knx:device:bridge:contacts_window_ff:livingroomTerrace" }
-Contact Window_FF_Livingroom_Couch   "Couch [MAP(de.map):%s]"		(FF_Livingroom,Sensor_Window_FF)	{ channel="knx:device:bridge:contacts_window_ff:livingroomCouch" }
-Contact Window_FF_Kitchen 			 "Küche [MAP(de.map):%s]"		(FF_Kitchen,Sensor_Window_FF)		{ channel="knx:device:bridge:contacts_window_ff:kitchen" }
-Contact Window_FF_Guestroom			 "Gästezimmer [MAP(de.map):%s]"	(FF_Guestroom,Sensor_Window_FF)		{ channel="knx:device:bridge:contacts_window_ff:guestroom" }
-Contact Window_FF_GuestWC 			 "Gäste WC [MAP(de.map):%s]"	(FF_GuestWC, Sensor_Window_FF)		{ channel="knx:device:bridge:contacts_window_ff:guestWC" }
-Contact Window_FF_Garage 			 "Schuppenfenster [MAP(de.map):%s]" (FF_Garage, Sensor_Window_FF)	{ channel="knx:device:bridge:contacts_window_ff:garage" }
+Contact Window_FF_Livingroom_Terrace "Terasse [MAP(de.map):%s]" 	<selfwindow> (FF_Livingroom,Sensor_Window_FF) { channel="knx:device:bridge:contacts_window_ff:livingroomTerrace" }
+Contact Window_FF_Livingroom_Couch   "Couch [MAP(de.map):%s]"		<selfwindow> (FF_Livingroom,Sensor_Window_FF)	{ channel="knx:device:bridge:contacts_window_ff:livingroomCouch" }
+Contact Window_FF_Kitchen 			 "Küche [MAP(de.map):%s]"		<selfwindow> (FF_Kitchen,Sensor_Window_FF)		{ channel="knx:device:bridge:contacts_window_ff:kitchen" }
+Contact Window_FF_Guestroom			 "Gästezimmer [MAP(de.map):%s]"	<selfwindow> (FF_Guestroom,Sensor_Window_FF)		{ channel="knx:device:bridge:contacts_window_ff:guestroom" }
+Contact Window_FF_GuestWC 			 "Gäste WC [MAP(de.map):%s]"	<selfwindow> (FF_GuestWC, Sensor_Window_FF)		{ channel="knx:device:bridge:contacts_window_ff:guestWC" }
+Contact Window_FF_Garage 			 "Schuppenfenster [MAP(de.map):%s]" <selfwindow> (FF_Garage, Sensor_Window_FF)	{ channel="knx:device:bridge:contacts_window_ff:garage" }
 
-Contact Window_SF_Bedroom 			 "Schlafzimmer [MAP(de.map):%s]" (SF_Bedroom,Sensor_Window_SF)		{ channel="knx:device:bridge:contacts_window_sf:bedroom" }
-Contact Window_SF_Dressingroom 		 "Ankleide [MAP(de.map):%s]"	(SF_Dressingroom,Sensor_Window_SF)	{ channel="knx:device:bridge:contacts_window_sf:dressingroom" }
-Contact Window_SF_Child1 			 "Kind 1 [MAP(de.map):%s]"		(SF_Child1,Sensor_Window_SF)		{ channel="knx:device:bridge:contacts_window_sf:child1" }
-Contact Window_SF_Child2 			 "Kind 2 [MAP(de.map):%s]"		(SF_Child2,Sensor_Window_SF)		{ channel="knx:device:bridge:contacts_window_sf:child2" }
-Contact Window_SF_Bathroom 			 "Badezimmer [MAP(de.map):%s]"	(SF_Bathroom,Sensor_Window_SF)		{ channel="knx:device:bridge:contacts_window_sf:bathroom" }
-Contact Window_SF_Attic 			 "Dachboden [MAP(de.map):%s]"	(SF_Attic,Sensor_Window_SF)			{ channel="knx:device:bridge:contacts_window_sf:attic" }
+Contact Window_SF_Bedroom 			 "Schlafzimmer [MAP(de.map):%s]" <selfwindow> (SF_Bedroom,Sensor_Window_SF)		{ channel="knx:device:bridge:contacts_window_sf:bedroom" }
+Contact Window_SF_Dressingroom 		 "Ankleide [MAP(de.map):%s]"	<selfwindow> (SF_Dressingroom,Sensor_Window_SF)	{ channel="knx:device:bridge:contacts_window_sf:dressingroom" }
+Contact Window_SF_Child1 			 "Kind 1 [MAP(de.map):%s]"		<selfwindow> (SF_Child1,Sensor_Window_SF)		{ channel="knx:device:bridge:contacts_window_sf:child1" }
+Contact Window_SF_Child2 			 "Kind 2 [MAP(de.map):%s]"		<selfwindow> (SF_Child2,Sensor_Window_SF)		{ channel="knx:device:bridge:contacts_window_sf:child2" }
+Contact Window_SF_Bathroom 			 "Badezimmer [MAP(de.map):%s]"	<selfwindow> (SF_Bathroom,Sensor_Window_SF)		{ channel="knx:device:bridge:contacts_window_sf:bathroom" }
+Contact Window_SF_Attic 			 "Dachboden [MAP(de.map):%s]"	<selfwindow> (SF_Attic,Sensor_Window_SF)			{ channel="knx:device:bridge:contacts_window_sf:attic" }
 
 //####### MOTIODETECTOR ########
 Switch Motiondetector_Outdoor_Switch "Gartenlicht autom."           <selflightmotion>	(Security)		{ channel="knx:device:bridge:motion_outdoor:main" }
