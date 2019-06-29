@@ -1,15 +1,15 @@
 String      MowerName                   "Name [%s]"                                                         {channel="robonect:mower:automower:name"}
 Number      MowerBattery                "Batterie [%d %%]"                                  <battery>       {channel="robonect:mower:automower:battery"}
-Number      MowerHours                  "Betriebsstunden [%d h]"                            <time>          {channel="robonect:mower:automower:moving-hours"}
-Number      MowerDuration               "Aktueller Modus [%s Sekunden]"                     <time>          {channel="robonect:mower:automower:status-duration"}
+Number      MowerHours                  "Betriebsstunden [%d h]"                            <selfclock>          {channel="robonect:mower:automower:moving-hours"}
+Number      MowerDuration               "Aktueller Modus [%s Sekunden]"                     <selfclock>          {channel="robonect:mower:automower:status-duration"}
 String      MowerMode                   "Modus"                                             <selfautoMode> ["Control","LawnMower"]  {channel="robonect:mower:automower:mode"}
 Number      MowerStatus                 "Status [MAP(robonect_status.map):%s]"              <selfinfo>      {channel="robonect:mower:automower:status"}
 String      MowerStatusFormatted        "Status [%s]"                                       <selfinfo> ["State","LawnMower"]
 Switch      MowerStarted                "Mähen"                                             <switch>        {channel="robonect:mower:automower:start"}
 String      MowerTimerStatus            "Timer Status [MAP(robonect_timer_status.map):%s]"  <selfinfo>      {channel="robonect:mower:automower:timer-status"}
 String      MowerTimerStatusFormatted   "Timer [%s]"                                        <selfinfo>
-DateTime    MowerNextTimer              "Nächster Start [%1$td.%1$tm %1$tH:%1$tM]"          <calendar>  {channel="robonect:mower:automower:timer-next"}
+DateTime    MowerNextTimer              "Nächster Start [%1$td.%1$tm %1$tH:%1$tM]"          <selfcalendar>  {channel="robonect:mower:automower:timer-next"}
 Number      MowerWlanSignal             "WLAN Signal [%d dB]"                               <network-on>    {channel="robonect:mower:automower:wlan-signal"}
 Number      MowerErrorCode              "Fehlercode [%s]"                                   <shield-1>      {channel="robonect:mower:automower:error-code"}
 String      MowerErrorMessage           "Fehlermeldung [%s]"                                <shield-1>      {channel="robonect:mower:automower:error-message"}
-DateTime    MowerErrorDate              "Fehlerdatum [%1$td.%1$tm %1$tH:%1$tM]"             <calendar>  {channel="robonect:mower:automower:error-date"}
+DateTime    MowerErrorDate              "Fehlerdatum [%1$td.%1$tm %1$tH:%1$tM]"             <selfcalendar>  {channel="robonect:mower:automower:error-date"}

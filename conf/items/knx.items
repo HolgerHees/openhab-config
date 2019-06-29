@@ -158,8 +158,8 @@ Contact Motiondetector_SF_Floor 	 "Flur oben [MAP(motion_de.map):%s]" <selfmotio
 //####### Bell ########
 Contact 	Bell_State 																								 { channel="knx:device:bridge:other:switchBell" }
 DateTime	Bell_Last_Change					"Klingel [%1$tH:%1$tM:%1$tS, %1$td.%1$tm]"	<selfbell> 	(Security)
-Switch 		Dooropener_FF_Floor 				"Türöffner" 							<selfkey> 		(FF_Floor)	 { channel="knx:device:bridge:other:switchDooropener" }
-Switch 		Dooropener_Timer 					"Türoffner" 							<selfkey> 		(FF_Floor)
+Switch 		Dooropener_FF_Floor 				"Türöffner" 							<frontdoor> 		(FF_Floor)	 { channel="knx:device:bridge:other:switchDooropener" }
+Switch 		Dooropener_Timer 					"Türoffner" 							<frontdoor> 		(FF_Floor)
 
 //####### Watering ########
 Group 		Watering 							"Bewässerung [%d]" 						<selfwater>

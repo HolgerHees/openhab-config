@@ -30,8 +30,8 @@ Switch roomba_full              "Staubbehälter [MAP(roomba_full.map):%s]" <tras
 
 String roomba_initiator         "Auslöser [%s]"             <msg>           {mqtt="<[mosquitto:/roomba/feedback/cleanMissionStatus_initiator:state:default]"}
 Number roomba_mssnM             "Verstrichene Zeit [%d min]" <selfruntime>        {mqtt="<[mosquitto:/roomba/feedback/cleanMissionStatus_mssnM:state:default]"}
-Number roomba_sqm               "Gereinigte Fläche [%d m²]" <groundfloor>
-Number roomba_sqft              "Gereinigte Fläche [%d ft]" <groundfloor>   {mqtt="<[mosquitto:/roomba/feedback/cleanMissionStatus_sqft:state:default]"}
+Number roomba_sqm               "Gereinigte Fläche [%d m²]" <selfhouse1>
+Number roomba_sqft              "Gereinigte Fläche [%d ft]" <selfhouse1>   {mqtt="<[mosquitto:/roomba/feedback/cleanMissionStatus_sqft:state:default]"}
 
 String roomba_errorFormatted    "Fehler [%s]"               <roombaerror>
 Switch roomba_error             "Error [%s]"                <roombaerror>   {mqtt="<[mosquitto:/roomba/feedback/cleanMissionStatus_error:state:MAP(roomba_switchFromMqtt.map)]"}

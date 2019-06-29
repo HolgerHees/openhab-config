@@ -92,7 +92,7 @@ sitemap haus label="Main Menu"
 		}
 	}
 	Frame label="Steuern" {
-		Group label="Garten [%s]" icon="garden" item=GardenStatus valuecolor=[=="Alles normal"="#26cb00",!="Alles normal"="red"] {
+		Group label="Garten [%s]" icon="selfgarden" item=GardenStatus valuecolor=[=="Alles normal"="#26cb00",!="Alles normal"="red"] {
 			Frame label="Allgemein • Letztes klingeln [%1$tH:%1$tM:%1$tS, %1$td.%1$tm]" item=Bell_Last_Change{
 				Switch item=Dooropener_Timer
 				Text label="Kameras" icon="camera"
@@ -406,7 +406,7 @@ sitemap haus label="Main Menu"
                 Group item=Sensor_Window_SF label="OG Fenster [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="red"]
             }
         }
-		Group label="Technik [%s]" icon="house" item=MainStatus valuecolor=[=="Alles normal"="#26cb00",=="Lüftung"="#cbcb00",!="Alles normal"="red"]
+		Group label="Technik [%s]" icon="selfhouse" item=MainStatus valuecolor=[=="Alles normal"="#26cb00",=="Lüftung"="#cbcb00",!="Alles normal"="red"]
 		{
             Frame label="Technik" {
                 Group item=Ventilation_Fan_Level label="Lüftung [MAP(level_de.map):%d]" icon="selfairing" {
@@ -427,7 +427,7 @@ sitemap haus label="Main Menu"
                         Text item=Ventilation_State_Message
                     }
                 }			
-                Group item=Heating_Operating_Mode label="Heizung [MAP(heating_de.map):%d]" icon="fire-on"{
+                Group item=Heating_Operating_Mode label="Heizung [MAP(heating_de.map):%d]" icon="selfheating"{
                     Frame label="Steuerung" {
                         Switch item=Heating_Auto_Mode label="Modus" mappings=[1="Auto", 0="Manuell"]
                         Switch item=Heating_Operating_Mode label="Betrieb" mappings=[1.000000="WW", 2.000000="HZ", 3.000000="RD"]  visibility=[Heating_Auto_Mode==0]
@@ -436,7 +436,7 @@ sitemap haus label="Main Menu"
                         Switch item=Heating_Livingroom_Circuit label="WZ Kreis"
                     }
                     Frame label="Sensordaten" {
-                        Text item=Heating_Demand label="Berechnungsdetails [MAP(yes_no_de.map):%d]" icon="fire-on"{
+                        Text item=Heating_Demand label="Berechnungsdetails [MAP(yes_no_de.map):%d]" icon="selfheating"{
                             Frame {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                                 Webview url="/static/grafana/heating_details.html?fromItem=Chart_From" icon=none height=36
@@ -501,7 +501,7 @@ sitemap haus label="Main Menu"
                                 Webview url="/static/grafana/energy_supply.html?fromItem=Chart_From" icon=none height=18
                             }
                         }
-                        Group label="Solar [%.2f kWh]" icon="solarplant" item=Solar_Daily_Yield {
+                        Group label="Solar [%.2f kWh]" icon="selfsolarplant" item=Solar_Daily_Yield {
                             Frame label="Solar" {
                                 Text item=Solar_Daily_Yield
                                 Text item=Solar_AC_Power

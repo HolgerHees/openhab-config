@@ -36,4 +36,4 @@ Switch Auto_Lighting							"Beleuchtung Automatik"			<settings>
 Switch Auto_Rollershutter						"Rollläden Automatik"			<settings>
 Switch Auto_Sunprotection						"Beschattung Automatik"			<settings>
 
-String Chart_From                               "Zeitraum"                      <calendar>
+String Chart_From                               "Zeitraum"                      <selfcalendar>
