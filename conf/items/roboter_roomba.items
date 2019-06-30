@@ -9,15 +9,15 @@ String roomba_command           "Roomba"                    <roomba>  ["Control"
 
 /* Settings */
 String roomba_boost             "Boost"                     <roomba>
-Switch roomba_carpetBoost       "Auto carpet Boost [%s]"    <selfswitch>        {mqtt=">[mosquitto:/roomba/setting:command:ON:carpetBoost true],>[mosquitto:/roomba/setting:command:OFF:carpetBoost false],<[mosquitto:/roomba/feedback/carpetBoost:state:MAP(roomba_selfswitch.map)]", autoupdate="false"}
-Switch roomba_vacHigh           "Vacuum Boost [%s]"         <selfswitch>        {mqtt=">[mosquitto:/roomba/setting:command:ON:vacHigh true],>[mosquitto:/roomba/setting:command:OFF:vacHigh false],<[mosquitto:/roomba/feedback/vacHigh:state:MAP(roomba_selfswitch.map)]", autoupdate="false"}
+Switch roomba_carpetBoost       "Auto carpet Boost [%s]"    <selfswitch>        {mqtt=">[mosquitto:/roomba/setting:command:ON:carpetBoost true],>[mosquitto:/roomba/setting:command:OFF:carpetBoost false],<[mosquitto:/roomba/feedback/carpetBoost:state:MAP(roomba_switch.map)]", autoupdate="false"}
+Switch roomba_vacHigh           "Vacuum Boost [%s]"         <selfswitch>        {mqtt=">[mosquitto:/roomba/setting:command:ON:vacHigh true],>[mosquitto:/roomba/setting:command:OFF:vacHigh false],<[mosquitto:/roomba/feedback/vacHigh:state:MAP(roomba_switch.map)]", autoupdate="false"}
 
 String roomba_passes            "Durchgänge"                <roomba>
-Switch roomba_noAutoPasses      "No Auto Passes [%s]"       <selfswitch>        {mqtt=">[mosquitto:/roomba/setting:command:ON:noAutoPasses true],>[mosquitto:/roomba/setting:command:OFF:noAutoPasses false],<[mosquitto:/roomba/feedback/noAutoPasses:state:MAP(roomba_selfswitch.map)]", autoupdate="false"}
-Switch roomba_twoPass           "Two Passes [%s]"           <selfswitch>        {mqtt=">[mosquitto:/roomba/setting:command:ON:twoPass true],>[mosquitto:/roomba/setting:command:OFF:twoPass false],<[mosquitto:/roomba/feedback/twoPass:state:MAP(roomba_selfswitch.map)]", autoupdate="false"}
+Switch roomba_noAutoPasses      "No Auto Passes [%s]"       <selfswitch>        {mqtt=">[mosquitto:/roomba/setting:command:ON:noAutoPasses true],>[mosquitto:/roomba/setting:command:OFF:noAutoPasses false],<[mosquitto:/roomba/feedback/noAutoPasses:state:MAP(roomba_switch.map)]", autoupdate="false"}
+Switch roomba_twoPass           "Two Passes [%s]"           <selfswitch>        {mqtt=">[mosquitto:/roomba/setting:command:ON:twoPass true],>[mosquitto:/roomba/setting:command:OFF:twoPass false],<[mosquitto:/roomba/feedback/twoPass:state:MAP(roomba_switch.map)]", autoupdate="false"}
 
-Switch roomba_edgeClean         "Edge Clean"                <selfswitch>        {mqtt=">[mosquitto:/roomba/setting:command:ON:openOnly false],>[mosquitto:/roomba/setting:command:OFF:openOnly true],<[mosquitto:/roomba/feedback/openOnly:state:MAP(roomba_inverse_selfswitch.map)]", autoupdate="false"}
-Switch roomba_binPause          "Always Complete"           <selfswitch>        {mqtt=">[mosquitto:/roomba/setting:command:ON:binPause false],>[mosquitto:/roomba/setting:command:OFF:binPause true],<[mosquitto:/roomba/feedback/binPause:state:MAP(roomba_inverse_selfswitch.map)]", autoupdate="false"}
+Switch roomba_edgeClean         "Edge Clean"                <selfswitch>        {mqtt=">[mosquitto:/roomba/setting:command:ON:openOnly false],>[mosquitto:/roomba/setting:command:OFF:openOnly true],<[mosquitto:/roomba/feedback/openOnly:state:MAP(roomba_inverse_switch.map)]", autoupdate="false"}
+Switch roomba_binPause          "Always Complete"           <selfswitch>        {mqtt=">[mosquitto:/roomba/setting:command:ON:binPause false],>[mosquitto:/roomba/setting:command:OFF:binPause true],<[mosquitto:/roomba/feedback/binPause:state:MAP(roomba_inverse_switch.map)]", autoupdate="false"}
 
 /* Roomba Feedback */
 String roomba_StatusFormatted   "Status [%s]"               <selfinfo>
@@ -25,8 +25,8 @@ String roomba_status            "Status [%s]"               <msg>           {mqt
 String roomba_phase             "Phase [%s]"                <msg>           {mqtt="<[mosquitto:/roomba/feedback/cleanMissionStatus_phase:state:default]"}
 Number roomba_batPct            "Batterie [%d %%]"          <selfbattery>       {mqtt="<[mosquitto:/roomba/feedback/batPct:state:default]"}
 Number roomba_rssi              "WLAN Signal [%d dB]"       <selfnetwork>       {mqtt="<[mosquitto:/roomba/feedback/signal_rssi:state:default]"}
-Switch roomba_bin_present       "Staubbehälter [MAP(roomba_bin_present.map):%s]" <trashpresent> {mqtt="<[mosquitto:/roomba/feedback/bin_present:state:MAP(roomba_selfswitch.map)]"}
-Switch roomba_full              "Staubbehälter [MAP(roomba_full.map):%s]" <trashpresent> {mqtt="<[mosquitto:/roomba/feedback/bin_full:state:MAP(roomba_selfswitch.map)]"}
+Switch roomba_bin_present       "Staubbehälter [MAP(roomba_bin_present.map):%s]" <trashpresent> {mqtt="<[mosquitto:/roomba/feedback/bin_present:state:MAP(roomba_switch.map)]"}
+Switch roomba_full              "Staubbehälter [MAP(roomba_full.map):%s]" <trashpresent> {mqtt="<[mosquitto:/roomba/feedback/bin_full:state:MAP(roomba_switch.map)]"}
 
 String roomba_initiator         "Auslöser [%s]"             <msg>           {mqtt="<[mosquitto:/roomba/feedback/cleanMissionStatus_initiator:state:default]"}
 Number roomba_mssnM             "Verstrichene Zeit [%d min]" <selfruntime>        {mqtt="<[mosquitto:/roomba/feedback/cleanMissionStatus_mssnM:state:default]"}
@@ -34,7 +34,7 @@ Number roomba_sqm               "Gereinigte Fläche [%d m²]" <selfhouse1>
 Number roomba_sqft              "Gereinigte Fläche [%d ft]" <selfhouse1>   {mqtt="<[mosquitto:/roomba/feedback/cleanMissionStatus_sqft:state:default]"}
 
 String roomba_errorFormatted    "Fehler [%s]"               <roombaerror>
-Switch roomba_error             "Error [%s]"                <roombaerror>   {mqtt="<[mosquitto:/roomba/feedback/cleanMissionStatus_error:state:MAP(roomba_selfswitchFromMqtt.map)]"}
+Switch roomba_error             "Error [%s]"                <roombaerror>   {mqtt="<[mosquitto:/roomba/feedback/cleanMissionStatus_error:state:MAP(roomba_switchFromMqtt.map)]"}
 String roomba_errortext         "Error Message [%s]"        <msg>           {mqtt="<[mosquitto:/roomba/feedback/error_message:state:default]"}
 
 
