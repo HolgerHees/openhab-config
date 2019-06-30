@@ -209,7 +209,7 @@ sitemap haus label="Main Menu"
 	}
 	Frame label="Sonstiges"
 	{
-		Group label="Status [%s]" icon="selfinfo" item=RoomStatus valuecolor=[=="Alles geschlossen"="#26cb00",!="Alles geschlossen"="red"]
+		Group label="Status [%s]" icon="selfstate" item=RoomStatus valuecolor=[=="Alles geschlossen"="#26cb00",!="Alles geschlossen"="red"]
         {
 			Frame label="Steuerung"
 			{
