@@ -104,7 +104,7 @@ Number Temperature_Room_Target	                "Ziel [%.1f °C]"				<selftempera
 
 //########### PLANT SENSORS ##########
 
-String SensorInfo       "Sensoren Status  [%s]"      <selfinfo>
+String SensorInfo       "Sensoren Status  [%s]"      <selfsensor>
 String PlantSensorInfo  "Planzen Status [%s]" <selfrain>
 
 Group SoilMoistSensor
