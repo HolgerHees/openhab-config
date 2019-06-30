@@ -11,7 +11,7 @@
    viewBox="0 0 64 63.999998"
    version="1.1"
    inkscape:version="0.92.2 5c3e80d, 2017-08-06"
-   sodipodi:docname="selfsocket.svg"
+   sodipodi:docname="selfsocket-off.svg"
    width="64"
    height="64">
   <sodipodi:namedview
@@ -27,9 +27,9 @@
      inkscape:window-height="1013"
      id="namedview71"
      showgrid="false"
-     inkscape:zoom="1.0305673"
-     inkscape:cx="-441.80017"
-     inkscape:cy="324.1721"
+     inkscape:zoom="8.2445384"
+     inkscape:cx="13.91521"
+     inkscape:cy="28.844947"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -168,8 +168,8 @@
      id="layer2"
      transform="matrix(0.9,0,0,0.9,414.6013,-769.83522)">
     <g
-       id="g5517"
-       transform="matrix(0.09025,0,0,0.09025,-416.04033,839.78804)">
+       id="g5409"
+       transform="matrix(0.10961535,0,0,0.1097843,-414.09366,828.71897)">
       <rect
          id="rect3759"
          rx="48.868961"

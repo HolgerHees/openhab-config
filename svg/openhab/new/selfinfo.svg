@@ -21,7 +21,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -38,9 +38,9 @@
      inkscape:window-height="1013"
      id="namedview31"
      showgrid="false"
-     inkscape:zoom="4.9166667"
-     inkscape:cx="24"
-     inkscape:cy="24"
+     inkscape:zoom="3.1679688"
+     inkscape:cx="69.846069"
+     inkscape:cy="16.987398"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -53,7 +53,8 @@
        x1="13"
        y2="1040.36"
        gradientUnits="userSpaceOnUse"
-       x2="36">
+       x2="36"
+       gradientTransform="matrix(1.5609756,0,0,1.6,-6.2439022,-1613.376)">
       <stop
          stop-color="#292c2f"
          id="stop2" />
@@ -67,7 +68,8 @@
        y1="44"
        y2="4"
        x2="0"
-       gradientUnits="userSpaceOnUse">
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.5609756,0,0,1.6,-6.2439022,-6.4)">
       <stop
          stop-color="#7cbaf8"
          id="stop7" />
@@ -82,40 +84,29 @@
        y2="9"
        x2="0"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.02857,0,0,1.2,-5.314,-4.8)">
+       gradientTransform="matrix(1.6055727,0,0,1.92,-14.538927,-14.08)">
       <stop
          stop-color="#197cf1"
-         id="stop12" />
+         id="stop12"
+         style="stop-color:#3660bf;stop-opacity:1" />
       <stop
          offset="1"
          stop-color="#20bcfa"
-         id="stop14" />
+         id="stop14"
+         style="stop-color:#209ffa;stop-opacity:1" />
     </linearGradient>
   </defs>
   <g
-     transform="matrix(1.33,0,0,1.33,-0.585,-1335.7188)"
-     id="g27"
-     style="fill-rule:evenodd">
-    <g
-       id="g23"
-       style="color:#000000;stroke-width:2">
-      <path
-         d="M 44,24 A 20,20 0 1 1 4,24 20,20 0 1 1 44,24"
-         transform="translate(0,1004.36)"
-         id="path19"
-         inkscape:connector-curvature="0"
-         style="fill:url(#b)" />
-      <path
-         d="M 24,6 C 14.059,6 6,14.06 6,24 6,33.941 14.06,42 24,42 33.941,42 42,33.94 42,24 42,14.059 33.94,6 24,6 m -2,6 h 4 v 4 h -4 z m 0,8 h 4 V 36 H 22 V 24 Z"
-         transform="translate(0,1004.36)"
-         id="path21"
-         inkscape:connector-curvature="0"
-         style="fill:url(#c)" />
-    </g>
+     id="g907">
     <path
-       d="m 26,1020.36 h -4 l 4,4 v 16 h -4 l 8,8 c 5.172,0 15,0 15,0 v -14 l -19,-18 z"
-       id="path25"
+       style="color:#000000;fill:url(#b);fill-rule:evenodd;stroke-width:3.16073465"
        inkscape:connector-curvature="0"
-       style="opacity:0.2;fill:url(#a)" />
+       id="path19"
+       d="M 62.439024,32 A 31.219512,32 0 1 1 2e-7,32 31.219512,32 0 1 1 62.439024,32" />
+    <path
+       style="color:#000000;fill:url(#c);fill-rule:evenodd;stroke-width:3.16073465"
+       inkscape:connector-curvature="0"
+       id="path21"
+       d="M 31.219512,3.2 C 15.701854,3.2 3.1219514,16.096 3.1219514,32 c 0,15.9056 12.5814636,28.8 28.0975606,28.8 15.517659,0 28.097561,-12.896 28.097561,-28.8 0,-15.9056 -12.581463,-28.8 -28.097561,-28.8 m -3.121951,9.6 h 6.243902 v 6.4 h -6.243902 z m 0,12.8 h 6.243902 V 51.2 H 28.097561 V 32 Z" />
   </g>
 </svg>

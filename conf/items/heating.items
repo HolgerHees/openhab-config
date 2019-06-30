@@ -2,16 +2,16 @@
 Group Heating_Temperatures
 Group Solar_Temperatures
 
-Switch Heating_Livingroom_Circuit				"Wohnzimmer Kreis"				<settings>			{ channel="knx:device:bridge:other:livingroomHeating" }
-Number Heating_Temperature_Livingroom_Target	"Ziel Wohnzimmer"				<settings>			(PersistentHistory)
-Number Heating_Temperature_Bedroom_Target		"Ziel Schlafzimmer"				<settings>			(PersistentHistory)
-Number Heating_Charged							"Geladen [%.1f]"				<settings>			(PersistentChart,PersistentHistory)
-Number Heating_Demand							"Heizung [%d]"					<settings>
-Number Solar_Power								"Solar Power [%.1f]"			<settings>			(PersistentChart,PersistentHistory,Solar_Temperatures)
+Switch Heating_Livingroom_Circuit				"Wohnzimmer Kreis"				<selfsettings>			{ channel="knx:device:bridge:other:livingroomHeating" }
+Number Heating_Temperature_Livingroom_Target	"Ziel Wohnzimmer"				<selfsettings>			(PersistentHistory)
+Number Heating_Temperature_Bedroom_Target		"Ziel Schlafzimmer"				<selfsettings>			(PersistentHistory)
+Number Heating_Charged							"Geladen [%.1f]"				<selfsettings>			(PersistentChart,PersistentHistory)
+Number Heating_Demand							"Heizung [%d]"					<selfsettings>
+Number Solar_Power								"Solar Power [%.1f]"			<selfsettings>			(PersistentChart,PersistentHistory,Solar_Temperatures)
 
 Number Heating_Auto_Mode						"Modus"							<selfautoMode>
-Number Heating_Operating_Mode					"Betriebsart [MAP(heating_de.map):%s]" <settings>	(PersistentHistory)				{exec=">[1:/opt/heating_control/heizungBetriebsart.bash -t 1] >[2:/opt/heating_control/heizungBetriebsart.bash -t 2] >[3:/opt/heating_control/heizungBetriebsart.bash -t 3] >[1.000000:/opt/heating_control/heizungBetriebsart.bash -t 1] >[2.000000:/opt/heating_control/heizungBetriebsart.bash -t 2] >[3.000000:/opt/heating_control/heizungBetriebsart.bash -t 3]"}
-//Number Heating_Operating_Mode					"Betriebsart [MAP(heating_de.map):%s]" <settings>	(PersistentHistory)				{channel="exec:command:heatingMode:input"}
+Number Heating_Operating_Mode					"Betriebsart [MAP(heating_de.map):%s]" <selfsettings>	(PersistentHistory)				{exec=">[1:/opt/heating_control/heizungBetriebsart.bash -t 1] >[2:/opt/heating_control/heizungBetriebsart.bash -t 2] >[3:/opt/heating_control/heizungBetriebsart.bash -t 3] >[1.000000:/opt/heating_control/heizungBetriebsart.bash -t 1] >[2.000000:/opt/heating_control/heizungBetriebsart.bash -t 2] >[3.000000:/opt/heating_control/heizungBetriebsart.bash -t 3]"}
+//Number Heating_Operating_Mode					"Betriebsart [MAP(heating_de.map):%s]" <selfsettings>	(PersistentHistory)				{channel="exec:command:heatingMode:input"}
 Number Heating_Power							"Leistung [%.1f %%]"			<selfruntime>		(PersistentChart,PersistentHistory)
 Number Heating_Circuit_Pump_Speed				"Heizkreispumpe (Drehzahl) [%.1f %%]" <selfruntime>	(PersistentChart,PersistentHistory)
 String Heating_Power_Message					"Brenner, Heizkreis [%s]"		<selfgas>
@@ -25,8 +25,8 @@ String Heating_Temperature_Offset_Message		"Vorlauf [%s]	"				<selftemperature>
 Number Heating_Temperature_Boiler_Target		"Kessel (Soll) [%.1f °C]"		<selftemperature>	
 Number Heating_Temperature_Boiler				"Kessel (Ist) [%.1f °C]"		<selftemperature>	
 String Heating_Temperature_Boiler_Message		"Kessel [%s]"					<selftemperature>	
-Number Heating_Burner_Starts					"Brennerstarts [%d]"			<settings>			(PersistentHistory)
-Number Heating_Burner_Starts_Current_Daily		"Brennerstarts (heute) [%.1f]"	<settings>		    (PersistentChart)
+Number Heating_Burner_Starts					"Brennerstarts [%d]"			<selfsettings>			(PersistentHistory)
+Number Heating_Burner_Starts_Current_Daily		"Brennerstarts (heute) [%.1f]"	<selfsettings>		    (PersistentChart)
 String Heating_Burner_Starts_Message			"Brennerstarts [%s]"			<selfgas>		
 Number Heating_Burner_Hours						"Brennerstunden [%.1f]"			<selfruntime>		(PersistentHistory)
 Number Heating_Burner_Hours_Current_Daily		"Brennerstunden (heute) [%.1f]"	<selfruntime>		(PersistentChart)
@@ -43,7 +43,7 @@ Number Heating_Solar_Power_Current5Min			"Solar Leistung [%.1f KW]"		<sun>				(P
 String Heating_Solar_Power_Message				"Solar Leistung [%s]"			<sun>			
 Number Heating_Solar_Pump_State					"Solar Pumpe [MAP(heating_pump_de.map):%s]" <selfruntime>	(PersistentChart,PersistentHistory)
 Number Heating_Solar_Reheating_State			"Nachladeunterdrückung [MAP(heating_state_de.map):%s]" <selfruntime>
-String Heating_Solar_State_Message				"Pumpe, Nachladeunterdr. [%s]"	<settings>
+String Heating_Solar_State_Message				"Pumpe, Nachladeunterdr. [%s]"	<selfsettings>
 Number Heating_Common_Fault						"Status [MAP(heating_state_de.map):%s]"<selfinfo>
 
 Number Heating_Temperature_Pipe_Out				"Gem. Vorlauf (Ist) [%.1f °C]"	<selftemperature>	(PersistentChart,PersistentHistory,Heating_Temperatures)

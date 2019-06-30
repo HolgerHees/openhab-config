@@ -11,7 +11,7 @@
    style="enable-background:new 0 0 64 64"
    id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
+   inkscape:version="0.92.2 5c3e80d, 2017-08-06"
    sodipodi:docname="selfclock.svg">
   <metadata
      id="metadata76">
@@ -36,20 +36,20 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1081"
-     inkscape:window-height="599"
+     inkscape:window-width="1920"
+     inkscape:window-height="1013"
      id="namedview72"
      showgrid="false"
      inkscape:zoom="2.6074563"
-     inkscape:cx="-96.740104"
-     inkscape:cy="16.162582"
-     inkscape:window-x="3688"
-     inkscape:window-y="195"
-     inkscape:window-maximized="0"
+     inkscape:cx="-59.539097"
+     inkscape:cy="-14.518661"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
      inkscape:current-layer="svg2" />
   <g
      id="g4746"
-     transform="matrix(0.88309625,0,0,0.88402583,3.74092,3.7111736)">
+     transform="matrix(1.0774411,0,0,1.0774411,-2.4781152,-2.4781152)">
     <path
        inkscape:connector-curvature="0"
        id="path4"
@@ -63,7 +63,7 @@
     <path
        inkscape:connector-curvature="0"
        id="path8-3"
-       d="m 31.678281,7.7816467 0,24.7578133 17.457032,17.457031 c 4.465292,-4.478481 7.228515,-10.655083 7.228515,-17.466797 0,-13.629373 -11.064268,-24.7129563 -24.685547,-24.7480473 z"
+       d="M 31.678281,7.7816467 V 32.53946 l 17.457032,17.457031 c 4.465292,-4.478481 7.228515,-10.655083 7.228515,-17.466797 0,-13.629373 -11.064268,-24.7129563 -24.685547,-24.7480473 z"
        style="fill:#796717;fill-opacity:1" />
     <path
        id="path8"
@@ -81,11 +81,11 @@
        style="fill:#1a171b">
       <path
          id="path14"
-         d="m 31,13 2,0 0,24 -2,0 z"
+         d="m 31,13 h 2 v 24 h -2 z"
          inkscape:connector-curvature="0" />
       <path
          id="path16"
-         d="m 27,31 20,0 0,2 -20,0 z"
+         d="m 27,31 h 20 v 2 H 27 Z"
          inkscape:connector-curvature="0" />
     </g>
     <path
@@ -130,11 +130,11 @@
        inkscape:connector-curvature="0" />
     <path
        id="path34"
-       d="m 32,12.2 c 0.374,0 0.737,0.033 1.1,0.055 l 0,-3.355 -2.2,0 0,3.355 C 31.263,12.233 31.626,12.2 32,12.2"
+       d="m 32,12.2 c 0.374,0 0.737,0.033 1.1,0.055 V 8.9 h -2.2 v 3.355 C 31.263,12.233 31.626,12.2 32,12.2"
        inkscape:connector-curvature="0" />
     <path
        id="path36"
-       d="m 12.2,32 c 0,-0.374 0.033,-0.737 0.055,-1.1 l -3.355,0 0,2.2 3.355,0 C 12.233,32.737 12.2,32.374 12.2,32"
+       d="m 12.2,32 c 0,-0.374 0.033,-0.737 0.055,-1.1 H 8.9 v 2.2 h 3.355 C 12.233,32.737 12.2,32.374 12.2,32"
        inkscape:connector-curvature="0" />
     <path
        id="path38"
@@ -148,7 +148,7 @@
        inkscape:connector-curvature="0" />
     <path
        id="path42"
-       d="m 32,51.8 c -0.374,0 -0.737,-0.033 -1.1,-0.055 l 0,3.355 2.2,0 0,-3.355 C 32.737,51.767 32.374,51.8 32,51.8"
+       d="m 32,51.8 c -0.374,0 -0.737,-0.033 -1.1,-0.055 V 55.1 h 2.2 V 51.745 C 32.737,51.767 32.374,51.8 32,51.8"
        inkscape:connector-curvature="0" />
     <path
        id="path44"
@@ -167,7 +167,7 @@
        inkscape:connector-curvature="0" />
     <path
        id="path50"
-       d="m 51.745,30.9 c 0.022,0.363 0.055,0.726 0.055,1.1 0,0.374 -0.033,0.737 -0.055,1.1 l 3.355,0 0,-2.2 -3.355,0"
+       d="m 51.745,30.9 c 0.022,0.363 0.055,0.726 0.055,1.1 0,0.374 -0.033,0.737 -0.055,1.1 H 55.1 v -2.2 h -3.355"
        inkscape:connector-curvature="0" />
     <path
        id="path52"

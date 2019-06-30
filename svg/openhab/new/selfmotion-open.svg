@@ -62,21 +62,21 @@
      id="namedview20"
      showgrid="false"
      inkscape:zoom="7.375"
-     inkscape:cx="-20.289466"
+     inkscape:cx="-48.086076"
      inkscape:cy="39.129073"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg18" />
   <path
-     transform="translate(-13.152542,11.677967)"
+     transform="matrix(1.2626433,0,0,1.2626433,-25.011555,6.3405211)"
      inkscape:connector-curvature="0"
      d="m 29.3,17.3 c 0,0 2.7,7.9 2.7,10.7 0,-2.7 2.7,-10.7 2.7,-10.7 h -5.4"
      style="fill:#ffffff"
      clip-path="url(#1)"
      id="path36" />
   <path
-     transform="translate(-13.152542,11.677967)"
+     transform="matrix(1.2626433,0,0,1.2626433,-25.011555,6.3405211)"
      inkscape:connector-curvature="0"
      d="m 30,17 1.5,2 -1.5,3 2,6 2,-6 -1.5,-3 1.5,-2 z"
      style="fill:#e70003"
@@ -84,7 +84,7 @@
      id="path38" />
   <g
      id="g2055"
-     transform="translate(0.54948398,-0.240967)">
+     transform="matrix(1.2626433,0,0,1.2626433,-7.7107833,-8.708841)">
     <g
        style="fill:#d72a2a;fill-opacity:1"
        transform="matrix(0,-0.59049,0.59049,0,30.517369,50.140883)"

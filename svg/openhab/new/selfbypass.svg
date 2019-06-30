@@ -29,8 +29,8 @@
      id="namedview22"
      showgrid="false"
      inkscape:zoom="10.429825"
-     inkscape:cx="-8.0593276"
-     inkscape:cy="19.863439"
+     inkscape:cx="10.644243"
+     inkscape:cy="27.225562"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -45,7 +45,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -54,63 +54,22 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(-384.57143,-483.798)">
-    <g
-       id="g4665"
-       transform="matrix(3.543122,0,0,3.543122,-997.57275,-1375.1832)">
-      <circle
-         r="1.1"
-         cy="532.4328"
-         cx="397.24554"
-         id="path4254"
-         style="fill:#6ca235;fill-opacity:1;stroke:none;stroke-width:1.79999995;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-      <circle
-         r="1.1"
-         cy="535.08026"
-         cx="397.24554"
-         id="path4254-6"
-         style="fill:#6ca235;fill-opacity:1;stroke:none;stroke-width:1.79999995;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-      <g
-         transform="translate(6.6101695,-0.71186441)"
-         style="fill:#6ca235;fill-opacity:1"
-         id="g4649">
-        <rect
-           style="fill:#6ca235;fill-opacity:1;stroke:none;stroke-width:1.79999995;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="rect4319"
-           width="1.8983051"
-           height="2.9152544"
-           x="389.53751"
-           y="526.57758" />
-        <rect
-           style="fill:#6ca235;fill-opacity:1;stroke:none;stroke-width:1.79999995;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="rect4319-7"
-           width="1.8983051"
-           height="2.9152544"
-           x="389.55444"
-           y="539.34052" />
-        <rect
-           style="fill:#6ca235;fill-opacity:1;stroke:none;stroke-width:1.79999995;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="rect4319-7-5"
-           width="1.8983051"
-           height="5.9661016"
-           x="393.58835"
-           y="531.45905" />
-        <rect
-           style="fill:#6ca235;fill-opacity:1;stroke:none;stroke-width:1.79999995;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="rect4319-7-5-3"
-           width="1.8983051"
-           height="5.9661016"
-           x="-199.40842"
-           y="626.37091"
-           transform="rotate(-54)" />
-        <rect
-           style="fill:#6ca235;fill-opacity:1;stroke:none;stroke-width:1.79999995;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           id="rect4319-7-5-3-5"
-           width="1.8983051"
-           height="5.9661016"
-           x="665.32257"
-           y="-4.090416"
-           transform="rotate(54)" />
-      </g>
-    </g>
+    <circle
+       style="fill:#6bc305;fill-opacity:1;stroke:#559c04;stroke-width:0.98461539;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path4254"
+       cx="409.02237"
+       cy="510.68549"
+       r="4.4212313" />
+    <circle
+       style="fill:#6bc305;fill-opacity:1;stroke:#559c04;stroke-width:0.98461539;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path4254-6"
+       cx="409.02237"
+       cy="521.32642"
+       r="4.4212313" />
+    <path
+       inkscape:connector-curvature="0"
+       style="fill:#6bc305;fill-opacity:1;stroke:#559c04;stroke-width:0.98461539;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 404.60991,484.29031 v 11.71731 l -0.01,0.0135 16.29039,11.83654 V 523.873 l -16.12689,11.71539 h -0.0865 v 0.0634 l -0.0192,0.0135 0.0192,0.0269 v 11.61347 h 7.63077 v -7.7673 l 16.03269,-11.64808 h 0.18077 v -0.13077 l 0.0211,-0.0154 -0.0211,-0.0289 v -23.80576 h -0.0846 l -16.19807,-11.76923 v -7.85 z"
+       id="rect4319" />
   </g>
 </svg>

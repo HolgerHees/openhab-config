@@ -154,7 +154,7 @@ sitemap haus label="Main Menu"
                         Text item=roomba_errorFormatted
                     }
                     Frame label="Sonstiges" {
-                        Text label="Settings" icon="settings" {
+                        Text label="Settings" icon="selfsettings" {
                             Frame label="Settings" {
                                 Selection item=roomba_boost mappings=[auto="Auto",eco="Eco",performance="Performance"]
                                 Selection item=roomba_passes mappings=[auto="Auto",one="Ein",two="Zwei"]

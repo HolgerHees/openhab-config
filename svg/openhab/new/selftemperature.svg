@@ -11,7 +11,7 @@
    style="enable-background:new 0 0 64 64"
    id="svg38"
    version="1.1"
-   inkscape:version="0.91 r13725"
+   inkscape:version="0.92.2 5c3e80d, 2017-08-06"
    sodipodi:docname="selftemperature.svg">
   <metadata
      id="metadata72">
@@ -37,166 +37,170 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1920"
-     inkscape:window-height="1015"
+     inkscape:window-height="1013"
      id="namedview68"
      showgrid="false"
      inkscape:zoom="10.429825"
-     inkscape:cx="11.920718"
+     inkscape:cx="-7.7344536"
      inkscape:cy="33.132322"
-     inkscape:window-x="1920"
+     inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg38" />
   <g
-     id="g4205">
-    <ellipse
-       id="circle40"
-       style="fill:#dae1e4;stroke-width:0.97419935"
-       cy="9.1325693"
-       cx="23.489357"
-       rx="6"
-       ry="5.694386" />
-    <ellipse
-       id="circle42"
-       style="fill:#c4cacc;stroke-width:0.97419935"
-       cy="9.1325693"
-       cx="23.489357"
-       rx="5"
-       ry="4.7453218" />
-    <path
-       inkscape:connector-curvature="0"
-       id="path44"
-       style="fill:#dae1e4;stroke-width:0.97419935"
-       d="m 17.489359,9.5052302 12,0 0,42.7078948 -12,0 z" />
-    <path
-       inkscape:connector-curvature="0"
-       id="path46"
-       style="fill:#c4cacc;stroke-width:0.97419935"
-       d="m 18.489359,9.4549298 10,0 0,41.8024882 -10,0 z" />
-    <ellipse
-       id="circle48"
-       style="fill:#dae1e4;stroke-width:0.97419935"
-       cy="53.636723"
-       cx="23.489357"
-       rx="9"
-       ry="8.5415792" />
-    <ellipse
-       cx="23.489359"
-       cy="53.636723"
-       id="circle52"
-       style="fill:#d72a2a;fill-opacity:1;stroke-width:0.97419935"
-       rx="8"
-       ry="7.5925145" />
-    <path
-       d="m 18.489359,12.40068 10,0 0,35.46927 -10,0 z"
-       id="path54"
-       inkscape:connector-curvature="0"
-       style="fill:#d72a2a;fill-opacity:1;stroke-width:0.97419935" />
+     id="g872"
+     transform="matrix(1.089545,0,0,1.089545,-2.596886,-3.7460566)">
     <g
-       transform="translate(-23.521775,1.4245555)"
-       id="g56"
-       style="fill:#c4cacc;fill-opacity:1">
+       id="g4205">
+      <ellipse
+         ry="5.694386"
+         rx="6"
+         cx="23.489357"
+         cy="9.1325693"
+         style="fill:#dae1e4;stroke-width:0.97419935"
+         id="circle40" />
+      <ellipse
+         ry="4.7453218"
+         rx="5"
+         cx="23.489357"
+         cy="9.1325693"
+         style="fill:#c4cacc;stroke-width:0.97419935"
+         id="circle42" />
       <path
-         style="fill:#c4cacc;fill-opacity:1"
-         inkscape:connector-curvature="0"
-         id="path58"
-         d="m 33,9 5,0 0,2 -5,0 z" />
+         d="m 17.489359,9.5052302 h 12 V 52.213125 h -12 z"
+         style="fill:#dae1e4;stroke-width:0.97419935"
+         id="path44"
+         inkscape:connector-curvature="0" />
       <path
-         style="fill:#c4cacc;fill-opacity:1"
-         inkscape:connector-curvature="0"
-         id="path60"
-         d="m 33,17 5,0 0,2 -5,0 z" />
+         d="m 18.489359,9.4549298 h 10 V 51.257418 h -10 z"
+         style="fill:#c4cacc;stroke-width:0.97419935"
+         id="path46"
+         inkscape:connector-curvature="0" />
+      <ellipse
+         ry="8.5415792"
+         rx="9"
+         cx="23.489357"
+         cy="53.636723"
+         style="fill:#dae1e4;stroke-width:0.97419935"
+         id="circle48" />
+      <ellipse
+         ry="7.5925145"
+         rx="8"
+         style="fill:#d72a2a;fill-opacity:1;stroke-width:0.97419935"
+         id="circle52"
+         cy="53.636723"
+         cx="23.489359" />
       <path
-         style="fill:#c4cacc;fill-opacity:1"
+         style="fill:#d72a2a;fill-opacity:1;stroke-width:0.97419935"
          inkscape:connector-curvature="0"
-         id="path62"
-         d="m 33,25 5,0 0,2 -5,0 z" />
-      <path
+         id="path54"
+         d="m 18.489359,12.40068 h 10 v 35.46927 h -10 z" />
+      <g
          style="fill:#c4cacc;fill-opacity:1"
-         inkscape:connector-curvature="0"
-         id="path64"
-         d="m 33,33 5,0 0,2 -5,0 z" />
-      <path
-         style="fill:#c4cacc;fill-opacity:1"
-         inkscape:connector-curvature="0"
-         id="path66"
-         d="m 33,41 5,0 0,2 -5,0 z" />
+         id="g56"
+         transform="translate(-23.521775,1.4245555)">
+        <path
+           d="m 33,9 h 5 v 2 h -5 z"
+           id="path58"
+           inkscape:connector-curvature="0"
+           style="fill:#c4cacc;fill-opacity:1" />
+        <path
+           d="m 33,17 h 5 v 2 h -5 z"
+           id="path60"
+           inkscape:connector-curvature="0"
+           style="fill:#c4cacc;fill-opacity:1" />
+        <path
+           d="m 33,25 h 5 v 2 h -5 z"
+           id="path62"
+           inkscape:connector-curvature="0"
+           style="fill:#c4cacc;fill-opacity:1" />
+        <path
+           d="m 33,33 h 5 v 2 h -5 z"
+           id="path64"
+           inkscape:connector-curvature="0"
+           style="fill:#c4cacc;fill-opacity:1" />
+        <path
+           d="m 33,41 h 5 v 2 h -5 z"
+           id="path66"
+           inkscape:connector-curvature="0"
+           style="fill:#c4cacc;fill-opacity:1" />
+      </g>
     </g>
-  </g>
-  <g
-     id="g4234"
-     transform="translate(0,-0.57527399)">
-    <circle
-       id="circle4"
-       style="fill:#dae1e4"
-       r="4.1999998"
-       cy="8.2134571"
-       cx="47.728809" />
-    <circle
-       id="circle6"
-       style="fill:#c4cacc"
-       r="3.5"
-       cy="8.2134571"
-       cx="47.728809" />
-    <path
-       id="path8"
-       style="fill:#dae1e4"
-       d="m 43.528813,7.9634566 8.4,0 0,31.5000004 -8.4,0 z"
-       inkscape:connector-curvature="0" />
-    <path
-       id="path10"
-       style="fill:#c4cacc"
-       d="m 44.228813,7.9263566 7,0 0,30.8322004 -7,0 z"
-       inkscape:connector-curvature="0" />
-    <circle
-       id="circle12"
-       style="fill:#dae1e4"
-       r="6.3000002"
-       cy="40.513458"
-       cx="47.728809" />
     <g
-       transform="matrix(0.7,0,0,0.7,25.328813,2.0134566)"
-       id="g14"
-       style="fill:#2e7de5">
+       transform="translate(0,-0.57527399)"
+       id="g4234">
       <circle
-         id="circle16"
-         r="8"
-         cy="55"
-         cx="32" />
+         cx="47.728809"
+         cy="8.2134571"
+         r="4.1999998"
+         style="fill:#dae1e4"
+         id="circle4" />
+      <circle
+         cx="47.728809"
+         cy="8.2134571"
+         r="3.5"
+         style="fill:#c4cacc"
+         id="circle6" />
       <path
-         id="path18"
-         d="m 27,39 10,0 0,12 -10,0 z"
-         inkscape:connector-curvature="0" />
-    </g>
-    <g
-       transform="matrix(0.735,0,0,0.735,13.605921,2.8758047)"
-       id="g20"
-       style="fill:#c4cacc;fill-opacity:1">
+         inkscape:connector-curvature="0"
+         d="m 43.528813,7.9634566 h 8.4 V 39.463457 h -8.4 z"
+         style="fill:#dae1e4"
+         id="path8" />
       <path
+         inkscape:connector-curvature="0"
+         d="m 44.228813,7.9263566 h 7 V 38.758557 h -7 z"
+         style="fill:#c4cacc"
+         id="path10" />
+      <circle
+         cx="47.728809"
+         cy="40.513458"
+         r="6.3000002"
+         style="fill:#dae1e4"
+         id="circle12" />
+      <g
+         style="fill:#2e7de5"
+         id="g14"
+         transform="matrix(0.7,0,0,0.7,25.328813,2.0134566)">
+        <circle
+           cx="32"
+           cy="55"
+           r="8"
+           id="circle16" />
+        <path
+           inkscape:connector-curvature="0"
+           d="M 27,39 H 37 V 51 H 27 Z"
+           id="path18" />
+      </g>
+      <g
          style="fill:#c4cacc;fill-opacity:1"
-         id="path22"
-         d="m 33,9 5,0 0,2 -5,0 z"
-         inkscape:connector-curvature="0" />
-      <path
-         style="fill:#c4cacc;fill-opacity:1"
-         id="path24"
-         d="m 33,17 5,0 0,2 -5,0 z"
-         inkscape:connector-curvature="0" />
-      <path
-         style="fill:#c4cacc;fill-opacity:1"
-         id="path26"
-         d="m 33,25 5,0 0,2 -5,0 z"
-         inkscape:connector-curvature="0" />
-      <path
-         style="fill:#c4cacc;fill-opacity:1"
-         id="path28"
-         d="m 33,33 5,0 0,2 -5,0 z"
-         inkscape:connector-curvature="0" />
-      <path
-         style="fill:#c4cacc;fill-opacity:1"
-         id="path30"
-         d="m 33,41 5,0 0,2 -5,0 z"
-         inkscape:connector-curvature="0" />
+         id="g20"
+         transform="matrix(0.735,0,0,0.735,13.605921,2.8758047)">
+        <path
+           inkscape:connector-curvature="0"
+           d="m 33,9 h 5 v 2 h -5 z"
+           id="path22"
+           style="fill:#c4cacc;fill-opacity:1" />
+        <path
+           inkscape:connector-curvature="0"
+           d="m 33,17 h 5 v 2 h -5 z"
+           id="path24"
+           style="fill:#c4cacc;fill-opacity:1" />
+        <path
+           inkscape:connector-curvature="0"
+           d="m 33,25 h 5 v 2 h -5 z"
+           id="path26"
+           style="fill:#c4cacc;fill-opacity:1" />
+        <path
+           inkscape:connector-curvature="0"
+           d="m 33,33 h 5 v 2 h -5 z"
+           id="path28"
+           style="fill:#c4cacc;fill-opacity:1" />
+        <path
+           inkscape:connector-curvature="0"
+           d="m 33,41 h 5 v 2 h -5 z"
+           id="path30"
+           style="fill:#c4cacc;fill-opacity:1" />
+      </g>
     </g>
   </g>
 </svg>

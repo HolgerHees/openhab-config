@@ -1,5 +1,5 @@
 //########### VENTILATION ##########
-Number Ventilation_Control						"Steuerung" 					<settings>						{comfoair="activate"}
+Number Ventilation_Control						"Steuerung" 					<selfsettings>						{comfoair="activate"}
 Number Ventilation_Auto_Mode					"Modus"							<selfautomode>
 Number Ventilation_Fan_Level					"Stufe"        					<selfairing> 		            {comfoair="fan_level"}
 Number Ventilation_Comfort_Temperature 			"Ziel [%.1f °C]"				<selftemperature> 				{comfoair="target_temperatur"}
