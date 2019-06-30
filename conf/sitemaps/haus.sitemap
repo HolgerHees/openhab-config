@@ -92,7 +92,7 @@ sitemap haus label="Main Menu"
 		}
 	}
 	Frame label="Steuern" {
-		Group label="Garten [%s]" icon="selfgarden" item=GardenStatus valuecolor=[=="Alles normal"="#569c04",!="Alles normal"="#d72a2a"] {
+		Group label="Garten [%s]" icon="selfgarden" item=GardenStatus valuecolor=[=="Alles normal"="#6bc305",!="Alles normal"="#d72a2a"] {
 			Frame label="Allgemein • Letztes klingeln [%1$tH:%1$tM:%1$tS, %1$td.%1$tm]" item=Bell_Last_Change{
 				Switch item=Dooropener_Timer
 				Text label="Kameras" icon="camera"
@@ -130,7 +130,7 @@ sitemap haus label="Main Menu"
                 }
 			}
 		}
-		Group label="Roboter [%s]" item=RoboterStatus icon="roomba" valuecolor=[=="Alles normal"="#569c04",!="Alles normal"="#d72a2a"] {
+		Group label="Roboter [%s]" item=RoboterStatus icon="roomba" valuecolor=[=="Alles normal"="#6bc305",!="Alles normal"="#d72a2a"] {
             Frame label="Haus" {
                 Text label="Roomba" item=roomba_StatusFormatted icon="roomba"{
                     Frame label="Status" {
@@ -209,7 +209,7 @@ sitemap haus label="Main Menu"
 	}
 	Frame label="Sonstiges"
 	{
-		Group label="Status [%s]" icon="selfstate" item=RoomStatus valuecolor=[=="Alles geschlossen"="#569c04",!="Alles geschlossen"="#d72a2a"]
+		Group label="Status [%s]" icon="selfstate" item=RoomStatus valuecolor=[=="Alles geschlossen"="#6bc305",!="Alles geschlossen"="#d72a2a"]
         {
 			Frame label="Steuerung"
 			{
@@ -312,7 +312,7 @@ sitemap haus label="Main Menu"
 				}
             }
 		}
-        Group item=SensorInfo label="Sensoren [%s]" valuecolor=[=="Alles normal"="#569c04",=="Giessen"="#cbcb00",!="Alles normal"="#d72a2a"]{
+        Group item=SensorInfo label="Sensoren [%s]" valuecolor=[=="Alles normal"="#6bc305",=="Giessen"="#cbcb00",!="Alles normal"="#d72a2a"]{
             Frame label="Temperatur & Feuchtigkeit"
             {
                 Group item=Air_FF_Livingroom_Message label="EG [%s]"{
@@ -367,7 +367,7 @@ sitemap haus label="Main Menu"
                         Webview url="/static/grafana/temperatures_garden.html?fromItem=Chart_From" icon=none height=36
                     }
                 }
-                Group item=PlantSensorInfo label="Pflanzen [%s]" valuecolor=[=="Feucht genug"="#569c04",=="Giessen"="#cbcb00",=="Jetzt Giessen"="#d72a2a"]{
+                Group item=PlantSensorInfo label="Pflanzen [%s]" valuecolor=[=="Feucht genug"="#6bc305",=="Giessen"="#cbcb00",=="Jetzt Giessen"="#d72a2a"]{
                     Frame label="Daten" {
                         Text item=SoilMoistSensor1
                         Text item=SoilMoistSensor2
@@ -406,7 +406,7 @@ sitemap haus label="Main Menu"
                 Group item=Sensor_Window_SF label="OG Fenster [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"]
             }
         }
-		Group label="Technik [%s]" icon="selfhouse" item=MainStatus valuecolor=[=="Alles normal"="#569c04",=="Lüftung"="#cbcb00",!="Alles normal"="#d72a2a"]
+		Group label="Technik [%s]" icon="selfhouse" item=MainStatus valuecolor=[=="Alles normal"="#6bc305",=="Lüftung"="#cbcb00",!="Alles normal"="#d72a2a"]
 		{
             Frame label="Technik" {
                 Group item=Ventilation_Fan_Level label="Lüftung [MAP(level_de.map):%d]" icon="selfairing" {
@@ -466,7 +466,7 @@ sitemap haus label="Main Menu"
                     Frame label="Verbrauch" {
                         Text item=Electricity_Current_Daily_Consumption label="Tagesverbrauch [%.2f kWh]"
                         Text item=Electricity_Current_Consumption
-                        Text item=Electricity_Current_Demand valuecolor=[>=0="#fea400",<0="#569c04"]
+                        Text item=Electricity_Current_Demand valuecolor=[>=0="#fea400",<0="#6bc305"]
                     }
                     Frame label="Details" {
                         Group label="Bezug [%.2f kWh]" item=Electricity_Current_Daily_Demand {
