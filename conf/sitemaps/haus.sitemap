@@ -250,7 +250,7 @@ sitemap haus label="Main Menu"
 			}
 			Frame label="Status"
 			{ 
-				Text label="Präsenz & Schlafen" icon="selfautomode"
+				Text label="Präsenz & Schlafen" icon="selfsettings"
                 {
                     Switch item=State_Presence label="Präsenz" mappings=[0="Abwesend", 1="Anwesend", 2="Schlafend"]
                     Text item=State_Holger_Presence label="Holger anwesend [%s]"
