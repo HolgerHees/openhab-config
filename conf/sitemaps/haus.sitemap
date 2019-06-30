@@ -130,9 +130,9 @@ sitemap haus label="Main Menu"
                 }
 			}
 		}
-		Group label="Roboter [%s]" item=RoboterStatus icon="selfautomode" valuecolor=[=="Alles normal"="#26cb00",!="Alles normal"="red"] {
+		Group label="Roboter [%s]" item=RoboterStatus icon="roomba" valuecolor=[=="Alles normal"="#26cb00",!="Alles normal"="red"] {
             Frame label="Haus" {
-                Text label="Roomba" item=roomba_StatusFormatted {
+                Text label="Roomba" item=roomba_StatusFormatted icon="roomba"{
                     Frame label="Status" {
                         Text item=roomba_batPct
                         Text item=roomba_StatusFormatted
@@ -188,7 +188,7 @@ sitemap haus label="Main Menu"
 				{
 					Image url="https://127.0.0.1/cameraAutomowerImage" label="Automower" refresh=5000
 				}
-                Text label="Automower" item=MowerStatus {
+                Text label="Automower" item=MowerStatus icon="mower" {
                     Frame label="Status" {
                         Text item=MowerBattery
                         Text item=MowerStatusFormatted
