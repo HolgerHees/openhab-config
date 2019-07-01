@@ -37,10 +37,10 @@ Number Heating_Temperature_Solar_Storage		"Solar Speicher [%.1f °C]"		<selftemp
 String Heating_Temperature_Solar_Message		"Kollektor, Speicher [%s]"		<selftemperature>	
 Number Heating_Solar_Hours						"Solar Stunden [%d]"			<selfruntime>		(PersistentHistory)
 String Heating_Solar_Hours_Message				"Solar Stunden [%s]"			<selfruntime>		
-Number Heating_Solar_Power						"Solar Leistung [%.1f KW]"		<sun>				(PersistentHistory)
-Number Heating_Solar_Power_Current_Daily		"Solar Leistung (heute) [%.1f KW]"	<sun>			(PersistentChart)
-Number Heating_Solar_Power_Current5Min			"Solar Leistung [%.1f KW]"		<sun>				(PersistentChart)
-String Heating_Solar_Power_Message				"Solar Leistung [%s]"			<sun>			
+Number Heating_Solar_Power						"Solar Leistung [%.1f KW]"		<selfsun>				(PersistentHistory)
+Number Heating_Solar_Power_Current_Daily		"Solar Leistung (heute) [%.1f KW]"	<selfsun>			(PersistentChart)
+Number Heating_Solar_Power_Current5Min			"Solar Leistung [%.1f KW]"		<selfsun>				(PersistentChart)
+String Heating_Solar_Power_Message				"Solar Leistung [%s]"			<selfsun>			
 Number Heating_Solar_Pump_State					"Solar Pumpe [MAP(heating_pump_de.map):%s]" <selfruntime>	(PersistentChart,PersistentHistory)
 Number Heating_Solar_Reheating_State			"Nachladeunterdrückung [MAP(heating_state_de.map):%s]" <selfruntime>
 String Heating_Solar_State_Message				"Pumpe, Nachladeunterdr. [%s]"	<selfsettings>

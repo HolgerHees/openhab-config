@@ -4,7 +4,7 @@ from org.joda.time.format import DateTimeFormat
 from marvin.helper import rule, getNow, getHistoricItemEntry, getHistoricItemState, getItemLastUpdate, itemLastUpdateOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
-startGasZaehlerStand = 8568.32
+startGasZaehlerStand = 8573.39
 startGasZaehlerCounter = 0
 
 referenceCounterDemandValue = 21158037

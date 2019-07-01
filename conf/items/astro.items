@@ -1,7 +1,7 @@
-DateTime Dawn_Time								"Morgendämmerung [%1$tH:%1$tM]"	<sun>				{ channel="astro:sun:local:civilDawn#start"}
-DateTime Dusk_Time								"Abenddämmerung [%1$tH:%1$tM]"	<sun>				{ channel="astro:sun:local:civilDusk#end"}
-DateTime Sunrise_Time							"Sonnenaufgang [%1$tH:%1$tM]"	<sun>				{ channel="astro:sun:local:rise#start"}
-DateTime Sunset_Time							"Sonnenuntergang [%1$tH:%1$tM]"	<sun>				{ channel="astro:sun:local:set#end"}
+DateTime Dawn_Time								"Morgendämmerung [%1$tH:%1$tM]"	<selfsun>				{ channel="astro:sun:local:civilDawn#start"}
+DateTime Dusk_Time								"Abenddämmerung [%1$tH:%1$tM]"	<selfsun>				{ channel="astro:sun:local:civilDusk#end"}
+DateTime Sunrise_Time							"Sonnenaufgang [%1$tH:%1$tM]"	<selfsun>				{ channel="astro:sun:local:rise#start"}
+DateTime Sunset_Time							"Sonnenuntergang [%1$tH:%1$tM]"	<selfsun>				{ channel="astro:sun:local:set#end"}
 
 Number   Sun_Azimuth                            "Azimuth [%.2f]"                <selfinfo>                    { channel="astro:sun:local:position#azimuth" }
 Number   Sun_Elevation                          "Elevation [%.2f]"              <selfinfo>                    { channel="astro:sun:local:position#elevation" }

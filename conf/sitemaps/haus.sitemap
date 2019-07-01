@@ -259,7 +259,7 @@ sitemap haus label="Main Menu"
                     Switch item=Scene8 label="Tablet Wakeup [%s]"
                     Switch item=Scene9 label="Tablet Light Theme [%s]"
                 }
-				Text label="Beschattung & Beleuchtung" icon="sun"
+				Text label="Beschattung & Beleuchtung" icon="selfsun"
                 {
 					Frame label="Sonstiges"
 					{
@@ -278,7 +278,10 @@ sitemap haus label="Main Menu"
 			}
 			Frame label="Info"
 			{
-				Text label="Sonnenauf & Untergang" icon="sun" {
+				Text label="Wetterbericht" icon="selfrain" {
+                    Webview url="/tools/weatherDetailOverview/" icon=none height=20
+                }
+				Text label="Sonnenauf & Untergang" icon="selfsun" {
                     Frame label="Tageszeiten"
                     {
                         Text item=Dawn_Time
