@@ -105,22 +105,22 @@ Number Temperature_Room_Target	                "Ziel [%.1f °C]"				<selftempera
 //########### PLANT SENSORS ##########
 
 String SensorInfo       "Sensoren Status  [%s]"      <selfsensor>
-String PlantSensorInfo  "Planzen Status [%s]" <selfrain>
+String PlantSensorInfo  "Planzen Status [%s]" <selfplant>
 
 Group SoilMoistSensor
 
-Number SoilMoistSensor1 "Pflanze 1 [%d]" <selfrain> (PersistentChart,PersistentHistory,SoilMoistSensor)
-Number SoilMoistSensor2 "Pflanze 2 [%d]" <selfrain> (PersistentChart,PersistentHistory,SoilMoistSensor)
-Number SoilMoistSensor3 "Pflanze 3 [%d]" <selfrain> (PersistentChart,PersistentHistory,SoilMoistSensor)
-Number SoilMoistSensor4 "Pflanze 4 [%d]" <selfrain> (PersistentChart,PersistentHistory,SoilMoistSensor)
-Number SoilMoistSensor5 "Pflanze 5 [%d]" <selfrain> (PersistentChart,PersistentHistory,SoilMoistSensor)
-Number SoilMoistSensor6 "Pflanze 6 [%d]" <selfrain> (PersistentChart,PersistentHistory)
+Number SoilMoistSensor1 "Pflanze 1 [%d]" <selfplant> (PersistentChart,PersistentHistory,SoilMoistSensor)
+Number SoilMoistSensor2 "Pflanze 2 [%d]" <selfplant> (PersistentChart,PersistentHistory,SoilMoistSensor)
+Number SoilMoistSensor3 "Pflanze 3 [%d]" <selfplant> (PersistentChart,PersistentHistory,SoilMoistSensor)
+Number SoilMoistSensor4 "Pflanze 4 [%d]" <selfplant> (PersistentChart,PersistentHistory,SoilMoistSensor)
+Number SoilMoistSensor5 "Pflanze 5 [%d]" <selfplant> (PersistentChart,PersistentHistory,SoilMoistSensor)
+Number SoilMoistSensor6 "Pflanze 6 [%d]" <selfplant> (PersistentChart,PersistentHistory)
 
-String SoilMoistSensorInfo "Überwacht [%s]" <selfrain>
+String SoilMoistSensorInfo "Überwacht [%s]" <selfplant>
 
-Switch SoilMoistSensor1Enabled "Pflanze 1" <selfrain>
-Switch SoilMoistSensor2Enabled "Pflanze 2" <selfrain>
-Switch SoilMoistSensor3Enabled "Pflanze 3" <selfrain>
-Switch SoilMoistSensor4Enabled "Pflanze 4" <selfrain>
-Switch SoilMoistSensor5Enabled "Pflanze 5" <selfrain>
-Switch SoilMoistSensor6Enabled "Pflanze 6" <selfrain>
+Switch SoilMoistSensor1Enabled "Pflanze 1" <selfplant>
+Switch SoilMoistSensor2Enabled "Pflanze 2" <selfplant>
+Switch SoilMoistSensor3Enabled "Pflanze 3" <selfplant>
+Switch SoilMoistSensor4Enabled "Pflanze 4" <selfplant>
+Switch SoilMoistSensor5Enabled "Pflanze 5" <selfplant>
+Switch SoilMoistSensor6Enabled "Pflanze 6" <selfplant>
