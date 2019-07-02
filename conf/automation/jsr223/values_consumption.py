@@ -327,11 +327,11 @@ class SolarConsumptionRule:
     def execute(self, module, input):
         now = getNow()
       
-        currentSupply = getItemState("Electricity_Meter_Supply").doubleValue()
+        currentSupply = getItemState("Electricity_Total_Supply").doubleValue()
         currentYield = getItemState("Solar_Total_Yield").doubleValue()
         
         # Tagesverbrauch
-        startSupply = getHistoricItemState("Electricity_Meter_Supply", now.withTimeAtStartOfDay() ).doubleValue()
+        startSupply = getHistoricItemState("Electricity_Total_Supply", now.withTimeAtStartOfDay() ).doubleValue()
         startYield = getHistoricItemState("Solar_Total_Yield", now.withTimeAtStartOfDay() ).doubleValue()
 
         totalSupply = currentSupply - startSupply
@@ -346,7 +346,7 @@ class SolarConsumptionRule:
         postUpdateIfChanged("Solar_Daily_Consumption",dailyConsumption)
         
         # Jahresverbrauch
-        startSupply = getHistoricItemState("Electricity_Meter_Supply", now.withDate(now.getYear(), 1, 1 ).withTimeAtStartOfDay() ).doubleValue()
+        startSupply = getHistoricItemState("Electricity_Total_Supply", now.withDate(now.getYear(), 1, 1 ).withTimeAtStartOfDay() ).doubleValue()
         startYield = getHistoricItemState("Solar_Total_Yield", now.withDate(now.getYear(), 1, 1 ).withTimeAtStartOfDay() ).doubleValue()
 
         totalSupply = currentSupply - startSupply
