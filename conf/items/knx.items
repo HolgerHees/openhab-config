@@ -112,13 +112,13 @@ Switch State_Holiday			    "Urlaubsmodus" 		<selfshield> 	(Security) 							{ ch
 
 Group:Contact:OR(OPEN, CLOSED) 	Sensor_Outdoor	"Aussen [%d]"			<selfmotion>	(Security) ["MotionDetector"]
 Group:Contact:OR(OPEN, CLOSED) 	Sensor_Indoor	"EG [%d]"				<selfmotion>	(Security) ["MotionDetector"]
-Group:Contact:OR(OPEN, CLOSED) 	Sensor_Doors_FF	"EG Türen [%d]"							<door>			(Security,Openingcontacts) ["Door","Sensor","OpenState"]
+Group:Contact:OR(OPEN, CLOSED) 	Sensor_Doors_FF	"EG Türen [%d]"							<selfdoor>			(Security,Openingcontacts) ["Door","Sensor","OpenState"]
 Group:Contact:OR(OPEN, CLOSED) 	Sensor_Window_FF	"EG Fenster [%d]"					<selfwindow>		(Security,Openingcontacts) ["Window","Sensor","OpenState"]
 Group:Contact:OR(OPEN, CLOSED) 	Sensor_Window_SF	"OG Fenster [%d]"					<selfwindow>		(Security,Openingcontacts) ["Window","Sensor","OpenState"]
 
-Contact Door_FF_Floor 	"Haustür [MAP(de.map):%s]"             <door> (FF_Floor,Sensor_Doors_FF) ["FrontDoor"] { channel="knx:device:bridge:contacts_door:main" }
-Contact Door_FF_Garage1 "Schuppentür Strasse [MAP(de.map):%s]" <door> (FF_Garage,Sensor_Doors_FF) ["GarageDoor"] { channel="knx:device:bridge:contacts_door:garageStreedside" }
-Contact Door_FF_Garage2 "Schuppentür Garten [MAP(de.map):%s]"  <door> (FF_Garage,Sensor_Doors_FF) ["GarageDoor"] { channel="knx:device:bridge:contacts_door:garageGardenside" }
+Contact Door_FF_Floor 	"Haustür [MAP(de.map):%s]"             <selfdoor> (FF_Floor,Sensor_Doors_FF) ["FrontDoor"] { channel="knx:device:bridge:contacts_door:main" }
+Contact Door_FF_Garage1 "Schuppentür Strasse [MAP(de.map):%s]" <selfdoor> (FF_Garage,Sensor_Doors_FF) ["GarageDoor"] { channel="knx:device:bridge:contacts_door:garageStreedside" }
+Contact Door_FF_Garage2 "Schuppentür Garten [MAP(de.map):%s]"  <selfdoor> (FF_Garage,Sensor_Doors_FF) ["GarageDoor"] { channel="knx:device:bridge:contacts_door:garageGardenside" }
 
 Contact Window_FF_Livingroom_Terrace "Terasse [MAP(de.map):%s]" 	<selfwindow> (FF_Livingroom,Sensor_Window_FF) { channel="knx:device:bridge:contacts_window_ff:livingroomTerrace" }
 Contact Window_FF_Livingroom_Couch   "Couch [MAP(de.map):%s]"		<selfwindow> (FF_Livingroom,Sensor_Window_FF)	{ channel="knx:device:bridge:contacts_window_ff:livingroomCouch" }
@@ -158,8 +158,8 @@ Contact Motiondetector_SF_Floor 	 "Flur oben [MAP(motion_de.map):%s]" <selfmotio
 //####### Bell ########
 Contact 	Bell_State 																								 { channel="knx:device:bridge:other:switchBell" }
 DateTime	Bell_Last_Change					"Klingel [%1$tH:%1$tM:%1$tS, %1$td.%1$tm]"	<selfbell> 	(Security)
-Switch 		Dooropener_FF_Floor 				"Türöffner" 							<frontdoor> 		(FF_Floor)	 { channel="knx:device:bridge:other:switchDooropener" }
-Switch 		Dooropener_Timer 					"Türoffner" 							<frontdoor> 		(FF_Floor)
+Switch 		Dooropener_FF_Floor 				"Türöffner" 							<selfdoor> 		(FF_Floor)	 { channel="knx:device:bridge:other:switchDooropener" }
+Switch 		Dooropener_Timer 					"Türoffner" 							<selfdoor> 		(FF_Floor)
 
 //####### Watering ########
 Group 		Watering 							"Bewässerung [%d]" 						<selfwater>

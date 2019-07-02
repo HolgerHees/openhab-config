@@ -116,11 +116,11 @@ Number SoilMoistSensor4 "Pflanze 4 [%d]" <selfplant> (PersistentChart,Persistent
 Number SoilMoistSensor5 "Pflanze 5 [%d]" <selfplant> (PersistentChart,PersistentHistory,SoilMoistSensor)
 Number SoilMoistSensor6 "Pflanze 6 [%d]" <selfplant> (PersistentChart,PersistentHistory)
 
-String SoilMoistSensorInfo "Überwacht [%s]" <selfplant>
+String SoilMoistSensorInfo "Überwacht [%s]" <selfcontrol>
 
-Switch SoilMoistSensor1Enabled "Pflanze 1" <selfplant>
-Switch SoilMoistSensor2Enabled "Pflanze 2" <selfplant>
-Switch SoilMoistSensor3Enabled "Pflanze 3" <selfplant>
-Switch SoilMoistSensor4Enabled "Pflanze 4" <selfplant>
-Switch SoilMoistSensor5Enabled "Pflanze 5" <selfplant>
-Switch SoilMoistSensor6Enabled "Pflanze 6" <selfplant>
+Switch SoilMoistSensor1Enabled "Pflanze 1" <selfautomode>
+Switch SoilMoistSensor2Enabled "Pflanze 2" <selfautomode>
+Switch SoilMoistSensor3Enabled "Pflanze 3" <selfautomode>
+Switch SoilMoistSensor4Enabled "Pflanze 4" <selfautomode>
+Switch SoilMoistSensor5Enabled "Pflanze 5" <selfautomode>
+Switch SoilMoistSensor6Enabled "Pflanze 6" <selfautomode>

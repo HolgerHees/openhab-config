@@ -13,7 +13,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="selfenergy.svg">
+   sodipodi:docname="selfenergy_supply.svg">
   <metadata
      id="metadata58">
     <rdf:RDF>
@@ -22,7 +22,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -41,7 +41,7 @@
      showgrid="false"
      showguides="false"
      inkscape:zoom="6.9532166"
-     inkscape:cx="19.98635"
+     inkscape:cx="-8.2020427"
      inkscape:cy="45.81884"
      inkscape:window-x="1920"
      inkscape:window-y="0"
@@ -85,4 +85,9 @@
      id="path38-3"
      style="color:#000000;opacity:0.98000004;fill:#ff9300;fill-opacity:1;stroke:#c87300;stroke-width:1.01814282;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
      inkscape:connector-curvature="0" />
+  <path
+     inkscape:connector-curvature="0"
+     d="m 48.997683,63.74288 c -0.205697,0 -0.401108,-0.08228 -0.545094,-0.226266 L 34.485839,48.716797 c -0.272547,-0.272547 -0.267405,-0.617088 -0.1697,-0.848496 0.09771,-0.231408 0.334256,-0.478242 0.714794,-0.478242 l 4.710436,0 c 0.70965,0 1.285599,-0.575949 1.285599,-1.285601 l 0,-10.27965 c 0,-0.426819 0.34454,-0.77136 0.771359,-0.77136 l 14.398711,0 c 0.426819,0 0.77136,0.344541 0.77136,0.77136 l 0,10.284794 c 0,0.70965 0.575947,1.285599 1.285598,1.285599 l 4.715577,0 c 0.380538,0 0.617088,0.246835 0.714794,0.478242 0.09771,0.231408 0.10284,0.570807 -0.1697,0.838212 L 49.537633,63.521757 c -0.13884,0.143985 -0.334255,0.221123 -0.53995,0.221123"
+     style="fill:#3660bf;stroke:#2c4e9c;stroke-width:0.51423967;stroke-opacity:1;fill-opacity:1"
+     id="path4" />
 </svg>

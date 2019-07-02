@@ -11,7 +11,7 @@
    style="enable-background:new 0 0 64 64"
    version="1.1"
    id="svg20"
-   sodipodi:docname="selfwindow-closed.svg"
+   sodipodi:docname="selfwindow-open.svg"
    inkscape:version="0.92.2 5c3e80d, 2017-08-06">
   <metadata
      id="metadata26">
@@ -51,46 +51,47 @@
      transform="matrix(1.2121136,0,0,1.4545455,-6.7876352,-14.545456)">
     <path
        id="path2"
-       style="fill:#f0f0f0"
-       d="m 15.5,15.5 h 33 v 33 h -33 z"
-       inkscape:connector-curvature="0" />
-    <path
-       id="path4"
-       style="fill:#646464"
-       d="M 48,16 V 48 H 16 V 16 h 32 m 1,-1 H 15 v 34 h 34 z"
-       inkscape:connector-curvature="0" />
-    <path
-       id="path6"
-       style="fill:#d9f1ff"
-       d="m 19.5,19.5 h 25 v 25 h -25 z"
-       inkscape:connector-curvature="0" />
-    <path
-       id="path8"
-       style="fill:#7aadcc"
-       d="M 44,20 V 44 H 20 V 20 h 24 m 1,-1 H 19 v 26 h 26 z"
-       inkscape:connector-curvature="0" />
-    <path
-       id="path10"
        style="fill:#ececed"
        d="m 10.5,53.5 v -43 h 43 v 43 h -43 m 4,-4 h 35 v -35 h -35 v 35"
        inkscape:connector-curvature="0" />
     <path
-       id="path12"
+       id="path4"
        style="fill:#9b9c9e"
        d="M 53,11 V 53 H 11 V 11 H 53 M 14,50 h 1 34 1 V 49 15 14 H 49 15 14 v 1 34 1 M 54,10 H 10 V 54 H 54 Z M 15,49 V 15 H 49 V 49 H 15"
+       inkscape:connector-curvature="0" />
+    <path
+       id="path6"
+       style="fill:#f0f0f0"
+       d="M 15.5,48.6 V 15.4 l 17,-3.78 v 40.76 z"
+       inkscape:connector-curvature="0" />
+    <path
+       id="path8"
+       style="fill:#646464"
+       d="M 32,12.25 V 51.76 L 16,48.2 V 15.8 L 32,12.25 M 33,11 15,15 v 34 l 18,4 z"
+       inkscape:connector-curvature="0" />
+    <path
+       id="path10"
+       style="fill:#d9f1ff"
+       d="M 18.5,44.61 V 19.39 l 11,-2.75 v 30.72 z"
+       inkscape:connector-curvature="0" />
+    <path
+       id="path12"
+       style="fill:#7aadcc"
+       d="M 29,17.28 V 46.72 L 19,44.22 V 19.78 l 10,-2.5 M 30,16 18,19 v 26 l 12,3 z"
        inkscape:connector-curvature="0" />
     <g
        id="g18"
        style="fill:#646464">
       <path
          id="path14"
-         d="m 46,36.5 v -5 c 0,-0.27 0.22,-0.5 0.5,-0.5 0.27,0 0.5,0.23 0.5,0.5 v 5 C 47,36.78 46.77,37 46.5,37 46.22,37 46,36.78 46,36.5"
+         d="M 25.46,30.4 30.44,30 c 0.27,-0.02 0.52,0.18 0.54,0.46 C 31,30.73 30.8,30.98 30.52,31 l -4.98,0.4 C 25.27,31.42 25.02,31.22 25,30.94 24.98,30.66 25.19,30.42 25.46,30.4"
          inkscape:connector-curvature="0" />
-      <circle
-         id="circle16"
-         r="1"
-         cy="31.5"
-         cx="46.5" />
+      <ellipse
+         id="ellipse16"
+         ry="1"
+         rx="0.62"
+         cy="30.5"
+         cx="30.620001" />
     </g>
   </g>
 </svg>

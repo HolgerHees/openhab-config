@@ -9,7 +9,7 @@ Number Heating_Charged							"Geladen [%.1f]"				<selfsettings>			(PersistentCha
 Number Heating_Demand							"Heizung [%d]"					<selfsettings>
 Number Solar_Power								"Solar Power [%.1f]"			<selfsettings>			(PersistentChart,PersistentHistory,Solar_Temperatures)
 
-Number Heating_Auto_Mode						"Modus"							<selfautoMode>
+Number Heating_Auto_Mode						"Modus"							<selfautomode>
 Number Heating_Operating_Mode					"Betriebsart [MAP(heating_de.map):%s]" <selfsettings>	(PersistentHistory)				{exec=">[1:/opt/heating_control/heizungBetriebsart.bash -t 1] >[2:/opt/heating_control/heizungBetriebsart.bash -t 2] >[3:/opt/heating_control/heizungBetriebsart.bash -t 3] >[1.000000:/opt/heating_control/heizungBetriebsart.bash -t 1] >[2.000000:/opt/heating_control/heizungBetriebsart.bash -t 2] >[3.000000:/opt/heating_control/heizungBetriebsart.bash -t 3]"}
 //Number Heating_Operating_Mode					"Betriebsart [MAP(heating_de.map):%s]" <selfsettings>	(PersistentHistory)				{channel="exec:command:heatingMode:input"}
 Number Heating_Power							"Leistung [%.1f %%]"			<selfruntime>		(PersistentChart,PersistentHistory)

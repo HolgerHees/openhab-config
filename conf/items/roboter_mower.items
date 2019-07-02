@@ -2,7 +2,7 @@ String      MowerName                   "Name [%s]"                             
 Number      MowerBattery                "Batterie [%d %%]"                                  <selfbattery>       {channel="robonect:mower:automower:battery"}
 Number      MowerHours                  "Betriebsstunden [%d h]"                            <selfclock>          {channel="robonect:mower:automower:moving-hours"}
 Number      MowerDuration               "Aktueller Modus [%s Sekunden]"                     <selfclock>          {channel="robonect:mower:automower:status-duration"}
-String      MowerMode                   "Modus"                                             <selfautoMode> ["Control","LawnMower"]  {channel="robonect:mower:automower:mode"}
+String      MowerMode                   "Modus"                                             <selfautomode> ["Control","LawnMower"]  {channel="robonect:mower:automower:mode"}
 Number      MowerStatus                 "Status [MAP(robonect_status.map):%s]"              <selfinfo>      {channel="robonect:mower:automower:status"}
 String      MowerStatusFormatted        "Status [%s]"                                       <selfinfo> ["State","LawnMower"]
 Switch      MowerStarted                "Mähen"                                             <selfswitch>        {channel="robonect:mower:automower:start"}

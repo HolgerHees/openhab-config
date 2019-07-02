@@ -1,5 +1,9 @@
 #/bin/sh
 
+DIRNAME=`dirname "$0"`
+
+cd $DIRNAME
+
 rm png/*.png
 rm ../../conf/icons/classic/*.png
 

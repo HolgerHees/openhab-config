@@ -7,41 +7,38 @@ Number Gas_Annual_Consumption 					"Aktuelle Periode [%.2f m³]"	<selfgas>
 String Gas_Forecast 							"Hochrechnung [%s]"				<selfgas>
 
 //########### ELECTRICITY ##########
-Number Energy_Demand					       	"Wirkenergie Bezug [%d Watt]"		<selfenergy>   { channel="knx:device:bridge:other:energyDemand" }
-Number Energy_Supply					       	"Wirkenergie Lieferung [%d Watt]"		<selfenergy>   { channel="knx:device:bridge:other:energySupply" }
-Number Power_Demand					        	"Wirkleistung Bezug [%d Watt]"		<selfenergy>   { channel="knx:device:bridge:other:powerDemand" }
-Number Power_Supply					        	"Wirkleistung Lieferung [%d Watt]"		<selfenergy>   { channel="knx:device:bridge:other:powerSupply" }
+Number Electricity_Meter_Demand					"Zählerstand Bezug [%.2f KWh]"		<selfenergy_demand>
+Number Electricity_Meter_Supply					"Zählerstand Lieferung [%.2f KWh]"	<selfenergy_supply>
 
-Number Electricity_Meter_Demand			"Zählerstand Bezug [%.2f KWh]"		<selfenergy>		(PersistentHistory)
-Number Electricity_Meter_Supply			"Zählerstand Lieferung [%.2f KWh]"	<selfenergy>		(PersistentHistory)
-Number Electricity_Current_Consumption 	"Aktueller Verbrauch [%d Watt]"	<selfenergy>		    (PersistentChart,PersistentHistory)
-Number Electricity_Current_Daily_Consumption  "Tagesverbrauch [%.2f KWh]"	<selfenergy>        (PersistentChart,PersistentHistory) ["Energy", "Measurement"]
+Number Energy_Demand							"Wirkenergie Bezug [%d Watt/h]"		<selfenergy_demand>   { channel="knx:device:bridge:other:energyDemand" }
+Number Energy_Supply							"Wirkenergie Lieferung [%d Watt/h]"	<selfenergy_supply>   { channel="knx:device:bridge:other:energySupply" }
+Number Power_Demand								"Wirkleistung Bezug [%d Watt]"		<selfenergy_demand>   { channel="knx:device:bridge:other:powerDemand" }
+Number Power_Supply								"Wirkleistung Lieferung [%d Watt]"	<selfenergy_supply>   { channel="knx:device:bridge:other:powerSupply" }
+
+Number Electricity_Total_Demand					"Gesamt Bezug [%.2f KWh]"		<selfenergy_demand>	(PersistentHistory)
+Number Electricity_Total_Supply					"Gesamt Lieferung [%.2f KWh]"	<selfenergy_supply>	(PersistentHistory)
+Number Electricity_Current_Consumption 			"Aktueller Verbrauch [%d Watt]"	<selfenergy>	(PersistentChart,PersistentHistory)
+Number Electricity_Current_Daily_Consumption	"Tagesverbrauch [%.2f KWh]"	<selfenergy>        (PersistentChart,PersistentHistory) ["Energy", "Measurement"]
 //Number Electricity_Current_Annual_Consumption "Jahresverbrauch [%.2f KWh]"	<selfenergy>
 
-Number Electricity_Current_Demand 	        "Aktueller Bezug [%d Watt]"	<selfenergy>
+Number Electricity_Current_Demand				"Aktueller Bezug [%d Watt]"	<selfenergy_demand>
 
-Number Electricity_Current_Daily_Demand 	   "Tagesbezug [%.2f KWh]"	<selfenergy>            (PersistentChart,PersistentHistory)
-Number Electricity_Current_Annual_Demand 	   "Jahresbezug [%.2f KWh]"	<selfenergy>
-String Electricity_Current_Annual_Demand_Forecast "Bezugs Hochrechnung [%s]"	<selfenergy>
+Number Electricity_Current_Daily_Demand 		"Tagesbezug [%.2f KWh]"	<selfenergy_demand>            (PersistentChart,PersistentHistory)
+Number Electricity_Current_Annual_Demand 		"Jahresbezug [%.2f KWh]"	<selfenergy_demand>
+String Electricity_Current_Annual_Demand_Forecast "Bezugs Hochrechnung [%s]"	<selfenergy_demand>
 
-Number Electricity_Current_Daily_Supply 	   "Tageslieferung [%.2f KWh]"	<selfenergy>        (PersistentChart,PersistentHistory)
-Number Electricity_Current_Annual_Supply 	   "Jahreslieferung [%.2f KWh]"	<selfenergy>
-String Electricity_Current_Annual_Supply_Forecast "Lieferung Hochrechnung [%s]"	<selfenergy>
-
-//Number Electricity_Meter						"Zählerstand [%.2f KWh]"		<selfenergy>		(PersistentHistory)
-//Number Electricity_Current_Daily_Consumption	"Tagesverbrauch [%.2f KWh]"		<selfenergy>        (PersistentChart) ["Energy", "Measurement"]
-//Number Electricity_Current_Consumption 		"Aktueller Verbrauch [%d Watt]"	<selfenergy>		(PersistentChart)
-//Number Electricity_Annual_Consumption 		"Aktuelle Periode [%.2f KWh]"	<selfenergy>
-//String Electricity_Forecast 					"Hochrechnung [%s]"				<selfenergy>
+Number Electricity_Current_Daily_Supply			"Tageslieferung [%.2f KWh]"	<selfenergy_supply>        (PersistentChart,PersistentHistory)
+Number Electricity_Current_Annual_Supply		"Jahreslieferung [%.2f KWh]"	<selfenergy_supply>
+String Electricity_Current_Annual_Supply_Forecast "Lieferung Hochrechnung [%s]"	<selfenergy_supply>
 
 //########### Solar ##########
-Number Solar_Daily_Consumption 	                "Tagesverbrauch [%.2f KWh]"	    <selfenergy>        (PersistentChart,PersistentHistory)
-Number Solar_Annual_Consumption 	            "Jahresverbrauch [%.2f KWh]"	<selfenergy>
+Number Solar_Daily_Consumption 	                "Tagesverbrauch [%.2f KWh]"	    <selfenergy_solar>        (PersistentChart,PersistentHistory)
+Number Solar_Annual_Consumption 	            "Jahresverbrauch [%.2f KWh]"	<selfenergy_solar>
 
-Number Solar_Total_Yield						"Gesamtertrag [%d kWh]"		    <selfenergy>        (PersistentHistory)                 { channel="modbus:data:solarGarage:earnings:total_yield:number" }
-Number Solar_Daily_Yield						"Tagesertrag [%.3f kWh]"	    <selfenergy>        (PersistentChart,PersistentHistory) { channel="modbus:data:solarGarage:earnings:daily_yield:number" }
-Number Solar_DC_Current						    "DC Strom [%.2f A]"	            <selfenergy>                                            { channel="modbus:data:solarGarage:power:dc_current:number" } 
-Number Solar_DC_Voltage						    "DC Spannung [%.2f V]"	        <selfenergy>                                            { channel="modbus:data:solarGarage:power:dc_voltage:number" } 
-Number Solar_DC_Power						    "DC Leistung [%d W]"	        <selfenergy>                                            { channel="modbus:data:solarGarage:power:dc_power:number" } 
-Number Solar_AC_Power						    "AC Leistung [%d W]"	        <selfenergy>        (PersistentChart,PersistentHistory) { channel="modbus:data:solarGarage:power:ac_power:number" } 
-Number Solar_Power_Limitation					"Wirkleistungsbegrenzung [%d %%]" <selfenergy>                                          { channel="modbus:data:solarGarage:control:power_limitation:number" }
+Number Solar_Total_Yield						"Gesamtertrag [%d kWh]"		    <selfenergy_solar>        (PersistentHistory)                 { channel="modbus:data:solarGarage:earnings:total_yield:number" }
+Number Solar_Daily_Yield						"Tagesertrag [%.3f kWh]"	    <selfenergy_solar>        (PersistentChart,PersistentHistory) { channel="modbus:data:solarGarage:earnings:daily_yield:number" }
+Number Solar_DC_Current						    "DC Strom [%.2f A]"	            <selfenergy_solar>                                            { channel="modbus:data:solarGarage:power:dc_current:number" } 
+Number Solar_DC_Voltage						    "DC Spannung [%.2f V]"	        <selfenergy_solar>                                            { channel="modbus:data:solarGarage:power:dc_voltage:number" } 
+Number Solar_DC_Power						    "DC Leistung [%d W]"	        <selfenergy_solar>                                            { channel="modbus:data:solarGarage:power:dc_power:number" } 
+Number Solar_AC_Power						    "AC Leistung [%d W]"	        <selfenergy_solar>        (PersistentChart,PersistentHistory) { channel="modbus:data:solarGarage:power:ac_power:number" } 
+Number Solar_Power_Limitation					"Wirkleistungsbegrenzung [%d %%]" <selfenergy_solar>                                          { channel="modbus:data:solarGarage:control:power_limitation:number" }

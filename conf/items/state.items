@@ -10,7 +10,7 @@ Switch State_Sunprotection_Dressingroom			"Rollladen Ankleide geschlossen"	<self
 Switch State_Sunprotection_Bedroom				"Rollladen Schlafzimmer geschlossen"<selfrollershutter>
 Switch State_Sunprotection_Livingroom			"Rollläden Wohnzimmer geschlossen"	<selfrollershutter>
 
-Number State_Lightprogram			            "Lichtprogram"	<selfautoMode>
+Number State_Lightprogram			            "Lichtprogram"	<selfautomode>
 
 Number State_Server 							"Serverstatus [MAP(server_status.map):%s]"  			<selferror>
 
@@ -20,20 +20,20 @@ String GardenStatus								"Status [%s]"					<selferror>
 String AutoStatus								"Status [%s]"					<selferror>
 String RoboterStatus							"Status [%s]"					<selferror>
 
-Switch Scene1									"Scene 1"						<selfsettings>         { synonyms="Fernsehen" }
-Switch Scene2									"Scene 2"						<selfsettings>         { synonyms="Aufstehen" }
-Switch Scene3									"Scene 3"						<selfsettings>         { synonyms="Schlafen gehen" }
-Switch Scene4									"Scene 4"						<selfsettings>         { synonyms="Gute Nacht" }
-Switch Scene5									"Scene 5"						<selfsettings>         { synonyms="Ich geh raus, Ich bin draussen" }
-Switch Scene6									"Scene 6"						<selfsettings>         { synonyms="Fernseher einschalten" }
-Switch Scene7									"Scene 7"						<selfsettings>
-Switch Scene8									"Scene 8"						<selfsettings>
-Switch Scene9									"Scene 9"						<selfsettings>
+Switch Scene1									"Scene 1"						<selfautomode>         { synonyms="Fernsehen" }
+Switch Scene2									"Scene 2"						<selfautomode>         { synonyms="Aufstehen" }
+Switch Scene3									"Scene 3"						<selfautomode>         { synonyms="Schlafen gehen" }
+Switch Scene4									"Scene 4"						<selfautomode>         { synonyms="Gute Nacht" }
+Switch Scene5									"Scene 5"						<selfautomode>         { synonyms="Ich geh raus, Ich bin draussen" }
+Switch Scene6									"Scene 6"						<selfautomode>         { synonyms="Fernseher einschalten" }
+Switch Scene7									"Scene 7"						<selfautomode>
+Switch Scene8									"Scene 8"						<selfautomode>
+Switch Scene9									"Scene 9"						<selfautomode>
 
-Number Auto_Attic_Light							"Mode [%d]"						<selfsettings>
-Switch Auto_Christmas							"Weihnachtsmodus"				<selfsettings>
-Switch Auto_Lighting							"Beleuchtung Automatik"			<selfsettings>
-Switch Auto_Rollershutter						"Rollläden Automatik"			<selfsettings>
-Switch Auto_Sunprotection						"Beschattung Automatik"			<selfsettings>
+Number Auto_Attic_Light							"Mode [%d]"						<selfautomode>
+Switch Auto_Christmas							"Weihnachtsmodus"				<selfautomode>
+Switch Auto_Lighting							"Beleuchtung Automatik"			<selfautomode>
+Switch Auto_Rollershutter						"Rollläden Automatik"			<selfautomode>
+Switch Auto_Sunprotection						"Beschattung Automatik"			<selfautomode>
 
 String Chart_From                               "Zeitraum"                      <selfcalendar>

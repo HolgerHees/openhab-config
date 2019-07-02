@@ -9,7 +9,7 @@ sitemap haus label="Main Menu"
 				Group item=Lights_FF label="EG Lampen [MAP(group_light.map):%d]" {
 					Frame label="Wohnzimmer & Küche" {
 						Slider item=Light_FF_Livingroom_Hue_Brightness label="Wohnzimmer Indirekt"
-						Text label="Wohnz. Indirekt anpassen" icon="selfautomode" visibility=[Light_FF_Livingroom_Hue_Brightness>0] {
+						Text label="Wohnz. Indirekt anpassen" icon="selfcontrol" visibility=[Light_FF_Livingroom_Hue_Brightness>0] {
 							Frame label="Gruppe" {
 								Slider item=Light_FF_Livingroom_Hue_Brightness label="Alle Lampen [%d %%]"
 								Colorpicker item=Light_FF_Livingroom_Hue_Color label="Alle Lampen"
@@ -214,18 +214,18 @@ sitemap haus label="Main Menu"
 			Frame label="Steuerung"
 			{
 				Switch item=State_Notify label="Benachrichtigung"
-				Group label="Programme [%s]" icon="selfautomode" item=AutoStatus valuecolor=[AutoStatus=="Inaktiv"="#d72a2a"]{
+				Group label="Programme [%s]" icon="selfcontrol" item=AutoStatus valuecolor=[AutoStatus=="Inaktiv"="#d72a2a"]{
 					Frame label="Rollläden" {
-						Switch item=Auto_Rollershutter icon="selfautomode"
-						Switch item=Auto_Sunprotection visibility=[Auto_Rollershutter==ON] icon="selfautomode"
+						Switch item=Auto_Rollershutter
+						Switch item=Auto_Sunprotection visibility=[Auto_Rollershutter==ON]
 						Group item=Shutters visibility=[Auto_Rollershutter==ON]
 					}
 					Frame label="Beleuchtung" {
-						Switch item=Auto_Lighting icon="selfautomode"
+						Switch item=Auto_Lighting
 						Group item=Lights visibility=[Auto_Lighting==ON]
 					}
 					Frame label="Weihnachten" {
-						Switch item=Auto_Christmas icon="selfautomode"
+						Switch item=Auto_Christmas
 						Switch item=Socket_Livingroom_Couch visibility=[Auto_Christmas==ON]
 						Switch item=Socket_Livingroom_Fireplace visibility=[Auto_Christmas==ON]
 						Switch item=Socket_Floor visibility=[Auto_Christmas==ON]
@@ -233,11 +233,11 @@ sitemap haus label="Main Menu"
 						Switch item=Socket_Mobile_2 visibility=[Auto_Christmas==ON]
 					}
 					Frame label="Dachboden" {
-						Switch item=Auto_Attic_Light label="Modus" mappings=[1="OFF", 2="W", 3="B"] icon="selfautomode"
+						Switch item=Auto_Attic_Light label="Modus" mappings=[1="OFF", 2="W", 3="B"]
 						Switch item=Socket_Attic visibility=[Auto_Attic_Light!=1]
 					}
 				}
-                Text label="Szenen" icon="selfautomode" {
+                Text label="Szenen" icon="selfcontrol" {
                     Frame label="Wohnen" {
                         Switch item=Scene1 label="Fernsehen" icon="selfcouch"
                     }
@@ -504,7 +504,7 @@ sitemap haus label="Main Menu"
                                 Webview url="/static/grafana/energy_supply.html?fromItem=Chart_From" icon=none height=18
                             }
                         }
-                        Group label="Solar [%.2f kWh]" icon="selfsolarplant" item=Solar_Daily_Yield {
+                        Group label="Solar [%.2f kWh]" item=Solar_Daily_Yield {
                             Frame label="Solar" {
                                 Text item=Solar_Daily_Yield
                                 Text item=Solar_AC_Power
