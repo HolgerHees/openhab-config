@@ -14,7 +14,7 @@ Number Heating_Operating_Mode					"Betriebsart [MAP(heating_de.map):%s]" <selfse
 //Number Heating_Operating_Mode					"Betriebsart [MAP(heating_de.map):%s]" <selfsettings>	(PersistentHistory)				{channel="exec:command:heatingMode:input"}
 Number Heating_Power							"Leistung [%.1f %%]"			<selfruntime>		(PersistentChart,PersistentHistory)
 Number Heating_Circuit_Pump_Speed				"Heizkreispumpe (Drehzahl) [%.1f %%]" <selfruntime>	(PersistentChart,PersistentHistory)
-String Heating_Power_Message					"Brenner, Heizkreis [%s]"		<selfgas>
+String Heating_Power_Message					"Brenner, Heizkreis [%s]"		<selffire>
 Number Heating_Temperature_Room_Target	 		"Ziel [%.1f °C]" 				<selftemperature>
 Number Heating_Temperature_Outdoor				"Aussen (Ist) [%.1f °C]"		<selftemperature>	(PersistentChart,PersistentHistory,Heating_Temperatures)
 Number Heating_Temperature_Outdoor_Subdued		"Aussen (Ged.) [%.1f °C]"		<selftemperature>	(PersistentChart,PersistentHistory,Heating_Temperatures)
@@ -27,10 +27,10 @@ Number Heating_Temperature_Boiler				"Kessel (Ist) [%.1f °C]"		<selftemperature
 String Heating_Temperature_Boiler_Message		"Kessel [%s]"					<selftemperature>	
 Number Heating_Burner_Starts					"Brennerstarts [%d]"			<selfsettings>			(PersistentHistory)
 Number Heating_Burner_Starts_Current_Daily		"Brennerstarts (heute) [%.1f]"	<selfsettings>		    (PersistentChart)
-String Heating_Burner_Starts_Message			"Brennerstarts [%s]"			<selfgas>		
+String Heating_Burner_Starts_Message			"Brennerstarts [%s]"			<selffire>		
 Number Heating_Burner_Hours						"Brennerstunden [%.1f]"			<selfruntime>		(PersistentHistory)
 Number Heating_Burner_Hours_Current_Daily		"Brennerstunden (heute) [%.1f]"	<selfruntime>		(PersistentChart)
-String Heating_Burner_Hours_Message				"Brennerstunden [%s]"			<selfgas>		
+String Heating_Burner_Hours_Message				"Brennerstunden [%s]"			<selffire>		
 Number Heating_Temperature_Wather_Storage		"Wasser [%.1f °C]"				<selftemperature>	(PersistentChart,PersistentHistory,Solar_Temperatures,Heating_Temperatures)
 Number Heating_Temperature_Solar_Collector		"Solar Kollektor [%.1f °C]"		<selftemperature>	(PersistentChart,PersistentHistory,Solar_Temperatures)
 Number Heating_Temperature_Solar_Storage		"Solar Speicher [%.1f °C]"		<selftemperature>	(PersistentChart,PersistentHistory,Solar_Temperatures)
