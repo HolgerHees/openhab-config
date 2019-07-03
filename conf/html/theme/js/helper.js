@@ -1320,6 +1320,9 @@ var MV = {
                     css = css + ".mdl-form__row {border-bottom: 1px solid rgba(38,191,117,.50);}";
                     css = css + ".mdl-form__label, .mdl-form__text, .mdl-form__value--text-link { font-size:17px; }";
                     css = css + ".mdl-layout__header { background-color: black !important; border-bottom: 1px solid rgba(38,191,117,.50);}";
+                    css = css + ".mdl-slider__background-upper { background-color: white !important;}";
+                    css = css + ".mdl-form input[type=range].is-lowest-value::-webkit-slider-thumb { background-color: white !important;}";
+                    css = css + ".mdl-form input[type=range].is-lowest-value::-moz-range-thumb { background-color: white !important;}";
                     //css = css + ".mdl-layout__header { background-color: rgba(38,191,117,.1) !important; border-bottom: 1px solid rgba(38,191,117,.50);}";
                     
                     var head = elem[0].contentWindow.document.getElementsByTagName('head')[0];
