@@ -882,6 +882,16 @@ body,
     margin: 1.0vw 0 1.1vw 0;
     background-color: var(--body-bg);
 }
+.mvWidget .weatherForecast .active .raindrop_background_1, 
+.mvWidget .weatherForecast .active .raindrop_background_2, 
+.mvWidget .weatherForecast .active .raindrop_background_3, 
+.mvWidget .weatherForecast .active .raindrop_background_4,
+.mvWidget .weatherForecast .active .snowflake_background_1, 
+.mvWidget .weatherForecast .active .snowflake_background_2, 
+.mvWidget .weatherForecast .active .snowflake_background_3, 
+.mvWidget .weatherForecast .active .snowflake_background_4 {
+    background-color: var(--widget-button-background-marker);
+}
 .mvWidget .weatherForecast .raindrop_background_1 {
     margin-left: 15%;
     width: 1vw;

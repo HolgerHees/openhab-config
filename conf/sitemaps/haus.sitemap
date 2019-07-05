@@ -77,13 +77,13 @@ sitemap haus label="Main Menu"
 				}
 			}
 		}
-		Group item=Shutters label="Rollläden [MAP(group_rollershutter.map):%d]" {
+		Group item=_Shutters label="Rollläden [MAP(group_rollershutter.map):%d]" {
 			Frame label="Alle" {
 				Switch item=Shutters label="Rollläden" mappings=[UP="Hoch",DOWN="Runter"]
 			}
 			Frame label="Etagen" {
-				Group item=Shutters_FF label="EG Rollläden [MAP(group_rollershutter.map):%d]"
-				Group item=Shutters_SF label="OG Rollläden [MAP(group_rollershutter.map):%d]"
+				Group item=_Shutters_FF label="EG Rollläden [MAP(group_rollershutter_ff.map):%d]"
+				Group item=_Shutters_SF label="OG Rollläden [MAP(group_rollershutter_sf.map):%d]"
 			}
 			Frame label="Beschattung" {
 				Switch item=Shutters_SOUTH label="Südseite" mappings=[UP="Hoch",DOWN="Runter"]
@@ -564,7 +564,7 @@ sitemap haus label="Main Menu"
                 }
             }
             Frame label="Sonstiges" {
-                Group item=Lights_Outdoor label="Lampen (RAW)"
+                Group item=Lights_Outdoor label="Lampen Garten (RAW) [MAP(group_socket.map):%d]"
                 Group label="Schalten (RAW) [MAP(group_socket.map):%d]" icon="selfsocket" item=Sockets {
                     Frame label="Wohnen" {
                         Switch item=Socket_Livingroom_Bassbox label="Bassbox"
