@@ -878,9 +878,9 @@ body,
 .mvWidget .weatherForecast .snowflake_background_3, 
 .mvWidget .weatherForecast .snowflake_background_4 {
     position: absolute;
-    height: 0.6vw;
-    min-height: 7px;
-    margin: 20% 0 22% 0;
+    height: 0.7vw;
+    min-height: 9px;
+    margin: 22% 0 22% 0;
     background-color: var(--body-bg);
 }
 .mvWidget .weatherForecast .active .raindrop_background_1, 
