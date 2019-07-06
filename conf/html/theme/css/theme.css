@@ -879,7 +879,8 @@ body,
 .mvWidget .weatherForecast .snowflake_background_4 {
     position: absolute;
     height: 0.6vw;
-    margin: 1.0vw 0 1.1vw 0;
+    min-height: 7px;
+    margin: 20% 0 22% 0;
     background-color: var(--body-bg);
 }
 .mvWidget .weatherForecast .active .raindrop_background_1, 
@@ -895,31 +896,38 @@ body,
 .mvWidget .weatherForecast .raindrop_background_1 {
     margin-left: 15%;
     width: 1vw;
+    min-width: 12px;
 }
 .mvWidget .weatherForecast .snowflake_background_1 {
     margin-left: 15%;
     width: 1.2vw;
+    min-width: 14px;
 }
 .mvWidget .weatherForecast .raindrop_background_2 {
     margin-left: 10%;
     width: 1.7vw;
+    min-width: 19px;
 } 
 .mvWidget .weatherForecast .snowflake_background_2 {
     margin-left: 9%;
     width: 1.8vw;
+    min-width: 20px;
 } 
 .mvWidget .weatherForecast .raindrop_background_3 {
     margin-left: 5%;
     width: 2.2vw;
+    min-width: 24px;
 } 
 .mvWidget .weatherForecast .snowflake_background_3,
 .mvWidget .weatherForecast .snowflake_background_4 {
     margin-left: 4%;
     width: 2.4vw;
+    min-width: 26px;
 } 
 .mvWidget .weatherForecast .raindrop_background_4 {
     margin-left: 5%;
     width: 2.2vw;
+    min-width: 24px;
 }
 
 .mvWidget .weatherForecast svg.raindrop,
@@ -927,6 +935,8 @@ body,
 .mvWidget .weatherForecast svg.thunder {
     width: 2.6vw;
     height: 2.6vw;
+    min-width: 31px;
+    min-height: 31px;
     stroke: none;
     position: absolute;
 }
@@ -939,10 +949,14 @@ body,
     filter: brightness(80%);
 }
 .mvWidget .weatherForecast svg.thunder {
-    padding: 0.3vw;
+    padding: 6%;
     fill: var(--widget-value-color-weather-thunder-fill);
+    fill-opacity: 0.4;
 	stroke: var(--widget-value-color-weather-thunder-stroke);
 	stroke-width: 1px;
+}
+.mvWidget .weatherForecast svg.thunder.strong {
+    fill-opacity: 1;
 }
 .mvWidget .weatherForecast .sun {
 	stroke: var(--widget-value-color-weather-clouds);
@@ -1174,6 +1188,9 @@ body,
     width: 4.9vw;
     height: 4.9vw;
     position:relative;
+    min-width: 58px;
+    min-height: 58px;
+    text-align: center;
 }
 .mvWidget .weatherDetailForecast .hour > div > .temperature {
     width:20%;
@@ -1239,14 +1256,15 @@ body,
     white-space: nowrap;
     font-weight: var(--widget-value-weight);
 }
+.mvWidget .weatherDetailForecast .hour > div > .wind .compass,
 .mvWidget .weatherDetailForecast .hour > div > .wind svg {
     width: 3vw;
 	height: 3vw;
+    min-width: 24px;
+    min-height: 24px;
 }
 .mvWidget .weatherDetailForecast .hour > div > .wind .compass {
     position: relative;
-    width: 3vw;
-	height: 3vw;
     margin-left: 20px;
 }
 .mvWidget .weatherDetailForecast .hour > div > .wind .compass .circle, 
