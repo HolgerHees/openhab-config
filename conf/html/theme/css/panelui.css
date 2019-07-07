@@ -111,7 +111,7 @@
     }
 }
 
-body.dark {
+html.dark, html.dark body {
     background-color: var(--body-bg);
     
     --body-bg: black;
@@ -131,7 +131,7 @@ body.dark {
     --widget-value-color-weather-raindrop: white;
     --widget-button-background-marker: #333;
 }
-body.light {
+html.light, html.light body {
     background-color: var(--body-bg);
     
     --body-bg: white;
