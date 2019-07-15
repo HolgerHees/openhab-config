@@ -7,6 +7,9 @@ from core.triggers import CronTrigger, ItemStateChangeTrigger
 totalSupply = 3600 # total possible photovoltaic power in watt
 maxTimeSlot = 300000 # value timeslot to messure average power consumption => 5 min
 
+energyTotalDemandCorrectureFactor = 1.045
+energyTotalSupplyCorrectureFactor = 1.00
+
 # offset values for total energy demand and supply (total values at the time when knx based energy meter was installed)
 startEnergyTotalDemandValue = 21158.037
 startEnergyTotalSupplyValue = 0
@@ -97,18 +100,18 @@ class SolarPower5minRule:
 class EnergyCounterDemandRule:
     def __init__(self):
         self.triggers = [
-          ItemStateChangeTrigger("Energy_Demand"),
+          ItemStateChangeTrigger("Energy_Demand_Active"),
           CronTrigger("1 0 0 * * ?")
         ]
 
     def execute(self, module, input):
         now = getNow()
         
-        demandCurrent = getItemState("Energy_Demand").intValue() / 1000.0
+        demandCurrent = getItemState("Energy_Demand_Active").intValue() / 1000.0
         zaehlerStandCurrent = ( startEnergyTotalDemandValue + demandCurrent )
         postUpdateIfChanged("Electricity_Total_Demand",zaehlerStandCurrent)
         
-        postUpdateIfChanged("Electricity_Meter_Demand",zaehlerStandCurrent-startElectricityMeterDemandValue)
+        postUpdateIfChanged("Electricity_Meter_Demand",(zaehlerStandCurrent-startElectricityMeterDemandValue) * energyTotalDemandCorrectureFactor)
 
         # *** Tagesbezug ***
         zaehlerStandOld = getHistoricItemState("Electricity_Total_Demand", now.withTimeAtStartOfDay() ).doubleValue()
@@ -137,18 +140,18 @@ class EnergyCounterDemandRule:
 class EnergyCounterSupplyRule:
     def __init__(self):
         self.triggers = [
-          ItemStateChangeTrigger("Energy_Supply"),
+          ItemStateChangeTrigger("Energy_Supply_Active"),
           CronTrigger("1 0 0 * * ?")
         ]
 
     def execute(self, module, input):
         now = getNow()
         
-        supplyCurrent = getItemState("Energy_Supply").intValue() / 1000.0
+        supplyCurrent = getItemState("Energy_Supply_Active").intValue() / 1000.0
         zaehlerStandCurrent = ( startEnergyTotalSupplyValue + supplyCurrent )
         postUpdateIfChanged("Electricity_Total_Supply",zaehlerStandCurrent)
 
-        postUpdateIfChanged("Electricity_Meter_Supply",zaehlerStandCurrent-startElectricityMeterSupplyValue)
+        postUpdateIfChanged("Electricity_Meter_Supply",(zaehlerStandCurrent-startElectricityMeterSupplyValue) * energyTotalSupplyCorrectureFactor)
 
         # *** Tagesverbrauch ***
         zaehlerStandOld = getHistoricItemState("Electricity_Total_Supply", now.withTimeAtStartOfDay() ).doubleValue()
@@ -263,8 +266,8 @@ class EnergySupplyRule:
 class EnergyConsumptionRule:
     def __init__(self):
         self.triggers = [
-          ItemStateChangeTrigger("Power_Demand"),
-          ItemStateChangeTrigger("Power_Supply")
+          ItemStateChangeTrigger("Power_Demand_Active"),
+          ItemStateChangeTrigger("Power_Supply_Active")
           # Solar_AC_Power is not needed. Change of Solar_AC_Power will mostly result in a Power_Supply change.
           # Just in the corner case that self consumption will change too will produce wrong values
           #ItemStateChangeTrigger("Solar_AC_Power")
@@ -281,8 +284,8 @@ class EnergyConsumptionRule:
         ]
 
     def execute(self, module, input):
-        powerDemand = getItemState("Power_Demand").intValue()
-        powerSupply = getItemState("Power_Supply").intValue()
+        powerDemand = getItemState("Power_Demand_Active").intValue()
+        powerSupply = getItemState("Power_Supply_Active").intValue()
         solarPower = 0 if solarIsNotWorking(self.log) else getItemState("Solar_AC_Power").intValue()
         
         consumption = powerDemand - powerSupply + solarPower

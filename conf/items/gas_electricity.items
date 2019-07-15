@@ -10,10 +10,10 @@ String Gas_Forecast 							"Hochrechnung [%s]"				<selfgas>
 Number Electricity_Meter_Demand					"Zählerstand Bezug [%.2f KWh]"		<selfenergy_demand>
 Number Electricity_Meter_Supply					"Zählerstand Lieferung [%.2f KWh]"	<selfenergy_supply>
 
-Number Energy_Demand							"Wirkenergie Bezug [%d Watt/h]"		<selfenergy_demand>   { channel="knx:device:bridge:other:energyDemand" }
-Number Energy_Supply							"Wirkenergie Lieferung [%d Watt/h]"	<selfenergy_supply>   { channel="knx:device:bridge:other:energySupply" }
-Number Power_Demand								"Wirkleistung Bezug [%d Watt]"		<selfenergy_demand>   { channel="knx:device:bridge:other:powerDemand" }
-Number Power_Supply								"Wirkleistung Lieferung [%d Watt]"	<selfenergy_supply>   { channel="knx:device:bridge:other:powerSupply" }
+Number Energy_Demand_Active					    "Wirkenergie Bezug [%d Watt/h]"		<selfenergy_demand>   { channel="knx:device:bridge:other:energyDemandActive" }
+Number Energy_Supply_Active					    "Wirkenergie Lieferung [%d Watt/h]"	<selfenergy_supply>   { channel="knx:device:bridge:other:energySupplyActive" }
+Number Power_Demand_Active					    "Wirkleistung Bezug [%d Watt]"		<selfenergy_demand>   { channel="knx:device:bridge:other:powerDemandActive" }
+Number Power_Supply_Active					    "Wirkleistung Lieferung [%d Watt]"	<selfenergy_supply>   { channel="knx:device:bridge:other:powerSupplyActive" }
 
 Number Electricity_Total_Demand					"Gesamt Bezug [%.2f KWh]"		<selfenergy_demand>	(PersistentHistory)
 Number Electricity_Total_Supply					"Gesamt Lieferung [%.2f KWh]"	<selfenergy_supply>	(PersistentHistory)
