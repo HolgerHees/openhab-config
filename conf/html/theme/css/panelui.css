@@ -64,8 +64,12 @@
 .mvWidget .weatherDetailForecast .today, .mvWidget .weatherDetailForecast .week{
     box-sizing: border-box;
 }
-.mvWidget .weatherDetailForecast .mvClickable:active {
+.mvWidget .weatherDetailForecast .mvClickable:hover {
     background-color: var(--widget-button-background-marker);
+}
+.mvWidget .weatherDetailForecast .mvClickable:active .raindrop_snowflake_background,
+.mvWidget .weatherDetailForecast .mvClickable:active {
+    background-color: var(--primary-light-color);
 }
 @media only screen and (min-width: 640px) {
     #openButton {
@@ -117,7 +121,7 @@ html.dark, html.dark body {
     --body-bg: black;
 
     --primary-color: white !important;
-    --primary-light-color: rgba(255,255,255,.50) !important;
+    --primary-light-color: #808080 !important;
     --primary-dark-color: rgba(255,255,255,1) !important;
     --primary-icon-color: var(--primary-dark-color) !important;
     --widget-text-color: white;
@@ -137,7 +141,7 @@ html.light, html.light body {
     --body-bg: white;
 
     --primary-color: #333 !important;
-    --primary-light-color: rgba(0,0,0,.50) !important;
+    --primary-light-color: #6e6e6e !important;
     --primary-dark-color: rgba(0,0,0,1) !important;
     --primary-icon-color: var(--primary-dark-color) !important;
     --widget-text-color: #333;

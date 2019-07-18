@@ -74,7 +74,7 @@ body {
    	--widget-value-color-weather-thunder-stroke: white;
 	--widget-value-color-weather-thunder-fill: var(--widget-warn-color);
 
-	--widget-button-border: 1px solid rgba(38,191,117,.50);
+	--widget-button-border: 1px solid var(--primary-light-color);
     --widget-button-background: rgba(38,191,117,.1);
   
     --widget-button-border-active: 1px solid var(--primary-color);
@@ -94,7 +94,8 @@ body {
 
     --primary-color: #26bf75;
     --primary-light-color: rgba(38,191,117,.50);
-    --primary-dark-color: rgba(38,191,117,.25);
+    --primary-dark-color: #09301d;
+    /*--primary-dark-color: rgba(38,191,117,.25);*/
 
     --primary-icon-color: var(--primary-dark-color);
     /*--dark-icon-color: rgba(189,189,189,.15);*/
@@ -129,7 +130,7 @@ body {
    	--widget-value-color-weather-thunder-stroke: white;
 	--widget-value-color-weather-thunder-fill: var(--widget-warn-color);
 
-	--widget-button-border: 1px solid rgba(187,229,255,.5);
+	--widget-button-border: 1px solid var(--primary-light-color);
 	--widget-button-background: rgba(187,229,255,.1);
 	--widget-button-border-active: 1px solid rgba(187,229,255,.9);
 	--widget-button-background-active: rgba(187,229,255,.5);
@@ -174,7 +175,7 @@ body {
    	--widget-value-color-weather-thunder-stroke: white;
 	--widget-value-color-weather-thunder-fill: var(--widget-warn-color);
 
-	--widget-button-border: 1px solid rgba(187,229,255,.5);
+	--widget-button-border: 1px solid var(--primary-light-color);
 	--widget-button-background: rgba(187,229,255,.1);
 	--widget-button-border-active: 1px solid rgba(187,229,255,.9);
 	--widget-button-background-active: rgba(187,229,255,.5);
@@ -869,29 +870,19 @@ body,
 	line-height: 0.9vw;
     margin: 0 0 0 2px;
 }
-.mvWidget .weatherForecast .raindrop_background_1, 
-.mvWidget .weatherForecast .raindrop_background_2, 
-.mvWidget .weatherForecast .raindrop_background_3, 
-.mvWidget .weatherForecast .raindrop_background_4,
-.mvWidget .weatherForecast .snowflake_background_1, 
-.mvWidget .weatherForecast .snowflake_background_2, 
-.mvWidget .weatherForecast .snowflake_background_3, 
-.mvWidget .weatherForecast .snowflake_background_4 {
+.mvWidget .weatherForecast .raindrop_snowflake_background {
     position: absolute;
     height: 0.7vw;
     min-height: 9px;
     margin: 22% 0 22% 0;
     background-color: var(--body-bg);
 }
-.mvWidget .weatherForecast .active .raindrop_background_1, 
-.mvWidget .weatherForecast .active .raindrop_background_2, 
-.mvWidget .weatherForecast .active .raindrop_background_3, 
-.mvWidget .weatherForecast .active .raindrop_background_4,
-.mvWidget .weatherForecast .active .snowflake_background_1, 
-.mvWidget .weatherForecast .active .snowflake_background_2, 
-.mvWidget .weatherForecast .active .snowflake_background_3, 
-.mvWidget .weatherForecast .active .snowflake_background_4 {
+.mvWidget .weatherDetailForecast .mvClickable:hover .raindrop_snowflake_background,
+.mvWidget .weatherForecast .active .raindrop_snowflake_background {
     background-color: var(--widget-button-background-marker);
+}
+.mvWidget .weatherDetailForecast .mvClickable:active .raindrop_snowflake_background {
+    background-color: var(--primary-dark-color);
 }
 .mvWidget .weatherForecast .raindrop_background_1 {
     margin-left: 15%;
@@ -1130,14 +1121,15 @@ body,
     border-color: var(--body-bg);
     padding: 0.2vw;
 }
+.mvWidget .weatherDetailForecast .mvClickable:hover,
+.mvWidget .weatherDetailForecast .mvClickable.active {
+    background-color: var(--widget-button-background-marker);
+    border: var(--widget-button-border-marker);
+}
 .mvWidget .weatherDetailForecast .mvClickable:active {
     background-color: var(--primary-dark-color);
     border: var(--widget-button-border);
     border-radius: var(--widget-button-radius);    
-}
-.mvWidget .weatherDetailForecast .mvClickable.active {
-    background-color: var(--widget-button-background-marker);
-    border: var(--widget-button-border-marker);
 }
 .mvWidget .weatherDetailForecast {
     display: flex;
