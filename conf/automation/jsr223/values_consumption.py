@@ -12,11 +12,11 @@ energyTotalSupplyCorrectureFactor = 1.00
 
 # offset values for total energy demand and supply (total values at the time when knx based energy meter was installed)
 startEnergyTotalDemandValue = 21158.037
-startEnergyTotalSupplyValue = 0
+startEnergyTotalSupplyValue = -90.636
 
 # offset values for electricity meter demand and supply (total values at the time when new electricity meter was changed)
 startElectricityMeterDemandValue = 21911.164
-startElectricityMeterSupplyValue = 90.636
+startElectricityMeterSupplyValue = 0
 
 # offset values for gas meter (total value at the time when knx based impulse counter was resettet)
 startGasMeterValue = 8573.39
@@ -153,13 +153,13 @@ class EnergyCounterSupplyRule:
 
         postUpdateIfChanged("Electricity_Meter_Supply",(zaehlerStandCurrent-startElectricityMeterSupplyValue) * energyTotalSupplyCorrectureFactor)
 
-        # *** Tagesverbrauch ***
+        # *** Tageslieferung ***
         zaehlerStandOld = getHistoricItemState("Electricity_Total_Supply", now.withTimeAtStartOfDay() ).doubleValue()
         currentSupply = zaehlerStandCurrent - zaehlerStandOld
 
         postUpdateIfChanged("Electricity_Current_Daily_Supply",currentSupply)
+        # *** Jahreslieferung ***
 
-        # *** Jahresverbrauch ***
         zaehlerStandOld = getHistoricItemState("Electricity_Total_Supply", now.withDate(now.getYear(), 1, 1 ).withTimeAtStartOfDay()).doubleValue()
         currentSupply = zaehlerStandCurrent - zaehlerStandOld
 
@@ -341,10 +341,11 @@ class SolarConsumptionRule:
         totalYield = currentYield - startYield
         dailyConsumption = totalYield - totalSupply
         
-        #self.log.info(u"{}".format(now.withTimeAtStartOfDay()))
+        postUpdateIfChanged("Solar_Daily_Yield",totalYield)
+        
         #self.log.info(u"A {} {}".format(currentSupply,currentYield))
         #self.log.info(u"B {} {}".format(startSupply,startYield))
-        #self.log.info(u"C {}".format(dailyConsumption))
+        #self.log.info(u"C {} {}".format(totalSupply,totalYield))
         
         postUpdateIfChanged("Solar_Daily_Consumption",dailyConsumption)
         
