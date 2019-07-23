@@ -1349,7 +1349,6 @@ var MV = {
                 let stateItemName = "Watering_Program_State";
                 let circuitItemName = "Watering_Circuits";
                 
-                
                 function getSVG(icon_name)
                 {
                     let msg = "<svg style=\"width:16px;height:16px;stroke:var(--sub-icon-color);filter:brightness(150%);\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 64 64\">";
