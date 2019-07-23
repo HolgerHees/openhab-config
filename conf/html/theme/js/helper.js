@@ -464,10 +464,11 @@ var MV = {
                         if (scope.vm.watchedItems.hasOwnProperty(k)) {
                             ++count;
                         }
-                    }
-					console.log("mvTrigger: onUpdate " + (item==null? "all" : item.name) + " " + count );*/
+                    }*/
 					//console.log(scope.vm.watchedItems);
 					
+					//console.log("mvTrigger: onUpdate " + (item==null? "all" : item.name)  );
+                    
 					// Specific items are only allowed if we are watching it
 					if( item != null && scope.vm.watchedItems[item.name] == undefined )
 					{
@@ -496,7 +497,7 @@ var MV = {
 				
 				scope.$on('$destroy', function()
 				{
-					scope.vm.updateListemer = [];
+					scope.vm.updateListener = [];
 				});
 			}
 		}
@@ -1351,41 +1352,53 @@ var MV = {
                 
                 function getSVG(icon_name)
                 {
-                    let msg = "<svg style=\"width:16px;height:16px;\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 64 64\">";
+                    let msg = "<svg style=\"width:16px;height:16px;stroke:var(--sub-icon-color);filter:brightness(150%);\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 64 64\">";
                     msg += "<use xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"/static/theme/svg/icons.svg#" + icon_name + "\"></use>";
                     msg += "</svg>";
                     return msg;
                 }
                 
+                function updateValue()
+                {
+                    let msg_r = [];
+                        
+                    if( scope.itemState(circuitItemName) == 'ON' )
+                    {
+                        let programState = scope.itemState(stateItemName);
+                        
+                        if( programState != "läuft nicht" )
+                        {
+                            msg_r.push( "Bewässerung: " + getSVG('self_rain_grayscaled') + " <span class=\"value\">" + programState + "</span>" );
+                        }
+                    }
+                    else
+                    {
+                        //msg_r.push( "Bewässerung: " + getSVG('openhab_rain_colored') + " <span class=\"value\">Garten links gleich fertig</span>" );
+                    }
+
+                    elem[0].innerHTML = "<div>" + msg_r.join("</div><div>") + "</div>";
+                }
+                
                 scope.$$postDigest(function()
                 {
+                    // register for item usage
+                    //scope.getItem(stateItemName);
+                    //scope.getItem(circuitItemName)
+
                     scope.addUpdateListener(function( updatedItemName )
                     {
+                        
                         if( updatedItemName != null && updatedItemName != stateItemName && updatedItemName != circuitItemName )
                         {
                             return;
                         }
                         
-                        let msg_r = [];
-                        
-                        if( scope.itemState(circuitItemName) == 'ON' )
-                        {
-                            let programState = scope.itemState(stateItemName);
-                            
-                            if( programState != "läuft nicht" )
-                            {
-                                msg_r.push( "Bewässerung: " + getSVG('openhab_rain_colored') + " <span class=\"value\">" + programState + "</span>" );
-                            }
-                        }
-                        else
-                        {
-                            //msg_r.push( "Bewässerung: " + getSVG('openhab_rain_colored') + " <span class=\"value\">Garten links gleich fertig</span>" );
-                        }
-
-                        elem[0].innerHTML = "<div>" + msg_r.join("</div><div>") + "</div>";
+                        updateValue();
                                 
                         //elem[0].querySelector(".value").innerHTML = "Bewässerung: Garten links gleich fertig";
                     });
+                    
+                    updateValue();
                 });
             }
         };
