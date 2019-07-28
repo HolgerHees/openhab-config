@@ -29,7 +29,7 @@ class MotiondetectorOutdoorSwitchSleepingRule:
 @rule("lights_outdoor.py")
 class MotiondetectorOutdoorSwitchRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("Motiondetector_Outdoor_Switch")]
+        self.triggers = [ItemCommandTrigger("Motiondetector_Outdoor_Switch")]
 
     def execute(self, module, input):
         global ruleTimeouts
@@ -37,7 +37,7 @@ class MotiondetectorOutdoorSwitchRule:
         last = ruleTimeouts.get("Motiondetector_Outdoor_Main_Switch",0)
         
         if now - last > 1000:
-            itemState = input["event"].getItemState()
+            itemState = input["event"].getItemCommand()
             
             if itemState == ON:
                 ruleTimeouts["Light_Outdoor"] = now
