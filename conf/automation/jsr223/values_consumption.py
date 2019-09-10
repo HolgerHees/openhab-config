@@ -1,8 +1,10 @@
 from org.joda.time import DateTime
 from org.joda.time.format import DateTimeFormat
 
-from marvin.helper import rule, getNow, getHistoricItemEntry, getHistoricItemState, getItemLastUpdate, itemLastUpdateOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand
-from core.triggers import CronTrigger, ItemStateChangeTrigger
+from marvin.helper import rule, getNow, getHistoricItemEntry, getHistoricItemState, getItemLastUpdate, itemLastUpdateOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand, createTimer
+from core.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
+
+from org.eclipse.smarthome.core.types.RefreshType import REFRESH
 
 totalSupply = 3600 # total possible photovoltaic power in watt
 maxTimeSlot = 300000 # value timeslot to messure average power consumption => 5 min
@@ -261,41 +263,40 @@ class EnergySupplyRule:
             postUpdate("Solar_Power_Limitation",100)
             self.log.info(u"Shutdown power limitation")
 
-
 @rule("values_consumption.py")
-class EnergyConsumptionRule:
+class EnergyCurrentDemandAndConsumptionRule:
     def __init__(self):
         self.triggers = [
           ItemStateChangeTrigger("Power_Demand_Active"),
-          ItemStateChangeTrigger("Power_Supply_Active")
-          # Solar_AC_Power is not needed. Change of Solar_AC_Power will mostly result in a Power_Supply change.
-          # Just in the corner case that self consumption will change too will produce wrong values
-          #ItemStateChangeTrigger("Solar_AC_Power")
-
-          # OLD: should be cron based, otherwise it will create until 3 times more values if it is based on ItemStateChangeTrigger
-          # NEW: cron based trigger sometimems does not work.
-
-          #2019-05-09 16:20:17.889 [vent.ItemStateChangedEvent] - Power_Supply changed from 1377.0 to 1266.0
-          #2019-05-09 16:20:26.750 [vent.ItemStateChangedEvent] - Solar_AC_Power changed from 1751.0 to 921.0
-          #2019-05-09 16:20:34.283 [vent.ItemStateChangedEvent] - Power_Supply changed from 1266.0 to 490.0
-          
-          #2019-05-09 16:20:30.024 [INFO ] [values_consumption.EnergyConsumption] - Skip consumption update. powerDemand: 0, powerSupply: 1266, solarPower: 921
-          #CronTrigger("*/15 * * * * ?")
+          ItemStateChangeTrigger("Power_Supply_Active"),
+          ItemStateUpdateTrigger("Solar_AC_Power")
         ]
+        
+    def updateConsumption(self,solarPower):
+        consumption = self.currentDemand + solarPower
+        
+        if consumption > 0:
+            postUpdateIfChanged("Electricity_Current_Consumption",consumption)
+        else:
+            self.log.info(u"Skip consumption update. powerDemand: {}, powerSupply: {}, solarPower: {}".format(self.powerDemand,self.powerSupply,solarPower))
 
     def execute(self, module, input):
-        powerDemand = getItemState("Power_Demand_Active").intValue()
-        powerSupply = getItemState("Power_Supply_Active").intValue()
-        solarPower = 0 if solarIsNotWorking(self.log) else getItemState("Solar_AC_Power").intValue()
-        
-        consumption = powerDemand - powerSupply + solarPower
-        # only update if consumption makes sence
-        if consumption > 0:
-            postUpdateIfChanged("Electricity_Current_Consumption",powerDemand - powerSupply + solarPower)
+        if input["event"].getItemName() == "Solar_AC_Power":
+            self.updateConsumption(input['event'].getItemState().intValue())
         else:
-            self.log.info(u"Skip consumption update. powerDemand: {}, powerSupply: {}, solarPower: {}".format(powerDemand,powerSupply,solarPower))
-        
-        postUpdateIfChanged("Electricity_Current_Demand",powerDemand - powerSupply)
+            self.powerDemand = getItemState("Power_Demand_Active").intValue()
+            self.powerSupply = getItemState("Power_Supply_Active").intValue()
+            
+            self.currentDemand = self.powerDemand - self.powerSupply
+            
+            # solar value update was not successful for a while
+            if solarIsNotWorking(self.log):
+                self.updateConsumption(0)
+            
+            # triggers solar value update
+            sendCommand("Solar_AC_Power",REFRESH)
+
+            postUpdateIfChanged("Electricity_Current_Demand",self.currentDemand)
 
 
 @rule("values_consumption.py")
