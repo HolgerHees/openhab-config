@@ -3,7 +3,7 @@ import math
 from org.joda.time import DateTime, DateTimeZone
 from org.joda.time.format import DateTimeFormat
 
-from marvin.helper import rule, getNow, getGroupMember, itemLastUpdateOlderThen, getItemLastUpdate, getHistoricItemState, getHistoricItemEntry, getItemState, getMaxItemState, getItem, postUpdate, postUpdateIfChanged, sendCommand, createTimer
+from marvin.helper import rule, getNow, getGroupMember, itemLastUpdateOlderThen, getItemLastUpdate, getHistoricItemState, getHistoricItemEntry, getItemState, getMaxItemState, getItem, postUpdate, postUpdateIfChanged, sendCommand, createTimer, getStableItemState
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 from core.actions import Transformation
 
@@ -34,38 +34,7 @@ class HeatingHelper:
             if cacheValue != None:
                 return cacheValue
         
-        currentEndTime = now
-        currentEndTimeMillis = currentEndTime.getMillis()
-        minTimeMillis = currentEndTimeMillis - ( checkTimeRange * 60 * 1000 )
-
-        value = 0.0
-        duration = 0
-
-        # get and cache "real" item to speedup getHistoricItemEntry. Otherwise "getHistoricItemEntry" will lookup the item by its name every time
-        item = getItem(itemName)
-        
-        while True:
-            entry = getHistoricItemEntry(item, currentEndTime )
-
-            currentStartMillis = entry.getTimestamp().getTime()
-
-            if currentStartMillis < minTimeMillis:
-                currentStartMillis = minTimeMillis
-
-            _duration = currentEndTimeMillis - currentStartMillis
-            _value = entry.getState().doubleValue()
-
-            duration = duration + _duration
-            value = value + ( _value * _duration )
-
-            currentEndTimeMillis = currentStartMillis -1
-
-            if currentEndTimeMillis < minTimeMillis:
-                break
-
-            currentEndTime = DateTime(currentEndTimeMillis)
-
-        value = ( value / duration )
+        value = getStableItemState(now,itemName, checkTimeRange)
 
         cacheValue = HeatingHelper.stableReferences.get( cacheKey )
         

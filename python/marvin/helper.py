@@ -361,6 +361,42 @@ def getItemLastUpdate(itemOrName):
         raise NotInitialisedException("Item lastUpdate for '" + item.getName() + "' not found")
     return lastUpdate
 
+def getStableItemState( now, itemName, checkTimeRange ):
+        
+    currentEndTime = now
+    currentEndTimeMillis = currentEndTime.getMillis()
+    minTimeMillis = currentEndTimeMillis - ( checkTimeRange * 60 * 1000 )
+
+    value = 0.0
+    duration = 0
+
+    # get and cache "real" item to speedup getHistoricItemEntry. Otherwise "getHistoricItemEntry" will lookup the item by its name every time
+    item = getItem(itemName)
+    
+    while True:
+        entry = getHistoricItemEntry(item, currentEndTime )
+
+        currentStartMillis = entry.getTimestamp().getTime()
+
+        if currentStartMillis < minTimeMillis:
+            currentStartMillis = minTimeMillis
+
+        _duration = currentEndTimeMillis - currentStartMillis
+        _value = entry.getState().doubleValue()
+
+        duration = duration + _duration
+        value = value + ( _value * _duration )
+
+        currentEndTimeMillis = currentStartMillis -1
+
+        if currentEndTimeMillis < minTimeMillis:
+            break
+
+        currentEndTime = DateTime(currentEndTimeMillis)
+
+    value = ( value / duration )
+
+    return value
 
 # *** Notifications and Emails ***
 def sendNotification(header, message, url=None):
