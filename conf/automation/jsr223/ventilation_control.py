@@ -136,34 +136,41 @@ class FilterFanLevelRule:
         currentLevel = getItemState("Ventilation_Fan_Level").intValue()
 
         raumTemperatur = getItemState("Temperature_FF_Livingroom").doubleValue()
-        zielTemperatur = getItemState("Ventilation_Comfort_Temperature").doubleValue()
+        zielTemperatur = getItemState("Ventilation_Comfort_Temperature").doubleValue
+        
+        presenceSate = getItemState("State_Presence").intValue()
+        
+        isTooWarm = raumTemperatur >= zielTemperatur
+        coolingPossible = getItemState("Temperature_Garden").doubleValue() < raumTemperatur
 
-        if getItemState("State_Presence").intValue() == 2:
-            newLevel = 2
+        # Sleep
+        if presenceSate == 2:
+            reducedLevel = 2    # Level 1
+            defaultLevel = 2    # Level 1
+            coolingLevel = 2    # Level 1
+        # Away since 30 minutes
+        elif presenceSate == 0 and itemLastUpdateOlderThen("State_Presence", getNow().minusMinutes(60)):
+            reducedLevel = 1    # Level A
+            defaultLevel = 2    # Level 1
+            coolingLevel = 3    # Level 2
         else:
-            newLevel = 3
+            reducedLevel = 2    # Level 1
+            defaultLevel = 3    # Level 2
+            coolingLevel = 3    # Level 2
             
-        # Raumtemperatur ist zu warm
-        if raumTemperatur >= zielTemperatur:
-            aussenTemperatur = getItemState("Temperature_Garden").doubleValue()
-            # aussentemperatur ist zu warm
-            if aussenTemperatur >= raumTemperatur:
-                newLevel = 1
-            # Raumtemperatur ist viel zu warm und kann mit Aussenluft gekühlt werden
-            # Lüftung sollte also nicht in den Sparmodus geschickt werden auch wenn man abwesend ist
-            elif raumTemperatur < zielTemperatur + 1 or aussenTemperatur >= raumTemperatur:
-                if getItemState("State_Presence").intValue() == 0 and itemLastUpdateOlderThen("State_Presence", getNow().minusMinutes(60)):
-                    newLevel = 2
-
-        # Wenn der aktuelle Level Stufe 'A' (also 1) ist, sollte vor einem erneuten umschalten gewartet werden damit ein
-        # hin und herschalten vermieden wird. z.B. bei kurzzeitigen Temperaturschwankungen
-        if currentLevel == 1:
-            waitBeforeChange = 15
-        else:
-            # must be > 1. Otherwise cangedSince dows not work propperly
-            waitBeforeChange = 2
+        # reducedLevel if it is too warm inside and also outside
+        # coolingLevel if it is too warm inside but outside colder then inside
+        newLevel = (coolingLevel if coolingPossible else reducedLevel) if isTooWarm else defaultLevel
 
         if newLevel != currentLevel:
+            # Wenn der aktuelle Level Stufe 'A' (also 1) ist, sollte vor einem erneuten umschalten gewartet werden damit ein
+            # hin und herschalten vermieden wird. z.B. bei kurzzeitigen Temperaturschwankungen
+            if currentLevel == 1:
+                waitBeforeChange = 15
+            else:
+                # must be > 1. Otherwise cangedSince dows not work propperly
+                waitBeforeChange = 2
+
             if itemLastUpdateOlderThen("Ventilation_Fan_Level", getNow().minusMinutes(waitBeforeChange)):
                 global autoChangeInProgress
                 autoChangeInProgress = True
