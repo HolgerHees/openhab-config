@@ -396,8 +396,16 @@ var MV = {
 					{
                         // Collect used items
 						collectItem(scope,name);
-					
-						updateItem(scope,OHService.getItem(name));
+
+						var item = OHService.getItem(name);
+						if( item == null ) 
+						{
+							// Should never happen
+							console.error("Item state requested before items initialized");
+							return null;
+						}
+
+						updateItem(scope,item);
 						//console.log("fetch state: " + name);
 					}
 					else
@@ -415,7 +423,16 @@ var MV = {
 					// Collect used items
 					collectItem(scope,name);
 
-					return scope.orgGetItem( name ) ;
+					var item = scope.orgGetItem( name );
+
+					if( typeof item == 'string' )
+					{
+						// Can happen. Used inside mvDetailInfoStatus to check if an item is already available
+						//console.warn("fallback " + name + " " + OHService.getItem(name) );
+						return null;
+					}
+
+					return item;
 				}
 				
 				scope.orgItemsInGroup = scope.itemsInGroup ;
@@ -1397,7 +1414,7 @@ var MV = {
                     });
                     
                     // getItem triggers a watcher registration process
-                    if( typeof scope.getItem(circuitItemName) == 'object' )
+                    if( scope.getItem(circuitItemName) != null )
                     {
                         updateValue();
                     }
