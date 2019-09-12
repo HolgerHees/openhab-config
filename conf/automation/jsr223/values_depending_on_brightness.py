@@ -15,8 +15,15 @@ class ValuesDependingOnBrightnessRule:
             postUpdateIfChanged("State_Outdoorlights", ON)
         else:
             postUpdateIfChanged("State_Outdoorlights", OFF)
+            
+        isAfterDusk = itemStateOlderThen("Dusk_Time", now)
 
-        if itemStateOlderThen("Dusk_Time", now) or isBeforeSunrise:
+        if isAfterDusk or isBeforeSunrise:
             postUpdateIfChanged("State_Rollershutter", ON)
         else:
             postUpdateIfChanged("State_Rollershutter", OFF)
+
+        if isAfterDusk or itemStateNewerThen("Dawn_Time", now):
+            postUpdateIfChanged("State_Solar", OFF)
+        else:
+            postUpdateIfChanged("State_Solar", ON)

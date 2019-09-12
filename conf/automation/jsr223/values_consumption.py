@@ -82,12 +82,6 @@ def getHistoricReference(log, itemName, valueTime, outdatetTime, messureTime, in
 
     return value
 
-
-def solarIsNotWorking(log):
-    #log.info(u"{}".format(itemLastUpdateOlderThen("Solar_DC_Power", getNow().withTimeAtStartOfDay())))
-    return itemLastUpdateOlderThen("Solar_DC_Power", getNow().withTimeAtStartOfDay())
-
-
 @rule("values_consumption.py")
 class SolarPower5minRule:
     def __init__(self):
@@ -230,7 +224,7 @@ class EnergySupplyRule:
       
         now = getNow().getMillis()
         
-        currentACPower = 0 if solarIsNotWorking(self.log) else getItemState("Solar_AC_Power").intValue()
+        currentACPower = getItemState("Solar_AC_Power").intValue()
 
         currentPowerLimitation = getItemState("Solar_Power_Limitation").intValue()
 
@@ -264,6 +258,18 @@ class EnergySupplyRule:
             self.log.info(u"Shutdown power limitation")
 
 @rule("values_consumption.py")
+class EnergyTotalYieldRefreshRule:
+    def __init__(self):
+        self.triggers = [
+          CronTrigger("0 * * * * ?")
+        ]
+        
+    def execute(self, module, input):
+        if getItemState("State_Solar") == ON:
+            # triggers solar value update
+            sendCommand("Solar_Total_Yield",REFRESH)
+        
+@rule("values_consumption.py")
 class EnergyCurrentDemandAndConsumptionRule:
     def __init__(self):
         self.triggers = [
@@ -290,11 +296,19 @@ class EnergyCurrentDemandAndConsumptionRule:
             self.currentDemand = self.powerDemand - self.powerSupply
             
             # solar value update was not successful for a while
-            if solarIsNotWorking(self.log):
-                self.updateConsumption(0)
-            
-            # triggers solar value update
-            sendCommand("Solar_AC_Power",REFRESH)
+            #solarActive = getItemState("State_Solar") == ON
+            #if itemLastUpdateOlderThen("Solar_Total_Yield", getNow().minusHours(5) if solarActive else getNow().minusHours(14)):
+            if itemLastUpdateOlderThen("Solar_Total_Yield", getNow().minusHours(24)):
+                self.log.info(u"Solar: ERROR • Values not updated. Fallback to '0' values.")
+                postUpdate("Solar_AC_Power",0)
+                postUpdateIfChanged("Solar_DC_Power",0)
+                postUpdateIfChanged("Solar_DC_Current",0)
+                postUpdateIfChanged("Solar_DC_Voltage",0)
+                postUpdateIfChanged("Solar_Daily_Yield",0)
+
+            if getItemState("State_Solar") == ON:
+                # triggers solar value update
+                sendCommand("Solar_AC_Power",REFRESH)
 
             postUpdateIfChanged("Electricity_Current_Demand",self.currentDemand)
 
@@ -313,7 +327,7 @@ class EnergyDailyConsumptionRule:
     def execute(self, module, input):
         dailyEnergyDemand = getItemState("Electricity_Current_Daily_Demand").doubleValue()
         dailyEnergySupply = getItemState("Electricity_Current_Daily_Supply").doubleValue()
-        dailySolarSupply = 0 if solarIsNotWorking(self.log) else getItemState("Solar_Daily_Yield").doubleValue()
+        dailySolarSupply = getItemState("Solar_Daily_Yield").doubleValue()
 
         postUpdateIfChanged("Electricity_Current_Daily_Consumption",dailyEnergyDemand - dailyEnergySupply + dailySolarSupply)
 
