@@ -509,16 +509,19 @@ var MV = {
 				{
 					scope.vm.updateListener = [];
 				});
+                
+                if( mvService.hasMissedReload() )
+                {
+                    console.log("mvTrigger: missed reload");
+                    mvService.lastRefresh = MV.getCurrentMillies();
 
-				if( mvService.hasMissedReload() )
-				{
-					console.log("mvTrigger: missed reload");
-					//console.log(OHService.loadItems);
-					//$rootScope.$emit('openhab-update');
-
-					OHService.reloadItems();
-					//scope.$$postDigest(function(){ triggerListener(scope,null); });
-				}
+                    // trigger 'openhab-update' event after the main thread has finished the initialisation
+                    window.setTimeout(function()
+                    {
+                        $rootScope.$emit('openhab-update');
+                        //OHService.reloadItems();
+                    },0);
+                }
 			}
 		}
     }]);
