@@ -98,7 +98,7 @@ var MV = {
 			reloadItems();
 		}
 
-		let loadItems = OHService.loadItems;
+		/*let loadItems = OHService.loadItems;
 		OHService.loadItems = function()
 		{
 			//console.log("loadItems");
@@ -106,7 +106,7 @@ var MV = {
 			vm.lastRefresh = MV.getCurrentMillies();
 			
 			loadItems();
-		}
+		}*/
 	}
 })();
 
@@ -461,13 +461,6 @@ var MV = {
 
 				//console.log("mvTrigger: register");
 				
-				if( mvService.hasMissedReload() )
-				{
-					console.log("mvTrigger: missed reload");
-
-					scope.$$postDigest(function(){ triggerListener(scope,null); });
-				}
-				
 				//window.setTimeout(function(){
 				//    let testItem = {name: "Temperature_FF_Livingroom", state: "20.0"};
 				//    $rootScope.$emit('openhab-update',testItem);
@@ -516,6 +509,16 @@ var MV = {
 				{
 					scope.vm.updateListener = [];
 				});
+
+				if( mvService.hasMissedReload() )
+				{
+					console.log("mvTrigger: missed reload");
+					//console.log(OHService.loadItems);
+					//$rootScope.$emit('openhab-update');
+
+					OHService.reloadItems();
+					//scope.$$postDigest(function(){ triggerListener(scope,null); });
+				}
 			}
 		}
     }]);
