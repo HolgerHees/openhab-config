@@ -295,20 +295,22 @@ class EnergyCurrentDemandAndConsumptionRule:
             
             self.currentDemand = self.powerDemand - self.powerSupply
             
-            # solar value update was not successful for a while
-            #solarActive = getItemState("State_Solar") == ON
-            #if itemLastUpdateOlderThen("Solar_Total_Yield", getNow().minusHours(5) if solarActive else getNow().minusHours(14)):
-            if itemLastUpdateOlderThen("Solar_Total_Yield", getNow().minusHours(24)):
-                self.log.info(u"Solar: ERROR • Values not updated. Fallback to '0' values.")
-                postUpdate("Solar_AC_Power",0)
-                postUpdateIfChanged("Solar_DC_Power",0)
-                postUpdateIfChanged("Solar_DC_Current",0)
-                postUpdateIfChanged("Solar_DC_Voltage",0)
-                postUpdateIfChanged("Solar_Daily_Yield",0)
-
             if getItemState("State_Solar") == ON:
+                # solar value update was not successful for a while
+                #solarActive = getItemState("State_Solar") == ON
+                #if itemLastUpdateOlderThen("Solar_Total_Yield", getNow().minusHours(5) if solarActive else getNow().minusHours(14)):
+                if itemLastUpdateOlderThen("Solar_Total_Yield", getNow().minusHours(24)):
+                    self.log.info(u"Solar: ERROR • Values not updated. Fallback to '0' values.")
+                    postUpdate("Solar_AC_Power",0)
+                    postUpdateIfChanged("Solar_DC_Power",0)
+                    postUpdateIfChanged("Solar_DC_Current",0)
+                    postUpdateIfChanged("Solar_DC_Voltage",0)
+                    postUpdateIfChanged("Solar_Daily_Yield",0)
+
                 # triggers solar value update
                 sendCommand("Solar_AC_Power",REFRESH)
+            else:
+                self.updateConsumption(0)
 
             postUpdateIfChanged("Electricity_Current_Demand",self.currentDemand)
 
