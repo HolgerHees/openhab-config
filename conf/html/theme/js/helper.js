@@ -394,7 +394,7 @@ var MV = {
 				{
 					if( scope.vm.watchedValues[ name ] == undefined )
 					{
-						// Collect used items
+                        // Collect used items
 						collectItem(scope,name);
 					
 						updateItem(scope,OHService.getItem(name));
@@ -1386,7 +1386,6 @@ var MV = {
 
                     scope.addUpdateListener(function( updatedItemName )
                     {
-                        
                         if( updatedItemName != null && updatedItemName != stateItemName && updatedItemName != circuitItemName )
                         {
                             return;
@@ -1397,7 +1396,11 @@ var MV = {
                         //elem[0].querySelector(".value").innerHTML = "Bewässerung: Garten links gleich fertig";
                     });
                     
-                    updateValue();
+                    // getItem triggers a watcher registration process
+                    if( typeof scope.getItem(circuitItemName) == 'object' )
+                    {
+                        updateValue();
+                    }
                 });
             }
         };
