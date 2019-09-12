@@ -317,7 +317,6 @@ class EnergyDailyConsumptionRule:
 
         postUpdateIfChanged("Electricity_Current_Daily_Consumption",dailyEnergyDemand - dailyEnergySupply + dailySolarSupply)
 
-
 @rule("values_consumption.py")
 class SolarConsumptionRule:
     def __init__(self):
