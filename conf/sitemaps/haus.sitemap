@@ -259,11 +259,12 @@ sitemap haus label="Main Menu"
                     Switch item=Scene8 label="Tablet Wakeup [%s]"
                     Switch item=Scene9 label="Tablet Light Theme [%s]"
                 }
-				Text label="Beschattung & Beleuchtung" icon="selfsun"
+				Text label="Beschattung, Beleuchtung & Solar" icon="selfsun"
                 {
 					Frame label="Sonstiges"
 					{
                         Text item=State_Outdoorlights label="Aussenbeleuchtung aktiv [%s]"
+                        Text item=State_Solar label="Solaranlage wird abgefragt [%s]"
                         Text item=State_Rollershutter label="Rollläden sollten unten sein [%s]"
                     }
 					Frame label="Sonnenschutz"
