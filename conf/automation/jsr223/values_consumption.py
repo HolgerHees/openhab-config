@@ -338,6 +338,11 @@ class SolarConsumptionRule:
         startSupply = getHistoricItemState("Electricity_Total_Supply", now.withTimeAtStartOfDay() ).doubleValue()
         startYield = getHistoricItemState("Solar_Total_Yield", now.withTimeAtStartOfDay() ).doubleValue()
 
+        # sometimes solar converter is providing wrong value. Mostly if he is inactive in the night
+        if currentYield > 1000000000 or startYield > 1000000000:
+            self.log.error(u"Wrong Solar Value: currentYield is {}, startYield is {}".format(currentYield,startYield))
+            return
+
         totalSupply = currentSupply - startSupply
         totalYield = currentYield - startYield
         dailyConsumption = totalYield - totalSupply
