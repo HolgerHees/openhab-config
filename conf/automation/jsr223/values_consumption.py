@@ -290,9 +290,19 @@ class EnergyCurrentDemandAndConsumptionRule:
         if input["event"].getItemName() == "Solar_AC_Power":
             self.updateConsumption(input['event'].getItemState().intValue())
         else:
-            self.powerDemand = getItemState("Power_Demand_Active").intValue()
-            self.powerSupply = getItemState("Power_Supply_Active").intValue()
-            
+            if input["event"].getItemName() == "Power_Demand_Active":
+                self.powerDemand = input["event"].getItemState().intValue()
+                self.powerSupply = getItemState("Power_Supply_Active").intValue()
+                
+                if self.powerDemand != getItemState("Power_Demand_Active").intValue():
+                    self.log.error("Item demand state differences: {}, item state: {}".format(self.powerDemand,getItemState("Power_Demand_Active").intValue()))
+            else:
+                self.powerDemand = getItemState("Power_Demand_Active").intValue()
+                self.powerSupply = input["event"].getItemState().intValue()
+                
+                if self.powerSupply != getItemState("Power_Supply_Active").intValue():
+                    self.log.error("Item supply state differences: {}, item state: {}".format(self.powerSupply,getItemState("Power_Supply_Active").intValue()))
+
             self.currentDemand = self.powerDemand - self.powerSupply
             
             if getItemState("State_Solar") == ON:
