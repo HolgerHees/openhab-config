@@ -1,4 +1,13 @@
-var mvInitializer = function(app){
+var mvInitializer = function(){
+    
+    if(typeof angular === "undefined")
+    {
+        setTimeout(mvInitializer, 50);
+        return;
+    }
+
+    var app = angular.module('app', []);
+
     var MV = {
         'handleClassArray': function( add, name, classList )
         {
@@ -426,8 +435,8 @@ var mvInitializer = function(app){
 
                         if( typeof item == 'string' )
                         {
-                            // Can happen. Used inside mvDetailInfoStatus to check if an item is already available
-                            //console.warn("fallback " + name + " " + OHService.getItem(name) );
+                            // Should never happen
+                            console.error("Item requested before items initialized");
                             return null;
                         }
 
@@ -511,7 +520,7 @@ var mvInitializer = function(app){
 
                     if( mvService.hasMissedReload() )
                     {
-                        console.log("mvTrigger: missed reload");
+                        console.log("Emit update event again, because mvTrigger missed initial update event");
                         mvService.lastRefresh = MV.getCurrentMillies();
 
                         // trigger 'openhab-update' event after the main thread has finished the initialisation
@@ -1408,6 +1417,7 @@ var mvInitializer = function(app){
 
                         scope.addUpdateListener(function( updatedItemName )
                         {
+                            //console.log("Watering_Circuits initialized");
                             if( updatedItemName != null && updatedItemName != stateItemName && updatedItemName != circuitItemName )
                             {
                                 return;
@@ -1419,10 +1429,10 @@ var mvInitializer = function(app){
                         });
                         
                         // getItem triggers a watcher registration process
-                        if( scope.getItem(circuitItemName) != null )
-                        {
-                            updateValue();
-                        }
+                        //if( scope.getItem(circuitItemName) != null )
+                        //{
+                            //updateValue();
+                        //}
                     });
                 }
             };
@@ -1430,18 +1440,6 @@ var mvInitializer = function(app){
     })();
 };
 
-function waitForAngular()
-{
-    if(typeof angular !== "undefined")
-    {
-        var app = angular.module('app', []);
-        mvInitializer(app);
-    }
-    else
-    {
-        setTimeout(waitForAngular, 50);
-    }
-}
-waitForAngular();
+mvInitializer();
 
 
