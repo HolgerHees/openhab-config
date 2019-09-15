@@ -333,7 +333,7 @@ class EnergyDailyConsumptionRule:
           #ItemStateChangeTrigger("Electricity_Current_Daily_Supply"),
           #ItemStateChangeTrigger("Solar_Daily_Yield")
           # should be cron based, otherwise it will create until 3 times more values if it is based on ItemStateChangeTrigger
-          CronTrigger("0 */5 * * * ?")
+          CronTrigger("30 */5 * * * ?")
         ]
 
     def execute(self, module, input):
@@ -350,7 +350,7 @@ class SolarConsumptionRule:
           #ItemStateChangeTrigger("Electricity_Meter_Supply"),
           #ItemStateChangeTrigger("Solar_Total_Yield"),
           # should be cron based, otherwise it will create until 3 times more values if it is based on ItemStateChangeTrigger
-          CronTrigger("0 */5 * * * ?")
+          CronTrigger("15 */5 * * * ?")
         ]
 
     def execute(self, module, input):
@@ -397,7 +397,7 @@ class SolarConsumptionRule:
 @rule("values_consumption.py")
 class GasConsumptionRule:
     def __init__(self):
-        self.triggers = [CronTrigger("0 */5 * * * ?")]
+        self.triggers = [CronTrigger("15 */5 * * * ?")]
 
     def execute(self, module, input):
         now = getNow()
