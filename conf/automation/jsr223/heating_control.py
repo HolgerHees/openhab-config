@@ -416,17 +416,19 @@ class HeatingHelper:
         if lastHeatingChange.getMillis() < now.minusHours(12).getMillis():
             # 0.3 steilheit
             # niveau 12k
-            # 20° => 36°
-            # -20^ => 47°   
+            # 20° => 36°                => 0 => 0°
+            # -20^ => 47°               => 40 => 11°
             
-            # 15 (0) => 32 (0)
-            # -15 (-30) => 44 (12)
-            if currentOutdoorTemp > 15.0: 
-                maxVL = 32
-            elif currentOutdoorTemp < -15.0:
-                maxVL = 44 
+            if currentOutdoorTemp > 20.0: 
+                maxVL = 36.0 * 0.95
+            elif currentOutdoorTemp < -20.0:
+                maxVL = 47.0 * 0.95 
             else:
-                maxVL = ( ( currentOutdoorTemp - 15.0 ) * -0.4 ) + 32.0
+                maxVL = ( ( ( ( currentOutdoorTemp - 20.0 ) * -1 ) * 11.0 / 40.0 ) + 36.0 ) * 0.95
+                #test = ( ( ( ( currentOutdoorTemp - 20.0 ) * -1 ) * 11.0 / 40.0 ) + 36.0 ) * 0.9
+                #self.log.info(u"-----> {}".format(test))
+                #test = ( ( ( ( currentOutdoorTemp - 20.0 ) * -1 ) * 11.0 / 40.0 ) + 36.0 ) * 0.95
+                #self.log.info(u"-----> {}".format(test))
         else:
             maxVL = temperature_Pipe_In + 11.5
           
@@ -665,7 +667,7 @@ class HeatingCheckRule(HeatingHelper):
         currentAtticTemp = self.getStableValue( now, "Temperature_SF_Attic", 10, True )
         #currentOutdoorTemp = self.getStableValue( now, "Temperature_Garden", 10, True )
         currentOutdoorTemp = self.getStableValue( now, "Heating_Temperature_Outdoor", 10 )
-
+        
         # not changed since 6 hours.
         if self.isOutdatetForecast():
             self.log.info(u"Forecast: ERROR • Fall back to current temperature.")
