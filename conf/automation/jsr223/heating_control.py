@@ -159,12 +159,12 @@ class HeatingHelper:
                 if isForecast or getItemState("Shutters_FF_Kitchen") == PercentType.ZERO:
                     _activeRadiation = _activeRadiation + ( ( 0.645 * 1.01 * 2.0 ) * _effectiveWestRadiation )
                     
-                # exclude inactive rooms from sun power to exclude their effects from further calculation
-                if activeRooms.get("livingroom"):
-                    if isForecast or getItemState("Shutters_FF_Livingroom_Terrace") == PercentType.ZERO:
-                        _activeRadiation = _activeRadiation + ( ( 0.625 * 2.13 * 3.0 ) * _effectiveWestRadiation )
-                    if isForecast or getItemState("Shutters_FF_Livingroom_Couch") == PercentType.ZERO:
-                        _activeRadiation = _activeRadiation + ( ( 0.655 * 2.13 * 2.0 ) * _effectiveWestRadiation )
+                #if activeRooms.get("livingroom"):
+                # also if the room is inactive has the sun radiation an effect
+                if isForecast or getItemState("Shutters_FF_Livingroom_Terrace") == PercentType.ZERO:
+                    _activeRadiation = _activeRadiation + ( ( 0.625 * 2.13 * 3.0 ) * _effectiveWestRadiation )
+                if isForecast or getItemState("Shutters_FF_Livingroom_Couch") == PercentType.ZERO:
+                    _activeRadiation = _activeRadiation + ( ( 0.655 * 2.13 * 2.0 ) * _effectiveWestRadiation )
             
             _activeRadiation = round( _activeRadiation / 60.0, 1 )
             _effectiveSouthRadiation = round( _effectiveSouthRadiation / 60.0, 1 )
@@ -260,6 +260,8 @@ class HeatingHelper:
         maxHeatingPowerPerMinute = currentHeatingPowerPerMinute
         
         # remove inactive rooms from heating power to exclude their effects from further calculation
+        # - the room is inactive if it is too warm in this room
+        # - so the heating circuit in this room is off and is not used for radiation
         if not activeRooms.get("livingroom"):
             # Livingroom is 23.2049195152831% of the whole heating area
             currentHeatingPowerPerMinute = round( currentHeatingPowerPerMinute * 0.768, 1 )
@@ -330,6 +332,8 @@ class HeatingHelper:
         # adjustment is only needed in case of real cooling. Means not in the summer when it is warming up from outside
         if totalPower > 0:
             # remove inactive room from cooling power to exclude their effects from further calculation
+            # - the room is inactive if it is too warm in this room
+            # - so the cooling power of this room is not relevant
             if not activeRooms.get("livingroom"):
                 # Livingroom is 14.7448138257267% or 21.4786205 W/h/K of the whole house UValue
                 totalPower = round( totalPower * 0.853, 1 )
@@ -390,6 +394,8 @@ class HeatingHelper:
         maxPower = neededPower
         
         # remove inactive rooms from needed power to exclude their effects from further calculation
+        # - the room is inactive if it is too warm in this room
+        # - so there is no need to spend energy in this room
         if not activeRooms.get("livingroom"):
             neededPower = neededPower - 6012.96212326389
 
@@ -945,10 +951,10 @@ class HeatingCheckRule(HeatingHelper):
 
                 reference = reference.plusMinutes( endOffset )
                 _isNightMode = self.isNightModeTime(reference)
-                msg = u"end check at {} • {} min. • {} min. lazy".format(OFFSET_FORMATTER.print(reference),endOffset,lazyTime)
+                msg = u"{} check at {} • {} min. • {} min. lazy".format(u"end" if _isNightMode else u"ended now •",OFFSET_FORMATTER.print(reference),endOffset,lazyTime)
             else:
                 _isNightMode = nightModeActive
-                msg = u"ended"
+                msg = u"inactive"
         else:
             if not nightModeActive:
                 startOffset = coolingDownMinutes if coolingDownMinutes > 0 else 0
@@ -958,13 +964,15 @@ class HeatingCheckRule(HeatingHelper):
                 # if heating not active, check if the night mode is far enough for a new heating cycle
                 if not isHeatingActive and startOffset < LAZY_OFFSET:
                     startOffset = LAZY_OFFSET
+                elif startOffset > LAZY_OFFSET * 2:
+                    startOffset = LAZY_OFFSET * 2
 
                 reference = reference.plusMinutes( startOffset )
                 _isNightMode = self.isNightModeTime(reference)
-                msg = u"start check at {} • {} min.".format(OFFSET_FORMATTER.print(reference),startOffset)
+                msg = u"{} check at {} • {} min.".format(u"started now •" if _isNightMode else u"start",OFFSET_FORMATTER.print(reference),startOffset)
             else:
                 _isNightMode = nightModeActive
-                msg = u"started"
+                msg = u"active"
             
         self.log.info(u"        : Night mode {}".format(msg))
 
