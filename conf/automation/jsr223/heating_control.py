@@ -68,126 +68,52 @@ class HeatingHelper:
         
         return getItemState(cloudCoverItem).doubleValue()
 
-    def _getSunData( self, time ):
+    def getNeededEnergyForOneDegrees( self, activeRooms, livingroomTemperature, bedroomTemperature ):
 
-        # Constants                                                                                                                                                                                                                                 
-        K = 0.017453                                                                                                                                                                                                                      
+        # 15°C => 1.2250
+        # 30°C => 1.1644
 
-        # Change this reflecting your destination                                                                                                                                                                                                   
-        latitude = 52.347767                                                                                                                                                                                                              
-        longitude = 13.621287
+        # 0°C  => 0
+        # 15°C => -0.0606
 
-        # allways +1 Berlin winter time
-        local = time.toDateTime(DateTimeZone.forOffsetHours(1))
+        # https://www.ubakus.de/u-wert-rechner/
+        _minDensity = 1.1644
+        maxDensity = 1.2250
+        _cAir = 1.005 # KJ / KG
+        _jouleKWRatio = 3.6
 
-        day = local.getDayOfYear()
-        hour = local.getHourOfDay() + (local.getMinuteOfHour()/60.0)
+        _lowerVolume = 231.8911
+        _upperVolume = 216.5555
 
-        # Source: http://www.jgiesen.de/SME/tk/index.htm
-        deklination = -23.45 * math.cos( K * 360 * (day + 10) / 365 )
-        zeitgleichung = 60.0 * (-0.171 * math.sin( 0.0337*day+0.465) - 0.1299 * math.sin( 0.01787*day-0.168))
-        stundenwinkel = 15.0 * ( hour - (15.0-longitude)/15.0 - 12.0 + zeitgleichung/60.0)
-        x = math.sin(K * latitude) * math.sin(K * deklination) + math.cos(K * latitude) * math.cos(K * deklination) * math.cos(K * stundenwinkel)
-        y = - (math.sin(K*latitude) * x - math.sin(K*deklination)) / (math.cos(K*latitude) * math.sin(math.acos(x)))
-        elevation = math.asin(x) / K
+        _lowerFloorPower = 15379.708453125
+        _upperFloorPower = 6786.38176111111
 
-        isBreak = hour <= 12.0 + (15.0-longitude)/15.0 - zeitgleichung/60.0
-        if isBreak: azimut = math.acos(y) / K
-        else: azimut = 360.0 - math.acos(y) / K
+        _lowerDensity = ( ( livingroomTemperature - 15.0 ) * ( _minDensity - maxDensity ) / 15.0 ) + maxDensity
+        if _lowerDensity < _minDensity: _lowerDensity = _minDensity
+        elif _lowerDensity > maxDensity: _lowerDensity = maxDensity
 
-        return elevation, azimut
+        _upperDensity = ( ( bedroomTemperature - 15.0 ) * ( _minDensity - maxDensity ) / 15.0 ) + maxDensity
+        if _upperDensity < _minDensity: _upperDensity = _minDensity
+        elif _upperDensity > maxDensity: _upperDensity = maxDensity
 
-    def getSunPowerPerMinute( self, logPrefix, activeRooms, referenceTime, cloudCoverItem, isForecast ):
+        _lowerAirPower = _lowerVolume * _lowerDensity * _cAir / _jouleKWRatio
+        _upperAirPower = _upperVolume * _upperDensity * _cAir / _jouleKWRatio
 
-        cloudCover = self._getCloudData( cloudCoverItem )
-        elevation, azimut = self._getSunData( referenceTime )
-
-        # 125° 1/2 der Hauswand	
-        southMultiplier = 0
-        if azimut >= 100 and azimut <= 260 and elevation >= 12.0:
-            # 100° (0) => -1 (0)
-            # 260° (160) => 1 (2)
-            southX = ( ( azimut - 100.0 ) * 2.0 / 160.0 ) - 1.0
-            southMultiplier = ( math.pow( southX, 10.0 ) * -1.0 ) + 1.0
-
-        westMultiplier = 0
-        if azimut >= 190 and azimut <= 350 and elevation >= 8.0:
-            # https://rechneronline.de/funktionsgraphen/
-            # 190° (0) => -1 (0)
-            # 350° (160) => 1 (2)           
-            westX = ( ( azimut - 190.0 ) * 2.0 / 160.0 ) - 1.0
-            westMultiplier = ( math.pow( westX, 10.0 ) * -1.0 ) + 1.0
-
-        southActive = southMultiplier > 0.0
-        westActive  = westMultiplier > 0.0
+        lowerPower = _lowerFloorPower + _lowerAirPower
+        upperPower = _upperFloorPower + _upperAirPower
         
-        # in the morning the sun must be above 20°
-        # and in the evening the sun must be above 10°
-        if southActive or westActive:
-            _usedRadians = math.radians(elevation)
-            if _usedRadians < 0.0: _usedRadians = 0.0
-            
-            # Cloud Cover is between 0 and 9 - but converting to 0 and 8
-            # https://en.wikipedia.org/wiki/Okta
-            _cloudCover = cloudCover
-            if _cloudCover > 8.0: _cloudCover = 8.0
-            _cloudCoverFactor = _cloudCover / 8.0
-            
-            # http://www.shodor.org/os411/courses/_master/tools/calculators/solarrad/
-            # http://scool.larc.nasa.gov/lesson_plans/CloudCoverSolarRadiation.pdf
-            _maxRadiation = 990.0 * math.sin( _usedRadians ) - 30.0
-            if _maxRadiation < 0.0: _maxRadiation = 0.0
-            _currentRadiation = _maxRadiation * ( 1.0 - 0.75 * math.pow( _cloudCoverFactor, 3.4 ) )
+        neededPower = lowerPower + upperPower
+        
+        maxPower = neededPower
+        
+        # remove inactive rooms from needed power to exclude their effects from further calculation
+        # - the room is inactive if it is too warm in this room
+        # - so there is no need to spend energy in this room
+        if not activeRooms.get("livingroom"):
+            neededPower = neededPower - 6012.96212326389
 
-            _activeRadiation = 0.0
-            _effectiveSouthRadiation = _currentRadiation * 0.37 * southMultiplier
-            _effectiveWestRadiation = _currentRadiation * 0.37 * westMultiplier
-            
-            # Südseite bis ca. 16 Uhr
-            if _effectiveSouthRadiation > 0.0:
-                # 0 means 0% down
-                if isForecast or getItemState("Shutters_SF_Bathroom") == PercentType.ZERO:
-                    _activeRadiation = _activeRadiation + ( ( 0.86 * 1.00 ) * _effectiveSouthRadiation )
-                if isForecast or getItemState("Shutters_SF_Dressingroom") == PercentType.ZERO:
-                    _activeRadiation = _activeRadiation + ( ( 0.86 * 1.00 ) * _effectiveSouthRadiation )
+        return neededPower, maxPower
 
-            # Westseite ab ca. 14 Uhr
-            if _effectiveWestRadiation > 0.0:
-                # 0 means 0% down
-                if isForecast or getItemState("Shutters_SF_Bedroom") == PercentType.ZERO:
-                   _activeRadiation = _activeRadiation + ( ( 0.615 * 1.00 * 3.0 ) * _effectiveWestRadiation )
-                if isForecast or getItemState("Shutters_FF_Kitchen") == PercentType.ZERO:
-                    _activeRadiation = _activeRadiation + ( ( 0.645 * 1.01 * 2.0 ) * _effectiveWestRadiation )
-                    
-                #if activeRooms.get("livingroom"):
-                # also if the room is inactive has the sun radiation an effect
-                if isForecast or getItemState("Shutters_FF_Livingroom_Terrace") == PercentType.ZERO:
-                    _activeRadiation = _activeRadiation + ( ( 0.625 * 2.13 * 3.0 ) * _effectiveWestRadiation )
-                if isForecast or getItemState("Shutters_FF_Livingroom_Couch") == PercentType.ZERO:
-                    _activeRadiation = _activeRadiation + ( ( 0.655 * 2.13 * 2.0 ) * _effectiveWestRadiation )
-            
-            _activeRadiation = round( _activeRadiation / 60.0, 1 )
-            _effectiveSouthRadiation = round( _effectiveSouthRadiation / 60.0, 1 )
-            _effectiveWestRadiation = round( _effectiveWestRadiation / 60.0, 1 )
-
-            activeDirections = []
-            if southActive: activeDirections.append("S")
-            if westActive: activeDirections.append("W")
-            activeMsg = u" • {}".format("+".join(activeDirections))
-        else:
-            _activeRadiation = 0.0
-            _effectiveSouthRadiation = 0.0
-            _effectiveWestRadiation = 0.0
-
-            activeMsg = u""
-            
-        sunElevationMsg = int( round( elevation, 0 ) )
-        sunAzimutMsg = int( round( azimut, 0 ) )
-
-        self.log.info(u"{} Azimut {}° • Elevation {}° • Clouds {} octas{}".format(logPrefix, sunAzimutMsg, sunElevationMsg, cloudCover, activeMsg) )
-
-        return _activeRadiation, _activeRadiation, _effectiveSouthRadiation, _effectiveWestRadiation
-       
     def getOpenWindows( self, cached = False ):
         if cached == False or HeatingHelper.openSFContacts is None:
             now = getNow()
@@ -244,31 +170,162 @@ class HeatingHelper:
     
     def getLongOpenWindows( self ):
         return { "ffCount": len(HeatingHelper.longOpenFFContacts), "totalFfCount": 6, "sfCount": len(HeatingHelper.longOpenSFContacts), "totalSfCount": 5 }
-
-    def getHeatingPowerPerMinute( self, activeRooms, pumpSpeed, temperature_Pipe_Out, temperature_Pipe_In):
-        # To warmup 1 liter of wather you need 4,182 Kilojoule
-        # 1 Wh == 3,6 kJ
-        # 1000 l * 4,182 kJ / 3,6kJ = 1161,66666667
-        _referencePower = 1162 # per Watt je m³/K
-        #_maxVolume = 1.2 # 1200l max Volumenstrom of a Vitodens 200-W Typ B2HA with 13kW
-        _maxVolume = 0.584 # 584l Nenn-Umlaufwassermenge of a Vitodens 200-W Typ B2HA with 13kW
-        
-        circulationDiff = temperature_Pipe_Out - temperature_Pipe_In
-        pumpVolume = round( ( _maxVolume * pumpSpeed ) / 100.0, 2 )
-        currentHeatingPowerPerMinute = round( ( _referencePower * pumpVolume * circulationDiff ) / 60.0, 1 )
-        
-        maxHeatingPowerPerMinute = currentHeatingPowerPerMinute
-        
-        # remove inactive rooms from heating power to exclude their effects from further calculation
-        # - the room is inactive if it is too warm in this room
-        # - so the heating circuit in this room is off and is not used for radiation
-        if not activeRooms.get("livingroom"):
-            # Livingroom is 23.2049195152831% of the whole heating area
-            currentHeatingPowerPerMinute = round( currentHeatingPowerPerMinute * 0.768, 1 )
       
-        return currentHeatingPowerPerMinute, pumpVolume, maxHeatingPowerPerMinute
-    
-    def getCoolingPowerPerMinute( self, logPrefix, now, activeRooms, outdoorTempReference, outdoorTemperature, livingroomTemperature, bedroomTemperature, atticTemperature, sunPower, sunPowerMax, openWindow ):
+    def _getSunData( self, time ):
+
+        # Constants                                                                                                                                                                                                                                 
+        K = 0.017453                                                                                                                                                                                                                      
+
+        # Change this reflecting your destination                                                                                                                                                                                                   
+        latitude = 52.347767                                                                                                                                                                                                              
+        longitude = 13.621287
+
+        # allways +1 Berlin winter time
+        local = time.toDateTime(DateTimeZone.forOffsetHours(1))
+
+        day = local.getDayOfYear()
+        hour = local.getHourOfDay() + (local.getMinuteOfHour()/60.0)
+
+        # Source: http://www.jgiesen.de/SME/tk/index.htm
+        deklination = -23.45 * math.cos( K * 360 * (day + 10) / 365 )
+        zeitgleichung = 60.0 * (-0.171 * math.sin( 0.0337*day+0.465) - 0.1299 * math.sin( 0.01787*day-0.168))
+        stundenwinkel = 15.0 * ( hour - (15.0-longitude)/15.0 - 12.0 + zeitgleichung/60.0)
+        x = math.sin(K * latitude) * math.sin(K * deklination) + math.cos(K * latitude) * math.cos(K * deklination) * math.cos(K * stundenwinkel)
+        y = - (math.sin(K*latitude) * x - math.sin(K*deklination)) / (math.cos(K*latitude) * math.sin(math.acos(x)))
+        elevation = math.asin(x) / K
+
+        isBreak = hour <= 12.0 + (15.0-longitude)/15.0 - zeitgleichung/60.0
+        if isBreak: azimut = math.acos(y) / K
+        else: azimut = 360.0 - math.acos(y) / K
+
+        return elevation, azimut
+
+    def getSunPowerPerMinute( self, logPrefix, referenceTime, cloudCoverItem ):
+
+        cloudCover = self._getCloudData( cloudCoverItem )
+        elevation, azimut = self._getSunData( referenceTime )
+
+        # 125° 1/2 der Hauswand	
+        southMultiplier = 0
+        if azimut >= 100 and azimut <= 260 and elevation >= 12.0:
+            # 100° (0) => -1 (0)
+            # 260° (160) => 1 (2)
+            southX = ( ( azimut - 100.0 ) * 2.0 / 160.0 ) - 1.0
+            southMultiplier = ( math.pow( southX, 10.0 ) * -1.0 ) + 1.0
+
+        westMultiplier = 0
+        if azimut >= 190 and azimut <= 350 and elevation >= 8.0:
+            # https://rechneronline.de/funktionsgraphen/
+            # 190° (0) => -1 (0)
+            # 350° (160) => 1 (2)           
+            westX = ( ( azimut - 190.0 ) * 2.0 / 160.0 ) - 1.0
+            westMultiplier = ( math.pow( westX, 10.0 ) * -1.0 ) + 1.0
+
+        southActive = southMultiplier > 0.0
+        westActive  = westMultiplier > 0.0
+        
+        # in the morning the sun must be above 20°
+        # and in the evening the sun must be above 10°
+        if southActive or westActive:
+            _usedRadians = math.radians(elevation)
+            if _usedRadians < 0.0: _usedRadians = 0.0
+            
+            # Cloud Cover is between 0 and 9 - but converting to 0 and 8
+            # https://en.wikipedia.org/wiki/Okta
+            _cloudCover = cloudCover
+            if _cloudCover > 8.0: _cloudCover = 8.0
+            _cloudCoverFactor = _cloudCover / 8.0
+            
+            # http://www.shodor.org/os411/courses/_master/tools/calculators/solarrad/
+            # http://scool.larc.nasa.gov/lesson_plans/CloudCoverSolarRadiation.pdf
+            _maxRadiation = 990.0 * math.sin( _usedRadians ) - 30.0
+            if _maxRadiation < 0.0: _maxRadiation = 0.0
+            _currentRadiation = _maxRadiation * ( 1.0 - 0.75 * math.pow( _cloudCoverFactor, 3.4 ) )
+
+            _effectiveSouthRadiation = _currentRadiation * southMultiplier
+            _effectiveWestRadiation = _currentRadiation * westMultiplier
+            
+            _effectiveSouthRadiation = round( _effectiveSouthRadiation / 60.0, 3 )
+            _effectiveWestRadiation = round( _effectiveWestRadiation / 60.0, 3 )
+
+            activeDirections = []
+            if southActive: activeDirections.append("S")
+            if westActive: activeDirections.append("W")
+            activeMsg = u" • {}".format("+".join(activeDirections))
+        else:
+            _activeRadiation = 0.0
+            _effectiveSouthRadiation = 0.0
+            _effectiveWestRadiation = 0.0
+
+            activeMsg = u""
+            
+        sunElevationMsg = int( round( elevation, 0 ) )
+        sunAzimutMsg = int( round( azimut, 0 ) )
+
+        self.log.info(u"{} Azimut {}° • Elevation {}° • Clouds {} octas{}".format(logPrefix, sunAzimutMsg, sunElevationMsg, cloudCover, activeMsg) )
+
+        return _effectiveSouthRadiation, _effectiveWestRadiation
+      
+    def getWindowSunPowerPerMinute( self, logPrefix, _effectiveSouthRadiation, _effectiveWestRadiation, isForecast ):
+
+        _activeRadiation = 0
+
+        if _effectiveSouthRadiation > 0 or _effectiveWestRadiation > 0:
+          
+            # https://de.wikipedia.org/wiki/Energiedurchlassgrad
+            # https://www.fensterversand.com/info/qualitaet/g-wert-fenster.php
+            # https://www.fensterversand.com/fenster/verglasung/dreifachverglasung.php
+            # G Value of 0.55 "3-Windowpane heat reflecting glass"
+            _effectiveSouthRadiation = _effectiveSouthRadiation * 0.55
+            _effectiveWestRadiation = _effectiveWestRadiation * 0.55
+  
+            # Südseite bis ca. 16 Uhr
+            if _effectiveSouthRadiation > 0.0:
+                # 0 means 0% down
+                if isForecast or getItemState("Shutters_SF_Bathroom") == PercentType.ZERO:
+                    _activeRadiation = _activeRadiation + ( ( 0.86 * 1.00 ) * _effectiveSouthRadiation )
+                if isForecast or getItemState("Shutters_SF_Dressingroom") == PercentType.ZERO:
+                    _activeRadiation = _activeRadiation + ( ( 0.86 * 1.00 ) * _effectiveSouthRadiation )
+                #if isForecast or getItemState("Shutters_SF_Attic") == PercentType.ZERO:
+                #    _activeRadiation = _activeRadiation + ( ( 0.645 * 0.85 ) * _effectiveSouthRadiation )
+
+            # Westseite ab ca. 14 Uhr
+            if _effectiveWestRadiation > 0.0:
+                # 0 means 0% down
+                if isForecast or getItemState("Shutters_SF_Bedroom") == PercentType.ZERO:
+                   _activeRadiation = _activeRadiation + ( ( 0.615 * 1.00 * 3.0 ) * _effectiveWestRadiation )
+                if isForecast or getItemState("Shutters_FF_Kitchen") == PercentType.ZERO:
+                    _activeRadiation = _activeRadiation + ( ( 0.645 * 1.01 * 2.0 ) * _effectiveWestRadiation )
+                    
+                # also if the room is inactive has the sun radiation an effect
+                if isForecast or getItemState("Shutters_FF_Livingroom_Terrace") == PercentType.ZERO:
+                    _activeRadiation = _activeRadiation + ( ( 0.625 * 2.13 * 3.0 ) * _effectiveWestRadiation )
+                if isForecast or getItemState("Shutters_FF_Livingroom_Couch") == PercentType.ZERO:
+                    _activeRadiation = _activeRadiation + ( ( 0.655 * 2.13 * 2.0 ) * _effectiveWestRadiation )
+            
+            _activeRadiation = round( _activeRadiation, 1 )
+            
+        return _activeRadiation
+       
+    def getWallSunPowerPerMinute( self, _effectiveSouthRadiation, _effectiveWestRadiation ):
+        _activeRadiation = 0.0
+
+        if _effectiveSouthRadiation > 0 or _effectiveWestRadiation > 0:
+          
+            _southArea = 19.6086
+            _westArea = 30.6187
+
+            # 66.2 is the lazyness of the wall
+            if _effectiveSouthRadiation > 0:
+                _activeRadiation = _activeRadiation + ( _southArea * _effectiveSouthRadiation / 66.2 ) 
+            if _effectiveWestRadiation > 0:
+                _activeRadiation = _activeRadiation + ( _westArea * _effectiveWestRadiation / 66.2 ) 
+                
+            _activeRadiation = round( _activeRadiation, 1 )
+            
+        return _activeRadiation
+
+    def getCoolingPowerPerMinute( self, logPrefix, now, activeRooms, outdoorTempReference, outdoorTemperature, livingroomTemperature, bedroomTemperature, atticTemperature, _wallSunPower, _windowSunPower, openWindow ):
 
         densitiyAir = 1.2041
         cAir = 1.005
@@ -342,65 +399,51 @@ class HeatingHelper:
         egExchangePower = ( ( (egPower + floorPower) * openWindow["ffCount"] ) / openWindow["totalFfCount"] ) * 2.0
         ogExchangePower = ( ( (ogPower + atticPower) * openWindow["sfCount"] ) / openWindow["totalSfCount"] ) * 2.0
 
-        # sunPower and openWindow are already adjusted to exclude inactive rooms
-        coolingPower = round( ( (totalPower + egExchangePower + ogExchangePower) / 60.0 ) - sunPower, 1 )
-        maxCoolingPower = round( ( (maxTotalPower + egExchangePower + ogExchangePower) / 60.0 ) - sunPowerMax, 1 )
+        coolingPower = round( ( (totalPower + egExchangePower + ogExchangePower) / 60.0 ) - _windowSunPower - _wallSunPower, 1 )
+        maxCoolingPower = round( ( (maxTotalPower + egExchangePower + ogExchangePower) / 60.0 ) - _windowSunPower - _wallSunPower, 1 )
 
         # log messages
-        baseMsg = round( ( ( floorPower + egPower + ogPower + atticPower ) / 60.0 ) * -10.0 ) / 10.0
+        wallMsg = round( ( ( floorPower + egPower + ogPower + atticPower ) / 60.0 ) * -10.0 ) / 10.0
+        if wallMsg == 0: wallMsg = 0.0
+        if _wallSunPower == 0: _wallSunPower = 0.0
+
         ventilationMsg = round( ( ( ventilationPowerInW / 60.0 ) * -10.0 ) ) / 10.0
+        if ventilationMsg == 0: ventilationMsg = 0.0
+
         leakingMsg = round( ( leakingPowerInW / 60.0 ) * -10.0 ) / 10.0
+        if leakingMsg == 0: leakingMsg = 0.0
+
         windowMsg = round( ( ( egExchangePower + ogExchangePower ) / 60.0 ) * -10.0 ) / 10.0
-        self.log.info(u"{} Wall {} • Air {} • Leak {} • Window {} • Sun {}".format(logPrefix, baseMsg, ventilationMsg, leakingMsg, windowMsg, sunPowerMax) )
+        if windowMsg == 0: windowMsg = 0.0
+        if _windowSunPower == 0: _windowSunPower = 0.0
+
+        self.log.info(u"{} Wall {} (☀{}) • Air {} • Leak {} • Window {} (☀{})".format(logPrefix, wallMsg, _wallSunPower, ventilationMsg, leakingMsg, windowMsg, _windowSunPower) )
 
         return coolingPower, maxCoolingPower
 
-    def getNeededEnergyForOneDegrees( self, activeRooms, livingroomTemperature, bedroomTemperature ):
-
-        # 15°C => 1.2250
-        # 30°C => 1.1644
-
-        # 0°C  => 0
-        # 15°C => -0.0606
-
-        # https://www.ubakus.de/u-wert-rechner/
-        _minDensity = 1.1644
-        maxDensity = 1.2250
-        _cAir = 1.005 # KJ / KG
-        _jouleKWRatio = 3.6
-
-        _lowerVolume = 231.8911
-        _upperVolume = 216.5555
-
-        _lowerFloorPower = 15379.708453125
-        _upperFloorPower = 6784.08459444445
-
-        _lowerDensity = ( ( livingroomTemperature - 15.0 ) * ( _minDensity - maxDensity ) / 15.0 ) + maxDensity
-        if _lowerDensity < _minDensity: _lowerDensity = _minDensity
-        elif _lowerDensity > maxDensity: _lowerDensity = maxDensity
-
-        _upperDensity = ( ( bedroomTemperature - 15.0 ) * ( _minDensity - maxDensity ) / 15.0 ) + maxDensity
-        if _upperDensity < _minDensity: _upperDensity = _minDensity
-        elif _upperDensity > maxDensity: _upperDensity = maxDensity
-
-        _lowerAirPower = _lowerVolume * _lowerDensity * _cAir / _jouleKWRatio
-        _upperAirPower = _upperVolume * _upperDensity * _cAir / _jouleKWRatio
-
-        lowerPower = _lowerFloorPower + _lowerAirPower
-        upperPower = _upperFloorPower + _upperAirPower
+    def getHeatingPowerPerMinute( self, activeRooms, pumpSpeed, temperature_Pipe_Out, temperature_Pipe_In):
+        # To warmup 1 liter of wather you need 4,182 Kilojoule
+        # 1 Wh == 3,6 kJ
+        # 1000 l * 4,182 kJ / 3,6kJ = 1161,66666667
+        _referencePower = 1162 # per Watt je m³/K
+        #_maxVolume = 1.2 # 1200l max Volumenstrom of a Vitodens 200-W Typ B2HA with 13kW
+        _maxVolume = 0.584 # 584l Nenn-Umlaufwassermenge of a Vitodens 200-W Typ B2HA with 13kW
         
-        neededPower = lowerPower + upperPower
+        circulationDiff = temperature_Pipe_Out - temperature_Pipe_In
+        pumpVolume = round( ( _maxVolume * pumpSpeed ) / 100.0, 2 )
+        currentHeatingPowerPerMinute = round( ( _referencePower * pumpVolume * circulationDiff ) / 60.0, 1 )
         
-        maxPower = neededPower
+        maxHeatingPowerPerMinute = currentHeatingPowerPerMinute
         
-        # remove inactive rooms from needed power to exclude their effects from further calculation
+        # remove inactive rooms from heating power to exclude their effects from further calculation
         # - the room is inactive if it is too warm in this room
-        # - so there is no need to spend energy in this room
+        # - so the heating circuit in this room is off and is not used for radiation
         if not activeRooms.get("livingroom"):
-            neededPower = neededPower - 6012.96212326389
-
-        return neededPower, maxPower
-
+            # Livingroom is 23.2049195152831% of the whole heating area
+            currentHeatingPowerPerMinute = round( currentHeatingPowerPerMinute * 0.768, 1 )
+      
+        return currentHeatingPowerPerMinute, pumpVolume, maxHeatingPowerPerMinute
+    
     def getCurrentHeatingPowerPerMinute( self, activeRooms ):
         pumpSpeed = getItemState("Heating_Circuit_Pump_Speed").intValue()
         if pumpSpeed == 0: 
@@ -445,14 +488,22 @@ class HeatingHelper:
         return _possibleHeatingPowerPerMinute, 0, _maxHeatingPowerPerMinute
 
     def getCurrentCoolingPowerPerMinute(self, activeRooms, now, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, openWindow ):
-        _sunPower, _sunPowerMax, _effectiveSouthRadiation, _effectiveWestRadiation = self.getSunPowerPerMinute( u"Current :", activeRooms, now, "Cloud_Cover_Current", False )
-        _coolingPowerPerMinute, _maxPowerPerMinute = self.getCoolingPowerPerMinute( u"        :", now, activeRooms, currentOutdoorTemp, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, _sunPower, _sunPowerMax, openWindow )
+        _effectiveSouthRadiation, _effectiveWestRadiation = self.getSunPowerPerMinute( u"Current :", now, "Cloud_Cover_Current" )
+
+        _windowSunPower = self.getWindowSunPowerPerMinute( u"Current :", _effectiveSouthRadiation, _effectiveWestRadiation, False )
+        _wallSunPower = self.getWallSunPowerPerMinute(_effectiveSouthRadiation, _effectiveWestRadiation)
+
+        _coolingPowerPerMinute, _maxPowerPerMinute = self.getCoolingPowerPerMinute( u"        :", now, activeRooms, currentOutdoorTemp, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, _wallSunPower, _windowSunPower, openWindow )
         
-        return _coolingPowerPerMinute, _sunPower, _effectiveSouthRadiation, _effectiveWestRadiation, _maxPowerPerMinute
+        return _coolingPowerPerMinute, _windowSunPower, _effectiveSouthRadiation, _effectiveWestRadiation, _maxPowerPerMinute
 
     def getCurrentForecastCoolingPowerPerMinute(self, hours, activeRooms, now, currentOutdoorTemp, currentOutdoorForecastTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, openWindow ):
-        _sunPower, _sunPowerMax, _, _ = self.getSunPowerPerMinute( u"FC {}h   :".format(hours), activeRooms, now.plusMinutes(hours*60), u"Cloud_Cover_Forecast{}".format(hours), True )
-        _coolingPowerPerMinute, _maxPowerPerMinute = self.getCoolingPowerPerMinute( u"        :", now, activeRooms, currentOutdoorTemp, currentOutdoorForecastTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, _sunPower, _sunPowerMax, openWindow )
+        _effectiveSouthRadiation, _effectiveWestRadiation = self.getSunPowerPerMinute( u"FC {}h   :".format(hours), now.plusMinutes(hours*60), u"Cloud_Cover_Forecast{}".format(hours) )
+
+        _windowSunPower = self.getWindowSunPowerPerMinute( u"FC {}h   :".format(hours), _effectiveSouthRadiation, _effectiveWestRadiation, True )
+        _wallSunPower = self.getWallSunPowerPerMinute(_effectiveSouthRadiation, _effectiveWestRadiation)
+
+        _coolingPowerPerMinute, _maxPowerPerMinute = self.getCoolingPowerPerMinute( u"        :", now, activeRooms, currentOutdoorTemp, currentOutdoorForecastTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, _wallSunPower, _windowSunPower, openWindow )
         if _coolingPowerPerMinute != _maxPowerPerMinute:
             self.log.info(u"        : ⇲ CD {} W/min. ⇩".format(_maxPowerPerMinute * -1))
         self.log.info(u"        : CD {} W/min. ({}°C) ⇩".format( (_coolingPowerPerMinute * -1),currentOutdoorForecastTemp) )
