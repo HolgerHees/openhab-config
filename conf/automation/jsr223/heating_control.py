@@ -505,8 +505,10 @@ class HeatingHelper:
 
         _coolingPowerPerMinute, _maxPowerPerMinute = self.getCoolingPowerPerMinute( u"        :", now, activeRooms, currentOutdoorTemp, currentOutdoorForecastTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, _wallSunPower, _windowSunPower, openWindow )
         if _coolingPowerPerMinute != _maxPowerPerMinute:
-            self.log.info(u"        : ⇲ CD {} W/min. ⇩".format(_maxPowerPerMinute * -1))
-        self.log.info(u"        : CD {} W/min. ({}°C) ⇩".format( (_coolingPowerPerMinute * -1),currentOutdoorForecastTemp) )
+            adjustedMsg = u" [⇲ CD {} W/min. ⇩]".format(_maxPowerPerMinute * -1)
+        else:
+            adjustedMsg = u""
+        self.log.info(u"        : CD {} W/min. ({}°C) ⇩{}".format( (_coolingPowerPerMinute * -1),currentOutdoorForecastTemp, adjustedMsg) )
         return _coolingPowerPerMinute, _maxPowerPerMinute
 
     def _cleanupChargeLevel( self, totalChargeLevel, _cleanableChargeDiff ):
@@ -581,7 +583,7 @@ class HeatingHelper:
             msg = u"CD {} W/min. ⇩ • ".format(maxCoolingPowerPerMinute * -1)
             msg = u"{}HU {} W/min. ⇧ • ".format(msg,maxHeatingPowerPerMinute)
             msg = u"{}Slot {} KW/K".format(msg,round( maxHeatingPower / 1000.0, 1 ))
-            self.log.info(u"        : ⇲ {}".format(msg))
+            self.log.info(u"        : [⇲ {}]".format(msg))
  
 '''@rule("heating_control.py")
 class MoveCircuitSwitchRule(HeatingHelper):
