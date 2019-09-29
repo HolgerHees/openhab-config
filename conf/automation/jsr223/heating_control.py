@@ -13,6 +13,8 @@ BEDROOM_REDUCTION = 2.5
 NIGHT_REDUCTION = 2.0
 MIN_HEATING_TIME = 15 # 'Heizen mit WW' should be active at least for 15 min.
 MIN_ONLY_WW_TIME = 15 # 'Nur WW' should be active at least for 15 min.
+MIN_REDUCED_TIME = 5
+MAX_REDUCED_TIME = 60
 LAZY_OFFSET = 90 # Offset time until any heating has an effect
 
 class HeatingHelper:
@@ -585,23 +587,6 @@ class HeatingHelper:
             msg = u"{}Slot {} KW/K".format(msg,round( maxHeatingPower / 1000.0, 1 ))
             self.log.info(u"        : [⇲ {}]".format(msg))
  
-'''@rule("heating_control.py")
-class MoveCircuitSwitchRule(HeatingHelper):
-    def __init__(self):
-        self.triggers = [CronTrigger("0 0 0 * * ?")]
-
-    def callback(self):
-        self.log.info(u"Toogle  : Livingroom circuit OFF")
-        sendCommand("Heating_Livingroom_Circuit",OFF)
-    
-    def execute(self, module, input):
-        # switch after 2 days of inactivity livingroom circuit once to avoid ventile damages
-        if itemLastUpdateOlderThen("Heating_Livingroom_Circuit", getNow().minusMinutes(60*24*2)):
-            if getItemState("Heating_Livingroom_Circuit") == OFF:
-                self.log.info(u"Toogle  : Livingroom circuit ON")
-                sendCommand("Heating_Livingroom_Circuit",ON)
-                createTimer(120, self.callback)'''
-        
 @rule("heating_control.py")
 class CalculateChargeLevelRule(HeatingHelper):
     def __init__(self):
@@ -851,21 +836,9 @@ class HeatingCheckRule(HeatingHelper):
         self.log.info(u"Effects : LR {}° ⇩ • OR {}°C ⇩ • NR {}°C ⇩ • LRC {}".format(lazyReduction,outdoorReduction,nightReduction,currentLivingRoomCircuit ))
         self.log.info(u"Rooms   : Living {}°C (⇒ {}°C) • Sleeping {}°C (⇒ {}°C)".format(currentLivingroomTemp,heatingTargetLivingroomTemp,currentBedroomTemp,heatingTargetBedroomTemp))
                
-        # prepare for wakeup. is needed to calculate correct night end time and force buffer time in the morning
-        # use possible night mode reduced temp if night mode is not ending during the next 4 hours 
-        # otherwise use normal temp
-        referenceTarget = heatingTargetLivingroomTemp if self.isNightModeTime(now.plusMinutes(240)) else _heatingTargetLivingroomTemp
-        newLivingRoomCircuit = currentLivingRoomCircuit
-        # Switch livingroom circuit off if it is too warm
-        if isLivingRoomCircuitActive:
-            if currentLivingroomTemp >= referenceTarget + 0.2:
-                newLivingRoomCircuit = OFF
-                #newLivingRoomCircuit = ON
-        elif currentLivingroomTemp <= referenceTarget:
-            newLivingRoomCircuit = ON
-            
         ### Analyse result
         if getItemState("Heating_Auto_Mode").intValue() == 1:
+            forceBufferHeating = False
             heatingDemand = 0
             heatingType = ""
             
@@ -879,7 +852,7 @@ class HeatingCheckRule(HeatingHelper):
                 
                 if referenceTargetDiff > 0:
                     heatingDemand = 1
-                    heatingType = u"HEATING NEEDED"
+                    heatingType = u"HEATING"
                 else:
                     # it is too warm inside, but outside it is very cold, so we need some buffer heating to avoid cold floors
                     # should always be calculated with all rooms ON and maxSlotHeatingPower
@@ -887,41 +860,169 @@ class HeatingCheckRule(HeatingHelper):
                 
                     if forceBufferHeating:
                         heatingDemand = 1
-                        heatingType = u"FORCED BUFFER HEATING NEEDED"
-                        # should always be calculated with all rooms ON
-                        newLivingRoomCircuit = ON
+                        heatingType = u"FORCED BUFFER HEATING"
                     elif referenceTargetDiff == 0.0:
                         # Check if buffer heating is needed
                         isBufferHeatingNeeded = self.isBufferHeating( isHeatingActive, targetChargeLevelDiff, minBufferChargeLevel, maxBufferChargeLevel )
         
                         if isBufferHeatingNeeded:
                             heatingDemand = 1
-                            heatingType = u"BUFFER HEATING NEEDED"
+                            heatingType = u"BUFFER HEATING"
                         else:
-                            heatingType = u"NO HEATING NEEDED • BUFFER FULL"
+                            heatingType = u"NO HEATING • BUFFER FULL"
                     else:
-                        heatingType = u"NO HEATING NEEDED • TOO WARM"
-                
-                if lazyReduction > 0 or outdoorReduction > 0:
-                    heatingType = u"{} • REDUCED {}°".format(heatingType,( lazyReduction + outdoorReduction ))
+                        heatingType = u"NO HEATING • TOO WARM"
             else:
-                heatingType = u"NO HEATING NEEDED • TOO MANY OPEN WINDOWS"
+                heatingType = u"NO HEATING • TOO MANY OPEN WINDOWS"
 
-            self.log.info(u"Demand  : {}".format(heatingType) )
+            lastUpdateBeforeInMinutes = int( round( ( now.getMillis() - lastHeatingChange.getMillis() ) / 1000.0 / 60.0 ) )
+            lastHeatingChangeFormatted = OFFSET_FORMATTER.print(lastHeatingChange)
+            lastUpdateBeforeFormatted = lastUpdateBeforeInMinutes if lastUpdateBeforeInMinutes < 60 else '{:02d}:{:02d}'.format(*divmod(lastUpdateBeforeInMinutes, 60));
+            self.log.info(u"Demand  : {} • since {} • {} min. ago".format(heatingType,lastHeatingChangeFormatted,lastUpdateBeforeFormatted) )
 
             postUpdateIfChanged("Heating_Demand", heatingDemand )
+
+            # should always be calculated with all rooms ON
+            if forceBufferHeating:
+                newLivingRoomCircuit = ON
+            else:
+                # !! if condition is disabled because we want to calculate it always
+                # !! we should switch the circuit off during the night to avoid ventile damages during long inactivity times
+                # !! itemLastUpdateOlderThen("Heating_Livingroom_Circuit", getNow().minusMinutes(60*24*2))
+                #if heatingDemand == 1 or currentLivingRoomCircuit == OFF:
+
+                newLivingRoomCircuit = currentLivingRoomCircuit
+                # prepare for wakeup. is needed to calculate correct night end time and force buffer time in the morning
+                # use possible night mode reduced temp if night mode is not ending during the next 4 hours 
+                # otherwise use normal temp
+                referenceTarget = heatingTargetLivingroomTemp if self.isNightModeTime(now.plusMinutes(240)) else _heatingTargetLivingroomTemp
+                # Switch livingroom circuit off if it is too warm
+                if isLivingRoomCircuitActive:
+                    if currentLivingroomTemp >= referenceTarget + 0.2:
+                        newLivingRoomCircuit = OFF
+                        #newLivingRoomCircuit = ON
+                elif currentLivingroomTemp <= referenceTarget:
+                    newLivingRoomCircuit = ON
 
             if currentLivingRoomCircuit != newLivingRoomCircuit:
                 self.log.info(u"Switch  : Livingroom circuit {}".format(newLivingRoomCircuit))
                 sendCommand("Heating_Livingroom_Circuit",newLivingRoomCircuit)
         
             ### Call heating control
-            self.controlHeating(now, currentOperatingMode, heatingDemand, lastHeatingChange, currentOutdoorTemp)
+            self.controlHeating(now, currentOperatingMode, heatingDemand, currentOutdoorTemp)
         else:
             self.log.info(u"Demand  : SKIPPED • MANUAL MODE ACTIVE")
             postUpdateIfChanged("Heating_Demand", 0 )
 
         self.log.info(u"<<<")
+
+    def controlHeating( self, now, currentOperatingMode, heatingDemand, currentOutdoorTemp ):
+
+        # 0 - Abschalten
+        # 1 - Nur WW
+        # 2 - Heizen mit WW
+        # 3 - Reduziert
+        # 4 - Normal
+        
+        isHeatingRequested = heatingDemand == 1
+        if self.activeHeatingOperatingMode == -1:
+            self.activeHeatingOperatingMode = currentOperatingMode
+        
+        forceRetry = self.activeHeatingOperatingMode != currentOperatingMode
+        forceRetryMsg = u" • RETRY {} {}".format(self.activeHeatingOperatingMode,currentOperatingMode) if forceRetry else u""
+        delayedMsg = u""
+        
+        currentOperatingModeUpdate = getItemLastUpdate("Heating_Operating_Mode")
+        lastUpdateBeforeInMinutes = int( round( ( now.getMillis() - currentOperatingModeUpdate.getMillis() ) / 1000.0 / 60.0 ) )
+        lastHeatingChangeFormatted = OFFSET_FORMATTER.print(currentOperatingModeUpdate)
+        lastUpdateBeforeFormatted = lastUpdateBeforeInMinutes if lastUpdateBeforeInMinutes < 60 else '{:02d}:{:02d}'.format(*divmod(lastUpdateBeforeInMinutes, 60));
+        
+        self.log.info(u"Active  : {} • since {} • {} min. ago".format(Transformation.transform("MAP", "heating_de.map", str(currentOperatingMode) ),lastHeatingChangeFormatted,lastUpdateBeforeFormatted) )
+        
+        # Nur WW
+        if currentOperatingMode == 1:
+            # Temperatur sollte seit XX min nicht OK sein und 'Nur WW' sollte mindestens XX min aktiv sein um 'flattern' zu vermeiden
+            if isHeatingRequested:
+                isRunningLongEnough = itemLastUpdateOlderThen("Heating_Operating_Mode", now.minusMinutes(MIN_ONLY_WW_TIME))
+                
+                if forceRetry or isRunningLongEnough:
+                    self.activeHeatingOperatingMode = 2
+                    sendCommand("Heating_Operating_Mode", self.activeHeatingOperatingMode)
+                else:
+                    runtimeToGo = MIN_ONLY_WW_TIME - int( round( ( now.getMillis() - currentOperatingModeUpdate.getMillis() ) / 1000.0 / 60.0 ) )
+                    delayedMsg = u" in {} min.".format(runtimeToGo)
+
+                self.log.info(u"Switch  : Heizen mit WW{}{}".format(delayedMsg,forceRetryMsg))
+
+        # Heizen mit WW
+        elif currentOperatingMode == 2:
+            currentPowerState = getItemState("Heating_Power").intValue()
+            
+            # Wenn Heizkreispumpe auf 0 dann ist Heizen zur Zeit komplett deaktiviert (zu warm draussen) oder Brauchwasser wird aufgeheizt
+            #if Heating_Circuit_Pump_Speed.state > 0:
+            # Temperatur sollte seit XX min OK sein und Brenner sollte entweder nicht laufen oder mindestens XX min am Stück gelaufen sein
+            if not isHeatingRequested:
+                isRunningLongEnough = itemLastUpdateOlderThen("Heating_Operating_Mode",now.minusMinutes(MIN_HEATING_TIME))
+                
+                if currentPowerState == 0 or forceRetry or isRunningLongEnough:
+                    self.activeHeatingOperatingMode = 1
+                    sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
+                else:
+                    runtimeToGo = MIN_HEATING_TIME - int( round( ( now.getMillis() - currentOperatingModeUpdate.getMillis() ) / 1000.0 / 60.0 ) )
+                    delayedMsg = u" in {} min.".format(runtimeToGo)
+
+                self.log.info(u"Switch  : Nur WW{}{}".format(delayedMsg,forceRetryMsg))
+                  
+            # Brenner läuft nicht
+            elif currentPowerState == 0:
+                forceReducedMsg = None
+                
+                # No burner starts since a while
+                if itemLastUpdateOlderThen("Heating_Power",now.minusMinutes(5)) and itemLastUpdateOlderThen("Heating_Operating_Mode",now.minusMinutes(5)):
+                    forceReducedMsg = u" • No burner starts"
+                else:
+                    burnerStarts = self.getBurnerStarts(now)
+                
+                    if burnerStarts > 1:
+                        forceReducedMsg = u" • Too many burner starts"
+                        
+                if forceReducedMsg != None:
+                    self.activeHeatingOperatingMode = 3
+                   
+                    sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
+                    self.log.info(u"Switch  : Reduziert{}{}".format(forceReducedMsg,forceRetryMsg))
+        
+        # Reduziert
+        elif currentOperatingMode == 3:
+            # Wenn Temperatur seit XX min OK ist und der brenner sowieso aus ist kann gleich in 'Nur WW' gewechselt werden
+            if not isHeatingRequested:
+                self.activeHeatingOperatingMode = 1
+                sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
+                self.log.info(u"Switch  : Nur WW. Temperature reached max value{}".format(forceRetryMsg))
+            else:
+                lastReducedRuntime = self.getLastReductionTime( currentOperatingModeUpdate )
+                if lastReducedRuntime > 0:
+                    targetReducedTime = int( round(lastReducedRuntime * 2.0 / 1000.0 / 60.0, 0) )
+                    if targetReducedTime > MAX_REDUCED_TIME:
+                        targetReducedTime = MAX_REDUCED_TIME
+                    elif targetReducedTime < MIN_REDUCED_TIME:
+                        # SHOULD NEVER HAPPEN !!!
+                        self.log.error(u"MIN_REDUCED_TIME less then allowed. Was {}".format(targetReducedTime))
+                        targetReducedTime = MIN_REDUCED_TIME
+                else:
+                    targetReducedTime = MIN_REDUCED_TIME
+                                
+                #self.log.info(u"E {}".format(targetReducedTime))
+                    
+                # Dauernd reduziert läuft seit mindestens XX Minuten
+                if forceRetry or itemLastUpdateOlderThen("Heating_Operating_Mode",now.minusMinutes(targetReducedTime) ):
+                    self.activeHeatingOperatingMode = 2
+                    sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
+                elif not forceRetry:
+                    runtimeToGo = targetReducedTime - int( round( ( now.getMillis() - currentOperatingModeUpdate.getMillis() ) / 1000.0 / 60.0 ) )
+                    delayedMsg = u" in {} min.".format(runtimeToGo)
+                    
+                self.log.info(u"Switch  : Heizen mit WW{}{}".format(delayedMsg,forceRetryMsg))
 
     def getHeatingTargetDiff( self, currentLivingroomTemp, targetLivingroomTemp, currentBedroomTemp, targetBedroomTemp, useLivingroomReference ):
         livingroomDifference = targetLivingroomTemp - currentLivingroomTemp
@@ -1131,110 +1232,54 @@ class HeatingCheckRule(HeatingHelper):
                     self.forcedBufferReferenceTemperature = None
 
         return self.forcedBufferReferenceTemperature != None
+    
+    def getBurnerStarts( self, now ):
+        # max 5 min.
+        minTimestamp = getHistoricItemEntry("Heating_Operating_Mode",now).getTimestamp().getTime()
+        _minTimestamp = now.minusMinutes(5).getMillis()
+        if minTimestamp < _minTimestamp:
+            minTimestamp = _minTimestamp
 
-    def controlHeating( self, now, currentOperatingMode, heatingDemand, lastHeatingChange, currentOutdoorTemp ):
-
-        # 0 - Abschalten
-        # 1 - Nur WW
-        # 2 - Heizen mit WW
-        # 3 - Reduziert
-        # 4 - Normal
+        currentTime = now
+        lastItemEntry = None
+        burnerStarts = 0
         
-        isHeatingRequested = heatingDemand == 1
-        if self.activeHeatingOperatingMode == -1:
-            self.activeHeatingOperatingMode = currentOperatingMode
-        
-        forceRetry = self.activeHeatingOperatingMode != currentOperatingMode
-        forceRetryMsg = u" • RETRY" if forceRetry else u""
-        
-        
-        lastUpdateBeforeInMinutes = int( round( ( now.getMillis() - lastHeatingChange.getMillis() ) / 1000.0 / 60.0 ) )
-        lastHeatingChangeFormatted = OFFSET_FORMATTER.print(lastHeatingChange)
-        lastUpdateBeforeFormatted = lastUpdateBeforeInMinutes if lastUpdateBeforeInMinutes < 60 else '{:02d}:{:02d}'.format(*divmod(lastUpdateBeforeInMinutes, 60));
-        
-        self.log.info(u"Active  : {} • since {} • {} min. ago".format(Transformation.transform("MAP", "heating_de.map", str(currentOperatingMode) ),lastHeatingChangeFormatted,lastUpdateBeforeFormatted) )
-        
-        # Nur WW
-        if currentOperatingMode == 1:
-            # Temperatur sollte seit XX min nicht OK sein und 'Nur WW' sollte mindestens XX min aktiv sein um 'flattern' zu vermeiden
-            if isHeatingRequested:
-                isRunningLongEnough = itemLastUpdateOlderThen("Heating_Operating_Mode", now.minusMinutes(MIN_ONLY_WW_TIME))
+        # check for new burner starts during this time periode
+        # "Heating_Burner_Starts" is not useable because of wather heating
+        while currentTime.getMillis() > minTimestamp:
+            currentItemEntry = getHistoricItemEntry("Heating_Power", currentTime)
+            if lastItemEntry is not None:
+                currentHeating = ( currentItemEntry.getState().doubleValue() != 0.0 )
+                lastHeating = ( lastItemEntry.getState().doubleValue() != 0.0 )
                 
-                if forceRetry or isRunningLongEnough:
-                    self.activeHeatingOperatingMode = 2
-                    sendCommand("Heating_Operating_Mode", self.activeHeatingOperatingMode)
-                elif not isRunningLongEnough:
-                    runtimeInMinutes = int( round( ( now.getMillis() - getItemLastUpdate("Heating_Operating_Mode").getMillis() ) / 1000.0 / 60.0 ) )
-                    forceRetryMsg = u" • SKIPPED • offtime is {} min.".format(runtimeInMinutes)
-
-                self.log.info(u"Switch  : Nur WW => Heizen mit WW{}".format(forceRetryMsg))
-
-        # Heizen mit WW
-        elif currentOperatingMode == 2:
-            currentPowerState = getItemState("Heating_Power").intValue()
+                if currentHeating != lastHeating:
+                    burnerStarts = burnerStarts + 1
             
-            # Wenn Heizkreispumpe auf 0 dann ist Heizen zur Zeit komplett deaktiviert (zu warm draussen) oder Brauchwasser wird aufgeheizt
-            #if Heating_Circuit_Pump_Speed.state > 0:
-            # Temperatur sollte seit XX min OK sein und Brenner sollte entweder nicht laufen oder mindestens XX min am Stück gelaufen sein
-            if not isHeatingRequested:
-                isRunningLongEnough = itemLastUpdateOlderThen("Heating_Operating_Mode",now.minusMinutes(MIN_HEATING_TIME))
-                
-                if currentPowerState == 0 or forceRetry or isRunningLongEnough:
-                    self.activeHeatingOperatingMode = 1
-                    sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
-                elif not isRunningLongEnough:
-                    runtimeInMinutes = int( round( ( now.getMillis() - getItemLastUpdate("Heating_Operating_Mode").getMillis() ) / 1000.0 / 60.0 ) )
-                    forceRetryMsg = u" • SKIPPED • runtime is {} min.".format(runtimeInMinutes)
+            currentTime = DateTime( currentItemEntry.getTimestamp().getTime() - 1 )
+            lastItemEntry = currentItemEntry
+            
+        return burnerStarts
+    
+    def getLastReductionTime( self, currentOperatingModeUpdate ):
+        lastOperatingMode = getHistoricItemEntry("Heating_Operating_Mode",currentOperatingModeUpdate.minusSeconds(1))
+        #self.log.info(u"A {}".format(lastOperatingMode.getState().intValue()))
+        
+        # last mode was "Heizen mit WW"
+        if lastOperatingMode.getState().intValue() == 2:
+            lastOperatingModeUpdate = DateTime( lastOperatingMode.getTimestamp().getTime() )
+            lastHeatingTime = currentOperatingModeUpdate.getMillis() - lastOperatingModeUpdate.getMillis()
+            #self.log.info(u"B {}".format(lastHeatingTime))
 
-                self.log.info(u"Switch  : Heizen mit WW => Nur WW{}".format(forceRetryMsg))
-                  
-            # Brenner läuft nicht
-            elif currentPowerState == 0:
-                # max 5 min.
-                minTimestamp = getHistoricItemEntry("Heating_Operating_Mode",now).getTimestamp().getTime()
-                _minTimestamp = now.minusMinutes(5).getMillis()
-                if minTimestamp < _minTimestamp:
-                    minTimestamp = _minTimestamp
+            # last mode was running less then MIN_HEATING_TIME
+            if lastHeatingTime < MIN_HEATING_TIME * 60 * 1000:
+                # mode before was "Reduziert"
+                previousOperatingMode = getHistoricItemEntry("Heating_Operating_Mode",lastOperatingModeUpdate.minusSeconds(1))
+                #self.log.info(u"C {}".format(previousOperatingMode.getState().intValue()))
 
-                currentTime = now
-                lastItemEntry = None
-                burnerStarts = 0
-
-                # check for new burner starts during this time periode
-                while currentTime.getMillis() > minTimestamp:
-                    currentItemEntry = getHistoricItemEntry("Heating_Power", currentTime)
-                    if lastItemEntry is not None:
-                        currentHeating = ( currentItemEntry.getState().doubleValue() != 0.0 )
-                        lastHeating = ( lastItemEntry.getState().doubleValue() != 0.0 )
-                        
-                        if currentHeating != lastHeating:
-                            burnerStarts = burnerStarts + 1
+                if previousOperatingMode.getState().intValue() == 3:
+                    # letzt calculate last "reduziert" runtime and increase it by 2
+                    previousOperatingModeUpdate = DateTime( previousOperatingMode.getTimestamp().getTime() ) 
+                    lastReducedRuntime = lastOperatingModeUpdate.getMillis() - previousOperatingModeUpdate.getMillis()
                     
-                    currentTime = DateTime( currentItemEntry.getTimestamp().getTime() - 1 )
-                    lastItemEntry = currentItemEntry
-            
-                if burnerStarts > 1:
-                    self.activeHeatingOperatingMode = 3
-                    sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
-                    self.log.info(u"Switch  : Heizen mit WW => Reduziert{}".format(forceRetryMsg))
-        
-        # Reduziert
-        elif currentOperatingMode == 3:
-            # Wenn Temperatur seit XX min OK ist und der brenner sowieso aus ist kann gleich in 'Nur WW' gewechselt werden
-            if not isHeatingRequested:
-                self.activeHeatingOperatingMode = 1
-                sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
-                self.log.info(u"Switch  : Reduziert => Nur WW. Temperature reached max value{}".format(forceRetryMsg))
-            else:
-                # 'timeInterval' ist zwischen 10 und 60 min, je nach Aussentemperatur
-                
-                timeInterval = 10
-                if currentOutdoorTemp > 0:
-                    timeInterval = int( math.floor( ( ( currentOutdoorTemp * 50.0 ) / 20.0 ) + 10.0 ) )
-                    if timeInterval > 60: timeInterval = 60
-                
-                # Dauernd reduziert läuft seit mindestens XX Minuten
-                if forceRetry or itemLastUpdateOlderThen("Heating_Operating_Mode",now.minusMinutes(timeInterval) ):
-                    self.activeHeatingOperatingMode = 2
-                    sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
-                    self.log.info(u"Switch  : Reduziert => Heizen mit WW • after {} min.{}".format(timeInterval,forceRetryMsg))
+                    return lastReducedRuntime
+        return 0
