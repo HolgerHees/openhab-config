@@ -37,9 +37,9 @@ class PresenceCheckRule:
 class WakeupRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("Motiondetector_FF_Floor",state="OPEN"),
-            ItemStateChangeTrigger("Motiondetector_FF_Livingroom",state="OPEN"),
-            ItemStateChangeTrigger("Motiondetector_SF_Floor",state="OPEN"),
+            #ItemStateChangeTrigger("Motiondetector_FF_Floor",state="OPEN"),
+            #ItemStateChangeTrigger("Motiondetector_FF_Livingroom",state="OPEN"),
+            #ItemStateChangeTrigger("Motiondetector_SF_Floor",state="OPEN"),
             ItemStateChangeTrigger("Lights_FF",state="ON"),
             ItemStateChangeTrigger("Shutters_FF",state="0")
         ]
