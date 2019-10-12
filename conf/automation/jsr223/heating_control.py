@@ -387,7 +387,7 @@ class HeatingHelper:
         leakingPowerInW = ( _leakingLowerPowerInKJ + _leakingUpperPowerInKJ ) / 3.6
         totalPower = ( floorPower + egPower + ogPower + atticPower ) + ventilationPowerInW + leakingPowerInW
 
-        maxTotalPower = totalPower
+        possibleTotalPower = totalPower
         # adjustment is only needed in case of real cooling. Means not in the summer when it is warming up from outside
         if totalPower > 0:
             # remove inactive room from cooling power to exclude their effects from further calculation
@@ -402,7 +402,7 @@ class HeatingHelper:
         ogExchangePower = ( ( (ogPower + atticPower) * openWindow["sfCount"] ) / openWindow["totalSfCount"] ) * 2.0
 
         coolingPower = round( ( (totalPower + egExchangePower + ogExchangePower) / 60.0 ) - _windowSunPower - _wallSunPower, 1 )
-        maxCoolingPower = round( ( (maxTotalPower + egExchangePower + ogExchangePower) / 60.0 ) - _windowSunPower - _wallSunPower, 1 )
+        possibleCoolingPower = round( ( (possibleTotalPower + egExchangePower + ogExchangePower) / 60.0 ) - _windowSunPower - _wallSunPower, 1 )
 
         # log messages
         wallMsg = round( ( ( floorPower + egPower + ogPower + atticPower ) / 60.0 ) * -10.0 ) / 10.0
@@ -421,7 +421,7 @@ class HeatingHelper:
 
         self.log.info(u"{} Wall {} (☀{}) • Air {} • Leak {} • Window {} (☀{})".format(logPrefix, wallMsg, _wallSunPower, ventilationMsg, leakingMsg, windowMsg, _windowSunPower) )
 
-        return coolingPower, maxCoolingPower
+        return coolingPower, possibleCoolingPower
 
     def getHeatingPowerPerMinute( self, activeRooms, pumpSpeed, temperature_Pipe_Out, temperature_Pipe_In):
         # To warmup 1 liter of wather you need 4,182 Kilojoule
@@ -495,9 +495,9 @@ class HeatingHelper:
         _windowSunPower = self.getWindowSunPowerPerMinute( u"Current :", _effectiveSouthRadiation, _effectiveWestRadiation, False )
         _wallSunPower = self.getWallSunPowerPerMinute(_effectiveSouthRadiation, _effectiveWestRadiation)
 
-        _coolingPowerPerMinute, _maxPowerPerMinute = self.getCoolingPowerPerMinute( u"        :", now, activeRooms, currentOutdoorTemp, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, _wallSunPower, _windowSunPower, openWindow )
+        _coolingPowerPerMinute, _currentPossibleCoolingPowerPerMinute = self.getCoolingPowerPerMinute( u"        :", now, activeRooms, currentOutdoorTemp, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, _wallSunPower, _windowSunPower, openWindow )
         
-        return _coolingPowerPerMinute, _windowSunPower, _effectiveSouthRadiation, _effectiveWestRadiation, _maxPowerPerMinute
+        return _coolingPowerPerMinute, _windowSunPower, _effectiveSouthRadiation, _effectiveWestRadiation, _currentPossibleCoolingPowerPerMinute
 
     def getCurrentForecastCoolingPowerPerMinute(self, hours, activeRooms, now, currentOutdoorTemp, currentOutdoorForecastTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, openWindow ):
         _effectiveSouthRadiation, _effectiveWestRadiation = self.getSunPowerPerMinute( u"FC {}h   :".format(hours), now.plusMinutes(hours*60), u"Cloud_Cover_Forecast{}".format(hours) )
@@ -505,13 +505,13 @@ class HeatingHelper:
         _windowSunPower = self.getWindowSunPowerPerMinute( u"FC {}h   :".format(hours), _effectiveSouthRadiation, _effectiveWestRadiation, True )
         _wallSunPower = self.getWallSunPowerPerMinute(_effectiveSouthRadiation, _effectiveWestRadiation)
 
-        _coolingPowerPerMinute, _maxPowerPerMinute = self.getCoolingPowerPerMinute( u"        :", now, activeRooms, currentOutdoorTemp, currentOutdoorForecastTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, _wallSunPower, _windowSunPower, openWindow )
-        if _coolingPowerPerMinute != _maxPowerPerMinute:
-            adjustedMsg = u" [⇲ CD {} W/min. ⇩]".format(_maxPowerPerMinute * -1)
+        _coolingPowerPerMinute, _currentPossibleCoolingPowerPerMinute = self.getCoolingPowerPerMinute( u"        :", now, activeRooms, currentOutdoorTemp, currentOutdoorForecastTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, _wallSunPower, _windowSunPower, openWindow )
+        if _coolingPowerPerMinute != _currentPossibleCoolingPowerPerMinute:
+            adjustedMsg = u" [⇲ CD {} W/min. ⇩]".format(_currentPossibleCoolingPowerPerMinute * -1)
         else:
             adjustedMsg = u""
         self.log.info(u"        : CD {} W/min. ({}°C) ⇩{}".format( (_coolingPowerPerMinute * -1),currentOutdoorForecastTemp, adjustedMsg) )
-        return _coolingPowerPerMinute, _maxPowerPerMinute
+        return _coolingPowerPerMinute, _currentPossibleCoolingPowerPerMinute
 
     def _cleanupChargeLevel( self, totalChargeLevel, _cleanableChargeDiff ):
 
@@ -580,11 +580,11 @@ class HeatingHelper:
 
         return _currentChargeLevel
     
-    def logPowerAdjustments( self, currentCoolingPowerPerMinute, maxCoolingPowerPerMinute, currentHeatingPowerPerMinute, maxHeatingPowerPerMinute, baseHeatingPower, maxHeatingPower ):
-        if currentCoolingPowerPerMinute != maxCoolingPowerPerMinute or currentHeatingPowerPerMinute != maxHeatingPowerPerMinute or baseHeatingPower != maxHeatingPower:
-            msg = u"CD {} W/min. ⇩ • ".format(maxCoolingPowerPerMinute * -1)
+    def logPowerAdjustments( self, currentCoolingPowerPerMinute, currentPossibleCoolingPowerPerMinute, currentHeatingPowerPerMinute, maxHeatingPowerPerMinute, baseHeatingPower, possibleBaseHeatingPower ):
+        if currentCoolingPowerPerMinute != currentPossibleCoolingPowerPerMinute or currentHeatingPowerPerMinute != maxHeatingPowerPerMinute or baseHeatingPower != possibleBaseHeatingPower:
+            msg = u"CD {} W/min. ⇩ • ".format(currentPossibleCoolingPowerPerMinute * -1)
             msg = u"{}HU {} W/min. ⇧ • ".format(msg,maxHeatingPowerPerMinute)
-            msg = u"{}Slot {} KW/K".format(msg,round( maxHeatingPower / 1000.0, 1 ))
+            msg = u"{}Slot {} KW/K".format(msg,round( possibleBaseHeatingPower / 1000.0, 1 ))
             self.log.info(u"        : [⇲ {}]".format(msg))
  
 @rule("heating_control.py")
@@ -611,15 +611,15 @@ class CalculateChargeLevelRule(HeatingHelper):
         openWindow = self.getOpenWindows()
 
         # Calculate current cooling power per minute, based on temperature differences, sun power and open windows
-        currentCoolingPowerPerMinute, sunPower, effectiveSouthRadiation, effectiveWestRadiation, maxCoolingPowerPerMinute = self.getCurrentCoolingPowerPerMinute( activeRooms, now, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, openWindow )
+        currentCoolingPowerPerMinute, sunPower, effectiveSouthRadiation, effectiveWestRadiation, currentPossibleCoolingPowerPerMinute = self.getCurrentCoolingPowerPerMinute( activeRooms, now, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, openWindow )
         
         # Get Needed energy to warmup the house by one degrees
-        baseHeatingPower, maxHeatingPower = self.getNeededEnergyForOneDegrees( activeRooms, currentLivingroomTemp, currentBedroomTemp )
+        baseHeatingPower, possibleBaseHeatingPower = self.getNeededEnergyForOneDegrees( activeRooms, currentLivingroomTemp, currentBedroomTemp )
 
         # Calculate the "real" heating power based on the pump speed.
         currentHeatingPowerPerMinute, currentPumpSpeedInPercent, maxHeatingPowerPerMinute = self.getCurrentHeatingPowerPerMinute( activeRooms )
         
-        self.logPowerAdjustments( currentCoolingPowerPerMinute, maxCoolingPowerPerMinute, currentHeatingPowerPerMinute, maxHeatingPowerPerMinute, baseHeatingPower, maxHeatingPower )
+        self.logPowerAdjustments( currentCoolingPowerPerMinute, currentPossibleCoolingPowerPerMinute, currentHeatingPowerPerMinute, maxHeatingPowerPerMinute, baseHeatingPower, possibleBaseHeatingPower )
             
         # some logs
         self.log.info(u"        : CD {} W/min. ({}°C) ⇩ • HU {} W/min. ({}%) ⇧".format(( currentCoolingPowerPerMinute * -1 ),currentOutdoorTemp,currentHeatingPowerPerMinute,currentPumpSpeedInPercent) )
@@ -747,10 +747,10 @@ class HeatingCheckRule(HeatingHelper):
         currentForecast4CoolingPowerPerMinute, maxForecast4CoolingPowerPerMinute = self.getCurrentForecastCoolingPowerPerMinute( 4, activeRooms, now, currentOutdoorTemp, currentOutdoorForecast4Temp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, longOpenWindow)
 
         # Calculate current cooling power per minute, based on temperature differences, sun power and open windows
-        currentCoolingPowerPerMinute, _, _, _, maxCoolingPowerPerMinute = self.getCurrentCoolingPowerPerMinute( activeRooms, now, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, openWindow )
+        currentCoolingPowerPerMinute, _, _, _, currentPossibleCoolingPowerPerMinute = self.getCurrentCoolingPowerPerMinute( activeRooms, now, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, openWindow )
 
         # Get Needed energy to warmup the house by one degrees
-        baseHeatingPower, maxHeatingPower = self.getNeededEnergyForOneDegrees( activeRooms, currentLivingroomTemp, currentBedroomTemp )
+        baseHeatingPower, possibleBaseHeatingPower = self.getNeededEnergyForOneDegrees( activeRooms, currentLivingroomTemp, currentBedroomTemp )
 
         # Calculate the "real" heating power based on the pump speed.
         currentHeatingPowerPerMinute, currentPumpSpeedInPercent, maxHeatingPowerPerMinute = self.getCurrentHeatingPowerPerMinute( activeRooms )
@@ -760,7 +760,7 @@ class HeatingCheckRule(HeatingHelper):
         else:
             _currentPumpSpeedMsg = u"{}%".format(currentPumpSpeedInPercent)
         
-        self.logPowerAdjustments( currentCoolingPowerPerMinute, maxCoolingPowerPerMinute, currentHeatingPowerPerMinute, maxHeatingPowerPerMinute, baseHeatingPower, maxHeatingPower )
+        self.logPowerAdjustments( currentCoolingPowerPerMinute, currentPossibleCoolingPowerPerMinute, currentHeatingPowerPerMinute, maxHeatingPowerPerMinute, baseHeatingPower, possibleBaseHeatingPower )
 
         # some logs
         self.log.info(u"        : CD {} W/min. ({}°C) ⇩ • HU {} W/min. ({}) ⇧".format(( currentCoolingPowerPerMinute * -1 ),currentOutdoorTemp,currentHeatingPowerPerMinute,_currentPumpSpeedMsg) )
@@ -769,7 +769,7 @@ class HeatingCheckRule(HeatingHelper):
         outdoorReduction = self.calculateOutdoorReduction( currentCoolingPowerPerMinute, currentForecast4CoolingPowerPerMinute, currentForecast8CoolingPowerPerMinute)
 
         slotHeatingPower = round( baseHeatingPower * 0.1, 1 )
-        maxSlotHeatingPower = round( maxHeatingPower * 0.1, 1 )
+        possibleSlotHeatingPower = round( possibleBaseHeatingPower * 0.1, 1 )
 
         # Calculate "available" heating power. Thats means current or possible heating power - current cooling power
         # This is the leftover to warmup the house
@@ -855,8 +855,8 @@ class HeatingCheckRule(HeatingHelper):
                     heatingType = u"HEATING"
                 else:
                     # it is too warm inside, but outside it is very cold, so we need some buffer heating to avoid cold floors
-                    # should always be calculated with all rooms ON and maxSlotHeatingPower
-                    forceBufferHeating = self.forcedBufferHeatingCheck( now, isHeatingActive, lastHeatingChange, maxSlotHeatingPower, availableHeatingPowerPerMinute, targetChargeLevelDiff, currentLivingroomTemp, currentCoolingPowerPerMinute )
+                    # should always be calculated with all rooms ON and possibleSlotHeatingPower
+                    forceBufferHeating = self.forcedBufferHeatingCheck( now, isHeatingActive, lastHeatingChange, possibleSlotHeatingPower, availableHeatingPowerPerMinute, targetChargeLevelDiff, currentLivingroomTemp, currentPossibleCoolingPowerPerMinute )
                 
                     if forceBufferHeating:
                         heatingDemand = 1
@@ -1163,7 +1163,7 @@ class HeatingCheckRule(HeatingHelper):
         # when was the last heating job
         lastUpdateBeforeInMinutes = int( round( ( now.getMillis() - lastUpdate.getMillis() ) / 1000.0 / 60.0 ) )
 
-        # 20W/min => 0
+        # 0W/min => 0
         # 60W/min => 4
         
         maxFactor = currentCoolingPowerPerMinute * 4.0 / 60.0
