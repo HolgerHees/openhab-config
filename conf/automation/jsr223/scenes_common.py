@@ -47,6 +47,7 @@ class Scene3Rule:
 
     def execute(self, module, input):
         sendCommand("Light_FF_Floor_Hue_Brightness", 60)
+        sendCommand("Light_SF_Bathroom_Ceiling", ON)
         sendCommand("Light_SF_Bathroom_Mirror", ON)
         sendCommand("Light_SF_Bedroom_Right", ON)
 
@@ -56,9 +57,9 @@ class Scene3Rule:
             if child.getState() not in states and child.getName() != "Light_FF_Floor_Hue_Brightness":
                 sendCommand(child, OFF)
 
-        for child in getItem("Lights_SF").getAllMembers():
-            if child.getState() not in states and child.getName() not in ["Light_SF_Bathroom_Mirror", "Light_SF_Bedroom_Right"]:
-                sendCommand(child, OFF)
+        #for child in getItem("Lights_SF").getAllMembers():
+        #    if child.getState() not in states and child.getName() not in ["Light_SF_Bathroom_Mirror", "Light_SF_Bedroom_Right"]:
+        #        sendCommand(child, OFF)
 
         sendCommand("Scene6", ON)
         postUpdate("Scene3", OFF)
