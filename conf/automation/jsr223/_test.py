@@ -1,18 +1,47 @@
-from org.openhab.core.automation import Rule as SmarthomeRule
-from org.eclipse.smarthome.core.types import UnDefType
+from core.jsr223.scope import itemRegistry, things, scriptExtension
+scriptExtension.importPreset(None)# fix for Jython > 2.7.0
 
-from org.eclipse.smarthome.model.persistence.extensions import PersistenceExtensions
-from org.eclipse.smarthome.core.thing import ChannelUID
+import inspect
+import json
+from shlex import split
 
-from core.actions import Mail, Pushover #, XMPP
-from core.jsr223 import scope, get_scope, get_automation_manager
+import java.util
+from java.nio.file.StandardWatchEventKinds import ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY
+
+try:
+    from org.openhab.core.automation.util import TriggerBuilder
+    from org.openhab.core.automation import Trigger
+except:
+    from org.eclipse.smarthome.automation.core.util import TriggerBuilder
+    from org.eclipse.smarthome.automation import Trigger
 
 try:
     from org.openhab.config.core import Configuration
 except:
     from org.eclipse.smarthome.config.core import Configuration
 
-    
+try:
+    from org.openhab.core.thing import ChannelUID, ThingUID, ThingStatus
+    from org.openab.core.thing.type import ChannelKind
+except:
+    from org.eclipse.smarthome.core.thing import ChannelUID, ThingUID, ThingStatus
+    from org.eclipse.smarthome.core.thing.type import ChannelKind
+
+try:
+    from org.eclipse.smarthome.core.types import TypeParser
+except:
+    from org.openhab.core.types import TypeParser
+
+from core.osgi.events import OsgiEventTrigger
+from core.utils import validate_uid
+from core.log import logging, LOG_PREFIX
+
+from org.quartz.CronExpression import isValidExpression
+
+
+
+
+
 #from core.log import logging
 from core.triggers import ItemStateUpdateTrigger, ItemStateChangeTrigger
 
