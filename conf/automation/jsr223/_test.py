@@ -6,33 +6,10 @@ from org.eclipse.smarthome.core.thing import ChannelUID
 
 from core.actions import Mail, Pushover #, XMPP
 from core.jsr223 import scope, get_scope, get_automation_manager
-
-
-from java.nio.file.StandardWatchEventKinds import ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY
-
-from org.openhab.core.automation.core.util import TriggerBuilder
-from org.openhab.core.automation import Trigger
-from org.eclipse.smarthome.config.core import Configuration
-from org.eclipse.smarthome.core.thing import ChannelUID, ThingUID, ThingStatus
-from org.eclipse.smarthome.core.thing.type import ChannelKind
-from org.eclipse.smarthome.core.types import TypeParser
-
-import core
-from core.jsr223 import scope
-from core.osgi.events import OsgiEventTrigger
-from core.log import logging, LOG_PREFIX
-
-from org.quartz.CronExpression import isValidExpression
-
-
-
 #from core.log import logging
 from core.triggers import ItemStateUpdateTrigger, ItemStateChangeTrigger
 
 from org.slf4j import LoggerFactory
-
-
-
 
 from marvin.helper import log, sendCommand
 
