@@ -1,6 +1,6 @@
 from inspect import isclass
 from java.util import UUID
-from org.eclipse.smarthome.automation import Rule as SmarthomeRule
+from org.openhab.core.automation import Rule as SmarthomeRule
 
 from core.log import logging, LOG_PREFIX, log_traceback
 from core.jsr223 import scope, get_automation_manager

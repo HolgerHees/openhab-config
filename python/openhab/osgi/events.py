@@ -6,7 +6,7 @@ from org.osgi.service.event import EventHandler, EventConstants, EventAdmin
 from org.osgi.service.cm import ManagedService
 
 from org.eclipse.smarthome.config.core import Configuration
-from org.eclipse.smarthome.automation.handler import TriggerHandler
+from org.openhab.core.automation.handler import TriggerHandler
 
 import openhab
 from openhab.jsr223 import scope

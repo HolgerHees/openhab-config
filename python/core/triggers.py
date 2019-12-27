@@ -5,8 +5,8 @@ import uuid
 import java.util
 from java.nio.file.StandardWatchEventKinds import ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY
 
-from org.eclipse.smarthome.automation.core.util import TriggerBuilder
-from org.eclipse.smarthome.automation import Trigger
+from org.openhab.core.automation.core.util import TriggerBuilder
+from org.openhab.core.automation import Trigger
 from org.eclipse.smarthome.config.core import Configuration
 from org.eclipse.smarthome.core.thing import ChannelUID, ThingUID, ThingStatus
 from org.eclipse.smarthome.core.thing.type import ChannelKind

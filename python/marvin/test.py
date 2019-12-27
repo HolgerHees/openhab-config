@@ -4,7 +4,7 @@ import traceback
 
 from org.slf4j import Logger, LoggerFactory
 
-LOG_PREFIX = "org.eclipse.smarthome.automation.rules"
+LOG_PREFIX = "org.openhab.core.automation.rules"
 
 def log_traceback(fn):
     """Decorator to provide better Jython stack traces"""
@@ -40,5 +40,5 @@ handler = Slf4jHandler()
 logging.root.setLevel(logging.DEBUG)
 logging.root.handlers = [handler]
 
-log = LoggerFactory.getLogger("org.eclipse.smarthome.automation")
+log = LoggerFactory.getLogger("org.openhab.core.automation")
 log.info("test module loaded")

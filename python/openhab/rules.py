@@ -1,5 +1,5 @@
 from java.util import UUID
-from org.eclipse.smarthome.automation import Rule as SmarthomeRule
+from org.openhab.core.automation import Rule as SmarthomeRule
 
 from openhab.log import logging, log_traceback, LOG_PREFIX
 

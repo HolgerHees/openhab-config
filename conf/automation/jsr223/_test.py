@@ -4,7 +4,7 @@ sendCommand("Solar_Power_Limitation",10)
 
 #import time
 
-#from org.eclipse.smarthome.automation import Rule as SmarthomeRule
+#from org.openhab.core.automation import Rule as SmarthomeRule
 #from marvin.helper import log, getGroupMember, sendCommand
 #from core.jsr223 import scope
 #from core.triggers import CronTrigger, ItemStateUpdateTrigger, ItemStateChangeTrigger
@@ -161,7 +161,7 @@ class EventMonitorRule:
 from org.slf4j import LoggerFactory
 from threading import Timer
 
-log = LoggerFactory.getLogger("org.eclipse.smarthome.automation.examples.test")
+log = LoggerFactory.getLogger("org.openhab.core.automation.examples.test")
 
 def callback():
     log.info("callback")

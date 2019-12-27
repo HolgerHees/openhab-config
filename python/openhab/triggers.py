@@ -5,9 +5,9 @@ import inspect
 import json
 import uuid
 
-from org.eclipse.smarthome.automation import Trigger
-from org.eclipse.smarthome.automation.handler import TriggerHandler
-from org.eclipse.smarthome.automation.type import TriggerType
+from org.openhab.core.automation import Trigger
+from org.openhab.core.automation.handler import TriggerHandler
+from org.openhab.core.automation.type import TriggerType
 from org.eclipse.smarthome.config.core import Configuration
 
 import openhab
