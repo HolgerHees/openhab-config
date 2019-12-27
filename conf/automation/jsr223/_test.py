@@ -6,6 +6,13 @@ from org.eclipse.smarthome.core.thing import ChannelUID
 
 from core.actions import Mail, Pushover #, XMPP
 from core.jsr223 import scope, get_scope, get_automation_manager
+
+try:
+    from org.openhab.config.core import Configuration
+except:
+    from org.eclipse.smarthome.config.core import Configuration
+
+    
 #from core.log import logging
 from core.triggers import ItemStateUpdateTrigger, ItemStateChangeTrigger
 
