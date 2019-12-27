@@ -1,3 +1,11 @@
+from org.openhab.core.automation import Rule as SmarthomeRule
+from org.eclipse.smarthome.core.types import UnDefType
+
+from org.eclipse.smarthome.model.persistence.extensions import PersistenceExtensions
+from org.eclipse.smarthome.core.thing import ChannelUID
+
+
+
 from marvin.helper import log, sendCommand
 
 sendCommand("Solar_Power_Limitation",10)
