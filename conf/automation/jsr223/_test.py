@@ -4,6 +4,14 @@ from org.eclipse.smarthome.core.types import UnDefType
 from org.eclipse.smarthome.model.persistence.extensions import PersistenceExtensions
 from org.eclipse.smarthome.core.thing import ChannelUID
 
+from core.actions import Mail, Pushover #, XMPP
+from core.jsr223 import scope, get_scope, get_automation_manager
+#from core.log import logging
+from core.triggers import ItemStateUpdateTrigger, ItemStateChangeTrigger
+
+from org.slf4j import LoggerFactory
+
+
 
 
 from marvin.helper import log, sendCommand
