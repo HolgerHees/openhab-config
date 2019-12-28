@@ -13,7 +13,7 @@ from org.eclipse.smarthome.model.persistence.extensions import PersistenceExtens
 from org.eclipse.smarthome.core.thing import ChannelUID
 from org.joda.time import DateTime
 
-from core.actions import Mail, Pushover #, XMPP
+from core.actions import Telegram #, XMPP
 from core.jsr223 import scope, get_scope, get_automation_manager
 #from core.log import logging
 from core.triggers import ItemStateUpdateTrigger, ItemStateChangeTrigger
@@ -398,11 +398,11 @@ def getStableItemState( now, itemName, checkTimeRange ):
 
     return value
 
-# *** Notifications and Emails ***
+# *** Notifications ***
 def sendNotification(header, message, url=None):
-    Pushover.pushover(header + ": " + message)
-    #XMPP.sendXMPP("holger.hees@gmail.com", header + ": " + message)
 
-
-def sendMail(header, message, url=None):
-    Mail.sendMail("holger.hees@gmail.com", header, message, url)
+    if url == None:
+        Telegram.sendTelegram("bot1", header + ": " + message)
+    else:
+        Telegram.sendTelegramPhoto("bot1", url, header + ": " + message)
+    #Pushover.pushover(header + ": " + message)

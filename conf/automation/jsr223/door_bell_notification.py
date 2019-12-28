@@ -1,4 +1,4 @@
-from marvin.helper import rule, getNow, itemStateOlderThen, sendNotification, sendMail, postUpdate
+from marvin.helper import rule, getNow, itemStateOlderThen, sendNotification, postUpdate
 from core.triggers import ItemStateChangeTrigger
 
 
@@ -10,6 +10,5 @@ class DoorBellNotificationRule:
     def execute(self, module, input):
         if itemStateOlderThen("Bell_Last_Change", getNow().minusSeconds(30)):
             sendNotification("Klingel", "Es klingelt", "https://smartmarvin.de/cameraStrasseImage")
-            sendMail("Es klingelt", u"Es klingelt jemand an der Tür", "https://smartmarvin.de/cameraStrasseImage")
 
         postUpdate("Bell_Last_Change", DateTimeType())
