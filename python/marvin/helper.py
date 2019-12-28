@@ -402,7 +402,7 @@ def getStableItemState( now, itemName, checkTimeRange ):
 def sendNotification(header, message, url=None):
 
     if url == None:
-        Telegram.sendTelegram("bot1", header + ": " + message)
+        Telegram.sendTelegram("bot1", "*" + header + "*: " + message)
     else:
-        Telegram.sendTelegramPhoto("bot1", url, header + ": " + message)
+        Telegram.sendTelegramPhoto("bot1", url, "*" + header + "*: " + message)
     #Pushover.pushover(header + ": " + message)
