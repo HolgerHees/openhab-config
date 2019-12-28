@@ -20,7 +20,7 @@ from core.triggers import ItemStateUpdateTrigger, ItemStateChangeTrigger
 
 from org.slf4j import LoggerFactory
 
-LOG_PREFIX = "org.openhab.core.automation.custom"
+from configuration import LOG_PREFIX
 
 #log = logging.getLogger(LOG_PREFIX)
 log = LoggerFactory.getLogger(LOG_PREFIX)
