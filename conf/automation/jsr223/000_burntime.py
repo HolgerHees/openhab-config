@@ -4,7 +4,7 @@ from org.slf4j import LoggerFactory
 
 # import sys
 
-log = LoggerFactory.getLogger("org.eclipse.smarthome.automation")
+log = LoggerFactory.getLogger("org.openhab.core.automation")
 
 log.info("jsr223: checking for initialised context")
 

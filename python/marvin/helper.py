@@ -6,7 +6,7 @@ import threading
 #from java.util import UUID
 #import datetime
 from java.lang import NoSuchFieldException
-from org.eclipse.smarthome.automation import Rule as SmarthomeRule
+from org.openhab.core.automation import Rule as SmarthomeRule
 from org.eclipse.smarthome.core.types import UnDefType
 
 from org.eclipse.smarthome.model.persistence.extensions import PersistenceExtensions
@@ -20,7 +20,7 @@ from core.triggers import ItemStateUpdateTrigger, ItemStateChangeTrigger
 
 from org.slf4j import LoggerFactory
 
-LOG_PREFIX = "org.eclipse.smarthome.automation.custom"
+from configuration import LOG_PREFIX
 
 #log = logging.getLogger(LOG_PREFIX)
 log = LoggerFactory.getLogger(LOG_PREFIX)
