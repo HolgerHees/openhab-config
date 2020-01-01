@@ -49,9 +49,8 @@ class WakeupRule:
         if getItemState("State_Presence").intValue() == 2:
             # sometimes the "Lights_FF" state switches back and forth for a couple of milliseconds when set "Lights_FF" state to OFF
             if itemLastUpdateOlderThen("State_Presence",getNow().minusSeconds(5)):
-                if getItemState("Lights_FF") == ON or getItemState("Shutters_FF") == PercentType.ZERO:
-                    postUpdate("State_Presence", 1)
-                    sendNotification(u"System", u"Guten Morgen")
+                postUpdate("State_Presence", 1)
+                sendNotification(u"System", u"Guten Morgen")
 
 @rule("presence_detection.py") 
 class SleepingRule:
@@ -64,3 +63,6 @@ class SleepingRule:
             postUpdate("State_Presence", 2)
             
         postUpdate("Scene4", OFF)
+
+log.info(u"{}".format(PercentType.ZERO))
+log.info(u"{}".format(getItemState("Shutters_FF")))
