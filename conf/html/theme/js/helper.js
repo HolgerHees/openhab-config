@@ -1219,8 +1219,13 @@ var mvInitializer = function(){
                 template: '<div><img></div>',
                 link: function(scope, element, attrs) {
 
-                    var inlineUrl = scope.ngModel.config.imageUrl;
-                    var popupUrl = scope.ngModel.config.streamUrl;
+                    var host = location.host;
+                    var parts = host.split(".");
+                    if( parts.length == 3 ) parts.shift();
+                    var domain = parts.join(".");
+                        
+                    var inlineUrl = "//" + domain + "/" + scope.ngModel.config.imageUrl;
+                    var popupUrl = "//" + domain + "/" + scope.ngModel.config.streamUrl;
                     var inlineRefreshInterval = scope.ngModel.config.imageRefresh;
                     var imageWidth = 0;
                     var imageHeight = 0;
