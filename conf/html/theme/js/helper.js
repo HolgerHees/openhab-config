@@ -1,5 +1,15 @@
 var mvInitializer = function(){
     
+    var host = location.host;
+    var parts = host.split(".");
+    var authType = "";
+    if( parts.length == 3 ) 
+    {
+        var subDomain = parts.shift();
+        if( subDomain.indexOf("fa") === 0 ) authType = "fa.";
+    }
+    var domain = parts.join(".");
+                        
     if(typeof angular === "undefined")
     {
         setTimeout(mvInitializer, 50);
@@ -1151,19 +1161,18 @@ var mvInitializer = function(){
 
                     function loadContent()
                     {
-                        //console.log("loadContent");
-
-                        var _url = attrs.embeddUrl
+                        //var _url = "//" + authType + domain + attrs.embeddUrl;
+                        var _url = attrs.embeddUrl;
+                        
                         let contentElement = element[0].childNodes[0];
                         
                         _url += ( _url.indexOf("?") == -1 ? "?" : "&" ) + 'rand=' + Math.random();
                         
                         var xhr = new XMLHttpRequest();
+                        xhr.withCredentials = true;
                         xhr.open("GET", _url);
                         xhr.onload = function() 
                         {
-                            //console.log("loadContent");
-                            
                             sessionStorage.setItem('mvWidgetEmbedd.embeddUrl_'+attrs.embeddUrl, this.response);
 
                             contentElement.innerHTML = this.response;
@@ -1218,14 +1227,8 @@ var mvInitializer = function(){
                 restrict: 'AE',
                 template: '<div><img></div>',
                 link: function(scope, element, attrs) {
-
-                    var host = location.host;
-                    var parts = host.split(".");
-                    if( parts.length == 3 ) parts.shift();
-                    var domain = parts.join(".");
-                        
-                    var inlineUrl = "//" + domain + "/" + scope.ngModel.config.imageUrl;
-                    var popupUrl = "//" + domain + "/" + scope.ngModel.config.streamUrl;
+                    var inlineUrl = "//" + authType + domain + "/" + scope.ngModel.config.imageUrl;
+                    var popupUrl = "//" + authType + domain + "/" + scope.ngModel.config.streamUrl;
                     var inlineRefreshInterval = scope.ngModel.config.imageRefresh;
                     var imageWidth = 0;
                     var imageHeight = 0;

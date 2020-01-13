@@ -17,16 +17,6 @@ ruleTimeouts = {}
 
 # Main MotionDetector Switch
 @rule("lights_outdoor.py")
-class MotiondetectorOutdoorSwitchSleepingRule:
-    def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("State_Presence",state="2")]
-        
-    def execute(self, module, input):
-        sendCommandIfChanged("Motiondetector_Outdoor_Switch", ON)
-        
-
-# Main MotionDetector Switch
-@rule("lights_outdoor.py")
 class MotiondetectorOutdoorSwitchRule:
     def __init__(self):
         self.triggers = [ItemCommandTrigger("Motiondetector_Outdoor_Switch")]
