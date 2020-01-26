@@ -1,4 +1,4 @@
-from marvin.helper import rule, createTimer, getItemState, postUpdate, postUpdateIfChanged
+from custom.helper import rule, createTimer, getItemState, postUpdate, postUpdateIfChanged
 from core.triggers import ItemStateChangeTrigger
 
 

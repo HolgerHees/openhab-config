@@ -1,7 +1,7 @@
 from org.joda.time import DateTime
 from org.joda.time.format import DateTimeFormat
 
-from marvin.helper import rule, getNow, getHistoricItemEntry, getHistoricItemState, getItemLastUpdate, itemLastUpdateOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand, createTimer
+from custom.helper import rule, getNow, getHistoricItemEntry, getHistoricItemState, getItemLastUpdate, itemLastUpdateOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand, createTimer
 from core.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
 
 from org.eclipse.smarthome.core.types.RefreshType import REFRESH

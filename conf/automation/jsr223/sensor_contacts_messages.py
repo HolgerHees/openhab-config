@@ -1,4 +1,4 @@
-from marvin.helper import rule, getGroupMemberChangeTrigger, getFilteredChildItems, postUpdateIfChanged
+from custom.helper import rule, getGroupMemberChangeTrigger, getFilteredChildItems, postUpdateIfChanged
 
 
 @rule("sensor_contact_messages.py")

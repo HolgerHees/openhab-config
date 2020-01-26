@@ -1,4 +1,4 @@
-from marvin.helper import rule, sendNotification, getItemState, postUpdateIfChanged
+from custom.helper import rule, sendNotification, getItemState, postUpdateIfChanged
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 @rule("roboter_messages.py")

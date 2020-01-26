@@ -1,4 +1,4 @@
-from marvin.helper import rule, getNow, itemStateOlderThen, sendNotification, postUpdate
+from custom.helper import rule, getNow, itemStateOlderThen, sendNotification, postUpdate
 from core.triggers import ItemStateChangeTrigger
 
 

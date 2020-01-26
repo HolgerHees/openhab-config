@@ -1,4 +1,4 @@
-from marvin.helper import rule, getGroupMemberChangeTrigger, postUpdate, sendCommand
+from custom.helper import rule, getGroupMemberChangeTrigger, postUpdate, sendCommand
 
 @rule("values_security_last_changed.py")
 class ValuesSecurityLastChangedRule:

@@ -1,6 +1,6 @@
 import math
 
-from marvin.helper import rule, createTimer, getNow, getGroupMember, getItemState, postUpdate, sendCommand, getItemLastUpdate
+from custom.helper import rule, createTimer, getNow, getGroupMember, getItemState, postUpdate, sendCommand, getItemLastUpdate
 from core.triggers import ItemCommandTrigger
 
 circuits = [

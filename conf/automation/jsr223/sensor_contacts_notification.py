@@ -1,4 +1,4 @@
-from marvin.helper import rule, getGroupMemberChangeTrigger, sendNotification, getItem, getItemState
+from custom.helper import rule, getGroupMemberChangeTrigger, sendNotification, getItem, getItemState
 
 
 @rule("scene_contact_notifications.py")

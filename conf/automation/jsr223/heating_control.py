@@ -3,7 +3,7 @@ import math
 from org.joda.time import DateTime, DateTimeZone
 from org.joda.time.format import DateTimeFormat
 
-from marvin.helper import rule, getNow, getGroupMember, itemLastUpdateOlderThen, getItemLastUpdate, getHistoricItemState, getHistoricItemEntry, getItemState, getMaxItemState, getItem, postUpdate, postUpdateIfChanged, sendCommand, createTimer, getStableItemState
+from custom.helper import rule, getNow, getGroupMember, itemLastUpdateOlderThen, getItemLastUpdate, getHistoricItemState, getHistoricItemEntry, getItemState, getMaxItemState, getItem, postUpdate, postUpdateIfChanged, sendCommand, createTimer, getStableItemState
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 from core.actions import Transformation
 

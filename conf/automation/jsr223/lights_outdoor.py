@@ -1,6 +1,6 @@
 import time
 
-from marvin.helper import rule, createTimer, getItemState, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged, getNow
+from custom.helper import rule, createTimer, getItemState, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged, getNow
 from core.triggers import ItemCommandTrigger, ItemStateChangeTrigger
 
 manualMappings = [

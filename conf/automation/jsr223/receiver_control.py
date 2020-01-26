@@ -1,4 +1,4 @@
-from marvin.helper import rule, sendCommand
+from custom.helper import rule, sendCommand
 from core.triggers import ItemStateChangeTrigger
 
 @rule("receiver_control.py")

@@ -1,4 +1,4 @@
-from marvin.helper import rule, sendCommand, getItemState
+from custom.helper import rule, sendCommand, getItemState
 from core.triggers import ItemStateChangeTrigger, ItemStateUpdateTrigger
 
 

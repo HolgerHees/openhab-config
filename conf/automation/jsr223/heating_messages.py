@@ -1,4 +1,4 @@
-from marvin.helper import rule, getNow, getItemState, getHistoricItemState, postUpdate, postUpdateIfChanged
+from custom.helper import rule, getNow, getItemState, getHistoricItemState, postUpdate, postUpdateIfChanged
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 

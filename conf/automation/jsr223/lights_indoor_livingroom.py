@@ -1,4 +1,4 @@
-from marvin.helper import rule, getItemState, sendCommand, postUpdate, postUpdateIfChanged, getNow, createTimer
+from custom.helper import rule, getItemState, sendCommand, postUpdate, postUpdateIfChanged, getNow, createTimer
 from core.triggers import ItemCommandTrigger, ItemStateChangeTrigger
 from org.eclipse.smarthome.core.types import UnDefType
 

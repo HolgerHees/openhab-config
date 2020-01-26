@@ -1,4 +1,4 @@
-from marvin.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen, itemStateNewerThen, getNow
+from custom.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen, itemStateNewerThen, getNow
 from core.actions import Transformation
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 

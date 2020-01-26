@@ -1,6 +1,6 @@
 import urllib2
 
-from marvin.helper import rule, getItemState, postUpdate, postUpdateIfChanged
+from custom.helper import rule, getItemState, postUpdate, postUpdateIfChanged
 from core.triggers import ItemStateChangeTrigger, ItemCommandTrigger
 
 @rule("presence_actions.py")

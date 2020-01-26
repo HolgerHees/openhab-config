@@ -1,6 +1,6 @@
 import math
 
-from marvin.helper import rule, getNow, itemLastUpdateOlderThen, getItemState, postUpdate, postUpdateIfChanged, \
+from custom.helper import rule, getNow, itemLastUpdateOlderThen, getItemState, postUpdate, postUpdateIfChanged, \
     sendCommand
 from core.triggers import CronTrigger, ItemCommandTrigger, ItemStateChangeTrigger
 

@@ -47,14 +47,14 @@ from core.triggers import ItemStateUpdateTrigger, ItemStateChangeTrigger
 
 from org.slf4j import LoggerFactory
 
-from marvin.helper import log, sendCommand
+from custom.helper import log, sendCommand
 
 sendCommand("Solar_Power_Limitation",10)
 
 #import time
 
 #from org.openhab.core.automation import Rule as SmarthomeRule
-#from marvin.helper import log, getGroupMember, sendCommand
+#from custom.helper import log, getGroupMember, sendCommand
 #from core.jsr223 import scope
 #from core.triggers import CronTrigger, ItemStateUpdateTrigger, ItemStateChangeTrigger
 
@@ -92,7 +92,7 @@ sendCommand("Solar_Power_Limitation",10)
  
 #log.info(u"{}".format(test))
 
-#from marvin.helper import log, rule, getItemState, getItemLastUpdate, itemLastUpdateOlderThen, getNow
+#from custom.helper import log, rule, getItemState, getItemLastUpdate, itemLastUpdateOlderThen, getNow
 
 #log.info( getItemState("State_Present") )
 #log.info( getItemState("roomba_auto") )
@@ -133,7 +133,7 @@ class EventMonitorRule:
         testTimer.start()'''
 
 
-'''from marvin.helper import log, rule, getItemState
+'''from custom.helper import log, rule, getItemState
 from openhab.triggers import ItemStateUpdateTrigger,CronTrigger
 from openhab.jsr223 import scope, get_scope
 
@@ -149,14 +149,14 @@ class EventMonitorRule:
         self.log.info("debug")'''
  
 
-# from marvin.helper import log, logExecution, getItemState, sendCommand, postUpdate
+# from custom.helper import log, logExecution, getItemState, sendCommand, postUpdate
 # log.warn("test")
 
 
 '''from openhab.jsr223.scope import scriptExtension
 from org.osgi.framework import FrameworkUtil, ServiceListener, ServiceEvent
 from openhab.triggers import ItemStateUpdateTrigger,CronTrigger
-from marvin.helper import log, rule
+from custom.helper import log, rule
 
 _bundle = FrameworkUtil.getBundle(type(scriptExtension))
 bundle_context = _bundle.getBundleContext() if _bundle else None

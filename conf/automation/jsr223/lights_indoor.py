@@ -1,4 +1,4 @@
-from marvin.helper import rule, getItemState, sendCommand
+from custom.helper import rule, getItemState, sendCommand
 from core.triggers import CronTrigger, ItemStateChangeTrigger 
 
 @rule("lights_indoor.py")
