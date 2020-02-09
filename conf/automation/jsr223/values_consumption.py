@@ -365,7 +365,8 @@ class SolarConsumptionRule:
 
         # sometimes solar converter is providing wrong value. Mostly if he is inactive in the night
         if currentYield > 1000000000 or startYield > 1000000000:
-            self.log.error(u"Wrong Solar Value: currentYield is {}, startYield is {}".format(currentYield,startYield))
+            # can be INFO because it is a 'normal' behavior of this  solar converter
+            self.log.info(u"Wrong Solar Value: currentYield is {}, startYield is {}".format(currentYield,startYield))
             return
 
         totalSupply = currentSupply - startSupply
