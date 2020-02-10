@@ -214,6 +214,7 @@ sitemap haus label="Main Menu"
 			Frame label="Steuerung"
 			{
 				Switch item=State_Notify label="Benachrichtigung"
+                Switch item=State_Holidays_Active label="Urlaub aktiv"
 				Group label="Programme [%s]" icon="selfcontrol" item=AutoStatus valuecolor=[AutoStatus=="Inaktiv"="#d72a2a"]{
 					Frame label="Rollläden" {
 						Switch item=Auto_Rollershutter
