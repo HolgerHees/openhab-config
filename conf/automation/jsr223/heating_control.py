@@ -1210,13 +1210,13 @@ class HeatingCheckRule(HeatingHelper):
         
         holidaysInactive = getItemState("State_Holidays_Active") == OFF
         maxMorningHour = 7 if holidaysInactive and day <= 5 else 9
-        minEveningMorningHour = 17 if holidaysInactive and day <= 5 else 16
+        minEveningHour = 17 if holidaysInactive and day <= 5 else 16
         
         isMorning = hour <= maxMorningHour
         hadMorningHeating = lastHeatingChangeDay == day
         
-        isEvening = hour >= minEveningMorningHour
-        hadEveningHeating = lastHeatingChangeDay == day and lastHeatingChangeHour >= minEveningMorningHour
+        isEvening = hour >= minEveningHour
+        hadEveningHeating = lastHeatingChangeDay == day and lastHeatingChangeHour >= minEveningHour
         
         if isHeatingActive:
             if self.forcedBufferReferenceTemperature != None:
@@ -1245,8 +1245,8 @@ class HeatingCheckRule(HeatingHelper):
             heatingMinutes = int( round( ( targetBufferChargeLevel / availableHeatingPowerPerMinute ) ) )
         
             if heatingMinutes > MIN_HEATING_TIME:    
-                # only in the morning and evening
-                if ( isMorning and !hadMorningHeating ) or ( isEvening and !hadEveningHeating ):
+                # only in the morning and evening 
+                if ( isMorning and not hadMorningHeating ) or ( isEvening and not hadEveningHeating ):
                     if self.isNightModeTime( now.plusMinutes( heatingMinutes + ( LAZY_OFFSET if isEvening else LAZY_OFFSET * 0.5 ) ) ):
                         self.log.info(u"        : No forced buffer • {} W in {} min. • night".format(targetBufferChargeLevel,heatingMinutes) )
                         self.forcedBufferReferenceTemperature = None
@@ -1255,7 +1255,8 @@ class HeatingCheckRule(HeatingHelper):
                         self.forcedBufferReferenceTemperature = currentLivingroomTemp
                         self.forcedBufferReferenceDate = lastHeatingChange
                 else:
-                    self.log.info(u"        : No forced buffer • {} W in {} min. • wrong time".format(targetBufferChargeLevel,heatingMinutes))
+                    reason = "wrong time" if not isMorning and not isEvening else "already forced"
+                    self.log.info(u"        : No forced buffer • {} W in {} min. • {}".format(targetBufferChargeLevel,heatingMinutes,reason))
                     self.forcedBufferReferenceTemperature = None
 
             else:
