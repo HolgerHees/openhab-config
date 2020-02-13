@@ -115,7 +115,9 @@
     }
 }
 
-html.dark, html.dark body {
+html.black, html.black body
+html.dark, html.dark body
+{
     background-color: var(--body-bg);
     
     --body-bg: black;
@@ -134,6 +136,11 @@ html.dark, html.dark body {
     --widget-text-color-nonimportant: white;
     --widget-value-color-weather-raindrop: white;
     --widget-button-background-marker: #333;
+}
+html.dark, html.dark body {
+    background-color: var(--body-bg);
+
+    --body-bg: #202124;
 }
 html.light, html.light body {
     background-color: var(--body-bg);
@@ -155,3 +162,16 @@ html.light, html.light body {
     --widget-value-color-weather-raindrop: #333;
     --widget-button-background-marker: #DDD;
 } 
+
+body:not(.basicui) #openButton
+{
+    top: 5px;
+    right: 5px;
+}
+
+body:not(.basicui) .today, 
+body:not(.basicui) .week 
+{
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+}
