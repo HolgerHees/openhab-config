@@ -1180,12 +1180,12 @@ class HeatingCheckRule(HeatingHelper):
 
         return maxBufferChargeLevel > 0
 
-    def calculateForcedBufferHeatingTime(self, now, lastUpdate, slotHeatingPower, isMorning ):
+    def calculateForcedBufferHeatingTime(self, now, lastUpdate, slotHeatingPower ):
       
         # when was the last heating job
         lastUpdateBeforeInMinutes = ( now.getMillis() - lastUpdate.getMillis() ) / 1000.0 / 60.0
        
-        booster = 2.0 if isMorning else 1.5
+        booster = 2.0 if now.getHourOfDay() < 12 else 1.5
         
         # 0 => 0
         # 8 => 1
@@ -1202,22 +1202,6 @@ class HeatingCheckRule(HeatingHelper):
 
     def forcedBufferHeatingCheck( self, now, isHeatingActive, lastHeatingChange, slotHeatingPower, availableHeatingPowerPerMinute, currentBufferChargeLevel, currentLivingroomTemp, currentCoolingPowerPerMinute ):
 
-        lastHeatingChangeDay = lastHeatingChange.getDayOfWeek()
-        lastHeatingChangeHour = lastHeatingChange.getHourOfDay()
-
-        day = now.getDayOfWeek()
-        hour = now.getHourOfDay()
-        
-        holidaysInactive = getItemState("State_Holidays_Active") == OFF
-        maxMorningHour = 7 if holidaysInactive and day <= 5 else 9
-        minEveningHour = 17 if holidaysInactive and day <= 5 else 16
-        
-        isMorning = hour <= maxMorningHour
-        hadMorningHeating = lastHeatingChangeDay == day
-        
-        isEvening = hour >= minEveningHour
-        hadEveningHeating = lastHeatingChangeDay == day and lastHeatingChangeHour >= minEveningHour
-        
         if isHeatingActive:
             if self.forcedBufferReferenceTemperature != None:
                 # Room is warming up, so we have to stop previously forced checks
@@ -1226,7 +1210,7 @@ class HeatingCheckRule(HeatingHelper):
                     self.forcedBufferReferenceTemperature = None
                 else:
                     if self.forcedBufferReferenceDate != -1:
-                        targetBufferChargeLevel = self.calculateForcedBufferHeatingTime( now, self.forcedBufferReferenceDate, slotHeatingPower, isMorning )
+                        targetBufferChargeLevel = self.calculateForcedBufferHeatingTime( now, self.forcedBufferReferenceDate, slotHeatingPower )
                     else:
                         targetBufferChargeLevel = slotHeatingPower
                     
@@ -1240,14 +1224,29 @@ class HeatingCheckRule(HeatingHelper):
                 # Keep everything like it is. This leaves the forcedBufferCheckActive untouched
                 self.log.info(u"        : No forced buffer • is heating" )
         else:
-            targetBufferChargeLevel = self.calculateForcedBufferHeatingTime( now, lastHeatingChange, slotHeatingPower, isMorning )
+            targetBufferChargeLevel = self.calculateForcedBufferHeatingTime( now, lastHeatingChange, slotHeatingPower )
 
             heatingMinutes = int( round( ( targetBufferChargeLevel / availableHeatingPowerPerMinute ) ) )
         
             if heatingMinutes > MIN_HEATING_TIME:    
+                lastHeatingChangeDay = lastHeatingChange.getDayOfWeek()
+                lastHeatingChangeHour = lastHeatingChange.getHourOfDay()
+
+                day = now.getDayOfWeek()
+                hour = now.getHourOfDay()
+                
+                isMorning = hour < 12 and self.isNightModeTime(now)
+                hadMorningHeating = lastHeatingChangeDay == day
+                
+                holidaysInactive = getItemState("State_Holidays_Active") == OFF
+                minEveningHour = 17 if holidaysInactive and day <= 5 else 16
+                isEvening = hour >= minEveningHour
+                hadEveningHeating = lastHeatingChangeDay == day and lastHeatingChangeHour >= minEveningHour
+
                 # only in the morning and evening 
                 if ( isMorning and not hadMorningHeating ) or ( isEvening and not hadEveningHeating ):
-                    if self.isNightModeTime( now.plusMinutes( heatingMinutes + ( LAZY_OFFSET if isEvening else LAZY_OFFSET * 0.5 ) ) ):
+                    offset = int( round( heatingMinutes + ( LAZY_OFFSET if isEvening else LAZY_OFFSET * 0.5 ), 0 ) )
+                    if self.isNightModeTime( now.plusMinutes( offset ) ):
                         self.log.info(u"        : No forced buffer • {} W in {} min. • night".format(targetBufferChargeLevel,heatingMinutes) )
                         self.forcedBufferReferenceTemperature = None
                     else:
