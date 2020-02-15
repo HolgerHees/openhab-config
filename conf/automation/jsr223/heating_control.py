@@ -1094,7 +1094,8 @@ class HeatingCheckRule(HeatingHelper):
                     _nightModeActive = True
             # Saturday and Sunday
             else:
-                if hour < 8 or ( hour == 8 and minute <= 30 ):
+                if hour < 8:
+                #if hour < 8 or ( hour == 8 and minute <= 30 ):
                     _nightModeActive = True
         # Evening
         else:
