@@ -715,8 +715,7 @@ class HeatingCheckRule(HeatingHelper):
             CronTrigger("30 */2 * * * ?")
         ]
         self.nightModeActive = False
-        self.forcedBufferReferenceTemperature = None
-        self.forcedBufferReferenceDate = -1
+        self.forcedBufferReferenceDate = None
         self.activeHeatingOperatingMode = -1
 
     def execute(self, module, input):
@@ -858,6 +857,7 @@ class HeatingCheckRule(HeatingHelper):
                
         ### Analyse result
         if getItemState("Heating_Auto_Mode").intValue() == 1:
+            forceLivingRoomHeatingPossible = ( currentLivingroomTemp - heatingTargetLivingroomTemp < 1.0 )
             forceBufferHeating = False
             heatingDemand = 0
             heatingType = ""
@@ -875,8 +875,8 @@ class HeatingCheckRule(HeatingHelper):
                     heatingType = u"HEATING"
                 else:
                     # it is too warm inside, but outside it is very cold, so we need some buffer heating to avoid cold floors
-                    # should always be calculated with all rooms ON and possibleSlotHeatingPower
-                    forceBufferHeating = self.forcedBufferHeatingCheck( now, isHeatingActive, lastHeatingChange, possibleSlotHeatingPower, availableHeatingPowerPerMinute, targetChargeLevelDiff, currentBedroomTemp, currentPossibleCoolingPowerPerMinute )
+                    referenceSlotHeatingPower = possibleSlotHeatingPower if forceLivingRoomHeatingPossible else slotHeatingPower
+                    forceBufferHeating = self.forcedBufferHeatingCheck( now, isHeatingActive, lastHeatingChange, referenceSlotHeatingPower, availableHeatingPowerPerMinute, targetChargeLevelDiff, currentPossibleCoolingPowerPerMinute )
                 
                     if forceBufferHeating:
                         heatingDemand = 1
@@ -903,7 +903,7 @@ class HeatingCheckRule(HeatingHelper):
             postUpdateIfChanged("Heating_Demand", heatingDemand )
 
             # should always be calculated with all rooms ON
-            if forceBufferHeating:
+            if forceBufferHeating and forceLivingRoomHeatingPossible:
                 newLivingRoomCircuit = ON
             else:
                 # !! if condition is disabled because we want to calculate it always
@@ -1201,26 +1201,18 @@ class HeatingCheckRule(HeatingHelper):
 
         return round( targetBufferChargeLevel, 1 )
 
-    def forcedBufferHeatingCheck( self, now, isHeatingActive, lastHeatingChange, slotHeatingPower, availableHeatingPowerPerMinute, currentBufferChargeLevel, currentReferenceTemp, currentCoolingPowerPerMinute ):
+    def forcedBufferHeatingCheck( self, now, isHeatingActive, lastHeatingChange, slotHeatingPower, availableHeatingPowerPerMinute, currentBufferChargeLevel, currentCoolingPowerPerMinute ):
 
         if isHeatingActive:
-            if self.forcedBufferReferenceTemperature != None:
-                # Room is warming up, so we have to stop previously forced checks
-                if self.forcedBufferReferenceTemperature < currentReferenceTemp:
-                    self.log.info(u"        : Stop forced buffer • room is warming up" )
-                    self.forcedBufferReferenceTemperature = None
+            if self.forcedBufferReferenceDate != None:
+                targetBufferChargeLevel = self.calculateForcedBufferHeatingTime( now, self.forcedBufferReferenceDate, slotHeatingPower )
+                
+                # Too much forced heating > 90 minutes
+                if currentBufferChargeLevel > targetBufferChargeLevel:
+                    self.log.info(u"        : Stop forced buffer • buffer limit reached" )
+                    self.forcedBufferReferenceDate = None
                 else:
-                    if self.forcedBufferReferenceDate != -1:
-                        targetBufferChargeLevel = self.calculateForcedBufferHeatingTime( now, self.forcedBufferReferenceDate, slotHeatingPower )
-                    else:
-                        targetBufferChargeLevel = slotHeatingPower
-                    
-                    # Too much forced heating > 90 minutes
-                    if currentBufferChargeLevel > targetBufferChargeLevel:
-                        self.log.info(u"        : Stop forced buffer • buffer limit reached" )
-                        self.forcedBufferReferenceTemperature = None
-                    else:
-                        self.log.info(u"        : Continue forced heating • until {} W".format( targetBufferChargeLevel ) )
+                    self.log.info(u"        : Continue forced heating • until {} W".format( targetBufferChargeLevel ) )
             else:
                 # Keep everything like it is. This leaves the forcedBufferCheckActive untouched
                 self.log.info(u"        : No forced buffer • is heating" )
@@ -1249,26 +1241,25 @@ class HeatingCheckRule(HeatingHelper):
                     offset = int( round( heatingMinutes + ( LAZY_OFFSET if isEvening else LAZY_OFFSET * 0.5 ), 0 ) )
                     if self.isNightModeTime( now.plusMinutes( offset ) ):
                         self.log.info(u"        : No forced buffer • {} W in {} min. • night".format(targetBufferChargeLevel,heatingMinutes) )
-                        self.forcedBufferReferenceTemperature = None
+                        self.forcedBufferReferenceDate = None
                     else:
                         self.log.info(u"        : Force buffer • {} W in {} min. • prevent cold floors".format(targetBufferChargeLevel,heatingMinutes))
-                        self.forcedBufferReferenceTemperature = currentReferenceTemp
                         self.forcedBufferReferenceDate = lastHeatingChange
                 else:
                     reason = "wrong time" if not isMorning and not isEvening else "already forced"
                     self.log.info(u"        : No forced buffer • {} W in {} min. • {}".format(targetBufferChargeLevel,heatingMinutes,reason))
-                    self.forcedBufferReferenceTemperature = None
+                    self.forcedBufferReferenceDate = None
 
             else:
                 # Last heating older then 24 hours, but still no heating needed. Maybe maxBuffer low.
                 if now.getMillis() - lastHeatingChange.getMillis() > 86400000:
                     self.log.info(u"        : No forced buffer • not needed" )
-                    self.forcedBufferReferenceTemperature = None
+                    self.forcedBufferReferenceDate = None
                 else:
                     self.log.info(u"        : No forced buffer • {} W in {} min.".format(targetBufferChargeLevel,heatingMinutes) )
-                    self.forcedBufferReferenceTemperature = None
+                    self.forcedBufferReferenceDate = None
 
-        return self.forcedBufferReferenceTemperature != None
+        return self.forcedBufferReferenceDate != None
     
     def getBurnerStarts( self, now ):
         # max 5 min.
