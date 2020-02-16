@@ -876,7 +876,7 @@ class HeatingCheckRule(HeatingHelper):
                 else:
                     # it is too warm inside, but outside it is very cold, so we need some buffer heating to avoid cold floors
                     # should always be calculated with all rooms ON and possibleSlotHeatingPower
-                    forceBufferHeating = self.forcedBufferHeatingCheck( now, isHeatingActive, lastHeatingChange, possibleSlotHeatingPower, availableHeatingPowerPerMinute, targetChargeLevelDiff, currentLivingroomTemp, currentPossibleCoolingPowerPerMinute )
+                    forceBufferHeating = self.forcedBufferHeatingCheck( now, isHeatingActive, lastHeatingChange, possibleSlotHeatingPower, availableHeatingPowerPerMinute, targetChargeLevelDiff, currentBedroomTemp, currentPossibleCoolingPowerPerMinute )
                 
                     if forceBufferHeating:
                         heatingDemand = 1
@@ -1201,12 +1201,12 @@ class HeatingCheckRule(HeatingHelper):
 
         return round( targetBufferChargeLevel, 1 )
 
-    def forcedBufferHeatingCheck( self, now, isHeatingActive, lastHeatingChange, slotHeatingPower, availableHeatingPowerPerMinute, currentBufferChargeLevel, currentLivingroomTemp, currentCoolingPowerPerMinute ):
+    def forcedBufferHeatingCheck( self, now, isHeatingActive, lastHeatingChange, slotHeatingPower, availableHeatingPowerPerMinute, currentBufferChargeLevel, currentReferenceTemp, currentCoolingPowerPerMinute ):
 
         if isHeatingActive:
             if self.forcedBufferReferenceTemperature != None:
                 # Room is warming up, so we have to stop previously forced checks
-                if self.forcedBufferReferenceTemperature < currentLivingroomTemp:
+                if self.forcedBufferReferenceTemperature < currentReferenceTemp:
                     self.log.info(u"        : Stop forced buffer • room is warming up" )
                     self.forcedBufferReferenceTemperature = None
                 else:
@@ -1252,7 +1252,7 @@ class HeatingCheckRule(HeatingHelper):
                         self.forcedBufferReferenceTemperature = None
                     else:
                         self.log.info(u"        : Force buffer • {} W in {} min. • prevent cold floors".format(targetBufferChargeLevel,heatingMinutes))
-                        self.forcedBufferReferenceTemperature = currentLivingroomTemp
+                        self.forcedBufferReferenceTemperature = currentReferenceTemp
                         self.forcedBufferReferenceDate = lastHeatingChange
                 else:
                     reason = "wrong time" if not isMorning and not isEvening else "already forced"
