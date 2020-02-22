@@ -2,12 +2,48 @@
 Group Heating_Temperatures
 Group Solar_Temperatures
 
-Switch Heating_Livingroom_Circuit				"Wohnzimmer Kreis"				<selfsettings>			{ channel="knx:device:bridge:other:livingroomHeating" }
-Number Heating_Temperature_Livingroom_Target	"Ziel Wohnzimmer"				<selfsettings>			(PersistentHistory)
-Number Heating_Temperature_Bedroom_Target		"Ziel Schlafzimmer"				<selfsettings>			(PersistentHistory)
+Switch Heating_FF_GuestWC_Circuit			"Gäste WC Kreis"		<selfsettings>
+Switch Heating_FF_Livingroom_Circuit		"Wohnzimmer Kreis"		<selfsettings>			{ channel="knx:device:bridge:other:livingroomHeating" }
+Switch Heating_FF_Guestroom_Circuit			"Gästezimmer Kreis"		<selfsettings>
+Switch Heating_FF_Floor_Circuit				"Flur unten Kreis"		<selfsettings>
+Switch Heating_SF_Floor_Circuit				"Flur oben Kreis"		<selfsettings>
+Switch Heating_SF_Child1_Circuit			"Kind 1 Kreis"			<selfsettings>
+Switch Heating_SF_Child2_Circuit			"Kind 2 Kreis"			<selfsettings>
+Switch Heating_SF_Bedroom_Circuit			"Schlafzimmer Kreis"	<selfsettings>
+Switch Heating_SF_Dressingroom_Circuit		"Ankleide Kreis"		<selfsettings>
+Switch Heating_SF_Bathroom_Circuit			"Badezimmer Kreis"		<selfsettings>
+
+Number Heating_FF_GuestWC_Charged			"Gäste WC Geladen"		<selfsettings>
+Number Heating_FF_Livingroom_Charged		"Wohnzimmer Geladen"	<selfsettings>
+Number Heating_FF_Guestroom_Charged			"Gästezimmer Geladen"	<selfsettings>
+Number Heating_FF_Floor_Charged				"Flur unten Geladen"	<selfsettings>
+Number Heating_SF_Floor_Charged				"Flur oben Geladen"		<selfsettings>
+Number Heating_SF_Child1_Charged			"Kind 1 Geladen"		<selfsettings>
+Number Heating_SF_Child2_Charged			"Kind 2 Geladen"		<selfsettings>
+Number Heating_SF_Bedroom_Charged			"Schlafzimmer Geladen"	<selfsettings>
+Number Heating_SF_Dressingroom_Charged		"Ankleide Geladen"		<selfsettings>
+Number Heating_SF_Bathroom_Charged			"Badezimmer Geladen"	<selfsettings>
+
+Number Heating_Temperature_FF_GuestWC_Target	"Ziel Gäste WC"		<selfsettings>
+Number Heating_Temperature_FF_Livingroom_Target	"Ziel Wohnzimmer"	<selfsettings>
+Number Heating_Temperature_FF_Guestroom_Target	"Ziel Gästezimmer"	<selfsettings>
+Number Heating_Temperature_FF_Floor_Target	"Ziel Flur unten"		<selfsettings>
+Number Heating_Temperature_SF_Floor_Target		"Ziel Flur oben"	<selfsettings>
+Number Heating_Temperature_SF_Child1_Target		"Ziel Kind 1"		<selfsettings>
+Number Heating_Temperature_SF_Child2_Target		"Ziel Kind 2"		<selfsettings>
+Number Heating_Temperature_SF_Bedroom_Target		"Ziel Schlafzimmer"	<selfsettings>
+Number Heating_Temperature_SF_Dressingroom_Target		"Ziel Ankleide"	<selfsettings>
+Number Heating_Temperature_SF_Bathroom_Target		"Ziel Badezimmer"	<selfsettings>
+//Number Heating_Temperature_Livingroom_Target	"Ziel Wohnzimmer"				<selfsettings>			(PersistentHistory)
+//Number Heating_Temperature_Bedroom_Target		"Ziel Schlafzimmer"				<selfsettings>			(PersistentHistory)
+
+
 Number Heating_Charged							"Geladen [%.1f]"				<selfsettings>			(PersistentChart,PersistentHistory)
 Number Heating_Demand							"Heizung [%d]"					<selfsettings>
 Number Solar_Power								"Solar Power [%.1f]"			<selfsettings>			(PersistentChart,PersistentHistory,Solar_Temperatures)
+
+
+
 
 Number Heating_Auto_Mode						"Modus"							<selfautomode>
 Number Heating_Operating_Mode					"Betriebsart [MAP(heating_de.map):%s]" <selfsettings>	(PersistentHistory)				{exec=">[1:/opt/heating_control/heizungBetriebsart.bash -t 1] >[2:/opt/heating_control/heizungBetriebsart.bash -t 2] >[3:/opt/heating_control/heizungBetriebsart.bash -t 3] >[1.000000:/opt/heating_control/heizungBetriebsart.bash -t 1] >[2.000000:/opt/heating_control/heizungBetriebsart.bash -t 2] >[3.000000:/opt/heating_control/heizungBetriebsart.bash -t 3]"}

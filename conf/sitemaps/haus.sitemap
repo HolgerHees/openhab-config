@@ -437,8 +437,30 @@ sitemap haus label="Main Menu"
                         Switch item=Heating_Auto_Mode label="Modus" mappings=[1="Auto", 0="Manuell"]
                         Switch item=Heating_Operating_Mode label="Betrieb" mappings=[1.000000="WW", 2.000000="HZ", 3.000000="RD"]  visibility=[Heating_Auto_Mode==0]
                         Text item=Heating_Operating_Mode visibility=[Heating_Auto_Mode==1]
-                        Setpoint item=Temperature_Room_Target label="Komforttemperatur [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                        Switch item=Heating_Livingroom_Circuit label="WZ Kreis"
+                        Text item=Heating_Demand label="Komforttemperaturen" icon="selfheating"{
+                            Setpoint item=Temperature_FF_GuestWC_Target label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=Temperature_FF_Livingroom_Target label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=Temperature_FF_Guestroom_Target label="Gästezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=Temperature_FF_Floor_Target label="Flur unten [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=Temperature_SF_Floor_Target label="Flur oben [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=Temperature_SF_Child1_Target label="Kind 1 [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=Temperature_SF_Child2_Target label="Kind 2 [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=Temperature_SF_Bedroom_Target label="Schlafzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=Temperature_SF_Dressingroom_Target label="Ankleide [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=Temperature_SF_Bathroom_Target label="Badezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        }
+                        Text item=Heating_Demand label="Heizkreise" icon="selfheating"{
+                            Switch item=Heating_FF_GuestWC_Circuit label="Gäste WC Kreis"
+                            Switch item=Heating_FF_Livingroom_Circuit label="WZ Kreis"
+                            Switch item=Heating_FF_Guestroom_Circuit label="Gästezimmer Kreis"
+                            Switch item=Heating_FF_Floor_Circuit label="Flur unten Kreis"
+                            Switch item=Heating_SF_Floor_Circuit label="Flur oben Kreis"
+                            Switch item=Heating_SF_Child1_Circuit label="Kind 1 Kreis"
+                            Switch item=Heating_SF_Child2_Circuit label="Kind 2 Kreis"
+                            Switch item=Heating_SF_Bedroom_Circuit label="Schlafzimmer Kreis"
+                            Switch item=Heating_SF_Dressingroom_Circuit label="Ankleide Kreis"
+                            Switch item=Heating_SF_Bathroom_Circuit label="Badezimmer Kreis"
+                        }
                     }
                     Frame label="Sensordaten" {
                         Text item=Heating_Demand label="Berechnungsdetails [MAP(yes_no_de.map):%d]" icon="selfheating"{

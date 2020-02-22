@@ -2,14 +2,14 @@ from custom.helper import rule, getNow, getItemState, getHistoricItemState, getM
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 infoConfig = [
-    ["Air_FF_Livingroom_Message", "Temperature_FF_Livingroom", "Humidity_FF_Livingroom", "Heating_Temperature_Livingroom_Target"],
+    ["Air_FF_Livingroom_Message", "Temperature_FF_Livingroom", "Humidity_FF_Livingroom", "Heating_Temperature_FF_Livingroom_Target"],
     ["Air_FF_Boxroom_Message", "Temperature_FF_Boxroom", "Humidity_FF_Boxroom", None],
     ["Air_FF_Guestroom_Message", "Temperature_FF_Guestroom", "Humidity_FF_Guestroom", None],
     ["Air_FF_GuestWC_Message", "Temperature_FF_GuestWC", "Humidity_FF_GuestWC", None],
     ["Air_FF_Floor_Message", "Temperature_FF_Floor", "Humidity_FF_Floor", None],
     ["Air_FF_Utilityroom_Message", "Temperature_FF_Utilityroom", "Humidity_FF_Utilityroom", None],
     ["Air_FF_Garage_Message", "Temperature_FF_Garage", "Humidity_FF_Garage", None],
-    ["Air_SF_Bedroom_Message", "Temperature_SF_Bedroom", "Humidity_SF_Bedroom", "Heating_Temperature_Bedroom_Target"],
+    ["Air_SF_Bedroom_Message", "Temperature_SF_Bedroom", "Humidity_SF_Bedroom", "Heating_Temperature_SF_Bedroom_Target"],
     ["Air_SF_Dressingroom_Message", "Temperature_SF_Dressingroom", "Humidity_SF_Dressingroom", None],
     ["Air_SF_Child1_Message", "Temperature_SF_Child1", "Humidity_SF_Child1", None],
     ["Air_SF_Child2_Message", "Temperature_SF_Child2", "Humidity_SF_Child2", None],

@@ -100,7 +100,18 @@ String Wind_Message						"Wind [%s]"						<wind>
 
 String Rain_Garden_Message				"Regen [%s]"					<selfrain>
 
-Number Temperature_Room_Target	                "Ziel [%.1f °C]"				<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
+//Number Temperature_Room_Target	        "Ziel [%.1f °C]"				<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
+
+Number Temperature_FF_GuestWC_Target	"Ziel Gäste WC [%.1f °C]"		<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
+Number Temperature_FF_Livingroom_Target	"Ziel Wohnzimmer [%.1f °C]"		<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
+Number Temperature_FF_Guestroom_Target	"Ziel Gästezimmer [%.1f °C]"	<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
+Number Temperature_FF_Floor_Target	    "Ziel Flur unten [%.1f °C]"		<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
+Number Temperature_SF_Floor_Target	    "Ziel Flur oben [%.1f °C]"		<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
+Number Temperature_SF_Child1_Target	    "Ziel Kind 1 [%.1f °C]"			<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
+Number Temperature_SF_Child2_Target	    "Ziel Kind 2 [%.1f °C]"			<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
+Number Temperature_SF_Bedroom_Target	"Ziel Schlafzimmer [%.1f °C]"	<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
+Number Temperature_SF_Dressingroom_Target	"Ziel Ankleide [%.1f °C]"	<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
+Number Temperature_SF_Bathroom_Target	"Ziel Badezimmer [%.1f °C]"		<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
 
 //########### PLANT SENSORS ##########
 

@@ -7,9 +7,10 @@ from custom.helper import rule, getNow, getGroupMember, itemLastUpdateOlderThen,
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 from core.actions import Transformation
 
+from custom.model.sun import SunRadiation
+
 OFFSET_FORMATTER = DateTimeFormat.forPattern("HH:mm")
 
-BEDROOM_REDUCTION = 2.5
 NIGHT_REDUCTION = 2.0
 MIN_HEATING_TIME = 15 # 'Heizen mit WW' should be active at least for 15 min.
 MIN_ONLY_WW_TIME = 15 # 'Nur WW' should be active at least for 15 min.
@@ -172,101 +173,6 @@ class HeatingHelper:
     
     def getLongOpenWindows( self ):
         return { "ffCount": len(HeatingHelper.longOpenFFContacts), "totalFfCount": 6, "sfCount": len(HeatingHelper.longOpenSFContacts), "totalSfCount": 5 }
-      
-    def _getSunData( self, time ):
-
-        # Constants                                                                                                                                                                                                                                 
-        K = 0.017453                                                                                                                                                                                                                      
-
-        # Change this reflecting your destination                                                                                                                                                                                                   
-        latitude = 52.347767                                                                                                                                                                                                              
-        longitude = 13.621287
-
-        # allways +1 Berlin winter time
-        local = time.toDateTime(DateTimeZone.forOffsetHours(1))
-
-        day = local.getDayOfYear()
-        hour = local.getHourOfDay() + (local.getMinuteOfHour()/60.0)
-
-        # Source: http://www.jgiesen.de/SME/tk/index.htm
-        deklination = -23.45 * math.cos( K * 360 * (day + 10) / 365 )
-        zeitgleichung = 60.0 * (-0.171 * math.sin( 0.0337*day+0.465) - 0.1299 * math.sin( 0.01787*day-0.168))
-        stundenwinkel = 15.0 * ( hour - (15.0-longitude)/15.0 - 12.0 + zeitgleichung/60.0)
-        x = math.sin(K * latitude) * math.sin(K * deklination) + math.cos(K * latitude) * math.cos(K * deklination) * math.cos(K * stundenwinkel)
-        y = - (math.sin(K*latitude) * x - math.sin(K*deklination)) / (math.cos(K*latitude) * math.sin(math.acos(x)))
-        elevation = math.asin(x) / K
-
-        isBreak = hour <= 12.0 + (15.0-longitude)/15.0 - zeitgleichung/60.0
-        if isBreak: azimut = math.acos(y) / K
-        else: azimut = 360.0 - math.acos(y) / K
-
-        return elevation, azimut
-
-    def getSunPowerPerMinute( self, logPrefix, referenceTime, cloudCoverItem ):
-
-        cloudCover = self._getCloudData( cloudCoverItem )
-        elevation, azimut = self._getSunData( referenceTime )
-
-        # 125° 1/2 der Hauswand	
-        southMultiplier = 0
-        if azimut >= 100 and azimut <= 260 and elevation >= 12.0:
-            # 100° (0) => -1 (0)
-            # 260° (160) => 1 (2)
-            southX = ( ( azimut - 100.0 ) * 2.0 / 160.0 ) - 1.0
-            southMultiplier = ( math.pow( southX, 10.0 ) * -1.0 ) + 1.0
-
-        westMultiplier = 0
-        if azimut >= 190 and azimut <= 350 and elevation >= 8.0:
-            # https://rechneronline.de/funktionsgraphen/
-            # 190° (0) => -1 (0)
-            # 350° (160) => 1 (2)           
-            westX = ( ( azimut - 190.0 ) * 2.0 / 160.0 ) - 1.0
-            westMultiplier = ( math.pow( westX, 10.0 ) * -1.0 ) + 1.0
-
-        southActive = southMultiplier > 0.0
-        westActive  = westMultiplier > 0.0
-        
-        # in the morning the sun must be above 20°
-        # and in the evening the sun must be above 10°
-        if southActive or westActive:
-            _usedRadians = math.radians(elevation)
-            if _usedRadians < 0.0: _usedRadians = 0.0
-            
-            # Cloud Cover is between 0 and 9 - but converting to 0 and 8
-            # https://en.wikipedia.org/wiki/Okta
-            _cloudCover = cloudCover
-            if _cloudCover > 8.0: _cloudCover = 8.0
-            _cloudCoverFactor = _cloudCover / 8.0
-            
-            # http://www.shodor.org/os411/courses/_master/tools/calculators/solarrad/
-            # http://scool.larc.nasa.gov/lesson_plans/CloudCoverSolarRadiation.pdf
-            _maxRadiation = 990.0 * math.sin( _usedRadians ) - 30.0
-            if _maxRadiation < 0.0: _maxRadiation = 0.0
-            _currentRadiation = _maxRadiation * ( 1.0 - 0.75 * math.pow( _cloudCoverFactor, 3.4 ) )
-
-            _effectiveSouthRadiation = _currentRadiation * southMultiplier
-            _effectiveWestRadiation = _currentRadiation * westMultiplier
-            
-            _effectiveSouthRadiation = round( _effectiveSouthRadiation / 60.0, 3 )
-            _effectiveWestRadiation = round( _effectiveWestRadiation / 60.0, 3 )
-
-            activeDirections = []
-            if southActive: activeDirections.append("S")
-            if westActive: activeDirections.append("W")
-            activeMsg = u" • {}".format("+".join(activeDirections))
-        else:
-            _activeRadiation = 0.0
-            _effectiveSouthRadiation = 0.0
-            _effectiveWestRadiation = 0.0
-
-            activeMsg = u""
-            
-        sunElevationMsg = int( round( elevation, 0 ) )
-        sunAzimutMsg = int( round( azimut, 0 ) )
-
-        self.log.info(u"{} Azimut {}° • Elevation {}° • Clouds {} octas{}".format(logPrefix, sunAzimutMsg, sunElevationMsg, cloudCover, activeMsg) )
-
-        return _effectiveSouthRadiation, _effectiveWestRadiation
       
     def getWindowSunPowerPerMinute( self, logPrefix, _effectiveSouthRadiation, _effectiveWestRadiation, isForecast ):
 
@@ -490,7 +396,12 @@ class HeatingHelper:
         return _possibleHeatingPowerPerMinute, 0, _maxHeatingPowerPerMinute
 
     def getCurrentCoolingPowerPerMinute(self, activeRooms, now, currentOutdoorTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, openWindow ):
-        _effectiveSouthRadiation, _effectiveWestRadiation = self.getSunPowerPerMinute( u"Current :", now, "Cloud_Cover_Current" )
+        cloudCover = self._getCloudData( "Cloud_Cover_Current" )
+        _effectiveSouthRadiation, _effectiveWestRadiation, _debugInfo = SunRadiation.getSunPowerPerMinute( now, cloudCover )
+        self.log.info(u"Current :{} ".format(_debugInfo))
+
+        _effectiveSouthRadiation = round( _effectiveSouthRadiation / 60.0, 3 )
+        _effectiveWestRadiation = round( _effectiveWestRadiation / 60.0, 3 )
 
         _windowSunPower = self.getWindowSunPowerPerMinute( u"Current :", _effectiveSouthRadiation, _effectiveWestRadiation, False )
         _wallSunPower = self.getWallSunPowerPerMinute(_effectiveSouthRadiation, _effectiveWestRadiation)
@@ -500,7 +411,12 @@ class HeatingHelper:
         return _coolingPowerPerMinute, _windowSunPower, _effectiveSouthRadiation, _effectiveWestRadiation, _currentPossibleCoolingPowerPerMinute
 
     def getCurrentForecastCoolingPowerPerMinute(self, hours, activeRooms, now, currentOutdoorTemp, currentOutdoorForecastTemp, currentLivingroomTemp, currentBedroomTemp, currentAtticTemp, openWindow ):
-        _effectiveSouthRadiation, _effectiveWestRadiation = self.getSunPowerPerMinute( u"FC {}h   :".format(hours), now.plusMinutes(hours*60), u"Cloud_Cover_Forecast{}".format(hours) )
+        cloudCover = self._getCloudData( u"Cloud_Cover_Forecast{}".format(hours) )
+        _effectiveSouthRadiation, _effectiveWestRadiation, _debugInfo = SunRadiation.getSunPowerPerMinute( now.plusMinutes(hours*60), cloudCover )
+        self.log.info(u"FC {}h   :{} ".format(hours,_debugInfo))
+
+        _effectiveSouthRadiation = round( _effectiveSouthRadiation / 60.0, 3 )
+        _effectiveWestRadiation = round( _effectiveWestRadiation / 60.0, 3 )
 
         _windowSunPower = self.getWindowSunPowerPerMinute( u"FC {}h   :".format(hours), _effectiveSouthRadiation, _effectiveWestRadiation, True )
         _wallSunPower = self.getWallSunPowerPerMinute(_effectiveSouthRadiation, _effectiveWestRadiation)
@@ -530,7 +446,7 @@ class HeatingHelper:
         _currentChargeLevel = totalChargeLevel
         
         # targetLivingroomTemp and targetBedroomTemp must be without night reduction,
-        # that why we can't use stored target values like Heating_Temperature_Livingroom_Target and Heating_Temperature_Bedroom_Target
+        # that why we can't use stored target values like Heating_Temperature_FF_Livingroom_Target and Heating_Temperature_SF_Bedroom_Target
         # we need this, because all upcoming calculations should not consider night reduction
 
         _useLivingroomReference = self._useLivingroomReference( currentBedroomTemp, targetBedroomTemp, currentLivingroomTemp, targetLivingroomTemp )
@@ -558,8 +474,8 @@ class HeatingHelper:
     def calculateAdjustedTotalChargeLevel( self, now, baseHeatingPower, currentBedroomTemp, currentLivingroomTemp ):
         _currentChargeLevel = getItemState("Heating_Charged").doubleValue()
 
-        _livingroomTarget = getItemState("Heating_Temperature_Livingroom_Target").doubleValue()
-        _bedroomTarget = getItemState("Heating_Temperature_Bedroom_Target").doubleValue()
+        _livingroomTarget = getItemState("Heating_Temperature_FF_Livingroom_Target").doubleValue()
+        _bedroomTarget = getItemState("Heating_Temperature_SF_Bedroom_Target").doubleValue()
 
         _useLivingroomReference = self._useLivingroomReference( currentBedroomTemp, _bedroomTarget, currentLivingroomTemp, _livingroomTarget )
         _currentSource = "Temperature_FF_Livingroom" if _useLivingroomReference else "Temperature_SF_Bedroom"
@@ -623,7 +539,7 @@ class CalculateChargeLevelRule(HeatingHelper):
         #currentOutdoorTemp = self.getStableValue( now, "Temperature_Garden", 10 )
         currentOutdoorTemp = self.getStableValue( now, "Heating_Temperature_Outdoor", 10 )
 
-        currentLivingRoomCircuit = getItemState("Heating_Livingroom_Circuit")
+        currentLivingRoomCircuit = getItemState("Heating_FF_Livingroom_Circuit")
         isLivingRoomCircuitActive = currentLivingRoomCircuit == ON
         activeRooms = { "livingroom": isLivingRoomCircuitActive }
 
@@ -669,8 +585,8 @@ class CalculateChargeLevelRule(HeatingHelper):
 
         if effectiveSouthRadiation > 0.0 or effectiveWestRadiation > 0.0:
           
-            heatingLivingroomTarget = round( getItemState("Heating_Temperature_Livingroom_Target").doubleValue(), 1 )
-            heatingBedroomTarget = round( getItemState("Heating_Temperature_Bedroom_Target").doubleValue(), 1 )
+            heatingLivingroomTarget = round( getItemState("Heating_Temperature_FF_Livingroom_Target").doubleValue(), 1 )
+            heatingBedroomTarget = round( getItemState("Heating_Temperature_SF_Bedroom_Target").doubleValue(), 1 )
 
             atticRef = heatingBedroomTarget - 1.0
             if getItemState("State_Sunprotection_Attic") == ON:
@@ -740,9 +656,8 @@ class HeatingCheckRule(HeatingHelper):
             currentOutdoorForecast4Temp = round( getItemState("Temperature_Garden_Forecast4").doubleValue(), 1 )
             currentOutdoorForecast8Temp = round( getItemState("Temperature_Garden_Forecast8").doubleValue(), 1 )
             
-        heatingTarget = round( getItemState("Temperature_Room_Target").doubleValue(), 1 )
-        heatingTargetLivingroomTemp = round( heatingTarget, 1 )
-        heatingTargetBedroomTemp = round( heatingTarget - BEDROOM_REDUCTION, 1 )
+        heatingTargetLivingroomTemp = round( getItemState("Temperature_FF_Livingroom_Target").doubleValue(), 1 )
+        heatingTargetBedroomTemp = round( getItemState("Temperature_SF_Bedroom_Target").doubleValue(), 1 )
 
         totalChargeLevel = round( getItemState("Heating_Charged").doubleValue(), 1 )
         
@@ -751,7 +666,7 @@ class HeatingCheckRule(HeatingHelper):
         currentOperatingMode = getItemState("Heating_Operating_Mode").intValue()
         isHeatingActive = currentOperatingMode == 2
 
-        currentLivingRoomCircuit = getItemState("Heating_Livingroom_Circuit")
+        currentLivingRoomCircuit = getItemState("Heating_FF_Livingroom_Circuit")
         isLivingRoomCircuitActive = currentLivingRoomCircuit == ON
         activeRooms = { "livingroom": isLivingRoomCircuitActive }
 
@@ -848,8 +763,8 @@ class HeatingCheckRule(HeatingHelper):
         
         heatingTargetLivingroomTemp -= nightReduction
         heatingTargetBedroomTemp -= nightReduction
-        postUpdateIfChanged("Heating_Temperature_Livingroom_Target", heatingTargetLivingroomTemp )
-        postUpdateIfChanged("Heating_Temperature_Bedroom_Target", heatingTargetBedroomTemp )
+        postUpdateIfChanged("Heating_Temperature_FF_Livingroom_Target", heatingTargetLivingroomTemp )
+        postUpdateIfChanged("Heating_Temperature_SF_Bedroom_Target", heatingTargetBedroomTemp )
 
         # Some logs
         self.log.info(u"Effects : LR {}° ⇩ • OR {}°C ⇩ • NR {}°C ⇩ • LRC {}".format(lazyReduction,outdoorReduction,nightReduction,currentLivingRoomCircuit ))
@@ -908,7 +823,7 @@ class HeatingCheckRule(HeatingHelper):
             else:
                 # !! if condition is disabled because we want to calculate it always
                 # !! we should switch the circuit off during the night to avoid ventile damages during long inactivity times
-                # !! itemLastUpdateOlderThen("Heating_Livingroom_Circuit", getNow().minusMinutes(60*24*2))
+                # !! itemLastUpdateOlderThen("Heating_FF_Livingroom_Circuit", getNow().minusMinutes(60*24*2))
                 #if heatingDemand == 1 or currentLivingRoomCircuit == OFF:
 
                 newLivingRoomCircuit = currentLivingRoomCircuit
@@ -926,7 +841,7 @@ class HeatingCheckRule(HeatingHelper):
 
             if currentLivingRoomCircuit != newLivingRoomCircuit:
                 self.log.info(u"Switch  : Livingroom circuit {}".format(newLivingRoomCircuit))
-                sendCommand("Heating_Livingroom_Circuit",newLivingRoomCircuit)
+                sendCommand("Heating_FF_Livingroom_Circuit",newLivingRoomCircuit)
         
             ### Call heating control
             self.controlHeating(now, currentOperatingMode, heatingDemand, currentOutdoorTemp)
