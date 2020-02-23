@@ -330,6 +330,8 @@ Heating.rooms = [
     )
 ]
 
+Heating.allowedRooms = {'FF Kitchen': True, 'FF Livingroom': True}
+                       
 Heating.init()
 
 @rule("heating_control_new.py")
@@ -337,7 +339,7 @@ class TestRule():
     def __init__(self):
         self.triggers = [CronTrigger("*/15 * * * * ?")]
         self.activeHeatingOperatingMode = -1
-  
+
     def execute(self, module, input):
         now = getNow()
         currentOperatingMode = getItemState("Heating_Operating_Mode").intValue()
@@ -346,15 +348,8 @@ class TestRule():
         heating = Heating(self.log)
         cr, hhs = heating.calculate(currentOperatingMode == 2,lastHeatingChange, 60/15)    
         
-        allowedRooms = {'FF Kitchen': True, 'FF Livingroom': True}
+        heatingNeeded = hhs.isHeatingNeeded()
         
-        heatingNeeded = False
-        for room in filter( lambda room: room.getHeatingCircuitItem() != None,Heating.rooms):
-            if hhs.getHeatingState(room.getName()).getHeatingDemandEnergy() > 0:
-                if room.getName() in allowedRooms:
-                    heatingNeeded = True
-                    break
-               
         for room in filter( lambda room: room.getHeatingCircuitItem() != None,Heating.rooms):
             
             rs = cr.getRoomState(room.getName())
@@ -362,7 +357,6 @@ class TestRule():
             totalChargeLevel = rs.getHeatingBuffer()
             #postUpdateIfChanged( room.getHeatingBufferItem(), 0 )
             postUpdateIfChanged( room.getHeatingBufferItem(), totalChargeLevel )
-            
 
             rhs = hhs.getHeatingState(room.getName())
             if not heatingNeeded or rhs.getHeatingDemandEnergy() > 0:
@@ -384,7 +378,7 @@ class TestRule():
         
         # TODO enable control heating system
         #self.controlHeating(currentOperatingMode,heatingNeeded)  
- 
+
     def setSunStates(self, cr ):
       
         effectiveSouthRadiation = cr.getSunSouthRadiation() / 60.0

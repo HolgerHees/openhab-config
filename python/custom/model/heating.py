@@ -13,6 +13,8 @@ from custom.model.house import Window
 from custom.model.state import RoomState, HouseState, RoomHeatingState, HouseHeatingState
 
 class Heating(object):
+    allowedRooms = {}
+    
     defaultNightReduction = 2.0
     lazyOffset = 90 # Offset time until any heating has an effect
     minHeatingTime = 15 # 'Heizen mit WW' should be active at least for 15 min.
@@ -537,11 +539,9 @@ class Heating(object):
         if room.getName() in Heating._stableTemperatureReferences:
             _lastTemp = Heating._stableTemperatureReferences[room.getName()]
             if currentTemperature > _lastTemp:
-                _charged = self.adjustChargeLevel(rs,currentTemperature,_lastTemp,charged)
-                if _charged < 0.0: _charged = 0.0
-                hs.setChargeAdjustment(charged-_charged)
-                charged = _charged
-                
+                hs.setOriginalChargedBuffer(charged)
+                charged = self.adjustChargeLevel(rs,currentTemperature,_lastTemp,charged)
+                if charged < 0.0: charged = 0.0
             
         if hs.getHeatingDemandEnergy() == -1:
             hs.setInfo("WINDOW")
@@ -682,13 +682,13 @@ class Heating(object):
         #infoMsg = u"{} • DEBUG {}".format(infoMsg, rs.getLeakCooling())
 
         if rhs != None:
-            if rhs.getHeatingDemandEnergy() >= 0:
+            if rs.getHeatingRadiation() >= 0:
                 infoMsg = u"{}, HU {:3.1f} W/min".format(infoMsg, round(self.formatEnergy(rs.getHeatingRadiation()),1))
         
             percent = int(round(rhs.getChargedBuffer() * 100 / rs.getBufferSlotCapacity() ))
-            adjustedBuffer = u" {} W ⇩".format(round(rhs.getChargeAdjustment(),1)) if rhs.getChargeAdjustment() > 0 else u""
+            adjustedBuffer = u"{} => ".format(round(rhs.getOriginalChargedBuffer(),1)) if rhs.getOriginalChargedBuffer() > 0 else u""
         
-            infoMsg = u"{} • BF {}% ({}{} W)".format(infoMsg, percent, round(rhs.getChargedBuffer(),1), adjustedBuffer)
+            infoMsg = u"{} • BF {}% ({}{} W)".format(infoMsg, percent, adjustedBuffer, round(rhs.getChargedBuffer(),1))
 
             infoMsg = u"{} • LR {}°C".format(infoMsg, round(rhs.getLazyReduction(),1)) if rhs.getLazyReduction() > 0 else infoMsg
       
@@ -759,6 +759,8 @@ class Heating(object):
         outdoorReduction = self.calculateOutdoorReduction(cr.getPassiveSaldo(),cr4.getPassiveSaldo(),cr8.getPassiveSaldo())
             
         # *** HEATING STATE ***
+        heatingNeeded = False
+        
         hhs = HouseHeatingState()
         coldFloorHeatingPossible = not isHeatingActive and self.possibleColdFloorHeating(nightModeActive,lastHeatingChange)
         for room in filter( lambda room: room.getTemperatureTargetItem() != None,self.rooms):
@@ -787,23 +789,29 @@ class Heating(object):
                 if not self.isNightModeTime( self.now.plusMinutes( int( round( day_rhs.getHeatingDemandTime() * 60, 0 ) ) ) ):
                     rhs = day_rhs
                     rhs.setForcedInfo('PRE')
-                    Heating._forcedHeatings[room.getName()] = [ rhs, rhs.getHeatingDemandEnergy() ]
             
             # *** CHECK FOR COLD FLOOR HEATING ***
             if coldFloorHeatingPossible and rhs.getHeatingDemandEnergy() == 0:
                 neededEnergy = self.getColdFloorHeatingEnergy(lastHeatingChange, rs.getBufferSlotCapacity())
                 neededTime = neededEnergy / rs.getActivePossibleSaldo()
-                
-                # TODO enable all CF also if only one CF exceeds the Heating.minHeatingTime
-                #self.log.info(u"{} {}W {}min".format(room.getName(),neededEnergy,round(neededTime*60.0)))
-                
-                if rhs.getHeatingDemandEnergy() < neededEnergy and (neededTime * 60.0) > Heating.minHeatingTime:
+                if rhs.getHeatingDemandEnergy() < neededEnergy:
                     rhs.setHeatingDemandEnergy(neededEnergy)
                     rhs.setHeatingDemandTime(neededTime)
                     rhs.setForcedInfo('CF')
-                    Heating._forcedHeatings[room.getName()] = [ rhs, rhs.getHeatingDemandEnergy() ]
+
+            if room.getName() in Heating.allowedRooms and rhs.getHeatingDemandTime() * 60 > Heating.minHeatingTime:
+                heatingNeeded = True
 
             hhs.setHeatingState(room.getName(),rhs)
+            
+        hhs.setHeatingNeeded(heatingNeeded)
+
+        # *** REGISTER FORCED HEATINGS IF HEATING IS POSSIBLE
+        if heatingNeeded:
+            for room in filter( lambda room: room.getTemperatureTargetItem() != None,self.rooms):
+                rhs = hhs.getHeatingState(room.getName())
+                if rhs.getForcedInfo() != None and room.getName() not in Heating._forcedHeatings:
+                    Heating._forcedHeatings[room.getName()] = [ rhs, rhs.getHeatingDemandEnergy() ]
 
         # *** LOGGING ***
         for room in self.rooms:

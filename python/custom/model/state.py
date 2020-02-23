@@ -163,11 +163,17 @@ class HouseHeatingState():
     def __init__(self):
         self.heatingStates = {}
         
+    def setHeatingState(self,roomName,state):
+        self.heatingStates[roomName]=state
+
     def getHeatingState(self,roomName):
         return self.heatingStates[roomName]
     
-    def setHeatingState(self,roomName,state):
-        self.heatingStates[roomName]=state
+    def setHeatingNeeded(self,value):
+        self.heatingNeeded=value
+
+    def isHeatingNeeded(self):
+        return self.heatingNeeded
 
 class RoomHeatingState():
     def __init__(self):
@@ -177,7 +183,7 @@ class RoomHeatingState():
         self.heatingDemandEnergy = 0
         self.heatingDemandTime = 0
         self.chargedBuffer = 0
-        self.activeChargeAdjustment = 0
+        self.originalChargedBuffer = 0
         self.forcedInfo = None
 
     def setName(self,name):
@@ -216,11 +222,11 @@ class RoomHeatingState():
     def getHeatingDemandTime(self):
         return self.heatingDemandTime
 
-    def setChargeAdjustment(self,value):
-        self.activeChargeAdjustment = value
+    def setOriginalChargedBuffer(self,value):
+        self.originalChargedBuffer = value
 
-    def getChargeAdjustment(self):
-        return self.activeChargeAdjustment
+    def getOriginalChargedBuffer(self):
+        return self.originalChargedBuffer
 
     def setChargedBuffer(self,value):
         self.chargedBuffer = value
