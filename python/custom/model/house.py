@@ -28,10 +28,11 @@ class ThermalStorageType(ThermalBridgeType):
         return self.capacity
        
 class Wall(object):
-    def __init__(self, direction, area, type):
+    def __init__(self, direction, area, type, bound= None):
         self.direction = direction
         self.area = area
         self.type = type
+        self.bound = bound
     
     def getDirection(self):
         return self.direction
@@ -41,6 +42,9 @@ class Wall(object):
 
     def getType(self):
         return self.type
+
+    def getBound(self):
+        return self.bound
 
 class Door(Wall):
     def __init__(self, direction, area, type, contactItem=None):

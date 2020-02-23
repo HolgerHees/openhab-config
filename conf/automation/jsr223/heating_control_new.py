@@ -73,8 +73,8 @@ Heating.rooms = [
         walls=[
             Wall(direction='floor', area=6.29125, type=_groundFloor),
             Wall(direction='ceiling', area=6.29125, type=_groundCeiling),
-            Wall(direction='west', area=10.31765, type=_inner11Wall),
-            Wall(direction='north', area=3.4949, type=_inner17Wall),
+            Wall(direction='west', area=10.31765, type=_inner11Wall, bound="FF Utilityroom"),
+            Wall(direction='north', area=3.4949, type=_inner17Wall, bound="FF Floor"),
             Wall(direction='east', area=9.14345, type=_outerWall),
             Wall(direction='south', area=5.0225, type=_garageWall)
         ],
@@ -90,9 +90,9 @@ Heating.rooms = [
         walls=[
             Wall(direction='floor', area=8.9875, type=_groundFloor),
             Wall(direction='ceiling', area=8.9875, type=_groundCeiling),
-            Wall(direction='west', area=10.31765, type=_inner11Wall),
-            Wall(direction='north', area=5.39615, type=_inner17Wall),
-            Wall(direction='east', area=10.31765, type=_inner11Wall),
+            Wall(direction='west', area=10.31765, type=_inner11Wall, bound="FF Boxroom"),
+            Wall(direction='north', area=5.39615, type=_inner17Wall, bound="FF Floor"),
+            Wall(direction='east', area=10.31765, type=_inner11Wall, bound="FF Guest WC"),
             Wall(direction='south', area=5.294375, type=_garageWall)
         ],
         transitions=[
@@ -106,9 +106,9 @@ Heating.rooms = [
         walls=[
             Wall(direction='floor', area=5.734025, type=_groundFloor),
             Wall(direction='ceiling', area=5.734025, type=_groundCeiling),
-            Wall(direction='west', area=8.5388, type=_inner17Wall),
-            Wall(direction='north', area=4.57765, type=_inner17Wall),
-            Wall(direction='east', area=10.31765, type=_inner11Wall),
+            Wall(direction='west', area=8.5388, type=_inner17Wall, bound="FF Livingroom"),
+            Wall(direction='north', area=4.57765, type=_inner17Wall, bound="FF Livingroom"),
+            Wall(direction='east', area=10.31765, type=_inner11Wall, bound="FF Utilityroom"),
             Wall(direction='south', area=4.57765, type=_garageWall)
         ]
     ),
@@ -123,7 +123,7 @@ Heating.rooms = [
         walls=[
             Wall(direction='floor', area=12.999225, type=_groundFloor),
             Wall(direction='ceiling', area=12.999225, type=_groundCeiling),
-            Wall(direction='east', area=8.789925, type=_inner17Wall),
+            Wall(direction='east', area=8.789925, type=_inner17Wall, bound="FF Boxroom"),
             Wall(direction='south', area=3.0, type=_garageWall),
             Wall(direction='south', area=7.1311, type=_outerWall),
             Wall(direction='west', area=8.069575, type=_outerWall),
@@ -134,8 +134,9 @@ Heating.rooms = [
             Wall(direction='south', area=3.393775, type=_outerWall),
             Wall(direction='west', area=9.292675, type=_outerWall),
             Wall(direction='north', area=18.92765, type=_outerWall),
-            Wall(direction='east', area=17.93755, type=_inner17Wall),
-            Wall(direction='south', area=6.177675, type=_inner17Wall)
+            Wall(direction='east', area=17.93755, type=_inner17Wall, bound="FF Floor"), # TODO better calculation
+            #Wall(direction='east', area=10.31765, type=_inner17Wall, bound="FF Guestroom"), # TODO better calculation
+            Wall(direction='south', area=6.177675, type=_inner17Wall, bound="FF Boxroom")
         ],
         transitions=[
             Window(direction='west', area=2.2, type=_outerWindow, contactItem='Window_FF_Kitchen', shutterItem='Shutters_FF_Kitchen', shutterArea=0.2992, radiationArea=0.645*1.01*2.0, sunProtectionItem="State_Sunprotection_Livingroom"),
@@ -154,10 +155,10 @@ Heating.rooms = [
         walls=[
             Wall(direction='floor', area=13.5891, type=_groundFloor),
             Wall(direction='ceiling', area=13.5891, type=_groundCeiling),
-            Wall(direction='west', area=10.31765, type=_inner17Wall),
+            Wall(direction='west', area=10.31765, type=_inner17Wall, bound="FF Livingroom"),
             Wall(direction='north', area=10.8486, type=_outerWall),
             Wall(direction='east', area=7.9847, type=_outerWall),
-            Wall(direction='south', area=9.06975, type=_inner17Wall)
+            Wall(direction='south', area=9.06975, type=_inner17Wall, bound="FF Floor")
         ],
         transitions=[
             Window(direction='east', area=2.07625, type=_outerWindow, contactItem='Window_FF_Guestroom', shutterItem='Shutters_FF_Guestroom', shutterArea=0.2567)
@@ -174,10 +175,11 @@ Heating.rooms = [
         walls=[
             Wall(direction='floor', area=12.9843, type=_groundFloor),
             Wall(direction='ceiling', area=2.0524125, type=_groundCeiling),
-            Wall(direction='west', area=7.0746, type=_inner17Wall),
-            Wall(direction='north', area=9.06975, type=_inner17Wall),
+            Wall(direction='west', area=7.0746, type=_inner17Wall, bound="FF Livingroom"),
+            Wall(direction='north', area=9.06975, type=_inner17Wall, bound="FF Guestroom"),
             Wall(direction='east', area=5.19525, type=_outerWall),
-            Wall(direction='south', area=7.54215, type=_inner17Wall)
+            Wall(direction='south', area=7.54215, type=_inner17Wall, bound="FF Guest WC")   # TODO better calculation
+            #Wall(direction='south', area=7.54215, type=_inner17Wall, bound="FF Utilityroom")
         ],
         transitions=[
             Door(direction='east', area=4.6632, type=_mainDoor, contactItem='Door_FF_Floor')
@@ -382,7 +384,7 @@ class TestRule():
         
         # TODO enable control heating system
         #self.controlHeating(currentOperatingMode,heatingNeeded)  
-
+ 
     def setSunStates(self, cr ):
       
         effectiveSouthRadiation = cr.getSunSouthRadiation() / 60.0

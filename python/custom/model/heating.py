@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import math
 
 from custom.helper import getNow, getItemState, itemLastUpdateOlderThen, getStableItemState
 from custom.model.sun import SunRadiation
@@ -761,11 +762,12 @@ class Heating(object):
         hhs = HouseHeatingState()
         coldFloorHeatingPossible = not isHeatingActive and self.possibleColdFloorHeating(nightModeActive,lastHeatingChange)
         for room in filter( lambda room: room.getTemperatureTargetItem() != None,self.rooms):
+            rs = cr.getRoomState(room.getName())
+
             # *** CLEAN OR RESTORE FORCED HEATING ***
             if room.getName() in Heating._forcedHeatings:
-                rhs = Heating._forcedHeatings[room.getName()][1]
-                rs = cr.getRoomState(room.getName())
-                neededEnergy = Heating._forcedHeatings[room.getName()][2] - rs.getHeatingBuffer()
+                rhs = Heating._forcedHeatings[room.getName()][0]
+                neededEnergy = Heating._forcedHeatings[room.getName()][1] - rs.getHeatingBuffer()
                 if neededEnergy < 0:
                     del Heating._forcedHeatings[room.getName()]
                 else:
@@ -789,10 +791,13 @@ class Heating(object):
             
             # *** CHECK FOR COLD FLOOR HEATING ***
             if coldFloorHeatingPossible and rhs.getHeatingDemandEnergy() == 0:
-                neededEnergy = self.getColdFloorHeatingEnergy(lastHeatingChange, room.getBufferSlotCapacity())
-                if rhs.getHeatingDemandEnergy() < neededEnergy:
-                    rs = cr.getRoomState(room.getName())
-                    neededTime = neededEnergy / rs.getActivePossibleSaldo()
+                neededEnergy = self.getColdFloorHeatingEnergy(lastHeatingChange, rs.getBufferSlotCapacity())
+                neededTime = neededEnergy / rs.getActivePossibleSaldo()
+                
+                # TODO enable all CF also if only one CF exceeds the Heating.minHeatingTime
+                #self.log.info(u"{} {}W {}min".format(room.getName(),neededEnergy,round(neededTime*60.0)))
+                
+                if rhs.getHeatingDemandEnergy() < neededEnergy and (neededTime * 60.0) > Heating.minHeatingTime:
                     rhs.setHeatingDemandEnergy(neededEnergy)
                     rhs.setHeatingDemandTime(neededTime)
                     rhs.setForcedInfo('CF')
