@@ -339,7 +339,7 @@ class TestRule():
     def __init__(self):
         self.triggers = [CronTrigger("*/15 * * * * ?")]
         self.activeHeatingOperatingMode = -1
- 
+    
     def execute(self, module, input):
         now = getNow()
         currentOperatingMode = getItemState("Heating_Operating_Mode").intValue()

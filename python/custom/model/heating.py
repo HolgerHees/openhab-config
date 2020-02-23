@@ -180,7 +180,7 @@ class Heating(object):
             
         return closedWindowCooling, openWindowCooling, windowRadiation, openWindowCount
           
-    def calculateHeatingEnergy( self, isForecast, lastHeatingChange ):
+    def calculateHeatingEnergy( self, isForecast ):
         pumpSpeed = self.getCachedItemState(self.heatingCircuitPumpSpeedItem).intValue()
         if pumpSpeed == 0 or isForecast: 
             temperatures = []
@@ -193,39 +193,40 @@ class Heating(object):
                 for room in filter( lambda room: room.getHeatingArea() != None and room.getTemperatureTargetItem() != None,self.rooms):
                     temperatures.append( self.getCachedItemFloat( room.getTemperatureTargetItem() ) )
                 
-            temperature_Pipe_In = reduce( lambda x,y: x+y, temperatures ) / len(temperatures)
+            temperature_Pipe_In = reduce( lambda x,y: x+y, temperatures ) / len(temperatures) + 7.0
             
-            if lastHeatingChange.getMillis() < self.now.minusHours(12).getMillis():
-                # 0.3 steilheit
-                # niveau 12k
-                # 20° => 36°                => 0 => 0°
-                # -20^ => 47°               => 40 => 11°
-                
-                currentOutdoorTemp = self.getCachedItemFloat( self.temperatureGardenItem )
-                
-                if currentOutdoorTemp > 20.0: 
-                    maxVL = 36.0 * 0.95
-                elif currentOutdoorTemp < -20.0:
-                    maxVL = 47.0 * 0.95 
-                else:
-                    maxVL = ( ( ( ( currentOutdoorTemp - 20.0 ) * -1 ) * 11.0 / 40.0 ) + 36.0 ) * 0.95
-                    #test = ( ( ( ( currentOutdoorTemp - 20.0 ) * -1 ) * 11.0 / 40.0 ) + 36.0 ) * 0.9
-                    #self.log.info(u"-----> {}".format(test))
-                    #test = ( ( ( ( currentOutdoorTemp - 20.0 ) * -1 ) * 11.0 / 40.0 ) + 36.0 ) * 0.95
-                    #self.log.info(u"-----> {}".format(test))
+            # 0.3 steilheit
+            # niveau 12k
+            # 20° => 36°                => 0 => 0°
+            # -20^ => 47°               => 40 => 11°
+            
+            currentOutdoorTemp = self.getCachedItemFloat( self.temperatureGardenItem )
+            
+            if currentOutdoorTemp > 20.0: 
+                temperature_Pipe_Out = 36.0 * 0.95
+            elif currentOutdoorTemp < -20.0:
+                temperature_Pipe_Out = 47.0 * 0.95 
             else:
-                maxVL = temperature_Pipe_In + 11.5
+                temperature_Pipe_Out = ( ( ( ( currentOutdoorTemp - 20.0 ) * -1 ) * 11.0 / 40.0 ) + 36.0 ) * 0.95
+                #test = ( ( ( ( currentOutdoorTemp - 20.0 ) * -1 ) * 11.0 / 40.0 ) + 36.0 ) * 0.9
+                #self.log.info(u"-----> {}".format(test))
+                #test = ( ( ( ( currentOutdoorTemp - 20.0 ) * -1 ) * 11.0 / 40.0 ) + 36.0 ) * 0.95
+                #self.log.info(u"-----> {}".format(test))
                     
-            circulationDiff = maxVL - temperature_Pipe_In
+            circulationDiff = temperature_Pipe_Out - temperature_Pipe_In
                 
-            pumpSpeed = 100.0
+            pumpSpeed = 85.0
             debugInfo = ""
             isForecast = True
+
+            #Diff 9.1°C • VL 37.5°C • RL 28.4°C • 85.0% (FC)
+            #self.log.info( u"Diff {}°C • VL {}°C • RL {}°C • {}% (FC)".format(round(circulationDiff,1),round(temperature_Pipe_Out,1),round(temperature_Pipe_In,1),pumpSpeed))
         else:
             temperature_Pipe_Out = self.getCachedItemFloat(self.heatingTemperaturePipeOutItem)
             temperature_Pipe_In = self.getCachedItemFloat(self.heatingTemperaturePipeInItem)
             circulationDiff = temperature_Pipe_Out - temperature_Pipe_In
             
+            #Diff 9.6°C • VL 38.9°C • RL 29.3°C • 85% (0.42 m³)
             debugInfo = u"Diff {}°C • VL {}°C • RL {}°C • {}%".format(round(circulationDiff,1),round(temperature_Pipe_Out,1),round(temperature_Pipe_In,1),pumpSpeed)
 
         return circulationDiff, pumpSpeed, isForecast, debugInfo
@@ -370,7 +371,7 @@ class Heating(object):
 
         return round( targetBufferChargeLevel, 1 )
 
-    def getCoolingAndRadiations(self,hours,lastHeatingChange):
+    def getCoolingAndRadiations(self,hours):
         isForecast = hours != 0
         
         time = self.now
@@ -395,7 +396,7 @@ class Heating(object):
 
         self.cache[self.getCachedStableItemKey(self.temperatureGardenItem)] = self.cache[self.temperatureGardenItem]
             
-        heatingCirculationDiff, heatingPumpSpeed, heatingForecast, heatingDebugInfo = self.calculateHeatingEnergy(isForecast,lastHeatingChange)
+        heatingCirculationDiff, heatingPumpSpeed, heatingForecast, heatingDebugInfo = self.calculateHeatingEnergy(isForecast)
         activeHeatingArea, activeHeatingVolume, maxHeatingArea, maxHeatingVolume = self.calculateActiveHeatingArea(isForecast)
         
         currentTotalVentilationCooling = self.getVentilationEnergy(tempDiffOffset) / 3.6 # converting kj into watt
@@ -679,12 +680,12 @@ class Heating(object):
         infoMsg = u"{} • CD {:4.1f}".format(infoMsg, round(self.formatEnergy(rs.getPassiveSaldo()),1))
 
         # **** DEBUG ****
-        #infoMsg = u"{} • DEBUG {}".format(infoMsg, rs.getLeakCooling())
+        #infoMsg = u"{} • DEBUG {} {}".format(infoMsg, rs.getPossibleHeatingRadiation(), rs.getPossibleHeatingVolume())
 
         if rhs != None:
             if rs.getHeatingRadiation() >= 0:
                 infoMsg = u"{}, HU {:3.1f} W/min".format(infoMsg, round(self.formatEnergy(rs.getHeatingRadiation()),1))
-        
+                
             adjustedBuffer = u""
             if rhs.getChargedBuffer() != rs.getHeatingBuffer() or rhs.getAdjustedHeatingBuffer() > 0:
                 if rhs.getChargedBuffer() != rs.getHeatingBuffer():
@@ -696,7 +697,8 @@ class Heating(object):
             percent = int(round(rhs.getChargedBuffer() * 100 / rs.getBufferSlotCapacity() ))
             infoMsg = u"{} • BF {}%, {}{} W".format(infoMsg, percent, round(rhs.getChargedBuffer(),1), adjustedBuffer)
 
-            infoMsg = u"{} • LR {}°C".format(infoMsg, round(rhs.getLazyReduction(),1)) if rhs.getLazyReduction() > 0 else infoMsg
+            lr = round(rhs.getLazyReduction(),1)
+            infoMsg = u"{} • LR {}°C".format(infoMsg, lr) if lr > 0 else infoMsg
       
             if rhs.getHeatingDemandEnergy() > 0:
                 infoMsg = u"{} • HU {} W in {} min".format(
@@ -732,15 +734,15 @@ class Heating(object):
         self.cache[u"org_{}".format(self.temperatureGardenItem)] = self.getCachedStableItemState(self.temperatureGardenItem)
 
         # *** 8 HOUR FORECAST ***
-        cr8 = self.getCoolingAndRadiations(8,lastHeatingChange)
+        cr8 = self.getCoolingAndRadiations(8)
         self.logCoolingAndRadiations("FC8     ",cr8)
 
         # *** 4 HOUR FORECAST ***
-        cr4 = self.getCoolingAndRadiations(4,lastHeatingChange)
+        cr4 = self.getCoolingAndRadiations(4)
         self.logCoolingAndRadiations("FC4     ",cr4)
 
         # *** CURRENT ***
-        cr = self.getCoolingAndRadiations(0,lastHeatingChange)
+        cr = self.getCoolingAndRadiations(0)
         self.logCoolingAndRadiations("Current ",cr)
 
         if cr.getHeatingVolume() > 0:
