@@ -51,11 +51,12 @@ class Door(Wall):
         return self.contactItem
 
 class Window(Door):
-    def __init__(self, direction, area, type, contactItem=None, shutterItem=None, shutterArea=None, glasArea=None):
+    def __init__(self, direction, area, type, contactItem=None, shutterItem=None, shutterArea=None, radiationArea=None, sunProtectionItem=None):
         super(Window,self).__init__(direction, area, type, contactItem)
         self.shutterItem = shutterItem
         self.shutterArea = shutterArea
-        self.glasArea = glasArea
+        self.radiationArea = radiationArea
+        self.sunProtectionItem = sunProtectionItem
         
     def getShutterItem(self):
         return self.shutterItem
@@ -63,8 +64,11 @@ class Window(Door):
     def getShutterArea(self):
         return self.shutterArea
 
-    def getGlasArea(self):
-        return self.glasArea
+    def getRadiationArea(self):
+        return self.radiationArea
+
+    def getSunProtectionItem(self):
+        return self.sunProtectionItem
 
 class Room(object):
     def __init__(self, name, temperatureSensorItem, temperatureTargetItem=None, heatingBufferItem=None, heatingCircuitItem=None, heatingArea=None, volume=None, walls=None, transitions=[]):

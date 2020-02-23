@@ -564,7 +564,7 @@ class CalculateChargeLevelRule(HeatingHelper):
         
         self.log.info(u"Slot    : {} KW/K • {} W/0.1K".format(round( baseHeatingPower / 1000.0, 1 ),slotHeatingPower ) )
 
-        self.setSunStates( currentOutdoorTemp, currentAtticTemp, currentBedroomTemp, currentLivingroomTemp, sunPower, effectiveSouthRadiation, effectiveWestRadiation )
+        #self.setSunStates( currentOutdoorTemp, currentAtticTemp, currentBedroomTemp, currentLivingroomTemp, sunPower, effectiveSouthRadiation, effectiveWestRadiation )
 
         # Get the house charge level. If we detect a house warmup, we remove "adjust" the needed amount energy for heating up in 0.1°C levels
         totalChargeLevel = self.calculateAdjustedTotalChargeLevel( now, baseHeatingPower, currentBedroomTemp, currentLivingroomTemp )
@@ -579,9 +579,9 @@ class CalculateChargeLevelRule(HeatingHelper):
 
         self.log.info(u"<<<")
 
-    def setSunStates(self, currentOutdoorTemp, currentAtticTemp, currentBedroomTemp, currentLivingroomTemp, sunPower, effectiveSouthRadiation, effectiveWestRadiation ):
+    '''def setSunStates(self, currentOutdoorTemp, currentAtticTemp, currentBedroomTemp, currentLivingroomTemp, sunPower, effectiveSouthRadiation, effectiveWestRadiation ):
       
-        postUpdateIfChanged( "Solar_Power", sunPower )
+        #postUpdateIfChanged( "Solar_Power", sunPower )
 
         if effectiveSouthRadiation > 0.0 or effectiveWestRadiation > 0.0:
           
@@ -621,7 +621,7 @@ class CalculateChargeLevelRule(HeatingHelper):
                 if effectiveWestRadiation < 3.7 or currentLivingroomTemp < livingroomRef or currentOutdoorTemp < livingroomRef:
                     postUpdate("State_Sunprotection_Livingroom", OFF )
             elif effectiveWestRadiation > 3.8 and currentLivingroomTemp >= livingroomRef and currentOutdoorTemp >= livingroomRef:
-                postUpdate("State_Sunprotection_Livingroom", ON )
+                postUpdate("State_Sunprotection_Livingroom", ON )'''
 
 @rule("heating_control.py")
 class HeatingCheckRule(HeatingHelper):
@@ -774,7 +774,7 @@ class HeatingCheckRule(HeatingHelper):
         if getItemState("Heating_Auto_Mode").intValue() == 1:
             forceLivingRoomHeatingPossible = ( currentLivingroomTemp - heatingTargetLivingroomTemp < 1.0 )
             forceBufferHeating = False
-            heatingDemand = 0
+            heatingDemand = OFF
             heatingType = ""
             
             ### Check heating demand
@@ -786,7 +786,7 @@ class HeatingCheckRule(HeatingHelper):
                 referenceTargetDiff = round( heatingTargetDiff - lazyReduction - outdoorReduction, 1 )
                 
                 if referenceTargetDiff > 0:
-                    heatingDemand = 1
+                    heatingDemand = ON
                     heatingType = u"HEATING"
                 else:
                     # it is too warm inside, but outside it is very cold, so we need some buffer heating to avoid cold floors
@@ -794,14 +794,14 @@ class HeatingCheckRule(HeatingHelper):
                     forceBufferHeating = self.forcedBufferHeatingCheck( now, isHeatingActive, lastHeatingChange, referenceSlotHeatingPower, availableHeatingPowerPerMinute, targetChargeLevelDiff, currentPossibleCoolingPowerPerMinute )
                 
                     if forceBufferHeating:
-                        heatingDemand = 1
+                        heatingDemand = ON
                         heatingType = u"FORCED BUFFER HEATING"
                     elif referenceTargetDiff == 0.0:
                         # Check if buffer heating is needed
                         isBufferHeatingNeeded = self.isBufferHeating( isHeatingActive, targetChargeLevelDiff, minBufferChargeLevel, maxBufferChargeLevel )
         
                         if isBufferHeatingNeeded:
-                            heatingDemand = 1
+                            heatingDemand = ON
                             heatingType = u"BUFFER HEATING"
                         else:
                             heatingType = u"NO HEATING • BUFFER FULL"
@@ -859,7 +859,7 @@ class HeatingCheckRule(HeatingHelper):
         # 3 - Reduziert
         # 4 - Normal
         
-        isHeatingRequested = heatingDemand == 1
+        isHeatingRequested = heatingDemand == ON
         if self.activeHeatingOperatingMode == -1:
             self.activeHeatingOperatingMode = currentOperatingMode
         

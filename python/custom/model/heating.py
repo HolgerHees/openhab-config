@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from custom.helper import getNow, getItemState, getItemLastUpdate, itemLastUpdateOlderThen, getStableItemState
+from custom.helper import getNow, getItemState, itemLastUpdateOlderThen, getStableItemState
 from custom.model.sun import SunRadiation
 
 from org.eclipse.smarthome.core.library.types import OnOffType
@@ -15,9 +15,9 @@ class Heating(object):
     defaultNightReduction = 2.0
     lazyOffset = 90 # Offset time until any heating has an effect
     minHeatingTime = 15 # 'Heizen mit WW' should be active at least for 15 min.
-    #MIN_ONLY_WW_TIME = 15 # 'Nur WW' should be active at least for 15 min.
-    #MIN_REDUCED_TIME = 5
-    #MAX_REDUCED_TIME = 60
+    minOnlyWwTime = 15 # 'Nur WW' should be active at least for 15 min.
+    minReducedTime = 5
+    maxReducedTime = 60
 
     densitiyAir = 1.2041
     cAir = 1.005
@@ -30,7 +30,7 @@ class Heating(object):
     # To warmup 1 liter of wather you need 4,182 Kilojoule
     # 1 Wh == 3,6 kJ
     # 1000 l * 4,182 kJ / 3,6kJ = 1161,66666667
-    heatingReferencePower = 1162 # per Watt je m³/K
+    heatingReferenceEnergy = 1162 # per Watt je m³/K
 
     cloudCoverFC8Item = None
     cloudCoverFC4Item = None
@@ -75,13 +75,6 @@ class Heating(object):
         self.log = log
         self.cache = {}
         self.now = getNow()
-
-        #Heating_Auto_Mode
-        #=>Heating_Charged
-        #=>Heating_Demand
-        #Heating_Operating_Mode
-        #=>Heating_Temperature_Livingroom_Target
-        #=>Heating_Temperature_Bedroom_Target
         
     def getCachedStableItemKey(self,itemName,stableSince=10):
         return u"stable-{}-{}".format(itemName,stableSince)
@@ -109,7 +102,7 @@ class Heating(object):
             self.cache[key] = itemLastUpdateOlderThen( itemName, self.now.minusMinutes(minutes) )
         return self.cache[key]
 
-    def getVentilationPower(self,tempDiffOffset):
+    def getVentilationEnergy(self,tempDiffOffset):
         # *** Calculate power loss by ventilation ***
         _ventilationLevel = self.getCachedItemState(self.ventilationLevelItem).intValue()
         _ventilationTempDiff = self.getCachedItemFloat(self.ventilationOutgoingTemperatureItem) - self.getCachedItemFloat(self.ventilationIncommingTemperatureItem)
@@ -120,22 +113,22 @@ class Heating(object):
             if _ventilationTempDiff + ventilationOffset > 0:
                 _ventilationTempDiff = _ventilationTempDiff + ventilationOffset
                     
-        # Ventilation Power
+        # Ventilation Energy
         # 15% => 40m/h		XX => ?
         # 100% => 350m/h		85 => 310
         _ventilationVolume = ( ( ( _ventilationLevel - 15.0 ) * 310.0 ) / 85.0 ) + 40.0
         _ventilationUValue = _ventilationVolume * self.densitiyAir * self.cAir
-        _ventilationPowerInKJ = _ventilationUValue * _ventilationTempDiff
-        return _ventilationPowerInKJ * -1 if _ventilationPowerInKJ != 0 else 0.0
+        _ventilationEnergyInKJ = _ventilationUValue * _ventilationTempDiff
+        return _ventilationEnergyInKJ * -1 if _ventilationEnergyInKJ != 0 else 0.0
     
-    def getLeakingPower(self,volume, currentTemperature, outdoorTemperature):
+    def getLeakingEnergy(self,volume, currentTemperature, outdoorTemperature):
         _leakingTemperatureDiff = currentTemperature - outdoorTemperature
         _leakingVolume = ( volume * self.leaking_n50 * self.leaking_e ) / ( 1 + ( self.leaking_f / self.leaking_e ) * ( ( ( 0.1 * 0.4 ) / self.leaking_n50 ) * ( ( 0.1 * 0.4 ) / self.leaking_n50 ) ) )
         _leakingUValue = _leakingVolume * self.densitiyAir * self.cAir
-        _leakingPowerInKJ = _leakingUValue * _leakingTemperatureDiff
-        return _leakingPowerInKJ * -1 if _leakingPowerInKJ != 0 else 0.0
+        _leakingEnergyInKJ = _leakingUValue * _leakingTemperatureDiff
+        return _leakingEnergyInKJ * -1 if _leakingEnergyInKJ != 0 else 0.0
 
-    def getCoolingPower(self ,area, currentTemperature, type):
+    def getCoolingEnergy(self ,area, currentTemperature, type):
         if type.getUValue() != None:
             referenceTemperature = self.getCachedStableItemFloat(type.getReferenceTemperatureItem())
             temperatureDifference = currentTemperature - referenceTemperature
@@ -148,7 +141,7 @@ class Heating(object):
     def calculateWallCoolingAndRadiations(self,currentTemperature,sunSouthRadiation,sunWestRadiation,walls):
         wallCooling = wallRadiation = roomCapacity = 0
         for wall in walls:
-            cooling = self.getCoolingPower(wall.getArea(),currentTemperature,wall.getType())
+            cooling = self.getCoolingEnergy(wall.getArea(),currentTemperature,wall.getType())
             wallCooling = wallCooling + cooling
             
             if wall.getType() == self.radiatedThermalStorageType:
@@ -165,20 +158,20 @@ class Heating(object):
     def calculateWindowCoolingAndRadiations(self,currentTemperature,sunSouthRadiation,sunWestRadiation,transitions,wallCooling,isForecast):
         closedWindowCooling = windowRadiation = openWindowCount = 0
         for transition in transitions:
-            cooling = self.getCoolingPower(transition.getArea(),currentTemperature,transition.getType())
+            cooling = self.getCoolingEnergy(transition.getArea(),currentTemperature,transition.getType())
             closedWindowCooling = closedWindowCooling + cooling
 
             if transition.getContactItem() != None and self.getCachedItemState(transition.getContactItem()) == OpenClosedType.OPEN:
                 if self.cachedItemLastUpdateOlderThen(transition.getContactItem(), 10 if isForecast else 2):
                     openWindowCount = openWindowCount + 1
 
-            if isinstance(transition,Window) and transition.getGlasArea() != None:
+            if isinstance(transition,Window) and transition.getRadiationArea() != None:
                 _shutterOpen = (isForecast or transition.getShutterItem() == None or self.getCachedItemState(transition.getShutterItem()) == PercentType.ZERO)
                 if _shutterOpen:
                     if transition.getDirection() == 'south':
-                        windowRadiation = windowRadiation + SunRadiation.getWindowSunPowerPerMinute(transition.getGlasArea(),sunSouthRadiation)
+                        windowRadiation = windowRadiation + SunRadiation.getWindowSunPowerPerMinute(transition.getRadiationArea(),sunSouthRadiation)
                     elif transition.getDirection() == 'west':
-                        windowRadiation = windowRadiation + SunRadiation.getWindowSunPowerPerMinute(transition.getGlasArea(),sunWestRadiation)
+                        windowRadiation = windowRadiation + SunRadiation.getWindowSunPowerPerMinute(transition.getRadiationArea(),sunWestRadiation)
         
         openWindowCooling = 0 if isForecast else wallCooling * openWindowCount
             
@@ -188,13 +181,13 @@ class Heating(object):
         pumpSpeed = self.getCachedItemState(self.heatingCircuitPumpSpeedItem).intValue()
         if pumpSpeed == 0 or isForecast: 
             temperatures = []
-            for room in filter( lambda room: room.getHeatingCircuitItem() != None,self.rooms):
-                if isForecast or self.getCachedItemState( room.getHeatingCircuitItem() ) == OnOffType.ON:
+            for room in filter( lambda room: room.getHeatingArea() != None,self.rooms):
+                if isForecast or room.getHeatingCircuitItem() == None or self.getCachedItemState( room.getHeatingCircuitItem() ) == OnOffType.ON:
                     temperatures.append( self.getCachedStableItemFloat( room.getTemperatureSensorItem() ) )
             
             if len(temperatures) == 0:
                 # Fallback is avg of all target temperatures
-                for room in filter( lambda room: room.getHeatingCircuitItem() != None,self.rooms):
+                for room in filter( lambda room: room.getHeatingArea() != None and room.getTemperatureTargetItem() != None,self.rooms):
                     temperatures.append( self.getCachedItemFloat( room.getTemperatureTargetItem() ) )
                 
             temperature_Pipe_In = reduce( lambda x,y: x+y, temperatures ) / len(temperatures)
@@ -240,9 +233,9 @@ class Heating(object):
             roomHeatingVolume = roomHeatingArea * activeHeatingVolume / activeHeatingArea
         
             pumpVolume = round( ( roomHeatingVolume * pumpSpeed ) / 100.0, 2 )
-            heatingPower = self.heatingReferencePower * pumpVolume * circulationDiff
+            heatingEnergy = self.heatingReferenceEnergy * pumpVolume * circulationDiff
             
-            return pumpVolume, heatingPower
+            return pumpVolume, heatingEnergy
         else:
             return 0.0, 0.0
           
@@ -265,23 +258,23 @@ class Heating(object):
         
         return activeHeatingArea, activeHeatingVolume, maxHeatingArea, self.maxHeatingVolume
     
-    def getOutdoorDependingReduction( self, coolingPower ):
+    def getOutdoorDependingReduction( self, coolingEnergy ):
         # more than zeor means cooling => no reduction
-        if coolingPower <= 0: return 0.0
+        if coolingEnergy <= 0: return 0.0
 
         # less than zero means - sun heating
         # 18000 Watt => 300 W/min => max reduction
-        if coolingPower > 18000: return 2.0
+        if coolingEnergy > 18000: return 2.0
 
-        return ( coolingPower * 2.0 ) / 18000.0
+        return ( coolingEnergy * 2.0 ) / 18000.0
 
-    def calculateOutdoorReduction(self, coolingPower, coolingPowerFC4, coolingPowerFC8):
+    def calculateOutdoorReduction(self, coolingEnergy, coolingEnergyFC4, coolingEnergyFC8):
         # Current cooling should count full
-        _outdoorReduction = self.getOutdoorDependingReduction(coolingPower)
+        _outdoorReduction = self.getOutdoorDependingReduction(coolingEnergy)
         # Closed cooling forecast should count 90%
-        _outdoorReductionFC4 = self.getOutdoorDependingReduction(coolingPowerFC4) * 0.8
+        _outdoorReductionFC4 = self.getOutdoorDependingReduction(coolingEnergyFC4) * 0.8
         # Cooling forecast in 8 hours should count 80%
-        _outdoorReductionFC8 = self.getOutdoorDependingReduction(coolingPowerFC8) * 0.6
+        _outdoorReductionFC8 = self.getOutdoorDependingReduction(coolingEnergyFC8) * 0.6
         
         _outdoorReduction = _outdoorReduction + _outdoorReductionFC4 + _outdoorReductionFC8
         
@@ -338,6 +331,42 @@ class Heating(object):
           
         return False
       
+    def possibleColdFloorHeating(self,nightModeActive,lastHeatingChange):
+        day = self.now.getDayOfWeek()
+        hour = self.now.getHourOfDay()
+        
+        hadTodayHeating = lastHeatingChange.getDayOfWeek() == day
+
+        isMorning = hour < 12 and nightModeActive
+        hadMorningHeating = hadTodayHeating
+        
+        holidaysInactive = self.getCachedItemState(Heating.holidayStatusItem) == OnOffType.OFF
+        minEveningHour = 17 if holidaysInactive and day <= 5 else 16
+        isEvening = hour >= minEveningHour
+        hadEveningHeating = hadTodayHeating and lastHeatingChange.getHourOfDay() >= minEveningHour
+        
+        return (isMorning and not hadMorningHeating) or (isEvening and not hadEveningHeating)
+      
+    def getColdFloorHeatingEnergy(self, lastUpdate, slotHeatingEnergy ):
+      
+        # when was the last heating job
+        lastUpdateBeforeInMinutes = ( self.now.getMillis() - lastUpdate.getMillis() ) / 1000.0 / 60.0
+       
+        booster = 2.0 if self.now.getHourOfDay() < 12 else 1.5
+        
+        # 0 => 0
+        # 8 => 1
+        factor = ( lastUpdateBeforeInMinutes / 60.0 ) / 8.0
+        if factor > 1.0: factor = 1.0
+
+        #https://rechneronline.de/funktionsgraphen/
+        multiplier = ( math.pow( (factor-1), 2.0 ) * -1 ) + 1      #(x-1)^2*-1+1
+        #multiplier = math.pow( (factor-1), 3.0 ) + 1              #(x-1)^3+1
+
+        targetBufferChargeLevel = round( slotHeatingEnergy * factor * booster, 1 )
+
+        return round( targetBufferChargeLevel, 1 )
+
     def getCoolingAndRadiations(self,hours,lastHeatingChange):
         isForecast = hours != 0
         
@@ -366,7 +395,7 @@ class Heating(object):
         heatingCirculationDiff, heatingPumpSpeed, heatingForecast, heatingDebugInfo = self.calculateHeatingEnergy(isForecast,lastHeatingChange)
         activeHeatingArea, activeHeatingVolume, maxHeatingArea, maxHeatingVolume = self.calculateActiveHeatingArea(isForecast)
         
-        currentTotalVentilationCooling = self.getVentilationPower(tempDiffOffset) / 3.6 # converting kj into watt
+        currentTotalVentilationCooling = self.getVentilationEnergy(tempDiffOffset) / 3.6 # converting kj into watt
         sunSouthRadiation, sunWestRadiation, sunDebugInfo = SunRadiation.getSunPowerPerMinute(time,round(self.getCachedItemFloat(self.cloudCoverItem),1))
         
         totalWallCooling = 0
@@ -412,7 +441,7 @@ class Heating(object):
 
             # *** VENTILATION COOLING ***
             ventilationCooling = room.getVolume() * currentTotalVentilationCooling / self.totalVolume
-            leakCooling = self.getLeakingPower(room.getVolume(),currentTemperature,self.getCachedItemFloat(self.temperatureGardenItem)) / 3.6 # converting kj into watt
+            leakCooling = self.getLeakingEnergy(room.getVolume(),currentTemperature,self.getCachedItemFloat(self.temperatureGardenItem)) / 3.6 # converting kj into watt
                 
             # summarize room values
             totalBufferCapacity = totalBufferCapacity + roomCapacity
@@ -430,8 +459,6 @@ class Heating(object):
             # set room values
             roomState = RoomState()
             roomState.setName(room.getName())
-            #roomIsActive = True#room.getHeatingCircuitItem() != None and ( isForecast or self.getCachedItemState( room.getHeatingCircuitItem() ) == OnOffType.ON )
-            #roomState.setActive(roomIsActive)
             roomState.setOpenWindowCount(openWindowCount)
 
             roomState.setBufferCapacity(roomCapacity)
@@ -443,12 +470,12 @@ class Heating(object):
             roomState.setWindowCooling(openWindowCooling)
             roomState.setWindowRadiation(windowRadiation)
 
-            roomState.setPassiveSaldo(wallCooling+wallRadiation+ventilationCooling+leakCooling+openWindowCooling+windowRadiation)
-
             roomState.setHeatingVolume(heatingVolume)
             roomState.setHeatingRadiation(heatingRadiation)
             roomState.setPossibleHeatingVolume(possibleHeatingVolume)
             roomState.setPossibleHeatingRadiation(possibleHeatingRadiation)
+            
+            roomState.setCurrentTemperature(currentTemperature)
 
             states[room.getName()] = roomState
 
@@ -466,82 +493,80 @@ class Heating(object):
         houseState.setWindowCooling(totalWindowCooling)
         houseState.setWindowRadiation(totalWindowRadiation)
 
-        houseState.setPassiveSaldo(totalWallCooling+totalWallRadiation+totalVentilationCooling+totalLeakCooling+totalWindowCooling+totalWindowRadiation)
-
         houseState.setHeatingPumpSpeed(heatingPumpSpeed)
         houseState.setHeatingVolume(totalHeatingVolume)
         houseState.setHeatingRadiation(totalHeatingRadiation)
         houseState.setPossibleHeatingVolume(totalPossibleHeatingVolume)
         houseState.setPossibleHeatingRadiation(totalPossibleHeatingRadiation)
-        
         houseState.setHeatingDebugInfo(heatingDebugInfo)
+
+        houseState.setSunSouthRadiation(sunSouthRadiation)
+        houseState.setSunWestRadiation(sunWestRadiation)
         houseState.setSunDebugInfo(sunDebugInfo)
 
         return houseState
         
-    def getHeatingDemand(self,cr,cr4,cr8,outdoorReduction,nightReduction,isHeatingActive):
+    def getHeatingDemand(self,room,cr,cr4,cr8,outdoorReduction,nightReduction,isHeatingActive):
       
-        states = {}
-        for room in filter( lambda room: room.getHeatingCircuitItem() != None,self.rooms):
-            
-            hs = RoomHeatingState()
-            
-            for transition in room.transitions:
-                if transition.getContactItem() != None and self.getCachedItemState(transition.getContactItem()) == OpenClosedType.OPEN:
-                    if self.cachedItemLastUpdateOlderThen(transition.getContactItem(), 10):
-                        hs.setHeatingDemandEnergy(-1)
-                        break
-                    
-            states[room.getName()] = hs
-        
-        hhs = HouseHeatingState()
-        hhs.setHeatingStates(states)
+        hs = RoomHeatingState()
+        hs.setName(room.getName())
 
+        for transition in room.transitions:
+            if transition.getContactItem() != None and self.getCachedItemState(transition.getContactItem()) == OpenClosedType.OPEN:
+                if self.cachedItemLastUpdateOlderThen(transition.getContactItem(), 10):
+                    hs.setHeatingDemandEnergy(-1)
+                    break
+        
         bufferHeatingEnabled = cr.getPassiveSaldo() < 0 and cr4.getPassiveSaldo() < 0
 
-        for room in filter( lambda room: room.getHeatingCircuitItem() != None,self.rooms):
-            
-            hs = hhs.getHeatingState(room.getName())
+        hs.setNightReduction(nightReduction)
+        hs.setOutdoorReduction(outdoorReduction)
+        
+        rs = cr.getRoomState(room.getName())
 
-            if hs.getHeatingDemandEnergy() == -1:
-                hs.setInfo("OPEN WINDOW")
-                continue
-            
-            hs.setNightReduction(nightReduction)
-            
-            currentTemperature = round( self.getCachedStableItemFloat(room.getTemperatureSensorItem()), 1)
-            targetTemperature = self.getCachedItemFloat(room.getTemperatureTargetItem()) - outdoorReduction - nightReduction
-            
-            charged = self.getCachedItemFloat(room.getHeatingBufferItem())
-            
-            # check for upcoming charge level changes => see "charge level changes" for the final one
-            if room.getName() in Heating._stableTemperatureReferences:
-                _lastTemp = Heating._stableTemperatureReferences[room.getName()]
-                if currentTemperature > _lastTemp:
-                    charged = self.adjustChargeLevel(cr.getRoomState(room.getName()),currentTemperature,_lastTemp,charged)
-                    if charged < 0.0: charged = 0.0
-                    self.log.info(u"\t        : {:10s} • Charging to {} adjusted".format(room.getName(),charged) )
+        currentTemperature = round( self.getCachedStableItemFloat(room.getTemperatureSensorItem()), 1)
+
+        # set active target temperature to room state
+        targetTemperature = self.getCachedItemFloat(room.getTemperatureTargetItem()) -  nightReduction
+        rs.setTargetTemperature(targetTemperature)
+
+        charged = rs.getHeatingBuffer()
+        
+        # check for upcoming charge level changes => see "charge level changes" for the final one
+        if room.getName() in Heating._stableTemperatureReferences:
+            _lastTemp = Heating._stableTemperatureReferences[room.getName()]
+            if currentTemperature > _lastTemp:
+                _charged = self.adjustChargeLevel(rs,currentTemperature,_lastTemp,charged)
+                if _charged < 0.0: _charged = 0.0
+                hs.setChargeAdjustment(charged-_charged)
+                charged = _charged
                 
-            missingDegrees = targetTemperature - currentTemperature
+            
+        if hs.getHeatingDemandEnergy() == -1:
+            hs.setInfo("WINDOW")
+        else:
+            missingDegrees = targetTemperature - outdoorReduction - currentTemperature
 
             if missingDegrees < 0:
                 hs.setInfo("WARM")
-            else:
-                rs = cr.getRoomState(room.getName())
-                
+            else:                
                 if missingDegrees > 0:
                     hs.setInfo("COLD")
                     
                     possibleDegrees = charged / rs.getBufferCapacity()
+                    #self.log.info(u"{} {} {}".format(room.getName(),possibleDegrees,missingDegrees))
                     if possibleDegrees - missingDegrees > 0:
+                        #self.log.info(u"A")
                         lazyReduction = missingDegrees
                         charged = charged - ( missingDegrees * rs.getBufferCapacity() )
                         missingDegrees = 0
                     else:
+                        #self.log.info(u"B")
                         lazyReduction = possibleDegrees
+                        charged = 0
                         neededEnergy = ( missingDegrees - possibleDegrees ) * rs.getBufferCapacity()
                         #self.log.info(u"{} {} {}".format(rs.getName(),neededEnergy,temperatureDifference))
-                        neededTime = neededEnergy / rs.getPossibleHeatingRadiation()
+                        neededTime = neededEnergy / rs.getActivePossibleSaldo()
                         hs.setHeatingDemandEnergy(neededEnergy)
                         hs.setHeatingDemandTime(neededTime)
                         
@@ -552,7 +577,8 @@ class Heating(object):
                         #self.log.info(u"{} {} {}".format(room.getName(),missingDegrees,bufferHeatingEnabled))
 
                         # 75% of 0.1°C
-                        maxBuffer = rs.getBufferCapacity() * 0.1 * 0.75
+                        maxBuffer = rs.getBufferSlotCapacity() * 0.75
+                        #self.log.info(u"{} {} {}".format(room.getName(),charged,maxBuffer))
                         
                         # Stop buffer heating if buffer more than 75% charged
                         if charged > maxBuffer:
@@ -565,40 +591,38 @@ class Heating(object):
                             hs.setInfo("CHARGE")
                             #self.log.info(u"3")
                             neededEnergy = maxBuffer - charged
-                            neededTime = neededEnergy / rs.getPossibleHeatingRadiation()
+                            neededTime = neededEnergy / rs.getActivePossibleSaldo()
                             hs.setHeatingDemandEnergy(neededEnergy)
                             hs.setHeatingDemandTime(neededTime)
                     else:
                         hs.setInfo("SKIP")
 
-            hs.setChargedBuffer(charged)
+        hs.setChargedBuffer(charged)
             
-        return hhs
+        return hs
                 
     def adjustChargeLevel(self,rs,currentTemp,lastTemp,chargeLevel):
         heatedUpTempDiff = currentTemp - lastTemp
         chargeLevel = chargeLevel - ( rs.getBufferCapacity() * heatedUpTempDiff )
         return chargeLevel
         
-    def calculateChargeLevel(self,room,cr):
+    def calculateChargeLevel(self,room,rs,devider):
         totalChargeLevel = self.getCachedItemFloat(room.getHeatingBufferItem())
         
-        rs = cr.getRoomState(room.getName())
-
         _currentTemp = round(self.getCachedStableItemFloat(room.getTemperatureSensorItem(),20),1)
         if room.getName() in Heating._stableTemperatureReferences:
             _lastTemp = Heating._stableTemperatureReferences[room.getName()]
             if _currentTemp < _lastTemp:
-                self.log.info(u"Cleanup : {:10s} • Reference to {} adjusted".format(room.getName(),_currentTemp) )
+                self.log.info(u"\tCleanup : {:10s} • Reference to {} adjusted".format(room.getName(),_currentTemp) )
             elif _currentTemp > _lastTemp:
                 totalChargeLevel = self.adjustChargeLevel(rs,_currentTemp,_lastTemp,totalChargeLevel)
-                self.log.info(u"Cleanup : {:10s} • Reference to {} and Charged to {} adjusted".format(room.getName(),_currentTemp,totalChargeLevel) )
+                if totalChargeLevel < 0.0: totalChargeLevel = 0.0
+                self.log.info(u"\tCleanup : {:10s} • Reference to {} and Charged to {} adjusted".format(room.getName(),_currentTemp,round(totalChargeLevel,1)) )
         Heating._stableTemperatureReferences[room.getName()]=_currentTemp
       
-        totalChargeLevel = totalChargeLevel + rs.getPassiveSaldo() + rs.getHeatingRadiation()
-        totalChargeLevel = round( totalChargeLevel, 1 )
+        totalChargeLevel = totalChargeLevel + ( rs.getActiveSaldo() / 60.0 / devider )
         if totalChargeLevel < 0.0: totalChargeLevel = 0.0
-
+        
         return totalChargeLevel
       
 
@@ -628,45 +652,61 @@ class Heating(object):
         msg = u"{} W/min".format(self.formatEnergy(cr.getHeatingRadiation())) if cr.getHeatingRadiation() > 0 else u"{} W/min (FC)".format(self.formatEnergy(cr.getPossibleHeatingRadiation()))
         self.log.info(u"\t        : CD {} W/min ({}°C) • HU {}".format(self.formatEnergy(cr.getPassiveSaldo()),round(cr.getReferenceTemperature(),1), msg ))
                   
-    def logHeatingState(self,room, cr, hhs, outdoorReduction, nightReduction ):
-        target = self.getCachedItemFloat(room.getTemperatureTargetItem()) - outdoorReduction - nightReduction
+    def logHeatingState(self,room, cr, hhs ):
         
         rs = cr.getRoomState(room.getName())
-        rhs = hhs.getHeatingState(room.getName())
+        rhs = hhs.getHeatingState(room.getName()) if room.getTemperatureTargetItem() != None else None
+                        
+        infoMsg = u"{:15s} • {}°C".format(room.getName(),round(self.getCachedStableItemFloat(room.getTemperatureSensorItem()),1))
         
-        reductionMsg = u""
-        if outdoorReduction > 0:
-            reductionMsg = u"{}, OR {}".format(reductionMsg,outdoorReduction)
-        if nightReduction > 0:
-            reductionMsg = u"{}, NR {}".format(reductionMsg,nightReduction)
-                
-        infoMsg = u""
+        if rhs != None:
+            reductionMsg = u""
+            if rhs.getHeatingDemandEnergy() >= 0:
+                if rhs.getOutdoorReduction() > 0:
+                    reductionMsg = u"{}, OR {}".format(reductionMsg,rhs.getOutdoorReduction())
+                if rhs.getNightReduction() > 0:
+                    reductionMsg = u"{}, NR {}".format(reductionMsg,rhs.getNightReduction())
+
+            target = self.getCachedItemFloat(room.getTemperatureTargetItem()) - rhs.getOutdoorReduction() - rhs.getNightReduction()
+            infoMsg = u"{} ({}{})".format(infoMsg,target,reductionMsg)
+
+            infoValue = rhs.getInfo()
+            if rhs.getForcedInfo() != None:
+                infoValue = u"{} ({})".format(infoValue, rhs.getForcedInfo())
+            infoMsg = u"{} • {:6s}".format(infoMsg,infoValue)
+
+        infoMsg = u"{} • CD {:4.1f}".format(infoMsg, round(self.formatEnergy(rs.getPassiveSaldo()),1))
+
+        # **** DEBUG ****
+        #infoMsg = u"{} • DEBUG {}".format(infoMsg, rs.getLeakCooling())
+
+        if rhs != None:
+            if rhs.getHeatingDemandEnergy() >= 0:
+                infoMsg = u"{}, HU {:3.1f} W/min".format(infoMsg, round(self.formatEnergy(rs.getHeatingRadiation()),1))
         
-        percent = int(round(rhs.getChargedBuffer() * 100 / rs.getBufferCapacity()))
-        infoMsg = u"{} • {:6s} {:3d}%".format(infoMsg,rhs.getInfo(),percent)
-
-        infoMsg = u"{} • CD {:4.1f} W/min".format(infoMsg, round(self.formatEnergy(rs.getPassiveSaldo()),1))
-
-        infoMsg = u"{} • HU {:3.1f} W/min".format(infoMsg, round(self.formatEnergy(rs.getHeatingRadiation()),1))
-
-        infoMsg = u"{} • LR {}°C".format(infoMsg, round(rhs.getLazyReduction(),1)) if rhs.getLazyReduction() > 0 else infoMsg
+            percent = int(round(rhs.getChargedBuffer() * 100 / rs.getBufferSlotCapacity() ))
+            adjustedBuffer = u" {} W ⇩".format(round(rhs.getChargeAdjustment(),1)) if rhs.getChargeAdjustment() > 0 else u""
         
-        if room.getName() in Heating._forcedHeatings:
-            infoMsg = u"{} • FH {}".format(infoMsg, Heating._forcedHeatings[room.getName()])
-            
-        if rhs.getHeatingDemandEnergy() > 0:
-            infoMsg = u"{} • HU {} W in {} min".format(
-                infoMsg,
-                round(rhs.getHeatingDemandEnergy(),1),
-                round(rhs.getHeatingDemandTime()*60)
-            )
-            self.log.info(u"\t     ON : {:15s} • {}°C ({}{}){}".format(room.getName(),round(self.getCachedStableItemFloat(room.getTemperatureSensorItem()),1),target,reductionMsg,infoMsg))
-        elif rhs.getHeatingDemandEnergy() == 0:
-            self.log.info(u"\t    OFF : {:15s} • {}°C ({}{}){}".format(room.getName(),round(self.getCachedStableItemFloat(room.getTemperatureSensorItem()),1),target,reductionMsg,infoMsg))
+            infoMsg = u"{} • BF {}% ({}{} W)".format(infoMsg, percent, round(rhs.getChargedBuffer(),1), adjustedBuffer)
+
+            infoMsg = u"{} • LR {}°C".format(infoMsg, round(rhs.getLazyReduction(),1)) if rhs.getLazyReduction() > 0 else infoMsg
+      
+            if rhs.getHeatingDemandEnergy() > 0:
+                infoMsg = u"{} • HU {} W in {} min".format(
+                    infoMsg,
+                    round(rhs.getHeatingDemandEnergy(),1),
+                    round(rhs.getHeatingDemandTime()*60)
+                )
+                self.log.info(u"\t     ON : {}".format(infoMsg))
+            elif rhs.getHeatingDemandEnergy() == 0:
+                self.log.info(u"\t    OFF : {}".format(infoMsg))
+            else:
+                self.log.info(u"\tSKIPPED : {}".format(infoMsg))
         else:
-            self.log.info(u"\tSKIPPED : {:15s} • {}°C ({}) • OPEN WINDOWS".format(room.getName(),round(self.getCachedStableItemFloat(room.getTemperatureSensorItem()),1),target))
+            self.log.info(u"\t        : {}".format(infoMsg))
+
                 
-    def calculate(self):
+    def calculate(self,isHeatingActive,lastHeatingChange,devider):
         # handle outdated ventilation values
         if itemLastUpdateOlderThen(self.ventilationFilterRuntimeItem, self.now.minusMinutes(120)):
             self.cache[self.ventilationLevelItem] = DecimalType(1)
@@ -680,11 +720,6 @@ class Heating(object):
             self.cache[self.cloudCoverFC4Item] = DecimalType(9)
             self.cache[self.cloudCoverFC8Item] = DecimalType(9)
             self.cache[self.cloudCoverItem] = DecimalType(9)
-
-        lastHeatingChange = getItemLastUpdate("Heating_Demand")
-        
-        currentOperatingMode = getItemState("Heating_Operating_Mode").intValue()
-        isHeatingActive = currentOperatingMode == 2
 
         self.cache[u"org_{}".format(self.cloudCoverItem)] = self.getCachedItemState(self.cloudCoverItem)
         self.cache[u"org_{}".format(self.temperatureGardenItem)] = self.getCachedStableItemState(self.temperatureGardenItem)
@@ -704,82 +739,71 @@ class Heating(object):
         if cr.getHeatingVolume() > 0:
             self.log.info(u"\t        : {} ({} m³)".format(cr.getHeatingDebugInfo(),cr.getHeatingVolume()))
 
-        #self.log.info(u"\tSlot    : {} KW/K • {} W/0.1K".format(round(cr.getBufferCapacity()/1000,1),round(cr.getBufferCapacity()/10,1)))
-        
+        # CLEAN CHARGE LEVEL
+        for room in filter( lambda room: room.getTemperatureTargetItem() != None,self.rooms):
+            rs = cr.getRoomState(room.getName())
+            totalChargeLevel = self.calculateChargeLevel(room,rs,devider)
+            rs.setHeatingBuffer(totalChargeLevel)
 
+            rs = cr4.getRoomState(room.getName())
+            rs.setHeatingBuffer(totalChargeLevel)
 
+            rs = cr8.getRoomState(room.getName())
+            rs.setHeatingBuffer(totalChargeLevel)
 
         # *** NIGHT MODE DETECTION ***
         nightModeActive = self.isNightMode(isHeatingActive)
         nightReduction = self.defaultNightReduction if nightModeActive else 0.0
-
-
         # *** OUTDOOR REDUCTION ***
         outdoorReduction = self.calculateOutdoorReduction(cr.getPassiveSaldo(),cr4.getPassiveSaldo(),cr8.getPassiveSaldo())
-
-
-
-        
-        # *** HEATING DEMAND CALCULATION ***
-        hhs = self.getHeatingDemand(cr,cr4,cr8,outdoorReduction,nightReduction,isHeatingActive)
-
-        # *** CHECK FOR PRE HEATING IN THE MORNING ***
-        if nightModeActive and self.now.getHourOfDay() < 12:
-            day_hhs = self.getHeatingDemand(cr,cr4,cr8,outdoorReduction,0,isHeatingActive)
             
-            for room in filter( lambda room: room.getHeatingCircuitItem() != None,self.rooms):
-                day_rhs = day_hhs.getHeatingState(room.getName())
-                if not self.isNightModeTime( self.now.plusMinutes( int( round( day_rhs.getHeatingDemandTime() * 60, 0 ) ) ) ):
-                    Heating._forcedHeatings[room.getName()] = "PRE"
-                elif room.getName() not in Heating._forcedHeatings:
+        # *** HEATING STATE ***
+        hhs = HouseHeatingState()
+        coldFloorHeatingPossible = not isHeatingActive and self.possibleColdFloorHeating(nightModeActive,lastHeatingChange)
+        for room in filter( lambda room: room.getTemperatureTargetItem() != None,self.rooms):
+            # *** CLEAN OR RESTORE FORCED HEATING ***
+            if room.getName() in Heating._forcedHeatings:
+                rhs = Heating._forcedHeatings[room.getName()][1]
+                rs = cr.getRoomState(room.getName())
+                neededEnergy = Heating._forcedHeatings[room.getName()][2] - rs.getHeatingBuffer()
+                if neededEnergy < 0:
+                    del Heating._forcedHeatings[room.getName()]
+                else:
+                    rs = cr.getRoomState(room.getName())
+                    neededTime = neededEnergy / rs.getActivePossibleSaldo()
+                    rhs.setHeatingDemandEnergy(neededEnergy)
+                    rhs.setHeatingDemandTime(neededTime)
+                    hhs.setHeatingState(room.getName(),rhs)
                     continue
-
-                hhs.setHeatingState(room.getName(),day_rhs)
+  
+            # *** HEATING DEMAND CALCULATION ***
+            rhs = self.getHeatingDemand(room,cr,cr4,cr8,outdoorReduction,nightReduction,isHeatingActive)
+         
+            # *** CHECK FOR PRE HEATING IN THE MORNING ***
+            if nightModeActive and self.now.getHourOfDay() < 12 and rhs.getHeatingDemandEnergy() == 0:
+                day_rhs = self.getHeatingDemand(room,cr,cr4,cr8,outdoorReduction,0,isHeatingActive)
+                if not self.isNightModeTime( self.now.plusMinutes( int( round( day_rhs.getHeatingDemandTime() * 60, 0 ) ) ) ):
+                    rhs = day_rhs
+                    rhs.setForcedInfo('PRE')
+                    Heating._forcedHeatings[room.getName()] = [ rhs, rhs.getHeatingDemandEnergy() ]
             
-                
+            # *** CHECK FOR COLD FLOOR HEATING ***
+            if coldFloorHeatingPossible and rhs.getHeatingDemandEnergy() == 0:
+                neededEnergy = self.getColdFloorHeatingEnergy(lastHeatingChange, room.getBufferSlotCapacity())
+                if rhs.getHeatingDemandEnergy() < neededEnergy:
+                    rs = cr.getRoomState(room.getName())
+                    neededTime = neededEnergy / rs.getActivePossibleSaldo()
+                    rhs.setHeatingDemandEnergy(neededEnergy)
+                    rhs.setHeatingDemandTime(neededTime)
+                    rhs.setForcedInfo('CF')
+                    Heating._forcedHeatings[room.getName()] = [ rhs, rhs.getHeatingDemandEnergy() ]
 
+            hhs.setHeatingState(room.getName(),rhs)
 
-
-
-        # TODO add cold food heating in the morning and evening
-
-
-
-        for room in filter( lambda room: room.getHeatingCircuitItem() != None,self.rooms):
-          
-            rhs = hhs.getHeatingState(room.getName())
+        # *** LOGGING ***
+        for room in self.rooms:
+            self.logHeatingState(room, cr, hhs )
             
-            # clean forced heatings
-            if rhs.getHeatingDemandEnergy() <= 0 and room.getName() in Heating._forcedHeatings:
-                del Heating._forcedHeatings[room.getName()]
-
-            # clean charge level
-            totalChargeLevel = self.calculateChargeLevel(room,cr)
-            rhs.setHeatingBuffer(totalChargeLevel)
-            
-            self.logHeatingState(room, cr, hhs, outdoorReduction, nightReduction )
-            
-            
-
-     
-
-        
-
-
-        
-        
-        
-        
-        
-        #Buffer  : 0% filled • 0 W ... 1222.7 W • 17 min. ⇧
-        #Charged : 0.0 W total incl. buffer • 0 min. ⇩
-        #        : Night mode start check at 13:38 • 90 min.
-        #Effects : LR 0.0° ⇩ • OR 0.0°C ⇩ • NR 0.0°C ⇩ • LRC OFF
-        #Rooms   : Living 22.3°C (⇒ 22.0°C) • Sleeping 20.4°C (⇒ 19.5°C)
         #        : No forced buffer • 3054.5 W in 43 min. • wrong time
-        #Demand  : NO HEATING • TOO WARM • since 04:50 • 07:18 min. ago
-        #Active  : Nur WW • since 04:50 • 07:18 min. ago
-        
-        return hhs
 
-
+        return cr, hhs
