@@ -183,7 +183,7 @@ class RoomHeatingState():
         self.heatingDemandEnergy = 0
         self.heatingDemandTime = 0
         self.chargedBuffer = 0
-        self.originalChargedBuffer = 0
+        self.adjustedHeatingBuffer = 0
         self.forcedInfo = None
 
     def setName(self,name):
@@ -222,11 +222,11 @@ class RoomHeatingState():
     def getHeatingDemandTime(self):
         return self.heatingDemandTime
 
-    def setOriginalChargedBuffer(self,value):
-        self.originalChargedBuffer = value
+    def setAdjustedHeatingBuffer(self,value):
+        self.adjustedHeatingBuffer = value
 
-    def getOriginalChargedBuffer(self):
-        return self.originalChargedBuffer
+    def getAdjustedHeatingBuffer(self):
+        return self.adjustedHeatingBuffer
 
     def setChargedBuffer(self,value):
         self.chargedBuffer = value

@@ -333,13 +333,13 @@ Heating.rooms = [
 Heating.allowedRooms = {'FF Kitchen': True, 'FF Livingroom': True}
                        
 Heating.init()
-
+ 
 @rule("heating_control_new.py")
 class TestRule():
     def __init__(self):
         self.triggers = [CronTrigger("*/15 * * * * ?")]
         self.activeHeatingOperatingMode = -1
-
+ 
     def execute(self, module, input):
         now = getNow()
         currentOperatingMode = getItemState("Heating_Operating_Mode").intValue()

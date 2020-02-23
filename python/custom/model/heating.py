@@ -539,9 +539,9 @@ class Heating(object):
         if room.getName() in Heating._stableTemperatureReferences:
             _lastTemp = Heating._stableTemperatureReferences[room.getName()]
             if currentTemperature > _lastTemp:
-                hs.setOriginalChargedBuffer(charged)
                 charged = self.adjustChargeLevel(rs,currentTemperature,_lastTemp,charged)
                 if charged < 0.0: charged = 0.0
+                hs.setAdjustedHeatingBuffer(charged)
             
         if hs.getHeatingDemandEnergy() == -1:
             hs.setInfo("WINDOW")
@@ -685,10 +685,16 @@ class Heating(object):
             if rs.getHeatingRadiation() >= 0:
                 infoMsg = u"{}, HU {:3.1f} W/min".format(infoMsg, round(self.formatEnergy(rs.getHeatingRadiation()),1))
         
+            adjustedBuffer = u""
+            if rhs.getChargedBuffer() != rs.getHeatingBuffer() or rhs.getAdjustedHeatingBuffer() > 0:
+                if rhs.getChargedBuffer() != rs.getHeatingBuffer():
+                    adjustedBuffer = u"{}{}".format(adjustedBuffer,round(rs.getHeatingBuffer(),1),adjustedBuffer)
+                if rhs.getAdjustedHeatingBuffer() > 0:
+                    adjustedBuffer = u"{} => {}".format(adjustedBuffer,round(rhs.getAdjustedHeatingBuffer(),1))
+                adjustedBuffer = u" ({})".format(adjustedBuffer)
+            
             percent = int(round(rhs.getChargedBuffer() * 100 / rs.getBufferSlotCapacity() ))
-            adjustedBuffer = u"{} => ".format(round(rhs.getOriginalChargedBuffer(),1)) if rhs.getOriginalChargedBuffer() > 0 else u""
-        
-            infoMsg = u"{} • BF {}% ({}{} W)".format(infoMsg, percent, adjustedBuffer, round(rhs.getChargedBuffer(),1))
+            infoMsg = u"{} • BF {}%, {}{} W".format(infoMsg, percent, round(rhs.getChargedBuffer(),1), adjustedBuffer)
 
             infoMsg = u"{} • LR {}°C".format(infoMsg, round(rhs.getLazyReduction(),1)) if rhs.getLazyReduction() > 0 else infoMsg
       
