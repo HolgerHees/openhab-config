@@ -10,35 +10,47 @@ class State(object):
     def getBufferSlotCapacity(self):
         return self.bufferCapacity * 0.1
 
-    def setWallCooling(self,value):
-        self.wallCooling = value
+    def setOutdoorWallEnergy(self,value):
+        self.outdoorWallEnergy = value
         
-    def getWallCooling(self):
-        return self.wallCooling
+    def getOutdoorWallEnergy(self):
+        return self.outdoorWallEnergy
         
-    def setWallRadiation(self,value):
+    def setIndoorWallEnergy(self,value):
+        self.indoorWallEnergy = value
+        
+    def getIndoorWallEnergy(self):
+        return self.indoorWallEnergy
+
+    def getWallEnergy(self):
+        return self.outdoorWallEnergy + self.indoorWallEnergy
+
+    def setOutdoorWallRadiation(self,value):
         self.wallRadiation = value
         
+    def getOutdoorWallRadiation(self):
+        return self.wallRadiation
+
     def getWallRadiation(self):
         return self.wallRadiation
 
-    def setVentilationCooling(self,value):
-        self.ventilationCooling = value
+    def setVentilationEnergy(self,value):
+        self.ventilationEnergy = value
         
-    def getVentilationCooling(self):
-        return self.ventilationCooling
+    def getVentilationEnergy(self):
+        return self.ventilationEnergy
 
-    def setLeakCooling(self,value):
-        self.leakCooling = value
+    def setLeakEnergy(self,value):
+        self.leakEnergy = value
         
-    def getLeakCooling(self):
-        return self.leakCooling
+    def getLeakEnergy(self):
+        return self.leakEnergy
 
-    def setWindowCooling(self,value):
-        self.windowCooling = value
+    def setWindowEnergy(self,value):
+        self.windowEnergy = value
         
-    def getWindowCooling(self):
-        return self.windowCooling
+    def getWindowEnergy(self):
+        return self.windowEnergy
 
     def setWindowRadiation(self,value):
         self.windowRadiation = value
@@ -46,8 +58,14 @@ class State(object):
     def getWindowRadiation(self):
         return self.windowRadiation
 
+    def setOpenWindowCount(self,count):
+        self.openWindowCount = count
+
+    def getOpenWindowCount(self):
+        return self.openWindowCount
+
     def getPassiveSaldo(self):
-        return self.wallCooling+self.wallRadiation+self.ventilationCooling+self.leakCooling+self.windowCooling+self.windowRadiation
+        return self.outdoorWallEnergy+self.indoorWallEnergy+self.wallRadiation+self.ventilationEnergy+self.leakEnergy+self.windowEnergy+self.windowRadiation
       
     def getActiveSaldo(self):
         return self.getPassiveSaldo() + self.getHeatingRadiation()
@@ -88,12 +106,6 @@ class RoomState(State):
 
     def getName(self):
         return self.name
-
-    def setOpenWindowCount(self,count):
-        self.openWindowCount = count
-
-    def getOpenWindowCount(self):
-        return self.openWindowCount
 
     def setCurrentTemperature(self,value):
         self.temperature = value

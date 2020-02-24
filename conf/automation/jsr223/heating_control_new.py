@@ -15,8 +15,6 @@ Heating.cloudCoverItem = "Cloud_Cover_Current"
 Heating.temperatureGardenFC8Item = "Temperature_Garden_Forecast8"
 Heating.temperatureGardenFC4Item = "Temperature_Garden_Forecast4"
 Heating.temperatureGardenItem = "Heating_Temperature_Outdoor" # Temperature_Garden
-Heating.temperatureGarageItem = "Temperature_FF_Garage"
-Heating.temperatureAtticItem = "Heating_Temperature_Outdoor"
 
 Heating.ventilationFilterRuntimeItem = "Ventilation_Filter_Runtime"
 
@@ -30,53 +28,69 @@ Heating.heatingTemperaturePipeInItem = "Heating_Temperature_Pipe_In"
 
 Heating.holidayStatusItem = "State_Holidays_Active"
  
-_groundFloor = ThermalStorageType( capacity=164.0, uValue=0.320, uOffset=0.08, factor=0.60, referenceTemperatureItem=Heating.temperatureGardenItem )
-_groundCeiling = ThermalStorageType( capacity=308.0 )
+_groundFloor = ThermalStorageType( capacity=164.0, uValue=0.320, uOffset=0.08, factor=0.60 )
+_groundCeiling = ThermalStorageType( capacity=308.0, uValue=0.610, uOffset=0.1, factor=1.0 )
 
-_outerWall = ThermalStorageType( capacity=77.0, uValue=0.234, uOffset=0.08, factor=1.0, referenceTemperatureItem=Heating.temperatureGardenItem )
-_garageWall = ThermalStorageType( capacity=77.0, uValue=0.234, uOffset=0.08, factor=1.0, referenceTemperatureItem=Heating.temperatureGarageItem )
+_outer36Wall = ThermalStorageType( capacity=77.0, uValue=0.234, uOffset=0.08, factor=1.0 )
+_outer22Wall = ThermalStorageType( capacity=53.0, uValue=0.348, uOffset=0.08, factor=1.0 )
+_garageWall = ThermalStorageType( capacity=77.0, uValue=0.234, uOffset=0.08, factor=1.0 )
 
-_inner11Wall = ThermalStorageType( capacity=87.0 / 2.0 )
-_inner17Wall = ThermalStorageType( capacity=111.0 / 2.0 )
+_inner11Wall = ThermalStorageType( capacity=87.0 / 2.0, uValue=0.883, uOffset=0, factor=1.0 )
+_inner17Wall = ThermalStorageType( capacity=111.0 / 2.0, uValue=0.565, uOffset=0, factor=1.0 )
 
-_mainDoor = ThermalBridgeType( uValue=1.400, uOffset=0.08, factor=1.0, referenceTemperatureItem=Heating.temperatureGardenItem )
-_garageDoor = ThermalBridgeType( uValue=1.700, uOffset=0.08, factor=1.0, referenceTemperatureItem=Heating.temperatureGarageItem )
-_outerWindow = ThermalBridgeType( uValue=0.970, uOffset=0.08, factor=1.0, referenceTemperatureItem=Heating.temperatureGardenItem )
+_mainDoor = ThermalBridgeType( uValue=1.400, uOffset=0.08, factor=1.0 )
+_garageDoor = ThermalBridgeType( uValue=1.700, uOffset=0.08, factor=1.0 )
+_outerWindow = ThermalBridgeType( uValue=0.970, uOffset=0.08, factor=1.0 )
 
-_outerShutter = ThermalBridgeType( uValue=0.34, uOffset=0.08, factor=1.0, referenceTemperatureItem=Heating.temperatureGardenItem )
+_outerShutter = ThermalBridgeType( uValue=0.34, uOffset=0.08, factor=1.0 )
 
-_firstFloor = ThermalStorageType( capacity=136.0 )
-_firstCeiling = ThermalStorageType( capacity=9.30, uValue=0.186, uOffset=0.1, factor=1.0, referenceTemperatureItem=Heating.temperatureAtticItem )
-_firstSlopingCeiling = ThermalStorageType( capacity=9.30, uValue=0.186, uOffset=0.1, factor=1.0, referenceTemperatureItem=Heating.temperatureGardenItem )
-_firstSlopingWindow = ThermalBridgeType( uValue=1.400, uOffset=0.1, factor=1.0, referenceTemperatureItem=Heating.temperatureGardenItem )
+_firstFloor = ThermalStorageType( capacity=136.0, uValue=0.610, uOffset=0.1, factor=1.0 )
+_firstCeiling = ThermalStorageType( capacity=9.30, uValue=0.186, uOffset=0.1, factor=1.0 )
+_firstSlopingCeiling = ThermalStorageType( capacity=9.30, uValue=0.186, uOffset=0.1, factor=1.0 )
+_firstSlopingWindow = ThermalBridgeType( uValue=1.400, uOffset=0.1, factor=1.0 )
 
-_atticFloor = ThermalStorageType( capacity=1.7 )
+_atticFloor = ThermalStorageType( capacity=1.7, uValue=0.186, uOffset=0, factor=1.0 )
 
 _firstFloorHeight = 2.57
 _secondFloorHeight = 2.45
 _atticFloorHeight = 2.10
 
-#_maxVolume = 1.2 # 1200l max Volumenstrom of a Vitodens 200-W Typ B2HA with 13kW
-Heating.maxHeatingVolume = 0.584 # 584l Nenn-Umlaufwassermenge of a Vitodens 200-W Typ B2HA with 13kW
-
-Heating.radiatedThermalStorageType = _outerWall
-
-Heating.rooms = [
+rooms = [
+    Room(
+        name='FF Garage',
+        temperatureSensorItem='Temperature_FF_Garage',
+        volume=54.0702 * _atticFloorHeight / 2.0,
+        walls=[
+            Wall(direction='floor', area=27.456025, type=_atticFloor),
+            Wall(direction='ceiling', area=27.456025, type=_firstSlopingCeiling),
+            Wall(direction='west', area=7.199, type=_outer22Wall),
+            Wall(direction='north', area=4.18, type=_outer36Wall, bound="FF Livingroom"),
+            Wall(direction='north', area=3.509, type=_outer36Wall, bound="FF Boxroom"),
+            Wall(direction='north', area=5.5, type=_outer36Wall, bound="FF Utilityroom"),
+            Wall(direction='north', area=3.85, type=_outer36Wall,bound="FF Guest WC"),
+            Wall(direction='east', area=6.09, type=_outer22Wall),
+            Wall(direction='south', area=17.039, type=_outer22Wall)
+        ],
+        transitions=[
+            Window(direction='east', area=0.7676, type=_firstSlopingWindow),
+            Window(direction='south', area=0.7676, type=_outerWindow, contactItem='Window_SF_Attic', shutterItem='Shutters_SF_Attic', shutterArea=0.19295, radiationArea=0.72*1.00, sunProtectionItem="State_Sunprotection_Attic")
+        ]
+    ),
     Room(
         name='FF Guest WC',
         temperatureSensorItem='Temperature_FF_GuestWC',
         temperatureTargetItem='Temperature_FF_GuestWC_Target',
         heatingBufferItem='Heating_FF_GuestWC_Charged',
         heatingCircuitItem='Heating_FF_GuestWC_Circuit',
-        heatingArea=4.92445,
+        heatingVolume=15.33 + 8.0, # +8.0 because of additional wall radiator
         volume=4.92445 * _firstFloorHeight,
         walls=[
             Wall(direction='floor', area=6.29125, type=_groundFloor),
-            Wall(direction='ceiling', area=6.29125, type=_groundCeiling),
+            Wall(direction='ceiling', area=6.29125, type=_groundCeiling, bound="SF Bathroom"),
             Wall(direction='west', area=10.31765, type=_inner11Wall, bound="FF Utilityroom"),
             Wall(direction='north', area=3.4949, type=_inner17Wall, bound="FF Floor"),
-            Wall(direction='east', area=9.14345, type=_outerWall),
-            Wall(direction='south', area=5.0225, type=_garageWall)
+            Wall(direction='east', area=9.14345, type=_outer36Wall),
+            Wall(direction='south', area=5.0225, type=_garageWall, bound="FF Garage")
         ],
         transitions=[
             Window(direction='east', area=1.045, type=_outerWindow, contactItem='Window_FF_GuestWC', shutterItem='Shutters_FF_GuestWC', shutterArea=0.1292)
@@ -85,18 +99,22 @@ Heating.rooms = [
     Room(
         name='FF Utilityroom',
         temperatureSensorItem='Temperature_FF_Utilityroom',
-        #heatingArea=3.0,
+        # TODO check
+        #temperatureTargetItem='Temperature_FF_UtilityroomC_Target',
+        #heatingBufferItem='Heating_FF_Utilityroom_Charged',
+        #heatingCircuitItem='Heating_FF_Utilityroom_Circuit',
+        #heatingVolume=27.04,
         volume=7.816325 * _firstFloorHeight,
         walls=[
             Wall(direction='floor', area=8.9875, type=_groundFloor),
-            Wall(direction='ceiling', area=8.9875, type=_groundCeiling),
+            Wall(direction='ceiling', area=8.9875, type=_groundCeiling, bound="SF Bathroom"),
             Wall(direction='west', area=10.31765, type=_inner11Wall, bound="FF Boxroom"),
             Wall(direction='north', area=5.39615, type=_inner17Wall, bound="FF Floor"),
             Wall(direction='east', area=10.31765, type=_inner11Wall, bound="FF Guest WC"),
-            Wall(direction='south', area=5.294375, type=_garageWall)
+            Wall(direction='south', area=5.294375, type=_garageWall, bound="FF Garage")
         ],
         transitions=[
-            Door(direction='south', area=1.880625, type=_garageDoor)
+            Door(direction='south', area=1.880625, type=_garageDoor, bound="FF Garage")
         ]
     ),
     Room(
@@ -105,11 +123,11 @@ Heating.rooms = [
         volume=4.72615 * _firstFloorHeight,
         walls=[
             Wall(direction='floor', area=5.734025, type=_groundFloor),
-            Wall(direction='ceiling', area=5.734025, type=_groundCeiling),
+            Wall(direction='ceiling', area=5.734025, type=_groundCeiling, bound="SF Dressingroom"),
             Wall(direction='west', area=8.5388, type=_inner17Wall, bound="FF Livingroom"),
             Wall(direction='north', area=4.57765, type=_inner17Wall, bound="FF Livingroom"),
             Wall(direction='east', area=10.31765, type=_inner11Wall, bound="FF Utilityroom"),
-            Wall(direction='south', area=4.57765, type=_garageWall)
+            Wall(direction='south', area=4.57765, type=_garageWall, bound="FF Garage")
         ]
     ),
     Room(
@@ -118,24 +136,26 @@ Heating.rooms = [
         temperatureTargetItem='Temperature_FF_Livingroom_Target',
         heatingBufferItem='Heating_FF_Livingroom_Charged',
         heatingCircuitItem='Heating_FF_Livingroom_Circuit',
-        heatingArea=37.9957 + 10.7406,
+        heatingVolume=75.45 + 75.45 + 34.39,
         volume=37.9957 * _firstFloorHeight + 10.7406 * _firstFloorHeight,
         walls=[
             Wall(direction='floor', area=12.999225, type=_groundFloor),
-            Wall(direction='ceiling', area=12.999225, type=_groundCeiling),
+            Wall(direction='ceiling', area=12.999225, type=_groundCeiling, bound="SF Dressingroom"),
             Wall(direction='east', area=8.789925, type=_inner17Wall, bound="FF Boxroom"),
-            Wall(direction='south', area=3.0, type=_garageWall),
-            Wall(direction='south', area=7.1311, type=_outerWall),
-            Wall(direction='west', area=8.069575, type=_outerWall),
+            Wall(direction='south', area=4.6781, type=_garageWall, bound="FF Garage"),
+            Wall(direction='south', area=5.453, type=_outer36Wall),
+            Wall(direction='west', area=8.069575, type=_outer36Wall),
             #Wall(direction='north', area=4.57765, type=_inner17Wall),
 
             Wall(direction='floor', area=42.4732875, type=_groundFloor),
-            Wall(direction='ceiling', area=42.4732875, type=_groundCeiling),
-            Wall(direction='south', area=3.393775, type=_outerWall),
-            Wall(direction='west', area=9.292675, type=_outerWall),
-            Wall(direction='north', area=18.92765, type=_outerWall),
-            Wall(direction='east', area=17.93755, type=_inner17Wall, bound="FF Floor"), # TODO better calculation
-            #Wall(direction='east', area=10.31765, type=_inner17Wall, bound="FF Guestroom"), # TODO better calculation
+            Wall(direction='ceiling', area=16.3125, type=_groundCeiling, bound="SF Bedroom"),
+            Wall(direction='ceiling', area=17.07625, type=_groundCeiling, bound="SF Child 2"),
+            Wall(direction='ceiling', area=9.0845375, type=_groundCeiling, bound="SF Floor"),
+            Wall(direction='south', area=3.393775, type=_outer36Wall),
+            Wall(direction='west', area=9.292675, type=_outer36Wall),
+            Wall(direction='north', area=18.92765, type=_outer36Wall),
+            Wall(direction='east', area=7.34725, type=_inner17Wall, bound="FF Floor"),
+            Wall(direction='east', area=10.339175, type=_inner17Wall, bound="FF Guestroom"),
             Wall(direction='south', area=6.177675, type=_inner17Wall, bound="FF Boxroom")
         ],
         transitions=[
@@ -150,14 +170,14 @@ Heating.rooms = [
         temperatureTargetItem='Temperature_FF_Guestroom_Target',
         heatingBufferItem='Heating_FF_Guestroom_Charged',
         heatingCircuitItem='Heating_FF_Guestroom_Circuit',
-        heatingArea=11.53445,
+        heatingVolume=45.55,
         volume=11.53445 * _firstFloorHeight,
         walls=[
             Wall(direction='floor', area=13.5891, type=_groundFloor),
-            Wall(direction='ceiling', area=13.5891, type=_groundCeiling),
+            Wall(direction='ceiling', area=13.5891, type=_groundCeiling, bound="SF Child 1"),
             Wall(direction='west', area=10.31765, type=_inner17Wall, bound="FF Livingroom"),
-            Wall(direction='north', area=10.8486, type=_outerWall),
-            Wall(direction='east', area=7.9847, type=_outerWall),
+            Wall(direction='north', area=10.8486, type=_outer36Wall),
+            Wall(direction='east', area=7.9847, type=_outer36Wall),
             Wall(direction='south', area=9.06975, type=_inner17Wall, bound="FF Floor")
         ],
         transitions=[
@@ -170,16 +190,16 @@ Heating.rooms = [
         temperatureTargetItem='Temperature_FF_Floor_Target',
         heatingBufferItem='Heating_FF_Floor_Charged',
         heatingCircuitItem='Heating_FF_Floor_Circuit',
-        heatingArea=5.6538,
+        heatingVolume=27.47,
         volume=11.3076 * _firstFloorHeight,
         walls=[
             Wall(direction='floor', area=12.9843, type=_groundFloor),
-            Wall(direction='ceiling', area=2.0524125, type=_groundCeiling),
+            Wall(direction='ceiling', area=2.0524125, type=_groundCeiling, bound="SF Floor"),
             Wall(direction='west', area=7.0746, type=_inner17Wall, bound="FF Livingroom"),
             Wall(direction='north', area=9.06975, type=_inner17Wall, bound="FF Guestroom"),
-            Wall(direction='east', area=5.19525, type=_outerWall),
-            Wall(direction='south', area=7.54215, type=_inner17Wall, bound="FF Guest WC")   # TODO better calculation
-            #Wall(direction='south', area=7.54215, type=_inner17Wall, bound="FF Utilityroom")
+            Wall(direction='east', area=5.19525, type=_outer36Wall),
+            Wall(direction='south', area=3.4949, type=_inner17Wall, bound="FF Guest WC"),
+            Wall(direction='south', area=4.04725, type=_inner17Wall, bound="FF Utilityroom")
         ],
         transitions=[
             Door(direction='east', area=4.6632, type=_mainDoor, contactItem='Door_FF_Floor')
@@ -191,16 +211,19 @@ Heating.rooms = [
         temperatureTargetItem='Temperature_SF_Floor_Target',
         heatingBufferItem='Heating_SF_Floor_Charged',
         heatingCircuitItem='Heating_SF_Floor_Circuit',
-        heatingArea=4.0,
+        heatingVolume=26.46,
         volume=18.1926 * _secondFloorHeight - 4.3968,
         walls=[
-            Wall(direction='floor', area=9.2315625, type=_firstFloor),
-            Wall(direction='ceiling', area=14.1436125, type=_firstCeiling),
-            Wall(direction='west', area=7.77045, type=_inner11Wall),
-            Wall(direction='north', area=10.2148, type=_inner17Wall),
-            Wall(direction='east', area=3.435, type=_outerWall),
+            Wall(direction='floor', area=4.61578125, type=_firstFloor, bound="FF Livingroom"),
+            Wall(direction='floor', area=4.61578125, type=_firstFloor, bound="FF Floor"),
+            Wall(direction='ceiling', area=14.1436125, type=_firstCeiling, bound="SF Attic"),
+            Wall(direction='west', area=7.77045, type=_inner11Wall, bound="SF Bedroom"),
+            Wall(direction='north', area=8.51865, type=_inner17Wall, bound="SF Child 1"),
+            Wall(direction='north', area=1.69615, type=_inner17Wall, bound="SF Child 2"),
+            Wall(direction='east', area=3.435, type=_outer36Wall),
             Wall(direction='east', area=8.026, type=_firstSlopingCeiling),
-            Wall(direction='south', area=11.99365, type=_inner17Wall)
+            Wall(direction='south', area=8.51865, type=_inner17Wall, bound="SF Bathroom"),
+            Wall(direction='south', area=1.69615, type=_inner17Wall, bound="SF Dressingroom")
         ],
         transitions=[
             Window(direction='east', area=0.7676, type=_firstSlopingWindow)
@@ -212,16 +235,17 @@ Heating.rooms = [
         temperatureTargetItem='Temperature_SF_Child1_Target',
         heatingBufferItem='Heating_SF_Child1_Charged',
         heatingCircuitItem='Heating_SF_Child1_Circuit',
-        heatingArea=13.036325,
+        heatingVolume=55.59,
         volume=13.036325 * _secondFloorHeight - 4.6016,
         walls=[
-            Wall(direction='floor', area=16.626875, type=_firstFloor),
-            Wall(direction='ceiling', area=10.3266375, type=_firstCeiling),
-            Wall(direction='west', area=9.9941, type=_inner11Wall),
-            Wall(direction='north', area=8.1533, type=_outerWall),
-            Wall(direction='east', area=3.595, type=_outerWall),
+            Wall(direction='floor', area=4.0, type=_firstFloor, bound="FF Livingroom"),
+            Wall(direction='floor', area=12.626875, type=_firstFloor, bound="FF Guestroom"),
+            Wall(direction='ceiling', area=10.3266375, type=_firstCeiling, bound="SF Attic"),
+            Wall(direction='west', area=9.9941, type=_inner11Wall, bound="SF Child 2"),
+            Wall(direction='north', area=8.1533, type=_outer36Wall),
+            Wall(direction='east', area=3.595, type=_outer36Wall),
             Wall(direction='east', area=9.2032, type=_firstSlopingCeiling),
-            Wall(direction='south', area=8.51865, type=_inner17Wall)
+            Wall(direction='south', area=8.51865, type=_inner17Wall, bound="SF Floor")
         ],
         transitions=[
             Window(direction='north', area=1.8875, type=_outerWindow, contactItem='Window_SF_Child1', shutterItem='Shutters_SF_Child1', shutterArea=0.2567)
@@ -233,16 +257,17 @@ Heating.rooms = [
         temperatureTargetItem='Temperature_SF_Child2_Target',
         heatingBufferItem='Heating_SF_Child2_Charged',
         heatingCircuitItem='Heating_SF_Child2_Circuit',
-        heatingArea=14.99575,
+        heatingVolume=58.61,
         volume=14.99575 * _secondFloorHeight - 4.6016,
         walls=[
-            Wall(direction='floor', area=17.07625, type=_firstFloor),
-            Wall(direction='ceiling', area=10.7760125, type=_firstCeiling),
-            Wall(direction='west', area=3.595, type=_outerWall),
+            Wall(direction='floor', area=17.07625, type=_firstFloor, bound="FF Livingroom"),
+            Wall(direction='ceiling', area=10.7760125, type=_firstCeiling, bound="SF Attic"),
+            Wall(direction='west', area=3.595, type=_outer36Wall),
             Wall(direction='west', area=9.2032, type=_firstSlopingCeiling),
-            Wall(direction='north', area=8.5008, type=_outerWall),
-            Wall(direction='east', area=9.9941, type=_inner11Wall),
-            Wall(direction='south', area=8.86615, type=_inner17Wall)
+            Wall(direction='north', area=8.5008, type=_outer36Wall),
+            Wall(direction='east', area=9.9941, type=_inner11Wall, bound="SF Child 1"),
+            Wall(direction='south', area=7.17, type=_inner17Wall, bound="SF Bedroom"),
+            Wall(direction='south', area=1.69615, type=_inner17Wall, bound="SF Floor")
         ],
         transitions=[
             Window(direction='north', area=1.8875, type=_outerWindow, contactItem='Window_SF_Child2', shutterItem='Shutters_SF_Child2', shutterArea=0.2567)
@@ -254,15 +279,15 @@ Heating.rooms = [
         temperatureTargetItem='Temperature_SF_Bedroom_Target',
         heatingBufferItem='Heating_SF_Bedroom_Charged',
         heatingCircuitItem='Heating_SF_Bedroom_Circuit',
-        heatingArea=14.3929,
+        heatingVolume=57.58,
         volume=14.3929 * _secondFloorHeight,
         walls=[
-            Wall(direction='floor', area=16.3125, type=_firstFloor),
-            Wall(direction='ceiling', area=16.3125, type=_firstCeiling),
-            Wall(direction='west', area=5.9851, type=_outerWall),
-            Wall(direction='north', area=12.51, type=_inner17Wall),
-            Wall(direction='east', area=8.03455, type=_inner11Wall),
-            Wall(direction='south', area=3.28735, type=_outerWall),
+            Wall(direction='floor', area=16.3125, type=_firstFloor, bound="FF Livingroom"),
+            Wall(direction='ceiling', area=16.3125, type=_firstCeiling, bound="SF Attic"),
+            Wall(direction='west', area=5.9851, type=_outer36Wall),
+            Wall(direction='north', area=12.51, type=_inner17Wall, bound="SF Child 2"),
+            Wall(direction='east', area=8.03455, type=_inner11Wall, bound="SF Floor"),
+            Wall(direction='south', area=3.28735, type=_outer36Wall),
             Wall(direction='south', area=0.5, type=_firstSlopingCeiling)
         ],
         transitions=[
@@ -275,16 +300,16 @@ Heating.rooms = [
         temperatureTargetItem='Temperature_SF_Dressingroom_Target',
         heatingBufferItem='Heating_SF_Dressingroom_Charged',
         heatingCircuitItem='Heating_SF_Dressingroom_Circuit',
-        heatingArea=14.88435,
+        heatingVolume=57.58,
         volume=14.88435 * _secondFloorHeight - 4.6016,
         walls=[
-            Wall(direction='floor', area=16.660625, type=_firstFloor),
-            Wall(direction='ceiling', area=10.40850625, type=_firstCeiling),
-            Wall(direction='west', area=3.5075, type=_outerWall),
+            Wall(direction='floor', area=16.660625, type=_firstFloor, bound="FF Livingroom"),
+            Wall(direction='ceiling', area=10.40850625, type=_firstCeiling, bound="SF Attic"),
+            Wall(direction='west', area=3.5075, type=_outer36Wall),
             Wall(direction='west', area=8.9792, type=_firstSlopingCeiling),
-            Wall(direction='north', area=3.63485, type=_inner17Wall),
-            Wall(direction='east', area=9.9941, type=_inner11Wall),
-            Wall(direction='south', area=9.0333, type=_outerWall)
+            Wall(direction='north', area=3.63485, type=_inner17Wall, bound="SF Floor"),
+            Wall(direction='east', area=9.9941, type=_inner11Wall, bound="SF Bathroom"),
+            Wall(direction='south', area=9.0333, type=_outer36Wall)
         ],
         transitions=[
             Window(direction='south', area=1.41875, type=_outerWindow, contactItem='Window_SF_Dressingroom', shutterItem='Shutters_SF_Dressingroom', shutterArea=0.19295, radiationArea=0.86*1.00, sunProtectionItem="State_Sunprotection_Dressingroom")
@@ -296,16 +321,17 @@ Heating.rooms = [
         temperatureTargetItem='Temperature_SF_Bathroom_Target',
         heatingBufferItem='Heating_SF_Bathroom_Charged',
         heatingCircuitItem='Heating_SF_Bathroom_Circuit',
-        heatingArea=6.0,
+        heatingVolume=30.33 + 8.0, # +8.0 because of additional wall radiator
         volume=12.51273 * _secondFloorHeight - 2.5884,
         walls=[
-            Wall(direction='floor', area=14.469875, type=_firstFloor),
-            Wall(direction='ceiling', area=10.3266375, type=_firstCeiling),
-            Wall(direction='west', area=9.9941, type=_inner11Wall),
-            Wall(direction='north', area=7.4633, type=_inner17Wall),
-            Wall(direction='east', area=5.033, type=_outerWall),
+            Wall(direction='floor', area=5.482375, type=_firstFloor, bound="FF Guest WC"),
+            Wall(direction='floor', area=8.9875, type=_firstFloor, bound="FF Utilityroom"),
+            Wall(direction='ceiling', area=10.3266375, type=_firstCeiling, bound="SF Attic"),
+            Wall(direction='west', area=9.9941, type=_inner11Wall, bound="SF Dressingroom"),
+            Wall(direction='north', area=7.4633, type=_inner17Wall, bound="SF Floor"),
+            Wall(direction='east', area=5.033, type=_outer36Wall),
             Wall(direction='east', area=5.1768, type=_firstSlopingCeiling),
-            Wall(direction='south', area=7.63045, type=_outerWall)
+            Wall(direction='south', area=7.63045, type=_outer36Wall)
         ],
         transitions=[
             Window(direction='south', area=1.41875, type=_outerWindow, contactItem='Window_SF_Bathroom', shutterItem='Shutters_SF_Bathroom', shutterArea=0.19295, radiationArea=0.86*1.00, sunProtectionItem="State_Sunprotection_Bathroom")
@@ -316,12 +342,12 @@ Heating.rooms = [
         temperatureSensorItem='Temperature_SF_Attic',
         volume=54.0702 * _atticFloorHeight / 2.0,
         walls=[
-            Wall(direction='floor', area=59.871875, type=_atticFloor),
-            Wall(direction='ceiling', area=49.9872093014803 + 49.9872093014803, type=_firstSlopingCeiling),
-            Wall(direction='west', area=9.9941, type=_outerWall),
-            Wall(direction='north', area=5.91675, type=_outerWall),
-            #Wall(direction='east', area=5.033, type=_outerWall),
-            Wall(direction='south', area=5.01995, type=_outerWall)
+            Wall(direction='floor', area=59.871875, type=_atticFloor, bound="SF Bedroom" ),
+            Wall(direction='west', area=9.9941, type=_outer36Wall),
+            Wall(direction='west', area=49.9872093014803, type=_firstSlopingCeiling),
+            Wall(direction='north', area=5.91675, type=_outer36Wall),
+            Wall(direction='east', area=49.9872093014803, type=_firstSlopingCeiling),
+            Wall(direction='south', area=5.01995, type=_outer36Wall)
         ],
         transitions=[
             Window(direction='east', area=0.7676, type=_firstSlopingWindow),
@@ -329,18 +355,19 @@ Heating.rooms = [
         ]
     )
 ]
-
-Heating.allowedRooms = {'FF Kitchen': True, 'FF Livingroom': True}
-                       
-Heating.init()
  
+Heating.init(rooms)
+
 @rule("heating_control_new.py")
 class TestRule():
     def __init__(self):
         self.triggers = [CronTrigger("*/15 * * * * ?")]
         self.activeHeatingOperatingMode = -1
+        self.controllableRooms = {'FF Livingroom': True}
 
     def execute(self, module, input):
+        self.log.info(u"\t--------: ---" )
+
         now = getNow()
         currentOperatingMode = getItemState("Heating_Operating_Mode").intValue()
         lastHeatingChange = getItemLastUpdate("Heating_Demand")
@@ -350,7 +377,7 @@ class TestRule():
         
         heatingNeeded = hhs.isHeatingNeeded()
         
-        for room in filter( lambda room: room.getHeatingCircuitItem() != None,Heating.rooms):
+        for room in filter( lambda room: room.getHeatingCircuitItem() != None,Heating.getRooms()):
             
             rs = cr.getRoomState(room.getName())
             # update heating buffer
@@ -359,12 +386,13 @@ class TestRule():
             postUpdateIfChanged( room.getHeatingBufferItem(), totalChargeLevel )
 
             rhs = hhs.getHeatingState(room.getName())
-            if not heatingNeeded or rhs.getHeatingDemandEnergy() > 0:
-                #postUpdateIfChanged(room.getHeatingCircuitItem(),ON)
-                pass
-            else:
-                #postUpdateIfChanged(room.getHeatingCircuitItem(),OFF)
-                pass
+            if room.getName() in self.controllableRooms:
+                if not heatingNeeded or rhs.getHeatingDemandEnergy() > 0:
+                    #postUpdateIfChanged(room.getHeatingCircuitItem(),ON)
+                    pass
+                else:
+                    #postUpdateIfChanged(room.getHeatingCircuitItem(),OFF)
+                    pass
               
         heatingDemand = ON if heatingNeeded else OFF
         #postUpdateIfChanged("Heating_Demand", heatingDemand )
@@ -372,12 +400,14 @@ class TestRule():
         lastUpdateBeforeInMinutes = int( round( ( now.getMillis() - lastHeatingChange.getMillis() ) / 1000.0 / 60.0 ) )
         lastHeatingChangeFormatted = OFFSET_FORMATTER.print(lastHeatingChange)
         lastUpdateBeforeFormatted = lastUpdateBeforeInMinutes if lastUpdateBeforeInMinutes < 60 else '{:02d}:{:02d}'.format(*divmod(lastUpdateBeforeInMinutes, 60));
+        self.log.info(u"\t        : ---" )
         self.log.info(u"\tDemand  : {} since {} • {} min. ago".format(heatingDemand, lastHeatingChangeFormatted, lastUpdateBeforeFormatted) )
         
         self.setSunStates(cr)
         
         # TODO enable control heating system
         #self.controlHeating(currentOperatingMode,heatingNeeded)  
+        self.log.info(u"\t--------: ---" )
 
     def setSunStates(self, cr ):
       
@@ -392,7 +422,7 @@ class TestRule():
 
             fallbackTargetTemperature = cr.getRoomState("FF Livingroom").getTargetTemperature()
           
-            for room in Heating.rooms:
+            for room in Heating.getRooms():
                 rs = cr.getRoomState(room.getName())
               
                 for transition in room.transitions:

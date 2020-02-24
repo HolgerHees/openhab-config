@@ -47,16 +47,16 @@ class Wall(object):
         return self.bound
 
 class Door(Wall):
-    def __init__(self, direction, area, type, contactItem=None):
-        super(Door,self).__init__(direction, area, type)
+    def __init__(self, direction, area, type, bound= None, contactItem=None):
+        super(Door,self).__init__(direction, area, type, bound)
         self.contactItem = contactItem
         
     def getContactItem(self):
         return self.contactItem
 
 class Window(Door):
-    def __init__(self, direction, area, type, contactItem=None, shutterItem=None, shutterArea=None, radiationArea=None, sunProtectionItem=None):
-        super(Window,self).__init__(direction, area, type, contactItem)
+    def __init__(self, direction, area, type, bound= None, contactItem=None, shutterItem=None, shutterArea=None, radiationArea=None, sunProtectionItem=None):
+        super(Window,self).__init__(direction, area, type, bound, contactItem)
         self.shutterItem = shutterItem
         self.shutterArea = shutterArea
         self.radiationArea = radiationArea
@@ -75,13 +75,13 @@ class Window(Door):
         return self.sunProtectionItem
 
 class Room(object):
-    def __init__(self, name, temperatureSensorItem, temperatureTargetItem=None, heatingBufferItem=None, heatingCircuitItem=None, heatingArea=None, volume=None, walls=None, transitions=[]):
+    def __init__(self, name, temperatureSensorItem, temperatureTargetItem=None, heatingBufferItem=None, heatingCircuitItem=None, heatingVolume=None, volume=None, walls=None, transitions=[]):
         self.name = name
         self.temperatureSensorItem = temperatureSensorItem
         self.temperatureTargetItem = temperatureTargetItem
         self.heatingBufferItem = heatingBufferItem
         self.heatingCircuitItem = heatingCircuitItem
-        self.heatingArea = heatingArea
+        self.heatingVolume = heatingVolume
         self.volume = volume
         self.walls = walls
         self.transitions = transitions
@@ -101,8 +101,8 @@ class Room(object):
     def getHeatingCircuitItem(self):
         return self.heatingCircuitItem
 
-    def getHeatingArea(self):
-        return self.heatingArea
+    def getHeatingVolume(self):
+        return self.heatingVolume
 
     def getVolume(self):
         return self.volume
