@@ -113,17 +113,11 @@ class RoomState(State):
     def getCurrentTemperature(self):
         return self.temperature
 
-    def setTargetTemperature(self,value):
-        self.targetTemperature = value
+    def setChargedEnergy(self,value):
+        self.chargedEnergy = value
 
-    def getTargetTemperature(self):
-        return self.targetTemperature
-
-    def setHeatingBuffer(self,value):
-        self.heatingBuffer = value
-
-    def getHeatingBuffer(self):
-        return self.heatingBuffer
+    def getChargedEnergy(self):
+        return self.chargedEnergy
       
 class HouseState(State):
     def setRoomStates(self,values):
@@ -171,22 +165,6 @@ class HouseState(State):
     def getSunDebugInfo(self):
         return self.sunDebugInfo
 
-class HouseHeatingState():
-    def __init__(self):
-        self.heatingStates = {}
-        
-    def setHeatingState(self,roomName,state):
-        self.heatingStates[roomName]=state
-
-    def getHeatingState(self,roomName):
-        return self.heatingStates[roomName]
-    
-    def setHeatingNeeded(self,value):
-        self.heatingNeeded=value
-
-    def isHeatingNeeded(self):
-        return self.heatingNeeded
-
 class RoomHeatingState():
     def __init__(self):
         self.lazyReduction = 0
@@ -221,6 +199,12 @@ class RoomHeatingState():
 
     def getNightReduction(self):
         return self.nightReduction
+
+    def setHeatingTargetTemperature(self,value):
+        self.heatingTargetTemperature = value
+
+    def getHeatingTargetTemperature(self):
+        return self.heatingTargetTemperature
 
     def setHeatingDemandEnergy(self,value):
         self.heatingDemandEnergy = value
@@ -257,3 +241,25 @@ class RoomHeatingState():
 
     def getForcedInfo(self):
         return self.forcedInfo
+
+    def setForcedDebugInfo(self,value):
+        self.forcedDebugInfo = value
+
+    def getForcedDebugInfo(self):
+        return self.forcedDebugInfo
+
+class HouseHeatingState():
+    def __init__(self):
+        self.heatingStates = {}
+        
+    def setHeatingState(self,roomName,state):
+        self.heatingStates[roomName]=state
+
+    def getHeatingState(self,roomName):
+        return self.heatingStates[roomName]
+    
+    def setHeatingNeeded(self,value):
+        self.heatingNeeded=value
+
+    def isHeatingNeeded(self):
+        return self.heatingNeeded

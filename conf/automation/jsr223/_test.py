@@ -1,55 +1,6 @@
-from core.jsr223.scope import itemRegistry, things, scriptExtension
-scriptExtension.importPreset(None)# fix for Jython > 2.7.0
+from custom.helper import sendCommandIfChanged
 
-import inspect
-import json
-from shlex import split
-
-import java.util
-from java.nio.file.StandardWatchEventKinds import ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY
-
-try:
-    from org.openhab.core.automation.util import TriggerBuilder
-    from org.openhab.core.automation import Trigger
-except:
-    from org.eclipse.smarthome.automation.core.util import TriggerBuilder
-    from org.eclipse.smarthome.automation import Trigger
-
-try:
-    from org.openhab.config.core import Configuration
-except:
-    from org.eclipse.smarthome.config.core import Configuration
-
-try:
-    from org.openhab.core.thing import ChannelUID, ThingUID, ThingStatus
-    from org.openab.core.thing.type import ChannelKind
-except:
-    from org.eclipse.smarthome.core.thing import ChannelUID, ThingUID, ThingStatus
-    from org.eclipse.smarthome.core.thing.type import ChannelKind
-
-try:
-    from org.eclipse.smarthome.core.types import TypeParser
-except:
-    from org.openhab.core.types import TypeParser
-
-from core.osgi.events import OsgiEventTrigger
-from core.utils import validate_uid
-from core.log import logging, LOG_PREFIX
-
-from org.quartz.CronExpression import isValidExpression
-
-
-
-
-
-#from core.log import logging
-from core.triggers import ItemStateUpdateTrigger, ItemStateChangeTrigger
-
-from org.slf4j import LoggerFactory
-
-from custom.helper import log, sendCommand
-
-sendCommand("Solar_Power_Limitation",10)
+#sendCommandIfChanged("Motiondetector_Outdoor_Switch", ON)
 
 #import time
 
