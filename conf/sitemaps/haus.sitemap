@@ -322,12 +322,20 @@ sitemap haus label="Main Menu"
             {
                 Group item=Air_FF_Livingroom_Message label="EG [%s]"{
                     Frame label="Daten" {
-                        Text item=Air_FF_Livingroom_Message 
-                        Text item=Air_FF_Boxroom_Message 
-                        Text item=Air_FF_Guestroom_Message 
-                        Text item=Air_FF_GuestWC_Message 
-                        Text item=Air_FF_Floor_Message 
-                        Text item=Air_FF_Utilityroom_Message 
+                        Text item=Air_FF_Livingroom_Message {
+                            Setpoint item=Temperature_FF_Livingroom_Target label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        }
+                        Text item=Air_FF_Boxroom_Message
+                        Text item=Air_FF_Guestroom_Message {
+                            Setpoint item=Temperature_FF_Guestroom_Target label="Gästezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        }
+                        Text item=Air_FF_GuestWC_Message {
+                            Setpoint item=Temperature_FF_GuestWC_Target label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        }
+                        Text item=Air_FF_Floor_Message {
+                            Setpoint item=Temperature_FF_Floor_Target label="Flur unten [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        }
+                        Text item=Air_FF_Utilityroom_Message
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
@@ -336,13 +344,25 @@ sitemap haus label="Main Menu"
                 }
                 Group item=Air_SF_Bedroom_Message label="OG [%s]"{
                     Frame label="Daten" {
-                        Text item=Air_SF_Bedroom_Message 
-                        Text item=Air_SF_Dressingroom_Message 
-                        Text item=Air_SF_Child1_Message 
-                        Text item=Air_SF_Child2_Message 
-                        Text item=Air_SF_Bathroom_Message 
-                        Text item=Air_SF_Floor_Message 
-                        Text item=Air_SF_Attic_Message 
+                        Text item=Air_SF_Bedroom_Message {
+                            Setpoint item=Temperature_SF_Bedroom_Target label="Schlafzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        }
+                        Text item=Air_SF_Dressingroom_Message {
+                            Setpoint item=Temperature_SF_Dressingroom_Target label="Ankleide [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        }
+                        Text item=Air_SF_Child1_Message {
+                            Setpoint item=Temperature_SF_Child1_Target label="Kind 1 [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        }
+                        Text item=Air_SF_Child2_Message {
+                            Setpoint item=Temperature_SF_Child2_Target label="Kind 2 [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        }
+                        Text item=Air_SF_Bathroom_Message {
+                            Setpoint item=Temperature_SF_Bathroom_Target label="Badezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        }
+                        Text item=Air_SF_Floor_Message {
+                            Setpoint item=Temperature_SF_Floor_Target label="Flur oben [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        }
+                        Text item=Air_SF_Attic_Message
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
@@ -437,7 +457,7 @@ sitemap haus label="Main Menu"
                         Switch item=Heating_Auto_Mode label="Modus" mappings=[1="Auto", 0="Manuell"]
                         Switch item=Heating_Operating_Mode label="Betrieb" mappings=[1.000000="WW", 2.000000="HZ", 3.000000="RD"]  visibility=[Heating_Auto_Mode==0]
                         Text item=Heating_Operating_Mode visibility=[Heating_Auto_Mode==1]
-                        Text item=Heating_Demand label="Komforttemperaturen" icon="selfheating"{
+                        Text label="Komforttemperaturen" icon="selfheating"{
                             Setpoint item=Temperature_FF_GuestWC_Target label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
                             Setpoint item=Temperature_FF_Livingroom_Target label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                             Setpoint item=Temperature_FF_Guestroom_Target label="Gästezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
@@ -449,7 +469,7 @@ sitemap haus label="Main Menu"
                             Setpoint item=Temperature_SF_Dressingroom_Target label="Ankleide [%.1f °C]" step=0.5 minValue=15 maxValue=25
                             Setpoint item=Temperature_SF_Bathroom_Target label="Badezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=Heating_Demand label="Heizkreise" icon="selfheating"{
+                        Text label="Heizkreise" icon="selfheating"{
                             Switch item=Heating_FF_GuestWC_Circuit label="Gäste WC Kreis"
                             Switch item=Heating_FF_Livingroom_Circuit label="WZ Kreis"
                             Switch item=Heating_FF_Guestroom_Circuit label="Gästezimmer Kreis"

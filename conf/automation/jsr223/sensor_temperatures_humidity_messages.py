@@ -2,19 +2,19 @@ from custom.helper import rule, getNow, getItemState, getHistoricItemState, getM
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 infoConfig = [
-    ["Air_FF_Livingroom_Message", "Temperature_FF_Livingroom", "Humidity_FF_Livingroom", "Heating_FF_Livingroom_Target_Temperature"],
+    ["Air_FF_Livingroom_Message", "Temperature_FF_Livingroom", "Humidity_FF_Livingroom", "Temperature_FF_Livingroom_Target"],
     ["Air_FF_Boxroom_Message", "Temperature_FF_Boxroom", "Humidity_FF_Boxroom", None],
-    ["Air_FF_Guestroom_Message", "Temperature_FF_Guestroom", "Humidity_FF_Guestroom", "Heating_FF_Guestroom_Target_Temperature"],
-    ["Air_FF_GuestWC_Message", "Temperature_FF_GuestWC", "Humidity_FF_GuestWC", "Heating_FF_GuestWC_Target_Temperature"],
-    ["Air_FF_Floor_Message", "Temperature_FF_Floor", "Humidity_FF_Floor", "Heating_FF_Floor_Target_Temperature"],
+    ["Air_FF_Guestroom_Message", "Temperature_FF_Guestroom", "Humidity_FF_Guestroom", "Temperature_FF_Guestroom_Target"],
+    ["Air_FF_GuestWC_Message", "Temperature_FF_GuestWC", "Humidity_FF_GuestWC", "Temperature_FF_GuestWC_Target"],
+    ["Air_FF_Floor_Message", "Temperature_FF_Floor", "Humidity_FF_Floor", "Temperature_FF_Floor_Target"],
     ["Air_FF_Utilityroom_Message", "Temperature_FF_Utilityroom", "Humidity_FF_Utilityroom", None],
     ["Air_FF_Garage_Message", "Temperature_FF_Garage", "Humidity_FF_Garage", None],
-    ["Air_SF_Bedroom_Message", "Temperature_SF_Bedroom", "Humidity_SF_Bedroom", "Heating_SF_Bedroom_Target_Temperature"],
-    ["Air_SF_Dressingroom_Message", "Temperature_SF_Dressingroom", "Humidity_SF_Dressingroom", "Heating_SF_Dressingroom_Target_Temperature"],
-    ["Air_SF_Child1_Message", "Temperature_SF_Child1", "Humidity_SF_Child1", "Heating_SF_Child1_Target_Temperature"],
-    ["Air_SF_Child2_Message", "Temperature_SF_Child2", "Humidity_SF_Child2", "Heating_SF_Child2_Target_Temperature"],
-    ["Air_SF_Bathroom_Message", "Temperature_SF_Bathroom", "Humidity_SF_Bathroom", "Heating_SF_Bathroom_Target_Temperature"],
-    ["Air_SF_Floor_Message", "Temperature_SF_Floor", "Humidity_SF_Floor", "Heating_SF_Floor_Target_Temperature"],
+    ["Air_SF_Bedroom_Message", "Temperature_SF_Bedroom", "Humidity_SF_Bedroom", "Temperature_SF_Bedroom_Target"],
+    ["Air_SF_Dressingroom_Message", "Temperature_SF_Dressingroom", "Humidity_SF_Dressingroom", "Temperature_SF_Dressingroom_Target"],
+    ["Air_SF_Child1_Message", "Temperature_SF_Child1", "Humidity_SF_Child1", "Temperature_SF_Child1_Target"],
+    ["Air_SF_Child2_Message", "Temperature_SF_Child2", "Humidity_SF_Child2", "Temperature_SF_Child2_Target"],
+    ["Air_SF_Bathroom_Message", "Temperature_SF_Bathroom", "Humidity_SF_Bathroom", "Temperature_SF_Bathroom_Target"],
+    ["Air_SF_Floor_Message", "Temperature_SF_Floor", "Humidity_SF_Floor", "Temperature_SF_Floor_Target"],
     ["Air_SF_Attic_Message", "Temperature_SF_Attic", "Humidity_SF_Attic", None],
     ["Air_Wireless_Message", "Temperature_Wireless", "Humidity_Wireless", None],
     ["Air_Garden_Message", "Temperature_Garden", "Humidity_Garden", None]
@@ -106,7 +106,6 @@ class InfoValueRule:
         postUpdateIfChanged(infoItem, msg)
 
     def execute(self, module, input):
-
         itemName = input['event'].getItemName()
 
         # was it a raw trigger?

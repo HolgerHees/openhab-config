@@ -1,10 +1,12 @@
 from core.triggers import CronTrigger, ItemStateChangeTrigger
-from custom.helper import rule, getNow, getItemState, getItemLastUpdate, sendCommand, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen
+from custom.helper import rule, getNow, getHistoricItemEntry, getItemState, getItemLastUpdate, sendCommand, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen
 from custom.model.heating import Heating
 from custom.model.house import ThermalStorageType, ThermalBridgeType, Wall, Door, Window, Room
 
+from org.joda.time import DateTime
 from org.joda.time.format import DateTimeFormat
 from core.actions import Transformation
+import math
 
 OFFSET_FORMATTER = DateTimeFormat.forPattern("HH:mm")
 
@@ -22,6 +24,7 @@ Heating.ventilationLevelItem = "Ventilation_Outgoing"
 Heating.ventilationOutgoingTemperatureItem = "Ventilation_Outdoor_Outgoing_Temperature"
 Heating.ventilationIncommingTemperatureItem = "Ventilation_Outdoor_Incoming_Temperature"
 
+Heating.heatingPower = "Heating_Power"
 Heating.heatingCircuitPumpSpeedItem = "Heating_Circuit_Pump_Speed"
 Heating.heatingTemperaturePipeOutItem = "Heating_Temperature_Pipe_Out"
 Heating.heatingTemperaturePipeInItem = "Heating_Temperature_Pipe_In"
@@ -59,19 +62,25 @@ _firstFloorHeight = 2.57
 _secondFloorHeight = 2.45
 _atticFloorHeight = 2.10
 
+Heating.temperatureSensorItemPlaceholder = u"Temperature_{}"
+Heating.temperatureTargetItemPlaceholder = u"Temperature_{}_Target"
+Heating.heatingBufferItemPlaceholder = u"Heating_{}_Charged"
+Heating.heatingCircuitItemPlaceholder = u"Heating_{}_Circuit"
+Heating.heatingTargetTemperatureItemPlaceholder = u"Heating_{}_Target_Temperature"
+Heating.heatingDemandItemPlaceholder = u"Heating_{}_Demand"
+
 rooms = [
     Room(
-        name='FF Garage',
-        temperatureSensorItem='Temperature_FF_Garage',
+        name='FF_Garage',
         volume=54.0702 * _atticFloorHeight / 2.0,
         walls=[
             Wall(direction='floor', area=27.456025, type=_atticFloor),
             Wall(direction='ceiling', area=27.456025, type=_firstSlopingCeiling),
             Wall(direction='west', area=5.319, type=_outer22Wall),
-            Wall(direction='north', area=4.18, type=_outer36Wall, bound="FF Livingroom"),
-            Wall(direction='north', area=3.509, type=_outer36Wall, bound="FF Boxroom"),
-            Wall(direction='north', area=5.5, type=_outer36Wall, bound="FF Utilityroom"),
-            Wall(direction='north', area=3.85, type=_outer36Wall,bound="FF Guest WC"),
+            Wall(direction='north', area=4.18, type=_outer36Wall, bound="FF_Livingroom"),
+            Wall(direction='north', area=3.509, type=_outer36Wall, bound="FF_Boxroom"),
+            Wall(direction='north', area=5.5, type=_outer36Wall, bound="FF_Utilityroom"),
+            Wall(direction='north', area=3.85, type=_outer36Wall,bound="FF_GuestWC"),
             Wall(direction='east', area=5.21, type=_outer22Wall),
             Wall(direction='south', area=17.039, type=_outer22Wall)
         ],
@@ -82,88 +91,73 @@ rooms = [
         ]
     ),
     Room(
-        name='FF Guest WC',
-        temperatureSensorItem='Temperature_FF_GuestWC',
-        temperatureTargetItem='Temperature_FF_GuestWC_Target',
-        heatingBufferItem='Heating_FF_GuestWC_Charged',
-        heatingCircuitItem='Heating_FF_GuestWC_Circuit',
-        heatingTargetTemperatureItem='Heating_FF_GuestWC_Target_Temperature',
+        name='FF_GuestWC',
         heatingVolume=15.33 + 8.0, # +8.0 because of additional wall radiator
         volume=4.92445 * _firstFloorHeight,
         walls=[
             Wall(direction='floor', area=6.29125, type=_groundFloor),
-            Wall(direction='ceiling', area=6.29125, type=_groundCeiling, bound="SF Bathroom"),
-            Wall(direction='west', area=10.31765, type=_inner11Wall, bound="FF Utilityroom"),
-            Wall(direction='north', area=3.4949, type=_inner17Wall, bound="FF Floor"),
+            Wall(direction='ceiling', area=6.29125, type=_groundCeiling, bound="SF_Bathroom"),
+            Wall(direction='west', area=10.31765, type=_inner11Wall, bound="FF_Utilityroom"),
+            Wall(direction='north', area=3.4949, type=_inner17Wall, bound="FF_Floor"),
             Wall(direction='east', area=9.14345, type=_outer36Wall),
-            Wall(direction='south', area=5.0225, type=_garageWall, bound="FF Garage")
+            Wall(direction='south', area=5.0225, type=_garageWall, bound="FF_Garage")
         ],
         transitions=[
             Window(direction='east', area=1.045, type=_outerWindow, contactItem='Window_FF_GuestWC', shutterItem='Shutters_FF_GuestWC', shutterArea=0.1292)
         ]
     ),
     Room(
-        name='FF Utilityroom',
-        temperatureSensorItem='Temperature_FF_Utilityroom',
+        name='FF_Utilityroom',
         # TODO check
-        #temperatureTargetItem='Temperature_FF_UtilityroomC_Target',
-        #heatingBufferItem='Heating_FF_Utilityroom_Charged',
-        #heatingCircuitItem='Heating_FF_Utilityroom_Circuit',
         #heatingVolume=27.04,
         volume=7.816325 * _firstFloorHeight,
         walls=[
             Wall(direction='floor', area=8.9875, type=_groundFloor),
-            Wall(direction='ceiling', area=8.9875, type=_groundCeiling, bound="SF Bathroom"),
-            Wall(direction='west', area=10.31765, type=_inner11Wall, bound="FF Boxroom"),
-            Wall(direction='north', area=5.39615, type=_inner17Wall, bound="FF Floor"),
-            Wall(direction='east', area=10.31765, type=_inner11Wall, bound="FF Guest WC"),
-            Wall(direction='south', area=5.294375, type=_garageWall, bound="FF Garage")
+            Wall(direction='ceiling', area=8.9875, type=_groundCeiling, bound="SF_Bathroom"),
+            Wall(direction='west', area=10.31765, type=_inner11Wall, bound="FF_Boxroom"),
+            Wall(direction='north', area=5.39615, type=_inner17Wall, bound="FF_Floor"),
+            Wall(direction='east', area=10.31765, type=_inner11Wall, bound="FF_GuestWC"),
+            Wall(direction='south', area=5.294375, type=_garageWall, bound="FF_Garage")
         ],
         transitions=[
-            Door(direction='south', area=1.880625, type=_utilityroomGarageDoor, bound="FF Garage")
+            Door(direction='south', area=1.880625, type=_utilityroomGarageDoor, bound="FF_Garage")
         ]
     ),
     Room(
-        name='FF Boxroom',
-        temperatureSensorItem='Temperature_FF_Boxroom',
+        name='FF_Boxroom',
         volume=4.72615 * _firstFloorHeight,
         walls=[
             Wall(direction='floor', area=5.734025, type=_groundFloor),
-            Wall(direction='ceiling', area=5.734025, type=_groundCeiling, bound="SF Dressingroom"),
-            Wall(direction='west', area=8.5388, type=_inner17Wall, bound="FF Livingroom"),
-            Wall(direction='north', area=4.57765, type=_inner17Wall, bound="FF Livingroom"),
-            Wall(direction='east', area=10.31765, type=_inner11Wall, bound="FF Utilityroom"),
-            Wall(direction='south', area=4.57765, type=_garageWall, bound="FF Garage")
+            Wall(direction='ceiling', area=5.734025, type=_groundCeiling, bound="SF_Dressingroom"),
+            Wall(direction='west', area=8.5388, type=_inner17Wall, bound="FF_Livingroom"),
+            Wall(direction='north', area=4.57765, type=_inner17Wall, bound="FF_Livingroom"),
+            Wall(direction='east', area=10.31765, type=_inner11Wall, bound="FF_Utilityroom"),
+            Wall(direction='south', area=4.57765, type=_garageWall, bound="FF_Garage")
         ]
     ),
     Room(
-        name='FF Livingroom',
-        temperatureSensorItem='Temperature_FF_Livingroom',
-        temperatureTargetItem='Temperature_FF_Livingroom_Target',
-        heatingBufferItem='Heating_FF_Livingroom_Charged',
-        heatingCircuitItem='Heating_FF_Livingroom_Circuit',
-        heatingTargetTemperatureItem='Heating_FF_Livingroom_Target_Temperature',
+        name='FF_Livingroom',
         heatingVolume=75.45 + 75.45 + 34.39,
         volume=37.9957 * _firstFloorHeight + 10.7406 * _firstFloorHeight,
         walls=[
             Wall(direction='floor', area=12.999225, type=_groundFloor),
-            Wall(direction='ceiling', area=12.999225, type=_groundCeiling, bound="SF Dressingroom"),
-            Wall(direction='east', area=8.789925, type=_inner17Wall, bound="FF Boxroom"),
-            Wall(direction='south', area=4.6781, type=_garageWall, bound="FF Garage"),
+            Wall(direction='ceiling', area=12.999225, type=_groundCeiling, bound="SF_Dressingroom"),
+            Wall(direction='east', area=8.789925, type=_inner17Wall, bound="FF_Boxroom"),
+            Wall(direction='south', area=4.6781, type=_garageWall, bound="FF_Garage"),
             Wall(direction='south', area=5.453, type=_outer36Wall),
             Wall(direction='west', area=8.069575, type=_outer36Wall),
             #Wall(direction='north', area=4.57765, type=_inner17Wall),
 
             Wall(direction='floor', area=42.4732875, type=_groundFloor),
-            Wall(direction='ceiling', area=16.3125, type=_groundCeiling, bound="SF Bedroom"),
-            Wall(direction='ceiling', area=17.07625, type=_groundCeiling, bound="SF Child 2"),
-            Wall(direction='ceiling', area=9.0845375, type=_groundCeiling, bound="SF Floor"),
+            Wall(direction='ceiling', area=16.3125, type=_groundCeiling, bound="SF_Bedroom"),
+            Wall(direction='ceiling', area=17.07625, type=_groundCeiling, bound="SF_Child2"),
+            Wall(direction='ceiling', area=9.0845375, type=_groundCeiling, bound="SF_Floor"),
             Wall(direction='south', area=3.393775, type=_outer36Wall),
             Wall(direction='west', area=9.292675, type=_outer36Wall),
             Wall(direction='north', area=18.92765, type=_outer36Wall),
-            Wall(direction='east', area=7.34725, type=_inner17Wall, bound="FF Floor"),
-            Wall(direction='east', area=10.339175, type=_inner17Wall, bound="FF Guestroom"),
-            Wall(direction='south', area=6.177675, type=_inner17Wall, bound="FF Boxroom")
+            Wall(direction='east', area=7.34725, type=_inner17Wall, bound="FF_Floor"),
+            Wall(direction='east', area=10.339175, type=_inner17Wall, bound="FF_Guestroom"),
+            Wall(direction='south', area=6.177675, type=_inner17Wall, bound="FF_Boxroom")
         ],
         transitions=[
             Window(direction='west', area=2.2, type=_outerWindow, contactItem='Window_FF_Kitchen', shutterItem='Shutters_FF_Kitchen', shutterArea=0.2992, radiationArea=0.645*1.01*2.0, sunProtectionItem="State_Sunprotection_Livingroom"),
@@ -172,134 +166,112 @@ rooms = [
         ]
     ),
     Room(
-        name='FF Guestroom',
-        temperatureSensorItem='Temperature_FF_Guestroom',
-        temperatureTargetItem='Temperature_FF_Guestroom_Target',
-        heatingBufferItem='Heating_FF_Guestroom_Charged',
-        heatingCircuitItem='Heating_FF_Guestroom_Circuit',
-        heatingTargetTemperatureItem='Heating_FF_Guestroom_Target_Temperature',
+        name='FF_Guestroom',
         heatingVolume=45.55,
         volume=11.53445 * _firstFloorHeight,
         walls=[
             Wall(direction='floor', area=13.5891, type=_groundFloor),
-            Wall(direction='ceiling', area=13.5891, type=_groundCeiling, bound="SF Child 1"),
-            Wall(direction='west', area=10.31765, type=_inner17Wall, bound="FF Livingroom"),
+            Wall(direction='ceiling', area=13.5891, type=_groundCeiling, bound="SF_Child1"),
+            Wall(direction='west', area=10.31765, type=_inner17Wall, bound="FF_Livingroom"),
             Wall(direction='north', area=10.8486, type=_outer36Wall),
             Wall(direction='east', area=7.9847, type=_outer36Wall),
-            Wall(direction='south', area=9.06975, type=_inner17Wall, bound="FF Floor")
+            Wall(direction='south', area=9.06975, type=_inner17Wall, bound="FF_Floor")
         ],
         transitions=[
             Window(direction='east', area=2.07625, type=_outerWindow, contactItem='Window_FF_Guestroom', shutterItem='Shutters_FF_Guestroom', shutterArea=0.2567)
         ]
     ),
     Room(
-        name='FF Floor',
-        temperatureSensorItem='Temperature_FF_Floor',
-        temperatureTargetItem='Temperature_FF_Floor_Target',
-        heatingBufferItem='Heating_FF_Floor_Charged',
-        heatingCircuitItem='Heating_FF_Floor_Circuit',
-        heatingTargetTemperatureItem='Heating_FF_Floor_Target_Temperature',
+        name='FF_Floor',
         heatingVolume=27.47,
         volume=11.3076 * _firstFloorHeight,
         walls=[
             Wall(direction='floor', area=12.9843, type=_groundFloor),
-            Wall(direction='ceiling', area=2.0524125, type=_groundCeiling, bound="SF Floor"),
-            Wall(direction='west', area=7.0746, type=_inner17Wall, bound="FF Livingroom"),
-            Wall(direction='north', area=9.06975, type=_inner17Wall, bound="FF Guestroom"),
-            Wall(direction='east', area=5.19525, type=_outer36Wall),
-            Wall(direction='south', area=3.4949, type=_inner17Wall, bound="FF Guest WC"),
-            Wall(direction='south', area=4.04725, type=_inner17Wall, bound="FF Utilityroom")
+            Wall(direction='ceiling', area=2.0524125, type=_groundCeiling, bound="SF_Floor"),
+            Wall(direction='west', area=7.0746, type=_inner17Wall, bound="FF_Livingroom"),
+            Wall(direction='north', area=9.06975, type=_inner17Wall, bound="FF_Guestroom"),
+            # east wall is shared between lower and upper floor
+            Wall(direction='east', area=(5.19525+3.435)/2.0, type=_outer36Wall),
+            Wall(direction='south', area=3.4949, type=_inner17Wall, bound="FF_GuestWC"),
+            Wall(direction='south', area=4.04725, type=_inner17Wall, bound="FF_Utilityroom")
         ],
         transitions=[
-            Door(direction='east', area=4.6632, type=_mainDoor, contactItem='Door_FF_Floor')
+            # count the main door only 50%, because other 50% is counted on upper floor
+            Door(direction='east', area=4.6632/2.0, type=_mainDoor, contactItem='Door_FF_Floor'),
+            # count 50% of the sloping window from upper floor
+            Window(direction='east', area=0.7676/2.0, type=_firstSlopingWindow)
         ]
     ),
     Room(
-        name='SF Floor',
-        temperatureSensorItem='Temperature_SF_Floor',
-        temperatureTargetItem='Temperature_SF_Floor_Target',
-        heatingBufferItem='Heating_SF_Floor_Charged',
-        heatingCircuitItem='Heating_SF_Floor_Circuit',
-        heatingTargetTemperatureItem='Heating_SF_Floor_Target_Temperature',
+        name='SF_Floor',
         heatingVolume=26.46,
         volume=18.1926 * _secondFloorHeight - 4.3968,
         walls=[
-            Wall(direction='floor', area=4.61578125, type=_firstFloor, bound="FF Livingroom"),
-            Wall(direction='floor', area=4.61578125, type=_firstFloor, bound="FF Floor"),
-            Wall(direction='ceiling', area=14.1436125, type=_firstCeiling, bound="SF Attic"),
-            Wall(direction='west', area=7.77045, type=_inner11Wall, bound="SF Bedroom"),
-            Wall(direction='north', area=8.51865, type=_inner17Wall, bound="SF Child 1"),
-            Wall(direction='north', area=1.69615, type=_inner17Wall, bound="SF Child 2"),
-            Wall(direction='east', area=3.435, type=_outer36Wall),
+            Wall(direction='floor', area=4.61578125, type=_firstFloor, bound="FF_Livingroom"),
+            Wall(direction='floor', area=4.61578125, type=_firstFloor, bound="FF_Floor"),
+            Wall(direction='ceiling', area=14.1436125, type=_firstCeiling, bound="SF_Attic"),
+            Wall(direction='west', area=7.77045, type=_inner11Wall, bound="SF_Bedroom"),
+            Wall(direction='north', area=8.51865, type=_inner17Wall, bound="SF_Child1"),
+            Wall(direction='north', area=1.69615, type=_inner17Wall, bound="SF_Child2"),
+            # east wall is shared between lower and upper floor
+            Wall(direction='east', area=(5.19525+3.435)/2.0, type=_outer36Wall),
             Wall(direction='east', area=8.026, type=_firstSlopingCeiling),
-            Wall(direction='south', area=8.51865, type=_inner17Wall, bound="SF Bathroom"),
-            Wall(direction='south', area=1.69615, type=_inner17Wall, bound="SF Dressingroom")
+            Wall(direction='south', area=8.51865, type=_inner17Wall, bound="SF_Bathroom"),
+            Wall(direction='south', area=1.69615, type=_inner17Wall, bound="SF_Dressingroom")
         ],
         transitions=[
-            Window(direction='east', area=0.7676, type=_firstSlopingWindow)
+            # count 50% of the main door from lower floor
+            Door(direction='east', area=4.6632/2.0, type=_mainDoor, contactItem='Door_FF_Floor'),
+            # count the sloping window only 50%, because other 50% is counted on lower floor
+            Window(direction='east', area=0.7676/2.0, type=_firstSlopingWindow)
         ]
     ),
     Room(
-        name='SF Child 1',
-        temperatureSensorItem='Temperature_SF_Child1',
-        temperatureTargetItem='Temperature_SF_Child1_Target',
-        heatingBufferItem='Heating_SF_Child1_Charged',
-        heatingCircuitItem='Heating_SF_Child1_Circuit',
-        heatingTargetTemperatureItem='Heating_SF_Child1_Target_Temperature',
+        name='SF_Child1',
         heatingVolume=55.59,
         volume=13.036325 * _secondFloorHeight - 4.6016,
         walls=[
-            Wall(direction='floor', area=4.0, type=_firstFloor, bound="FF Livingroom"),
-            Wall(direction='floor', area=12.626875, type=_firstFloor, bound="FF Guestroom"),
-            Wall(direction='ceiling', area=10.3266375, type=_firstCeiling, bound="SF Attic"),
-            Wall(direction='west', area=9.9941, type=_inner11Wall, bound="SF Child 2"),
+            Wall(direction='floor', area=4.0, type=_firstFloor, bound="FF_Livingroom"),
+            Wall(direction='floor', area=12.626875, type=_firstFloor, bound="FF_Guestroom"),
+            Wall(direction='ceiling', area=10.3266375, type=_firstCeiling, bound="SF_Attic"),
+            Wall(direction='west', area=9.9941, type=_inner11Wall, bound="SF_Child2"),
             Wall(direction='north', area=8.1533, type=_outer36Wall),
             Wall(direction='east', area=3.595, type=_outer36Wall),
             Wall(direction='east', area=9.2032, type=_firstSlopingCeiling),
-            Wall(direction='south', area=8.51865, type=_inner17Wall, bound="SF Floor")
+            Wall(direction='south', area=8.51865, type=_inner17Wall, bound="SF_Floor")
         ],
         transitions=[
             Window(direction='north', area=1.8875, type=_outerWindow, contactItem='Window_SF_Child1', shutterItem='Shutters_SF_Child1', shutterArea=0.2567)
         ]
     ),
     Room(
-        name='SF Child 2',
-        temperatureSensorItem='Temperature_SF_Child2',
-        temperatureTargetItem='Temperature_SF_Child2_Target',
-        heatingBufferItem='Heating_SF_Child2_Charged',
-        heatingCircuitItem='Heating_SF_Child2_Circuit',
-        heatingTargetTemperatureItem='Heating_SF_Child2_Target_Temperature',
+        name='SF_Child2',
         heatingVolume=58.61,
         volume=14.99575 * _secondFloorHeight - 4.6016,
         walls=[
-            Wall(direction='floor', area=17.07625, type=_firstFloor, bound="FF Livingroom"),
-            Wall(direction='ceiling', area=10.7760125, type=_firstCeiling, bound="SF Attic"),
+            Wall(direction='floor', area=17.07625, type=_firstFloor, bound="FF_Livingroom"),
+            Wall(direction='ceiling', area=10.7760125, type=_firstCeiling, bound="SF_Attic"),
             Wall(direction='west', area=3.595, type=_outer36Wall),
             Wall(direction='west', area=9.2032, type=_firstSlopingCeiling),
             Wall(direction='north', area=8.5008, type=_outer36Wall),
-            Wall(direction='east', area=9.9941, type=_inner11Wall, bound="SF Child 1"),
-            Wall(direction='south', area=7.17, type=_inner17Wall, bound="SF Bedroom"),
-            Wall(direction='south', area=1.69615, type=_inner17Wall, bound="SF Floor")
+            Wall(direction='east', area=9.9941, type=_inner11Wall, bound="SF_Child1"),
+            Wall(direction='south', area=7.17, type=_inner17Wall, bound="SF_Bedroom"),
+            Wall(direction='south', area=1.69615, type=_inner17Wall, bound="SF_Floor")
         ],
         transitions=[
             Window(direction='north', area=1.8875, type=_outerWindow, contactItem='Window_SF_Child2', shutterItem='Shutters_SF_Child2', shutterArea=0.2567)
         ]
     ),
     Room(
-        name='SF Bedroom',
-        temperatureSensorItem='Temperature_SF_Bedroom',
-        temperatureTargetItem='Temperature_SF_Bedroom_Target',
-        heatingBufferItem='Heating_SF_Bedroom_Charged',
-        heatingCircuitItem='Heating_SF_Bedroom_Circuit',
-        heatingTargetTemperatureItem='Heating_SF_Bedroom_Target_Temperature',
+        name='SF_Bedroom',
         heatingVolume=57.58,
         volume=14.3929 * _secondFloorHeight,
         walls=[
-            Wall(direction='floor', area=16.3125, type=_firstFloor, bound="FF Livingroom"),
-            Wall(direction='ceiling', area=16.3125, type=_firstCeiling, bound="SF Attic"),
+            Wall(direction='floor', area=16.3125, type=_firstFloor, bound="FF_Livingroom"),
+            Wall(direction='ceiling', area=16.3125, type=_firstCeiling, bound="SF_Attic"),
             Wall(direction='west', area=5.9851, type=_outer36Wall),
-            Wall(direction='north', area=12.51, type=_inner17Wall, bound="SF Child 2"),
-            Wall(direction='east', area=8.03455, type=_inner11Wall, bound="SF Floor"),
+            Wall(direction='north', area=12.51, type=_inner17Wall, bound="SF_Child2"),
+            Wall(direction='east', area=8.03455, type=_inner11Wall, bound="SF_Floor"),
             Wall(direction='south', area=3.28735, type=_outer36Wall),
             Wall(direction='south', area=0.5, type=_firstSlopingCeiling)
         ],
@@ -308,21 +280,16 @@ rooms = [
         ]
     ),
     Room(
-        name='SF Dressingroom',
-        temperatureSensorItem='Temperature_SF_Dressingroom',
-        temperatureTargetItem='Temperature_SF_Dressingroom_Target',
-        heatingBufferItem='Heating_SF_Dressingroom_Charged',
-        heatingCircuitItem='Heating_SF_Dressingroom_Circuit',
-        heatingTargetTemperatureItem='Heating_SF_Dressingroom_Target_Temperature',
+        name='SF_Dressingroom',
         heatingVolume=57.58,
         volume=14.88435 * _secondFloorHeight - 4.6016,
         walls=[
-            Wall(direction='floor', area=16.660625, type=_firstFloor, bound="FF Livingroom"),
-            Wall(direction='ceiling', area=10.40850625, type=_firstCeiling, bound="SF Attic"),
+            Wall(direction='floor', area=16.660625, type=_firstFloor, bound="FF_Livingroom"),
+            Wall(direction='ceiling', area=10.40850625, type=_firstCeiling, bound="SF_Attic"),
             Wall(direction='west', area=3.5075, type=_outer36Wall),
             Wall(direction='west', area=8.9792, type=_firstSlopingCeiling),
-            Wall(direction='north', area=3.63485, type=_inner17Wall, bound="SF Floor"),
-            Wall(direction='east', area=9.9941, type=_inner11Wall, bound="SF Bathroom"),
+            Wall(direction='north', area=3.63485, type=_inner17Wall, bound="SF_Floor"),
+            Wall(direction='east', area=9.9941, type=_inner11Wall, bound="SF_Bathroom"),
             Wall(direction='south', area=9.0333, type=_outer36Wall)
         ],
         transitions=[
@@ -330,20 +297,15 @@ rooms = [
         ]
     ),
     Room(
-        name='SF Bathroom',
-        temperatureSensorItem='Temperature_SF_Bathroom',
-        temperatureTargetItem='Temperature_SF_Bathroom_Target',
-        heatingBufferItem='Heating_SF_Bathroom_Charged',
-        heatingCircuitItem='Heating_SF_Bathroom_Circuit',
-        heatingTargetTemperatureItem='Heating_SF_Bathroom_Target_Temperature',
+        name='SF_Bathroom',
         heatingVolume=30.33 + 8.0, # +8.0 because of additional wall radiator
         volume=12.51273 * _secondFloorHeight - 2.5884,
         walls=[
-            Wall(direction='floor', area=5.482375, type=_firstFloor, bound="FF Guest WC"),
-            Wall(direction='floor', area=8.9875, type=_firstFloor, bound="FF Utilityroom"),
-            Wall(direction='ceiling', area=10.3266375, type=_firstCeiling, bound="SF Attic"),
-            Wall(direction='west', area=9.9941, type=_inner11Wall, bound="SF Dressingroom"),
-            Wall(direction='north', area=7.4633, type=_inner17Wall, bound="SF Floor"),
+            Wall(direction='floor', area=5.482375, type=_firstFloor, bound="FF_GuestWC"),
+            Wall(direction='floor', area=8.9875, type=_firstFloor, bound="FF_Utilityroom"),
+            Wall(direction='ceiling', area=10.3266375, type=_firstCeiling, bound="SF_Attic"),
+            Wall(direction='west', area=9.9941, type=_inner11Wall, bound="SF_Dressingroom"),
+            Wall(direction='north', area=7.4633, type=_inner17Wall, bound="SF_Floor"),
             Wall(direction='east', area=5.033, type=_outer36Wall),
             Wall(direction='east', area=5.1768, type=_firstSlopingCeiling),
             Wall(direction='south', area=7.63045, type=_outer36Wall)
@@ -353,11 +315,10 @@ rooms = [
         ]
     ),
     Room(
-        name='SF Attic',
-        temperatureSensorItem='Temperature_SF_Attic',
+        name='SF_Attic',
         volume=54.0702 * _atticFloorHeight / 2.0,
         walls=[
-            Wall(direction='floor', area=59.871875, type=_atticFloor, bound="SF Bedroom" ),
+            Wall(direction='floor', area=59.871875, type=_atticFloor, bound="SF_Bedroom" ),
             Wall(direction='west', area=9.9941, type=_outer36Wall),
             Wall(direction='west', area=49.9872093014803, type=_firstSlopingCeiling),
             Wall(direction='north', area=5.91675, type=_outer36Wall),
@@ -373,71 +334,133 @@ rooms = [
 
 Heating.init(rooms)
 
-@rule("heating_control_new.py")
-class HeatingRule():
+controllableRooms = {'FF_Livingroom': True}
+
+#@rule("heating_control.py")
+#class TestRule():
+#    def __init__(self):
+#        heating = Heating(self.log)
+        
+#        currentTotalVentilationEnergy = heating.getVentilationEnergy(1.0) / 3.6
+        
+#        for room in Heating.getRooms():
+#        #for room in filter( lambda room: room.getHeatingVolume() != None,Heating.getRooms()):
+#            energyLost = ventilationLost = leakLost = roomCapacity = 0
+#            for transition in filter( lambda transition: transition.getBound() == None, room.getTransitions() ):
+#                type = transition.getType()
+#                coolingPerKelvin = ( type.getUValue() + type.getUOffset() ) * transition.getArea() * type.getFactor()
+#                energyLost = energyLost + coolingPerKelvin
+                
+#            ventilationLost = ventilationLost + room.getVolume() * currentTotalVentilationEnergy / Heating.totalVolume
+
+#            leakLost = leakLost + heating.getLeakingEnergy(room.getVolume(),20.0,19.0) / 3.6
+
+#            for wall in room.getWalls():
+#                if wall.getBound() == None:
+#                    type = wall.getType()
+#                    coolingPerKelvin = ( type.getUValue() + type.getUOffset() ) * wall.getArea() * type.getFactor()
+#                    energyLost = energyLost + coolingPerKelvin
+
+#                capacity = ( wall.getArea() * wall.getType().getCapacity() ) / 3.6 # converting kj into watt
+#                roomCapacity = roomCapacity + capacity
+              
+#            self.log.info(u"{} wall: {} ventilation: {} leak: {} capacity: {}".format(room.getName(),energyLost,ventilationLost,leakLost,roomCapacity))
+
+#    def execute(self, module, input):
+#        pass
+        
+@rule("heating_control.py")
+class HeatingVentileRule():
+    def __init__(self):
+        self.triggers = [
+            CronTrigger("0 */10 1 ? * MON,FRI"),
+            CronTrigger("0 0 2 ? * MON,FRI")
+        ]
+
+    # refresh heating ventile twice per week
+    def execute(self, module, input):
+        for room in filter( lambda room: room.getHeatingVolume() != None and room.getName() in controllableRooms,Heating.getRooms()):
+            circuiteItem = heating.getHeatingCircuitItem(room)
+            hour = getNow().getHourOfDay()()
+            if hour == 2 or getItemState(circuiteItem) == OFF:
+                postUpdateIfChanged(heating.getHeatingCircuitItem(room),ON)
+            else:
+                postUpdateIfChanged(heating.getHeatingCircuitItem(room),OFF)
+
+@rule("heating_control.py")
+class HeatingControlRule():
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("Heating_Auto_Mode"),
-            CronTrigger("15 * * * * ?")
-#            CronTrigger("*/15 * * * * ?")
+#            CronTrigger("15 * * * * ?")
+            CronTrigger("*/15 * * * * ?")
         ]
         self.activeHeatingOperatingMode = -1
-        self.controllableRooms = {'FF Livingroom': True}
 
     def execute(self, module, input):
         self.log.info(u"--------: ---" )
 
         now = getNow()
         currentOperatingMode = getItemState("Heating_Operating_Mode").intValue()
-        lastHeatingChange = getItemLastUpdate("Heating_Demand")
+        
+        currentHeatingDemand = getItemState("Heating_Demand")
 
         heating = Heating(self.log)
-        cr, hhs = heating.calculate(currentOperatingMode == 2,lastHeatingChange)    
+        cr, hhs = heating.calculate(currentHeatingDemand == ON)    
         
         autoModeEnabled = getItemState("Heating_Auto_Mode").intValue() == 1
-        heatingNeeded = autoModeEnabled and hhs.isHeatingNeeded()
+        heatingRequested = autoModeEnabled and hhs.isHeatingRequested()
         
-        for room in filter( lambda room: room.getHeatingCircuitItem() != None,Heating.getRooms()):
+        longestRuntime = 0
+        for room in filter( lambda room: room.getHeatingVolume() != None,Heating.getRooms()):
             
             rs = cr.getRoomState(room.getName())
             # update heating buffer
             totalChargeLevel = rs.getChargedEnergy()
             #postUpdateIfChanged( room.getHeatingBufferItem(), 0 )
 
-            postUpdateIfChanged( room.getHeatingBufferItem(), totalChargeLevel )
+            postUpdateIfChanged( heating.getHeatingBufferItem(room), totalChargeLevel )
             
             rhs = hhs.getHeatingState(room.getName())
-
-            postUpdateIfChanged(room.getHeatingTargetTemperatureItem(), rhs.getHeatingTargetTemperature() )
             
-            if room.getName() in self.controllableRooms:
-                if not heatingNeeded or rhs.getHeatingDemandEnergy() > 0:
-                    postUpdateIfChanged(room.getHeatingCircuitItem(),ON)
-                    pass
+            if rhs.getHeatingDemandTime() > longestRuntime:
+                longestRuntime = rhs.getHeatingDemandTime()
+
+            postUpdateIfChanged(heating.getHeatingTargetTemperatureItem(room), rhs.getHeatingTargetTemperature() )
+            
+            if heatingRequested and (rhs.getHeatingDemandEnergy() > 0 or room.getName() not in controllableRooms):
+                postUpdateIfChanged(heating.getHeatingDemandItem(room),ON)
+            else:
+                postUpdateIfChanged(heating.getHeatingDemandItem(room),OFF)
+              
+            if room.getName() in controllableRooms:
+                if not heatingRequested or rhs.getHeatingDemandEnergy() > 0:
+                    postUpdateIfChanged(heating.getHeatingCircuitItem(room),ON)
                 else:
-                    postUpdateIfChanged(room.getHeatingCircuitItem(),OFF)
-                    pass
+                    postUpdateIfChanged(heating.getHeatingCircuitItem(room),OFF)
             
         self.log.info(u"        : ---" )
 
-        heatingDemand = ON if heatingNeeded else OFF
+        heatingDemand = ON if heatingRequested else OFF
         postUpdateIfChanged("Heating_Demand", heatingDemand )
         
         if autoModeEnabled:
-            lastUpdateBeforeInMinutes = int( round( ( now.getMillis() - lastHeatingChange.getMillis() ) / 1000.0 / 60.0 ) )
-            lastHeatingChangeFormatted = OFFSET_FORMATTER.print(lastHeatingChange)
+            endMsg = u" • {} min. to go".format(heating.visualizeHeatingDemandTime(longestRuntime)) if longestRuntime > 0 else u""
+            lastHeatingDemandChange = getItemLastUpdate("Heating_Demand")
+            lastUpdateBeforeInMinutes = int( round( ( now.getMillis() - lastHeatingDemandChange.getMillis() ) / 1000.0 / 60.0 ) )
+            lastHeatingChangeFormatted = OFFSET_FORMATTER.print(lastHeatingDemandChange)
             lastUpdateBeforeFormatted = lastUpdateBeforeInMinutes if lastUpdateBeforeInMinutes < 60 else '{:02d}:{:02d}'.format(*divmod(lastUpdateBeforeInMinutes, 60));
-            self.log.info(u"Demand  : {} since {} • {} min. ago".format(heatingDemand, lastHeatingChangeFormatted, lastUpdateBeforeFormatted) )
+            self.log.info(u"Demand  : {} since {} • {} min. ago{}".format(heatingDemand, lastHeatingChangeFormatted, lastUpdateBeforeFormatted,endMsg) )
             
-            self.controlHeating(now,currentOperatingMode,heatingNeeded)  
+            self.controlHeating(now,currentOperatingMode,heatingRequested)  
         else:
             self.log.info(u"Demand  : SKIPPED • MANUAL MODE ACTIVE")
 
-        self.setSunStates(cr)
+        self.setSunStates(cr,hhs, heating)
         
         self.log.info(u"--------: ---" )
 
-    def setSunStates(self, cr ):
+    def setSunStates(self, cr, hhs, heating ):
       
         effectiveSouthRadiation = cr.getSunSouthRadiation() / 60.0
         effectiveWestRadiation = cr.getSunWestRadiation() / 60.0
@@ -448,21 +471,19 @@ class HeatingRule():
 
             currentOutdoorTemperature = cr.getReferenceTemperature()
 
-            fallbackTargetTemperature = cr.getRoomState("FF Livingroom").getTargetTemperature()
+            fallbackTargetTemperature = hhs.getHeatingState("FF_Livingroom").getHeatingTargetTemperature()
           
             for room in Heating.getRooms():
                 rs = cr.getRoomState(room.getName())
-              
+                
+                targetRoomTemperature = fallbackTargetTemperature if room.getHeatingVolume() == None else hhs.getHeatingState(room.getName()).getHeatingTargetTemperature()
+                
                 for transition in room.transitions:
                     if not isinstance(transition,Window) or transition.getRadiationArea() == None or transition.getSunProtectionItem() == None:
                         continue
                       
                     currentRoomTemperature = rs.getCurrentTemperature()
 
-                    targetRoomTemperature = rs.getTargetTemperature()
-                    if targetRoomTemperature == None:
-                        targetRoomTemperature = fallbackTargetTemperature
-                        
                     targetRoomTemperature = targetRoomTemperature - 1.0
                     
                     effectiveRadiation = effectiveSouthRadiation if transition.getDirection() == 'south' else effectiveWestRadiation
@@ -495,7 +516,7 @@ class HeatingRule():
         delayedMsg = u""
         
         currentOperatingModeUpdate = getItemLastUpdate("Heating_Operating_Mode")
-        lastUpdateBeforeInMinutes = int( round( ( now.getMillis() - currentOperatingModeUpdate.getMillis() ) / 1000.0 / 60.0 ) )
+        lastUpdateBeforeInMinutes = int( math.floor( ( now.getMillis() - currentOperatingModeUpdate.getMillis() ) / 1000.0 / 60.0 ) )
         lastHeatingChangeFormatted = OFFSET_FORMATTER.print(currentOperatingModeUpdate)
         lastUpdateBeforeFormatted = lastUpdateBeforeInMinutes if lastUpdateBeforeInMinutes < 60 else '{:02d}:{:02d}'.format(*divmod(lastUpdateBeforeInMinutes, 60));
         
@@ -505,13 +526,13 @@ class HeatingRule():
         if currentOperatingMode == 1:
             # Temperatur sollte seit XX min nicht OK sein und 'Nur WW' sollte mindestens XX min aktiv sein um 'flattern' zu vermeiden
             if isHeatingRequested:
-                isRunningLongEnough = itemLastUpdateOlderThen("Heating_Operating_Mode", now.minusMinutes(Heating.minOnlyWwTime))
+                isRunningLongEnough = itemLastUpdateOlderThen("Heating_Operating_Mode", now.minusMinutes(Heating.MIN_ONLY_WW_TIME))
                 
                 if forceRetry or isRunningLongEnough:
                     self.activeHeatingOperatingMode = 2
                     sendCommand("Heating_Operating_Mode", self.activeHeatingOperatingMode)
                 else:
-                    runtimeToGo = Heating.minOnlyWwTime - int( round( ( now.getMillis() - currentOperatingModeUpdate.getMillis() ) / 1000.0 / 60.0 ) )
+                    runtimeToGo = Heating.MIN_ONLY_WW_TIME - int( round( ( now.getMillis() - currentOperatingModeUpdate.getMillis() ) / 1000.0 / 60.0 ) )
                     delayedMsg = u" in {} min.".format(runtimeToGo)
 
                 self.log.info(u"Switch  : Heizen mit WW{}{}".format(delayedMsg,forceRetryMsg))
@@ -520,17 +541,21 @@ class HeatingRule():
         elif currentOperatingMode == 2:
             currentPowerState = getItemState("Heating_Power").intValue()
             
+            if currentPowerState == 0 and lastUpdateBeforeInMinutes < 1:
+                self.log.info(u"Delayed : Give the heating system more time to react")
+                return
+        
             # Wenn Heizkreispumpe auf 0 dann ist Heizen zur Zeit komplett deaktiviert (zu warm draussen) oder Brauchwasser wird aufgeheizt
             #if Heating_Circuit_Pump_Speed.state > 0:
             # Temperatur sollte seit XX min OK sein und Brenner sollte entweder nicht laufen oder mindestens XX min am Stück gelaufen sein
             if not isHeatingRequested:
-                isRunningLongEnough = itemLastUpdateOlderThen("Heating_Operating_Mode",now.minusMinutes(Heating.minHeatingTime))
+                isRunningLongEnough = itemLastUpdateOlderThen("Heating_Operating_Mode",now.minusMinutes(Heating.MIN_HEATING_TIME))
                 
                 if currentPowerState == 0 or forceRetry or isRunningLongEnough:
                     self.activeHeatingOperatingMode = 1
                     sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
                 else:
-                    runtimeToGo = Heating.minHeatingTime - int( round( ( now.getMillis() - currentOperatingModeUpdate.getMillis() ) / 1000.0 / 60.0 ) )
+                    runtimeToGo = Heating.MIN_HEATING_TIME - int( round( ( now.getMillis() - currentOperatingModeUpdate.getMillis() ) / 1000.0 / 60.0 ) )
                     delayedMsg = u" in {} min.".format(runtimeToGo)
 
                 self.log.info(u"Switch  : Nur WW{}{}".format(delayedMsg,forceRetryMsg))
@@ -538,6 +563,9 @@ class HeatingRule():
             # Brenner läuft nicht
             elif currentPowerState == 0:
                 forceReducedMsg = None
+                
+                # TODO maybe check Heating_Temperature_Wather_Storage if the temerature is increasing => hint that water heating is active
+                # TODO also if Heating_Power is going from 0 to 65 and one minute later from 65 to 0 is a hint for a unsuccessful start
                 
                 # No burner starts since a while
                 if itemLastUpdateOlderThen("Heating_Power",now.minusMinutes(5)) and itemLastUpdateOlderThen("Heating_Operating_Mode",now.minusMinutes(5)):
@@ -560,19 +588,19 @@ class HeatingRule():
             if not isHeatingRequested:
                 self.activeHeatingOperatingMode = 1
                 sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
-                self.log.info(u"Switch  : Nur WW. Temperature reached max value{}".format(forceRetryMsg))
+                self.log.info(u"Switch  : Nur WW because heating is not needed anymore{}".format(forceRetryMsg))
             else:
                 lastReducedRuntime = self.getLastReductionTime( currentOperatingModeUpdate )
                 if lastReducedRuntime > 0:
                     targetReducedTime = int( round(lastReducedRuntime * 2.0 / 1000.0 / 60.0, 0) )
-                    if targetReducedTime > Heating.maxReducedTime:
-                        targetReducedTime = Heating.maxReducedTime
-                    elif targetReducedTime < Heating.minReducedTime:
+                    if targetReducedTime > Heating.MAX_REDUCTION_TIME:
+                        targetReducedTime = Heating.MAX_REDUCTION_TIME
+                    elif targetReducedTime < Heating.MIN_REDUCED_TIME:
                         # SHOULD NEVER HAPPEN !!!
                         self.log.error(u"MIN_REDUCED_TIME less then allowed. Was {}".format(targetReducedTime))
-                        targetReducedTime = Heating.minReducedTime
+                        targetReducedTime = Heating.MIN_REDUCED_TIME
                 else:
-                    targetReducedTime = Heating.minReducedTime
+                    targetReducedTime = Heating.MIN_REDUCED_TIME
                                 
                 #self.log.info(u"E {}".format(targetReducedTime))
                     
@@ -624,7 +652,7 @@ class HeatingRule():
             #self.log.info(u"B {}".format(lastHeatingTime))
 
             # last mode was running less then MIN_HEATING_TIME
-            if lastHeatingTime < MIN_HEATING_TIME * 60 * 1000:
+            if lastHeatingTime < Heating.MIN_HEATING_TIME * 60 * 1000:
                 # mode before was "Reduziert"
                 previousOperatingMode = getHistoricItemEntry("Heating_Operating_Mode",lastOperatingModeUpdate.minusSeconds(1))
                 #self.log.info(u"C {}".format(previousOperatingMode.getState().intValue()))

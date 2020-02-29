@@ -34,8 +34,18 @@ Number Heating_SF_Child2_Target_Temperature		"Ziel Kind 2"		<selfsettings>
 Number Heating_SF_Bedroom_Target_Temperature		"Ziel Schlafzimmer"	<selfsettings>
 Number Heating_SF_Dressingroom_Target_Temperature		"Ziel Ankleide"	<selfsettings>
 Number Heating_SF_Bathroom_Target_Temperature		"Ziel Badezimmer"	<selfsettings>
-//Number Heating_Livingroom_Target	"Ziel Wohnzimmer"				<selfsettings>			(PersistentHistory)
-//Number Heating_Bedroom_Target		"Ziel Schlafzimmer"				<selfsettings>			(PersistentHistory)
+
+Switch Heating_FF_GuestWC_Demand			"Heizung Gäste WC [%d]"		<selfsettings>
+Switch Heating_FF_Livingroom_Demand			"Heizung Wohnzimmer [%d]"	<selfsettings>
+Switch Heating_FF_Guestroom_Demand			"Heizung Gästezimmer [%d]"	<selfsettings>
+Switch Heating_FF_Floor_Demand				"Heizung Flur unten [%d]"	<selfsettings>
+Switch Heating_SF_Floor_Demand				"Heizung Flur oben [%d]"	<selfsettings>
+Switch Heating_SF_Child1_Demand				"Heizung Kind 1 [%d]"		<selfsettings>
+Switch Heating_SF_Child2_Demand				"Heizung Kind 2 [%d]"		<selfsettings>
+Switch Heating_SF_Bedroom_Demand			"Heizung Schlafzimmer [%d]"	<selfsettings>
+Switch Heating_SF_Dressingroom_Demand		"Heizung Ankleide [%d]"		<selfsettings>
+Switch Heating_SF_Bathroom_Demand			"Heizung Badezimmer [%d]"	<selfsettings>
+
 
 Switch Heating_Demand							"Heizung [%d]"					<selfsettings>
 

@@ -75,13 +75,8 @@ class Window(Door):
         return self.sunProtectionItem
 
 class Room(object):
-    def __init__(self, name, temperatureSensorItem, temperatureTargetItem=None, heatingBufferItem=None, heatingCircuitItem=None, heatingTargetTemperatureItem=None, heatingVolume=None, volume=None, walls=None, transitions=[]):
+    def __init__(self, name, heatingVolume=None, volume=None, walls=None, transitions=[]):
         self.name = name
-        self.temperatureSensorItem = temperatureSensorItem
-        self.temperatureTargetItem = temperatureTargetItem
-        self.heatingBufferItem = heatingBufferItem
-        self.heatingCircuitItem = heatingCircuitItem
-        self.heatingTargetTemperatureItem = heatingTargetTemperatureItem
         self.heatingVolume = heatingVolume
         self.volume = volume
         self.walls = walls
@@ -89,21 +84,6 @@ class Room(object):
   
     def getName(self):
         return self.name
-
-    def getTemperatureSensorItem(self):
-        return self.temperatureSensorItem
-
-    def getTemperatureTargetItem(self):
-        return self.temperatureTargetItem
-
-    def getHeatingBufferItem(self):
-        return self.heatingBufferItem
-
-    def getHeatingCircuitItem(self):
-        return self.heatingCircuitItem
-
-    def getHeatingTargetTemperatureItem(self):
-        return self.heatingTargetTemperatureItem
 
     def getHeatingVolume(self):
         return self.heatingVolume

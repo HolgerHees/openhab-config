@@ -118,7 +118,16 @@ class RoomState(State):
 
     def getChargedEnergy(self):
         return self.chargedEnergy
+
+    '''def setFloorBufferCapacity(self,value):
+        self.floorBufferCapacity = value
+
+    def getFloorBufferCapacity(self):
+        return self.floorBufferCapacity
       
+    def getFloorBufferSlotCapacity(self):
+        return self.floorBufferCapacity * 0.1'''
+
 class HouseState(State):
     def setRoomStates(self,values):
         self.roomStates = values
@@ -134,6 +143,12 @@ class HouseState(State):
         
     def getHeatingPumpSpeed(self):
         return self.heatingPumpSpeed
+
+    def setHeatingVolumeFactor(self,value):
+        self.heatingVolumeFactor = value
+        
+    def getHeatingVolumeFactor(self):
+        return self.heatingVolumeFactor
 
     def setHeatingDebugInfo(self,value):
         self.heatingDebugInfo = value
@@ -173,8 +188,9 @@ class RoomHeatingState():
         self.heatingDemandEnergy = 0
         self.heatingDemandTime = 0
         self.chargedBuffer = 0
-        self.adjustedHeatingBuffer = 0
+        self.adjustedHeatingBuffer = None
         self.forcedInfo = None
+        self.forcedDebugInfo = None
 
     def setName(self,name):
         self.name = name
@@ -258,8 +274,8 @@ class HouseHeatingState():
     def getHeatingState(self,roomName):
         return self.heatingStates[roomName]
     
-    def setHeatingNeeded(self,value):
-        self.heatingNeeded=value
+    def setHeatingRequested(self,value):
+        self.heatingRequested=value
 
-    def isHeatingNeeded(self):
-        return self.heatingNeeded
+    def isHeatingRequested(self):
+        return self.heatingRequested
