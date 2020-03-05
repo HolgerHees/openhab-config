@@ -486,7 +486,7 @@ sitemap haus label="Main Menu"
                         Text item=Heating_Demand label="Berechnungsdetails [MAP(yes_no_de.map):%d]" icon="selfheating"{
                             Frame {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/heating_details.html?fromItem=Chart_From" icon=none height=36
+                                Webview url="/static/grafana/heating_details.html?fromItem=Chart_From" icon=none height=27
                             }
                             Frame {
                                 Webview url="/static/logs/heating.html" icon=none height=36

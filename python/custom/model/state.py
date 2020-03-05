@@ -113,20 +113,11 @@ class RoomState(State):
     def getCurrentTemperature(self):
         return self.temperature
 
-    def setChargedEnergy(self,value):
-        self.chargedEnergy = value
+    def setChargedBuffer(self,value):
+        self.chargedBuffer = value
 
-    def getChargedEnergy(self):
-        return self.chargedEnergy
-
-    '''def setFloorBufferCapacity(self,value):
-        self.floorBufferCapacity = value
-
-    def getFloorBufferCapacity(self):
-        return self.floorBufferCapacity
-      
-    def getFloorBufferSlotCapacity(self):
-        return self.floorBufferCapacity * 0.1'''
+    def getChargedBuffer(self):
+        return self.chargedBuffer
 
 class HouseState(State):
     def setRoomStates(self,values):
@@ -187,10 +178,11 @@ class RoomHeatingState():
         self.nightReduction = 0
         self.heatingDemandEnergy = 0
         self.heatingDemandTime = 0
-        self.chargedBuffer = 0
-        self.adjustedHeatingBuffer = None
+        self.reserveBuffer = 0
+        self.adjustedChargedBuffer = None
         self.forcedInfo = None
-        self.forcedDebugInfo = None
+        self.debugInfo = None
+        self.openWindowState = 0
 
     def setName(self,name):
         self.name = name
@@ -234,17 +226,26 @@ class RoomHeatingState():
     def getHeatingDemandTime(self):
         return self.heatingDemandTime
 
-    def setAdjustedHeatingBuffer(self,value):
-        self.adjustedHeatingBuffer = value
+    def setAdjustedChargedBuffer(self,value):
+        self.adjustedChargedBuffer = value
 
-    def getAdjustedHeatingBuffer(self):
-        return self.adjustedHeatingBuffer
+    def getAdjustedChargedBuffer(self):
+        return self.adjustedChargedBuffer
 
-    def setChargedBuffer(self,value):
-        self.chargedBuffer = value
+    def setChargedReserveBuffer(self,value):
+        self.chargedReserveBuffer = value
 
-    def getChargedBuffer(self):
-        return self.chargedBuffer
+    def getChargedReserveBuffer(self):
+        return self.chargedReserveBuffer
+
+    def setOpenWindowState(self,state):
+        self.openWindowState = state
+    
+    def hasOpenWindow(self):
+        return self.openWindowState > 0
+
+    def hasLongOpenWindow(self):
+        return self.openWindowState > 1
 
     def setInfo(self,value):
         self.info = value
@@ -258,11 +259,11 @@ class RoomHeatingState():
     def getForcedInfo(self):
         return self.forcedInfo
 
-    def setForcedDebugInfo(self,value):
-        self.forcedDebugInfo = value
+    def setDebugInfo(self,value):
+        self.debugInfo = value
 
-    def getForcedDebugInfo(self):
-        return self.forcedDebugInfo
+    def getDebugInfo(self):
+        return self.debugInfo
 
 class HouseHeatingState():
     def __init__(self):

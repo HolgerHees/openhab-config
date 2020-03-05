@@ -49,12 +49,8 @@ Switch Heating_SF_Bathroom_Demand			"Heizung Badezimmer [%d]"	<selfsettings>
 
 Switch Heating_Demand							"Heizung [%d]"					<selfsettings>
 
-// FIXME can be removed
-Number Heating_Charged							"Geladen [%.1f]"				<selfsettings>			(PersistentChart,PersistentHistory)
+//Number Heating_Charged							"Geladen [%.1f]"				<selfsettings>			(PersistentChart,PersistentHistory)
 //Number Solar_Power								"Solar Power [%.1f]"			<selfsettings>			(PersistentChart,PersistentHistory,Solar_Temperatures)
-
-
-
 
 Number Heating_Auto_Mode						"Modus"							<selfautomode>
 Number Heating_Operating_Mode					"Betriebsart [MAP(heating_de.map):%s]" <selfsettings>	(PersistentHistory)				{exec=">[1:/opt/heating_control/heizungBetriebsart.bash -t 1] >[2:/opt/heating_control/heizungBetriebsart.bash -t 2] >[3:/opt/heating_control/heizungBetriebsart.bash -t 3] >[1.000000:/opt/heating_control/heizungBetriebsart.bash -t 1] >[2.000000:/opt/heating_control/heizungBetriebsart.bash -t 2] >[3.000000:/opt/heating_control/heizungBetriebsart.bash -t 3]"}

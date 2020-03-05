@@ -340,9 +340,9 @@ controllableRooms = {'FF_Livingroom': True}
 #class TestRule():
 #    def __init__(self):
 #        heating = Heating(self.log)
-        
+
 #        currentTotalVentilationEnergy = heating.getVentilationEnergy(1.0) / 3.6
-        
+
 #        for room in Heating.getRooms():
 #        #for room in filter( lambda room: room.getHeatingVolume() != None,Heating.getRooms()):
 #            energyLost = ventilationLost = leakLost = roomCapacity = 0
@@ -350,7 +350,7 @@ controllableRooms = {'FF_Livingroom': True}
 #                type = transition.getType()
 #                coolingPerKelvin = ( type.getUValue() + type.getUOffset() ) * transition.getArea() * type.getFactor()
 #                energyLost = energyLost + coolingPerKelvin
-                
+
 #            ventilationLost = ventilationLost + room.getVolume() * currentTotalVentilationEnergy / Heating.totalVolume
 
 #            leakLost = leakLost + heating.getLeakingEnergy(room.getVolume(),20.0,19.0) / 3.6
@@ -363,12 +363,12 @@ controllableRooms = {'FF_Livingroom': True}
 
 #                capacity = ( wall.getArea() * wall.getType().getCapacity() ) / 3.6 # converting kj into watt
 #                roomCapacity = roomCapacity + capacity
-              
+
 #            self.log.info(u"{} wall: {} ventilation: {} leak: {} capacity: {}".format(room.getName(),energyLost,ventilationLost,leakLost,roomCapacity))
 
 #    def execute(self, module, input):
 #        pass
-        
+ 
 @rule("heating_control.py")
 class HeatingVentileRule():
     def __init__(self):
@@ -380,25 +380,25 @@ class HeatingVentileRule():
     # refresh heating ventile twice per week
     def execute(self, module, input):
         for room in filter( lambda room: room.getHeatingVolume() != None and room.getName() in controllableRooms,Heating.getRooms()):
-            circuiteItem = heating.getHeatingCircuitItem(room)
+            circuiteItem = Heating.getHeatingCircuitItem(room)
             hour = getNow().getHourOfDay()()
             if hour == 2 or getItemState(circuiteItem) == OFF:
-                postUpdateIfChanged(heating.getHeatingCircuitItem(room),ON)
+                postUpdateIfChanged(Heating.getHeatingCircuitItem(room),ON)
             else:
-                postUpdateIfChanged(heating.getHeatingCircuitItem(room),OFF)
+                postUpdateIfChanged(Heating.getHeatingCircuitItem(room),OFF)
 
 @rule("heating_control.py")
 class HeatingControlRule():
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("Heating_Auto_Mode"),
-#            CronTrigger("15 * * * * ?")
-            CronTrigger("*/15 * * * * ?")
+            CronTrigger("15 * * * * ?")
+#            CronTrigger("*/15 * * * * ?")
         ]
         self.activeHeatingOperatingMode = -1
 
     def execute(self, module, input):
-        self.log.info(u"--------: ---" )
+        self.log.info(u"--------: >>>" )
 
         now = getNow()
         currentOperatingMode = getItemState("Heating_Operating_Mode").intValue()
@@ -416,28 +416,28 @@ class HeatingControlRule():
             
             rs = cr.getRoomState(room.getName())
             # update heating buffer
-            totalChargeLevel = rs.getChargedEnergy()
+            totalChargeLevel = rs.getChargedBuffer()
             #postUpdateIfChanged( room.getHeatingBufferItem(), 0 )
 
-            postUpdateIfChanged( heating.getHeatingBufferItem(room), totalChargeLevel )
+            postUpdateIfChanged( Heating.getHeatingBufferItem(room), totalChargeLevel )
             
             rhs = hhs.getHeatingState(room.getName())
             
-            if rhs.getHeatingDemandTime() > longestRuntime:
+            if heatingRequested and rhs.getHeatingDemandTime() > longestRuntime:
                 longestRuntime = rhs.getHeatingDemandTime()
 
-            postUpdateIfChanged(heating.getHeatingTargetTemperatureItem(room), rhs.getHeatingTargetTemperature() )
+            postUpdateIfChanged(Heating.getHeatingTargetTemperatureItem(room), rhs.getHeatingTargetTemperature() )
             
-            if heatingRequested and (rhs.getHeatingDemandEnergy() > 0 or room.getName() not in controllableRooms):
-                postUpdateIfChanged(heating.getHeatingDemandItem(room),ON)
+            if heatingRequested and (rhs.getHeatingDemandTime() > 0 or room.getName() not in controllableRooms):
+                postUpdateIfChanged(Heating.getHeatingDemandItem(room),ON)
             else:
-                postUpdateIfChanged(heating.getHeatingDemandItem(room),OFF)
+                postUpdateIfChanged(Heating.getHeatingDemandItem(room),OFF)
               
             if room.getName() in controllableRooms:
-                if not heatingRequested or rhs.getHeatingDemandEnergy() > 0:
-                    postUpdateIfChanged(heating.getHeatingCircuitItem(room),ON)
+                if not heatingRequested or rhs.getHeatingDemandTime() > 0:
+                    postUpdateIfChanged(Heating.getHeatingCircuitItem(room),ON)
                 else:
-                    postUpdateIfChanged(heating.getHeatingCircuitItem(room),OFF)
+                    postUpdateIfChanged(Heating.getHeatingCircuitItem(room),OFF)
             
         self.log.info(u"        : ---" )
 
@@ -445,7 +445,7 @@ class HeatingControlRule():
         postUpdateIfChanged("Heating_Demand", heatingDemand )
         
         if autoModeEnabled:
-            endMsg = u" • {} min. to go".format(heating.visualizeHeatingDemandTime(longestRuntime)) if longestRuntime > 0 else u""
+            endMsg = u" • {} min. to go".format(Heating.visualizeHeatingDemandTime(longestRuntime)) if longestRuntime > 0 else u""
             lastHeatingDemandChange = getItemLastUpdate("Heating_Demand")
             lastUpdateBeforeInMinutes = int( round( ( now.getMillis() - lastHeatingDemandChange.getMillis() ) / 1000.0 / 60.0 ) )
             lastHeatingChangeFormatted = OFFSET_FORMATTER.print(lastHeatingDemandChange)
@@ -456,11 +456,11 @@ class HeatingControlRule():
         else:
             self.log.info(u"Demand  : SKIPPED • MANUAL MODE ACTIVE")
 
-        self.setSunStates(cr,hhs, heating)
+        self.setSunStates(cr,hhs)
         
-        self.log.info(u"--------: ---" )
+        self.log.info(u"--------: <<<" )
 
-    def setSunStates(self, cr, hhs, heating ):
+    def setSunStates(self, cr, hhs ):
       
         effectiveSouthRadiation = cr.getSunSouthRadiation() / 60.0
         effectiveWestRadiation = cr.getSunWestRadiation() / 60.0

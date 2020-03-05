@@ -45,7 +45,7 @@
   if( isPhone ) document.getElementsByTagName("body")[0].className="phone";
       
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", "/elasticsearch/_all/_search?sort=@timestamp:desc&size=100&q=group:openhab%20AND%20level:INFO%20AND%20(class:*CalculateChargeLevel*%20OR%20class:*HeatingCheck*)");
+  xhr.open("GET", "/elasticsearch/_all/_search?sort=@timestamp:desc,_id:desc&size=100&q=group:openhab%20AND%20level:INFO%20AND%20class:*HeatingControl*");
   xhr.onload = function() 
   {  
       var data = JSON.parse(this.response);
@@ -64,12 +64,14 @@
           
           var parts = entry._source["message"].split(":");
           
-          if( parts[0] == ">>>" )
+          //console.log(parts);
+          
+          if( parts[1] == " >>>" )
           {
               tableContent += "<div class=\"column separator\"></div>";
               tableContent += "<div class=\"column separator\"></div>";
           }
-          else if( parts[0] == "<<<" )
+          else if( parts[1] == " <<<" )
           {
               var dt = new Date( Date.parse(entry._source["@timestamp"]) );
               
