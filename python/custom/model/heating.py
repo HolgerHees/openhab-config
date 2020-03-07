@@ -626,9 +626,9 @@ class Heating(object):
                     continue
                 
                 # *** window is open or is closed not long enough
-                debugInfo = u"OPEN {} min.".format(openDuration)
+                debugInfo = u"OPEN {} min.".format(int(round(openDuration / 1000.0 / 60.0)))
                 if closedDuration != None:
-                    debugInfo = u"{} & CLOSED {} min.".format(debugInfo, closedDuration)
+                    debugInfo = u"{} & CLOSED {} min.".format(debugInfo, int(round(closedDuration / 1000.0 / 60.0)))
                 debugInfo = u"{} ago".format(debugInfo)
                 hs.setDebugInfo( debugInfo )
 

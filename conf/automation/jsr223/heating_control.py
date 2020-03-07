@@ -335,6 +335,7 @@ rooms = [
 Heating.init(rooms)
 
 controllableRooms = {'FF_Livingroom': True}
+maintenanceMode = {}
 
 #@rule("heating_control.py")
 #class TestRule():
@@ -379,13 +380,23 @@ class HeatingVentileRule():
 
     # refresh heating ventile twice per week
     def execute(self, module, input):
+        now = getNow()
         for room in filter( lambda room: room.getHeatingVolume() != None and room.getName() in controllableRooms,Heating.getRooms()):
             circuiteItem = Heating.getHeatingCircuitItem(room)
-            hour = getNow().getHourOfDay()()
-            if hour == 2 or getItemState(circuiteItem) == OFF:
-                postUpdateIfChanged(Heating.getHeatingCircuitItem(room),ON)
-            else:
-                postUpdateIfChanged(Heating.getHeatingCircuitItem(room),OFF)
+            maintainanceModeActive = room in maintenanceMode
+
+            if maintainanceModeActive or itemLastUpdateOlderThen(circuiteItem,now.minusHours(24)):
+                hour = now.getHourOfDay()
+                if hour == 2 or getItemState(circuiteItem) == OFF:
+                    postUpdateIfChanged(circuiteItem,ON)
+                else:
+                    postUpdateIfChanged(circuiteItem,OFF)
+                
+                if hour == 2:
+                    del maintenanceMode[room]
+                elif not maintainanceModeActive:
+                    maintenanceMode[room] = True
+                
 
 @rule("heating_control.py")
 class HeatingControlRule():
@@ -433,7 +444,7 @@ class HeatingControlRule():
             else:
                 postUpdateIfChanged(Heating.getHeatingDemandItem(room),OFF)
               
-            if room.getName() in controllableRooms:
+            if room.getName() in controllableRooms and room not in maintenanceMode:
                 if not heatingRequested or rhs.getHeatingDemandTime() > 0:
                     postUpdateIfChanged(Heating.getHeatingCircuitItem(room),ON)
                 else:
