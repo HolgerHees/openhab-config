@@ -412,9 +412,9 @@ class Heating(object):
         hadMorningHeating = hadTodayHeating
         
         holidaysInactive = self.getCachedItemState(Heating.holidayStatusItem) == OnOffType.OFF
-        minEveningHour = 17 if holidaysInactive and day <= 5 else 16
-        isEvening = hour >= minEveningHour
-        hadEveningHeating = hadTodayHeating and lastHeatingChange.getHourOfDay() >= minEveningHour
+        eveningStartHour = 17 if holidaysInactive and day <= 5 else 16
+        isEvening = ( hour == eveningStartHour )
+        hadEveningHeating = hadTodayHeating and lastHeatingChange.getHourOfDay() >= eveningStartHour
         
         #self.log.info(u"{} {} {} {}".format(isMorning,hadMorningHeating,isEvening,hadEveningHeating))
         
@@ -619,7 +619,11 @@ class Heating(object):
                     closedSince = getItemLastUpdate(transition.getContactItem())
                     closedDuration = self.now.getMillis() - closedSince.getMillis()
                     openDuration = closedSince.getMillis() - Heating._openWindowContacts[transition.getContactItem()].getMillis()
-                    if closedDuration > openDuration * 2.0:
+                    endingTreshold = openDuration * 2.0
+                    # 1 hour
+                    if endingTreshold > 60 * 60 * 1000:
+                        endingTreshold = 60 * 60 * 1000
+                    if closedDuration > endingTreshold:
                         del Heating._openWindowContacts[transition.getContactItem()]
                         continue
                 else:
