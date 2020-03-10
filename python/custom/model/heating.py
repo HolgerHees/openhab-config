@@ -349,7 +349,9 @@ class Heating(object):
         
         return round( _outdoorReduction, 2 )
       
-    def isNightModeTime(self,reference):
+    def isNightModeTime(self, offset = None):
+        reference = self.now.plusMinutes( offset ) if offset != None else self.now
+      
         day    = reference.getDayOfWeek()
         hour   = reference.getHourOfDay()
         minute = reference.getMinuteOfHour()
@@ -391,18 +393,14 @@ class Heating(object):
             offset = self.LAZY_OFFSET
             if not isHeatingActive: 
                 offset = offset + self.MIN_HEATING_TIME
-            return self.isNightModeTime( self.now.plusMinutes( offset ) )
+            return self.isNightModeTime( offset )
         
         if self.now.getHourOfDay() < 10:
-            return self.isNightModeTime( self.now )
+            return self.isNightModeTime()
           
         return False
       
-    def possibleColdFloorHeating(self,nightModeActive,lastHeatingChange):
-      
-        if self.now.minusMinutes(180).getMillis() < lastHeatingChange.getMillis():
-            return False
-          
+    def possibleColdFloorHeating(self,nightModeActive,lastHeatingChange):      
         day = self.now.getDayOfWeek()
         hour = self.now.getHourOfDay()
         
@@ -421,7 +419,6 @@ class Heating(object):
         return (isMorning and not hadMorningHeating) or (isEvening and not hadEveningHeating)
       
     def getColdFloorHeatingTime(self, lastUpdate ):
-      
         # when was the last heating job
         lastUpdateBeforeInMinutes = ( self.now.getMillis() - lastUpdate.getMillis() ) / 1000.0 / 60.0
        
@@ -972,14 +969,14 @@ class Heating(object):
                 #neededEnergy = neededTime * rs.getActivePossibleSaldo()
                 #self.log.info(u"{} saldo: {}, energy: {}, time: {}".format(room.getName(),round(rs.getActivePossibleSaldo(),1),round(neededEnergy,1),Heating.visualizeHeatingDemandTime(neededTime)))
                 
-                if rhs.getHeatingDemandTime() == 0:
+                if rhs.getHeatingDemandTime() == 0 and not isHeatingActive:
                     fh_info_type_r = {'not needed':[], 'wrong time': [], 'other': []}
                     
                     # *** CHECK FOR PRE HEATING IN THE MORNING ***
                     if nightModeActive and self.now.getHourOfDay() < 12:
-                        day_rhs = self.getHeatingDemand(room,rs,outdoorReduction,0,isHeatingActive)
+                        day_rhs = self.getHeatingDemand(room,rs,outdoorReduction,0,false)
                         if day_rhs.getHeatingDemandTime() > 0:
-                            if not self.isNightModeTime( self.now.plusMinutes( int( round( self.limitHeatingDemandTime( room.getName(), day_rhs.getHeatingDemandTime() ) * 60, 0 ) ) ) ):
+                            if not self.isNightModeTime( int(round(self.limitHeatingDemandTime( room.getName(), day_rhs.getHeatingDemandTime() ) * 60, 0)) ):
                                 rhs = day_rhs
                                 rhs.setForcedInfo('PRE')
                             else:
@@ -990,11 +987,12 @@ class Heating(object):
                         fh_info_type_r["wrong time"].append('PRE')
                     
                     # *** CHECK FOR COLD FLOOR HEATING ***
-                    coldFloorHeatingPossible = not isHeatingActive and self.possibleColdFloorHeating(nightModeActive,lastHeatingChange)
-                    if coldFloorHeatingPossible:
+                    if self.now.minusMinutes(180).getMillis() < lastHeatingChange.getMillis():
+                        fh_info_type_r["not needed"].append('CF')
+                    elif self.possibleColdFloorHeating(nightModeActive,lastHeatingChange):
                         neededTime = self.getColdFloorHeatingTime(lastHeatingChange)
                         if rhs.getHeatingDemandTime() < neededTime:
-                            if not self.isNightModeTime( self.now.plusMinutes( int( round( self.limitHeatingDemandTime( room.getName(), neededTime ) * 60, 0 ) ) ) ):
+                            if not self.isNightModeTime( int(round(self.limitHeatingDemandTime( room.getName(), neededTime ) * 60, 0)) ):
                                 rhs.setHeatingDemandEnergy(None)
                                 rhs.setHeatingDemandTime(neededTime)
                                 rhs.setForcedInfo('CF')

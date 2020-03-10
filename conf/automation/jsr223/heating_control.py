@@ -369,7 +369,7 @@ maintenanceMode = {}
 
 #    def execute(self, module, input):
 #        pass
- 
+
 @rule("heating_control.py")
 class HeatingVentileRule():
     def __init__(self):
