@@ -974,7 +974,7 @@ class Heating(object):
                     
                     # *** CHECK FOR PRE HEATING IN THE MORNING ***
                     if nightModeActive and self.now.getHourOfDay() < 12:
-                        day_rhs = self.getHeatingDemand(room,rs,outdoorReduction,0,false)
+                        day_rhs = self.getHeatingDemand(room,rs,outdoorReduction,0,False)
                         if day_rhs.getHeatingDemandTime() > 0:
                             if not self.isNightModeTime( int(round(self.limitHeatingDemandTime( room.getName(), day_rhs.getHeatingDemandTime() ) * 60, 0)) ):
                                 rhs = day_rhs
