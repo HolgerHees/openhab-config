@@ -19,7 +19,8 @@ ruleTimeouts = {}
 @rule("lights_outdoor.py")
 class MotiondetectorOutdoorSwitchRule:
     def __init__(self):
-        self.triggers = [ItemCommandTrigger("Motiondetector_Outdoor_Switch")]
+        # must be a stateChange trigger to get also events from physical knx buttons
+        self.triggers = [ItemStateChangeTrigger("Motiondetector_Outdoor_Switch")]
 
     def execute(self, module, input):
         global ruleTimeouts
@@ -27,23 +28,23 @@ class MotiondetectorOutdoorSwitchRule:
         last = ruleTimeouts.get("Motiondetector_Outdoor_Main_Switch",0)
         
         if now - last > 1000:
-            itemState = input["event"].getItemCommand()
+            itemState = input["event"].getItemState()
             
             if itemState == ON:
                 ruleTimeouts["Light_Outdoor"] = now
 
-                sendCommand("Light_Outdoor_Garage_Streedside",OFF)
-                sendCommand("Light_Outdoor_Frontdoor",OFF)
-                sendCommand("Light_Outdoor_Carport",OFF)
-                sendCommand("Light_Outdoor_Terrace",0)
-                sendCommand("Light_Outdoor_Garage_Gardenside",OFF)
+                sendCommandIfChanged("Light_Outdoor_Garage_Streedside",OFF)
+                sendCommandIfChanged("Light_Outdoor_Frontdoor",OFF)
+                sendCommandIfChanged("Light_Outdoor_Carport",OFF)
+                sendCommandIfChanged("Light_Outdoor_Terrace",0)
+                sendCommandIfChanged("Light_Outdoor_Garage_Gardenside",OFF)
 
             #ruleTimeouts["Motiondetector_Outdoor_Individual_Switches"] = now
-            postUpdate("Motiondetector_Outdoor_Garage_Streetside_Switch",itemState)
-            postUpdate("Motiondetector_Outdoor_Frontdoor_Switch",itemState)
-            postUpdate("Motiondetector_Outdoor_Carport_Switch",itemState)
-            postUpdate("Motiondetector_Outdoor_Terrace_Switch",itemState)
-            postUpdate("Motiondetector_Outdoor_Garage_Gardenside_Switch",itemState)
+            postUpdateIfChanged("Motiondetector_Outdoor_Garage_Streetside_Switch",itemState)
+            postUpdateIfChanged("Motiondetector_Outdoor_Frontdoor_Switch",itemState)
+            postUpdateIfChanged("Motiondetector_Outdoor_Carport_Switch",itemState)
+            postUpdateIfChanged("Motiondetector_Outdoor_Terrace_Switch",itemState)
+            postUpdateIfChanged("Motiondetector_Outdoor_Garage_Gardenside_Switch",itemState)
 
 
 # Individual MotionDetector Switchs
@@ -80,6 +81,7 @@ class MotiondetectorOutdoorIndividualSwitchRule:
                 if getItemState(entry[1]) == OFF:
                     switchState = OFF
                     
+        # must be a command to inform physical knx switch
         sendCommandIfChanged("Motiondetector_Outdoor_Switch",switchState)
 
         #self.log.info(u"{} {} {} {} {} ".format(gs,f,c,t,gg))
@@ -117,6 +119,8 @@ class LightOutdoorControlRule:
                     #ruleTimeouts["Motiondetector_Outdoor_Individual_Switches"] = now
                     if postUpdateIfChanged(entry[1],OFF):
                         ruleTimeouts["Motiondetector_Outdoor_Main_Switch"] = now
+                        
+                        # must be a command to inform physical knx switch
                         sendCommandIfChanged("Motiondetector_Outdoor_Switch",OFF)
                     #self.log.info(u"{} {}".format(itemName,now-last))
                     break
