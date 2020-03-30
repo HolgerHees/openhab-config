@@ -1,5 +1,7 @@
 Switch TV_KEY_POWER					"An / Aus" <selfsettings>
 
+String TV_KEY_CODE      			"Tastendruck" <selfsettings>			{channel="samsungtv:tv:livingroom:keyCode"} 
+
 Switch TV_KEY_POWER_ON				"An" <selfsettings>						{ wol="192.168.0.73#FC:03:9F:1D:28:38" }
 Switch TV_KEY_POWER_OFF				"Aus" <selfsettings>					{channel="samsungtv:tv:livingroom:power"} 
 Dimmer TV_KEY_VOLUME	        	"Lautstärke" <selfsettings>				{channel="samsungtv:tv:livingroom:volume"} 

@@ -1,6 +1,6 @@
 from custom.helper import sendCommandIfChanged
 
-#sendCommandIfChanged("Motiondetector_Outdoor_Switch", ON)
+#sendCommandIfChanged("TV_KEY_BROWSER_URL", "https://www.zeuthen.de")
 
 #import time
 
