@@ -75,8 +75,9 @@ class Window(Door):
         return self.sunProtectionItem
 
 class Room(object):
-    def __init__(self, name, heatingVolume=None, volume=None, walls=None, transitions=[]):
+    def __init__(self, name, additionalWallRadiator=False, heatingVolume=None, volume=None, walls=None, transitions=[]):
         self.name = name
+        self.additionalWallRadiator = additionalWallRadiator
         self.heatingVolume = heatingVolume
         self.volume = volume
         self.walls = walls
@@ -84,6 +85,9 @@ class Room(object):
   
     def getName(self):
         return self.name
+
+    def hasAdditionalWallRadiator(self):
+        return self.additionalWallRadiator
 
     def getHeatingVolume(self):
         return self.heatingVolume

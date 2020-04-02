@@ -92,7 +92,8 @@ rooms = [
     ),
     Room(
         name='FF_GuestWC',
-        heatingVolume=15.33 + 8.0, # +8.0 because of additional wall radiator
+        additionalWallRadiator=True,
+        heatingVolume=29.63,
         volume=4.92445 * _firstFloorHeight,
         walls=[
             Wall(direction='floor', area=6.29125, type=_groundFloor),
@@ -137,7 +138,7 @@ rooms = [
     ),
     Room(
         name='FF_Livingroom',
-        heatingVolume=75.45 + 75.45 + 34.39,
+        heatingVolume=84.20 + 84.20 + 49.90,
         volume=37.9957 * _firstFloorHeight + 10.7406 * _firstFloorHeight,
         walls=[
             # Kitchen
@@ -169,7 +170,7 @@ rooms = [
     ),
     Room(
         name='FF_Guestroom',
-        heatingVolume=45.55,
+        heatingVolume=60.19,
         volume=11.53445 * _firstFloorHeight,
         walls=[
             Wall(direction='floor', area=13.5891, type=_groundFloor),
@@ -185,7 +186,7 @@ rooms = [
     ),
     Room(
         name='FF_Floor',
-        heatingVolume=27.47,
+        heatingVolume=40.93,
         volume=11.3076 * _firstFloorHeight,
         walls=[
             Wall(direction='floor', area=12.9843, type=_groundFloor),
@@ -206,7 +207,7 @@ rooms = [
     ),
     Room(
         name='SF_Floor',
-        heatingVolume=26.46,
+        heatingVolume=38.45,
         volume=18.1926 * _secondFloorHeight - 4.3968,
         walls=[
             Wall(direction='floor', area=4.61578125, type=_firstFloor, bound="FF_Livingroom"),
@@ -230,7 +231,7 @@ rooms = [
     ),
     Room(
         name='SF_Child1',
-        heatingVolume=55.59,
+        heatingVolume=39.61,
         volume=13.036325 * _secondFloorHeight - 4.6016,
         walls=[
             Wall(direction='floor', area=4.0, type=_firstFloor, bound="FF_Livingroom"),
@@ -248,7 +249,7 @@ rooms = [
     ),
     Room(
         name='SF_Child2',
-        heatingVolume=58.61,
+        heatingVolume=41.32,
         volume=14.99575 * _secondFloorHeight - 4.6016,
         walls=[
             Wall(direction='floor', area=17.07625, type=_firstFloor, bound="FF_Livingroom"),
@@ -266,7 +267,7 @@ rooms = [
     ),
     Room(
         name='SF_Bedroom',
-        heatingVolume=57.58 + 57.58,
+        heatingVolume=35.87 + 39.33,
         volume=(14.3929 * _secondFloorHeight) + (14.88435 * _secondFloorHeight - 4.6016),
         walls=[
             # Bedroom
@@ -312,7 +313,8 @@ rooms = [
 #    ),
     Room(
         name='SF_Bathroom',
-        heatingVolume=30.33 + 8.0, # +8.0 because of additional wall radiator
+        additionalWallRadiator=True,
+        heatingVolume=35.31,
         volume=12.51273 * _secondFloorHeight - 2.5884,
         walls=[
             Wall(direction='floor', area=5.482375, type=_firstFloor, bound="FF_GuestWC"),
@@ -366,16 +368,19 @@ maintenanceMode = {}
 #@rule("heating_control.py")
 #class TestRule():
 #    def __init__(self):
+#        totalVolume=0
 #        for room in filter( lambda room: room.getHeatingVolume() != None,Heating.getRooms()):
-#            roomCapacity = 0
-#            for wall in room.getWalls():
-#                capacity = ( wall.getArea() * wall.getType().getCapacity() ) / 3.6 # converting kj into watt
-#                roomCapacity = roomCapacity + capacity
-#            self.log.info("{} {}".format(room.getName(),roomCapacity)) 
-#    
+#            #roomCapacity = 0
+#            #for wall in room.getWalls():
+#            #    capacity = ( wall.getArea() * wall.getType().getCapacity() ) / 3.6 # converting kj into watt
+#            #    roomCapacity = roomCapacity + capacity
+#            #self.log.info("{} {}".format(room.getName(),roomCapacity)) 
+#            self.log.info("{} {}".format(room.getName(),room.getHeatingVolume())) 
+#            totalVolume = totalVolume + room.getHeatingVolume()
+#        self.log.info("{}".format(totalVolume))
+#              
 #    def execute(self, module, input):
 #        pass
-
 
 #@rule("heating_control.py")
 #class TestRule():
@@ -437,7 +442,6 @@ class HeatingVentileRule():
                 elif not maintainanceModeActive:
                     maintenanceMode[room] = True
                 
-
 @rule("heating_control.py")
 class HeatingControlRule():
     def __init__(self):
@@ -493,9 +497,11 @@ class HeatingControlRule():
                     circuitItem = Heating.getHeatingCircuitItem(room)
                     if rhs.getHeatingDemandTime() > 0:
                         #self.log.info("ON")
-                        sendCommandIfChanged(circuitItem,ON)
-                        
-                        circuitLastChange = getItemLastUpdate(circuitItem)
+                        if sendCommandIfChanged(circuitItem,ON):
+                            circuitLastChange = now
+                        else:
+                            circuitLastChange = getItemLastUpdate(circuitItem)
+                            
                         if lastCircuitOpenedAt == None or lastCircuitOpenedAt.getMillis() < circuitLastChange.getMillis():
                             lastCircuitOpenedAt = circuitLastChange
                     else:

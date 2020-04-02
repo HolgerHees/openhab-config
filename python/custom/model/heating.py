@@ -308,19 +308,22 @@ class Heating(object):
             return 0.0, 0.0
           
     def calculateHeatingVolumeFactor(self,isForecast):
-        activeHeatingVolume = 0
+        if not isForecast:
+            activeHeatingVolume = 0
         
-        for room in filter( lambda room: room.getHeatingVolume() != None,Heating.rooms):
-            if isForecast or self.getCachedItemState( Heating.getHeatingCircuitItem(room) ) == OnOffType.ON:
-                activeHeatingVolume = activeHeatingVolume + room.getHeatingVolume()
+            for room in filter( lambda room: room.getHeatingVolume() != None,Heating.rooms):
+                if self.getCachedItemState( Heating.getHeatingCircuitItem(room) ) == OnOffType.ON:
+                    activeHeatingVolume = activeHeatingVolume + room.getHeatingVolume()
                 
-        # if all circuits are active => then 100% of Heating.totalHeatingVolume are possible
-        # if 1% of the circuits area is active then 60.4% of self.totalHeatingVolume at 100%
-        # if 10% of the circuits area is active then 64.0% of self.totalHeatingVolume at 100%
-        # if 50% of the circuits area is active then 80.0% of self.totalHeatingVolume at 100%
-        activeHeatingVolumeInPercent = ( activeHeatingVolume * 40.0 / Heating.totalHeatingVolume ) + 60.0
-        
-        return activeHeatingVolumeInPercent / 100.0
+            if activeHeatingVolume > 0:
+                # if all circuits are active => then 100% of Heating.totalHeatingVolume are possible
+                # if >0% of the circuits volume is active then 30.0% of self.totalHeatingVolume at 100%
+                # if 50% of the circuits volume is active then 65.0% of self.totalHeatingVolume at 100%
+                possibleHeatingVolumeInPercent = ( activeHeatingVolume * 70.0 / Heating.totalHeatingVolume ) + 30.0
+
+                return possibleHeatingVolumeInPercent / activeHeatingVolume
+
+        return 1.0
     
     def getOutdoorDependingReduction( self, coolingEnergy ):
         # more than zeor means cooling => no reduction
