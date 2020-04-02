@@ -1,5 +1,5 @@
 from core.triggers import CronTrigger, ItemStateChangeTrigger
-from custom.helper import rule, getNow, getHistoricItemEntry, getItemState, getItemLastUpdate, sendCommand, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen
+from custom.helper import rule, getNow, getHistoricItemEntry, getItemState, getItemLastUpdate, sendCommand, sendCommandIfChanged, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen
 from custom.model.heating import Heating
 from custom.model.house import ThermalStorageType, ThermalBridgeType, Wall, Door, Window, Room
 
@@ -493,14 +493,14 @@ class HeatingControlRule():
                     circuitItem = Heating.getHeatingCircuitItem(room)
                     if rhs.getHeatingDemandTime() > 0:
                         #self.log.info("ON")
-                        postUpdateIfChanged(circuitItem,ON)
+                        sendCommandIfChanged(circuitItem,ON)
                         
                         circuitLastChange = getItemLastUpdate(circuitItem)
                         if lastCircuitOpenedAt == None or lastCircuitOpenedAt.getMillis() < circuitLastChange.getMillis():
                             lastCircuitOpenedAt = circuitLastChange
                     else:
                         #self.log.info("OFF")
-                        postUpdateIfChanged(circuitItem,OFF)
+                        sendCommandIfChanged(circuitItem,OFF)
                 
             self.log.info(u"        : ---" )
             
