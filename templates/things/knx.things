@@ -27,19 +27,23 @@ Bridge	knx:ip:bridge [
         Type    switch  :       bedroomLeftLongPressed  "Schlafz. Bett Fenster (lang)" [ ga="1/4/2" ]
         Type    switch  :       bedroomRight            "Schlafz. Bett Wand"         [ ga="1/4/3" ]
         Type    switch  :       bedroomRightLongPressed "Schlafz. Bett Wand (lang)"  [ ga="1/4/4" ]
-
-        Type    switch  :       livingroomHeating       "Heizkreis Wohnzimmer"       [ ga="0/5/0+<0/5/1" ]
-        Type    switch  :       floorEGHeating          "Heizkreis Flur"             [ ga="0/5/2+<0/5/3" ]
-        Type    switch  :       guestroomHeating        "Heizkreis Gästezimmer"      [ ga="0/5/4+<0/5/5" ]
-        Type    switch  :       guestWCHeating          "Heizkreis Gäste WC"         [ ga="0/5/6+<0/5/7" ]
-        Type    switch  :       guestWCHKHeating        "Heizkreis Gäste WC HK"      [ ga="0/5/8+<0/5/9" ]
-
-        Type    switch  :       floorOGHeating          "Heizkreis Flur OG"          [ ga="1/5/0+<1/5/1" ]
-        Type    switch  :       child1Heating           "Heizkreis Kind 1"           [ ga="1/5/2+<1/5/3" ]
-        Type    switch  :       child2Heating           "Heizkreis Kind 2"           [ ga="1/5/4+<1/5/5" ]
-        Type    switch  :       bedroomHeating          "Heizkreis Schlafzimmer"     [ ga="1/5/6+<1/5/7" ]
-        Type    switch  :       bathroomHeating         "Heizkreis Badezimmer"       [ ga="1/5/8+<1/5/9" ]
-        Type    switch  :       bathroomHKHeating       "Heizkreis Badezimmer HK"    [ ga="1/5/10+<1/5/11" ]
+    }
+    Thing device heating_ff
+    {
+        Type    switch  :       livingroomCircuit       "Heizkreis Wohnzimmer"       [ ga="0/5/0+<0/5/1" ]
+        Type    switch  :       floorCircuit            "Heizkreis Flur"             [ ga="0/5/2+<0/5/3" ]
+        Type    switch  :       guestroomCircuit        "Heizkreis Gästezimmer"      [ ga="0/5/4+<0/5/5" ]
+        Type    switch  :       guestWCCircuit          "Heizkreis Gäste WC"         [ ga="0/5/6+<0/5/7" ]
+        Type    switch  :       guestWCHKCircuit        "Heizkreis Gäste WC HK"      [ ga="0/5/8+<0/5/9" ]
+    }
+    Thing device heating_sf
+    {
+        Type    switch  :       floorCircuit            "Heizkreis Flur"             [ ga="1/5/0+<1/5/1" ]
+        Type    switch  :       child1Circuit           "Heizkreis Kind 1"           [ ga="1/5/2+<1/5/3" ]
+        Type    switch  :       child2Circuit           "Heizkreis Kind 2"           [ ga="1/5/4+<1/5/5" ]
+        Type    switch  :       bedroomCircuit          "Heizkreis Schlafzimmer"     [ ga="1/5/6+<1/5/7" ]
+        Type    switch  :       bathroomCircuit         "Heizkreis Badezimmer"       [ ga="1/5/8+<1/5/9" ]
+        Type    switch  :       bathroomHKCircuit       "Heizkreis Badezimmer HK"    [ ga="1/5/10+<1/5/11" ]
     }
     Thing device sensors_ff
     {

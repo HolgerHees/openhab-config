@@ -614,6 +614,9 @@ body,
 .mvWidget.mvStatus > div .value > div:first-child {
     color: var(--widget-text-color-nonimportant);
 }
+.mvWidget.mvStatus > div .value > div:last-child {
+    color: var(--widget-text-color);
+}
 .mvWidget.mvStatus > div.warn .value > div:last-child,
 .mvWidget.mvStatus > div.error .value > div:last-child {
     font-weight: var(--widget-value-weight);
