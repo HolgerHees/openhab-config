@@ -474,13 +474,13 @@ sitemap haus label="Main Menu"
                             Switch item=Heating_FF_Floor_Circuit label="Flur unten Kreis"
                             Switch item=Heating_FF_Guestroom_Circuit label="Gästezimmer Kreis"
                             Switch item=Heating_FF_GuestWC_Circuit label="Gäste WC Kreis"
-                            Switch item=Heating_FF_GuestWCHK_Circuit label="Gäste WC HK"
+                            Switch item=Heating_FF_GuestWC_HK label="Gäste WC HK"
                             Switch item=Heating_SF_Floor_Circuit label="Flur oben Kreis"
                             Switch item=Heating_SF_Child1_Circuit label="Kind 1 Kreis"
                             Switch item=Heating_SF_Child2_Circuit label="Kind 2 Kreis"
                             Switch item=Heating_SF_Bedroom_Circuit label="Schlafzimmer Kreis"
                             Switch item=Heating_SF_Bathroom_Circuit label="Badezimmer Kreis"
-                            Switch item=Heating_SF_BathroomHK_Circuit label="Badezimmer HK"
+                            Switch item=Heating_SF_Bathroom_HK label="Badezimmer HK"
                         }
                     }
                     Frame label="Sensordaten" {

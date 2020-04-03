@@ -64,6 +64,7 @@ class Heating(object):
     temperatureTargetItemPlaceholder = u"Temperature_{}_Target"
     heatingBufferItemPlaceholder = u"Heating_{}_Charged"
     heatingCircuitItemPlaceholder = u"Heating_{}_Circuit"
+    heatingHKItemPlaceholder = u"Heating_{}_HK"
     heatingTargetTemperatureItemPlaceholder = u"Heating_{}_Target_Temperature"
     heatingDemandItemPlaceholder = u"Heating_{}_Demand"
 
@@ -114,6 +115,10 @@ class Heating(object):
     def getHeatingCircuitItem(room):
         return Heating.heatingCircuitItemPlaceholder.format(room.getName())
       
+    @staticmethod
+    def getHeatingHKItem(room):
+        return Heating.heatingHKItemPlaceholder.format(room.getName())
+
     @staticmethod
     def getHeatingTargetTemperatureItem(room):
         return Heating.heatingTargetTemperatureItemPlaceholder.format(room.getName())

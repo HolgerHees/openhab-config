@@ -34,7 +34,7 @@ Bridge	knx:ip:bridge [
         Type    switch  :       floorCircuit            "Heizkreis Flur"             [ ga="0/5/2+<0/5/3" ]
         Type    switch  :       guestroomCircuit        "Heizkreis Gästezimmer"      [ ga="0/5/4+<0/5/5" ]
         Type    switch  :       guestWCCircuit          "Heizkreis Gäste WC"         [ ga="0/5/6+<0/5/7" ]
-        Type    switch  :       guestWCHKCircuit        "Heizkreis Gäste WC HK"      [ ga="0/5/8+<0/5/9" ]
+        Type    switch  :       guestWCHK               "Heizkreis Gäste WC HK"      [ ga="0/5/8+<0/5/9" ]
     }
     Thing device heating_sf
     {
@@ -43,7 +43,7 @@ Bridge	knx:ip:bridge [
         Type    switch  :       child2Circuit           "Heizkreis Kind 2"           [ ga="1/5/4+<1/5/5" ]
         Type    switch  :       bedroomCircuit          "Heizkreis Schlafzimmer"     [ ga="1/5/6+<1/5/7" ]
         Type    switch  :       bathroomCircuit         "Heizkreis Badezimmer"       [ ga="1/5/8+<1/5/9" ]
-        Type    switch  :       bathroomHKCircuit       "Heizkreis Badezimmer HK"    [ ga="1/5/10+<1/5/11" ]
+        Type    switch  :       bathroomHK              "Heizkreis Badezimmer HK"    [ ga="1/5/10+<1/5/11" ]
     }
     Thing device sensors_ff
     {

@@ -92,7 +92,7 @@ rooms = [
     ),
     Room(
         name='FF_GuestWC',
-        additionalWallRadiator=True,
+        additionalRadiator=True,
         heatingVolume=29.63,
         volume=4.92445 * _firstFloorHeight,
         walls=[
@@ -313,7 +313,7 @@ rooms = [
 #    ),
     Room(
         name='SF_Bathroom',
-        additionalWallRadiator=True,
+        additionalRadiator=True,
         heatingVolume=35.31,
         volume=12.51273 * _secondFloorHeight - 2.5884,
         walls=[
@@ -466,7 +466,7 @@ class HeatingControlRule():
         cr, hhs = heating.calculate(currentHeatingDemand == ON)    
         
         if autoModeEnabled:
-            heatingRequested = autoModeEnabled and hhs.isHeatingRequested()
+            heatingRequested = hhs.isHeatingRequested()
             
             longestRuntime = 0
             lastCircuitOpenedAt = None
@@ -495,7 +495,7 @@ class HeatingControlRule():
                   
                 if room.getName() in controllableRooms and room not in maintenanceMode:
                     circuitItem = Heating.getHeatingCircuitItem(room)
-                    if rhs.getHeatingDemandTime() > 0:
+                    if heatingRequested and rhs.getHeatingDemandTime() > 0:
                         #self.log.info("ON")
                         if sendCommandIfChanged(circuitItem,ON):
                             circuitLastChange = now
@@ -503,10 +503,17 @@ class HeatingControlRule():
                             circuitLastChange = getItemLastUpdate(circuitItem)
                             
                         if lastCircuitOpenedAt == None or lastCircuitOpenedAt.getMillis() < circuitLastChange.getMillis():
-                            lastCircuitOpenedAt = circuitLastChange
+                            lastCircuitOpenedAt = circuitLastChange                            
                     else:
                         #self.log.info("OFF")
                         sendCommandIfChanged(circuitItem,OFF)
+                        
+                    if room.hasAdditionalRadiator():
+                        # additional radiator should only be enabled in case of CF heating
+                        if heatingRequested and rhs.getForcedInfo() == 'CF':
+                            sendCommandIfChanged(Heating.getHeatingHKItem(room),ON)
+                        else:
+                            sendCommandIfChanged(Heating.getHeatingHKItem(room),OFF)
                 
             self.log.info(u"        : ---" )
             
