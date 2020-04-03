@@ -436,6 +436,13 @@ class HeatingVentileRule():
                     postUpdateIfChanged(circuiteItem,ON)
                 else:
                     postUpdateIfChanged(circuiteItem,OFF)
+                    
+                if room.hasAdditionalRadiator():
+                    hkItem = Heating.getHeatingHKItem(room)
+                    if hour == 2 or getItemState(hkItem) == OFF:
+                        sendCommandIfChanged(hkItem,ON)
+                    else:
+                        sendCommandIfChanged(hkItem,OFF)
                 
                 if hour == 2:
                     del maintenanceMode[room]
