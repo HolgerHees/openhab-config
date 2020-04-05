@@ -16,11 +16,12 @@ Bridge	knx:ip:bridge [
         Type    number  :       powerDemandActive       "Wirkleistung Bezug"         [ ga="14.056:0/4/12" ]
         Type    number  :       powerSupplyActive       "Wirkleistung Lieferung"     [ ga="14.056:0/4/13" ]
 
-        Type    number  :       gasCounter              "Gas Counter"                [ ga="13.001:<0/4/6" ]
         Type    switch  :       stateNotify             "Benachrichtigen"            [ ga="<0/4/1" ]
-        Type    switch  :       stateHoliday            "Urlaubsmodus"               [ ga="<0/4/8" ]
-        Type    contact :       switchBell              "Klingeltaster"              [ ga="<0/4/7" ]
         Type    switch  :       switchDooropener        "Türöffner"                  [ ga="0/4/4" ]
+        Type    contact  :      smokeDetector           "Rauchmelder"                [ ga="0/4/5" ]
+        Type    number  :       gasCounter              "Gas Counter"                [ ga="13.001:<0/4/6" ]
+        Type    contact :       switchBell              "Klingeltaster"              [ ga="<0/4/7" ]
+        Type    switch  :       stateHoliday            "Urlaubsmodus"               [ ga="<0/4/8" ]
         Type    contact :       receiverState           "Receiverstatus"             [ ga="<0/4/9" ]
 
         Type    switch  :       bedroomLeft             "Schlafz. Bett Fenster"      [ ga="1/4/1" ]

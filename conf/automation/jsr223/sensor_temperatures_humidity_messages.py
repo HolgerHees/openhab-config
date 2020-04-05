@@ -10,7 +10,7 @@ infoConfig = [
     ["Air_FF_Utilityroom_Message", "Temperature_FF_Utilityroom", "Humidity_FF_Utilityroom", None],
     ["Air_FF_Garage_Message", "Temperature_FF_Garage", "Humidity_FF_Garage", None],
     ["Air_SF_Bedroom_Message", "Temperature_SF_Bedroom", "Humidity_SF_Bedroom", "Temperature_SF_Bedroom_Target"],
-    ["Air_SF_Dressingroom_Message", "Temperature_SF_Dressingroom", "Humidity_SF_Dressingroom", "Temperature_SF_Dressingroom_Target"],
+    ["Air_SF_Dressingroom_Message", "Temperature_SF_Dressingroom", "Humidity_SF_Dressingroom", None],
     ["Air_SF_Child1_Message", "Temperature_SF_Child1", "Humidity_SF_Child1", "Temperature_SF_Child1_Target"],
     ["Air_SF_Child2_Message", "Temperature_SF_Child2", "Humidity_SF_Child2", "Temperature_SF_Child2_Target"],
     ["Air_SF_Bathroom_Message", "Temperature_SF_Bathroom", "Humidity_SF_Bathroom", "Temperature_SF_Bathroom_Target"],

@@ -920,7 +920,6 @@ class Heating(object):
         hhs = HouseHeatingState()
         heatingRequested = False
         hasChargeLevelDebugInfos = False
-        disabledHeatingDemandCount = 0
         
         for room in filter( lambda room: room.getHeatingVolume() != None,Heating.rooms):
             
@@ -1023,15 +1022,13 @@ class Heating(object):
                                 fh_info_r.append( "{} {}".format(" & ".join(fh_info_type_r[type]),type) )
                         
                         rhs.setDebugInfo( ", ".join(fh_info_r) )
-    
-            # *** CHECKED HEATING DEMAND ***
-            if rhs.hasLongOpenWindow():
-                disabledHeatingDemandCount = disabledHeatingDemandCount + 1
-            elif rhs.getHeatingDemandTime() != None and ( ( isHeatingActive and rhs.getHeatingDemandTime() > 0.0 ) or rhs.getHeatingDemandTime() * 60 > Heating.MIN_HEATING_TIME ):
-                heatingRequested = True
+                        
+            if rhs.getHeatingDemandTime() > 0.0:
+                if isHeatingActive or rhs.getHeatingDemandTime() * 60 > Heating.MIN_HEATING_TIME:
+                    heatingRequested = True
 
             hhs.setHeatingState(room.getName(),rhs)
-        
+
         if hasChargeLevelDebugInfos:
             self.log.info(u"        : ---")
             
@@ -1039,14 +1036,6 @@ class Heating(object):
         for room in Heating.rooms:
             self.logHeatingState(room, cr, hhs )
             
-        # *** FORCED HEATING OFF ***
-        if disabledHeatingDemandCount >= 3:
-            heatingRequested = False
-            self.log.info(u"        : ---")
-            self.log.info(u"        : Forced heating OFF • too many open windows")
-            
-        hhs.setHeatingRequested(heatingRequested)
-
         # *** REGISTER FORCED HEATINGS IF HEATING IS POSSIBLE
         if heatingRequested:
             for room in filter( lambda room: room.getHeatingVolume() != None,Heating.rooms):
@@ -1054,6 +1043,8 @@ class Heating(object):
                 if rhs.getForcedInfo() != None and room.getName() not in Heating._forcedHeatings:
                     #Heating._forcedHeatings[room.getName()] = [ rhs, rs.getChargedBuffer() + rhs.getHeatingDemandEnergy() ]
                     Heating._forcedHeatings[room.getName()] = { 'rhs': rhs, 'energy': rhs.getHeatingDemandEnergy(), 'time': rhs.getHeatingDemandTime() }
+
+        hhs.setHeatingRequested(heatingRequested)
 
         Heating.lastRuntime = self.now
 

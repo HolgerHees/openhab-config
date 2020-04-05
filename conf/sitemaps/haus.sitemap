@@ -347,9 +347,7 @@ sitemap haus label="Main Menu"
                         Text item=Air_SF_Bedroom_Message {
                             Setpoint item=Temperature_SF_Bedroom_Target label="Schlafzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=Air_SF_Dressingroom_Message {
-                            Setpoint item=Temperature_SF_Dressingroom_Target label="Ankleide [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                        }
+                        Text item=Air_SF_Dressingroom_Message
                         Text item=Air_SF_Child1_Message {
                             Setpoint item=Temperature_SF_Child1_Target label="Kind 1 [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
@@ -430,6 +428,10 @@ sitemap haus label="Main Menu"
                 Group item=Sensor_Window_FF label="EG Fenster [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"]
                 Group item=Sensor_Window_SF label="OG Fenster [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"]
             }
+            Frame label="Sonstiges"
+            {
+                Text item=Smoke_Detector valuecolor=[!=CLOSED="#d72a2a"]
+            }
         }
 		Group label="Technik [%s]" icon="selfhouse" item=MainStatus valuecolor=[=="Alles normal"="#6bc305",=="Lüftung"="#cbcb00",!="Alles normal"="#d72a2a"]
 		{
@@ -466,7 +468,6 @@ sitemap haus label="Main Menu"
                             Setpoint item=Temperature_SF_Child1_Target label="Kind 1 [%.1f °C]" step=0.5 minValue=15 maxValue=25
                             Setpoint item=Temperature_SF_Child2_Target label="Kind 2 [%.1f °C]" step=0.5 minValue=15 maxValue=25
                             Setpoint item=Temperature_SF_Bedroom_Target label="Schlafzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=Temperature_SF_Dressingroom_Target label="Ankleide [%.1f °C]" step=0.5 minValue=15 maxValue=25
                             Setpoint item=Temperature_SF_Bathroom_Target label="Badezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text label="Heizkreise" icon="selfheating"{

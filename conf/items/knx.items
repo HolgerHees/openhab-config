@@ -175,9 +175,10 @@ Switch Watering_Gardenside_Beds_back			"Bewässerung Beete hinten"	<selfwater>		
 Switch Watering_Streetside_Lawn					"Bewässerung Rasen vorn"	<selfwater>		(Watering_Circuits)	{ channel="knx:device:bridge:wattering:streetsideLawn" }
 Switch Watering_Streetside_Beds					"Bewässerung Beete vorne"	<selfwater>		(Watering_Circuits)	{ channel="knx:device:bridge:wattering:streetsideBeds" }
 
-Number Watering_Program_Duration				"Programm Dauer [%d]"					<selfruntime>	(Watering)
-Switch Watering_Program_Start					"Programm starten"						<selfautomode>	(Watering)
-String Watering_Program_State					"Status [%s]"							<selfinfo>		(Watering)
+Number Watering_Program_Duration				"Programm Dauer [%d]"		<selfruntime>	(Watering)
+Switch Watering_Program_Start					"Programm starten"			<selfautomode>	(Watering)
+String Watering_Program_State					"Status [%s]"				<selfinfo>		(Watering)
 
 //####### Common States ########
-Contact		Receiver_State														           { channel="knx:device:bridge:other:receiverState" }
+Contact		Receiver_State														      { channel="knx:device:bridge:other:receiverState" }
+Contact		Smoke_Detector						 "Rauchmelder [MAP(smoke_detector_de.map):%s]"	<smoke>	  { channel="knx:device:bridge:other:smokeDetector" }

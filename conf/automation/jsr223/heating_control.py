@@ -355,13 +355,13 @@ controllableRooms = {
   'FF_Floor': True,
   'FF_Guestroom': True,
   'FF_GuestWC': True,
-#  'FF_GuestWCHK': True,
+  'FF_GuestWCHK': True,
   'SF_Floor': True,
   'SF_Child1': True,
   'SF_Child2': True,
   'SF_Bedroom': True,
-#  'SF_Bathroom': True
-#  'SF_BathroomHK': True
+  'SF_Bathroom': True,
+  'SF_BathroomHK': True
 }
 maintenanceMode = {}
 
@@ -414,7 +414,7 @@ maintenanceMode = {}
 
 #    def execute(self, module, input):
 #        pass
- 
+
 @rule("heating_control.py")
 class HeatingVentileRule():
     def __init__(self):
@@ -462,11 +462,9 @@ class HeatingControlRule():
     def execute(self, module, input):
         self.log.info(u"--------: >>>" )
 
-        autoModeEnabled = getItemState("Heating_Auto_Mode").intValue() == 1
-
         now = getNow()
+        autoModeEnabled = getItemState("Heating_Auto_Mode").intValue() == 1
         currentOperatingMode = getItemState("Heating_Operating_Mode").intValue()
-        
         currentHeatingDemand = getItemState("Heating_Demand")
 
         heating = Heating(self.log)
@@ -475,31 +473,62 @@ class HeatingControlRule():
         if autoModeEnabled:
             heatingRequested = hhs.isHeatingRequested()
             
+            # *** CHECK OPEN WINDOWS AND MIN HEATING VOLUME ***
+            disabledHeatingDemandCount = 0
+            requestedPossibleHeatingVolume = 0.0
+            for room in filter( lambda room: room.getHeatingVolume() != None,Heating.getRooms()):
+            
+                rs = cr.getRoomState(room.getName())
+                rhs = hhs.getHeatingState(room.getName())
+
+                # *** CHECKED HEATING DEMAND ***
+                if rhs.hasLongOpenWindow():
+                    disabledHeatingDemandCount = disabledHeatingDemandCount + 1
+            
+                if rhs.getHeatingDemandTime() != None and rhs.getHeatingDemandTime() > 0.0:
+                    requestedPossibleHeatingVolume = requestedPossibleHeatingVolume + rs.getPossibleHeatingVolume()
+                
+            # *** FORCED HEATING OFF ***
+            if disabledHeatingDemandCount >= 3:
+                heatingRequested = False
+                self.log.info(u"        : ---")
+                self.log.info(u"        : Heating OFF • too many open windows")
+                
+            # *** FORCED HEATING OFF IF ONLY 20%***
+            if requestedPossibleHeatingVolume < Heating.totalHeatingVolume * 0.2:
+                heatingRequested = False
+                activeHeatingVolume = round(requestedPossibleHeatingVolume / 1000.0,3)
+                possibleHeatingVolume = round(Heating.totalHeatingVolume / 1000.0,3)
+                self.log.info(u"        : ---")
+                self.log.info(u"        : Heating OFF • only {}m² of {}m² active".format(activeHeatingVolume,possibleHeatingVolume))
+            # *************************************************
+
+
+            # *** PERSIST AND CIRCUITS ************************
             longestRuntime = 0
             lastCircuitOpenedAt = None
             for room in filter( lambda room: room.getHeatingVolume() != None,Heating.getRooms()):
                 
                 rs = cr.getRoomState(room.getName())
-                # update heating buffer
+                rhs = hhs.getHeatingState(room.getName())
+                
+                # *** PERSIST HEATING CHARGE LEVEL ***
                 totalChargeLevel = rs.getChargedBuffer()
-                #postUpdateIfChanged( room.getHeatingBufferItem(), 0 )
-
                 postUpdateIfChanged( Heating.getHeatingBufferItem(room), totalChargeLevel )
                 
-                rhs = hhs.getHeatingState(room.getName())
+                # *** PERSIST HEATING TARGET TEMPERATURE ***
+                postUpdateIfChanged(Heating.getHeatingTargetTemperatureItem(room), rhs.getHeatingTargetTemperature() )
                 
                 if heatingRequested and rhs.getHeatingDemandTime() > longestRuntime:
                     longestRuntime = rhs.getHeatingDemandTime()
 
-                postUpdateIfChanged(Heating.getHeatingTargetTemperatureItem(room), rhs.getHeatingTargetTemperature() )
-                
+                # *** PERSIST HEATING DEMAND ***
                 if heatingRequested and (rhs.getHeatingDemandTime() > 0 or room.getName() not in controllableRooms):
                     postUpdateIfChanged(Heating.getHeatingDemandItem(room),ON)
                 else:
                     postUpdateIfChanged(Heating.getHeatingDemandItem(room),OFF)
                     
-                #self.log.info("{} {} {}".format(room.getName(),room.getName() in controllableRooms,rhs.getHeatingDemandTime()))
-                  
+                # *** CONTROL CIRCUITS AND HK ***
                 if room.getName() in controllableRooms and room not in maintenanceMode:
                     circuitItem = Heating.getHeatingCircuitItem(room)
                     if heatingRequested and rhs.getHeatingDemandTime() > 0:
@@ -515,13 +544,16 @@ class HeatingControlRule():
                         #self.log.info("OFF")
                         sendCommandIfChanged(circuitItem,OFF)
                         
+                    # wall radiator
                     if room.hasAdditionalRadiator():
                         # additional radiator should only be enabled in case of CF heating
                         if heatingRequested and rhs.getForcedInfo() == 'CF':
                             sendCommandIfChanged(Heating.getHeatingHKItem(room),ON)
                         else:
                             sendCommandIfChanged(Heating.getHeatingHKItem(room),OFF)
-                
+            # *************************************************
+            
+            
             self.log.info(u"        : ---" )
             
             # a heating ciruit was opened less then 5 minutes ago.

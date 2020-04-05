@@ -110,7 +110,7 @@ Number Temperature_SF_Floor_Target	    "Ziel Flur oben [%.1f °C]"		<selftempera
 Number Temperature_SF_Child1_Target	    "Ziel Kind 1 [%.1f °C]"			<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
 Number Temperature_SF_Child2_Target	    "Ziel Kind 2 [%.1f °C]"			<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
 Number Temperature_SF_Bedroom_Target	"Ziel Schlafzimmer [%.1f °C]"	<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
-Number Temperature_SF_Dressingroom_Target	"Ziel Ankleide [%.1f °C]"	<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
+//Number Temperature_SF_Dressingroom_Target	"Ziel Ankleide [%.1f °C]"	<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
 Number Temperature_SF_Bathroom_Target	"Ziel Badezimmer [%.1f °C]"		<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
 
 //########### PLANT SENSORS ##########
