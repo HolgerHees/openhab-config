@@ -7,11 +7,15 @@ from core.triggers import ItemStateChangeTrigger
 @rule("presence_actions.py")
 class LeavingActionRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("State_Presence",state="0")]
+        self.triggers = [ItemStateChangeTrigger("State_Presence")]
 
     def execute(self, module, input):
-        #self.log.info("test")
-        postUpdateIfChanged("State_Notify", ON)
+        self.log.info("test")
+        self.log.info("{}".format(input["event"].getItemState()))
+        if input["event"].getItemState().intValue() == 1:
+            postUpdateIfChanged("State_Notify", OFF)
+        else:
+            postUpdateIfChanged("State_Notify", ON)
 
 @rule("lights_indoor.py")
 class ArrivingActionRule:
