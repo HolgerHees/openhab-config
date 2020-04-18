@@ -961,9 +961,14 @@ class Heating(object):
                     del Heating._forcedHeatings[room.getName()]
                     rhs = None
                 else:
-                    rhs.setHeatingDemandEnergy(neededEnergy)
-                    rhs.setHeatingDemandTime(neededTime)
-                    hhs.setHeatingState(room.getName(),rhs)
+                    # PRE check is needed, because it is energy depending and maybe there is not enough demand to start heating. So we will never reach needed energy level
+                    # CF is not needed, because it is timebased
+                    if rhs.getForcedInfo() == "PRE" and not nightModeActive:
+                        del Heating._forcedHeatings[room.getName()]
+                    else:
+                        rhs.setHeatingDemandEnergy(neededEnergy)
+                        rhs.setHeatingDemandTime(neededTime)
+                        hhs.setHeatingState(room.getName(),rhs)
                 
             if rhs == None:
                 # *** OUTDOOR REDUCTION ***
@@ -1022,7 +1027,7 @@ class Heating(object):
                                 fh_info_r.append( "{} {}".format(" & ".join(fh_info_type_r[type]),type) )
                         
                         rhs.setDebugInfo( ", ".join(fh_info_r) )
-                        
+
             if rhs.getHeatingDemandTime() > 0.0:
                 if isHeatingActive or rhs.getHeatingDemandTime() * 60 > Heating.MIN_HEATING_TIME:
                     heatingRequested = True
