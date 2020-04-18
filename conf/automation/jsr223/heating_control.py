@@ -488,20 +488,21 @@ class HeatingControlRule():
                 if rhs.getHeatingDemandTime() != None and rhs.getHeatingDemandTime() > 0.0:
                     requestedPossibleHeatingVolume = requestedPossibleHeatingVolume + rs.getPossibleHeatingVolume()
                 
-            # *** FORCED HEATING OFF ***
-            if disabledHeatingDemandCount >= 3:
-                heatingRequested = False
-                self.log.info(u"        : ---")
-                self.log.info(u"        : Heating OFF • too many open windows")
-                
-            # *** FORCED HEATING OFF IF ONLY 20%***
-            if requestedPossibleHeatingVolume < Heating.totalHeatingVolume * 0.2:
-                heatingRequested = False
-                activeHeatingVolume = round(requestedPossibleHeatingVolume / 1000.0,3)
-                possibleHeatingVolume = round(Heating.totalHeatingVolume / 1000.0,3)
-                self.log.info(u"        : ---")
-                self.log.info(u"        : Heating OFF • only {}m² of {}m² active".format(activeHeatingVolume,possibleHeatingVolume))
-            # *************************************************
+            if heatingRequested:
+                # *** FORCED HEATING OFF ***
+                if disabledHeatingDemandCount >= 3:
+                    heatingRequested = False
+                    self.log.info(u"        : ---")
+                    self.log.info(u"        : Heating OFF • too many open windows")
+                    
+                # *** FORCED HEATING OFF IF ONLY 20%***
+                if requestedPossibleHeatingVolume < Heating.totalHeatingVolume * 0.2:
+                    heatingRequested = False
+                    activeHeatingVolume = round(requestedPossibleHeatingVolume / 1000.0,3)
+                    possibleHeatingVolume = round(Heating.totalHeatingVolume / 1000.0,3)
+                    self.log.info(u"        : ---")
+                    self.log.info(u"        : Heating OFF • only {}m² of {}m² active".format(activeHeatingVolume,possibleHeatingVolume))
+                # *************************************************
 
 
             # *** PERSIST AND CIRCUITS ************************
