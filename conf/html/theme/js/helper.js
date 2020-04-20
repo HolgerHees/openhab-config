@@ -1,14 +1,17 @@
 var mvInitializer = function(){
     
-    var host = location.host;
-    var parts = host.split(".");
+    var BASE_DOMAIN = document.cookie.split( ';' ).map( function( x ) { return x.trim().split( '=' ); } ).reduce( function( a, b ) { a[ b[ 0 ] ] = b[ 1 ]; return a; }, {} )[ "base_domain" ];
+
     var authType = "";
-    if( parts.length == 3 ) 
+    var domain = location.host;
+    if( BASE_DOMAIN && domain != BASE_DOMAIN ) 
     {
+        var parts = domain.split(".");
         var subDomain = parts.shift();
         if( subDomain.indexOf("fa") === 0 ) authType = "fa.";
+        
+        domain = parts.join(".");
     }
-    var domain = parts.join(".");
                         
     if(typeof angular === "undefined")
     {
