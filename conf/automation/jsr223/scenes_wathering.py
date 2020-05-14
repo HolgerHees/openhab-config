@@ -12,55 +12,55 @@ circuits = [
         ['Watering_Streetside_Beds', u"Beete", 1.0 ]
     ], [
         ['Watering_Gardenside_Beds_front', u"Beete", 1.0 ]
+    ], [
+        ['Watering_Gardenside_Beds_back', u"Beete", 1.0 ]
     ]
 ]
+    
+class WatheringHelper:
+    def getReferenceGroup(self):
+        referenceGroup = -1
+        for i in range(len(circuits)):
+            for circuit in circuits[i]:
+                if getItemState(circuit[0] + "_Auto") == ON:
+                    referenceGroup = i
+                    break
+                  
+            if referenceGroup != -1:
+                break
+        return referenceGroup
 
 @rule("scenes_wathering.py")
-class ScenesWatheringRule:
+class ScenesWatheringRule(WatheringHelper):
     def __init__(self):
-        self.triggers = [
-            ItemStateChangeTrigger("Watering_Streetside_Lawn_Auto"),
-            ItemStateChangeTrigger("Watering_Gardenside_Lawn_right_Auto"),
-            ItemStateChangeTrigger("Watering_Gardenside_Lawn_left_Auto"),
-            ItemStateChangeTrigger("Watering_Gardenside_Beds_front_Auto"),
-            ItemStateChangeTrigger("Watering_Streetside_Beds_Auto"),
-            ItemStateChangeTrigger("Watering_Gardenside_Beds_back_Auto"),
-            ItemStateChangeTrigger("Watering_Program_Duration")
-        ]
+        self.triggers = [ ItemStateChangeTrigger("Watering_Program_Duration") ]
+        
+        for group in circuits:
+            for circuit in group:
+                self.triggers.append(ItemStateChangeTrigger(circuit[0]+"_Auto"))
 
     def execute(self, module, input):
         reference_duration = getItemState("Watering_Program_Duration").intValue()
 
-        total = 0
-        for loop in circuits[0]:            
-            if getItemState(loop[0] + "_Auto") == ON:
-                duration = int( math.floor( loop[2] * reference_duration ) )
-                total = total + duration
-            
-                postUpdate(loop[0] + "_Info", u"{} min.".format(duration))
-            else:
-                postUpdate(loop[0] + "_Info", u"inaktiv")
-                
-        if total == 0:
-            total = reference_duration
-        
-        if getItemState("Watering_Gardenside_Beds_front_Auto") == ON:
-            postUpdate("Watering_Gardenside_Beds_front_Info", u"{} min.".format(total))
-        else:
-            postUpdate("Watering_Gardenside_Beds_front_Info", u"inaktiv")
-        
-        if getItemState("Watering_Streetside_Beds_Auto") == ON:
-            postUpdate("Watering_Streetside_Beds_Info", u"{} min.".format(total))
-        else:
-            postUpdate("Watering_Streetside_Beds_Info", u"inaktiv")
+        referenceGroup = self.getReferenceGroup()
+        if referenceGroup != -1:
+            totalDuration = 0.0
+            for circuit in circuits[referenceGroup]:
+                if getItemState(circuit[0] + "_Auto") == ON:
+                    totalDuration = totalDuration + ( circuit[2] * reference_duration )
+                    
+        for i in range(len(circuits)):
+            for circuit in circuits[i]:
+                if getItemState(circuit[0] + "_Auto") == ON:
+                    duration = ( circuit[2] * reference_duration if referenceGroup == i else totalDuration )
+                    duration = int( math.floor( duration ) )
 
-        if getItemState("Watering_Gardenside_Beds_back_Auto") == ON:
-            postUpdate("Watering_Gardenside_Beds_back_Info", u"{} min.".format(total))
-        else:
-            postUpdate("Watering_Gardenside_Beds_back_Info", u"inaktiv")
+                    postUpdate(circuit[0] + "_Info", u"{} min.".format(duration))
+                else:
+                    postUpdate(circuit[0] + "_Info", u"inaktiv")
 
 @rule("scenes_wathering.py")
-class ScenesWatheringRule:
+class ScenesWatheringRule(WatheringHelper):
     def __init__(self):
         self.triggers = [ItemCommandTrigger("Watering_Program_Start")]
 
@@ -100,44 +100,38 @@ class ScenesWatheringRule:
                         break
                       
         else:
-            referenceGroup = -1
-            for i in range(len(circuits)):
-                for circuit in circuits[i]:
-                    if getItemState(circuit[0] + "_Auto") == ON:
-                        referenceGroup = i
-                        break
-                      
-                if referenceGroup != -1:
-                    break
+            referenceGroup = self.getReferenceGroup()
+            if referenceGroup != -1:  
+                activeIndex = -1
+                activeStep = None
+                for i in range(len(circuits[referenceGroup])):
+                    step = circuits[referenceGroup][i]
                     
-            activeIndex = -1
-            activeStep = None
-            for i in range(len(circuits[referenceGroup])):
-                step = circuits[referenceGroup][i]
-                
-                if getItemState(step[0]) == ON:
-                    activeIndex = i
-                    activeStep = step
-                    break
+                    if getItemState(step[0]) == ON:
+                        activeIndex = i
+                        activeStep = step
+                        break
 
-            if activeStep != None:
-                runtime = getNow().getMillis() - getItemLastUpdate(activeStep[0]).getMillis()
-                
-                remaining = ( duration * activeStep[2] ) - runtime
-                if remaining <= 0:
-                    activeIndex += 1
-                    if activeIndex < len(circuits[referenceGroup]):
-                        sendCommand(circuits[referenceGroup][activeIndex][0], ON)
-                        sendCommand(activeStep[0], OFF)
+                if activeStep != None:
+                    runtime = getNow().getMillis() - getItemLastUpdate(activeStep[0]).getMillis()
+                    
+                    remaining = ( duration * activeStep[2] ) - runtime
+                    if remaining <= 0:
+                        activeIndex += 1
+                        if activeIndex < len(circuits[referenceGroup]):
+                            sendCommand(circuits[referenceGroup][activeIndex][0], ON)
+                            sendCommand(activeStep[0], OFF)
 
-                        activeStep = circuits[referenceGroup][activeIndex]
+                            activeStep = circuits[referenceGroup][activeIndex]
 
-                        remaining = ( duration * activeStep[2] )
-                        info = activeStep[1]
-                    else:
-                        #self.log.info("finish")
-                        self.disableAllCircuits()
-                        postUpdate("Watering_Program_Start", OFF)
+                            remaining = ( duration * activeStep[2] )
+                            info = activeStep[1]
+                        else:
+                            self.disableAllCircuits()
+                            postUpdate("Watering_Program_Start", OFF)
+            else:
+                self.disableAllCircuits()
+                postUpdate("Watering_Program_Start", OFF)
 
         return [ info, remaining ]
 

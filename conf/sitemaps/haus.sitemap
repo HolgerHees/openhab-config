@@ -135,9 +135,9 @@ sitemap haus label="Main Menu"
                         Text item=Watering_Streetside_Beds_Info label="Strasse [%s]" {
                             Switch item=Watering_Streetside_Beds_Auto label="Strasse "
                         }
-                        Text item=Watering_Gardenside_Beds_back_Info label="Brombeeren [%s]" {
+                        /*Text item=Watering_Gardenside_Beds_back_Info label="Brombeeren [%s]" {
                             Switch item=Watering_Gardenside_Beds_back_Auto label="Brombeeren"
-                        }
+                        }*/
                     }
                     Frame label="Direkt" {
                         Group item=Watering_Circuits label="Bewässerungskreise [%d]" {
