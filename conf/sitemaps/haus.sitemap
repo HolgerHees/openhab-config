@@ -112,21 +112,47 @@ sitemap haus label="Main Menu"
 					Switch item=Socket_Gardenside
 				}
                 Group label="Bewässerung [MAP(group_watering.map):%d]" item=Watering_Circuits {
-                    Group item=Watering_Circuits label="Bewässerungskreise [%d]" {
-                        Frame label="Garten" {
-                            Switch item=Watering_Gardenside_Lawn_left label="Rasen links"
-                            Switch item=Watering_Gardenside_Lawn_right label="Rasen rechts"
-                            Switch item=Watering_Gardenside_Beds_front label="Beete Terasse & Hecke"
-                            /*Switch item=Watering_Gardenside_Beds_back label="Beete hinten"*/
+                    Frame label="Programm" {
+                        Text item=Watering_Program_State
+                        Switch item=Watering_Program_Start
+                        Setpoint item=Watering_Program_Duration step=1.0 minValue=10 maxValue=60
+                    }
+                    Frame label="Rasen" {
+                        Text item=Watering_Gardenside_Lawn_left_Info label="Garten links [%s]" {
+                            Switch item=Watering_Gardenside_Lawn_left_Auto label="Garten links"
                         }
-                        Frame label="Strasse" {
-                            Switch item=Watering_Streetside_Lawn label="Rasen"
-                            Switch item=Watering_Streetside_Beds label="Beete & Hecke"
+                        Text item=Watering_Gardenside_Lawn_right_Info label="Garten rechts [%s]" {
+                            Switch item=Watering_Gardenside_Lawn_right_Auto label="Garten rechts"
+                        }
+                        Text item=Watering_Streetside_Lawn_Info label="Strasse [%s]" {
+                            Switch item=Watering_Streetside_Lawn_Auto label="Strasse"
                         }
                     }
-                    Setpoint item=Watering_Program_Duration step=1.0 minValue=10 maxValue=60
-                    Switch item=Watering_Program_Start
-                    Text item=Watering_Program_State
+                    Frame label="Beete & Hecken" {
+                        Text item=Watering_Gardenside_Beds_front_Info label="Terasse [%s]" {
+                            Switch item=Watering_Gardenside_Beds_front_Auto label="Terasse"
+                        }
+                        Text item=Watering_Streetside_Beds_Info label="Strasse [%s]" {
+                            Switch item=Watering_Streetside_Beds_Auto label="Strasse "
+                        }
+                        Text item=Watering_Gardenside_Beds_back_Info label="Brombeeren [%s]" {
+                            Switch item=Watering_Gardenside_Beds_back_Auto label="Brombeeren"
+                        }
+                    }
+                    Frame label="Direkt" {
+                        Group item=Watering_Circuits label="Bewässerungskreise [%d]" {
+                            Frame label="Garten" {
+                                Switch item=Watering_Gardenside_Lawn_left label="Rasen links"
+                                Switch item=Watering_Gardenside_Lawn_right label="Rasen rechts"
+                                Switch item=Watering_Gardenside_Beds_front label="Beete Terasse & Hecke"
+                                /*Switch item=Watering_Gardenside_Beds_back label="Beete hinten"*/
+                            }
+                            Frame label="Strasse" {
+                                Switch item=Watering_Streetside_Lawn label="Rasen"
+                                Switch item=Watering_Streetside_Beds label="Beete & Hecke"
+                            }
+                        }
+                    }
                 }
 			}
 		}
