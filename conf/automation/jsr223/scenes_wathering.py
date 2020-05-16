@@ -129,6 +129,8 @@ class ScenesWatheringRule(WatheringHelper):
                         else:
                             self.disableAllCircuits()
                             postUpdate("Watering_Program_Start", OFF)
+                    else:
+                        info = activeStep[1]
             else:
                 self.disableAllCircuits()
                 postUpdate("Watering_Program_Start", OFF)
