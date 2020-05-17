@@ -219,7 +219,7 @@ sitemap haus label="Main Menu"
                         Text item=MowerBattery
                         Text item=MowerStatusFormatted
                         Switch item=MowerStarted mappings=[ON="Start", OFF="Stop"]
-                        Switch item=MowerMode mappings=[HOME="Home", AUTO="Auto", MAN="Man"]
+                        Switch item=MowerMode mappings=[HOME="Home", AUTO="Auto", MANUAL="Man"]
                     }
                     Frame label="Infos" {
                         Text item=MowerTimerStatusFormatted
