@@ -606,19 +606,22 @@ class HeatingControlRule():
                       
                     currentRoomTemperature = rs.getCurrentTemperature()
 
-                    targetRoomTemperature = targetRoomTemperature - 1.0
-                    
                     effectiveRadiation = effectiveSouthRadiation if transition.getDirection() == 'south' else effectiveWestRadiation
 
                     if getItemState(transition.getSunProtectionItem()) == ON:
+                        targetRoomTemperature = targetRoomTemperature - 0.6
+                    
                         if effectiveRadiation < 3.7 or currentRoomTemperature < targetRoomTemperature or currentOutdoorTemperature < targetRoomTemperature:
                             postUpdate(transition.getSunProtectionItem(), OFF )
-                            self.log.info(u"DEBUG: SP switching off")
+                            self.log.info(u"DEBUG: SP switching off {} {} {} {} {} {}".format(room.getName(),effectiveRadiation,currentRoomTemperature,targetRoomTemperature,currentOutdoorTemperature,targetRoomTemperature))
                         #else:
                         #    self.log.info(u"SP still needed")
-                    elif effectiveRadiation > 3.8 and currentRoomTemperature >= targetRoomTemperature and currentOutdoorTemperature >= targetRoomTemperature:
-                        postUpdate(transition.getSunProtectionItem(), ON )
-                        self.log.info(u"DEBUG: SP switching on")
+                    else:
+                        targetRoomTemperature = targetRoomTemperature - 0.5
+
+                        if effectiveRadiation > 3.8 and currentRoomTemperature > targetRoomTemperature and currentOutdoorTemperature > targetRoomTemperature:
+                            postUpdate(transition.getSunProtectionItem(), ON )
+                            self.log.info(u"DEBUG: SP switching on {} {} {} {} {} {}".format(room.getName(),effectiveRadiation,currentRoomTemperature,targetRoomTemperature,currentOutdoorTemperature,targetRoomTemperature))
                     #else:
                     #   self.log.info(u"SP not needed")
 
