@@ -41,19 +41,23 @@ class SunRadiation(object):
 
         # 125° 1/2 der Hauswand	
         southMultiplier = 0
-        if azimut >= 100 and azimut <= 260 and elevation >= 12.0:
+        if azimut >= 150 and azimut <= 260 and elevation >= 10.0:
             # 100° (0) => -1 (0)
             # 260° (160) => 1 (2)
             southX = ( ( azimut - 100.0 ) * 2.0 / 160.0 ) - 1.0
             southMultiplier = ( math.pow( southX, 10.0 ) * -1.0 ) + 1.0
 
         westMultiplier = 0
-        if azimut >= 190 and azimut <= 350 and elevation >= 8.0:
-            # https://rechneronline.de/funktionsgraphen/
-            # 190° (0) => -1 (0)
-            # 350° (160) => 1 (2)           
-            westX = ( ( azimut - 190.0 ) * 2.0 / 160.0 ) - 1.0
-            westMultiplier = ( math.pow( westX, 10.0 ) * -1.0 ) + 1.0
+        #10 -> 35
+        minElevation = 0
+        if azimut >= 220 and azimut <= 300:
+            minElevation = ( ( azimut - 220 ) * 25.0 / 80.0 ) + 10.0
+            if elevation >= minElevation:
+                # https://rechneronline.de/funktionsgraphen/
+                # 190° (0) => -1 (0)
+                # 350° (160) => 1 (2)           
+                westX = ( ( azimut - 190.0 ) * 2.0 / 160.0 ) - 1.0
+                westMultiplier = ( math.pow( westX, 10.0 ) * -1.0 ) + 1.0
 
         southActive = southMultiplier > 0.0
         westActive  = westMultiplier > 0.0
@@ -92,8 +96,9 @@ class SunRadiation(object):
             
         sunElevationMsg = int( round( elevation, 0 ) )
         sunAzimutMsg = int( round( azimut, 0 ) )
-
-        debugInfo = u"Azimut {}° • Elevation {}° • Clouds {} octas{}".format(sunAzimutMsg, sunElevationMsg, cloudCover, activeMsg)
+      
+        minElevationMsg = u" ({})".format( int( round( minElevation)) ) if minElevation > 0 else ""
+        debugInfo = u"Azimut {}° • Elevation {}°{}• Clouds {} octas{}".format(sunAzimutMsg, sunElevationMsg, minElevationMsg, cloudCover, activeMsg)
 
         return _effectiveSouthRadiation, _effectiveWestRadiation, debugInfo
 
