@@ -589,41 +589,41 @@ class HeatingControlRule():
         
         #self.log.info(u"{} {}".format(effectiveSouthRadiation,effectiveWestRadiation))
         
-        if effectiveSouthRadiation > 0.0 or effectiveWestRadiation > 0.0:
+        #hasRadiation = effectiveSouthRadiation > 0.0 or effectiveWestRadiation > 0.0
 
-            currentOutdoorTemperature = cr.getReferenceTemperature()
+        currentOutdoorTemperature = cr.getReferenceTemperature()
 
-            fallbackTargetTemperature = hhs.getHeatingState("FF_Livingroom").getHeatingTargetTemperature()
-          
-            for room in Heating.getRooms():
-                rs = cr.getRoomState(room.getName())
-                
-                targetRoomTemperature = fallbackTargetTemperature if room.getHeatingVolume() == None else hhs.getHeatingState(room.getName()).getHeatingTargetTemperature()
-                
-                for transition in room.transitions:
-                    if not isinstance(transition,Window) or transition.getRadiationArea() == None or transition.getSunProtectionItem() == None:
-                        continue
-                      
-                    currentRoomTemperature = rs.getCurrentTemperature()
+        fallbackTargetTemperature = hhs.getHeatingState("FF_Livingroom").getHeatingTargetTemperature()
+      
+        for room in Heating.getRooms():
+            rs = cr.getRoomState(room.getName())
+            
+            targetRoomTemperature = fallbackTargetTemperature if room.getHeatingVolume() == None else hhs.getHeatingState(room.getName()).getHeatingTargetTemperature()
+            
+            for transition in room.transitions:
+                if not isinstance(transition,Window) or transition.getRadiationArea() == None or transition.getSunProtectionItem() == None:
+                    continue
+                  
+                currentRoomTemperature = rs.getCurrentTemperature()
 
-                    effectiveRadiation = effectiveSouthRadiation if transition.getDirection() == 'south' else effectiveWestRadiation
+                effectiveRadiation = effectiveSouthRadiation if transition.getDirection() == 'south' else effectiveWestRadiation
 
-                    if getItemState(transition.getSunProtectionItem()) == ON:
-                        targetRoomTemperature = targetRoomTemperature - 0.6
+                if getItemState(transition.getSunProtectionItem()) == ON:
+                    targetRoomTemperature = targetRoomTemperature - 0.6
                     
-                        if effectiveRadiation < 3.7 or currentRoomTemperature < targetRoomTemperature or currentOutdoorTemperature < targetRoomTemperature:
-                            postUpdate(transition.getSunProtectionItem(), OFF )
-                            self.log.info(u"DEBUG: SP switching off {} {} {} {} {} {}".format(room.getName(),effectiveRadiation,currentRoomTemperature,targetRoomTemperature,currentOutdoorTemperature,targetRoomTemperature))
-                        #else:
-                        #    self.log.info(u"SP still needed")
-                    else:
-                        targetRoomTemperature = targetRoomTemperature - 0.5
-
-                        if effectiveRadiation > 3.8 and currentRoomTemperature > targetRoomTemperature and currentOutdoorTemperature > targetRoomTemperature:
-                            postUpdate(transition.getSunProtectionItem(), ON )
-                            self.log.info(u"DEBUG: SP switching on {} {} {} {} {} {}".format(room.getName(),effectiveRadiation,currentRoomTemperature,targetRoomTemperature,currentOutdoorTemperature,targetRoomTemperature))
+                    if effectiveRadiation < 3.7 or currentRoomTemperature < targetRoomTemperature or currentOutdoorTemperature < targetRoomTemperature:
+                        postUpdate(transition.getSunProtectionItem(), OFF )
+                        self.log.info(u"DEBUG: SP switching off {} {} {} {} {}".format(room.getName(),effectiveRadiation,currentRoomTemperature,currentOutdoorTemperature,targetRoomTemperature))
                     #else:
-                    #   self.log.info(u"SP not needed")
+                    #    self.log.info(u"SP still needed")
+                else:
+                    targetRoomTemperature = targetRoomTemperature - 0.5
+
+                    if effectiveRadiation > 3.8 and currentRoomTemperature > targetRoomTemperature and currentOutdoorTemperature > targetRoomTemperature:
+                        postUpdate(transition.getSunProtectionItem(), ON )
+                        self.log.info(u"DEBUG: SP switching on {} {} {} {} {}".format(room.getName(),effectiveRadiation,currentRoomTemperature,currentOutdoorTemperature,targetRoomTemperature))
+                #else:
+                #   self.log.info(u"SP not needed")
 
     def controlHeating( self, now, currentOperatingMode, isHeatingRequested ):
 
