@@ -48,10 +48,10 @@ class SunRadiation(object):
             southMultiplier = ( math.pow( southX, 10.0 ) * -1.0 ) + 1.0
 
         westMultiplier = 0
-        #10 -> 35 # in real until 15°
         minElevation = 0
-        if azimut >= 220 and azimut <= 300:
-            minElevation = ( ( azimut - 220 ) * 25.0 / 80.0 ) + 10.0
+        if azimut >= 220 and azimut <= 285:
+            #10 -> 20
+            minElevation = ( ( azimut - 220 ) * 10.0 / 65.0 ) + 10.0
             if elevation >= minElevation:
                 # https://rechneronline.de/funktionsgraphen/
                 # 190° (0) => -1 (0)
