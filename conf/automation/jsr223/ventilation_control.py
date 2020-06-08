@@ -113,8 +113,8 @@ class FilterManualActionRule:
         self.triggers = [ItemCommandTrigger("Ventilation_Fan_Level")]
 
     def execute(self, module, input):
+        global autoChangeInProgress
         if autoChangeInProgress:
-            global autoChangeInProgress
             autoChangeInProgress = False
         else:
             postUpdate("Ventilation_Auto_Mode", 0)
