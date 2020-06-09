@@ -21,7 +21,7 @@ class ValuesDependingOnBrightnessRule:
                 
         if getItemState("State_Rollershutter") == ON:
             _upTime = getItemState("Sunrise_Time").calendar.getTimeInMillis()
-            _upTime = int(_upTime + ( cloudCover * 60.0 / 9.0 ) * 60 * 1000)
+            _upTime = int(_upTime + ( cloudCover * 30.0 / 9.0 ) * 60 * 1000)
 
             _lastDownTime = getItemState("State_Rollershutter_Down").calendar.getTimeInMillis()
 
@@ -31,7 +31,7 @@ class ValuesDependingOnBrightnessRule:
             postUpdateIfChanged("State_Rollershutter_Up", DateTime(_upTime).toString() )
         else:
             _downTime = getItemState("Dusk_Time").calendar.getTimeInMillis()
-            _downTime = int(_downTime - ( cloudCover * 60.0 / 9.0 ) * 60 * 1000)
+            _downTime = int(_downTime - ( cloudCover * 30.0 / 9.0 ) * 60 * 1000)
             
             if now.getMillis() > _downTime:
                 postUpdate("State_Rollershutter", ON)
