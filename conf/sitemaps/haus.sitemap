@@ -293,6 +293,8 @@ sitemap haus label="Main Menu"
                         Text item=State_Outdoorlights label="Aussenbeleuchtung aktiv [%s]"
                         Text item=State_Solar label="Solaranlage wird abgefragt [%s]"
                         Text item=State_Rollershutter label="Rollläden sollten unten sein [%s]"
+                        Text item=State_Rollershutter_Up
+                        Text item=State_Rollershutter_Down
                     }
 					Frame label="Sonnenschutz"
 					{

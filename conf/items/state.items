@@ -7,6 +7,9 @@ Switch State_Holidays_Active					"Urlaub aktiv"          <selfautomode>
 Switch State_Solar								"Solar Aktiv"		<selfsun>
 Switch State_Outdoorlights						"Aussenbeleuchtung Aktiv"		<selflight>
 Switch State_Rollershutter						"Rollläden geschlossen"			<selfrollershutter>
+DateTime State_Rollershutter_Up					"Rollläden hoch [%1$tH:%1$tM]"			<selfrollershutter>
+DateTime State_Rollershutter_Down				"Rollläden runter [%1$tH:%1$tM]"			<selfrollershutter>
+
 Switch State_Sunprotection_Attic				"Rollladen Dachboden geschlossen"	<selfrollershutter>
 Switch State_Sunprotection_Bathroom				"Rollladen Badezimmer geschlossen"	<selfrollershutter>
 Switch State_Sunprotection_Dressingroom			"Rollladen Ankleide geschlossen"	<selfrollershutter>
