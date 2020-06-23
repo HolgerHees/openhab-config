@@ -110,11 +110,12 @@
         background-color: var(--primary-light-color);
         border: 1px solid var(--primary-color);  
     }
-    #openButton, .mvClickable {
-        cursor: pointer;
-    }
 }
-
+@media not (hover: none) {
+  #openButton, .mvClickable {
+      cursor: pointer;
+  }
+}
 html.black, html.black body
 html.dark, html.dark body
 {
