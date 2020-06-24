@@ -126,13 +126,15 @@ class ScenesWatheringRule(WatheringHelperOld):
         if getItemState("Watering_Circuits") == OFF:
             for group in circuits:
                 #self.log.info("start " + loop[0][0])
+                isActive = False
                 for circuit in group[2]:
                     if getItemState(circuit + "_Auto") == ON:
                         sendCommand(circuit, ON)
-                        break
-                if remaining == 0:
+                        isActive = True
+                if isActive:
                     remaining = ( duration * group[0] )
                     info = group[1]
+                    break
                       
         else:
           activeIndex = -1
