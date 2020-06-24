@@ -5,19 +5,84 @@ from core.triggers import ItemCommandTrigger, ItemStateChangeTrigger
 
 circuits = [
     [
-        ['Watering_Streetside_Lawn', u"Strasse", 2.0 / 3.0 ],
-        ['Watering_Gardenside_Lawn_right', u"Garten rechts", 1.0 ],
-        ['Watering_Gardenside_Lawn_left', u"Garten links", 1.0 ]
-    ], [
-        ['Watering_Streetside_Beds', u"Beete", 1.0 ]
-    ], [
-        ['Watering_Gardenside_Beds_front', u"Beete", 1.0 ]
-    ], [
-        ['Watering_Gardenside_Beds_back', u"Beete", 1.0 ]
+      2.0 / 3.0,
+      u"Strasse",
+      [
+        'Watering_Streetside_Lawn'
+      ]
+    ],[
+      1.0,
+      u"Beete",
+      [
+        'Watering_Streetside_Beds',
+        'Watering_Gardenside_Beds_front',
+        'Watering_Gardenside_Beds_back'
+      ]
+    ],[
+      1.0,
+      u"Garten rechts",
+      [
+        'Watering_Gardenside_Lawn_right'
+      ]
+    ],[
+      1.0,
+      u"Garten links",
+      [
+        'Watering_Gardenside_Lawn_left'
+      ]
     ]
 ]
+      
+#circuits = [
+#    [
+#        ['Watering_Streetside_Lawn', u"Strasse", 2.0 / 3.0 ],
+#        ['Watering_Gardenside_Lawn_right', u"Garten rechts", 1.0 ],
+#        ['Watering_Gardenside_Lawn_left', u"Garten links", 1.0 ]
+#    ], [
+#        ['Watering_Streetside_Beds', u"Beete", 1.0 ]
+#    ], [
+#        ['Watering_Gardenside_Beds_front', u"Beete", 1.0 ]
+#    ], [
+#        ['Watering_Gardenside_Beds_back', u"Beete", 1.0 ]
+#    ]
+#]
     
+@rule("scenes_wathering.py")
+class ScenesWatheringRule():
+    def __init__(self):
+        self.triggers = [ ItemStateChangeTrigger("Watering_Program_Duration") ]
+        
+        for group in circuits:
+            for circuit in group[2]:
+                self.triggers.append(ItemStateChangeTrigger(circuit+"_Auto"))
+
+    def execute(self, module, input):
+        reference_duration = getItemState("Watering_Program_Duration").intValue()
+
+        for i in range(len(circuits)):
+            for circuit in circuits[i][2]:
+                if getItemState(circuit + "_Auto") == ON:
+                    duration = ( circuits[i][0] * reference_duration )
+                    duration = int( math.floor( duration ) )
+
+                    postUpdate(circuit + "_Info", u"{} min.".format(duration))
+                else:
+                    postUpdate(circuit + "_Info", u"inaktiv")
+
 class WatheringHelper:
+    def getReferenceGroup(self):
+        referenceGroup = -1
+        for i in range(len(circuits)):
+            for circuit in circuits[i][1]:
+                if getItemState(circuit[0] + "_Auto") == ON:
+                    referenceGroup = i
+                    break
+                  
+            if referenceGroup != -1:
+                break
+        return referenceGroup
+
+class WatheringHelperOld:
     def getReferenceGroup(self):
         referenceGroup = -1
         for i in range(len(circuits)):
@@ -31,36 +96,7 @@ class WatheringHelper:
         return referenceGroup
 
 @rule("scenes_wathering.py")
-class ScenesWatheringRule(WatheringHelper):
-    def __init__(self):
-        self.triggers = [ ItemStateChangeTrigger("Watering_Program_Duration") ]
-        
-        for group in circuits:
-            for circuit in group:
-                self.triggers.append(ItemStateChangeTrigger(circuit[0]+"_Auto"))
-
-    def execute(self, module, input):
-        reference_duration = getItemState("Watering_Program_Duration").intValue()
-
-        referenceGroup = self.getReferenceGroup()
-        if referenceGroup != -1:
-            totalDuration = 0.0
-            for circuit in circuits[referenceGroup]:
-                if getItemState(circuit[0] + "_Auto") == ON:
-                    totalDuration = totalDuration + ( circuit[2] * reference_duration )
-                    
-        for i in range(len(circuits)):
-            for circuit in circuits[i]:
-                if getItemState(circuit[0] + "_Auto") == ON:
-                    duration = ( circuit[2] * reference_duration if referenceGroup == i else totalDuration )
-                    duration = int( math.floor( duration ) )
-
-                    postUpdate(circuit[0] + "_Info", u"{} min.".format(duration))
-                else:
-                    postUpdate(circuit[0] + "_Info", u"inaktiv")
-
-@rule("scenes_wathering.py")
-class ScenesWatheringRule(WatheringHelper):
+class ScenesWatheringRule(WatheringHelperOld):
     def __init__(self):
         self.triggers = [ItemCommandTrigger("Watering_Program_Start")]
 
@@ -90,50 +126,46 @@ class ScenesWatheringRule(WatheringHelper):
         if getItemState("Watering_Circuits") == OFF:
             for group in circuits:
                 #self.log.info("start " + loop[0][0])
-                for circuit in group:
-                    if getItemState(circuit[0] + "_Auto") == ON:
-                        sendCommand(circuit[0], ON)
-
-                        if remaining == 0:
-                            remaining = ( duration * circuit[2] )
-                            info = circuit[1]
+                for circuit in group[2]:
+                    if getItemState(circuit + "_Auto") == ON:
+                        sendCommand(circuit, ON)
                         break
+                if remaining == 0:
+                    remaining = ( duration * group[0] )
+                    info = group[1]
                       
         else:
-            referenceGroup = self.getReferenceGroup()
-            if referenceGroup != -1:  
-                activeIndex = -1
-                activeStep = None
-                for i in range(len(circuits[referenceGroup])):
-                    step = circuits[referenceGroup][i]
-                    
-                    if getItemState(step[0]) == ON:
-                        activeIndex = i
-                        activeStep = step
-                        break
+          activeIndex = -1
+          activeGroup = None
+          for i in range(len(circuits)):
+              group = circuits[i]
+              
+              if getItemState(group[2][0]) == ON:
+                  activeIndex = i
+                  activeGroup = group
+                  break
 
-                if activeStep != None:
-                    runtime = getNow().getMillis() - getItemLastUpdate(activeStep[0]).getMillis()
-                    
-                    remaining = ( duration * activeStep[2] ) - runtime
-                    if remaining <= 0:
-                        activeIndex += 1
-                        if activeIndex < len(circuits[referenceGroup]):
-                            sendCommand(circuits[referenceGroup][activeIndex][0], ON)
-                            sendCommand(activeStep[0], OFF)
+          if activeGroup != None:
+              runtime = getNow().getMillis() - getItemLastUpdate(activeGroup[2][0]).getMillis()
+              
+              remaining = ( duration * activeGroup[0] ) - runtime
+              if remaining <= 0:
+                  activeIndex += 1
+                  if activeIndex < len(circuits):
+                      for circuit in circuits[activeIndex][2]:
+                          sendCommand(circuit, ON)
+                      for circuit in activeGroup[2]:
+                          sendCommand(circuit, OFF)
 
-                            activeStep = circuits[referenceGroup][activeIndex]
+                      activeGroup = circuits[activeIndex]
 
-                            remaining = ( duration * activeStep[2] )
-                            info = activeStep[1]
-                        else:
-                            self.disableAllCircuits()
-                            postUpdate("Watering_Program_Start", OFF)
-                    else:
-                        info = activeStep[1]
-            else:
-                self.disableAllCircuits()
-                postUpdate("Watering_Program_Start", OFF)
+                      remaining = ( duration * activeGroup[0] )
+                      info = activeStep[1]
+                  else:
+                      self.disableAllCircuits()
+                      postUpdate("Watering_Program_Start", OFF)
+              else:
+                  info = activeGroup[1]
 
         return [ info, remaining ]
 
