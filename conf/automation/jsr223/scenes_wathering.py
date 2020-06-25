@@ -162,7 +162,7 @@ class ScenesWatheringRule(WatheringHelperOld):
                       activeGroup = circuits[activeIndex]
 
                       remaining = ( duration * activeGroup[0] )
-                      info = activeStep[1]
+                      info = activeGroup[1]
                   else:
                       self.disableAllCircuits()
                       postUpdate("Watering_Program_Start", OFF)
