@@ -1,5 +1,4 @@
 Bridge zwave:serial_zstick:controller "ZWave Controller" [ port="/dev/ttyOpenHabZWave", controller_master="true", heal_enable="true", security_networkkey="{{vault_zwave_key}}" ]
 {
-//    Thing zwave:tkb_tz88_00_000:controller:node2 "ZWave Node 3: TZ88" (zwave:serial_zstick:controller) [ node_id=3 ]
-//    Thing zwave:fib_234_324:controller:node3 "ZWave Node 4: fibaro" (zwave:serial_zstick:controller) [ node_id=4 ]
+    Thing zwaveme_zweather_00_000 Weatherstation [ node_id=5 ]
 }
