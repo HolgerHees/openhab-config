@@ -439,6 +439,18 @@ sitemap haus label="Main Menu"
                         Webview url="/static/grafana/pflanzen.html?fromItem=Chart_From" icon=none height=18
                     }
                 }
+                Text label="ZWave"{
+                    Text item=ZunoWeatherStation_Temperature
+                    Text item=ZunoWeatherStation_Humidity
+                    Text item=ZunoWeatherStation_Pressure
+                    Text item=ZunoWeatherStation_Velocity
+                    Text item=ZunoWeatherStation_Direction
+                    Text item=ZunoWeatherStation_Luminance
+                    Text item=ZunoWeatherStation_Radiation
+                    Text item=ZunoWeatherStation_Raining
+                    Text item=ZunoWeatherStation_RainingRate
+                    Text item=ZunoWeatherStation_Battery
+                }
             }
             Frame label="Bewegung • [%1$tH:%1$tM:%1$tS, %1$td.%1$tm]" item=Security_Last_Change
             {
