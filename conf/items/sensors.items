@@ -137,13 +137,13 @@ Switch SoilMoistSensor5Enabled "Pflanze 5" <selfautomode>
 Switch SoilMoistSensor6Enabled "Pflanze 6" <selfautomode>
 
 //######## ZUNO #############
-Number ZunoWeatherStation_Temperature "Temperature" <selfautomode> { channel="zwave:zuno_weatherstation_00_000:controller:Weatherstation:sensor_temperature" }
-Number ZunoWeatherStation_Humidity "Humidity" <selfautomode> { channel="zwave:zuno_weatherstation_00_000:controller:Weatherstation:sensor_relhumidity" }
-Number ZunoWeatherStation_Pressure "Luftdruck" <selfautomode> { channel="zwave:zuno_weatherstation_00_000:controller:Weatherstation:sensor_barpressure" }
-Number ZunoWeatherStation_Velocity "Windgeschwindigkeit" <selfautomode> { channel="zwave:zuno_weatherstation_00_000:controller:Weatherstation:sensor_velocity" }
-Number ZunoWeatherStation_Direction "Windrichtung" <selfautomode> { channel="zwave:zuno_weatherstation_00_000:controller:Weatherstation:sensor_direction" }
-Number ZunoWeatherStation_Luminance "Helligkeit" <selfautomode> { channel="zwave:zuno_weatherstation_00_000:controller:Weatherstation:sensor_luminance" }
-Number ZunoWeatherStation_Radiation "Wärme" <selfautomode> { channel="zwave:zuno_weatherstation_00_000:controller:Weatherstation:sensor_radiation" }
-Switch ZunoWeatherStation_Raining "Regen" <selfautomode> { channel="zwave:zuno_weatherstation_00_000:controller:Weatherstation:sensor_raining" }
-Number ZunoWeatherStation_RainingRate "Regenmenge" <selfautomode> { channel="zwave:zuno_weatherstation_00_000:controller:Weatherstation:sensor_rainrate" }
-Number ZunoWeatherStation_Battery "Battery" <selfautomode> { channel="zwave:zuno_weatherstation_00_000:controller:Weatherstation:battery_level" }
+//Number ZunoWeatherStation_Temperature "Temperature" <selfautomode> { channel="zwave:zuno_weatherstation_00_000:controller:Weatherstation:sensor_temperature" }
+//Number ZunoWeatherStation_Humidity "Humidity" <selfautomode> { channel="zwave:zuno_weatherstation_00_000:controller:Weatherstation:sensor_relhumidity" }
+//Number ZunoWeatherStation_Pressure "Luftdruck" <selfautomode> { channel="zwave:zuno_weatherstation_00_000:controller:Weatherstation:sensor_barpressure" }
+//Number ZunoWeatherStation_Velocity "Windgeschwindigkeit" <selfautomode> { channel="zwave:zuno_weatherstation_00_000:controller:Weatherstation:sensor_velocity" }
+//Number ZunoWeatherStation_Direction "Windrichtung" <selfautomode> { channel="zwave:zuno_weatherstation_00_000:controller:Weatherstation:sensor_direction" }
+//Number ZunoWeatherStation_Luminance "Helligkeit" <selfautomode> { channel="zwave:zuno_weatherstation_00_000:controller:Weatherstation:sensor_luminance" }
+//Number ZunoWeatherStation_Radiation "Wärme" <selfautomode> { channel="zwave:zuno_weatherstation_00_000:controller:Weatherstation:sensor_radiation" }
+//Switch ZunoWeatherStation_Raining "Regen" <selfautomode> { channel="zwave:zuno_weatherstation_00_000:controller:Weatherstation:sensor_raining" }
+//Number ZunoWeatherStation_RainingRate "Regenmenge" <selfautomode> { channel="zwave:zuno_weatherstation_00_000:controller:Weatherstation:sensor_rainrate" }
+//Number ZunoWeatherStation_Battery "Battery" <selfautomode> { channel="zwave:zuno_weatherstation_00_000:controller:Weatherstation:battery_level" }
