@@ -6,6 +6,33 @@ from core.triggers import CronTrigger, ItemCommandTrigger, ItemStateChangeTrigge
 
 autoChangeInProgress = False
 
+@rule("ventilation_efficiency.py")
+class VentilationEfficiencyRule:
+    def __init__(self):
+        self.triggers = [
+            ItemStateChangeTrigger("Ventilation_Outdoor_Incoming_Temperature"),
+            ItemStateChangeTrigger("Ventilation_Indoor_Incoming_Temperature"),
+            ItemStateChangeTrigger("Ventilation_Indoor_Outgoing_Temperature"),
+            CronTrigger("0 */1 * * * ?")
+        ]
+    
+    def execute(self, module, input):
+        efficiency = 0
+
+        if getItemState("Ventilation_Bypass").intValue() == 0:
+            tempOutIn = getItemState("Ventilation_Outdoor_Incoming_Temperature").doubleValue()
+            tempInOut = getItemState("Ventilation_Indoor_Outgoing_Temperature").doubleValue()
+            tempInIn = getItemState("Ventilation_Indoor_Incoming_Temperature").doubleValue()
+
+            if tempInOut != tempOutIn:
+                efficiency = ( tempInIn - tempOutIn ) / ( tempInOut - tempOutIn ) * 100
+                efficiency = math.round( efficiency.doubleValue );
+            else:
+                efficiency = 100
+        else:
+            efficiency = 0
+
+        postUpdateIfChanged("Ventilation_Bypass_Efficiency", efficiency )
 
 @rule("ventilation_control.py")
 class FilterRuntimeRule:
@@ -34,7 +61,6 @@ class FilterRuntimeRule:
         msg = u", ".join(active)
 
         postUpdateIfChanged("Ventilation_Filter_Runtime_Message", msg)
-
 
 @rule("ventilation_control.py")
 class FilterStateMessageRule:

@@ -131,6 +131,7 @@ class ScenesWatheringRule(WatheringHelperOld):
                     if getItemState(circuit + "_Auto") == ON:
                         sendCommand(circuit, ON)
                         isActive = True
+                        break
                 if isActive:
                     remaining = ( duration * group[0] )
                     info = group[1]
@@ -152,17 +153,28 @@ class ScenesWatheringRule(WatheringHelperOld):
               
               remaining = ( duration * activeGroup[0] ) - runtime
               if remaining <= 0:
-                  activeIndex += 1
-                  if activeIndex < len(circuits):
-                      for circuit in circuits[activeIndex][2]:
+                  nextIndex = -1
+                  for i in range(len(circuits)):
+                      if i <= activeIndex:
+                          continue;
+                      group = circuits[i]
+                      for circuit in group[2]:
+                          if getItemState(circuit + "_Auto") == ON:
+                              nextIndex = i;
+                              break
+                      if nextIndex != -1:
+                          break
+                      
+                  if nextIndex != -1:
+                      for circuit in circuits[nextIndex][2]:
                           sendCommand(circuit, ON)
                       for circuit in activeGroup[2]:
                           sendCommand(circuit, OFF)
 
-                      activeGroup = circuits[activeIndex]
+                      nextGroup = circuits[nextIndex]
 
-                      remaining = ( duration * activeGroup[0] )
-                      info = activeGroup[1]
+                      remaining = ( duration * nextGroup[0] )
+                      info = nextGroup[1]
                   else:
                       self.disableAllCircuits()
                       postUpdate("Watering_Program_Start", OFF)

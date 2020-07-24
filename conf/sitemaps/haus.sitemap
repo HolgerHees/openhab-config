@@ -488,6 +488,7 @@ sitemap haus label="Main Menu"
                         Text item=Ventilation_Indoor_Temperature_Message
                         Text item=Ventilation_Fan_Message
                         Text item=Ventilation_Bypass
+                        Text item=Ventilation_Bypass_Efficiency
                         Text item=Ventilation_Filter_Runtime_Message
     /*Switch Ventilation_Filter_Reset	"Filterreset" (Lueftung) {comfoair="filter_reset"}*/
     /*Switch Ventilation_Error_Reset	"Fehlerreset" (Lueftung) {comfoair="error_reset"}*/
