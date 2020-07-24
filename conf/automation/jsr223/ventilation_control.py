@@ -12,8 +12,7 @@ class VentilationEfficiencyRule:
         self.triggers = [
             ItemStateChangeTrigger("Ventilation_Outdoor_Incoming_Temperature"),
             ItemStateChangeTrigger("Ventilation_Indoor_Incoming_Temperature"),
-            ItemStateChangeTrigger("Ventilation_Indoor_Outgoing_Temperature"),
-            CronTrigger("0 */1 * * * ?")
+            ItemStateChangeTrigger("Ventilation_Indoor_Outgoing_Temperature")
         ]
     
     def execute(self, module, input):
@@ -26,7 +25,7 @@ class VentilationEfficiencyRule:
 
             if tempInOut != tempOutIn:
                 efficiency = ( tempInIn - tempOutIn ) / ( tempInOut - tempOutIn ) * 100
-                efficiency = math.round( efficiency.doubleValue );
+                efficiency = round( efficiency );
             else:
                 efficiency = 100
         else:
