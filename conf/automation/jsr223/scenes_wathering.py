@@ -122,65 +122,54 @@ class ScenesWatheringRule(WatheringHelperOld):
         
         remaining = 0
         info = u""
-            
-        if getItemState("Watering_Circuits") == OFF:
-            for group in circuits:
-                #self.log.info("start " + loop[0][0])
-                isActive = False
+
+        # detect current active index
+        activeIndex = -1
+        for i in range(len(circuits)):
+            group = circuits[i]
+            if getItemState(group[2][0]) == ON:
+                activeIndex = i
+                runtime = getNow().getMillis() - getItemLastUpdate(group[2][0]).getMillis()
+                remaining = ( duration * group[0] ) - runtime
+                break
+
+        if remaining <= 0:
+            nextIndex = -1
+
+            # detect next index
+            for i in range(len(circuits)):
+                if activeIndex != -1 and i <= activeIndex:
+                    continue;
+                group = circuits[i]
                 for circuit in group[2]:
                     if getItemState(circuit + "_Auto") == ON:
-                        sendCommand(circuit, ON)
-                        isActive = True
+                        nextIndex = i;
                         break
-                if isActive:
-                    remaining = ( duration * group[0] )
-                    info = group[1]
+                if nextIndex != -1:
                     break
-                      
+        
+            #if nextIndex == -1:
+            #    self.disableAllCircuits()
+            #    postUpdate("Watering_Program_Start", OFF)
+
+            # activate next index
+            if nextIndex != -1:
+                for circuit in circuits[nextIndex][2]:
+                    if getItemState(circuit + "_Auto") == ON:
+                        sendCommand(circuit, ON)
+                
+                nextGroup = circuits[nextIndex]
+
+                remaining = ( duration * nextGroup[0] )
+                info = nextGroup[1]
+
+            # deactivate current index
+            if activeIndex != -1:
+                for circuit in circuits[activeIndex][2]:
+                    sendCommand(circuit, OFF)
         else:
-          activeIndex = -1
-          activeGroup = None
-          for i in range(len(circuits)):
-              group = circuits[i]
-              
-              if getItemState(group[2][0]) == ON:
-                  activeIndex = i
-                  activeGroup = group
-                  break
-
-          if activeGroup != None:
-              runtime = getNow().getMillis() - getItemLastUpdate(activeGroup[2][0]).getMillis()
-              
-              remaining = ( duration * activeGroup[0] ) - runtime
-              if remaining <= 0:
-                  nextIndex = -1
-                  for i in range(len(circuits)):
-                      if i <= activeIndex:
-                          continue;
-                      group = circuits[i]
-                      for circuit in group[2]:
-                          if getItemState(circuit + "_Auto") == ON:
-                              nextIndex = i;
-                              break
-                      if nextIndex != -1:
-                          break
-                      
-                  if nextIndex != -1:
-                      for circuit in circuits[nextIndex][2]:
-                          sendCommand(circuit, ON)
-                      for circuit in activeGroup[2]:
-                          sendCommand(circuit, OFF)
-
-                      nextGroup = circuits[nextIndex]
-
-                      remaining = ( duration * nextGroup[0] )
-                      info = nextGroup[1]
-                  else:
-                      self.disableAllCircuits()
-                      postUpdate("Watering_Program_Start", OFF)
-              else:
-                  info = activeGroup[1]
-
+            info = circuits[activeIndex][1]
+        
         return [ info, remaining ]
 
     def callbackProgress(self):
