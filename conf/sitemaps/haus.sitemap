@@ -439,17 +439,28 @@ sitemap haus label="Main Menu"
                         Webview url="/static/grafana/pflanzen.html?fromItem=Chart_From" icon=none height=18
                     }
                 }
-                Text label="ZWave"{
-                    Text item=ZunoWeatherStation_Temperature
-                    Text item=ZunoWeatherStation_Humidity
-                    Text item=ZunoWeatherStation_Pressure
-                    Text item=ZunoWeatherStation_Velocity
-                    Text item=ZunoWeatherStation_Direction
-                    Text item=ZunoWeatherStation_Luminance
-                    Text item=ZunoWeatherStation_Radiation
-                    Text item=ZunoWeatherStation_Raining
-                    Text item=ZunoWeatherStation_RainingRate
-                    Text item=ZunoWeatherStation_Battery
+                Text label="Wetter"{
+                    Text item=WeatherStation_Battery_Level
+                    Text item=WeatherStation_Battery_Health
+                    Text item=WeatherStation_Battery_Voltage
+                    Text item=WeatherStation_Battery_Current
+                    Text item=WeatherStation_Battery_Temperature
+                    Text item=WeatherStation_Rain_Amount
+                    Text item=WeatherStation_Rain_State
+                    Text item=WeatherStation_Rain_Heater
+                    Text item=WeatherStation_Wind_Speed
+                    Text item=WeatherStation_Wind_Gust
+                    Text item=WeatherStation_Wind_Direction
+                    Text item=WeatherStation_Temperature1
+                    Text item=WeatherStation_Humidity1
+                    Text item=WeatherStation_Temperature2
+                    Text item=WeatherStation_Humidity2
+                    Text item=WeatherStation_Pressure
+                    Text item=WeatherStation_Solar_Power
+                    Text item=WeatherStation_Light_Level
+                    Text item=WeatherStation_UV_Index
+                    Text item=WeatherStation_UV_A
+                    Text item=WeatherStation_UV_B
                 }
             }
             Frame label="Bewegung • [%1$tH:%1$tM:%1$tS, %1$td.%1$tm]" item=Security_Last_Change
