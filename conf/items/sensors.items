@@ -141,7 +141,7 @@ Number WeatherStation_Battery_Level       "Batterie Level [%d %%]"	<selfruntime>
 Number WeatherStation_Battery_Health      "Batterie Health [%d %%]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/0/#:state:default]"}
 Number WeatherStation_Battery_Voltage     "Batterie Spannung [%d mV]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/1/#:state:default]"}
 Number WeatherStation_Battery_Current	  "Batterie Strom [%d mA]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/2/#:state:default]"}
-Number WeatherStation_Battery_Temperature "Batterie Temperature [%d °C]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/3/#:state:default]"}
+Number WeatherStation_Battery_Temperature "Batterie Temperature [%.1f °C]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/3/#:state:default]"}
 Number WeatherStation_Rain_Amount         "Regen Menge [%d]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/4/#:state:default]"}
 Number WeatherStation_Rain_State          "Regen Status [%d]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/5/#:state:default]"}
 Switch WeatherStation_Rain_Heater         "Regen Heizung [%d]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/6/#:state:default]"}
