@@ -440,25 +440,40 @@ sitemap haus label="Main Menu"
                     }
                 }
                 Text label="Wetter"{
-                    Text item=WeatherStation_Battery_Level
-                    Text item=WeatherStation_Battery_Voltage
-                    Text item=WeatherStation_Battery_Current
-                    Text item=WeatherStation_Rain_Amount
-                    Text item=WeatherStation_Rain_State
-                    Text item=WeatherStation_Rain_Heater
-                    Text item=WeatherStation_Wind_Speed
-                    Text item=WeatherStation_Wind_Gust
-                    Text item=WeatherStation_Wind_Direction
-                    Text item=WeatherStation_Temperature1
-                    Text item=WeatherStation_Humidity1
-                    Text item=WeatherStation_Temperature2
-                    Text item=WeatherStation_Humidity2
+                    Text item=WeatherStation_Air1_Message {
+                        Text item=WeatherStation_Temperature1
+                        Text item=WeatherStation_Humidity1
+                    }
+                    Text item=WeatherStation_Air2_Message {
+                        Text item=WeatherStation_Temperature2
+                        Text item=WeatherStation_Humidity2
+                    }
+                    Text item=WeatherStation_Rain_Message {
+                        Text item=WeatherStation_Rain_State
+                        Text item=WeatherStation_Rain_Current
+                        Text item=WeatherStation_Rain_Daily
+                        Text item=WeatherStation_Rain_Heater
+                        Text item=WeatherStation_Rain_Amount
+                        Text item=WeatherStation_Rain_Counter
+                    }
+                    Text item=WeatherStation_Wind_Message {
+                        Text item=WeatherStation_Wind_Speed
+                        Text item=WeatherStation_Wind_Gust
+                        Text item=WeatherStation_Wind_Direction
+                    }
                     Text item=WeatherStation_Pressure
-                    Text item=WeatherStation_Solar_Power
                     Text item=WeatherStation_Light_Level
-                    Text item=WeatherStation_UV_Index
-                    Text item=WeatherStation_UV_A
-                    Text item=WeatherStation_UV_B
+                    Text item=WeatherStation_UV_Message {
+                        Text item=WeatherStation_UV_Index
+                        Text item=WeatherStation_UV_A
+                        Text item=WeatherStation_UV_B
+                    }
+                    Text item=WeatherStation_Solar_Power
+                    Text item=WeatherStation_Battery_Message {
+                        Text item=WeatherStation_Battery_Level
+                        Text item=WeatherStation_Battery_Voltage
+                        Text item=WeatherStation_Battery_Current
+                    }
                 }
             }
             Frame label="Bewegung • [%1$tH:%1$tM:%1$tS, %1$td.%1$tm]" item=Security_Last_Change

@@ -137,25 +137,41 @@ Switch SoilMoistSensor5Enabled "Pflanze 5" <selfautomode>
 Switch SoilMoistSensor6Enabled "Pflanze 6" <selfautomode>
 
 //######## Weatherstation ############
-Number WeatherStation_Battery_Level       "Batterie Level [%d %%]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/255/#:state:default]"}
-Number WeatherStation_Battery_Voltage     "Batterie Spannung [%d mV]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/0/#:state:default]"}
-Number WeatherStation_Battery_Current	  "Batterie Strom [%d mA]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/1/#:state:default]"}
-Number WeatherStation_Rain_Amount         "Regen Menge [%d]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/2/#:state:default]"}
-Number WeatherStation_Rain_State          "Regen Status [%d]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/3/#:state:default]"}
-Switch WeatherStation_Rain_Heater         "Regen Heizung [%d]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/4/#:state:default]"}
-Number WeatherStation_Wind_Speed          "Wind [%.1f m/s]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/5/#:state:default]"}
-Number WeatherStation_Wind_Gust           "Windböe [%.1f m/s]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/6/#:state:default]"}
-Number WeatherStation_Wind_Direction      "Windrichtung [%d °]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/7/#:state:default]"}
-Number WeatherStation_Temperature1        "Temperatur 1 [%.1f °C]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/8/#:state:default]"}
-Number WeatherStation_Humidity1           "Luftfeuchtigkeit 1 [%d]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/9/#:state:default]"}
-Number WeatherStation_Temperature2        "Temperatur 2 [%.1f °C]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/10/#:state:default]"}
-Number WeatherStation_Humidity2           "Luftfeuchtigkeit 2 [%.1f %%]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/11/#:state:default]"}
+Number WeatherStation_Battery_Level       "Batterie Level [%d %%]"	<battery> {mqtt="<[mosquitto:mysensors-pub-1/1/255/#:state:default]"}
+Number WeatherStation_Battery_Voltage     "Batterie Spannung [%d mV]"	<battery> {mqtt="<[mosquitto:mysensors-pub-1/1/0/#:state:default]"}
+Number WeatherStation_Battery_Current	  "Batterie Strom [%.1f mA]"	<battery> {mqtt="<[mosquitto:mysensors-pub-1/1/1/#:state:default]"}
+String WeatherStation_Battery_Message 	  "Batterie [%s]"	<battery>
+
+Number WeatherStation_Rain_Counter        "Regen Counter [%d]"	<selfrain>	(PersistentHistory)
+Number WeatherStation_Rain_Current 		  "Regen [%.1f mm]"			<chart>
+Number WeatherStation_Rain_Daily 		  "Regen (heute) [%.1f mm]"	<chart>
+
+Number WeatherStation_Rain_Amount         "Regen Menge [%d]"	<selfrain> {mqtt="<[mosquitto:mysensors-pub-1/1/2/#:state:default]"}
+Number WeatherStation_Rain_State          "Regen Status [%d]"	<selfrain> {mqtt="<[mosquitto:mysensors-pub-1/1/3/#:state:default]"}
+Number WeatherStation_Rain_Heater         "Regen Heizung [%s]"	<smoke> {mqtt="<[mosquitto:mysensors-pub-1/1/4/#:state:default]"}
+String WeatherStation_Rain_Message 	      "Regen [%s]"	<selfrain>
+
+Number WeatherStation_Wind_Speed          "Wind [%.1f m/s]"	<wind> {mqtt="<[mosquitto:mysensors-pub-1/1/5/#:state:default]"}
+Number WeatherStation_Wind_Gust           "Windböe [%.1f m/s]"	<wind> {mqtt="<[mosquitto:mysensors-pub-1/1/6/#:state:default]"}
+Number WeatherStation_Wind_Direction      "Windrichtung [%d °]"	<wind> {mqtt="<[mosquitto:mysensors-pub-1/1/7/#:state:default]"}
+String WeatherStation_Wind_Message 	      "Wind [%s]"	<wind>
+
+Number WeatherStation_Temperature1        "Temperatur 1 [%.1f °C]"	<selftemperature> {mqtt="<[mosquitto:mysensors-pub-1/1/8/#:state:default]"}
+Number WeatherStation_Humidity1           "Luftfeuchtigkeit 1 [%d %%]"	<humidity> {mqtt="<[mosquitto:mysensors-pub-1/1/9/#:state:default]"}
+String WeatherStation_Air1_Message 		  "Luft 1 [%s]"	<selftemperature>
+
+Number WeatherStation_Temperature2        "Temperatur 2 [%.1f °C]"	<selftemperature> {mqtt="<[mosquitto:mysensors-pub-1/1/10/#:state:default]"}
+Number WeatherStation_Humidity2           "Luftfeuchtigkeit 2 [%.1f %%]"	<humidity> {mqtt="<[mosquitto:mysensors-pub-1/1/11/#:state:default]"}
+String WeatherStation_Air2_Message 		  "Luft 2 [%s]"	<selftemperature>
+
 Number WeatherStation_Pressure            "Luftdruck [%.1f hPa]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/12/#:state:default]"}
-Number WeatherStation_Solar_Power         "Sonnenkraft [%.1f]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/13/#:state:default]"}
-Number WeatherStation_Light_Level         "Helligkeit [%.1f lux]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/14/#:state:default]"}
-Number WeatherStation_UV_Index            "UV Index [%.1f]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/15/#:state:default]"}
-Number WeatherStation_UV_A                "UV A [%.1f]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/16/#:state:default]"}
-Number WeatherStation_UV_B                "UV B [%.1f]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/17/#:state:default]"}
+Number WeatherStation_Solar_Power         "Sonnenkraft [%.1f °C]"	<sun> {mqtt="<[mosquitto:mysensors-pub-1/1/13/#:state:default]"}
+Number WeatherStation_Light_Level         "Helligkeit [%.1f lux]"	<sun> {mqtt="<[mosquitto:mysensors-pub-1/1/14/#:state:default]"}
+
+Number WeatherStation_UV_Index            "UV Index [%.1f]"	<sun> {mqtt="<[mosquitto:mysensors-pub-1/1/15/#:state:default]"}
+Number WeatherStation_UV_A                "UV A [%.1f]"	<sun> {mqtt="<[mosquitto:mysensors-pub-1/1/16/#:state:default]"}
+Number WeatherStation_UV_B                "UV B [%.1f]"	<sun> {mqtt="<[mosquitto:mysensors-pub-1/1/17/#:state:default]"}
+String WeatherStation_UV_Message 		  "UV Index [%s]"	<sun>
 
 //######## ZUNO #############
 //Number ZunoWeatherStation_Temperature "Temperature" <selfautomode> { channel="zwave:zuno_weatherstation_00_000:controller:Weatherstation:sensor_temperature" }
