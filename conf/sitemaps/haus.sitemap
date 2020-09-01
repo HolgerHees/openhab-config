@@ -452,7 +452,7 @@ sitemap haus label="Main Menu"
                         Text item=WeatherStation_Rain_State
                         Text item=WeatherStation_Rain_Current
                         Text item=WeatherStation_Rain_Daily
-                        Text item=WeatherStation_Rain_Heater
+                        Switch item=WeatherStation_Rain_Heater mappings=[1="ON", 0="OFF"]
                         Text item=WeatherStation_Rain_Amount
                         Text item=WeatherStation_Rain_Counter
                     }

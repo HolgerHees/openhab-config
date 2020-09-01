@@ -1,5 +1,6 @@
 from custom.helper import rule, getNow, getItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged
-from core.triggers import CronTrigger, ItemStateChangeTrigger
+from core.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
+from core.actions import Mqtt
 
 @rule("sensor_weatherstation.py")
 class BatteryMessageRule:
@@ -90,6 +91,16 @@ class WeatherstationRainLastHourRule:
             #0.2794 mm
 
         postUpdateIfChanged("WeatherStation_Rain_Current", lastHourRain)
+        
+@rule("sensor_weatherstation.py")
+class WeatherstationRainHeaterRule:
+    def __init__(self):
+        self.triggers = [
+            ItemStateUpdateTrigger("WeatherStation_Rain_Heater_Request")
+        ]
+
+    def execute(self, module, input):
+        Mqtt.publish("mosquitto","mysensors-sub-1/1/4/1/0/2",getItemState("WeatherStation_Rain_Heater").toString());
 
 @rule("sensor_weatherstation.py")
 class WeatherstationWindMessageRule:
