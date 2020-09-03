@@ -2,8 +2,19 @@ from custom.helper import rule, getNow, getItemState, getHistoricItemState, getM
 from core.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
 from core.actions import Mqtt
 
+OFFSET_TEMPERATURE_1  = 0.0
+OFFSET_HUMIDITY_1     = 0
+OFFSET_TEMPERATURE_2  = 1.1
+OFFSET_HUMIDITY_2     = 7.5
+OFFSET_WIND_DIRECTION = 0
+
+#UVA_RESPONSE_FACTOR = 0.001461
+UVA_RESPONSE_FACTOR = 0.002303
+#UVB_RESPONSE_FACTOR = 0.002591
+UVB_RESPONSE_FACTOR = 0.004686
+
 @rule("sensor_weatherstation.py")
-class BatteryMessageRule:
+class WeatherstationBatteryMessageRule:
     def __init__(self):
         self.triggers = [
             #CronTrigger("0/5 * * * * ?"),
@@ -108,30 +119,45 @@ class WeatherstationWindMessageRule:
         self.triggers = [
             #CronTrigger("0/5 * * * * ?"),
             ItemStateChangeTrigger("WeatherStation_Wind_Speed"),
-            ItemStateChangeTrigger("WeatherStation_Wind_Direction")
+            ItemStateChangeTrigger("WeatherStation_Wind_Direction_Raw")
         ]
 
     def execute(self, module, input):
+        if input['event'].getItemName() == "WeatherStation_Wind_Direction_Raw":
+            direction = input['event'].getItemState().intValue() + OFFSET_WIND_DIRECTION
+            postUpdate("WeatherStation_Wind_Direction",direction)
+        else:
+            direction = getItemState("WeatherStation_Wind_Direction").intValue()
+
         msg = u""
         if getItemState("WeatherStation_Wind_Speed").intValue() == 0:
             msg = u"Ruhig"
         else:
-            msg = u"{} km/h, {}".format(getItemState("WeatherStation_Wind_Speed").format("%.1f"),getItemState("WeatherStation_Wind_Direction").toString())
+            msg = u"{} km/h, {}".format(getItemState("WeatherStation_Wind_Speed").format("%.1f"),direction)
 
         postUpdateIfChanged("WeatherStation_Wind_Message", msg)
-        
+  
 @rule("sensor_weatherstation.py")
 class WeatherstationAir1MessageRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("WeatherStation_Temperature1"),
-            ItemStateChangeTrigger("WeatherStation_Humidity1")
+            ItemStateChangeTrigger("WeatherStation_Temperature1_Raw"),
+            ItemStateChangeTrigger("WeatherStation_Humidity1_Raw")
         ]
 
     def execute(self, module, input):
+        if input['event'].getItemName() == "WeatherStation_Temperature1_Raw":
+            temperature = round(round(input['event'].getItemState().doubleValue(),1) + OFFSET_TEMPERATURE_1, 1)
+            postUpdate("WeatherStation_Temperature1",temperature)
+            humidity = getItemState("WeatherStation_Humidity1").intValue()
+        else:
+            temperature = getItemState("WeatherStation_Temperature1").format("%.1f")
+            humidity = input['event'].getItemState().intValue() + OFFSET_HUMIDITY_1
+            postUpdate("WeatherStation_Humidity1",humidity)
+      
         msg = u"";
-        msg = u"{}{}°C, ".format(msg,getItemState("WeatherStation_Temperature1").format("%.1f"))
-        msg = u"{}{}%".format(msg,getItemState("WeatherStation_Humidity1").format("%.1f"))
+        msg = u"{}{}°C, ".format(msg,temperature)
+        msg = u"{}{}%".format(msg,humidity)
 
         postUpdateIfChanged("WeatherStation_Air1_Message", msg)
 
@@ -139,14 +165,23 @@ class WeatherstationAir1MessageRule:
 class WeatherstationAir2MessageRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("WeatherStation_Temperature2"),
-            ItemStateChangeTrigger("WeatherStation_Humidity2")
+            ItemStateChangeTrigger("WeatherStation_Temperature2_Raw"),
+            ItemStateChangeTrigger("WeatherStation_Humidity2_Raw")
         ]
 
     def execute(self, module, input):
+        if input['event'].getItemName() == "WeatherStation_Temperature2_Raw":
+            temperature = round(round(input['event'].getItemState().doubleValue(),1) + OFFSET_TEMPERATURE_2, 1)
+            postUpdate("WeatherStation_Temperature2",temperature)
+            humidity = getItemState("WeatherStation_Humidity2").format("%.1f")
+        else:
+            temperature = getItemState("WeatherStation_Temperature2").format("%.1f")
+            humidity = round(round(input['event'].getItemState().doubleValue(),1) + OFFSET_HUMIDITY_2, 1)
+            postUpdate("WeatherStation_Humidity2",humidity)
+      
         msg = u"";
-        msg = u"{}{}°C, ".format(msg,getItemState("WeatherStation_Temperature2").format("%.1f"))
-        msg = u"{}{}%".format(msg,getItemState("WeatherStation_Humidity2").format("%.1f"))
+        msg = u"{}{}°C, ".format(msg,temperature)
+        msg = u"{}{}%".format(msg,humidity)
 
         postUpdateIfChanged("WeatherStation_Air2_Message", msg)
 
@@ -154,15 +189,22 @@ class WeatherstationAir2MessageRule:
 class UVMessageRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("WeatherStation_UV_Index"),
             ItemStateChangeTrigger("WeatherStation_UV_A"),
             ItemStateChangeTrigger("WeatherStation_UV_B")
         ]
 
     def execute(self, module, input):
+      
+        uva_state = getItemState("WeatherStation_UV_A");
+        uvb_state = getItemState("WeatherStation_UV_B");
+        
+        uva_weighted = uva_state.doubleValue() * UVA_RESPONSE_FACTOR;
+        uvb_weighted = uvb_state.doubleValue() * UVB_RESPONSE_FACTOR;
+        uv_index = (uva_weighted + uvb_weighted) / 2.0;
+      
         msg = u"";
-        msg = u"{}{} (".format(msg,getItemState("WeatherStation_UV_Index").format("%.1f"))
-        msg = u"{}{}a,".format(msg,getItemState("WeatherStation_UV_A").format("%.1f"))
-        msg = u"{}{}b)".format(msg,getItemState("WeatherStation_UV_B").format("%.1f"))
+        msg = u"{}{} (".format(msg,round(uv_index * 10.0) / 10.0)
+        msg = u"{}{}a,".format(msg,uva_state.format("%.1f"))
+        msg = u"{}{}b)".format(msg,uvb_state.format("%.1f"))
 
         postUpdateIfChanged("WeatherStation_UV_Message", msg)
