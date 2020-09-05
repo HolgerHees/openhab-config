@@ -137,7 +137,7 @@ Switch SoilMoistSensor5Enabled "Pflanze 5" <selfautomode>
 Switch SoilMoistSensor6Enabled "Pflanze 6" <selfautomode>
 
 //######## Weatherstation ############
-Number WeatherStation_Battery_Level       "Batterie Level [%d %%]"	<battery> {mqtt="<[mosquitto:mysensors-pub-1/1/255/#:state:default]"}
+Number WeatherStation_Battery_Level       "Batterie Level [%d %%]"      <battery>
 Number WeatherStation_Battery_Voltage     "Batterie Spannung [%d mV]"	<battery> {mqtt="<[mosquitto:mysensors-pub-1/1/0/#:state:default]"}
 Number WeatherStation_Battery_Current	  "Batterie Strom [%.1f mA]"	<battery> {mqtt="<[mosquitto:mysensors-pub-1/1/1/#:state:default]"}
 String WeatherStation_Battery_Message 	  "Batterie [%s]"	<battery>
@@ -171,12 +171,15 @@ Number WeatherStation_Humidity2           "Luftfeuchtigkeit 2 [%.1f %%]"	<humidi
 String WeatherStation_Air2_Message 		  "Luft 2 [%s]"	<selftemperature>
 
 Number WeatherStation_Pressure            "Luftdruck [%.1f hPa]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/12/#:state:default]"}
-Number WeatherStation_Solar_Power         "Sonnenkraft [%.1f °C]"	<sun> {mqtt="<[mosquitto:mysensors-pub-1/1/13/#:state:default]"}
+Number WeatherStation_Solar_Power_Raw     "Sonnenkraft [%.1f °C]"	<sun> {mqtt="<[mosquitto:mysensors-pub-1/1/13/#:state:default]"}
+Number WeatherStation_Solar_Power         "Sonnenkraft [%.1f Watt/m²]"	<sun>
 Number WeatherStation_Light_Level         "Helligkeit [%.1f lux]"	<sun> {mqtt="<[mosquitto:mysensors-pub-1/1/14/#:state:default]"}
 
 Number WeatherStation_UV_Index            "UV Index [%.1f]"	<sun>
-Number WeatherStation_UV_A                "UV A [%.1f]"	<sun> {mqtt="<[mosquitto:mysensors-pub-1/1/15/#:state:default]"}
-Number WeatherStation_UV_B                "UV B [%.1f]"	<sun> {mqtt="<[mosquitto:mysensors-pub-1/1/16/#:state:default]"}
+Number WeatherStation_UV_A_Raw            "UV A [%.1f]"	<sun> {mqtt="<[mosquitto:mysensors-pub-1/1/15/#:state:default]"}
+Number WeatherStation_UV_A                "UV A [%.1f]"	<sun>
+Number WeatherStation_UV_B_Raw            "UV B [%.1f]"	<sun> {mqtt="<[mosquitto:mysensors-pub-1/1/16/#:state:default]"}
+Number WeatherStation_UV_B                "UV B [%.1f]"	<sun>
 String WeatherStation_UV_Message 		  "UV Index [%s]"	<sun>
 
 //######## ZUNO #############
