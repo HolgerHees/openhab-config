@@ -137,9 +137,14 @@ Switch SoilMoistSensor5Enabled "Pflanze 5" <selfautomode>
 Switch SoilMoistSensor6Enabled "Pflanze 6" <selfautomode>
 
 //######## Weatherstation ############
+Group Weatherstation "Wetterstation"
+
+Number WeatherStation_Last_Update         "Letzte Änderung vor [%d min]" <time>
+Number WeatherStation_Is_Working          "Aktiv [%d]"                  <time>
+
 Number WeatherStation_Battery_Level       "Batterie Level [%d %%]"      <battery>
-Number WeatherStation_Battery_Voltage     "Batterie Spannung [%d mV]"	<battery> {mqtt="<[mosquitto:mysensors-pub-1/1/0/#:state:default]"}
-Number WeatherStation_Battery_Current	  "Batterie Strom [%.1f mA]"	<battery> {mqtt="<[mosquitto:mysensors-pub-1/1/1/#:state:default]"}
+Number WeatherStation_Battery_Voltage     "Batterie Spannung [%d mV]"	<battery> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/0/#:state:default]"}
+Number WeatherStation_Battery_Current	  "Batterie Strom [%.1f mA]"	<battery> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/1/#:state:default]"}
 String WeatherStation_Battery_Message 	  "Batterie [%s]"	<battery>
 
 Number WeatherStation_Rain_Counter        "Regen Counter [%d]"	<selfrain>	(PersistentHistory)
@@ -147,35 +152,35 @@ Number WeatherStation_Rain_Current 		  "Regen [%.1f mm]"			<chart>
 Number WeatherStation_Rain_Daily 		  "Regen (heute) [%.1f mm]"	<chart>
 Number WeatherStation_Rain_State          "Regen Status [%d]"	<selfrain>
 
-Number WeatherStation_Rain_Impulse        "Regen Impulse [%d]"	<selfrain> {mqtt="<[mosquitto:mysensors-pub-1/1/2/#:state:default]"}
-Number WeatherStation_Rain_Rate           "Regen Rate [%d Ω]"	<selfrain> {mqtt="<[mosquitto:mysensors-pub-1/1/3/#:state:default]"}
-Number WeatherStation_Rain_Heater         "Regen Heizung"	<smoke> {mqtt="<[mosquitto:mysensors-pub-1/1/4/1/0/2:state:default]"}
-String WeatherStation_Rain_Heater_Request "Regen Heizung"	<smoke> {mqtt="<[mosquitto:mysensors-pub-1/1/4/2/0/2:state:default]"}
+Number WeatherStation_Rain_Impulse        "Regen Impulse [%d]"	<selfrain> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/2/#:state:default]"}
+Number WeatherStation_Rain_Rate           "Regen Rate [%d Ω]"	<selfrain> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/3/#:state:default]"}
+Number WeatherStation_Rain_Heater         "Regen Heizung"	<smoke> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/4/1/0/2:state:default]"}
+String WeatherStation_Rain_Heater_Request "Regen Heizung"	<smoke> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/4/2/0/2:state:default]"}
 String WeatherStation_Rain_Message 	      "Regen [%s]"	<selfrain>
 
-Number WeatherStation_Wind_Speed          "Wind [%.1f m/s]"	<wind> {mqtt="<[mosquitto:mysensors-pub-1/1/5/#:state:default]"}
-Number WeatherStation_Wind_Gust           "Windböe [%.1f m/s]"	<wind> {mqtt="<[mosquitto:mysensors-pub-1/1/6/#:state:default]"}
-Number WeatherStation_Wind_Direction_Raw  "Windrichtung [%d °]"	<wind> {mqtt="<[mosquitto:mysensors-pub-1/1/7/#:state:default]"}
+Number WeatherStation_Wind_Speed          "Wind [%.1f m/s]"	<wind> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/5/#:state:default]"}
+Number WeatherStation_Wind_Gust           "Windböe [%.1f m/s]"	<wind> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/6/#:state:default]"}
+Number WeatherStation_Wind_Direction_Raw  "Windrichtung [%d °]"	<wind> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/7/#:state:default]"}
 Number WeatherStation_Wind_Direction      "Windrichtung [%d °]"	<wind>
 String WeatherStation_Wind_Message 	      "Wind [%s]"	<wind>
 
-Number WeatherStation_Temperature_Raw     "Temperatur [%.1f °C]"	<selftemperature> {mqtt="<[mosquitto:mysensors-pub-1/1/8/#:state:default]"}
+Number WeatherStation_Temperature_Raw     "Temperatur [%.1f °C]"	<selftemperature> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/8/#:state:default]"}
 Number WeatherStation_Temperature         "Temperatur [%.1f °C]"	<selftemperature>
-Number WeatherStation_Humidity_Raw        "Luftfeuchtigkeit [%.1f %%]"	<humidity> {mqtt="<[mosquitto:mysensors-pub-1/1/9/#:state:default]"}
+Number WeatherStation_Humidity_Raw        "Luftfeuchtigkeit [%.1f %%]"	<humidity> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/9/#:state:default]"}
 Number WeatherStation_Humidity            "Luftfeuchtigkeit [%.1f %%]"	<humidity>
 String WeatherStation_Air_Message 		  "Luft [%s]"	<selftemperature>
 
-Number WeatherStation_Pressure            "Luftdruck [%.1f hPa]"	<selfruntime> {mqtt="<[mosquitto:mysensors-pub-1/1/10/#:state:default]"}
-Number WeatherStation_Solar_Power_Raw     "Sonnenkraft [%.1f °C]"	<sun> {mqtt="<[mosquitto:mysensors-pub-1/1/11/#:state:default]"}
+Number WeatherStation_Pressure            "Luftdruck [%.1f hPa]"	<selfruntime> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/10/#:state:default]"}
+Number WeatherStation_Solar_Power_Raw     "Sonnenkraft [%.1f °C]"	<sun> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/11/#:state:default]"}
 Number WeatherStation_Solar_Power         "Sonnenkraft [%.1f Watt/m²]"	<sun>
 Number WeatherStation_Solar_Power_Test1   "Sonnenkraft Cur. [%.1f Watt/m²]"	<sun>
 Number WeatherStation_Solar_Power_Test2   "Sonnenkraft Max. [%.1f Watt/m²]"	<sun>
-Number WeatherStation_Light_Level         "Helligkeit [%.1f lux]"	<sun> {mqtt="<[mosquitto:mysensors-pub-1/1/12/#:state:default]"}
+Number WeatherStation_Light_Level         "Helligkeit [%.1f lux]"	<sun> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/12/#:state:default]"}
 
 Number WeatherStation_UV_Index            "UV Index [%.1f]"	<sun>
-Number WeatherStation_UV_A_Raw            "UV A [%.1f]"	<sun> {mqtt="<[mosquitto:mysensors-pub-1/1/13/#:state:default]"}
+Number WeatherStation_UV_A_Raw            "UV A [%.1f]"	<sun> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/13/#:state:default]"}
 Number WeatherStation_UV_A                "UV A [%.1f]"	<sun>
-Number WeatherStation_UV_B_Raw            "UV B [%.1f]"	<sun> {mqtt="<[mosquitto:mysensors-pub-1/1/14/#:state:default]"}
+Number WeatherStation_UV_B_Raw            "UV B [%.1f]"	<sun> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/14/#:state:default]"}
 Number WeatherStation_UV_B                "UV B [%.1f]"	<sun>
 String WeatherStation_UV_Message 		  "UV Index [%s]"	<sun>
 

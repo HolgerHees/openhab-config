@@ -1,4 +1,4 @@
-from custom.helper import rule, getNow, getItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged
+from custom.helper import rule, getNow, getItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged, getItemLastUpdate, getItem
 from core.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
 from core.actions import Mqtt
 
@@ -47,6 +47,29 @@ fuelLevel =[
 ];
 
 @rule("sensor_weatherstation.py")
+class WeatherstationLastUpdateRule:
+    def __init__(self):
+        self.triggers = [
+            CronTrigger("0 * * * * ?")
+        ]
+
+    def execute(self, module, input):
+      
+        lastUpdate = 0
+        items = getItem("Weatherstation").getAllMembers()
+        for item in items:
+            _lastUpdate = getItemLastUpdate(item).getMillis()
+            if _lastUpdate > lastUpdate:
+                lastUpdate = _lastUpdate
+
+        now = getNow().getMillis()
+        
+        minutes = math.ceil((now - lastUpdate) / 1000.0 / 60.0)
+        
+        postUpdateIfChanged("WeatherStation_Last_Update", minutes)
+        postUpdateIfChanged("WeatherStation_Is_Working", 1 if minutes <= 17 else 0)
+        
+@rule("sensor_weatherstation.py")
 class WeatherstationBatteryRule:
     def __init__(self):
         self.triggers = [
@@ -57,11 +80,11 @@ class WeatherstationBatteryRule:
 
     def execute(self, module, input):
         if input['event'].getItemName() == "WeatherStation_Battery_Voltage":
-            level = 0
+            level = 0.0
             voltage = input['event'].getItemState().doubleValue()
             if voltage > fuelLevel[0][0]:
                 if voltage > fuelLevel[-1][0]:
-                    level = 100
+                    level = 100.0
                 else:
                     for i in range(1,len(fuelLevel)):
                         toVoltageLevel = fuelLevel[i][0]
@@ -78,15 +101,15 @@ class WeatherstationBatteryRule:
                             
                             # toPercentageLevel - fromPercentageLevel => 100%
                             # ?? => x
-                            level = ( ( x * (toPercentageLevel - fromPercentageLevel) ) / 100 ) + fromPercentageLevel
+                            level = round( ( ( x * (toPercentageLevel - fromPercentageLevel) ) / 100 ) + fromPercentageLevel )
                             break
             postUpdateIfChanged("WeatherStation_Battery_Level", level)
         else:
             level = getItemState("WeatherStation_Battery_Level").intValue()
       
         msg = u"";
-        msg = u"{}{}%, ".format(msg,level)
-        msg = u"{}{}mA".format(msg,getItemState("WeatherStation_Battery_Current").format("%.1f"))
+        msg = u"{}{:.0f} %, ".format(msg,level)
+        msg = u"{}{} mA".format(msg,getItemState("WeatherStation_Battery_Current").format("%.1f"))
 
         postUpdateIfChanged("WeatherStation_Battery_Message", msg)
 
@@ -161,7 +184,7 @@ class WeatherstationRainRule:
             rainState = "Extrem"
       
         msg = u"";
-        msg = u"{}{}".format(msg,"{}mm, ".format(todayRain) if todayRain > 0 else "" )
+        msg = u"{}{}".format(msg,"{} mm, ".format(todayRain) if todayRain > 0 else "" )
         msg = u"{}{} ({}), ".format(msg,rainState,rainLevel)
         msg = u"{}{}".format(msg,"An" if getItemState("WeatherStation_Rain_Heater").intValue() == 1 else "Aus" )
 
@@ -259,8 +282,8 @@ class WeatherstationAirRule:
             postUpdate("WeatherStation_Humidity",humidity)
       
         msg = u"";
-        msg = u"{}{}°C, ".format(msg,temperature)
-        msg = u"{}{}%".format(msg,humidity)
+        msg = u"{}{} °C, ".format(msg,temperature)
+        msg = u"{}{} %".format(msg,humidity)
 
         postUpdateIfChanged("WeatherStation_Air_Message", msg)
 
