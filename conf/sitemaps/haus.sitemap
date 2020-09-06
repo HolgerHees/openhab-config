@@ -440,21 +440,18 @@ sitemap haus label="Main Menu"
                     }
                 }
                 Text label="Wetter"{
-                    Text item=WeatherStation_Air1_Message {
-                        Text item=WeatherStation_Temperature1
-                        Text item=WeatherStation_Humidity1
-                    }
-                    Text item=WeatherStation_Air2_Message {
-                        Text item=WeatherStation_Temperature2
-                        Text item=WeatherStation_Humidity2
+                    Text item=WeatherStation_Air_Message {
+                        Text item=WeatherStation_Temperature
+                        Text item=WeatherStation_Humidity
                     }
                     Text item=WeatherStation_Rain_Message {
                         Text item=WeatherStation_Rain_State
                         Text item=WeatherStation_Rain_Current
                         Text item=WeatherStation_Rain_Daily
                         Switch item=WeatherStation_Rain_Heater mappings=[1="ON", 0="OFF"]
-                        Text item=WeatherStation_Rain_Amount
                         Text item=WeatherStation_Rain_Counter
+                        Text item=WeatherStation_Rain_Impulse
+                        Text item=WeatherStation_Rain_Rate
                     }
                     Text item=WeatherStation_Wind_Message {
                         Text item=WeatherStation_Wind_Speed
@@ -467,8 +464,16 @@ sitemap haus label="Main Menu"
                         Text item=WeatherStation_UV_Index
                         Text item=WeatherStation_UV_A
                         Text item=WeatherStation_UV_B
+                        Text item=WeatherStation_UV_A_Raw
+                        Text item=WeatherStation_UV_B_Raw
                     }
-                    Text item=WeatherStation_Solar_Power
+                    Text item=WeatherStation_Solar_Power {
+                        Text item=WeatherStation_Solar_Power label="Sonnenkraft gemessen [%.1f Watt/m²]"
+                        Text item=WeatherStation_Solar_Power_Test1 label="Sonnenkraft berechnet [%.1f Watt/m²]"
+                        Text item=WeatherStation_Solar_Power_Test2 label="Sonnenkraft maximal [%.1f Watt/m²]"
+                        Text item=WeatherStation_Solar_Power_Raw
+                        Text item=WeatherStation_Temperature
+                    }
                     Text item=WeatherStation_Battery_Message {
                         Text item=WeatherStation_Battery_Level
                         Text item=WeatherStation_Battery_Voltage
