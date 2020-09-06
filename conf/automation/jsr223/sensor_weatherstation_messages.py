@@ -64,7 +64,8 @@ class WeatherstationLastUpdateRule:
 
         now = getNow().getMillis()
         
-        minutes = math.ceil((now - lastUpdate) / 1000.0 / 60.0)
+        minutes = (now - lastUpdate) / 1000.0 / 60.0
+        minutes = math.ceil(minutes) if minutes < 0 else round(minutes)
         
         postUpdateIfChanged("WeatherStation_Last_Update", minutes)
         postUpdateIfChanged("WeatherStation_Is_Working", 1 if minutes <= 17 else 0)
