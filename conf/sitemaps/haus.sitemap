@@ -476,7 +476,12 @@ sitemap haus label="Main Menu"
                         Text item=WeatherStation_Solar_Power_Raw
                         Text item=WeatherStation_Temperature
                     }
-                    Text item=WeatherStation_Battery_Message {
+                    /*Text item=WeatherStation_Battery_Message labelcolor=[WeatherStation_Battery_Current>=0="#6bc305"] valuecolor=[WeatherStation_Battery_Level>=70="#6bc305",>=50="#cbcb00",<50="#d72a2a"] {
+                        Text item=WeatherStation_Battery_Level
+                        Text item=WeatherStation_Battery_Voltage
+                        Text item=WeatherStation_Battery_Current
+                    }*/
+                    Text item=WeatherStation_Battery_Message valuecolor=[WeatherStation_Battery_Current>=0="#6bc305"] {
                         Text item=WeatherStation_Battery_Level
                         Text item=WeatherStation_Battery_Voltage
                         Text item=WeatherStation_Battery_Current
