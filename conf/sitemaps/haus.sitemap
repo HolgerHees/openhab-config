@@ -440,7 +440,8 @@ sitemap haus label="Main Menu"
                     }
                 }
                 Text label="Wetter"{
-                    Text item=WeatherStation_Last_Update valuecolor=[<="17"="#6bc305",>"17"="#d72a2a"]
+                    Text item=WeatherStation_Update_Message visibility=[WeatherStation_Is_Working>0] valuecolor=[!=""="#6bc305"]
+                    Text item=WeatherStation_Update_Message visibility=[WeatherStation_Is_Working==0] valuecolor=[!=""="#d72a2a"]
                     Text item=WeatherStation_Air_Message {
                         Text item=WeatherStation_Temperature
                         Text item=WeatherStation_Humidity

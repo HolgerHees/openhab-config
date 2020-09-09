@@ -54,21 +54,45 @@ class WeatherstationLastUpdateRule:
         ]
 
     def execute(self, module, input):
-      
-        lastUpdate = 0
-        items = getItem("Weatherstation").getAllMembers()
-        for item in items:
-            _lastUpdate = getItemLastUpdate(item).getMillis()
-            if _lastUpdate > lastUpdate:
-                lastUpdate = _lastUpdate
-
         now = getNow().getMillis()
         
-        minutes = (now - lastUpdate) / 1000.0 / 60.0
-        minutes = math.ceil(minutes) if minutes < 0 else round(minutes)
+        newestUpdate = 0
+        oldestUpdate = now
+        items = getItem("Weatherstation").getAllMembers()
+        for item in items:
+            _update = getItemLastUpdate(item).getMillis()
+            if _update > newestUpdate:
+                newestUpdate = _update
+            if _update < oldestUpdate:
+                oldestUpdate = _update
+                #self.log.info("{} {}".format(item.getName(),getItemLastUpdate(item)))
         
-        postUpdateIfChanged("WeatherStation_Last_Update", minutes)
-        postUpdateIfChanged("WeatherStation_Is_Working", 1 if minutes <= 17 else 0)
+        # Special handling for heating updates
+        # Either the WeatherStation_Rain_Heater_Request is updated every 15 minutes (heating inactive) or every minute (heating is active)
+        # Or the WeatherStation_Rain_Heater is updated every 5 minutes
+        _heaterValueUpdate = getItemLastUpdate("WeatherStation_Rain_Heater").getMillis()
+        _heaterRequestUpdate = getItemLastUpdate("WeatherStation_Rain_Heater_Request").getMillis()
+        _update = _heaterValueUpdate if _heaterValueUpdate > _heaterRequestUpdate else _heaterRequestUpdate
+        if _update > newestUpdate:
+            newestUpdate = _update
+        if _update < oldestUpdate:
+            oldestUpdate = _update
+                
+        newestUpdateInMinutes = (now - newestUpdate) / 1000.0 / 60.0
+        newestUpdateInMinutes = round(newestUpdateInMinutes)
+        newestUpdateInMinutesMsg = u"{:.0f}".format(newestUpdateInMinutes) if newestUpdateInMinutes >= 1 else u"<1"
+        
+        oldestUpdateInMinutes = (now - oldestUpdate) / 1000.0 / 60.0
+        oldestUpdateInMinutes = round(oldestUpdateInMinutes)
+        oldestUpdateInMinutesMsg = u"{:.0f}".format(oldestUpdateInMinutes) if oldestUpdateInMinutes >= 1 else u"<1"
+        
+        if newestUpdateInMinutesMsg != oldestUpdateInMinutesMsg:
+            msg = u"{} bis {} min.".format(newestUpdateInMinutesMsg,oldestUpdateInMinutesMsg)
+        else:
+            msg = u"{} min.".format(newestUpdateInMinutesMsg)
+            
+        postUpdateIfChanged("WeatherStation_Update_Message", msg)
+        postUpdateIfChanged("WeatherStation_Is_Working", 1 if oldestUpdateInMinutes <= 10 else 0)
         
 @rule("sensor_weatherstation.py")
 class WeatherstationBatteryRule:
