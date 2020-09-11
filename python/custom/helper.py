@@ -338,21 +338,17 @@ def getNow():
     return DateTime.now()
 
 
-def itemStateNewerThen(itemOrName, refDate):
-    return getItemState(itemOrName).calendar.getTimeInMillis() > refDate.getMillis()
+#def itemStateNewerThen(itemOrName, refDate):
+#    return getItemState(itemOrName).calendar.getTimeInMillis() > refDate.getMillis()
 
-
-def itemStateOlderThen(itemOrName, refDate):
-    return not itemStateNewerThen(itemOrName, refDate)
-
+#def itemStateOlderThen(itemOrName, refDate):
+#    return not itemStateNewerThen(itemOrName, refDate)
 
 def itemLastUpdateNewerThen(itemOrName, refDate):
     return getItemLastUpdate(itemOrName).isAfter(refDate)
 
-
 def itemLastUpdateOlderThen(itemOrName, refDate):
     return not itemLastUpdateNewerThen(itemOrName, refDate)
-
 
 def getItemLastUpdate(itemOrName):
     item = _getItem(itemOrName)
@@ -360,6 +356,19 @@ def getItemLastUpdate(itemOrName):
     if lastUpdate is None:
         raise NotInitialisedException("Item lastUpdate for '" + item.getName() + "' not found")
     return lastUpdate
+
+#def itemLastChangeNewerThen(itemOrName, refDate):
+#    return getItemLastChange(itemOrName).isAfter(refDate)
+
+#def itemLastChangeOlderThen(itemOrName, refDate):
+#    return not itemLastChangeNewerThen(itemOrName, refDate)
+
+#def getItemLastChange(itemOrName):
+#    item = _getItem(itemOrName)
+#    lastChange = PersistenceExtensions.lastUpdate(item,"jdbc")
+#    if lastChange is None:
+#        raise NotInitialisedException("Item lastChange for '" + item.getName() + "' not found")
+#    return lastUpdate
 
 def getStableItemState( now, itemName, checkTimeRange ):
         

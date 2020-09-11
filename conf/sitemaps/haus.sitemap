@@ -440,51 +440,57 @@ sitemap haus label="Main Menu"
                     }
                 }
                 Text label="Wetter"{
-                    Text item=WeatherStation_Update_Message visibility=[WeatherStation_Is_Working>0] valuecolor=[!=""="#6bc305"]
-                    Text item=WeatherStation_Update_Message visibility=[WeatherStation_Is_Working==0] valuecolor=[!=""="#d72a2a"]
-                    Text item=WeatherStation_Air_Message {
-                        Text item=WeatherStation_Temperature
-                        Text item=WeatherStation_Humidity
+                    Frame label="Wetter" {
+                        Text item=WeatherStation_Air_Message {
+                            Text item=WeatherStation_Temperature
+                            Text item=WeatherStation_Humidity
+                        }
+                        Text item=WeatherStation_Pressure
+                        Text item=WeatherStation_Rain_Message {
+                            Text item=WeatherStation_Rain_State
+                            Text item=WeatherStation_Rain_Current
+                            Text item=WeatherStation_Rain_Daily
+                            Switch item=WeatherStation_Rain_Heater
+                            Text item=WeatherStation_Rain_Counter
+                            Text item=WeatherStation_Rain_Impulse
+                            Text item=WeatherStation_Rain_Rate
+                        }
+                        Text item=WeatherStation_Wind_Message {
+                            Text item=WeatherStation_Wind_Speed
+                            Text item=WeatherStation_Wind_Gust
+                            Text item=WeatherStation_Wind_Direction
+                        }
                     }
-                    Text item=WeatherStation_Rain_Message {
-                        Text item=WeatherStation_Rain_State
-                        Text item=WeatherStation_Rain_Current
-                        Text item=WeatherStation_Rain_Daily
-                        Switch item=WeatherStation_Rain_Heater mappings=[1="ON", 0="OFF"]
-                        Text item=WeatherStation_Rain_Counter
-                        Text item=WeatherStation_Rain_Impulse
-                        Text item=WeatherStation_Rain_Rate
+                    Frame label="Sonne" {
+                        Text item=WeatherStation_UV_Message {
+                            Text item=WeatherStation_UV_Index
+                            Text item=WeatherStation_UV_A
+                            Text item=WeatherStation_UV_B
+                            Text item=WeatherStation_UV_A_Raw
+                            Text item=WeatherStation_UV_B_Raw
+                        }
+                        Text item=WeatherStation_Light_Level
+                        Text item=WeatherStation_Solar_Power {
+                            Text item=WeatherStation_Solar_Power label="Sonnenkraft gemessen [%.1f Watt/m²]"
+                            Text item=WeatherStation_Solar_Power_Test1 label="Sonnenkraft berechnet [%.1f Watt/m²]"
+                            Text item=WeatherStation_Solar_Power_Test2 label="Sonnenkraft maximal [%.1f Watt/m²]"
+                            Text item=WeatherStation_Solar_Power_Raw
+                            Text item=WeatherStation_Temperature
+                        }
                     }
-                    Text item=WeatherStation_Wind_Message {
-                        Text item=WeatherStation_Wind_Speed
-                        Text item=WeatherStation_Wind_Gust
-                        Text item=WeatherStation_Wind_Direction
-                    }
-                    Text item=WeatherStation_Pressure
-                    Text item=WeatherStation_Light_Level
-                    Text item=WeatherStation_UV_Message {
-                        Text item=WeatherStation_UV_Index
-                        Text item=WeatherStation_UV_A
-                        Text item=WeatherStation_UV_B
-                        Text item=WeatherStation_UV_A_Raw
-                        Text item=WeatherStation_UV_B_Raw
-                    }
-                    Text item=WeatherStation_Solar_Power {
-                        Text item=WeatherStation_Solar_Power label="Sonnenkraft gemessen [%.1f Watt/m²]"
-                        Text item=WeatherStation_Solar_Power_Test1 label="Sonnenkraft berechnet [%.1f Watt/m²]"
-                        Text item=WeatherStation_Solar_Power_Test2 label="Sonnenkraft maximal [%.1f Watt/m²]"
-                        Text item=WeatherStation_Solar_Power_Raw
-                        Text item=WeatherStation_Temperature
-                    }
-                    /*Text item=WeatherStation_Battery_Message labelcolor=[WeatherStation_Battery_Current>=0="#6bc305"] valuecolor=[WeatherStation_Battery_Level>=70="#6bc305",>=50="#cbcb00",<50="#d72a2a"] {
-                        Text item=WeatherStation_Battery_Level
-                        Text item=WeatherStation_Battery_Voltage
-                        Text item=WeatherStation_Battery_Current
-                    }*/
-                    Text item=WeatherStation_Battery_Message valuecolor=[WeatherStation_Battery_Current>=0="#6bc305"] {
-                        Text item=WeatherStation_Battery_Level
-                        Text item=WeatherStation_Battery_Voltage
-                        Text item=WeatherStation_Battery_Current
+                    Frame label="Sonstiges" {
+                        Text item=WeatherStation_Update_Message visibility=[WeatherStation_Is_Working!=OFF] valuecolor=[!=""="#6bc305"]
+                        Text item=WeatherStation_Update_Message visibility=[WeatherStation_Is_Working==OFF] valuecolor=[!=""="#d72a2a"]
+                        /*Text item=WeatherStation_Battery_Message labelcolor=[WeatherStation_Battery_Current>=0="#6bc305"] valuecolor=[WeatherStation_Battery_Level>=70="#6bc305",>=50="#cbcb00",<50="#d72a2a"] {
+                            Text item=WeatherStation_Battery_Level
+                            Text item=WeatherStation_Battery_Voltage
+                            Text item=WeatherStation_Battery_Current
+                        }*/
+                        Text item=WeatherStation_Battery_Message valuecolor=[WeatherStation_Battery_Current>=0="#6bc305"] {
+                            Text item=WeatherStation_Battery_Level
+                            Text item=WeatherStation_Battery_Voltage
+                            Text item=WeatherStation_Battery_Current
+                        }
                     }
                 }
             }

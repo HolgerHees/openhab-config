@@ -140,7 +140,7 @@ Switch SoilMoistSensor6Enabled "Pflanze 6" <selfautomode>
 Group Weatherstation "Wetterstation"
 
 String WeatherStation_Update_Message      "Letzte Änderung [%s]"        <time>
-Number WeatherStation_Is_Working          "Aktiv [%d]"                  <time>
+Switch WeatherStation_Is_Working          "Aktiv [%d]"                  <time>
 
 Number WeatherStation_Battery_Level       "Batterie Level [%d %%]"      <battery>
 Number WeatherStation_Battery_Voltage     "Batterie Spannung [%d mV]"	<energy> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/0/#:state:default]"}
@@ -154,7 +154,7 @@ Number WeatherStation_Rain_State          "Regen Status [%d]"	<selfrain>
 
 Number WeatherStation_Rain_Impulse        "Regen Impulse [%d]"	<selfrain> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/2/#:state:default]"}
 Number WeatherStation_Rain_Rate           "Regen Rate [%d Ω]"	<selfrain> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/3/#:state:default]"}
-Number WeatherStation_Rain_Heater         "Regen Heizung"	<heating> {mqtt="<[mosquitto:mysensors-pub-1/1/4/1/0/2:state:default]"}
+Switch WeatherStation_Rain_Heater         "Regen Heizung"	<heating> {mqtt="<[mosquitto:mysensors-pub-1/1/4/1/0/2:state:MAP(weatherstation_heating.map)]"}
 String WeatherStation_Rain_Heater_Request "Regen Heizung"	<heating> {mqtt="<[mosquitto:mysensors-pub-1/1/4/2/0/2:state:default]"}
 String WeatherStation_Rain_Message 	      "Regen [%s]"	<selfrain>
 

@@ -70,13 +70,13 @@ class WeatherstationLastUpdateRule:
         # Special handling for heating updates
         # Either the WeatherStation_Rain_Heater_Request is updated every 15 minutes (heating inactive) or every minute (heating is active)
         # Or the WeatherStation_Rain_Heater is updated every 5 minutes
-        _heaterValueUpdate = getItemLastUpdate("WeatherStation_Rain_Heater").getMillis()
-        _heaterRequestUpdate = getItemLastUpdate("WeatherStation_Rain_Heater_Request").getMillis()
-        _update = _heaterValueUpdate if _heaterValueUpdate > _heaterRequestUpdate else _heaterRequestUpdate
-        if _update > newestUpdate:
-            newestUpdate = _update
-        if _update < oldestUpdate:
-            oldestUpdate = _update
+        #_heaterValueUpdate = getItemLastUpdate("WeatherStation_Rain_Heater").getMillis()
+        #_heaterRequestUpdate = getItemLastUpdate("WeatherStation_Rain_Heater_Request").getMillis()
+        #_update = _heaterValueUpdate if _heaterValueUpdate > _heaterRequestUpdate else _heaterRequestUpdate
+        #if _update > newestUpdate:
+        #    newestUpdate = _update
+        #if _update < oldestUpdate:
+        #    oldestUpdate = _update
                 
         newestUpdateInMinutes = (now - newestUpdate) / 1000.0 / 60.0
         newestUpdateInMinutes = round(newestUpdateInMinutes)
@@ -92,7 +92,7 @@ class WeatherstationLastUpdateRule:
             msg = u"{} min.".format(newestUpdateInMinutesMsg)
             
         postUpdateIfChanged("WeatherStation_Update_Message", msg)
-        postUpdateIfChanged("WeatherStation_Is_Working", 1 if oldestUpdateInMinutes <= 10 else 0)
+        postUpdateIfChanged("WeatherStation_Is_Working", ON if oldestUpdateInMinutes <= 10 else OFF)
         
 @rule("sensor_weatherstation.py")
 class WeatherstationBatteryRule:
@@ -137,6 +137,16 @@ class WeatherstationBatteryRule:
         msg = u"{}{} mA".format(msg,getItemState("WeatherStation_Battery_Current").format("%.1f"))
 
         postUpdateIfChanged("WeatherStation_Battery_Message", msg)
+
+@rule("sensor_weatherstation.py")
+class WeatherstationRainHeaterRule:
+    def __init__(self):
+        self.triggers = [
+            ItemStateUpdateTrigger("WeatherStation_Rain_Heater_Request")
+        ]
+
+    def execute(self, module, input):
+        Mqtt.publish("mosquitto","mysensors-sub-1/1/4/1/0/2", u"{}".format(1 if getItemState("WeatherStation_Rain_Heater") == ON else 0));
 
 @rule("sensor_weatherstation.py")
 class WeatherstationRainRule:
@@ -211,7 +221,7 @@ class WeatherstationRainRule:
         msg = u"";
         msg = u"{}{}".format(msg,"{} mm, ".format(todayRain) if todayRain > 0 else "" )
         msg = u"{}{} ({}), ".format(msg,rainState,rainLevel)
-        msg = u"{}{}".format(msg,"An" if getItemState("WeatherStation_Rain_Heater").intValue() == 1 else "Aus" )
+        msg = u"{}{}".format(msg,"An" if getItemState("WeatherStation_Rain_Heater") == ON else "Aus" )
 
         postUpdateIfChanged("WeatherStation_Rain_Message", msg)
 
@@ -235,16 +245,6 @@ class WeatherstationRainLastHourRule:
 
         postUpdateIfChanged("WeatherStation_Rain_Current", lastHourRain)
         
-@rule("sensor_weatherstation.py")
-class WeatherstationRainHeaterRule:
-    def __init__(self):
-        self.triggers = [
-            ItemStateUpdateTrigger("WeatherStation_Rain_Heater_Request")
-        ]
-
-    def execute(self, module, input):
-        Mqtt.publish("mosquitto","mysensors-sub-1/1/4/1/0/2",getItemState("WeatherStation_Rain_Heater").toString());
-
 @rule("sensor_weatherstation.py")
 class WeatherstationWindRule:
     def __init__(self):

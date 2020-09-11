@@ -1,7 +1,8 @@
 Strategies {
-	default = everyUpdate // must be everyUpdate to refresh the lastUpdate DateTime
+	default = everyChange, restoreOnStartup
 }
 
 Items {
-	* : strategy = everyUpdate, restoreOnStartup
+	Weatherstation* : strategy = everyUpdate, restoreOnStartup
+	//* : strategy = everyChange, restoreOnStartup
 }
