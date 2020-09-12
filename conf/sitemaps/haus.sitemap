@@ -440,28 +440,7 @@ sitemap haus label="Main Menu"
                         Webview url="/static/grafana/temperatures_garden.html?fromItem=Chart_From" icon=none height=36
                     }
                 }
-                Group item=PlantSensorInfo label="Pflanzen [%s]" valuecolor=[=="Feucht genug"="#6bc305",=="Giessen"="#cbcb00",=="Jetzt Giessen"="#d72a2a"]{
-                    Frame label="Daten" {
-                        Text item=SoilMoistSensor1
-                        Text item=SoilMoistSensor2
-                        Text item=SoilMoistSensor3
-                        Text item=SoilMoistSensor4
-                        Text item=Air_Wireless_Message label="Luft [%s]" visibility=[Auto_Attic_Light!=1]
-                        Text item=SoilMoistSensorInfo label="Überwachen [%s]"{
-                            Switch item=SoilMoistSensor1Enabled
-                            Switch item=SoilMoistSensor2Enabled
-                            Switch item=SoilMoistSensor3Enabled
-                            Switch item=SoilMoistSensor4Enabled
-                            Switch item=SoilMoistSensor5Enabled
-                            Switch item=SoilMoistSensor6Enabled 
-                        }
-                    }
-                    Frame label="Auswertung" {
-                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/grafana/pflanzen.html?fromItem=Chart_From" icon=none height=18
-                    }
-                }
-                Text label="Wetter"{
+                Group item=WeatherStation_Air_Message label="Wetter [%s]" {
                     Frame label="Wetter" {
                         Text item=WeatherStation_Air_Message {
                             Text item=WeatherStation_Temperature
@@ -513,6 +492,27 @@ sitemap haus label="Main Menu"
                             Text item=WeatherStation_Battery_Voltage
                             Text item=WeatherStation_Battery_Current
                         }
+                    }
+                }
+                Group item=PlantSensorInfo label="Pflanzen [%s]" valuecolor=[=="Feucht genug"="#6bc305",=="Giessen"="#cbcb00",=="Jetzt Giessen"="#d72a2a"]{
+                    Frame label="Daten" {
+                        Text item=SoilMoistSensor1
+                        Text item=SoilMoistSensor2
+                        Text item=SoilMoistSensor3
+                        Text item=SoilMoistSensor4
+                        Text item=Air_Wireless_Message label="Luft [%s]" visibility=[Auto_Attic_Light!=1]
+                        Text item=SoilMoistSensorInfo label="Überwachen [%s]"{
+                            Switch item=SoilMoistSensor1Enabled
+                            Switch item=SoilMoistSensor2Enabled
+                            Switch item=SoilMoistSensor3Enabled
+                            Switch item=SoilMoistSensor4Enabled
+                            Switch item=SoilMoistSensor5Enabled
+                            Switch item=SoilMoistSensor6Enabled 
+                        }
+                    }
+                    Frame label="Auswertung" {
+                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="/static/grafana/pflanzen.html?fromItem=Chart_From" icon=none height=18
                     }
                 }
             }

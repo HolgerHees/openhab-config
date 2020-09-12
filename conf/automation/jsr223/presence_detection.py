@@ -19,20 +19,27 @@ class PresenceCheckRule:
         holgerPhone = itemState if itemName == "State_Holger_Presence" else getItemState("State_Holger_Presence")
         sandraPhone = itemState if itemName == "State_Sandra_Presence" else getItemState("State_Sandra_Presence")
         
+        bot = 'bot1' if itemName == "State_Holger_Presence" else 'bot2'
+        
         if holgerPhone == ON or sandraPhone == ON:
             # only possible if we are away
             if getItemState("State_Presence").intValue() == 0:
                 postUpdate("State_Presence",1)
-                sendNotification(u"Tür", u"Willkommen")
         else:
             # only possible if we are present and not sleeping
             if getItemState("State_Presence").intValue() == 1:
                 postUpdate("State_Presence",0)
+
+        if itemState == ON:
+            sendNotification(u"Tür", u"Willkommen", recipient=bot)
+        else:
+            if holgerPhone == OFF and sandraPhone == OFF:
                 lightMsg = u" - LICHT an" if getItemState("Lights_Indoor") != OFF else u""
                 windowMsg = u" - FENSTER offen" if getItemState("Openingcontacts") != CLOSED else u""
-
-                sendNotification(u"Tür", u"Auf Wiedersehen{}{}".format(lightMsg,windowMsg))
-
+                sendNotification(u"Tür", u"Auf Wiedersehen{}{}".format(lightMsg,windowMsg), recipient=bot)
+            else:
+                sendNotification(u"Tür", u"Auf Wiedersehen", recipient=bot)
+        
 @rule("presence_detection.py")
 class WakeupRule:
     def __init__(self):

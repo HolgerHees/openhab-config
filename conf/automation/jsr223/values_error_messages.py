@@ -54,4 +54,4 @@ class ValuesErrorMessagesRule:
         msg = u", ".join(active)
 
         if postUpdateIfChanged("MainStatus", msg):
-            sendNotification(group, msg)
+            sendNotification(group, msg, recipient='bot1')

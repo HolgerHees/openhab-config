@@ -1,4 +1,5 @@
 Run=Läuft
 Finished=Fertig
--=Fertig
-NULL=Fertig
+Ready=Bereit
+-=Aus
+NULL=Aus

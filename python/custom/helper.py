@@ -411,10 +411,11 @@ def getStableItemState( now, itemName, checkTimeRange ):
     return value
 
 # *** Notifications ***
-def sendNotification(header, message, url=None):
-
-    if url == None:
-        Telegram.sendTelegram("bot1", "*" + header + "*: " + message)
-    else:
-        Telegram.sendTelegramPhoto("bot1", url, "*" + header + "*: " + message)
-    #Pushover.pushover(header + ": " + message)
+def sendNotification(header, message, url=None, recipient=None):
+    recipients = [recipient] if recipient != None else ['bot1','bot2']
+    
+    for recipient in recipients:
+        if url == None:
+            Telegram.sendTelegram(recipient, "*" + header + "*: " + message)
+        else:
+            Telegram.sendTelegramPhoto(recipient, url, "*" + header + "*: " + message)
