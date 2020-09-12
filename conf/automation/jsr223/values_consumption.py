@@ -1,7 +1,7 @@
 from org.joda.time import DateTime
 from org.joda.time.format import DateTimeFormat
 
-from custom.helper import rule, getNow, getHistoricItemEntry, getHistoricItemState, getItemLastUpdate, itemLastUpdateOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand, createTimer
+from custom.helper import rule, getNow, getHistoricItemEntry, getHistoricItemState, getItemLastUpdate, itemLastUpdateOlderThen, itemLastChangeOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand, createTimer
 from core.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
 
 from org.eclipse.smarthome.core.types.RefreshType import REFRESH
@@ -250,7 +250,7 @@ class EnergySupplyRule:
                     self.log.info(u"Decrease power limitation from {}% to {}%".format( currentPowerLimitation, possibleAvgPowerLimitation ))
                     return
                 
-            if len(input) == 0 and itemLastUpdateOlderThen("Solar_Power_Limitation",getNow().minusMinutes(4)):
+            if len(input) == 0 and itemLastChangeOlderThen("Solar_Power_Limitation",getNow().minusMinutes(4)):
                 sendCommand("Solar_Power_Limitation",currentPowerLimitation)
                 self.log.info(u"Refresh power limitation of {}%".format( currentPowerLimitation ))
         elif currentPowerLimitation != 100:

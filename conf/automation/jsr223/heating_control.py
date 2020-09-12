@@ -1,5 +1,5 @@
 from core.triggers import CronTrigger, ItemStateChangeTrigger
-from custom.helper import rule, getNow, getHistoricItemEntry, getItemState, getItemLastUpdate, sendCommand, sendCommandIfChanged, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen
+from custom.helper import rule, getNow, getHistoricItemEntry, getItemState, getItemLastUpdate, sendCommand, sendCommandIfChanged, postUpdate, postUpdateIfChanged, itemLastChangeOlderThen
 from custom.model.heating import Heating
 from custom.model.house import ThermalStorageType, ThermalBridgeType, Wall, Door, Window, Room
 
@@ -430,7 +430,7 @@ class HeatingVentileRule():
             circuiteItem = Heating.getHeatingCircuitItem(room)
             maintainanceModeActive = room in maintenanceMode
 
-            if maintainanceModeActive or itemLastUpdateOlderThen(circuiteItem,now.minusHours(24)):
+            if maintainanceModeActive or itemLastChangeOlderThen(circuiteItem,now.minusHours(24)):
                 hour = now.getHourOfDay()
                 if hour == 2 or getItemState(circuiteItem) == OFF:
                     postUpdateIfChanged(circuiteItem,ON)
@@ -651,7 +651,7 @@ class HeatingControlRule():
         if currentOperatingMode == 1:
             # Temperatur sollte seit XX min nicht OK sein und 'Nur WW' sollte mindestens XX min aktiv sein um 'flattern' zu vermeiden
             if isHeatingRequested:
-                isRunningLongEnough = itemLastUpdateOlderThen("Heating_Operating_Mode", now.minusMinutes(Heating.MIN_ONLY_WW_TIME))
+                isRunningLongEnough = itemLastChangeOlderThen("Heating_Operating_Mode", now.minusMinutes(Heating.MIN_ONLY_WW_TIME))
                 
                 if forceRetry or isRunningLongEnough:
                     self.activeHeatingOperatingMode = 2
@@ -674,7 +674,7 @@ class HeatingControlRule():
             #if Heating_Circuit_Pump_Speed.state > 0:
             # Temperatur sollte seit XX min OK sein und Brenner sollte entweder nicht laufen oder mindestens XX min am Stück gelaufen sein
             if not isHeatingRequested:
-                isRunningLongEnough = itemLastUpdateOlderThen("Heating_Operating_Mode",now.minusMinutes(Heating.MIN_HEATING_TIME))
+                isRunningLongEnough = itemLastChangeOlderThen("Heating_Operating_Mode",now.minusMinutes(Heating.MIN_HEATING_TIME))
                 
                 if currentPowerState == 0 or forceRetry or isRunningLongEnough:
                     self.activeHeatingOperatingMode = 1
@@ -693,7 +693,7 @@ class HeatingControlRule():
                 # TODO also if Heating_Power is going from 0 to 65 and one minute later from 65 to 0 is a hint for a unsuccessful start
                 
                 # No burner starts since a while
-                if itemLastUpdateOlderThen("Heating_Power",now.minusMinutes(5)) and itemLastUpdateOlderThen("Heating_Operating_Mode",now.minusMinutes(5)):
+                if itemLastChangeOlderThen("Heating_Power",now.minusMinutes(5)) and itemLastChangeOlderThen("Heating_Operating_Mode",now.minusMinutes(5)):
                     forceReducedMsg = u" • No burner starts"
                 else:
                     burnerStarts = self.getBurnerStarts(now)
@@ -730,7 +730,7 @@ class HeatingControlRule():
                 #self.log.info(u"E {}".format(targetReducedTime))
                     
                 # Dauernd reduziert läuft seit mindestens XX Minuten
-                if forceRetry or itemLastUpdateOlderThen("Heating_Operating_Mode",now.minusMinutes(targetReducedTime) ):
+                if forceRetry or itemLastChangeOlderThen("Heating_Operating_Mode",now.minusMinutes(targetReducedTime) ):
                     self.activeHeatingOperatingMode = 2
                     sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
                 elif not forceRetry:

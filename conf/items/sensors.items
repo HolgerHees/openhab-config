@@ -139,13 +139,13 @@ Switch SoilMoistSensor6Enabled "Pflanze 6" <selfautomode>
 //######## Weatherstation ############
 Group Weatherstation "Wetterstation"
 
-String WeatherStation_Update_Message      "Letzte Änderung [%s]"        <time>
-Switch WeatherStation_Is_Working          "Aktiv [%d]"                  <time>
+String WeatherStation_Update_Message      "Letzte Änderung [%s]"        <selfclock>
+Switch WeatherStation_Is_Working          "Aktiv [%d]"                  <selfclock>
 
-Number WeatherStation_Battery_Level       "Batterie Level [%d %%]"      <battery>
-Number WeatherStation_Battery_Voltage     "Batterie Spannung [%d mV]"	<energy> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/0/#:state:default]"}
-Number WeatherStation_Battery_Current	  "Batterie Strom [%.1f mA]"	<energy> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/1/#:state:default]"}
-String WeatherStation_Battery_Message 	  "Batterie [%s]"	<battery>
+Number WeatherStation_Battery_Level       "Batterie Level [%d %%]"      <selfbattery>
+Number WeatherStation_Battery_Voltage     "Batterie Spannung [%d mV]"	<selfenergy> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/0/#:state:default]"}
+Number WeatherStation_Battery_Current	  "Batterie Strom [%.1f mA]"	<selfenergy> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/1/#:state:default]"}
+String WeatherStation_Battery_Message 	  "Batterie [%s]"	<selfbattery>
 
 Number WeatherStation_Rain_Counter        "Regen Counter [%d]"	<selfrain>	(PersistentHistory)
 Number WeatherStation_Rain_Current 		  "Regen [%.1f mm]"			<chart>
@@ -171,18 +171,18 @@ Number WeatherStation_Humidity            "Luftfeuchtigkeit [%.1f %%]"	<humidity
 String WeatherStation_Air_Message 		  "Luft [%s]"	<selftemperature>
 
 Number WeatherStation_Pressure            "Luftdruck [%.1f hPa]"	<selfruntime> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/10/#:state:default]"}
-Number WeatherStation_Solar_Power_Raw     "Sonnenkraft [%.1f °C]"	<sun> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/11/#:state:default]"}
-Number WeatherStation_Solar_Power         "Sonnenkraft [%.1f Watt/m²]"	<sun>
-Number WeatherStation_Solar_Power_Test1   "Sonnenkraft Cur. [%.1f Watt/m²]"	<sun>
-Number WeatherStation_Solar_Power_Test2   "Sonnenkraft Max. [%.1f Watt/m²]"	<sun>
-Number WeatherStation_Light_Level         "Helligkeit [%.1f lux]"	<sun> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/12/#:state:default]"}
+Number WeatherStation_Solar_Power_Raw     "Sonnenkraft [%.1f °C]"	<selfsun> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/11/#:state:default]"}
+Number WeatherStation_Solar_Power         "Sonnenkraft [%.1f Watt/m²]"	<selfsun>
+Number WeatherStation_Solar_Power_Test1   "Sonnenkraft Cur. [%.1f Watt/m²]"	<selfsun>
+Number WeatherStation_Solar_Power_Test2   "Sonnenkraft Max. [%.1f Watt/m²]"	<selfsun>
+Number WeatherStation_Light_Level         "Helligkeit [%.1f lux]"	<selfsun> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/12/#:state:default]"}
 
-Number WeatherStation_UV_Index            "UV Index [%.1f]"	<sun>
-Number WeatherStation_UV_A_Raw            "UV A [%.1f]"	<sun> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/13/#:state:default]"}
-Number WeatherStation_UV_A                "UV A [%.1f]"	<sun>
-Number WeatherStation_UV_B_Raw            "UV B [%.1f]"	<sun> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/14/#:state:default]"}
-Number WeatherStation_UV_B                "UV B [%.1f]"	<sun>
-String WeatherStation_UV_Message 		  "UV Index [%s]"	<sun>
+Number WeatherStation_UV_Index            "UV Index [%.1f]"	<selfsun>
+Number WeatherStation_UV_A_Raw            "UV A [%.1f]"	<selfsun> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/13/#:state:default]"}
+Number WeatherStation_UV_A                "UV A [%.1f]"	<selfsun>
+Number WeatherStation_UV_B_Raw            "UV B [%.1f]"	<selfsun> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/14/#:state:default]"}
+Number WeatherStation_UV_B                "UV B [%.1f]"	<selfsun>
+String WeatherStation_UV_Message 		  "UV Index [%s]"	<selfsun>
 
 //######## ZUNO #############
 //Number ZunoWeatherStation_Temperature "Temperature" <selfautomode> { channel="zwave:zuno_weatherstation_00_000:controller:Weatherstation:sensor_temperature" }

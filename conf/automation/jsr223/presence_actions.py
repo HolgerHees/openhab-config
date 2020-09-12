@@ -1,6 +1,6 @@
 import urllib2
 
-from custom.helper import rule, getNow, getItemState, itemLastUpdateOlderThen, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged, createTimer
+from custom.helper import rule, getNow, getItemState, itemLastChangeOlderThen, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged, createTimer
 from core.triggers import ItemStateChangeTrigger
 
 
@@ -38,7 +38,7 @@ class ArrivingActionRule:
                 self.isArriving = False
         # 10 minutes matches the max time ranges used by presence detection to ping phones => see pingdevice thing configuration
         # it can happen that State_Presence changes after Door_FF_Floor was opened
-        elif itemLastUpdateOlderThen("Door_FF_Floor", getNow().minusMinutes(10)):
+        elif itemLastChangeOlderThen("Door_FF_Floor", getNow().minusMinutes(10)):
             self.isArriving = input["event"].getItemState().intValue() == 1 and input["oldState"].intValue() == 0
             if self.isArriving:
                 self.arrivingTimer = createTimer(60, self.arrivingCallback )

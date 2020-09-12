@@ -1,4 +1,4 @@
-from custom.helper import log, rule, itemLastUpdateOlderThen, getNow, getItemState, postUpdate, sendNotification
+from custom.helper import log, rule, itemLastChangeOlderThen, getNow, getItemState, postUpdate, sendNotification
 from core.triggers import ItemStateChangeTrigger
 
 
@@ -48,7 +48,7 @@ class WakeupRule:
         # only possible if we are sleeping
         if getItemState("State_Presence").intValue() == 2:
             # sometimes the "Lights_FF" state switches back and forth for a couple of milliseconds when set "Lights_FF" state to OFF
-            if itemLastUpdateOlderThen("State_Presence",getNow().minusSeconds(5)):
+            if itemLastChangeOlderThen("State_Presence",getNow().minusSeconds(5)):
                 postUpdate("State_Presence", 1)
                 sendNotification(u"System", u"Guten Morgen")
 

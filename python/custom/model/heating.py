@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import math
 
-from custom.helper import getNow, getItemState, itemLastUpdateOlderThen, getItemLastUpdate, getStableItemState
+from custom.helper import getNow, getItemState, itemLastUpdateOlderThen, itemLastChangeOlderThen, getItemLastUpdate, getStableItemState
 from custom.model.sun import SunRadiation
 
 from org.eclipse.smarthome.core.library.types import OnOffType
@@ -152,10 +152,10 @@ class Heating(object):
             self.cache[itemName] = getItemState(itemName)
         return self.cache[itemName]
       
-    def cachedItemLastUpdateOlderThen(self,itemName,minutes):
+    def cachedItemLastChangeOlderThen(self,itemName,minutes):
         key = u"update-{}-{}".format(itemName,minutes)
         if key not in self.cache:
-            self.cache[key] = itemLastUpdateOlderThen( itemName, self.now.minusMinutes(minutes) )
+            self.cache[key] = itemLastChangeOlderThen( itemName, self.now.minusMinutes(minutes) )
         return self.cache[key]
 
     def getVentilationEnergy(self,tempDiffOffset):
@@ -223,7 +223,7 @@ class Heating(object):
             closedWindowEnergy = closedWindowEnergy + cooling
 
             if transition.getContactItem() != None and self.getCachedItemState(transition.getContactItem()) == OpenClosedType.OPEN:
-                if self.cachedItemLastUpdateOlderThen(transition.getContactItem(), 10 if isForecast else 2):
+                if self.cachedItemLastChangeOlderThen(transition.getContactItem(), 10 if isForecast else 2):
                     openWindowCount = openWindowCount + 1
 
             if isinstance(transition,Window) and transition.getRadiationArea() != None:

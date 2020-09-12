@@ -1,8 +1,7 @@
 Strategies {
-	default = everyChange, restoreOnStartup
+	default = everyUpdate, restoreOnStartup
 }
 
 Items {
-	Weatherstation* : strategy = everyUpdate, restoreOnStartup
-	//* : strategy = everyChange, restoreOnStartup
+	* : strategy = everyUpdate, restoreOnStartup
 }

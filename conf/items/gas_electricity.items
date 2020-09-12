@@ -41,4 +41,4 @@ Number Solar_DC_Current						    "DC Strom [%.2f A]"	            <selfenergy_sol
 Number Solar_DC_Voltage						    "DC Spannung [%.2f V]"	        <selfenergy_solar>                                            { channel="modbus:data:solarGarage:power:dc_voltage:number" } 
 Number Solar_DC_Power						    "DC Leistung [%d W]"	        <selfenergy_solar>                                            { channel="modbus:data:solarGarage:power:dc_power:number" } 
 Number Solar_AC_Power						    "AC Leistung [%d W]"	        <selfenergy_solar>        (PersistentChart,PersistentHistory) { channel="modbus:data:solarGarage:power:ac_power:number" } 
-Number Solar_Power_Limitation					"Wirkleistungsbegrenzung [%d %%]" <selfenergy_solar>                                          { channel="modbus:data:solarGarage:control:power_limitation:number" }
+Number Solar_Power_Limitation					"Wirkleistungsbegrenzung [%d %%]" <selfenergy_solar>      (PersistentHistory)                 { channel="modbus:data:solarGarage:control:power_limitation:number" }

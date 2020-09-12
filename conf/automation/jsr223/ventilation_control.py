@@ -1,6 +1,6 @@
 import math
 
-from custom.helper import rule, getNow, itemLastUpdateOlderThen, getItemState, postUpdate, postUpdateIfChanged, \
+from custom.helper import rule, getNow, itemLastChangeOlderThen, getItemState, postUpdate, postUpdateIfChanged, \
     sendCommand
 from core.triggers import CronTrigger, ItemCommandTrigger, ItemStateChangeTrigger
 
@@ -174,7 +174,7 @@ class FilterFanLevelRule:
             defaultLevel = 2    # Level 1
             coolingLevel = 2    # Level 1
         # Away since 30 minutes
-        elif presenceSate == 0 and itemLastUpdateOlderThen("State_Presence", getNow().minusMinutes(60)):
+        elif presenceSate == 0 and itemLastChangeOlderThen("State_Presence", getNow().minusMinutes(60)):
             reducedLevel = 1    # Level A
             defaultLevel = 2    # Level 1
             coolingLevel = 3    # Level 2
@@ -196,7 +196,7 @@ class FilterFanLevelRule:
                 # must be > 1. Otherwise cangedSince dows not work propperly
                 waitBeforeChange = 2
 
-            if itemLastUpdateOlderThen("Ventilation_Fan_Level", getNow().minusMinutes(waitBeforeChange)):
+            if itemLastChangeOlderThen("Ventilation_Fan_Level", getNow().minusMinutes(waitBeforeChange)):
                 global autoChangeInProgress
                 autoChangeInProgress = True
 

@@ -2,19 +2,19 @@
 Group Heating_Temperatures
 Group Solar_Temperatures
 
-Switch Heating_FF_Livingroom_Circuit		"Wohnzimmer Kreis"		<selfsettings>	{ channel="knx:device:bridge:heating_ff:livingroomCircuit" }
-Switch Heating_FF_Floor_Circuit				"Flur unten Kreis"		<selfsettings>	{ channel="knx:device:bridge:heating_ff:floorCircuit" }
-Switch Heating_FF_Guestroom_Circuit			"Gästezimmer Kreis"		<selfsettings>	{ channel="knx:device:bridge:heating_ff:guestroomCircuit" }
-Switch Heating_FF_GuestWC_Circuit			"Gäste WC Kreis"		<selfsettings>	{ channel="knx:device:bridge:heating_ff:guestWCCircuit" }
-Switch Heating_FF_GuestWC_HK			    "Gäste WC HK"	    	<selfsettings>	{ channel="knx:device:bridge:heating_ff:guestWCHK" }
+Switch Heating_FF_Livingroom_Circuit		"Wohnzimmer Kreis"		<selfsettings>	(PersistentHistory) { channel="knx:device:bridge:heating_ff:livingroomCircuit" }
+Switch Heating_FF_Floor_Circuit				"Flur unten Kreis"		<selfsettings>	(PersistentHistory) { channel="knx:device:bridge:heating_ff:floorCircuit" }
+Switch Heating_FF_Guestroom_Circuit			"Gästezimmer Kreis"		<selfsettings>	(PersistentHistory) { channel="knx:device:bridge:heating_ff:guestroomCircuit" }
+Switch Heating_FF_GuestWC_Circuit			"Gäste WC Kreis"		<selfsettings>	(PersistentHistory) { channel="knx:device:bridge:heating_ff:guestWCCircuit" }
+Switch Heating_FF_GuestWC_HK			    "Gäste WC HK"	    	<selfsettings>	(PersistentHistory) { channel="knx:device:bridge:heating_ff:guestWCHK" }
 
-Switch Heating_SF_Floor_Circuit				"Flur oben Kreis"		<selfsettings>	{ channel="knx:device:bridge:heating_sf:floorCircuit" }
-Switch Heating_SF_Child1_Circuit			"Kind 1 Kreis"			<selfsettings>	{ channel="knx:device:bridge:heating_sf:child1Circuit" }
-Switch Heating_SF_Child2_Circuit			"Kind 2 Kreis"			<selfsettings>	{ channel="knx:device:bridge:heating_sf:child2Circuit" }
-Switch Heating_SF_Bedroom_Circuit			"Schlafzimmer Kreis"	<selfsettings>	{ channel="knx:device:bridge:heating_sf:bedroomCircuit" }
+Switch Heating_SF_Floor_Circuit				"Flur oben Kreis"		<selfsettings>	(PersistentHistory) { channel="knx:device:bridge:heating_sf:floorCircuit" }
+Switch Heating_SF_Child1_Circuit			"Kind 1 Kreis"			<selfsettings>	(PersistentHistory) { channel="knx:device:bridge:heating_sf:child1Circuit" }
+Switch Heating_SF_Child2_Circuit			"Kind 2 Kreis"			<selfsettings>	(PersistentHistory) { channel="knx:device:bridge:heating_sf:child2Circuit" }
+Switch Heating_SF_Bedroom_Circuit			"Schlafzimmer Kreis"	<selfsettings>	(PersistentHistory) { channel="knx:device:bridge:heating_sf:bedroomCircuit" }
 //Number Heating_SF_Dressingroom_Circuit		"Ankleide Kreis"		<selfsettings>	{ channel="knx:device:bridge:heating_sf:dressingroomCircuit" }
-Switch Heating_SF_Bathroom_Circuit			"Badezimmer Kreis"		<selfsettings>	{ channel="knx:device:bridge:heating_sf:bathroomCircuit" }
-Switch Heating_SF_Bathroom_HK       		"Badezimmer HK"		    <selfsettings>	{ channel="knx:device:bridge:heating_sf:bathroomHK" }
+Switch Heating_SF_Bathroom_Circuit			"Badezimmer Kreis"		<selfsettings>	(PersistentHistory) { channel="knx:device:bridge:heating_sf:bathroomCircuit" }
+Switch Heating_SF_Bathroom_HK       		"Badezimmer HK"		    <selfsettings>	(PersistentHistory) { channel="knx:device:bridge:heating_sf:bathroomHK" }
 
 Number Heating_FF_GuestWC_Charged			"Gäste WC Geladen"		<selfsettings>
 Number Heating_FF_Livingroom_Charged		"Wohnzimmer Geladen"	<selfsettings>

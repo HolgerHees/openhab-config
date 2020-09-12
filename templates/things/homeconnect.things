@@ -1,0 +1,5 @@
+Bridge homeconnect:api_bridge:default "Home Connect API" [ clientId="{vault_homecontrol_client_id}", clientSecret="{vault_homecontrol_client_secret}", simulator=false] {
+    // Thing configurations
+    Thing washer washer "Washer"  [ haId="{vault_homecontrol_washer}" ]
+}
+ 

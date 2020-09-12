@@ -1,6 +1,6 @@
 import time
 
-from custom.helper import rule, getNow, itemLastUpdateOlderThen, getItemState, sendNotification, postUpdate, postUpdateIfChanged, sendCommand
+from custom.helper import rule, getNow, itemLastChangeOlderThen, getItemState, sendNotification, postUpdate, postUpdateIfChanged, sendCommand
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 
@@ -166,6 +166,6 @@ class RoombaAutomaticRule:
                 and getItemState("roomba_batPct").intValue() >= 100 \
                 and getItemState("roomba_error") == OFF \
                 and getItemState("roomba_full") == OFF:
-            if itemLastUpdateOlderThen("roomba_cleaning_state", getNow().minusMinutes(360)) \
-                    and itemLastUpdateOlderThen("State_Presence", getNow().minusMinutes(60)):
+            if itemLastChangeOlderThen("roomba_cleaning_state", getNow().minusMinutes(360)) \
+                    and itemLastChangeOlderThen("State_Presence", getNow().minusMinutes(60)):
                 sendCommand("roomba_command", "start")

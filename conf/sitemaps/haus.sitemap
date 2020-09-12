@@ -156,8 +156,30 @@ sitemap haus label="Main Menu"
                 }
 			}
 		}
-		Group label="Roboter [%s]" item=RoboterStatus icon="roomba" valuecolor=[=="Alles normal"="#6bc305",!="Alles normal"="#d72a2a"] {
+		Group label="Geräte [%s]" item=RoboterStatus icon="roomba" valuecolor=[=="Alles normal"="#6bc305",!="Alles normal"="#d72a2a"] {
             Frame label="Haus" {
+                Text label="Waschmaschine [%s]" item=Washer_Message icon="whitegood" {
+                    Frame label="Status" {
+                        Text item=Washer_ProgramProgressState
+                        Text item=Washer_RemainingProgramTimeState
+                        Text item=Washer_OperationState
+                        Text item=Washer_DoorState
+                    }
+                    Frame label="Programm" {
+                        Text item=Washer_ActiveProgramState
+                        Text item=Washer_SelectedProgramState
+                        Text item=Washer_WashingProgramTemperature
+                        Text item=Washer_WashingProgramSpinSpeed
+                        Text item=Washer_WashingProgramDosingLevel1
+                        Text item=Washer_WashingProgramDosingLevel2
+                        Text item=Washer_WashingProgramActions
+                    }
+                    Frame label="Sonstiges" {
+                        Text item=Washer_RemoteStartAllowanceState
+                        Text item=Washer_RemoteControlActiveState
+                        Text item=Washer_LocalControlActiveState
+                    }
+                }
                 Text label="Roomba" item=roomba_StatusFormatted icon="roomba"{
                     Frame label="Status" {
                         Text item=roomba_batPct
