@@ -281,7 +281,7 @@ class WeatherstationWindRule:
             direction = "Nordwest"
         
         msg = u""
-        if getItemState("WeatherStation_Wind_Speed").intValue() == 0:
+        if getItemState("WeatherStation_Wind_Speed").doubleValue() == 0:
             msg = u"Ruhig"
         else:
             msg = u"{} km/h, {}".format(getItemState("WeatherStation_Wind_Speed").format("%.1f"),direction)

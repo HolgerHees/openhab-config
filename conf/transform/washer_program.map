@@ -1,5 +1,7 @@
 Mix=Schnell/Mix
 LaundryCare.Washer.Program.Mix=Schnell/Mix
+Night\ Wash=Schnell/Mix leise
+LaundryCare.Washer.Program.Mix.NightWash=Schnell/Mix leise
 Cotton=Baumwolle
 LaundryCare.Washer.Program.Cotton=Baumwolle
 Cotton\ Eco=Baumwolle/Eco
@@ -40,5 +42,7 @@ Towels=Handtücher
 LaundryCare.Washer.Program.Towels=Handtücher
 Water\ Proof=Wasserdicht
 LaundryCare.Washer.Program.WaterProof=Wasserdicht
+Super1530=Extra Kurz
+LaundryCare.Washer.Program.Super153045.Super1530=Extra Kurz
 -=Aus
 NULL=Aus

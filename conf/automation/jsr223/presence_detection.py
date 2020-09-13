@@ -1,7 +1,6 @@
 from custom.helper import log, rule, itemLastChangeOlderThen, getNow, getItemState, postUpdate, sendNotification
 from core.triggers import ItemStateChangeTrigger
 
-
 @rule("presence_detection.py")
 class PresenceCheckRule:
     def __init__(self):
@@ -14,7 +13,7 @@ class PresenceCheckRule:
         itemName = input['event'].getItemName()
         itemState = input['event'].getItemState()
         
-        sendNotification(u"{}".format(itemName), u"{}".format(itemState))
+        #sendNotification(u"{}".format(itemName), u"{}".format(itemState), recipient='bot1')
         
         holgerPhone = itemState if itemName == "State_Holger_Presence" else getItemState("State_Holger_Presence")
         sandraPhone = itemState if itemName == "State_Sandra_Presence" else getItemState("State_Sandra_Presence")
