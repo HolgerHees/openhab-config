@@ -196,7 +196,9 @@ class FilterFanLevelRule:
                 # must be > 1. Otherwise cangedSince dows not work propperly
                 waitBeforeChange = 2
 
-            if itemLastChangeOlderThen("Ventilation_Fan_Level", getNow().minusMinutes(waitBeforeChange)):
+            isModeUpdate = 'event' in input.keys() and input['event'].getItemName() == "Ventilation_Auto_Mode"
+            
+            if isModeUpdate or itemLastChangeOlderThen("Ventilation_Fan_Level", getNow().minusMinutes(waitBeforeChange)):
                 global autoChangeInProgress
                 autoChangeInProgress = True
 
