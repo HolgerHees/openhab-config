@@ -16,8 +16,8 @@
 
 <script>
     listener = new InitializedListener();
-    addGrafanaPanel("Weatherstation_Level"   , listener.generateParams( "weatherstation/wetterstation", 17,17,17 ) );
-    addGrafanaPanel("Weatherstation_Voltage_Current"       , listener.generateParams( "weatherstation/wetterstation", 18,18,18 ) );
+    addGrafanaPanel("Weatherstation_Rain_Amount" , listener.generateParams( "weatherstation/wetterstation", 8,10,10 ) );
+    addGrafanaPanel("Weatherstation_Rain_Rate"   , listener.generateParams( "weatherstation/wetterstation", 20,20,20 ) );
     listener.initIFrames();
 </script>
 

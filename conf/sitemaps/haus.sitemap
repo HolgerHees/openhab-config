@@ -465,6 +465,10 @@ sitemap haus label="Main Menu"
                             Text item=WeatherStation_Rain_Counter
                             Text item=WeatherStation_Rain_Impulse
                             Text item=WeatherStation_Rain_Rate
+                            Frame label="Auswertung" {
+                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/grafana/weatherstation_rain.html?fromItem=Chart_From" icon=none height=12
+                            }
                         }
                         Text item=WeatherStation_Wind_Message {
                             Text item=WeatherStation_Wind_Speed
@@ -514,7 +518,7 @@ sitemap haus label="Main Menu"
                             Text item=WeatherStation_Battery_Current
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/weatherstation_battery.html?fromItem=Chart_From" icon=none height=18
+                                Webview url="/static/grafana/weatherstation_battery.html?fromItem=Chart_From" icon=none height=12
                             }
                         }*/
                         Text item=WeatherStation_Battery_Message valuecolor=[WeatherStation_Battery_Current>=0="#6bc305"] {
@@ -523,7 +527,7 @@ sitemap haus label="Main Menu"
                             Text item=WeatherStation_Battery_Current
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/weatherstation_battery.html?fromItem=Chart_From" icon=none height=18
+                                Webview url="/static/grafana/weatherstation_battery.html?fromItem=Chart_From" icon=none height=12
                             }
                         }
                         Text item=WeatherStation_Update_Message visibility=[WeatherStation_Is_Working!=OFF] valuecolor=[!=""="#6bc305"]
