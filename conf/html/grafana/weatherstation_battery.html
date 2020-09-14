@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-type" CONTENT="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="css/panel.css" />
+    <script src="js/smarthome-grafana.js"></script>
+    <script src="js/smarthome-grafana-user-defaults.js"></script>
+    <script src="js/helper.js"></script>
+    <style>
+    .panel-container { height: 33%; }
+    </style>
+</head>
+
+<body>
+</body>
+
+<script>
+    listener = new InitializedListener();
+    addGrafanaPanel("Weatherstation_Level"   , listener.generateParams( "weatherstation/wetterstation", 17,17,17 ) );
+    addGrafanaPanel("Weatherstation_Voltage"       , listener.generateParams( "weatherstation/wetterstation", 18,18,18 ) );
+    addGrafanaPanel("Weatherstation_Current"   , listener.generateParams( "weatherstation/wetterstation", 19,19,19 ) );
+    listener.initIFrames();
+</script>
+
+</html>

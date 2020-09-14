@@ -168,12 +168,12 @@ Switch 		Dooropener_Timer 					"Türoffner" 							<selfdoor> 		(FF_Floor)
 Group 		Watering 							"Bewässerung [%d]" 						<selfwater>
 Group:Switch:OR(ON, OFF) Watering_Circuits 		"Bewässerung [%d]" 						<selfwater>		(Watering)
 
-Switch Watering_Gardenside_Lawn_left			"Bewässerung Rasen links"	<selfwater>		(Watering_Circuits)	{ channel="knx:device:bridge:wattering:gardensideLawnLeft" }
-Switch Watering_Gardenside_Lawn_right			"Bewässerung Rasen rechts"	<selfwater>		(Watering_Circuits)	{ channel="knx:device:bridge:wattering:gardensideLawnRight" }
-Switch Watering_Gardenside_Beds_front			"Bewässerung Beete Terasse"	<selfwater>		(Watering_Circuits)	{ channel="knx:device:bridge:wattering:gardensideBedsFront" }
-Switch Watering_Gardenside_Beds_back			"Bewässerung Beete hinten"	<selfwater>		(Watering_Circuits)	{ channel="knx:device:bridge:wattering:gardensideBedsBack" }
-Switch Watering_Streetside_Lawn					"Bewässerung Rasen vorne"	<selfwater>		(Watering_Circuits)	{ channel="knx:device:bridge:wattering:streetsideLawn" }
-Switch Watering_Streetside_Beds					"Bewässerung Beete vornee"	<selfwater>		(Watering_Circuits)	{ channel="knx:device:bridge:wattering:streetsideBeds" }
+Switch Watering_Gardenside_Lawn_left			"Bewässerung Rasen links"	<selfwater>		(Watering_Circuits,PersistentHistory)	{ channel="knx:device:bridge:wattering:gardensideLawnLeft" }
+Switch Watering_Gardenside_Lawn_right			"Bewässerung Rasen rechts"	<selfwater>		(Watering_Circuits,PersistentHistory)	{ channel="knx:device:bridge:wattering:gardensideLawnRight" }
+Switch Watering_Gardenside_Beds_front			"Bewässerung Beete Terasse"	<selfwater>		(Watering_Circuits,PersistentHistory)	{ channel="knx:device:bridge:wattering:gardensideBedsFront" }
+Switch Watering_Gardenside_Beds_back			"Bewässerung Beete hinten"	<selfwater>		(Watering_Circuits,PersistentHistory)	{ channel="knx:device:bridge:wattering:gardensideBedsBack" }
+Switch Watering_Streetside_Lawn					"Bewässerung Rasen vorne"	<selfwater>		(Watering_Circuits,PersistentHistory)	{ channel="knx:device:bridge:wattering:streetsideLawn" }
+Switch Watering_Streetside_Beds					"Bewässerung Beete vornee"	<selfwater>		(Watering_Circuits,PersistentHistory)	{ channel="knx:device:bridge:wattering:streetsideBeds" }
 
 String Watering_Program_State					"Status [%s]"				<selfinfo>		(Watering)
 

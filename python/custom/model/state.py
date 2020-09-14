@@ -153,6 +153,12 @@ class HouseState(State):
     def getReferenceTemperature(self):
         return self.referenceTemperature
       
+    def setCloudCover(self,value):
+        self.cloudCover = value
+
+    def getCloudCover(self):
+        return self.cloudCover
+
     def setSunSouthRadiation(self,value):
         self.sunSouthRadiation = value
         
@@ -164,6 +170,18 @@ class HouseState(State):
 
     def getSunWestRadiation(self):
         return self.sunWestRadiation
+
+    def setSunSouthRadiationMax(self,value):
+        self.sunSouthRadiationMax = value
+        
+    def getSunSouthRadiationMax(self):
+        return self.sunSouthRadiationMax
+
+    def setSunWestRadiationMax(self,value):
+        self.sunWestRadiationMax = value
+
+    def getSunWestRadiationMax(self):
+        return self.sunWestRadiationMax
 
     def setSunDebugInfo(self,value):
         self.sunDebugInfo = value

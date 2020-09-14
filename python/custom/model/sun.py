@@ -4,6 +4,8 @@ import time
 import math
 from org.joda.time import DateTimeZone
 
+from custom.helper import getItemState
+
 class SunRadiation(object): 
     @staticmethod
     def _getSunData( time ):
@@ -35,13 +37,13 @@ class SunRadiation(object):
         return elevation, azimut
 
     @staticmethod
-    def getSunPowerPerMinute( referenceTime, cloudCover ):
+    def getSunPowerPerHour( referenceTime, cloudCover, currentRadiation = None ):
 
         elevation, azimut = SunRadiation._getSunData( referenceTime )
 
         # 125° 1/2 der Hauswand	
         southMultiplier = 0
-        if azimut >= 150 and azimut <= 260 and elevation >= 10.0:
+        if azimut >= 150 and azimut <= 260 and ( currentRadiation != None or elevation >= 10.0 ):
             # 100° (0) => -1 (0)
             # 260° (160) => 1 (2)
             southX = ( ( azimut - 100.0 ) * 2.0 / 160.0 ) - 1.0
@@ -52,7 +54,7 @@ class SunRadiation(object):
         if azimut >= 220 and azimut <= 285:
             #10 -> 20
             minElevation = ( ( azimut - 220 ) * 10.0 / 65.0 ) + 10.0
-            if elevation >= minElevation:
+            if currentRadiation != None or elevation >= minElevation:
                 # https://rechneronline.de/funktionsgraphen/
                 # 190° (0) => -1 (0)
                 # 350° (160) => 1 (2)           
@@ -65,20 +67,23 @@ class SunRadiation(object):
         # in the morning the sun must be above 20°
         # and in the evening the sun must be above 10°
         if southActive or westActive:
-            _usedRadians = math.radians(elevation)
-            if _usedRadians < 0.0: _usedRadians = 0.0
-            
-            # Cloud Cover is between 0 and 9 - but converting to 0 and 8
-            # https://en.wikipedia.org/wiki/Okta
-            _cloudCover = cloudCover
-            if _cloudCover > 8.0: _cloudCover = 8.0
-            _cloudCoverFactor = _cloudCover / 8.0
-            
-            # http://www.shodor.org/os411/courses/_master/tools/calculators/solarrad/
-            # http://scool.larc.nasa.gov/lesson_plans/CloudCoverSolarRadiation.pdf
-            _maxRadiation = 990.0 * math.sin( _usedRadians ) - 30.0
-            if _maxRadiation < 0.0: _maxRadiation = 0.0
-            _currentRadiation = _maxRadiation * ( 1.0 - 0.75 * math.pow( _cloudCoverFactor, 3.4 ) )
+            if currentRadiation is None:
+                _usedRadians = math.radians(elevation)
+                if _usedRadians < 0.0: _usedRadians = 0.0
+                
+                # Cloud Cover is between 0 and 9 - but converting to 0 and 8
+                # https://en.wikipedia.org/wiki/Okta
+                _cloudCover = cloudCover
+                if _cloudCover > 8.0: _cloudCover = 8.0
+                _cloudCoverFactor = _cloudCover / 8.0
+                
+                # http://www.shodor.org/os411/courses/_master/tools/calculators/solarrad/
+                # http://scool.larc.nasa.gov/lesson_plans/CloudCoverSolarRadiation.pdf
+                _maxRadiation = 990.0 * math.sin( _usedRadians ) - 30.0
+                if _maxRadiation < 0.0: _maxRadiation = 0.0
+                _currentRadiation = _maxRadiation * ( 1.0 - 0.75 * math.pow( _cloudCoverFactor, 3.4 ) )
+            else:
+                _currentRadiation = currentRadiation
 
             _effectiveSouthRadiation = _currentRadiation * southMultiplier
             _effectiveWestRadiation = _currentRadiation * westMultiplier
@@ -103,7 +108,7 @@ class SunRadiation(object):
         return _effectiveSouthRadiation, _effectiveWestRadiation, debugInfo
 
     @staticmethod
-    def getWindowSunPowerPerMinute( area, radiation ):
+    def getWindowSunPowerPerHour( area, radiation ):
         # https://de.wikipedia.org/wiki/Energiedurchlassgrad
         # https://www.fensterversand.com/info/qualitaet/g-wert-fenster.php
         # https://www.fensterversand.com/fenster/verglasung/dreifachverglasung.php
@@ -111,6 +116,6 @@ class SunRadiation(object):
         return area * radiation * 0.55
 
     @staticmethod
-    def getWallSunPowerPerMinute( area, radiation ):
+    def getWallSunPowerPerHour( area, radiation ):
         # 66.2 is the lazyness of the wall
         return area * radiation / 66.2

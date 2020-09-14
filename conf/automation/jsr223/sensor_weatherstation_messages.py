@@ -2,11 +2,13 @@ from custom.helper import rule, getNow, getItemState, getHistoricItemState, getM
 from core.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
 from core.actions import Mqtt
 
+from custom.model.sun import SunRadiation
+
 import math
 
 OFFSET_TEMPERATURE  = 1.1
 OFFSET_HUMIDITY     = 7.5
-OFFSET_WIND_DIRECTION = 0
+OFFSET_WIND_DIRECTION = -135
 
 OFFSET_NTC = -0.1
 
@@ -259,26 +261,28 @@ class WeatherstationWindRule:
             direction = input['event'].getItemState().intValue() + OFFSET_WIND_DIRECTION
             if direction > 360:
                 direction -= 360
+            elif direction < 0:
+                direction += 360
             postUpdate("WeatherStation_Wind_Direction",direction)            
         else:
             direction = getItemState("WeatherStation_Wind_Direction").intValue()
 
         if direction >= 338 or direction < 23: 
-             direction = "Nord"
+             direction = u"Nord"
         elif direction < 68: 
-            direction = "Nordost"
+            direction = u"Nordost"
         elif direction < 113: 
-            direction = "Ost"
+            direction = u"Ost"
         elif direction < 158: 
-            direction = "Südost"
+            direction = u"Südost"
         elif direction < 203: 
-            direction = "Süd"
+            direction = u"Süd"
         elif direction < 248: 
-            direction = "Südwest"
+            direction = u"Südwest"
         elif direction < 293: 
-            direction = "West"
+            direction = u"West"
         elif direction < 338: 
-            direction = "Nordwest"
+            direction = u"Nordwest"
         
         msg = u""
         if getItemState("WeatherStation_Wind_Speed").doubleValue() == 0:
@@ -288,6 +292,16 @@ class WeatherstationWindRule:
 
         postUpdateIfChanged("WeatherStation_Wind_Message", msg)
   
+@rule("sensor_weatherstation.py")
+class UpdateWindLast15MinutesRule:
+    def __init__(self):
+        self.triggers = [CronTrigger("0 */15 * * * ?")]
+
+    def execute(self, module, input):
+        value = getMaxItemState("WeatherStation_Wind_Speed", getNow().minusMinutes(15)).doubleValue()
+
+        postUpdateIfChanged("WeatherStation_Wind_Current", value)
+        
 @rule("sensor_weatherstation.py")
 class WeatherstationAirRule:
     def __init__(self):
@@ -358,9 +372,23 @@ class SunPowerRule:
 
         _messuredRadiation = getItemState("WeatherStation_Solar_Power").doubleValue()
         
-        self.log.info(u"SolarPower messured: {}, calculated: {}".format(_messuredRadiation,_currentRadiation))
+        #self.log.info(u"SolarPower messured: {}, calculated: {}".format(_messuredRadiation,_currentRadiation))
             
-            
+#@rule("sensor_weatherstation.py")
+#class SunPowerDebugRule:
+#    def __init__(self):
+#        self.triggers = [CronTrigger("*/5 * * * * ?")]
+#
+#    def execute(self, module, input):
+#      
+#        _currentRadiation = getItemState("WeatherStation_Solar_Power").doubleValue()
+#
+#        sunSouthRadiation, sunWestRadiation, sunDebugInfo = SunRadiation.getSunPowerPerHour(getNow(),getItemState("Cloud_Cover_Current").doubleValue())
+#        self.log.info(u"Berechnet: {} {}".format(sunSouthRadiation, sunWestRadiation))
+#        
+#        sunSouthRadiation, sunWestRadiation, sunDebugInfo = SunRadiation.getSunPowerPerHour(getNow(),getItemState("Cloud_Cover_Current").doubleValue(),_currentRadiation)
+#        self.log.info(u"Gemessen: {} {}".format(sunSouthRadiation, sunWestRadiation))
+ 
 @rule("sensor_weatherstation.py")
 class UVIndexRule:
     def __init__(self):

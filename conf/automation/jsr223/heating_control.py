@@ -1,7 +1,8 @@
 from core.triggers import CronTrigger, ItemStateChangeTrigger
-from custom.helper import rule, getNow, getHistoricItemEntry, getItemState, getItemLastUpdate, sendCommand, sendCommandIfChanged, postUpdate, postUpdateIfChanged, itemLastChangeOlderThen
+from custom.helper import rule, getNow, getHistoricItemEntry, getItemState, getItemLastChange, getItemLastUpdate, sendCommand, sendCommandIfChanged, postUpdate, postUpdateIfChanged, itemLastChangeOlderThen, itemLastUpdateOlderThen, getStableItemState
 from custom.model.heating import Heating
 from custom.model.house import ThermalStorageType, ThermalBridgeType, Wall, Door, Window, Room
+from custom.model.sun import SunRadiation
 
 from org.joda.time import DateTime
 from org.joda.time.format import DateTimeFormat
@@ -537,7 +538,7 @@ class HeatingControlRule():
                         if sendCommandIfChanged(circuitItem,ON):
                             circuitLastChange = now
                         else:
-                            circuitLastChange = getItemLastUpdate(circuitItem)
+                            circuitLastChange = getItemLastChange(circuitItem)
                             
                         if lastCircuitOpenedAt == None or lastCircuitOpenedAt.getMillis() < circuitLastChange.getMillis():
                             lastCircuitOpenedAt = circuitLastChange                            
@@ -568,29 +569,39 @@ class HeatingControlRule():
                 postUpdateIfChanged("Heating_Demand", heatingDemand )
             
                 endMsg = u" • {} min. to go".format(Heating.visualizeHeatingDemandTime(longestRuntime)) if longestRuntime > 0 else u""
-                lastHeatingDemandChange = getItemLastUpdate("Heating_Demand")
-                lastUpdateBeforeInMinutes = int( round( ( now.getMillis() - lastHeatingDemandChange.getMillis() ) / 1000.0 / 60.0 ) )
+                lastHeatingDemandChange = getItemLastUpdate("Heating_Demand") # can be "getItemLastUpdate" datetime, because it is changed only from heating rule
+                lastChangeBeforeInMinutes = int( round( ( now.getMillis() - lastHeatingDemandChange.getMillis() ) / 1000.0 / 60.0 ) )
                 lastHeatingChangeFormatted = OFFSET_FORMATTER.print(lastHeatingDemandChange)
-                lastUpdateBeforeFormatted = lastUpdateBeforeInMinutes if lastUpdateBeforeInMinutes < 60 else '{:02d}:{:02d}'.format(*divmod(lastUpdateBeforeInMinutes, 60));
-                self.log.info(u"Demand  : {} since {} • {} min. ago{}".format(heatingDemand, lastHeatingChangeFormatted, lastUpdateBeforeFormatted,endMsg) )
+                lastChangeBeforeFormatted = lastChangeBeforeInMinutes if lastChangeBeforeInMinutes < 60 else '{:02d}:{:02d}'.format(*divmod(lastChangeBeforeInMinutes, 60));
+                self.log.info(u"Demand  : {} since {} • {} min. ago{}".format(heatingDemand, lastHeatingChangeFormatted, lastChangeBeforeFormatted,endMsg) )
                 
                 self.controlHeating(now,currentOperatingMode,heatingRequested)  
         else:
             self.log.info(u"Demand  : SKIPPED • MANUAL MODE ACTIVE")
 
-        self.setSunStates(cr,hhs)
+        self.setSunStates(now,cr,hhs)
         
         self.log.info(u"--------: <<<" )
 
-    def setSunStates(self, cr, hhs ):
-      
-        effectiveSouthRadiation = cr.getSunSouthRadiation() / 60.0
-        effectiveWestRadiation = cr.getSunWestRadiation() / 60.0
-        
-        #self.log.info(u"{} {}".format(effectiveSouthRadiation,effectiveWestRadiation))
-        
-        #hasRadiation = effectiveSouthRadiation > 0.0 or effectiveWestRadiation > 0.0
+    def setSunStates(self, now, cr, hhs ):
+        cloudCover = cr.getCloudCover()
 
+        _messuredRadiation = getStableItemState(now,"WeatherStation_Solar_Power",10)
+        _sunSouthRadiation, _sunWestRadiation, _sunDebugInfo = SunRadiation.getSunPowerPerHour(now,cloudCover,_messuredRadiation)
+        effectiveSouthRadiationShortTerm = _sunSouthRadiation / 60.0
+        effectiveWestRadiationShortTerm = _sunWestRadiation / 60.0
+        self.log.info(u"Gemessen Avg 10 min: {} {}".format(effectiveSouthRadiationShortTerm, effectiveWestRadiationShortTerm))
+
+        _messuredRadiation = getStableItemState(now,"WeatherStation_Solar_Power",30)
+        _sunSouthRadiation, _sunWestRadiation, _sunDebugInfo = SunRadiation.getSunPowerPerHour(now,cloudCover,_messuredRadiation)
+        effectiveSouthRadiationLongTerm = _sunSouthRadiation / 60.0
+        effectiveWestRadiationLongTerm = _sunWestRadiation / 60.0
+        self.log.info(u"Gemessen Avg 20 min: {} {}".format(effectiveSouthRadiationLongTerm, effectiveWestRadiationLongTerm))
+      
+        effectiveSouthRadiationMax = cr.getSunSouthRadiationMax() / 60.0
+        effectiveWestRadiationMax = cr.getSunWestRadiationMax() / 60.0
+        self.log.info(u"Max: {} {}".format(effectiveSouthRadiationMax, effectiveWestRadiationMax))
+      
         currentOutdoorTemperature = cr.getReferenceTemperature()
 
         fallbackTargetTemperature = hhs.getHeatingState("FF_Livingroom").getHeatingTargetTemperature()
@@ -606,24 +617,65 @@ class HeatingControlRule():
                   
                 currentRoomTemperature = rs.getCurrentTemperature()
 
-                effectiveRadiation = effectiveSouthRadiation if transition.getDirection() == 'south' else effectiveWestRadiation
+                effectiveRadiationShortTerm = effectiveSouthRadiationShortTerm if transition.getDirection() == 'south' else effectiveWestRadiationShortTerm
+                effectiveRadiationLongTerm = effectiveSouthRadiationLongTerm if transition.getDirection() == 'south' else effectiveWestRadiationLongTerm
+                effectiveRadiationMax = effectiveSouthRadiationMax if transition.getDirection() == 'south' else effectiveWestRadiationMax
 
                 if getItemState(transition.getSunProtectionItem()) == ON:
-                    targetRoomTemperature = targetRoomTemperature - 0.6
-                    
-                    if effectiveRadiation < 3.7 or currentRoomTemperature < targetRoomTemperature or currentOutdoorTemperature < targetRoomTemperature:
-                        postUpdate(transition.getSunProtectionItem(), OFF )
-                        self.log.info(u"DEBUG: SP switching off {} {} {} {} {}".format(room.getName(),effectiveRadiation,currentRoomTemperature,currentOutdoorTemperature,targetRoomTemperature))
-                    #else:
-                    #    self.log.info(u"SP still needed")
+                    radiationTooLow = (effectiveRadiationShortTerm < 3.7 and ( effectiveRadiationMax < 3.7 or effectiveRadiationLongTerm < 3.7 ))
+                    temperatureTooLow = (currentRoomTemperature < targetRoomTemperature - 0.6 or currentOutdoorTemperature < targetRoomTemperature - 0.1)
+                    if radiationTooLow or temperatureTooLow:
+                        if itemLastUpdateOlderThen(transition.getSunProtectionItem(), getNow().minusMinutes(60)):
+                            postUpdate(transition.getSunProtectionItem(), OFF )
+                            self.log.info(u"DEBUG: SP switching off {} {} {} {} {} {} {}".format(room.getName(),effectiveRadiationShortTerm,effectiveRadiationLongTerm,effectiveRadiationMax,currentRoomTemperature,currentOutdoorTemperature,targetRoomTemperature))
+                        else:
+                            self.log.warn(u"DEBUG: SP skipped off {} {} {} {} {} {} {}".format(room.getName(),effectiveRadiationShortTerm,effectiveRadiationLongTerm,effectiveRadiationMax,currentRoomTemperature,currentOutdoorTemperature,targetRoomTemperature))
                 else:
-                    targetRoomTemperature = targetRoomTemperature - 0.5
+                    radiationTooHigh = effectiveRadiationShortTerm > 3.8
+                    temperatureTooHigh = (currentRoomTemperature > targetRoomTemperature - 0.5 and currentOutdoorTemperature > targetRoomTemperature)
+                    if radiationTooHigh and temperatureTooHigh:
+                        if itemLastUpdateOlderThen(transition.getSunProtectionItem(), getNow().minusMinutes(15)):
+                            postUpdate(transition.getSunProtectionItem(), ON )
+                            self.log.info(u"DEBUG: SP switching on {} {} {} {} {} {} {}".format(room.getName(),effectiveRadiationShortTerm,effectiveRadiationLongTerm,effectiveRadiationMax,currentRoomTemperature,currentOutdoorTemperature,targetRoomTemperature))
+                        else:
+                            self.log.warn(u"DEBUG: SP skipped on {} {} {} {} {} {} {}".format(room.getName(),effectiveRadiationShortTerm,effectiveRadiationLongTerm,effectiveRadiationMax,currentRoomTemperature,currentOutdoorTemperature,targetRoomTemperature))
 
-                    if effectiveRadiation > 3.8 and currentRoomTemperature > targetRoomTemperature and currentOutdoorTemperature > targetRoomTemperature:
-                        postUpdate(transition.getSunProtectionItem(), ON )
-                        self.log.info(u"DEBUG: SP switching on {} {} {} {} {}".format(room.getName(),effectiveRadiation,currentRoomTemperature,currentOutdoorTemperature,targetRoomTemperature))
-                #else:
-                #   self.log.info(u"SP not needed")
+        #effectiveSouthRadiation = cr.getSunSouthRadiation() / 60.0
+        #effectiveWestRadiation = cr.getSunWestRadiation() / 60.0
+
+        #currentOutdoorTemperature = cr.getReferenceTemperature()
+
+        #fallbackTargetTemperature = hhs.getHeatingState("FF_Livingroom").getHeatingTargetTemperature()
+      
+        #for room in Heating.getRooms():
+        #    rs = cr.getRoomState(room.getName())
+            
+        #    targetRoomTemperature = fallbackTargetTemperature if room.getHeatingVolume() == None else hhs.getHeatingState(room.getName()).getHeatingTargetTemperature()
+            
+        #    for transition in room.transitions:
+        #        if not isinstance(transition,Window) or transition.getRadiationArea() == None or transition.getSunProtectionItem() == None:
+        #            continue
+                  
+        #        currentRoomTemperature = rs.getCurrentTemperature()
+
+        #        effectiveRadiation = effectiveSouthRadiation if transition.getDirection() == 'south' else effectiveWestRadiation
+
+        #        if getItemState(transition.getSunProtectionItem()) == ON:
+        #            targetRoomTemperature = targetRoomTemperature - 0.6
+                   
+        #            if effectiveRadiation < 3.7 or currentRoomTemperature < targetRoomTemperature or currentOutdoorTemperature < targetRoomTemperature:
+        #                #postUpdate(transition.getSunProtectionItem(), OFF )
+        #                self.log.info(u"DEBUG: SP switching off {} {} {} {} {}".format(room.getName(),effectiveRadiation,currentRoomTemperature,currentOutdoorTemperature,targetRoomTemperature))
+        #            #else: 
+        #            #    self.log.info(u"SP still needed")
+        #        else:
+        #            targetRoomTemperature = targetRoomTemperature - 0.5
+
+        #            if effectiveRadiation > 3.8 and currentRoomTemperature > targetRoomTemperature and currentOutdoorTemperature > targetRoomTemperature:
+        #                #postUpdate(transition.getSunProtectionItem(), ON )
+        #                self.log.info(u"DEBUG: SP switching on {} {} {} {} {}".format(room.getName(),effectiveRadiation,currentRoomTemperature,currentOutdoorTemperature,targetRoomTemperature))
+        #        #else:
+        #        #   self.log.info(u"SP not needed")
 
     def controlHeating( self, now, currentOperatingMode, isHeatingRequested ):
 
@@ -640,12 +692,12 @@ class HeatingControlRule():
         forceRetryMsg = u" • RETRY {} {}".format(self.activeHeatingOperatingMode,currentOperatingMode) if forceRetry else u""
         delayedMsg = u""
         
-        currentOperatingModeUpdate = getItemLastUpdate("Heating_Operating_Mode")
-        lastUpdateBeforeInMinutes = int( math.floor( ( now.getMillis() - currentOperatingModeUpdate.getMillis() ) / 1000.0 / 60.0 ) )
-        lastHeatingChangeFormatted = OFFSET_FORMATTER.print(currentOperatingModeUpdate)
-        lastUpdateBeforeFormatted = lastUpdateBeforeInMinutes if lastUpdateBeforeInMinutes < 60 else '{:02d}:{:02d}'.format(*divmod(lastUpdateBeforeInMinutes, 60));
+        currentOperatingModeChange = getItemLastChange("Heating_Operating_Mode")
+        lastChangeBeforeInMinutes = int( math.floor( ( now.getMillis() - currentOperatingModeChange.getMillis() ) / 1000.0 / 60.0 ) )
+        lastHeatingChangeFormatted = OFFSET_FORMATTER.print(currentOperatingModeChange)
+        lastChangeBeforeFormatted = lastChangeBeforeInMinutes if lastChangeBeforeInMinutes < 60 else '{:02d}:{:02d}'.format(*divmod(lastChangeBeforeInMinutes, 60));
         
-        self.log.info(u"Active  : {} since {} • {} min. ago".format(Transformation.transform("MAP", "heating_de.map", str(currentOperatingMode) ),lastHeatingChangeFormatted,lastUpdateBeforeFormatted) )
+        self.log.info(u"Active  : {} since {} • {} min. ago".format(Transformation.transform("MAP", "heating_de.map", str(currentOperatingMode) ),lastHeatingChangeFormatted,lastChangeBeforeFormatted) )
         
         # Nur WW
         if currentOperatingMode == 1:
@@ -657,7 +709,7 @@ class HeatingControlRule():
                     self.activeHeatingOperatingMode = 2
                     sendCommand("Heating_Operating_Mode", self.activeHeatingOperatingMode)
                 else:
-                    runtimeToGo = Heating.MIN_ONLY_WW_TIME - int( round( ( now.getMillis() - currentOperatingModeUpdate.getMillis() ) / 1000.0 / 60.0 ) )
+                    runtimeToGo = Heating.MIN_ONLY_WW_TIME - int( round( ( now.getMillis() - currentOperatingModeChange.getMillis() ) / 1000.0 / 60.0 ) )
                     delayedMsg = u" in {} min.".format(runtimeToGo)
 
                 self.log.info(u"Switch  : Heizen mit WW{}{}".format(delayedMsg,forceRetryMsg))
@@ -666,7 +718,7 @@ class HeatingControlRule():
         elif currentOperatingMode == 2:
             currentPowerState = getItemState("Heating_Power").intValue()
             
-            if currentPowerState == 0 and lastUpdateBeforeInMinutes < 1:
+            if currentPowerState == 0 and lastChangeBeforeInMinutes < 1:
                 self.log.info(u"Delayed : Give the heating system more time to react")
                 return
         
@@ -680,7 +732,7 @@ class HeatingControlRule():
                     self.activeHeatingOperatingMode = 1
                     sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
                 else:
-                    runtimeToGo = Heating.MIN_HEATING_TIME - int( round( ( now.getMillis() - currentOperatingModeUpdate.getMillis() ) / 1000.0 / 60.0 ) )
+                    runtimeToGo = Heating.MIN_HEATING_TIME - int( round( ( now.getMillis() - currentOperatingModeChange.getMillis() ) / 1000.0 / 60.0 ) )
                     delayedMsg = u" in {} min.".format(runtimeToGo)
 
                 self.log.info(u"Switch  : Nur WW{}{}".format(delayedMsg,forceRetryMsg))
@@ -715,7 +767,7 @@ class HeatingControlRule():
                 sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
                 self.log.info(u"Switch  : Nur WW because heating is not needed anymore{}".format(forceRetryMsg))
             else:
-                lastReducedRuntime = self.getLastReductionTime( currentOperatingModeUpdate )
+                lastReducedRuntime = self.getLastReductionTime( currentOperatingModeChange )
                 if lastReducedRuntime > 0:
                     targetReducedTime = int( round(lastReducedRuntime * 2.0 / 1000.0 / 60.0, 0) )
                     if targetReducedTime > Heating.MAX_REDUCTION_TIME:
@@ -734,7 +786,7 @@ class HeatingControlRule():
                     self.activeHeatingOperatingMode = 2
                     sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
                 elif not forceRetry:
-                    runtimeToGo = targetReducedTime - int( round( ( now.getMillis() - currentOperatingModeUpdate.getMillis() ) / 1000.0 / 60.0 ) )
+                    runtimeToGo = targetReducedTime - int( round( ( now.getMillis() - currentOperatingModeChange.getMillis() ) / 1000.0 / 60.0 ) )
                     delayedMsg = u" in {} min.".format(runtimeToGo)
                     
                 self.log.info(u"Switch  : Heizen mit WW{}{}".format(delayedMsg,forceRetryMsg))

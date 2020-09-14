@@ -1,7 +1,7 @@
 from org.joda.time import DateTime
 from org.joda.time.format import DateTimeFormat
 
-from custom.helper import rule, getNow, getHistoricItemEntry, getHistoricItemState, getItemLastUpdate, itemLastUpdateOlderThen, itemLastChangeOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand, createTimer
+from custom.helper import rule, getNow, getHistoricItemEntry, getHistoricItemState, getItemLastChange, itemLastUpdateOlderThen, itemLastChangeOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand, createTimer
 from core.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
 
 from org.eclipse.smarthome.core.types.RefreshType import REFRESH
@@ -27,7 +27,7 @@ startGasImpulseCounter = 0
 dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS")
 
 def getHistoricReference(log, itemName, valueTime, outdatetTime, messureTime, intervalTime):
-    endTime = getItemLastUpdate(itemName)
+    endTime = getItemLastChange(itemName)
     endTimestampInMillis = endTime.getMillis()
 
     nowInMillis = getNow().getMillis()

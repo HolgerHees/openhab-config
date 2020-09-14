@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import math
 
-from custom.helper import getNow, getItemState, itemLastUpdateOlderThen, itemLastChangeOlderThen, getItemLastUpdate, getStableItemState
+from custom.helper import getNow, getItemState, itemLastUpdateOlderThen, itemLastChangeOlderThen, getItemLastUpdate, getItemLastChange, getStableItemState
 from custom.model.sun import SunRadiation
 
 from org.eclipse.smarthome.core.library.types import OnOffType
@@ -206,9 +206,9 @@ class Heating(object):
             
             if wall.getBound() == None:
                 if wall.getDirection() == 'south':
-                    outdoorWallRadiation = outdoorWallRadiation + SunRadiation.getWallSunPowerPerMinute(wall.getArea(),sunSouthRadiation)
+                    outdoorWallRadiation = outdoorWallRadiation + SunRadiation.getWallSunPowerPerHour(wall.getArea(),sunSouthRadiation)
                 elif wall.getDirection() == 'west':
-                    outdoorWallRadiation = outdoorWallRadiation + SunRadiation.getWallSunPowerPerMinute(wall.getArea(),sunWestRadiation)
+                    outdoorWallRadiation = outdoorWallRadiation + SunRadiation.getWallSunPowerPerHour(wall.getArea(),sunWestRadiation)
 
             capacity = ( wall.getArea() * wall.getType().getCapacity() ) / 3.6 # converting kj into watt
 
@@ -230,9 +230,9 @@ class Heating(object):
                 _shutterOpen = (isForecast or transition.getShutterItem() == None or self.getCachedItemState(transition.getShutterItem()) == PercentType.ZERO)
                 if _shutterOpen:
                     if transition.getDirection() == 'south':
-                        windowRadiation = windowRadiation + SunRadiation.getWindowSunPowerPerMinute(transition.getRadiationArea(),sunSouthRadiation)
+                        windowRadiation = windowRadiation + SunRadiation.getWindowSunPowerPerHour(transition.getRadiationArea(),sunSouthRadiation)
                     elif transition.getDirection() == 'west':
-                        windowRadiation = windowRadiation + SunRadiation.getWindowSunPowerPerMinute(transition.getRadiationArea(),sunWestRadiation)
+                        windowRadiation = windowRadiation + SunRadiation.getWindowSunPowerPerHour(transition.getRadiationArea(),sunWestRadiation)
         
         openWindowEnergy = 0 if isForecast else wallCooling * openWindowCount
             
@@ -472,9 +472,12 @@ class Heating(object):
         heatingCirculationDiff, heatingPumpSpeed, heatingDebugInfo = self.calculateHeatingEnergy(isForecast)
         heatingVolumeFactor = self.calculateHeatingVolumeFactor(isForecast)
         
-        currentTotalVentilationEnergy = self.getVentilationEnergy(tempDiffOffset) / 3.6 # converting kj into watt
-        sunSouthRadiation, sunWestRadiation, sunDebugInfo = SunRadiation.getSunPowerPerMinute(time,round(self.getCachedItemFloat(self.cloudCoverItem),1))
+        cloudCover = round(self.getCachedItemFloat(self.cloudCoverItem),1)
         
+        currentTotalVentilationEnergy = self.getVentilationEnergy(tempDiffOffset) / 3.6 # converting kj into watt
+        sunSouthRadiation, sunWestRadiation, sunDebugInfo = SunRadiation.getSunPowerPerHour(time,cloudCover)
+        sunSouthRadiationMax, sunWestRadiationMax, sunMaxDebugInfo = SunRadiation.getSunPowerPerHour(time,0)
+
         totalOpenWindowCount = 0
         
         totalIndoorWallEnergy = 0
@@ -590,8 +593,11 @@ class Heating(object):
         houseState.setHeatingVolumeFactor(heatingVolumeFactor)
         houseState.setHeatingDebugInfo(heatingDebugInfo)
 
+        houseState.setCloudCover(cloudCover)
         houseState.setSunSouthRadiation(sunSouthRadiation)
+        houseState.setSunSouthRadiationMax(sunSouthRadiationMax)
         houseState.setSunWestRadiation(sunWestRadiation)
+        houseState.setSunWestRadiationMax(sunWestRadiationMax)
         houseState.setSunDebugInfo(sunDebugInfo)
 
         return houseState
@@ -610,7 +616,7 @@ class Heating(object):
                 if self.getCachedItemState(transition.getContactItem()) == OpenClosedType.OPEN:
                     # *** register open window if it is open long enough
                     if transition.getContactItem() not in Heating._openWindowContacts:
-                        openSince = getItemLastUpdate(transition.getContactItem())
+                        openSince = getItemLastChange(transition.getContactItem())
                         openDuration = self.now.getMillis() - openSince.getMillis()
                         if openDuration > Heating.OPEN_WINDOW_START_DURATION * 60 * 1000:
                             Heating._openWindowContacts[transition.getContactItem()] = openSince
@@ -621,7 +627,7 @@ class Heating(object):
                 # *** if the window was open
                 elif transition.getContactItem() in Heating._openWindowContacts:
                     # *** check if it is closed long enough to unregister it
-                    closedSince = getItemLastUpdate(transition.getContactItem())
+                    closedSince = getItemLastChange(transition.getContactItem())
                     closedDuration = self.now.getMillis() - closedSince.getMillis()
                     openDuration = closedSince.getMillis() - Heating._openWindowContacts[transition.getContactItem()].getMillis()
                     endingTreshold = openDuration * 2.0
@@ -941,7 +947,7 @@ class Heating(object):
 
             # *** HEATING STATE ***
 
-            lastHeatingChange = getItemLastUpdate(Heating.getHeatingDemandItem(room))
+            lastHeatingChange = getItemLastUpdate(Heating.getHeatingDemandItem(room)) # can be "getItemLastUpdate" datetime, because it is changed only from heating rule
 
             rhs = None
             # *** CLEAN OR RESTORE FORCED HEATING ***

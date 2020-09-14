@@ -382,8 +382,7 @@ def getStableItemState( now, itemName, checkTimeRange ):
     # get and cache "real" item to speedup getHistoricItemEntry. Otherwise "getHistoricItemEntry" will lookup the item by its name every time
     item = getItem(itemName)
 
-    # use the first time the default service (mapdb) which is faster then query mysql
-    entry = PersistenceExtensions.historicState(item, now)
+    entry = getHistoricItemEntry(item, now)
     
     while True:
         currentStartMillis = entry.getTimestamp().getTime()
