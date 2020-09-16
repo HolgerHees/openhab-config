@@ -177,7 +177,7 @@ Number WeatherStation_Solar_Power_Raw     "Sonnenkraft [%.1f °C]"	<selfsun> (We
 Number WeatherStation_Solar_Power         "Sonnenkraft [%.1f Watt/m²]"	<selfsun> (PersistentChart,PersistentHistory)
 Number WeatherStation_Solar_Power_Test1   "Sonnenkraft Cur. [%.1f Watt/m²]"	<selfsun>
 Number WeatherStation_Solar_Power_Test2   "Sonnenkraft Max. [%.1f Watt/m²]"	<selfsun>
-Number WeatherStation_Light_Level         "Helligkeit [%.1f lux]"	<selfsun> (Weatherstation,PersistentChart,PersistentHistory) {mqtt="<[mosquitto:mysensors-pub-1/1/12/#:state:default]"}
+Number WeatherStation_Light_Level         "Helligkeit [%d lux]"	<selfsun> (Weatherstation,PersistentChart,PersistentHistory) {mqtt="<[mosquitto:mysensors-pub-1/1/12/#:state:default]"}
 
 Number WeatherStation_UV_Index            "UV Index [%.1f]"	<selfsun> (PersistentChart,PersistentHistory)
 Number WeatherStation_UV_A_Raw            "UV A [%.1f]"	<selfsun> (Weatherstation,PersistentChart,PersistentHistory) {mqtt="<[mosquitto:mysensors-pub-1/1/13/#:state:default]"}

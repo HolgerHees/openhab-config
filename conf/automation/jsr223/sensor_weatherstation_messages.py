@@ -7,7 +7,7 @@ from custom.model.sun import SunRadiation
 import math
 
 OFFSET_TEMPERATURE  = 1.1
-OFFSET_HUMIDITY     = 7.5
+OFFSET_HUMIDITY     = 0 #7.5  > 2020-09-16 10:29:23.698
 OFFSET_WIND_DIRECTION = -135
 
 OFFSET_NTC = -0.1
@@ -94,7 +94,7 @@ class WeatherstationLastUpdateRule:
             msg = u"{} min.".format(newestUpdateInMinutesMsg)
             
         postUpdateIfChanged("WeatherStation_Update_Message", msg)
-        postUpdateIfChanged("WeatherStation_Is_Working", ON if oldestUpdateInMinutes <= 10 else OFF)
+        postUpdateIfChanged("WeatherStation_Is_Working", ON if oldestUpdateInMinutes <= 12 else OFF)
         
 @rule("sensor_weatherstation.py")
 class WeatherstationBatteryRule:
@@ -128,7 +128,7 @@ class WeatherstationBatteryRule:
                             
                             # toPercentageLevel - fromPercentageLevel => 100%
                             # ?? => x
-                            level = round( ( ( x * (toPercentageLevel - fromPercentageLevel) ) / 100 ) + fromPercentageLevel )
+                            level = int(round( ( ( x * (toPercentageLevel - fromPercentageLevel) ) / 100 ) + fromPercentageLevel ))
                             break
             postUpdateIfChanged("WeatherStation_Battery_Level", level)
         else:
@@ -314,15 +314,15 @@ class WeatherstationAirRule:
         if input['event'].getItemName() == "WeatherStation_Temperature_Raw":
             temperature = round(input['event'].getItemState().doubleValue() + OFFSET_TEMPERATURE, 1)
             postUpdate("WeatherStation_Temperature",temperature)
-            humidity = getItemState("WeatherStation_Humidity").format("%.1f")
+            humidity = getItemState("WeatherStation_Humidity").intValue()
         else:
             temperature = getItemState("WeatherStation_Temperature").format("%.1f")
-            humidity = round(input['event'].getItemState().doubleValue() + OFFSET_HUMIDITY, 1)
+            humidity = int(round(input['event'].getItemState().doubleValue() + OFFSET_HUMIDITY))
             postUpdate("WeatherStation_Humidity",humidity)
       
         msg = u"";
         msg = u"{}{} °C, ".format(msg,temperature)
-        msg = u"{}{} %".format(msg,humidity)
+        msg = u"{}{}.0 %".format(msg,humidity)
 
         postUpdateIfChanged("WeatherStation_Air_Message", msg)
 
@@ -342,7 +342,7 @@ class SunPowerRule:
             else:
                 diff = solar_temperature - outdoor_temperature
                 power = diff * CELSIUS_HEAT_UNIT
-                postUpdateIfChanged("WeatherStation_Solar_Power", power)
+                postUpdateIfChanged("WeatherStation_Solar_Power", round(power,1))
         else:
             postUpdateIfChanged("WeatherStation_Solar_Power", 0)
             
@@ -409,11 +409,11 @@ class UVIndexRule:
           
         uva_weighted = uva * UVA_RESPONSE_FACTOR;
         uvb_weighted = uvb * UVB_RESPONSE_FACTOR;
-        uv_index = (uva_weighted + uvb_weighted) / 2.0;
+        uv_index = round( (uva_weighted + uvb_weighted) / 2.0, 1 );
         postUpdateIfChanged("WeatherStation_UV_Index", uv_index)
       
         msg = u"";
-        msg = u"{}{} (".format(msg,round(uv_index,1))
+        msg = u"{}{} (".format(msg,uv_index)
         msg = u"{}{:.0f} • ".format(msg,round(uva))
         msg = u"{}{:.0f})".format(msg,round(uvb))
 

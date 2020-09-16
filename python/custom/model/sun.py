@@ -43,7 +43,7 @@ class SunRadiation(object):
 
         # 125° 1/2 der Hauswand	
         southMultiplier = 0
-        if azimut >= 150 and azimut <= 260 and ( currentRadiation != None or elevation >= 10.0 ):
+        if azimut >= 120 and azimut <= 260 and ( currentRadiation != None or elevation >= 10.0 ):
             # 100° (0) => -1 (0)
             # 260° (160) => 1 (2)
             southX = ( ( azimut - 100.0 ) * 2.0 / 160.0 ) - 1.0

@@ -894,8 +894,8 @@ class Heating(object):
 
         # handle outdated forecast values
         if itemLastUpdateOlderThen(self.temperatureGardenFC4Item, self.now.minusMinutes(360) ):
-            self.cache[self.temperatureGardenFC4Item] = getCachedItemState(self.temperatureGardenItem)
-            self.cache[self.temperatureGardenFC8Item] = getCachedItemState(self.temperatureGardenItem)
+            self.cache[self.temperatureGardenFC4Item] = self.getCachedItemState(self.temperatureGardenItem)
+            self.cache[self.temperatureGardenFC8Item] = self.getCachedItemState(self.temperatureGardenItem)
             self.cache[self.cloudCoverFC4Item] = DecimalType(9)
             self.cache[self.cloudCoverFC8Item] = DecimalType(9)
             self.cache[self.cloudCoverItem] = DecimalType(9)

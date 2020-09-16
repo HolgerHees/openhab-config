@@ -31,7 +31,7 @@ Heating.heatingTemperaturePipeOutItem = "Heating_Temperature_Pipe_Out"
 Heating.heatingTemperaturePipeInItem = "Heating_Temperature_Pipe_In"
 
 Heating.holidayStatusItem = "State_Holidays_Active"
- 
+
 _groundFloor = ThermalStorageType( capacity=164.0, uValue=0.320, uOffset=0.08, factor=0.60 )
 _groundCeiling = ThermalStorageType( capacity=308.0, uValue=0.610, uOffset=0.1, factor=1.0 )
 
