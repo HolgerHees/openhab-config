@@ -170,6 +170,23 @@ class rule(object):
 class NotInitialisedException(Exception):
     pass
 
+def startTimer(duration, callback, args=[], kwargs={}, oldTimer = None, groupCount = 0 ):
+    if oldTimer != None:
+        oldTimer.cancel()
+        groupCount = oldTimer.groupCount
+            
+    groupCount = groupCount - 1
+    
+    if groupCount == 0:
+        callback(*args, **kwargs)
+        
+        return None
+    else:
+        timer = createTimer(duration, callback, args, kwargs )
+        timer.start()
+        timer.groupCount = groupCount
+
+        return timer
 
 class createTimer:
     def __init__(self,duration, callback, args=[], kwargs={}):

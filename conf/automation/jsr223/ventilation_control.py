@@ -1,10 +1,12 @@
 import math
 
 from custom.helper import rule, getNow, itemLastChangeOlderThen, getItemState, postUpdate, postUpdateIfChanged, \
-    sendCommand
+    sendCommand, startTimer
 from core.triggers import CronTrigger, ItemCommandTrigger, ItemStateChangeTrigger
 
 autoChangeInProgress = False
+
+DELAYED_UPDATE_TIMEOUT = 3
 
 @rule("ventilation_efficiency.py")
 class VentilationEfficiencyRule:
@@ -14,8 +16,9 @@ class VentilationEfficiencyRule:
             ItemStateChangeTrigger("Ventilation_Indoor_Incoming_Temperature"),
             ItemStateChangeTrigger("Ventilation_Indoor_Outgoing_Temperature")
         ]
+        self.updateTimer = None
     
-    def execute(self, module, input):
+    def delayUpdate(self):
         efficiency = 0
 
         if getItemState("Ventilation_Bypass").intValue() == 0:
@@ -33,6 +36,11 @@ class VentilationEfficiencyRule:
 
         postUpdateIfChanged("Ventilation_Bypass_Efficiency", efficiency )
 
+        self.updateTimer = None
+
+    def execute(self, module, input):
+        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = 3)
+        
 @rule("ventilation_control.py")
 class FilterRuntimeRule:
     def __init__(self):
@@ -60,7 +68,7 @@ class FilterRuntimeRule:
         msg = u", ".join(active)
 
         postUpdateIfChanged("Ventilation_Filter_Runtime_Message", msg)
-
+ 
 @rule("ventilation_control.py")
 class FilterStateMessageRule:
     def __init__(self):
@@ -69,8 +77,9 @@ class FilterStateMessageRule:
             ItemStateChangeTrigger("Ventilation_Filter_Error_I"),
             ItemStateChangeTrigger("Ventilation_Filter_Error_E")
         ]
+        self.updateTimer = None
 
-    def execute(self, module, input):
+    def delayUpdate(self):
         active = []
 
         Ventilation_Filter_Error_I_State = getItemState("Ventilation_Filter_Error_I").intValue()
@@ -91,7 +100,11 @@ class FilterStateMessageRule:
         msg = ", ".join(active)
 
         postUpdateIfChanged("Ventilation_State_Message", msg)
+        
+        self.updateTimer = None
 
+    def execute(self, module, input):
+        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = 3)
 
 @rule("ventilation_control.py")
 class FilterOutdoorTemperatureMessageRule:
@@ -100,11 +113,16 @@ class FilterOutdoorTemperatureMessageRule:
             ItemStateChangeTrigger("Ventilation_Outdoor_Incoming_Temperature"),
             ItemStateChangeTrigger("Ventilation_Outdoor_Outgoing_Temperature")
         ]
+        self.updateTimer = None
 
-    def execute(self, module, input):
+    def delayUpdate(self):
         msg = u"→ {}°C, ← {}°C".format(getItemState("Ventilation_Outdoor_Incoming_Temperature").format("%.1f"),getItemState("Ventilation_Outdoor_Outgoing_Temperature").format("%.1f"))
         postUpdateIfChanged("Ventilation_Outdoor_Temperature_Message", msg)
+        
+        self.updateTimer = None
 
+    def execute(self, module, input):
+        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = 2)
 
 @rule("ventilation_control.py")
 class FilterIndoorTemperatureMessageRule:
@@ -113,11 +131,16 @@ class FilterIndoorTemperatureMessageRule:
             ItemStateChangeTrigger("Ventilation_Indoor_Incoming_Temperature"),
             ItemStateChangeTrigger("Ventilation_Indoor_Outgoing_Temperature")
         ]
+        self.updateTimer = None
 
-    def execute(self, module, input):
+    def delayUpdate(self):
         msg = u"→ {}°C, ← {}°C".format(getItemState("Ventilation_Indoor_Incoming_Temperature").format("%.1f"),getItemState("Ventilation_Indoor_Outgoing_Temperature").format("%.1f"))
         postUpdateIfChanged("Ventilation_Indoor_Temperature_Message", msg)
+        
+        self.updateTimer = None
 
+    def execute(self, module, input):
+        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = 2)
 
 @rule("ventilation_control.py")
 class FilterVentilationMessageRule:
@@ -126,11 +149,16 @@ class FilterVentilationMessageRule:
             ItemStateChangeTrigger("Ventilation_Incoming"),
             ItemStateChangeTrigger("Ventilation_Outgoing")
         ]
+        self.updateTimer = None
 
-    def execute(self, module, input):
+    def delayUpdate(self):
         msg = u"→ {}%, ← {}%".format(getItemState("Ventilation_Incoming").toString(),getItemState("Ventilation_Outgoing").toString())
         postUpdateIfChanged("Ventilation_Fan_Message", msg)
+        
+        self.updateTimer = None
 
+    def execute(self, module, input):
+        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = 2)
 
 @rule("ventilation_control.py")
 class FilterManualActionRule:

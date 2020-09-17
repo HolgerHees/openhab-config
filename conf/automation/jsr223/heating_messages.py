@@ -1,6 +1,7 @@
-from custom.helper import rule, getNow, getItemState, getHistoricItemState, postUpdate, postUpdateIfChanged
+from custom.helper import rule, getNow, getItemState, getHistoricItemState, postUpdate, postUpdateIfChanged, startTimer
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
+DELAYED_UPDATE_TIMEOUT = 3
 
 @rule("heating_messages.py")
 class HeatingPowerMessageRule:
@@ -9,11 +10,16 @@ class HeatingPowerMessageRule:
             ItemStateChangeTrigger("Heating_Power"),
             ItemStateChangeTrigger("Heating_Circuit_Pump_Speed")
         ]
+        self.updateTimer = None
 
-    def execute(self, module, input):
+    def delayUpdate(self):
         msg = u"{}%, {}%".format(getItemState("Heating_Power").format("%.0f"),getItemState("Heating_Circuit_Pump_Speed").format("%.0f"))
         postUpdateIfChanged("Heating_Power_Message", msg)
 
+        self.updateTimer = None
+
+    def execute(self, module, input):
+        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = 2)
 
 @rule("heating_messages.py")
 class HeatingTemperatureOutdoorMessageRule:
@@ -23,11 +29,19 @@ class HeatingTemperatureOutdoorMessageRule:
             ItemStateChangeTrigger("Heating_Temperature_Outdoor_Subdued"),
             ItemStateChangeTrigger("Temperature_Garden_Forecast4")
         ]
+        self.updateTimer = None
 
-    def execute(self, module, input):
+    def delayUpdate(self):
         msg = u"({}°C) {}°C, {}°C".format(getItemState("Temperature_Garden_Forecast4").format("%.1f"),getItemState("Heating_Temperature_Outdoor").format("%.1f"),getItemState("Heating_Temperature_Outdoor_Subdued").format("%.1f"))
         postUpdateIfChanged("Heating_Temperature_Outdoor_Message", msg)
 
+        self.updateTimer = None
+
+    def execute(self, module, input):
+        if input['event'].getItemName() == "Temperature_Garden_Forecast4":
+            self.delayUpdate()
+        else:
+            self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = 2)
 
 @rule("heating_messages.py")
 class HeatingTemperatureOffsetMessageRule:
@@ -36,11 +50,16 @@ class HeatingTemperatureOffsetMessageRule:
             ItemStateChangeTrigger("Heating_Temperature_Offset"),
             ItemStateChangeTrigger("Heating_Temperature_Offset_Target")
         ]
+        self.updateTimer = None
 
-    def execute(self, module, input):
+    def delayUpdate(self):
         msg = u"{}°C, {}°C".format(getItemState("Heating_Temperature_Offset").format("%.1f"),getItemState("Heating_Temperature_Offset_Target").format("%.1f"))
         postUpdateIfChanged("Heating_Temperature_Offset_Message", msg)
 
+        self.updateTimer = None
+
+    def execute(self, module, input):
+        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = 2)
 
 @rule("heating_messages.py")
 class HeatingTemperatureBoilerMessageRule:
@@ -49,11 +68,16 @@ class HeatingTemperatureBoilerMessageRule:
             ItemStateChangeTrigger("Heating_Temperature_Boiler"),
             ItemStateChangeTrigger("Heating_Temperature_Boiler_Target")
         ]
+        self.updateTimer = None
 
-    def execute(self, module, input):
+    def delayUpdate(self):
         msg = u"{}°C, {}°C".format(getItemState("Heating_Temperature_Boiler").format("%.1f"),getItemState("Heating_Temperature_Boiler_Target").format("%.1f"))
         postUpdateIfChanged("Heating_Temperature_Boiler_Message", msg)
 
+        self.updateTimer = None
+
+    def execute(self, module, input):
+        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = 2)
 
 @rule("heating_messages.py")
 class BurnerStartsRule:
@@ -98,13 +122,18 @@ class HeatingTemperatureSolarMessageRule:
             ItemStateChangeTrigger("Heating_Temperature_Solar_Collector"),
             ItemStateChangeTrigger("Heating_Temperature_Solar_Storage")
         ]
+        self.updateTimer = None
 
-    def execute(self, module, input):
+    def delayUpdate(self):
         solarCollector = getItemState("Heating_Temperature_Solar_Collector")
         solarStorage = getItemState("Heating_Temperature_Solar_Storage")
         msg = u"{}°C, {}°C".format(solarCollector.format("%.1f"),solarStorage.format("%.1f"))
         postUpdateIfChanged("Heating_Temperature_Solar_Message", msg)
 
+        self.updateTimer = None
+
+    def execute(self, module, input):
+        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = 2)
 
 @rule("heating_messages.py")
 class HeatingSolarStateMessageRule:
@@ -113,8 +142,9 @@ class HeatingSolarStateMessageRule:
             ItemStateChangeTrigger("Heating_Solar_Pump_State"),
             ItemStateChangeTrigger("Heating_Solar_Reheating_State")
         ]
+        self.updateTimer = None
 
-    def execute(self, module, input):
+    def delayUpdate(self):
         if getItemState("Heating_Solar_Pump_State").intValue() == 1:
             msg = "an"
         else:
@@ -129,7 +159,11 @@ class HeatingSolarStateMessageRule:
 
         postUpdateIfChanged("Heating_Solar_State_Message", msg)
 
+        self.updateTimer = None
 
+    def execute(self, module, input):
+        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = 2)
+ 
 @rule("heating_messages.py")
 class SolarHoursRule:
     def __init__(self):

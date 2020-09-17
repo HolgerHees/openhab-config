@@ -1,4 +1,4 @@
-from custom.helper import rule, getNow, getItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged
+from custom.helper import rule, getNow, getItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged, startTimer
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 infoConfig = [
@@ -60,7 +60,9 @@ class InfoValueRule:
         self.triggers = []
         self.triggerMappings = {}
         self.rawMappings = {}
+        self.updateTimer = {}
         for i, entry in enumerate(infoConfig):
+            self.updateTimer[entry[0]] = None
 
             # *** TEMPERATURE ***
             # if exists, map raw temperature trigger
@@ -96,6 +98,8 @@ class InfoValueRule:
         return postUpdateIfChanged(valueItem, value)
 
     def updateInfoMessage(self, infoItem, temperatureItem, humidityItem, temperatureTargetItem=None):
+        #self.log.info(u">>>delay: {}".format(infoItem))
+        
         msg = u"";
         if temperatureTargetItem is not None:
             msg = u"{}({}) ".format(msg,getItemState(temperatureTargetItem).format("%.1f"))
@@ -104,6 +108,8 @@ class InfoValueRule:
         msg = u"{}{} %".format(msg,getItemState(humidityItem).format("%.1f"))
 
         postUpdateIfChanged(infoItem, msg)
+        
+        self.updateTimer[infoItem] = None 
 
     def execute(self, module, input):
         itemName = input['event'].getItemName()
@@ -117,7 +123,13 @@ class InfoValueRule:
                 return
 
         data = infoConfig[ self.triggerMappings[itemName] ]
-        self.updateInfoMessage(data[0], data[1], data[2], data[3])
+         
+        #self.log.info(u">>>trigger: {} ".format(data[0]))
+
+        # group 2 value updates into one message update
+        # we have to delay 4 seconds, because sensor delay between 2 values is 3 seconds
+        self.updateTimer[data[0]] = startTimer(4, self.updateInfoMessage, args = [data[0], data[1], data[2], data[3]], oldTimer = self.updateTimer[data[0]], groupCount=2 )
+        #self.updateInfoMessage()
 
 
 @rule("sensor_temperatures_humidity_messages.py")

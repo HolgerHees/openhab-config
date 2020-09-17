@@ -1,12 +1,18 @@
-from custom.helper import rule, getNow, getItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged, getItemLastUpdate, getItem
+from custom.helper import rule, getNow, getItemState, getStableItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged, getItemLastUpdate, getItem, startTimer
 from core.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
 from core.actions import Mqtt
-
 from custom.model.sun import SunRadiation
 
+from org.joda.time import DateTime
 import math
 
+# base offset measured at 25°C
 OFFSET_TEMPERATURE  = 1.1
+# compensate heating from direct sunlight
+# 1.1 °C negative temperature offset for each 20 °C diff between ntc and raw temperature
+LAZY_OFFSET_TEMPERATURE  = 1.1
+LAZY_OFFSET_REF_TEMPERATURE_DIFF = 10.0
+
 OFFSET_HUMIDITY     = 0 #7.5  > 2020-09-16 10:29:23.698
 OFFSET_WIND_DIRECTION = -135
 
@@ -23,6 +29,8 @@ UVB_RESPONSE_FACTOR = 0.002591
 
 UVA_CORRECTION_FACTOR = 0.5 # behind glass
 UVB_CORRECTION_FACTOR = 0.5 # behind glass
+
+DELAYED_UPDATE_TIMEOUT = 3
 
 fuelLevel =[
   [ 3270, 0 ],
@@ -104,6 +112,19 @@ class WeatherstationBatteryRule:
             ItemStateChangeTrigger("WeatherStation_Battery_Voltage"),
             ItemStateChangeTrigger("WeatherStation_Battery_Current")
         ]
+        self.updateTimer = None
+
+    def delayUpdate(self):
+        level = getItemState("WeatherStation_Battery_Level").intValue()
+        current = getItemState("WeatherStation_Battery_Current").doubleValue()
+            
+        msg = u"";
+        msg = u"{}{:.0f} %, ".format(msg,level)
+        msg = u"{}{} mA".format(msg,getItemState("WeatherStation_Battery_Current").format("%.1f"))
+
+        postUpdateIfChanged("WeatherStation_Battery_Message", msg)
+        
+        self.updateTimer = None
 
     def execute(self, module, input):
         if input['event'].getItemName() == "WeatherStation_Battery_Voltage":
@@ -131,15 +152,9 @@ class WeatherstationBatteryRule:
                             level = int(round( ( ( x * (toPercentageLevel - fromPercentageLevel) ) / 100 ) + fromPercentageLevel ))
                             break
             postUpdateIfChanged("WeatherStation_Battery_Level", level)
-        else:
-            level = getItemState("WeatherStation_Battery_Level").intValue()
-      
-        msg = u"";
-        msg = u"{}{:.0f} %, ".format(msg,level)
-        msg = u"{}{} mA".format(msg,getItemState("WeatherStation_Battery_Current").format("%.1f"))
-
-        postUpdateIfChanged("WeatherStation_Battery_Message", msg)
-
+         
+        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = 2)
+        
 @rule("sensor_weatherstation.py")
 class WeatherstationRainHeaterRule:
     def __init__(self):
@@ -159,55 +174,11 @@ class WeatherstationRainRule:
             ItemStateChangeTrigger("WeatherStation_Rain_Rate"),
             ItemStateChangeTrigger("WeatherStation_Rain_Heater")
         ]
+        self.updateTimer = None
 
-    def execute(self, module, input):
-        if input['event'].getItemName() == "WeatherStation_Rain_Rate":
-            rainRate = input['event'].getItemState().intValue()
-            
-            if rainRate <= 524:
-                rainLevel = 10
-            elif rainRate <= 1310:
-                rainLevel = 9
-            elif rainRate <= 3276:
-                rainLevel = 8
-            elif rainRate <= 8192:
-                rainLevel = 7
-            elif rainRate <= 20480:
-                rainLevel = 6
-            elif rainRate <= 51200:
-                rainLevel = 5
-            elif rainRate <= 128000:
-                rainLevel = 4
-            elif rainRate <= 320000:
-                rainLevel = 3
-            elif rainRate <= 800000:
-                rainLevel = 2
-            elif rainRate <= 2000000:
-                rainLevel = 1
-            else:
-                rainLevel = 0
-
-            postUpdateIfChanged("WeatherStation_Rain_State", rainLevel)
-        else:
-            rainLevel = getItemState("WeatherStation_Rain_State").intValue()
-            
-        if input['event'].getItemName() == "WeatherStation_Rain_Impulse" and input['event'].getItemState().intValue() > 0:
-            zaehlerNeu = getItemState("WeatherStation_Rain_Counter").intValue()
-            zaehlerNeu += input['event'].getItemState().intValue()
-            postUpdateIfChanged("WeatherStation_Rain_Counter", zaehlerNeu)
-            
-            todayRain = 0
-            zaehlerAlt = getHistoricItemState("WeatherStation_Rain_Counter", getNow().withTimeAtStartOfDay()).intValue()
-            if zaehlerAlt != zaehlerNeu:
-                differenz = zaehlerNeu - zaehlerAlt
-                if differenz < 0:
-                    differenz = zaehlerNeu
-
-                todayRain = float(differenz) * 295.0 / 1000.0
-                todayRain = round(todayRain,1)
-            postUpdateIfChanged("WeatherStation_Rain_Daily", todayRain)
-        else:
-            todayRain = getItemState("WeatherStation_Rain_Daily").intValue()
+    def delayUpdate(self):
+        todayRain = getItemState("WeatherStation_Rain_Daily").intValue()
+        rainLevel = getItemState("WeatherStation_Rain_State").intValue()
 
         if rainLevel == 0:
             rainState = "Trocken"
@@ -226,6 +197,58 @@ class WeatherstationRainRule:
         msg = u"{}{}".format(msg,"An" if getItemState("WeatherStation_Rain_Heater") == ON else "Aus" )
 
         postUpdateIfChanged("WeatherStation_Rain_Message", msg)
+        
+    def execute(self, module, input):
+        if input['event'].getItemName() == "WeatherStation_Rain_Heater":
+            self.delayUpdate()
+        else:
+            if input['event'].getItemName() == "WeatherStation_Rain_Impulse":
+                impulseCount = input['event'].getItemState().intValue()
+                
+                if impulseCount == 0:
+                    return
+                  
+                zaehlerNeu = getItemState("WeatherStation_Rain_Counter").intValue()
+                zaehlerNeu += impulseCount
+                postUpdateIfChanged("WeatherStation_Rain_Counter", zaehlerNeu)
+                
+                todayRain = 0
+                zaehlerAlt = getHistoricItemState("WeatherStation_Rain_Counter", getNow().withTimeAtStartOfDay()).intValue()
+                if zaehlerAlt != zaehlerNeu:
+                    differenz = zaehlerNeu - zaehlerAlt
+                    if differenz < 0:
+                        differenz = zaehlerNeu
+
+                    todayRain = float(differenz) * 295.0 / 1000.0
+                    todayRain = round(todayRain,1)
+                postUpdateIfChanged("WeatherStation_Rain_Daily", todayRain)
+            elif input['event'].getItemName() == "WeatherStation_Rain_Rate":
+                rateUpdate = input['event'].getItemState().intValue()
+                rainLevel = 0                      
+                if rateUpdate   <= 524:
+                    rainLevel = 10
+                elif rateUpdate   <= 1310:
+                    rainLevel = 9
+                elif rateUpdate   <= 3276:
+                    rainLevel = 8
+                elif rateUpdate   <= 8192:
+                    rainLevel = 7
+                elif rateUpdate   <= 20480:
+                    rainLevel = 6
+                elif rateUpdate   <= 51200:
+                    rainLevel = 5
+                elif rateUpdate   <= 128000:
+                    rainLevel = 4
+                elif rateUpdate   <= 320000:
+                    rainLevel = 3
+                elif rateUpdate   <= 800000:
+                    rainLevel = 2
+                elif rateUpdate   <= 2000000:
+                    rainLevel = 1
+
+                postUpdateIfChanged("WeatherStation_Rain_State", rainLevel)
+                
+            self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = 2)
 
 @rule("sensor_weatherstation.py")
 class WeatherstationRainLastHourRule:
@@ -256,16 +279,10 @@ class WeatherstationWindRule:
             ItemStateChangeTrigger("WeatherStation_Wind_Direction_Raw")
         ]
 
-    def execute(self, module, input):
-        if input['event'].getItemName() == "WeatherStation_Wind_Direction_Raw":
-            direction = input['event'].getItemState().intValue() + OFFSET_WIND_DIRECTION
-            if direction > 360:
-                direction -= 360
-            elif direction < 0:
-                direction += 360
-            postUpdate("WeatherStation_Wind_Direction",direction)            
-        else:
-            direction = getItemState("WeatherStation_Wind_Direction").intValue()
+        self.updateTimer = None
+
+    def delayUpdate(self):
+        direction = getItemState("WeatherStation_Wind_Direction").intValue()
 
         if direction >= 338 or direction < 23: 
              direction = u"Nord"
@@ -291,6 +308,19 @@ class WeatherstationWindRule:
             msg = u"{} km/h, {}".format(getItemState("WeatherStation_Wind_Speed").format("%.1f"),direction)
 
         postUpdateIfChanged("WeatherStation_Wind_Message", msg)
+
+        self.updateTimer = None
+        
+    def execute(self, module, input):
+        if input['event'].getItemName() == "WeatherStation_Wind_Direction":
+            direction = input['event'].getItemState().intValue() + OFFSET_WIND_DIRECTION
+            if direction > 360:
+                direction -= 360
+            elif direction < 0:
+                direction += 360
+            postUpdate("WeatherStation_Wind_Direction",direction)            
+          
+        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = 2)
   
 @rule("sensor_weatherstation.py")
 class UpdateWindLast15MinutesRule:
@@ -309,22 +339,50 @@ class WeatherstationAirRule:
             ItemStateChangeTrigger("WeatherStation_Temperature_Raw"),
             ItemStateChangeTrigger("WeatherStation_Humidity_Raw")
         ]
-
-    def execute(self, module, input):
-        if input['event'].getItemName() == "WeatherStation_Temperature_Raw":
-            temperature = round(input['event'].getItemState().doubleValue() + OFFSET_TEMPERATURE, 1)
+        self.updateTimer = None
+        self.temperatureUpdate = None
+        
+    def delayUpdate(self):
+        #self.log.info(u">>> delayed: {} {}".format(self.temperatureUpdate != None,self.humidityUpdate != None))
+      
+        if self.temperatureUpdate != None:
+            #temperature = round(input['event'].getItemState().doubleValue() + OFFSET_TEMPERATURE, 1)
+            temperature = self.temperatureUpdate
+            self.log.info(u"Temp: {}".format(temperature))
+            # +30000 because we want to give the last value more priority (30sec of 120sec total)
+            diff = getStableItemState(DateTime(getNow().getMillis()+30000),"WeatherStation_Solar_Power",2) / CELSIUS_HEAT_UNIT
+            if diff > 0:
+                offset = diff * LAZY_OFFSET_TEMPERATURE / LAZY_OFFSET_REF_TEMPERATURE_DIFF
+                temperature = temperature - offset
+                self.log.info(u"New Temp: {} (diff: {}, offset: -{})".format(temperature, diff, offset))
+            
+            temperature = round(temperature + OFFSET_TEMPERATURE, 1)
+            self.log.info(u"New Temp: {} (offset: +{})".format(temperature, OFFSET_TEMPERATURE))
+            
             postUpdate("WeatherStation_Temperature",temperature)
-            humidity = getItemState("WeatherStation_Humidity").intValue()
+            self.temperatureUpdate = None
         else:
             temperature = getItemState("WeatherStation_Temperature").format("%.1f")
-            humidity = int(round(input['event'].getItemState().doubleValue() + OFFSET_HUMIDITY))
-            postUpdate("WeatherStation_Humidity",humidity)
+
+        humidity = getItemState("WeatherStation_Humidity").intValue()
       
         msg = u"";
         msg = u"{}{} °C, ".format(msg,temperature)
         msg = u"{}{}.0 %".format(msg,humidity)
 
         postUpdateIfChanged("WeatherStation_Air_Message", msg)
+        
+        self.updateTimer = None
+
+    def execute(self, module, input):
+        if input['event'].getItemName() == "WeatherStation_Humidity_Raw":
+            humidity = int(round(input['event'].getItemState().doubleValue() + OFFSET_HUMIDITY))
+            postUpdate("WeatherStation_Humidity",humidity)
+        else:
+            self.temperatureUpdate = input['event'].getItemState().doubleValue()
+          
+        # delay to take care of the latest WeatherStation_Solar_Power_Raw update
+        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = 2)
 
 @rule("sensor_weatherstation.py")
 class SunPowerRule:
@@ -397,16 +455,12 @@ class UVIndexRule:
             ItemStateChangeTrigger("WeatherStation_UV_B_Raw")
         ]
 
-    def execute(self, module, input):
-        if input['event'].getItemName() == "WeatherStation_UV_A_Raw":
-            uva = input['event'].getItemState().doubleValue() * UVA_CORRECTION_FACTOR
-            postUpdateIfChanged("WeatherStation_UV_A", uva)
-            uvb = getItemState("WeatherStation_UV_B").doubleValue()
-        else:
-            uva = getItemState("WeatherStation_UV_A").doubleValue()
-            uvb = input['event'].getItemState().doubleValue() * UVB_CORRECTION_FACTOR
-            postUpdateIfChanged("WeatherStation_UV_B", uvb)
-          
+        self.updateTimer = None
+
+    def delayUpdate(self):
+        uva = getItemState("WeatherStation_UV_A").doubleValue()
+        uvb = getItemState("WeatherStation_UV_B").doubleValue()
+        
         uva_weighted = uva * UVA_RESPONSE_FACTOR;
         uvb_weighted = uvb * UVB_RESPONSE_FACTOR;
         uv_index = round( (uva_weighted + uvb_weighted) / 2.0, 1 );
@@ -418,3 +472,15 @@ class UVIndexRule:
         msg = u"{}{:.0f})".format(msg,round(uvb))
 
         postUpdateIfChanged("WeatherStation_UV_Message", msg)
+        
+        self.updateTimer = None
+
+    def execute(self, module, input):
+        if input['event'].getItemName() == "WeatherStation_UV_A_Raw":
+            uva = input['event'].getItemState().doubleValue() * UVA_CORRECTION_FACTOR
+            postUpdateIfChanged("WeatherStation_UV_A", uva)
+        else:
+            uvb = input['event'].getItemState().doubleValue() * UVB_CORRECTION_FACTOR
+            postUpdateIfChanged("WeatherStation_UV_B", uvb)
+          
+        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = 2)

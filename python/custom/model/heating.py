@@ -1059,4 +1059,4 @@ class Heating(object):
 
         Heating.lastRuntime = self.now
 
-        return cr, hhs
+        return cr, cr4, cr8, hhs
