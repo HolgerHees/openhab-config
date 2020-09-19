@@ -17,7 +17,7 @@ Heating.cloudCoverItem = "Cloud_Cover_Current"
 
 Heating.temperatureGardenFC8Item = "Temperature_Garden_Forecast8"
 Heating.temperatureGardenFC4Item = "Temperature_Garden_Forecast4"
-Heating.temperatureGardenItem = "Heating_Temperature_Outdoor" # Temperature_Garden
+Heating.temperatureGardenItem = "Heating_Temperature_Outdoor" # WeatherStation_Temperature
 
 Heating.ventilationFilterRuntimeItem = "Ventilation_Filter_Runtime"
 
@@ -586,17 +586,34 @@ class HeatingControlRule():
     def setSunStates(self, now, cr, cr4, hhs ):
         cloudCover = cr.getCloudCover()
 
-        _messuredRadiation = getStableItemState(now,"WeatherStation_Solar_Power",10)
-        _sunSouthRadiation, _sunWestRadiation, _sunDebugInfo = SunRadiation.getSunPowerPerHour(now,cloudCover,_messuredRadiation)
+        azimut = getItemState("Sun_Azimuth").doubleValue()
+
+        # 225 => 15:32:30.781
+        # 245 => 16:57:30.784
+        # 80 min diff. ( ( ( 24h * 60min ) / 360° ) * 20° )
+        # => ignore radiation in this timewindow because of a tree which is hiding the sun
+        if azimut > 225 and azimut < 245:
+            offset = ( azimut - 225 ) * 80 / 20
+            #self.log.info(u"{}".format(offset))
+            offset = DateTime(now.getMillis()-offset*60*1000)
+            #self.log.info(u"{}".format(offset))
+        else:
+            offset = now
+            
+        _messuredRadiation = getStableItemState(offset,"WeatherStation_Solar_Power",10)
+        _sunSouthRadiation, _sunWestRadiation, _sunDebugInfo = SunRadiation.getSunPowerPerHour(offset,cloudCover,_messuredRadiation)
         effectiveSouthRadiationShortTerm = _sunSouthRadiation / 60.0
         effectiveWestRadiationShortTerm = _sunWestRadiation / 60.0
-        self.log.info(u"Gemessen Avg 10 min: {} {}".format(effectiveSouthRadiationShortTerm, effectiveWestRadiationShortTerm))
+        self.log.info(u"Gemessen Avg 10 min until {}: {} {}".format(offset,effectiveSouthRadiationShortTerm, effectiveWestRadiationShortTerm))
 
-        _messuredRadiation = getStableItemState(now,"WeatherStation_Solar_Power",30)
-        _sunSouthRadiation, _sunWestRadiation, _sunDebugInfo = SunRadiation.getSunPowerPerHour(now,cloudCover,_messuredRadiation)
+        #azimut = getItemState("Sun_Azimuth").doubleValue()
+        #longTermTimeWindow = 120 if azimut > 225 and azimut < 245 else 30 # in this direction a tree is hiding the sun
+        #longTermTimeWindow = 120 if azimut > 228 and azimut < 242 else 30 # in this direction a tree is hiding the sun
+        _messuredRadiation = getStableItemState(offset,"WeatherStation_Solar_Power",30)
+        _sunSouthRadiation, _sunWestRadiation, _sunDebugInfo = SunRadiation.getSunPowerPerHour(offset,cloudCover,_messuredRadiation)
         effectiveSouthRadiationLongTerm = _sunSouthRadiation / 60.0
         effectiveWestRadiationLongTerm = _sunWestRadiation / 60.0
-        self.log.info(u"Gemessen Avg 20 min: {} {}".format(effectiveSouthRadiationLongTerm, effectiveWestRadiationLongTerm))
+        self.log.info(u"Gemessen Avg 30 min until {}: {} {}".format(offset,effectiveSouthRadiationLongTerm, effectiveWestRadiationLongTerm))
       
         effectiveSouthRadiationMax = cr.getSunSouthRadiationMax() / 60.0
         effectiveWestRadiationMax = cr.getSunWestRadiationMax() / 60.0
@@ -624,20 +641,19 @@ class HeatingControlRule():
 
                 if getItemState(transition.getSunProtectionItem()) == ON:
                     radiationTooLow = (effectiveRadiationShortTerm < 2.0 and ( effectiveRadiationMax < 2.0 or effectiveRadiationLongTerm < 2.0 ))
-                    radiationNotWayTooHigh = (effectiveRadiationShortTerm < 12.0 and ( effectiveRadiationMax < 12.0 or effectiveRadiationLongTerm < 12.0 ))
-                    temperatureTooLow = ( \
-                        currentRoomTemperature < targetRoomTemperature - 0.7 \
-                        or \
-                        ( \
-                            currentOutdoorTemperature < targetRoomTemperature - 0.2 \
-                            and \
-                            currentOutdoorTemperature4 < targetRoomTemperature - 0.2 \
-                            and \
-                            currentRoomTemperature < targetRoomTemperature + ( 1.8 if radiationNotWayTooHigh else 0.8 ) \
-                        ) \
-                    )
                     
-                    if radiationTooLow or temperatureTooLow:
+                    roomTemperatureTooCold = currentRoomTemperature < targetRoomTemperature - 0.7
+                    
+                    radiationNotWayTooHigh = (effectiveRadiationShortTerm < 12.0 and ( effectiveRadiationMax < 12.0 or effectiveRadiationLongTerm < 12.0 ))
+                    itsGettingColderAndRoomIsNotWarmEnoughForIt = ( \
+                        currentOutdoorTemperature < targetRoomTemperature - 0.2 \
+                        and \
+                        currentOutdoorTemperature4 < targetRoomTemperature - 0.2 \
+                        and \
+                        currentRoomTemperature < targetRoomTemperature + ( 1.8 if radiationNotWayTooHigh else 0.8 ) \
+                    )
+                  
+                    if radiationTooLow or roomTemperatureTooCold or itsGettingColderAndRoomIsNotWarmEnoughForIt:
                         if itemLastUpdateOlderThen(transition.getSunProtectionItem(), getNow().minusMinutes(60)):
                             postUpdate(transition.getSunProtectionItem(), OFF )
                             self.log.info(u"DEBUG: SP switching off {} {} {} {}".format(room.getName(),effectiveRadiationShortTerm,effectiveRadiationLongTerm,effectiveRadiationMax))
@@ -645,25 +661,24 @@ class HeatingControlRule():
                             self.log.warn(u"DEBUG: SP skipped off {} {} {} {}".format(room.getName(),effectiveRadiationShortTerm,effectiveRadiationLongTerm,effectiveRadiationMax))
                 else:
                     radiationTooHigh = effectiveRadiationShortTerm > 5.0
+                    
+                    roomTemperatureTooWarm = currentRoomTemperature > targetRoomTemperature - 0.5
+                    
                     radiationWayTooHigh = effectiveRadiationShortTerm > 15.0
-                    temperatureTooHigh = ( \
-                        currentRoomTemperature > targetRoomTemperature - 0.5 \
-                        and \
-                        ( \
-                            currentOutdoorTemperature > targetRoomTemperature \
-                            or \
-                            currentOutdoorTemperature4 > targetRoomTemperature \
-                            or \
-                            currentRoomTemperature > targetRoomTemperature + ( 2.0 if not radiationWayTooHigh else 1.0 ) \
-                        ) \
+                    itsGettingWarmerOrRoomIsWayTooWarm = ( \
+                        currentOutdoorTemperature > targetRoomTemperature \
+                        or \
+                        currentOutdoorTemperature4 > targetRoomTemperature \
+                        or \
+                        currentRoomTemperature > targetRoomTemperature + ( 2.0 if not radiationWayTooHigh else 1.0 ) \
                     )
                     
                     #self.log.info(u"{} {}".format(room.getName(),effectiveRadiationShortTerm))
-                    #self.log.info(u"{} {}".format(radiationTooHigh,temperatureTooHigh))
+                    #self.log.info(u"{} {}".format(radiationTooHigh,roomTemperatureTooWarm))
                     #self.log.info(u"{} {}".format(currentRoomTemperature,targetRoomTemperature))
                     #self.log.info(u"{} {}".format(currentOutdoorTemperature,currentOutdoorTemperature4))
                     
-                    if radiationTooHigh and temperatureTooHigh:
+                    if radiationTooHigh and roomTemperatureTooWarm and itsGettingWarmerOrRoomIsWayTooWarm:
                         if itemLastUpdateOlderThen(transition.getSunProtectionItem(), getNow().minusMinutes(30)):
                             postUpdate(transition.getSunProtectionItem(), ON )
                             self.log.info(u"DEBUG: SP switching on {} {} {} {}".format(room.getName(),effectiveRadiationShortTerm,effectiveRadiationLongTerm,effectiveRadiationMax))

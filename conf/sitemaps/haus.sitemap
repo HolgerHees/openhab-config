@@ -386,6 +386,7 @@ sitemap haus label="Main Menu"
                             Setpoint item=Temperature_FF_Floor_Target label="Flur unten [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=Air_FF_Utilityroom_Message
+                        Text item=Air_FF_Garage_Message 
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
@@ -417,34 +418,16 @@ sitemap haus label="Main Menu"
                         Webview url="/static/grafana/temperatures_og.html?fromItem=Chart_From" icon=none height=18
                     }
                 }
-                Group item=Air_Garden_Message label="Garten & Schuppen [%s]"{
-                    Frame label="Daten" {
-                        Text item=Air_FF_Garage_Message 
-                        Group item=Air_Garden_Message label="Garten (Terasse) [%s]"{
-                            Frame {
-                                Text item=Heating_Temperature_Outdoor label="Garten (Schatten) [%.1f °C]"
-                                Text item=Air_Garden_Message label="Garten (Terasse) [%s]"
-                                Text item=Temperature_Garden_Forecast4 label="Garten (in 4 Std) [%.1f °C]"
-                                Text item=Temperature_Garden_Forecast8 label="Garten (in 8 Std) [%.1f °C]"
-                            }
-                            Frame {
-                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/temperatures_garden_details.html?fromItem=Chart_From" icon=none height=27
-                            }
-                        }
-                        Text item=Rain_Garden_Message
-                        Text item=Wind_Message 
-                    }
-                    Frame label="Auswertung" {
-                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/grafana/temperatures_garden.html?fromItem=Chart_From" icon=none height=36
-                    }
-                }
+                Text item=Air_Garden_Message label="Garten Alt [%s]"
                 Group item=WeatherStation_Air_Message label="Wetter [%s]" {
                     Frame label="Wetter" {
                         Text item=WeatherStation_Air_Message {
                             Text item=WeatherStation_Temperature
                             Text item=WeatherStation_Humidity
+                            Text item=WeatherStation_Dewpoint
+                            Text item=Heating_Temperature_Outdoor label="Garten (Schatten) [%.1f °C]"
+                            Text item=Temperature_Garden_Forecast4 label="Garten (in 4 Std) [%.1f °C]"
+                            Text item=Temperature_Garden_Forecast8 label="Garten (in 8 Std) [%.1f °C]"
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                                 Webview url="/static/grafana/weatherstation_temperatures.html?fromItem=Chart_From" icon=none height=27
@@ -465,6 +448,7 @@ sitemap haus label="Main Menu"
                             Text item=WeatherStation_Rain_Counter
                             Text item=WeatherStation_Rain_Impulse
                             Text item=WeatherStation_Rain_Rate
+                            Text item=WeatherStation_Dewpoint
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                                 Webview url="/static/grafana/weatherstation_rain.html?fromItem=Chart_From" icon=none height=12

@@ -77,28 +77,37 @@ Number Temperature_Wireless 	"Funk [%.1f °C]" 		<selftemperature>	(PersistentCh
 Number Humidity_Wireless 					"Funk [%.1f %%]" 		<chart>				(PersistentChart,PersistentHistory) {s300th="address=5;datapoint=HUMIDITY"}
 String Air_Wireless_Message 				"Flur [%s]"				<selftemperature>
 
+
+
+
+
+
 Number Temperature_Garden 	"Garten [%.1f °C]"	<selftemperature> 	(PersistentChart,PersistentHistory,Temperatures,Outdoor) {s300th="address=ks300;datapoint=TEMPERATURE"}
 Number Humidity_Garden 					"Garten [%.1f %%]"	<chart> (PersistentChart,PersistentHistory,Humidity,Outdoor)	{s300th="address=ks300;datapoint=HUMIDITY"}
 String Air_Garden_Message				"Garten Aktuell [%s]"			<selftemperature>
 
-Number Wind_Garden 						"Wind [%d m/s]"					<wind>											{s300th="address=ks300;datapoint=WIND"}
-Number Wind_Garden_Converted			"Wind [%d km/h]"				<wind>			(PersistentHistory)
-Number Wind_Garden_Current 		"Wind [%d]"						<wind>			(PersistentChart,Outdoor) ["Wind", "Measurement"]
+//Number Wind_Garden 						"Wind [%d m/s]"					<wind>											{s300th="address=ks300;datapoint=WIND"}
+//Number Wind_Garden_Converted			"Wind [%d km/h]"				<wind>			(PersistentHistory)
+//Number Wind_Garden_Current 		"Wind [%d]"						<wind>			(PersistentChart,Outdoor) ["Wind", "Measurement"]
 
-Number Rain_Garden_Counter 				"Regen Zähler [%d]"				<chart>				(PersistentHistory)				{s300th="address=ks300;datapoint=RAIN"}
-Number Regen_State_Garden 				"Regen Status [%d]"				<chart>												{s300th="address=ks300;datapoint=IS_RAINING"}
-Number Rain_Garden_Current 				"Regen [%.1f]"					<chart>				(PersistentChart,Outdoor)
-Number Rain_Garden_Current_Daily 		"Regen (heute) [%.1f]"			<chart>				(PersistentChart,Outdoor) ["Rain", "Measurement"]
+//Number Rain_Garden_Counter 				"Regen Zähler [%d]"				<chart>				(PersistentHistory)				{s300th="address=ks300;datapoint=RAIN"}
+//Number Regen_State_Garden 				"Regen Status [%d]"				<chart>												{s300th="address=ks300;datapoint=IS_RAINING"}
+//Number Rain_Garden_Current 				"Regen [%.1f]"					<chart>				(PersistentChart,Outdoor)
+//Number Rain_Garden_Current_Daily 		"Regen (heute) [%.1f]"			<chart>				(PersistentChart,Outdoor) ["Rain", "Measurement"]
+//String Wind_Direction					"Windrichtung [%s]"				<wind>
+//String Wind_Message						"Wind [%s]"						<wind>
+//String Rain_Garden_Message				"Regen [%s]"					<selfrain>
+
+
+
+
+
 
 Number Cloud_Cover_Current				"Wolken [%d]" 					<selftemperature>   
 Number Cloud_Cover_Forecast4			"Wolken (Vorhersage 4Std) [%d]"	<selftemperature>
 Number Temperature_Garden_Forecast4				"Garten (Vorhersage 4Std) [%.1f °C]" <selftemperature>	(PersistentChart,PersistentHistory)
 Number Cloud_Cover_Forecast8			"Wolken (Vorhersage 8Std) [%d]"	<selftemperature>
 Number Temperature_Garden_Forecast8				"Garten (Vorhersage 8Std) [%.1f °C]" <selftemperature>	(PersistentChart,PersistentHistory)
-String Wind_Direction					"Windrichtung [%s]"				<wind>
-String Wind_Message						"Wind [%s]"						<wind>
-
-String Rain_Garden_Message				"Regen [%s]"					<selfrain>
 
 //Number Temperature_Room_Target	        "Ziel [%.1f °C]"				<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
 
@@ -144,7 +153,7 @@ Switch WeatherStation_Is_Working          "Aktiv [%d]"                  <selfclo
 
 Number WeatherStation_Battery_Level       "Batterie Level [%d %%]"      <selfbattery> (PersistentChart,PersistentHistory)
 Number WeatherStation_Battery_Voltage     "Batterie Spannung [%d mV]"	<selfenergy> (Weatherstation,PersistentChart,PersistentHistory) {mqtt="<[mosquitto:mysensors-pub-1/1/0/#:state:default]"}
-Number WeatherStation_Battery_Current	  "Batterie Strom [%.1f mA]"	<selfenergy> (Weatherstation,PersistentChart,PersistentHistory) {mqtt="<[mosquitto:mysensors-pub-1/1/1/#:state:default]"}
+Number WeatherStation_Battery_Current	  "Batterie Strom [%d mA]"	<selfenergy> (Weatherstation,PersistentChart,PersistentHistory) {mqtt="<[mosquitto:mysensors-pub-1/1/1/#:state:default]"}
 String WeatherStation_Battery_Message 	  "Batterie [%s]"	<selfbattery>
 
 Number WeatherStation_Rain_Counter        "Regen Counter [%d]"	<selfrain> (PersistentHistory)
@@ -166,6 +175,8 @@ Number WeatherStation_Wind_Direction_Raw  "Windrichtung [%d °]"	<wind> (Weather
 Number WeatherStation_Wind_Direction      "Windrichtung [%d °]"	<wind>
 String WeatherStation_Wind_Message 	      "Wind [%s]"	<wind>
 
+Number WeatherStation_Dewpoint            "Taupunkt [%.1f °C]"	<selftemperature>
+
 Number WeatherStation_Temperature_Raw     "Temperatur [%.1f °C]"	<selftemperature> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/8/#:state:default]"}
 Number WeatherStation_Temperature         "Temperatur [%.1f °C]"	<selftemperature> (PersistentChart,PersistentHistory,Temperatures,Outdoor)
 Number WeatherStation_Humidity_Raw        "Luftfeuchtigkeit [%.1f %%]"	<humidity> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/9/#:state:default]"}
@@ -175,8 +186,8 @@ String WeatherStation_Air_Message 		  "Luft [%s]"	<selftemperature>
 Number WeatherStation_Pressure            "Luftdruck [%.1f hPa]"	<selfruntime> (Weatherstation,PersistentChart,PersistentHistory) {mqtt="<[mosquitto:mysensors-pub-1/1/10/#:state:default]"}
 Number WeatherStation_Solar_Power_Raw     "Sonnenkraft [%.1f °C]"	<selfsun> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/11/#:state:default]"}
 Number WeatherStation_Solar_Power         "Sonnenkraft [%.1f Watt/m²]"	<selfsun> (PersistentChart,PersistentHistory)
-Number WeatherStation_Solar_Power_Test1   "Sonnenkraft Cur. [%.1f Watt/m²]"	<selfsun>
-Number WeatherStation_Solar_Power_Test2   "Sonnenkraft Max. [%.1f Watt/m²]"	<selfsun>
+Number WeatherStation_Solar_Power_Test1   "Sonnenkraft Cur. [%.1f Watt/m²]"	<selfsun> (PersistentChart,PersistentHistory)
+Number WeatherStation_Solar_Power_Test2   "Sonnenkraft Max. [%.1f Watt/m²]"	<selfsun> (PersistentChart,PersistentHistory)
 Number WeatherStation_Light_Level         "Helligkeit [%d lux]"	<selfsun> (Weatherstation,PersistentChart,PersistentHistory) {mqtt="<[mosquitto:mysensors-pub-1/1/12/#:state:default]"}
 
 Number WeatherStation_UV_Index            "UV Index [%.1f]"	<selfsun> (PersistentChart,PersistentHistory)
