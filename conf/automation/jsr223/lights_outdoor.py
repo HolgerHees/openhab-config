@@ -140,7 +140,7 @@ class MotionDetectorRule:
         global timerMappings
         if getItemState(entry[1]) == ON:
             if getItemState(entry[2]) == OPEN:
-                timerMappings[entry[0]] = createTimer(timerDuration, self.callback,[entry])
+                timerMappings[entry[0]] = createTimer(self.log, timerDuration, self.callback,[entry])
                 timerMappings[entry[0]].start()
             else:
                 global ruleTimeouts
@@ -158,7 +158,7 @@ class MotionDetectorRule:
         if getItemState("State_Outdoorlights") == ON and getItemState(entry[1]) == ON:
             if timerMappings.get(entry[0]) is not None:
                 timerMappings[entry[0]].cancel()
-            timerMappings[entry[0]] = createTimer(timerDuration, self.callback, [entry] )
+            timerMappings[entry[0]] = createTimer(self.log, timerDuration, self.callback, [entry] )
             timerMappings[entry[0]].start()
 
             global ruleTimeouts
@@ -180,7 +180,7 @@ class TerasseMotionDetectorRule:
         global timerMappings
         if getItemState("Motiondetector_Outdoor_Terrace_Switch") == ON:
             if getItemState("Motiondetector_Outdoor_Terrace1") == OPEN or getItemState("Motiondetector_Outdoor_Terrace2") == OPEN:
-                timerMappings["Light_Outdoor_Terrace"] = createTimer(timerDuration, self.callback)
+                timerMappings["Light_Outdoor_Terrace"] = createTimer(self.log, timerDuration, self.callback)
                 timerMappings["Light_Outdoor_Terrace"].start()
             else:
                 global ruleTimeouts
@@ -196,7 +196,7 @@ class TerasseMotionDetectorRule:
             global timerMappings
             if timerMappings.get("Light_Outdoor_Terrace") is not None:
                 timerMappings["Light_Outdoor_Terrace"].cancel()
-            timerMappings["Light_Outdoor_Terrace"] = createTimer(timerDuration, self.callback )
+            timerMappings["Light_Outdoor_Terrace"] = createTimer(self.log, timerDuration, self.callback )
             timerMappings["Light_Outdoor_Terrace"].start()
 
             global ruleTimeouts

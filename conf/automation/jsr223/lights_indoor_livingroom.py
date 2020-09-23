@@ -145,10 +145,10 @@ class HueColorProgramRule:
         self._setCurrentColors([newColor1,newColor2,newColor3,newColor4,newColor5])
         
         if step < self.fadingSteps:
-            self.timer = createTimer(self.timeout, self.callbackFaded, [step + 1, data] )
+            self.timer = createTimer(self.log, self.timeout, self.callbackFaded, [step + 1, data] )
             self.timer.start()
         else:
-            self.timer = createTimer(self.timeout, self.callbackFaded, [1, self._getCurrentColors() ] )
+            self.timer = createTimer(self.log, self.timeout, self.callbackFaded, [1, self._getCurrentColors() ] )
             self.timer.start()
     
     def callback(self):
@@ -170,7 +170,7 @@ class HueColorProgramRule:
         sendCommand("Light_FF_Livingroom_Hue_Color4",color5)
         sendCommand("Light_FF_Livingroom_Hue_Color5",color1)
                     
-        self.timer = createTimer(self.timeout, self.callback )
+        self.timer = createTimer(self.log, self.timeout, self.callback )
         self.timer.start()
             
     def execute(self, module, input):
@@ -189,10 +189,10 @@ class HueColorProgramRule:
 
             if itemState == 1:
 
-                self.timer = createTimer(1, self.callback)
+                self.timer = createTimer(self.log, 1, self.callback)
                 self.timer.start()
 
             elif itemState == 2:
         
-                self.timer = createTimer(1, self.callbackFaded, [1, self.orgColors])
+                self.timer = createTimer(self.log, 1, self.callbackFaded, [1, self.orgColors])
                 self.timer.start()'''

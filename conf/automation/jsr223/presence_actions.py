@@ -41,7 +41,7 @@ class ArrivingActionRule:
         elif itemLastChangeOlderThen("Door_FF_Floor", getNow().minusMinutes(10)):
             self.isArriving = input["event"].getItemState().intValue() == 1 and input["oldState"].intValue() == 0
             if self.isArriving:
-                self.arrivingTimer = createTimer(60, self.arrivingCallback )
+                self.arrivingTimer = createTimer(self.log, 60, self.arrivingCallback )
                 self.arrivingTimer.start()
 
 @rule("presence_detection.py") 

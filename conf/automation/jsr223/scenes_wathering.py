@@ -192,7 +192,7 @@ class ScenesWatheringRule(WatheringHelperOld):
         self.currentProgressMsg = msg
         postUpdate("Watering_Program_State", self.currentProgressMsg)
 
-        self.progressTimer = createTimer(60.0, self.callbackProgress)
+        self.progressTimer = createTimer(self.log, 60.0, self.callbackProgress)
         self.progressTimer.start()
 
     def execute(self, module, input):

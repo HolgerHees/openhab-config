@@ -5,13 +5,16 @@ from custom.model.sun import SunRadiation
 
 from org.joda.time import DateTime
 import math
+import json
+import traceback
 
 # base offset measured at 25°C
+#OFFSET_TEMPERATURE  = 1.1
 OFFSET_TEMPERATURE  = 1.1
 # compensate heating from direct sunlight
-# 1.1 °C negative temperature offset for each 20 °C diff between ntc and raw temperature
-LAZY_OFFSET_TEMPERATURE  = 1.2
-LAZY_OFFSET_REF_TEMPERATURE_DIFF = 10.0
+# 1.2 °C negative temperature offset for each 10 °C diff between ntc and raw temperature
+#LAZY_OFFSET_TEMPERATURE  = 1.2
+LAZY_OFFSET_TEMPERATURE  = 2.0
 
 OFFSET_WIND_DIRECTION = -135
 
@@ -56,12 +59,71 @@ fuelLevel =[
   [ 4200, 100 ]
 ];
 
+def addToStack(self,stackName,itemValue):
+    value = getItemState(stackName).toString()
+    if value == "NULL":
+        stack = []
+    else:
+        stack = json.loads(value)
+        
+    if itemValue == None:
+        # avoid adding None twice
+        if stack[len(stack)-1][1] == None:
+            return
+        stack = [ [ getNow().getMillis(), itemValue ] ]
+    else:
+        stack.append([getNow().getMillis(),itemValue])
+        if len(stack) > 5:
+            stack = stack[-5:]
+        
+    #self.log.info(u"Save {}: {}".format(stackName,json.dumps(stack)))
+    postUpdate(stackName,json.dumps(stack))
+    return stack
+
+def getAvgStackValue(self,stackName,itemName):
+    value = getItemState(stackName).toString()
+    if value == "NULL":
+        self.log.warn(u"Fallback {}".format(stackName))
+        stack = addToStack(self,stackName,getItemState(itemName).doubleValue())
+    else:
+        stack = json.loads(value)
+        
+    maxTimestamp = getNow().getMillis() + 60000
+    minTimestamp = maxTimestamp - 5 * 60 * 1000
+    currentTimestamp = maxTimestamp
+    
+    avgValue = 0
+    for index, x in enumerate( reversed(stack) ): 
+        if x[1] == None:
+            break
+        fromTimestamp = x[0] if x[0] > minTimestamp else minTimestamp
+        avgValue += x[1] * ( currentTimestamp - fromTimestamp )
+        currentTimestamp = fromTimestamp
+        if currentTimestamp == minTimestamp:
+            break
+          
+    # return immediately if:
+    # - value timestamp == maxTimestamp
+    # - last value is None
+    if maxTimestamp == currentTimestamp:
+        return stack[len(stack)-1][1]
+      
+    #self.log.info(u"{}".format(maxTimestamp))
+    #self.log.info(u"{}".format(minTimestamp))
+    #self.log.info(u"{}".format(currentTimestamp))
+    #self.log.info(u"{}".format(json.dumps(stack)))
+    avgValue = avgValue / (maxTimestamp - currentTimestamp)  
+
+    #self.log.info(u"AVG {}: {}".format(stackName,avgValue))
+    return avgValue
+  
 @rule("sensor_weatherstation.py")
 class WeatherstationLastUpdateRule:
     def __init__(self):
         self.triggers = [
             CronTrigger("0 * * * * ?")
         ]
+        #solar3 = getAvgStackValue(self,"WeatherStation_Solar_Power_Stack","WeatherStation_Solar_Power_Raw")
 
     def execute(self, module, input):
         now = getNow().getMillis()
@@ -153,7 +215,7 @@ class WeatherstationBatteryRule:
                             break
             postUpdateIfChanged("WeatherStation_Battery_Level", level)
          
-        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
+        self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
         
 @rule("sensor_weatherstation.py")
 class WeatherstationRainHeaterRule:
@@ -177,7 +239,7 @@ class WeatherstationRainHeaterRule:
                     self.timer = None
         else:
             if getItemState("WeatherStation_Rain_Heater") == ON and self.timer == None:
-                self.timer = createTimer(300,self.disable) # max 5 min
+                self.timer = createTimer(self.log, 300,self.disable) # max 5 min
                 self.timer.start()
 
             Mqtt.publish("mosquitto","mysensors-sub-1/1/4/1/0/2", u"{}".format(1 if getItemState("WeatherStation_Rain_Heater") == ON else 0));
@@ -210,6 +272,8 @@ class WeatherstationRainRule:
             rainState = "Stark"
         else:
             rainState = "Extrem"
+            
+        postUpdateIfChanged("WeatherStation_Rain_State_Message", u"{} ({})".format(rainState,rainLevel))
       
         msg = u"";
         msg = u"{}{}".format(msg,"{} mm, ".format(todayRain) if todayRain > 0 else "" )
@@ -279,7 +343,7 @@ class WeatherstationRainRule:
 
                 postUpdateIfChanged("WeatherStation_Rain_State", rainLevel)
                 
-            self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers) - 1)
+            self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers) - 1)
 
 @rule("sensor_weatherstation.py")
 class WeatherstationRainLastHourRule:
@@ -316,34 +380,37 @@ class WeatherstationWindRule:
         direction = getItemState("WeatherStation_Wind_Direction").intValue()
 
         if direction >= 338 or direction < 23: 
-             direction = u"Nord"
+            directionMsg = u"Nord"
         elif direction < 68: 
-            direction = u"Nordost"
+            directionMsg = u"Nordost"
         elif direction < 113: 
-            direction = u"Ost"
+            directionMsg = u"Ost"
         elif direction < 158: 
-            direction = u"Südost"
+            directionMsg = u"Südost"
         elif direction < 203: 
-            direction = u"Süd"
+            directionMsg = u"Süd"
         elif direction < 248: 
-            direction = u"Südwest"
+            directionMsg = u"Südwest"
         elif direction < 293: 
-            direction = u"West"
+            directionMsg = u"West"
         elif direction < 338: 
-            direction = u"Nordwest"
+            directionMsg = u"Nordwest"
+        else:
+            directionMsg = u""
         
-        msg = u""
+        postUpdateIfChanged("WeatherStation_Wind_Direction_Message", directionMsg)
+        
         if getItemState("WeatherStation_Wind_Speed").doubleValue() == 0:
             msg = u"Ruhig"
         else:
-            msg = u"{} km/h, {}".format(getItemState("WeatherStation_Wind_Speed").format("%.1f"),direction)
+            msg = u"{} m/s, {}".format(getItemState("WeatherStation_Wind_Speed").format("%.1f"),directionMsg)
 
         postUpdateIfChanged("WeatherStation_Wind_Message", msg)
 
         self.updateTimer = None
         
     def execute(self, module, input):
-        if input['event'].getItemName() == "WeatherStation_Wind_Direction":
+        if input['event'].getItemName() == "WeatherStation_Wind_Direction_Raw":
             direction = input['event'].getItemState().intValue() + OFFSET_WIND_DIRECTION
             if direction > 360:
                 direction -= 360
@@ -351,7 +418,7 @@ class WeatherstationWindRule:
                 direction += 360
             postUpdate("WeatherStation_Wind_Direction",direction)            
           
-        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
+        self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
   
 @rule("sensor_weatherstation.py")
 class UpdateWindLast15MinutesRule:
@@ -368,39 +435,76 @@ class WeatherstationAirRule:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("WeatherStation_Temperature_Raw"),
-            ItemStateChangeTrigger("WeatherStation_Humidity_Raw")
+            ItemStateChangeTrigger("WeatherStation_Humidity_Raw"),
+            ItemStateChangeTrigger("WeatherStation_Solar_Temperature_Raw")
         ]
         self.updateTimer = None
         self.temperatureUpdate = None
+        self.solarUpdate = None
         
-    def delayUpdate(self):
-        #self.log.info(u">>> delayed: {} {}".format(self.temperatureUpdate != None,self.humidityUpdate != None))
-      
-        if self.temperatureUpdate != None:
-            if self.temperatureUpdate > -100 and self.temperatureUpdate < 100:
-                #temperature = round(input['event'].getItemState().doubleValue() + OFFSET_TEMPERATURE, 1)
-                temperature = self.temperatureUpdate
-                #self.log.info(u"Temp: {}".format(temperature))
-                # +30000 because we want to give the last value more priority (30sec of 120sec total)
-                diff = getStableItemState(DateTime(getNow().getMillis()+30000),"WeatherStation_Solar_Power",2) / CELSIUS_HEAT_UNIT
-                if diff > 0:
-                    offset = diff * LAZY_OFFSET_TEMPERATURE / LAZY_OFFSET_REF_TEMPERATURE_DIFF
-                    temperature = temperature - offset
-                    #self.log.info(u"New Temp: {} (diff: {}, offset: -{})".format(temperature, diff, offset))
-                
-                temperature = round(temperature + OFFSET_TEMPERATURE, 1)
-                #self.log.info(u"New Temp: {} (offset: +{})".format(temperature, OFFSET_TEMPERATURE))
-                
-                postUpdate("WeatherStation_Temperature",temperature)
-            else:
-                self.log.warn(u"Fallback. Got wrong temperature value: {}".format(self.temperatureUpdate))
-                temperature = round(getItemState("WeatherStation_Temperature").doubleValue(),1)
-            self.temperatureUpdate = None
+    def calculateSolarPower(self):
+        if getItemState("WeatherStation_Light_Level").intValue() > 500:
+            solar_temperature = getItemState("WeatherStation_Solar_Temperature_Raw").doubleValue() + OFFSET_NTC
+            outdoor_temperature = getItemState("WeatherStation_Temperature_Raw").doubleValue()
+            if outdoor_temperature > -100 and outdoor_temperature < 100:
+                if solar_temperature < outdoor_temperature:
+                    postUpdateIfChanged("WeatherStation_Solar_Power", 0)
+                else:
+                    diff = solar_temperature - outdoor_temperature
+                    power = diff * CELSIUS_HEAT_UNIT
+                    postUpdateIfChanged("WeatherStation_Solar_Power", round(power,1))
+                    
+            if self.solarUpdate != None:
+                addToStack(self,"WeatherStation_Solar_Temperature_Stack",solar_temperature)  
         else:
-            temperature = round(getItemState("WeatherStation_Temperature").doubleValue(),1)
+            if self.solarUpdate != None:
+                addToStack(self,"WeatherStation_Solar_Temperature_Stack",None)  
+                
+            postUpdateIfChanged("WeatherStation_Solar_Power", 0)
+            
+        azimut = getItemState("Sun_Azimuth").doubleValue()
+        elevation = getItemState("Sun_Elevation").doubleValue()
+        _usedRadians = math.radians(elevation)
+        if _usedRadians < 0.0: _usedRadians = 0.0
+        
+        # http://www.shodor.org/os411/courses/_master/tools/calculators/solarrad/
+        # http://scool.larc.nasa.gov/lesson_plans/CloudCoverSolarRadiation.pdf
+        _maxRadiation = 990.0 * math.sin( _usedRadians ) - 30.0
+        if _maxRadiation < 0.0: _maxRadiation = 0.0
+        
+        postUpdateIfChanged("WeatherStation_Solar_Power_Test2", _maxRadiation)
 
-        humidity = getItemState("WeatherStation_Humidity").intValue()
-      
+        # apply cloud cover
+        _cloudCover = getItemState("Cloud_Cover_Current").doubleValue()
+        if _cloudCover > 8.0: _cloudCover = 8.0
+        _cloudCoverFactor = _cloudCover / 8.0
+        _currentRadiation = _maxRadiation * ( 1.0 - 0.75 * math.pow( _cloudCoverFactor, 3.4 ) )
+        
+        postUpdateIfChanged("WeatherStation_Solar_Power_Test1", _currentRadiation)
+
+        #_messuredRadiation = getItemState("WeatherStation_Solar_Power").doubleValue()
+        
+        #self.log.info(u"SolarPower messured: {}, calculated: {}".format(_messuredRadiation,_currentRadiation))
+        
+    def calculateTemperature(self):          
+        # don't add invalid values to stack
+        if self.temperatureUpdate != None and self.temperatureUpdate > -100 and self.temperatureUpdate < 100:
+            addToStack(self,"WeatherStation_Temperature_Stack",self.temperatureUpdate)
+          
+        temperature = getAvgStackValue(self,"WeatherStation_Temperature_Stack","WeatherStation_Temperature_Raw")
+        solar_temperature = getAvgStackValue(self,"WeatherStation_Solar_Temperature_Stack","WeatherStation_Solar_Temperature_Raw")
+
+        if solar_temperature != None and solar_temperature > temperature:
+            offset = (solar_temperature - temperature) * LAZY_OFFSET_TEMPERATURE / 10.0
+            temperature = temperature - offset
+        temperature = round(temperature + OFFSET_TEMPERATURE, 1)
+        postUpdateIfChanged("WeatherStation_Temperature",temperature)
+
+        # only temporary for debugging
+        postUpdateIfChanged("SolarDiffCurrent", ( solar_temperature - temperature ) / 10.0 if solar_temperature != None else 0 )
+        postUpdateIfChanged("TemperatureDiff", temperature - getItemState("Temperature_Garden").doubleValue() )
+
+    def calculateDewpoint(self,temperature,humidity):
         # https://rechneronline.de/barometer/taupunkt.php
         if temperature>0:
             k2=17.62
@@ -425,6 +529,17 @@ class WeatherstationAirRule:
 
         postUpdateIfChanged("WeatherStation_Dewpoint", round(dewpoint,1))
         
+    def delayUpdate(self):
+        # we need to calculate only if we have outdoor or solar temperature changes
+        if self.solarUpdate != None or self.temperatureUpdate != None:
+            self.calculateSolarPower()
+            self.calculateTemperature()
+        
+        temperature = round(getItemState("WeatherStation_Temperature").doubleValue(),1)
+        humidity = getItemState("WeatherStation_Humidity").intValue()
+        
+        self.calculateDewpoint(temperature,humidity)
+              
         msg = u"";
         msg = u"{}{} °C, ".format(msg,temperature)
         msg = u"{}{}.0 %".format(msg,humidity)
@@ -432,6 +547,8 @@ class WeatherstationAirRule:
         postUpdateIfChanged("WeatherStation_Air_Message", msg)
         
         self.updateTimer = None
+        self.solarUpdate = None
+        self.temperatureUpdate = None
 
     def execute(self, module, input):
         if input['event'].getItemName() == "WeatherStation_Humidity_Raw":
@@ -440,75 +557,14 @@ class WeatherstationAirRule:
                 postUpdate("WeatherStation_Humidity",humidity)
             else:
                 self.log.warn(u"Fallback. Got wrong humidity value: {}".format(humidity))
+        elif input['event'].getItemName() == "WeatherStation_Solar_Temperature_Raw":
+            self.solarUpdate = input['event'].getItemState().doubleValue()
         else:
             self.temperatureUpdate = input['event'].getItemState().doubleValue()
           
         # delay to take care of the latest WeatherStation_Solar_Power_Raw update
-        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
+        self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
 
-@rule("sensor_weatherstation.py")
-class SunPowerRule:
-    def __init__(self):
-        self.triggers = [
-            ItemStateChangeTrigger("WeatherStation_Solar_Power_Raw")
-        ]
-
-    def execute(self, module, input):
-        if getItemState("WeatherStation_Light_Level").intValue() > 500:
-            solar_temperature = input['event'].getItemState().doubleValue() + OFFSET_NTC
-            outdoor_temperature = getItemState("WeatherStation_Temperature").doubleValue()
-            if solar_temperature < outdoor_temperature:
-                postUpdateIfChanged("WeatherStation_Solar_Power", 0)
-            else:
-                diff = solar_temperature - outdoor_temperature
-                power = diff * CELSIUS_HEAT_UNIT
-                postUpdateIfChanged("WeatherStation_Solar_Power", round(power,1))
-        else:
-            postUpdateIfChanged("WeatherStation_Solar_Power", 0)
-            
-            
-            
-            
-            
-        azimut = getItemState("Sun_Azimuth").doubleValue()
-        elevation = getItemState("Sun_Elevation").doubleValue()
-        _usedRadians = math.radians(elevation)
-        if _usedRadians < 0.0: _usedRadians = 0.0
-        
-        # http://www.shodor.org/os411/courses/_master/tools/calculators/solarrad/
-        # http://scool.larc.nasa.gov/lesson_plans/CloudCoverSolarRadiation.pdf
-        _maxRadiation = 990.0 * math.sin( _usedRadians ) - 30.0
-        if _maxRadiation < 0.0: _maxRadiation = 0.0
-        
-        postUpdateIfChanged("WeatherStation_Solar_Power_Test2", _maxRadiation)
-
-        # apply cloud cover
-        _cloudCover = getItemState("Cloud_Cover_Current").doubleValue()
-        if _cloudCover > 8.0: _cloudCover = 8.0
-        _cloudCoverFactor = _cloudCover / 8.0
-        _currentRadiation = _maxRadiation * ( 1.0 - 0.75 * math.pow( _cloudCoverFactor, 3.4 ) )
-        
-        postUpdateIfChanged("WeatherStation_Solar_Power_Test1", _currentRadiation)
-
-        _messuredRadiation = getItemState("WeatherStation_Solar_Power").doubleValue()
-        
-        #self.log.info(u"SolarPower messured: {}, calculated: {}".format(_messuredRadiation,_currentRadiation))
-            
-#@rule("sensor_weatherstation.py")
-#class SunPowerDebugRule:
-#    def __init__(self):
-#        self.triggers = [CronTrigger("*/5 * * * * ?")]
-#
-#    def execute(self, module, input):
-#      
-#        _currentRadiation = getItemState("WeatherStation_Solar_Power").doubleValue()
-#
-#        sunSouthRadiation, sunWestRadiation, sunDebugInfo = SunRadiation.getSunPowerPerHour(getNow(),getItemState("Cloud_Cover_Current").doubleValue())
-#        self.log.info(u"Berechnet: {} {}".format(sunSouthRadiation, sunWestRadiation))
-#        
-#        sunSouthRadiation, sunWestRadiation, sunDebugInfo = SunRadiation.getSunPowerPerHour(getNow(),getItemState("Cloud_Cover_Current").doubleValue(),_currentRadiation)
-#        self.log.info(u"Gemessen: {} {}".format(sunSouthRadiation, sunWestRadiation))
- 
 @rule("sensor_weatherstation.py")
 class UVIndexRule:
     def __init__(self):
@@ -545,4 +601,4 @@ class UVIndexRule:
             uvb = input['event'].getItemState().doubleValue() * UVB_CORRECTION_FACTOR
             postUpdateIfChanged("WeatherStation_UV_B", uvb)
           
-        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
+        self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))

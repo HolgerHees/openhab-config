@@ -39,7 +39,7 @@ class VentilationEfficiencyRule:
         self.updateTimer = None
 
     def execute(self, module, input):
-        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
+        self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
         
 @rule("ventilation_control.py")
 class FilterRuntimeRule:
@@ -104,7 +104,7 @@ class FilterStateMessageRule:
         self.updateTimer = None
 
     def execute(self, module, input):
-        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
+        self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
 
 @rule("ventilation_control.py")
 class FilterOutdoorTemperatureMessageRule:
@@ -122,7 +122,7 @@ class FilterOutdoorTemperatureMessageRule:
         self.updateTimer = None
 
     def execute(self, module, input):
-        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
+        self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
 
 @rule("ventilation_control.py")
 class FilterIndoorTemperatureMessageRule:
@@ -140,7 +140,7 @@ class FilterIndoorTemperatureMessageRule:
         self.updateTimer = None
 
     def execute(self, module, input):
-        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
+        self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
 
 @rule("ventilation_control.py")
 class FilterVentilationMessageRule:
@@ -158,7 +158,7 @@ class FilterVentilationMessageRule:
         self.updateTimer = None
 
     def execute(self, module, input):
-        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
+        self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
 
 @rule("ventilation_control.py")
 class FilterManualActionRule:

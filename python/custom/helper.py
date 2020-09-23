@@ -170,7 +170,7 @@ class rule(object):
 class NotInitialisedException(Exception):
     pass
 
-def startTimer(duration, callback, args=[], kwargs={}, oldTimer = None, groupCount = 0 ):
+def startTimer(log, duration, callback, args=[], kwargs={}, oldTimer = None, groupCount = 0 ):
     if oldTimer != None:
         oldTimer.cancel()
         groupCount = oldTimer.groupCount
@@ -182,17 +182,29 @@ def startTimer(duration, callback, args=[], kwargs={}, oldTimer = None, groupCou
         
         return None
     else:
-        timer = createTimer(duration, callback, args, kwargs )
+        timer = createTimer(log, duration, callback, args, kwargs )
         timer.start()
         timer.groupCount = groupCount
 
         return timer
 
 class createTimer:
-    def __init__(self,duration, callback, args=[], kwargs={}):
-        self.timer = threading.Timer(duration, callback, args, kwargs)
+    def __init__(self,log, duration, callback, args=[], kwargs={}):
+        self.log = log
+        self.callback = callback
+        self.args = args
+        self.kwargs = kwargs
+        
+        self.timer = threading.Timer(duration, self.handler)
         #log.info(str(self.timer))
         
+    def handler(self):
+        try:
+            self.callback(*self.args, **self.kwargs)
+        except:
+            self.log.error(u"{}".format(traceback.format_exc()))
+            raise
+          
     def start(self):
         if not self.timer.isAlive():
             #log.info("timer started")

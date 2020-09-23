@@ -595,7 +595,7 @@ class HeatingControlRule():
         if azimut > 225 and azimut < 245:
             offset = ( azimut - 225 ) * 80 / 20
             #self.log.info(u"{}".format(offset))
-            offset = DateTime(now.getMillis()-offset*60*1000)
+            offset = DateTime(int(now.getMillis()-offset*60*1000))
             #self.log.info(u"{}".format(offset))
         else:
             offset = now

@@ -21,7 +21,7 @@ class LightsOnRule:
                 sendCommand("Socket_Mobile_1", ON)
 
                 # must be a timer, otherwise sometimes it does not work. Maybe a conflict with Socket_Mobile_1 action
-                timer = createTimer(1.0,self.callback,[ON])
+                timer = createTimer(self.log, 1.0,self.callback,[ON])
                 timer.start()
                 
             else:
@@ -31,5 +31,5 @@ class LightsOnRule:
                 sendCommand("Socket_Mobile_1", OFF)
 
                 # must be a timer, otherwise sometimes it does not work. Maybe a conflict with Socket_Mobile_1 action
-                timer = createTimer(1.0,self.callback,[OFF])
+                timer = createTimer(self.log, 1.0,self.callback,[OFF])
                 timer.start()

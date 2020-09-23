@@ -128,6 +128,6 @@ class InfoValueRule:
 
         # group 2 value updates into one message update
         # we have to delay 4 seconds, because sensor delay between 2 values is 3 seconds
-        self.updateTimer[data[0]] = startTimer(4, self.updateInfoMessage, args = [data[0], data[1], data[2], data[3]], oldTimer = self.updateTimer[data[0]], groupCount=2 )
+        self.updateTimer[data[0]] = startTimer(self.log, 4, self.updateInfoMessage, args = [data[0], data[1], data[2], data[3]], oldTimer = self.updateTimer[data[0]], groupCount=2 ) 
         #self.updateInfoMessage()
 

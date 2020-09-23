@@ -14,12 +14,14 @@ class RoboterMessagesRule:
     def execute(self, module, input):
         group = "Fehler"
         active = []
-
+        url = None
+        
         if getItemState("roomba_status").toString() == "Stuck" or getItemState("roomba_full") == ON:
             active.append("Roomba")
 
         if getItemState("MowerStatus").intValue() == 7 or getItemState("MowerStatus").intValue() == 8:
             active.append("Mower")
+            url = "https://smartmarvin.de/cameraAutomowerImage"
 
         if len(active) == 0:
             active.append("Alles normal")

@@ -19,7 +19,7 @@ class HeatingPowerMessageRule:
         self.updateTimer = None
 
     def execute(self, module, input):
-        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
+        self.updateTimer = startTimer(self.log,DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
 
 @rule("heating_messages.py")
 class HeatingTemperatureOutdoorMessageRule:
@@ -41,7 +41,7 @@ class HeatingTemperatureOutdoorMessageRule:
         if input['event'].getItemName() == "Temperature_Garden_Forecast4":
             self.delayUpdate()
         else:
-            self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers) - 1)
+            self.updateTimer = startTimer(self.log,DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers) - 1)
 
 @rule("heating_messages.py")
 class HeatingTemperatureOffsetMessageRule:
@@ -59,7 +59,7 @@ class HeatingTemperatureOffsetMessageRule:
         self.updateTimer = None
 
     def execute(self, module, input):
-        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
+        self.updateTimer = startTimer(self.log,DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
 
 @rule("heating_messages.py")
 class HeatingTemperatureBoilerMessageRule:
@@ -77,7 +77,7 @@ class HeatingTemperatureBoilerMessageRule:
         self.updateTimer = None
 
     def execute(self, module, input):
-        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
+        self.updateTimer = startTimer(self.log,DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
 
 @rule("heating_messages.py")
 class BurnerStartsRule:
@@ -133,7 +133,7 @@ class HeatingTemperatureSolarMessageRule:
         self.updateTimer = None
 
     def execute(self, module, input):
-        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
+        self.updateTimer = startTimer(self.log,DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
 
 @rule("heating_messages.py")
 class HeatingSolarStateMessageRule:
@@ -162,7 +162,7 @@ class HeatingSolarStateMessageRule:
         self.updateTimer = None
 
     def execute(self, module, input):
-        self.updateTimer = startTimer(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
+        self.updateTimer = startTimer(self.log,DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
  
 @rule("heating_messages.py")
 class SolarHoursRule:
