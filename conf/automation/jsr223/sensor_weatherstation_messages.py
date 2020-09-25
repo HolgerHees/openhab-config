@@ -178,7 +178,7 @@ class WeatherstationLastUpdateRule:
             
         if oldestUpdateInMinutes > 10:
             for state in states:
-                self.log.debug(state[1])
+                self.log.debug(states[state][1])
                 
             if not self.notified:
                 self.log.error("Weatherstation has problems")
