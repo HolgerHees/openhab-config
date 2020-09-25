@@ -127,8 +127,10 @@ class Heating(object):
     def getHeatingDemandItem(room):
         return Heating.heatingDemandItemPlaceholder.format(room.getName())
 
-    def __init__(self,log):
-        self.log = log
+    def __init__(self,log,outdoorTemperatureItem):
+        self.log = log 
+        Heating.temperatureGardenItem = outdoorTemperatureItem
+         
         self.cache = {}
         self.now = getNow()
 

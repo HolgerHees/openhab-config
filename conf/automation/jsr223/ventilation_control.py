@@ -194,7 +194,9 @@ class FilterFanLevelRule:
         presenceSate = getItemState("State_Presence").intValue()
         
         isTooWarm = raumTemperatur >= zielTemperatur
-        coolingPossible = getItemState("WeatherStation_Temperature").doubleValue() < raumTemperatur
+        
+        outdoorTemperatureItemName = getItemState("Outdoor_Temperature_Item_Name").toString()
+        coolingPossible = getItemState(outdoorTemperatureItemName).doubleValue() < raumTemperatur
 
         # Sleep
         if presenceSate == 2:

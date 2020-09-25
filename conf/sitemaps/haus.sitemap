@@ -418,7 +418,6 @@ sitemap haus label="Main Menu"
                         Webview url="/static/grafana/temperatures_og.html?fromItem=Chart_From" icon=none height=18
                     }
                 }
-                Text item=Air_Garden_Message label="Garten Alt [%s]"
                 Group item=WeatherStation_Air_Message label="Wetter [%s]" {
                     Frame label="Wetter" {
                         Text item=WeatherStation_Air_Message {
@@ -445,7 +444,7 @@ sitemap haus label="Main Menu"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/weatherstation_pressure.html?fromItem=Chart_From" icon=none height=6
+                                Webview url="/static/grafana/weatherstation_pressure.html?fromItem=Chart_From" icon=none height=7
                             }
                         }
                         Text item=WeatherStation_Rain_Message {
@@ -456,7 +455,7 @@ sitemap haus label="Main Menu"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/weatherstation_rain.html?fromItem=Chart_From" icon=none height=12
+                                Webview url="/static/grafana/weatherstation_rain.html?fromItem=Chart_From" icon=none height=14
                             }
                             Frame label="Debug" {
                                 Text item=WeatherStation_Rain_State
@@ -475,7 +474,7 @@ sitemap haus label="Main Menu"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/weatherstation_wind.html?fromItem=Chart_From" icon=none height=6
+                                Webview url="/static/grafana/weatherstation_wind.html?fromItem=Chart_From" icon=none height=7
                             }
                             Frame label="Debug" {
                                 Text item=WeatherStation_Wind_Direction
@@ -491,7 +490,7 @@ sitemap haus label="Main Menu"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/weatherstation_uvindex.html?fromItem=Chart_From" icon=none height=6
+                                Webview url="/static/grafana/weatherstation_uvindex.html?fromItem=Chart_From" icon=none height=7
                             }
                             Frame label="Debug" {
                                 Text item=WeatherStation_UV_A_Raw
@@ -504,22 +503,21 @@ sitemap haus label="Main Menu"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/weatherstation_lightlevel.html?fromItem=Chart_From" icon=none height=6
+                                Webview url="/static/grafana/weatherstation_lightlevel.html?fromItem=Chart_From" icon=none height=7
                             }
                         }
                         Text item=WeatherStation_Solar_Power {
                             Frame label="Details" {
-                                Text item=WeatherStation_Solar_Power label="Sonnenkraft gemessen [%.1f Watt/m²]"
+                                Text item=WeatherStation_Solar_Power label="Sonnenkraft akt. [%.1f Watt/m²]"
+                                Text item=WeatherStation_Solar_Power_Max label="Sonnenkraft max [%.1f Watt/m²]"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/weatherstation_solarpower.html?fromItem=Chart_From" icon=none height=6
+                                Webview url="/static/grafana/weatherstation_solarpower.html?fromItem=Chart_From" icon=none height=7
                             }
                             Frame label=Debug {
                                 Text item=WeatherStation_Solar_Temperature_Raw
                                 Text item=WeatherStation_Temperature_Raw
-                                Text item=WeatherStation_Solar_Power_Test1 label="Sonnenkraft berechnet [%.1f Watt/m²]"
-                                Text item=WeatherStation_Solar_Power_Test2 label="Sonnenkraft maximal [%.1f Watt/m²]"
                             }
                         }
                     }
@@ -530,7 +528,7 @@ sitemap haus label="Main Menu"
                             Text item=WeatherStation_Battery_Current
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/weatherstation_battery.html?fromItem=Chart_From" icon=none height=12
+                                Webview url="/static/grafana/weatherstation_battery.html?fromItem=Chart_From" icon=none height=14
                             }
                         }*/
                         Text item=WeatherStation_Battery_Message valuecolor=[WeatherStation_Battery_Current>=0="#6bc305"] {
@@ -539,7 +537,7 @@ sitemap haus label="Main Menu"
                             Text item=WeatherStation_Battery_Current
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/weatherstation_battery.html?fromItem=Chart_From" icon=none height=12
+                                Webview url="/static/grafana/weatherstation_battery.html?fromItem=Chart_From" icon=none height=14
                             }
                         }
                         Text item=WeatherStation_Update_Message visibility=[WeatherStation_Is_Working!=OFF] valuecolor=[!=""="#6bc305"]
@@ -552,7 +550,6 @@ sitemap haus label="Main Menu"
                         Text item=SoilMoistSensor2
                         Text item=SoilMoistSensor3
                         Text item=SoilMoistSensor4
-                        Text item=Air_Wireless_Message label="Luft [%s]" visibility=[Auto_Attic_Light!=1]
                         Text item=SoilMoistSensorInfo label="Überwachen [%s]"{
                             Switch item=SoilMoistSensor1Enabled
                             Switch item=SoilMoistSensor2Enabled

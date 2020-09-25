@@ -17,7 +17,6 @@ Heating.cloudCoverItem = "Cloud_Cover_Current"
 
 Heating.temperatureGardenFC8Item = "Temperature_Garden_Forecast8"
 Heating.temperatureGardenFC4Item = "Temperature_Garden_Forecast4"
-Heating.temperatureGardenItem = "Heating_Temperature_Outdoor" # WeatherStation_Temperature
 
 Heating.ventilationFilterRuntimeItem = "Ventilation_Filter_Runtime"
 
@@ -468,7 +467,9 @@ class HeatingControlRule():
         currentOperatingMode = getItemState("Heating_Operating_Mode").intValue()
         currentHeatingDemand = getItemState("Heating_Demand")
 
-        heating = Heating(self.log)
+        outdoorTemperatureItemName = getItemState("Outdoor_Temperature_Item_Name").toString()
+        heating = Heating(self.log,outdoorTemperatureItemName)
+
         cr, cr4, cr8, hhs = heating.calculate(currentHeatingDemand == ON)    
         
         if autoModeEnabled:

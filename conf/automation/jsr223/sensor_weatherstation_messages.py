@@ -1,4 +1,4 @@
-from custom.helper import rule, getNow, getItemState, getStableItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged, getItemLastUpdate, getItem, startTimer, createTimer
+from custom.helper import rule, getNow, getItemState, getStableItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged, getItemLastUpdate, getItem, startTimer, createTimer, sendNotification, itemLastChangeOlderThen
 from core.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
 from core.actions import Mqtt
 from custom.model.sun import SunRadiation
@@ -123,6 +123,7 @@ class WeatherstationLastUpdateRule:
         self.triggers = [
             CronTrigger("0 * * * * ?")
         ]
+        self.notified = False
         #solar3 = getAvgStackValue(self,"WeatherStation_Solar_Power_Stack","WeatherStation_Solar_Power_Raw")
 
     def execute(self, module, input):
@@ -131,6 +132,8 @@ class WeatherstationLastUpdateRule:
         newestUpdate = 0
         oldestUpdate = now
         items = getItem("Weatherstation").getAllMembers()
+        states = {}
+        
         for item in items:
             _update = getItemLastUpdate(item).getMillis()
             if _update > newestUpdate:
@@ -138,6 +141,10 @@ class WeatherstationLastUpdateRule:
             if _update < oldestUpdate:
                 oldestUpdate = _update
                 #self.log.info("{} {}".format(item.getName(),getItemLastUpdate(item)))
+                
+            lastUpdate = getItemLastUpdate(item)
+            minutes = round( (now - lastUpdate.getMillis() ) / 1000.0 / 60.0 )
+            states[item.getName()] = [minutes,"{:.0f} min: {} ({})".format(minutes,item.getName(),getItemLastUpdate(item))]
         
         # Special handling for heating updates
         # Either the WeatherStation_Rain_Heater_Request is updated every 15 minutes (heating inactive) or every minute (heating is active)
@@ -164,7 +171,21 @@ class WeatherstationLastUpdateRule:
             msg = u"{} min.".format(newestUpdateInMinutesMsg)
             
         postUpdateIfChanged("WeatherStation_Update_Message", msg)
-        postUpdateIfChanged("WeatherStation_Is_Working", ON if oldestUpdateInMinutes <= 12 else OFF)
+        postUpdateIfChanged("WeatherStation_Is_Working", ON if oldestUpdateInMinutes <= 60 else OFF)
+        
+        temperatureItemName = 'WeatherStation_Temperature' if states['WeatherStation_Temperature_Raw'][0] < 30 else 'Heating_Temperature_Outdoor'
+        postUpdateIfChanged("Outdoor_Temperature_Item_Name", temperatureItemName )
+            
+        if oldestUpdateInMinutes > 10:
+            for state in states:
+                self.log.debug(state[1])
+                
+            if not self.notified:
+                self.log.error("Weatherstation has problems")
+                self.notified = True
+        elif self.notified:
+            self.log.error("Weatherstation is working")
+            self.notified = False
         
 @rule("sensor_weatherstation.py")
 class WeatherstationBatteryRule:
@@ -256,7 +277,7 @@ class WeatherstationRainRule:
         self.updateTimer = None
 
     def delayUpdate(self):
-        todayRain = getItemState("WeatherStation_Rain_Daily").intValue()
+        todayRain = getItemState("WeatherStation_Rain_Daily").doubleValue()
         rainLevel = getItemState("WeatherStation_Rain_State").intValue()
 
         if rainLevel < 0:
@@ -306,7 +327,7 @@ class WeatherstationRainRule:
                     if differenz < 0:
                         differenz = zaehlerNeu
 
-                    todayRain = float(differenz) * 295.0 / 1000.0
+                    todayRain = float(differenz) * 257.5 / 1000.0
                     todayRain = round(todayRain,1)
                 postUpdateIfChanged("WeatherStation_Rain_Daily", todayRain)
             elif input['event'].getItemName() == "WeatherStation_Rain_Rate":
@@ -336,10 +357,12 @@ class WeatherstationRainRule:
                     rainLevel = 0                      
  
                 if rainLevel > 0:
-                    temperature = getItemState("WeatherStation_Temperature").doubleValue()
-                    dewpoint = getItemState("WeatherStation_Dewpoint").doubleValue()
-                    if temperature - dewpoint <= 3:
-                        rainLevel = rainLevel * -1
+                    timeOffice = (11 - rainLevel) * 15
+                    if itemLastChangeOlderThen("WeatherStation_Rain_Counter", getNow().minusMinutes(timeOffice)):
+                        temperature = getItemState("WeatherStation_Temperature").doubleValue()
+                        dewpoint = getItemState("WeatherStation_Dewpoint").doubleValue()
+                        if temperature - dewpoint <= 3:
+                            rainLevel = rainLevel * -1
 
                 postUpdateIfChanged("WeatherStation_Rain_State", rainLevel)
                 
@@ -348,7 +371,7 @@ class WeatherstationRainRule:
 @rule("sensor_weatherstation.py")
 class WeatherstationRainLastHourRule:
     def __init__(self):
-        self.triggers = [CronTrigger("0 0 * * * ?")]
+        self.triggers = [CronTrigger("0 */15 * * * ?")]
 
     def execute(self, module, input):
         zaehlerNeu = getItemState("WeatherStation_Rain_Counter").intValue()
@@ -357,10 +380,8 @@ class WeatherstationRainLastHourRule:
 
         if zaehlerAlt != zaehlerNeu:
             differenz = zaehlerNeu - zaehlerAlt
-            if differenz < 0:
-                differenz = zaehlerNeu
-
-            lastHourRain = float(differenz) * 295.0 / 1000.0
+            lastHourRain = float(differenz) * 257.5 / 1000.0
+            #0.2575
             #0.2794 mm
 
         postUpdateIfChanged("WeatherStation_Rain_Current", lastHourRain)
@@ -403,7 +424,7 @@ class WeatherstationWindRule:
         if getItemState("WeatherStation_Wind_Speed").doubleValue() == 0:
             msg = u"Ruhig"
         else:
-            msg = u"{} m/s, {}".format(getItemState("WeatherStation_Wind_Speed").format("%.1f"),directionMsg)
+            msg = u"{} km/h, {}".format(getItemState("WeatherStation_Wind_Speed").format("%.1f"),directionMsg)
 
         postUpdateIfChanged("WeatherStation_Wind_Message", msg)
 
@@ -423,11 +444,13 @@ class WeatherstationWindRule:
 @rule("sensor_weatherstation.py")
 class UpdateWindLast15MinutesRule:
     def __init__(self):
-        self.triggers = [CronTrigger("0 */15 * * * ?")]
+        self.triggers = [
+          CronTrigger("0 */5 * * * ?")
+        ]
 
     def execute(self, module, input):
         value = getMaxItemState("WeatherStation_Wind_Speed", getNow().minusMinutes(15)).doubleValue()
-
+        
         postUpdateIfChanged("WeatherStation_Wind_Current", value)
         
 @rule("sensor_weatherstation.py")
@@ -472,19 +495,7 @@ class WeatherstationAirRule:
         _maxRadiation = 990.0 * math.sin( _usedRadians ) - 30.0
         if _maxRadiation < 0.0: _maxRadiation = 0.0
         
-        postUpdateIfChanged("WeatherStation_Solar_Power_Test2", _maxRadiation)
-
-        # apply cloud cover
-        _cloudCover = getItemState("Cloud_Cover_Current").doubleValue()
-        if _cloudCover > 8.0: _cloudCover = 8.0
-        _cloudCoverFactor = _cloudCover / 8.0
-        _currentRadiation = _maxRadiation * ( 1.0 - 0.75 * math.pow( _cloudCoverFactor, 3.4 ) )
-        
-        postUpdateIfChanged("WeatherStation_Solar_Power_Test1", _currentRadiation)
-
-        #_messuredRadiation = getItemState("WeatherStation_Solar_Power").doubleValue()
-        
-        #self.log.info(u"SolarPower messured: {}, calculated: {}".format(_messuredRadiation,_currentRadiation))
+        postUpdateIfChanged("WeatherStation_Solar_Power_Max", _maxRadiation)
         
     def calculateTemperature(self):          
         # don't add invalid values to stack
@@ -502,8 +513,7 @@ class WeatherstationAirRule:
 
         # only temporary for debugging
         postUpdateIfChanged("SolarDiffCurrent", ( solar_temperature - temperature ) / 10.0 if solar_temperature != None else 0 )
-        postUpdateIfChanged("TemperatureDiff", temperature - getItemState("Temperature_Garden").doubleValue() )
-
+ 
     def calculateDewpoint(self,temperature,humidity):
         # https://rechneronline.de/barometer/taupunkt.php
         if temperature>0:

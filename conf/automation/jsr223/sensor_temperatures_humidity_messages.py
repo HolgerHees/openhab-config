@@ -15,9 +15,7 @@ infoConfig = [
     ["Air_SF_Child2_Message", "Temperature_SF_Child2", "Humidity_SF_Child2", "Temperature_SF_Child2_Target"],
     ["Air_SF_Bathroom_Message", "Temperature_SF_Bathroom", "Humidity_SF_Bathroom", "Temperature_SF_Bathroom_Target"],
     ["Air_SF_Floor_Message", "Temperature_SF_Floor", "Humidity_SF_Floor", "Temperature_SF_Floor_Target"],
-    ["Air_SF_Attic_Message", "Temperature_SF_Attic", "Humidity_SF_Attic", None],
-    ["Air_Wireless_Message", "Temperature_Wireless", "Humidity_Wireless", None],
-    ["Air_Garden_Message", "Temperature_Garden", "Humidity_Garden", None]
+    ["Air_SF_Attic_Message", "Temperature_SF_Attic", "Humidity_SF_Attic", None]
 ]
 
 rawItems = {

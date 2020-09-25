@@ -73,41 +73,7 @@ Number Humidity_SF_Attic_Raw  				{ channel="knx:device:bridge:sensors_sf:humidi
 Number Humidity_SF_Attic 					"Dachboden [%.1f %%]"				<chart>			  (PersistentChart,PersistentHistory,Humidity,SF_Attic)
 String Air_SF_Attic_Message  				"Dachboden [%s]"		<selftemperature>
 
-Number Temperature_Wireless 	"Funk [%.1f °C]" 		<selftemperature>	(PersistentChart,PersistentHistory)	{s300th="address=5;datapoint=TEMPERATURE"}
-Number Humidity_Wireless 					"Funk [%.1f %%]" 		<chart>				(PersistentChart,PersistentHistory) {s300th="address=5;datapoint=HUMIDITY"}
-String Air_Wireless_Message 				"Flur [%s]"				<selftemperature>
-
-
-
-
-
-
-Number Temperature_Garden 	"Garten [%.1f °C]"	<selftemperature> 	(PersistentChart,PersistentHistory,Temperatures,Outdoor) {s300th="address=ks300;datapoint=TEMPERATURE"}
-Number Humidity_Garden 					"Garten [%.1f %%]"	<chart> (PersistentChart,PersistentHistory,Humidity,Outdoor)	{s300th="address=ks300;datapoint=HUMIDITY"}
-String Air_Garden_Message				"Garten Aktuell [%s]"			<selftemperature>
-
-//Number Wind_Garden 						"Wind [%d m/s]"					<wind>											{s300th="address=ks300;datapoint=WIND"}
-//Number Wind_Garden_Converted			"Wind [%d km/h]"				<wind>			(PersistentHistory)
-//Number Wind_Garden_Current 		"Wind [%d]"						<wind>			(PersistentChart,Outdoor) ["Wind", "Measurement"]
-
-//Number Rain_Garden_Counter 				"Regen Zähler [%d]"				<chart>				(PersistentHistory)				{s300th="address=ks300;datapoint=RAIN"}
-//Number Regen_State_Garden 				"Regen Status [%d]"				<chart>												{s300th="address=ks300;datapoint=IS_RAINING"}
-//Number Rain_Garden_Current 				"Regen [%.1f]"					<chart>				(PersistentChart,Outdoor)
-//Number Rain_Garden_Current_Daily 		"Regen (heute) [%.1f]"			<chart>				(PersistentChart,Outdoor) ["Rain", "Measurement"]
-//String Wind_Direction					"Windrichtung [%s]"				<wind>
-//String Wind_Message						"Wind [%s]"						<wind>
-//String Rain_Garden_Message				"Regen [%s]"					<selfrain>
-
-Number TemperatureDiff		"Difference [%.1f °C]" <selftemperature>	(PersistentChart,PersistentHistory)
-Number SolarDiffCurrent		"Solar Current [%.1f °C]" <selftemperature>	(PersistentChart,PersistentHistory)
-
-Number WeatherStation_Solar_Power_Test1   "Sonnenkraft Cur. [%.1f Watt/m²]"	<selfsun> (PersistentChart,PersistentHistory)
-Number WeatherStation_Solar_Power_Test2   "Sonnenkraft Max. [%.1f Watt/m²]"	<selfsun> (PersistentChart,PersistentHistory)
-
-
-
-
-
+// Forecast
 Number Temperature_Garden_Current		"Garten [%.1f °C]" <selftemperature>	(PersistentChart,PersistentHistory)
 Number Cloud_Cover_Current				"Wolken [%d]" 					<selftemperature>   
 Number Cloud_Cover_Forecast4			"Wolken (Vorhersage 4Std) [%d]"	<selftemperature>
@@ -154,6 +120,8 @@ Switch SoilMoistSensor6Enabled "Pflanze 6" <selfautomode>
 //######## Weatherstation ############
 Group Weatherstation "Wetterstation"
 
+String Outdoor_Temperature_Item_Name      "Item [%s]"	<selftemperature>
+
 String WeatherStation_Update_Message      "Letzte Änderung [%s]"        <selfclock>
 Switch WeatherStation_Is_Working          "Aktiv [%d]"                  <selfclock>
 
@@ -174,10 +142,10 @@ String WeatherStation_Rain_Heater_Request "Heizung"	<heating> {mqtt="<[mosquitto
 String WeatherStation_Rain_State_Message  "Status [%s]"	<selfrain>
 String WeatherStation_Rain_Message 	      "Regen [%s]"	<selfrain>
 
-Number WeatherStation_Wind_Current        "Geschwindigkeit max 15 min. [%.1f m/s]"	<wind> (PersistentChart,Outdoor) ["Wind", "Measurement"]
+Number WeatherStation_Wind_Current        "Böe (15 min). [%.1f km/h]"	<wind> (PersistentChart,Outdoor) ["Wind", "Measurement"]
 
-Number WeatherStation_Wind_Speed          "Geschwindigkeit [%.1f m/s]"	<wind> (Weatherstation,PersistentHistory) {mqtt="<[mosquitto:mysensors-pub-1/1/5/#:state:default]"}
-Number WeatherStation_Wind_Gust           "Böe [%.1f m/s]"	<wind> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/6/#:state:default]"}
+Number WeatherStation_Wind_Speed          "Geschwindigkeit [%.1f km/h]"	<wind> (Weatherstation,PersistentHistory) {mqtt="<[mosquitto:mysensors-pub-1/1/5/#:state:JS(weatherstation_wind.js)]"}
+Number WeatherStation_Wind_Gust           "Böe [%.1f km/h]"	<wind> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/6/#:state:JS(weatherstation_wind.js)]"}
 Number WeatherStation_Wind_Direction_Raw  "Richtung Raw [%d °]"	<wind> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/7/#:state:default]"}
 Number WeatherStation_Wind_Direction      "Richtung [%d °]"	<wind>
 String WeatherStation_Wind_Direction_Message "Richtung [%s]"	<wind>
@@ -194,7 +162,10 @@ String WeatherStation_Air_Message 		  "Luft [%s]"	<selftemperature>
 
 Number WeatherStation_Pressure            "Luftdruck [%.1f hPa]"	<selfruntime> (Weatherstation,PersistentChart,PersistentHistory) {mqtt="<[mosquitto:mysensors-pub-1/1/10/#:state:default]"}
 
+Number SolarDiffCurrent		              "Solar Current [%.1f °C]" <selftemperature>	(PersistentChart,PersistentHistory)
+
 String WeatherStation_Solar_Temperature_Stack "Sonnenkraft [%s]"	<selfsun>
+Number WeatherStation_Solar_Power_Max     "Sonnenkraft Max. [%.1f Watt/m²]"	<selfsun> (PersistentChart,PersistentHistory)
 
 Number WeatherStation_Solar_Temperature_Raw "Sonnentemperatur Raw [%.1f °C]"	<selfsun> (Weatherstation) {mqtt="<[mosquitto:mysensors-pub-1/1/11/#:state:default]"}
 Number WeatherStation_Solar_Power         "Sonnenkraft [%.1f Watt/m²]"	<selfsun> (PersistentChart,PersistentHistory)
