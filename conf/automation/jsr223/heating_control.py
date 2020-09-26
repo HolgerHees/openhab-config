@@ -453,6 +453,17 @@ class HeatingVentileRule():
 class HeatingControlRule():
     def __init__(self):
         self.triggers = [
+            ItemStateChangeTrigger("Heating_Operating_Mode")
+        ]
+
+    def execute(self, module, input):
+        mqttActions = actions.get("mqtt","mqtt:broker:mosquitto")
+        mqttActions.publishMQTT("/vcontrol/setBetriebsartTo",u"{}".format(getItemState("Heating_Operating_Mode").intValue()))
+            
+@rule("heating_control.py")
+class HeatingControlRule():
+    def __init__(self):
+        self.triggers = [
             ItemStateChangeTrigger("Heating_Auto_Mode"),
             CronTrigger("15 * * * * ?")
 #            CronTrigger("*/15 * * * * ?")

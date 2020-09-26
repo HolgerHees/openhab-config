@@ -1,6 +1,6 @@
 from custom.helper import rule, getNow, getItemState, getStableItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged, getItemLastUpdate, getItem, startTimer, createTimer, sendNotification, itemLastChangeOlderThen
 from core.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
-from core.actions import Mqtt
+#from core.actions import Mqtt
 from custom.model.sun import SunRadiation
 
 from org.joda.time import DateTime
@@ -116,7 +116,7 @@ def getAvgStackValue(self,stackName,itemName):
 
     #self.log.info(u"AVG {}: {}".format(stackName,avgValue))
     return avgValue
-  
+   
 @rule("sensor_weatherstation.py")
 class WeatherstationLastUpdateRule:
     def __init__(self):
@@ -263,7 +263,8 @@ class WeatherstationRainHeaterRule:
                 self.timer = createTimer(self.log, 300,self.disable) # max 5 min
                 self.timer.start()
 
-            Mqtt.publish("mosquitto","mysensors-sub-1/1/4/1/0/2", u"{}".format(1 if getItemState("WeatherStation_Rain_Heater") == ON else 0));
+            mqttActions = actions.get("mqtt","mqtt:broker:mosquitto")
+            mqttActions.publishMQTT("mysensors-sub-1/1/4/1/0/2",u"{}".format(1 if getItemState("WeatherStation_Rain_Heater") == ON else 0))
 
 @rule("sensor_weatherstation.py")
 class WeatherstationRainRule:
