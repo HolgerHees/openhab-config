@@ -1,10 +1,7 @@
 0=Ok
-0.0=Ok
-0.000000=Ok
 1=Gerätefehler
-1.0=Gerätefehler
-1.000000=Gerätefehler
 990=Lesefehler
+0.0=Ok
+1.0=Gerätefehler
 990.0=Lesefehler
-990.000000=Lesefehler
 NULL=

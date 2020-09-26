@@ -29,7 +29,7 @@ Bridge	knx:ip:bridge [
         Type    switch  :       bedroomRight            "Schlafz. Bett Wand"         [ ga="1/4/3" ]
         Type    switch  :       bedroomRightLongPressed "Schlafz. Bett Wand (lang)"  [ ga="1/4/4" ]
     }
-    Thing device heating_ff "KNX Heizung FF"
+    Thing device heating_ff "KNX Heizungskreise FF"
     {
         Type    switch  :       livingroomCircuit       "Heizkreis Wohnzimmer"       [ ga="0/5/0+<0/5/1" ]
         Type    switch  :       floorCircuit            "Heizkreis Flur"             [ ga="0/5/2+<0/5/3" ]
@@ -37,7 +37,7 @@ Bridge	knx:ip:bridge [
         Type    switch  :       guestWCCircuit          "Heizkreis Gäste WC"         [ ga="0/5/6+<0/5/7" ]
         Type    switch  :       guestWCHK               "Heizkreis Gäste WC HK"      [ ga="0/5/8+<0/5/9" ]
     }
-    Thing device heating_sf "KNX Heizung SF"
+    Thing device heating_sf "KNX Heizungskreise SF"
     {
         Type    switch  :       floorCircuit            "Heizkreis Flur"             [ ga="1/5/0+<1/5/1" ]
         Type    switch  :       child1Circuit           "Heizkreis Kind 1"           [ ga="1/5/2+<1/5/3" ]

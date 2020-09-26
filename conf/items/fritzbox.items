@@ -1,0 +1,13 @@
+Contact FritzboxDslEnable       "Aktiviert [%s]"   <selfinfo>   {fritzboxtr064="dslEnable"}
+String  FritzboxDslStatus       "Status [%s]"   <selfinfo>      {fritzboxtr064="dslStatus"}
+Number  FritzboxDslUpstreamCurrRate "Upstream Aktuell [%s mbit/s]"   <selfinfo> {fritzboxtr064="dslUpstreamCurrRate"}
+Number  FritzboxDslDownstreamCurrRate "Downstream Aktuell [%s mbit/s]"   <selfinfo> {fritzboxtr064="dslDownstreamCurrRate"}
+Number  FritzboxDslUpstreamMaxRate "Upstream Max [%s mbit/s]"   <selfinfo> {fritzboxtr064="dslUpstreamMaxRate"}
+Number  FritzboxDslDownstreamMaxRate "Downstream Max [%s mbit/s]"   <selfinfo> {fritzboxtr064="dslDownstreamMaxRate"}
+Number  FritzboxDslUpstreamNoiseMargin "Upstream Rauschabstand [%s dB*10]"   <selfinfo> {fritzboxtr064="dslUpstreamNoiseMargin"}
+Number  FritzboxDslDownstreamNoiseMargin "Downstream Rauschabstand [%s dB*10]"   <selfinfo> {fritzboxtr064="dslDownstreamNoiseMargin"}
+Number  FritzboxDslUpstreamAttenuation "Upstream Dämpfung [%s dB*10]"   <selfinfo> {fritzboxtr064="dslUpstreamAttenuation"}
+Number  FritzboxDslDownstreamAttenuation "Downstream Dämpfung [%s dB*10]"   <selfinfo> {fritzboxtr064="dslDownstreamAttenuation"}
+Number  FritzboxDslFECErrors "FEC Fehler [%s]"   <selfinfo> {fritzboxtr064="dslFECErrors"}
+Number  FritzboxDslHECErrors "HEC Fehler [%s]"   <selfinfo> {fritzboxtr064="dslHECErrors"}
+Number  FritzboxDslCRCErrors "CRC Fehler [%s]"   <selfinfo> {fritzboxtr064="dslCRCErrors"} 

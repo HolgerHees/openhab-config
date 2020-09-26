@@ -420,7 +420,7 @@ sitemap haus label="Main Menu"
                 }
                 Group item=WeatherStation_Air_Message label="Wetter [%s]" {
                     Frame label="Wetter" {
-                        Text item=WeatherStation_Air_Message {
+                        Group item=WeatherStation_Air_Message {
                             Frame label="Details" {
                                 Text item=WeatherStation_Temperature
                                 Text item=WeatherStation_Humidity
@@ -438,7 +438,7 @@ sitemap haus label="Main Menu"
                                 Text item=WeatherStation_Humidity_Raw
                             }
                         }
-                        Text item=WeatherStation_Pressure {
+                        Group item=WeatherStation_Pressure {
                             Frame label="Details" {
                                 Text item=WeatherStation_Pressure
                             }
@@ -447,7 +447,7 @@ sitemap haus label="Main Menu"
                                 Webview url="/static/grafana/weatherstation_pressure.html?fromItem=Chart_From" icon=none height=7
                             }
                         }
-                        Text item=WeatherStation_Rain_Message {
+                        Group item=WeatherStation_Rain_Message {
                             Frame label="Details" {
                                 Text item=WeatherStation_Rain_Current
                                 Text item=WeatherStation_Rain_Daily
@@ -465,7 +465,7 @@ sitemap haus label="Main Menu"
                                 Switch item=WeatherStation_Rain_Heater
                             }
                         }
-                        Text item=WeatherStation_Wind_Message {
+                        Group item=WeatherStation_Wind_Message {
                             Frame label="Details" {
                                 Text item=WeatherStation_Wind_Speed
                                 Text item=WeatherStation_Wind_Direction_Message
@@ -482,7 +482,7 @@ sitemap haus label="Main Menu"
                         }
                     }
                     Frame label="Sonne" {
-                        Text item=WeatherStation_UV_Message {
+                        Group item=WeatherStation_UV_Message {
                             Frame label="Details" {
                                 Text item=WeatherStation_UV_Index
                                 Text item=WeatherStation_UV_A
@@ -497,7 +497,7 @@ sitemap haus label="Main Menu"
                                 Text item=WeatherStation_UV_B_Raw
                             }
                         }
-                        Text item=WeatherStation_Light_Level {
+                        Group item=WeatherStation_Light_Level {
                             Frame label="Details" {
                                 Text item=WeatherStation_Light_Level
                             }
@@ -506,7 +506,7 @@ sitemap haus label="Main Menu"
                                 Webview url="/static/grafana/weatherstation_lightlevel.html?fromItem=Chart_From" icon=none height=7
                             }
                         }
-                        Text item=WeatherStation_Solar_Power {
+                        Group item=WeatherStation_Solar_Power {
                             Frame label="Details" {
                                 Text item=WeatherStation_Solar_Power label="Sonnenkraft akt. [%.1f Watt/m²]"
                                 Text item=WeatherStation_Solar_Power_Max label="Sonnenkraft max [%.1f Watt/m²]"
@@ -522,19 +522,12 @@ sitemap haus label="Main Menu"
                         }
                     }
                     Frame label="Sonstiges" {
-                        /*Text item=WeatherStation_Battery_Message labelcolor=[WeatherStation_Battery_Current>=0="#6bc305"] valuecolor=[WeatherStation_Battery_Level>=70="#6bc305",>=50="#cbcb00",<50="#d72a2a"] {
-                            Text item=WeatherStation_Battery_Level
-                            Text item=WeatherStation_Battery_Voltage
-                            Text item=WeatherStation_Battery_Current
-                            Frame label="Auswertung" {
-                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/weatherstation_battery.html?fromItem=Chart_From" icon=none height=14
+                        Group item=WeatherStation_Battery_Message valuecolor=[WeatherStation_Battery_Current>=0="#6bc305"] {
+                            Frame label="Details" {
+                                Text item=WeatherStation_Battery_Level
+                                Text item=WeatherStation_Battery_Voltage
+                                Text item=WeatherStation_Battery_Current
                             }
-                        }*/
-                        Text item=WeatherStation_Battery_Message valuecolor=[WeatherStation_Battery_Current>=0="#6bc305"] {
-                            Text item=WeatherStation_Battery_Level
-                            Text item=WeatherStation_Battery_Voltage
-                            Text item=WeatherStation_Battery_Current
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                                 Webview url="/static/grafana/weatherstation_battery.html?fromItem=Chart_From" icon=none height=14
@@ -611,7 +604,7 @@ sitemap haus label="Main Menu"
                 Group item=Heating_Operating_Mode label="Heizung [MAP(heating_de.map):%d]" icon="selfheating"{
                     Frame label="Steuerung" {
                         Switch item=Heating_Auto_Mode label="Modus" mappings=[1="Auto", 0="Manuell"]
-                        Switch item=Heating_Operating_Mode label="Betrieb" mappings=[1.000000="WW", 2.000000="HZ", 3.000000="RD"]  visibility=[Heating_Auto_Mode==0]
+                        Switch item=Heating_Operating_Mode label="Betrieb" mappings=[1.0="WW", 2.0="HZ", 3.0="RD"]  visibility=[Heating_Auto_Mode==0]
                         Text item=Heating_Operating_Mode visibility=[Heating_Auto_Mode==1]
                         Text label="Komforttemperaturen" icon="selfheating"{
                             Setpoint item=Temperature_FF_GuestWC_Target label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
@@ -790,6 +783,27 @@ sitemap haus label="Main Menu"
                 }
                 Text label="Server" icon="selfcomputer"{
                     Frame label="Daten" {
+                        Group item=FritzboxDslStatus label="DSL Status [%s]" {
+                            Frame label="Status" {
+                                Text item=FritzboxDslEnable
+                                Text item=FritzboxDslStatus
+                            }
+                            Frame label="Verbindung" {
+                                Text item=FritzboxDslUpstreamCurrRate
+                                Text item=FritzboxDslDownstreamCurrRate
+                                Text item=FritzboxDslUpstreamMaxRate
+                                Text item=FritzboxDslDownstreamMaxRate
+                                Text item=FritzboxDslUpstreamNoiseMargin
+                                Text item=FritzboxDslDownstreamNoiseMargin
+                                Text item=FritzboxDslUpstreamAttenuation
+                                Text item=FritzboxDslDownstreamAttenuation
+                            }
+                            Frame label="Fehler" {
+                                Text item=FritzboxDslFECErrors
+                                Text item=FritzboxDslHECErrors
+                                Text item=FritzboxDslCRCErrors
+                            }
+                        }
                         Text item=State_Server
                     }
                     Frame label="Auswertung" {

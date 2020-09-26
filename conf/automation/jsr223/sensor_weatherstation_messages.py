@@ -564,7 +564,7 @@ class WeatherstationAirRule:
     def execute(self, module, input):
         if input['event'].getItemName() == "WeatherStation_Humidity_Raw":
             humidity = int(round(input['event'].getItemState().doubleValue()))
-            if humidity >= 0 and humidity <= 100:
+            if humidity > 0 and humidity <= 100:
                 postUpdate("WeatherStation_Humidity",humidity)
             else:
                 self.log.warn(u"Fallback. Got wrong humidity value: {}".format(humidity))

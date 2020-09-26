@@ -1,8 +1,8 @@
 Bridge mqtt:broker:mosquitto [ host="127.0.0.1", secure=false ]
 {
     Thing topic vcontrol "Heizung" {
-//        Type number : operationMode "Betriebsart" [ stateTopic="/vcontrol/getBetriebsart", commandTopic="/vcontrol/setBetriebsartTo" ]
-        Type number : operationMode "Betriebsart" [ stateTopic="/vcontrol/getBetriebsart" ]
+        Type number : operationMode "Betriebsart" [ stateTopic="/vcontrol/getBetriebsart", commandTopic="/vcontrol/setBetriebsartTo" ]
+//        Type number : operationMode "Betriebsart" [ stateTopic="/vcontrol/getBetriebsart" ]
         Type number : power "Leistung" [ stateTopic="/vcontrol/getLeistungIst" ]
         Type number : pumpSpeed "Heizkreispumpe" [ stateTopic="/vcontrol/getHeizkreisPumpeDrehzahl" ]
         Type number : targetTemperature "Ziel" [ stateTopic="/vcontrol/getTempRaumSoll" ]
