@@ -783,10 +783,12 @@ sitemap haus label="Main Menu"
                 }
                 Text label="Server" icon="selfcomputer"{
                     Frame label="Daten" {
-                        Group item=FritzboxDslStatus label="DSL Status [%s]" {
+                        Group item=FritzboxDslStatus label="DSL Status [MAP(network_states.map):%s]" {
                             Frame label="Status" {
                                 Text item=FritzboxDslEnable
                                 Text item=FritzboxDslStatus
+                                Text item=FritzboxUptime
+                                Switch item=FritzboxGuestWifi
                             }
                             Frame label="Verbindung" {
                                 Text item=FritzboxDslUpstreamCurrRate

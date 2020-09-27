@@ -9,8 +9,8 @@ String                 Washer_ActiveProgramState          "Aktiv [MAP(washer_pro
 String                 Washer_SelectedProgramState        "Gewählt [MAP(washer_program.map):%s]" <heating>  {channel="homeconnect:washer:default:washer:selected_program_state"}
 String                 Washer_WashingProgramTemperature   "Temperatur [MAP(washer_temperature.map):%s]" <temperature> {channel="homeconnect:washer:default:washer:laundry_care_washer_temperature"}
 String                 Washer_WashingProgramSpinSpeed     "Schleudern [MAP(washer_spinspeed.map):%s]" <selfinfo> {channel="homeconnect:washer:default:washer:laundry_care_washer_spin_speed"}
-String                 Washer_WashingProgramDosingLevel1  "Dosierung I [%s]"              <selfinfo> {channel="homeconnect:washer:default:washer:laundry_care_washer_idos1"}
-String                 Washer_WashingProgramDosingLevel2  "Dosierung 2 [%s]"              <selfinfo> {channel="homeconnect:washer:default:washer:laundry_care_washer_idos2"}
+String                 Washer_WashingProgramDosingLevel1  "Dosierung I [MAP(washer_idos.map):%s]"              <selfinfo> {channel="homeconnect:washer:default:washer:laundry_care_washer_idos1"}
+String                 Washer_WashingProgramDosingLevel2  "Dosierung 2 [MAP(washer_idos.map):%s]"              <selfinfo> {channel="homeconnect:washer:default:washer:laundry_care_washer_idos2"}
 String                 Washer_WashingProgramActions       "Aktion [%s]"                   <selfinfo> {channel="homeconnect:washer:default:washer:basic_actions_state"}
 Number:Time            Washer_RemainingProgramTimeState   "Restlaufzeit [JS(washer_runtime.js):%s]"   <selfruntime>    {channel="homeconnect:washer:default:washer:remaining_program_time_state"}
 Number:Dimensionless   Washer_ProgramProgressState        "Fortschritt [JS(washer_progress.js):%s]"      <selfruntime>    {channel="homeconnect:washer:default:washer:program_progress_state"} 

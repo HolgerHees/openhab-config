@@ -1,6 +1,6 @@
 Bridge mqtt:broker:mosquitto [ host="127.0.0.1", secure=false ]
 {
-    Thing topic vcontrol "Heizung" {
+    Thing topic vcontrol "Heizung" @ "Geräte" {
         Type number : operationMode "Betriebsart" [ stateTopic="/vcontrol/getBetriebsart", commandTopic="/vcontrol/setBetriebsartTo" ]
 //        Type number : operationMode "Betriebsart" [ stateTopic="/vcontrol/getBetriebsart" ]
         Type number : power "Leistung" [ stateTopic="/vcontrol/getLeistungIst" ]
@@ -23,7 +23,7 @@ Bridge mqtt:broker:mosquitto [ host="127.0.0.1", secure=false ]
         Type number : solarReheatingState "Nachladeunterdrückung" [ stateTopic="/vcontrol/getNachladeunterdrueckungStatus" ]
         Type number : commonFault "Status" [ stateTopic="/vcontrol/getSammelstoerung" ]
     }    
-    Thing topic weatherstation "Wetterstation" {
+    Thing topic weatherstation "Wetterstation" @ "Geräte" {
         Type number : batteryVoltage "Betriebsart" [ stateTopic="mysensors-pub-1/1/0/#" ]
         Type number : batteryCurrent "Betriebsart" [ stateTopic="mysensors-pub-1/1/1/#" ]
         Type number : rainImpulse "Counter (current)" [ stateTopic="mysensors-pub-1/1/2/#" ]
@@ -41,7 +41,7 @@ Bridge mqtt:broker:mosquitto [ host="127.0.0.1", secure=false ]
         Type number : uvA "UV A" [ stateTopic="mysensors-pub-1/1/13/#" ]
         Type number : uvB "UV B" [ stateTopic="mysensors-pub-1/1/14/#" ]
     }
-    Thing topic roomba "Roomba" {
+    Thing topic roomba "Roomba" @ "Geräte" {
         //Type string : command "Command" [ commandTopic="/roomba/command:command:*:${command}" ]
         Type switch : carpetBoost "Auto carpet Boost" [ stateTopic="/roomba/setting:command:ON:carpetBoost", transformationPattern="MAP:roomba_switch.map" ]
         Type switch : vacHigh "Vacuum Boost" [ stateTopic="/roomba/setting:command:ON:vacHigh", transformationPattern="MAP:roomba_switch.map" ]

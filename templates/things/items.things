@@ -1,15 +1,15 @@
 // log:set TRACE org.openhab.binding.samsungtv
-samsungtv:tv:livingroom [ hostName="{{tv_livingroom_ip}}", port=55000, refreshInterval=1000 ]
+samsungtv:tv:livingroom "Fernseher" @ "Geräte" [ hostName="{{tv_livingroom_ip}}", port=55000, refreshInterval=1000 ]
 
 // log:set DEBUG org.openhab.binding.network
-network:pingdevice:phone1 [ hostname="{{phone1_ip}}", retry=12, timeout=10000, refreshInterval=5000 ] // max 3.0 min
-network:pingdevice:phone2 [ hostname="{{phone2_ip}}", retry=12, timeout=10000, refreshInterval=5000 ] // max 3.0 min
+network:pingdevice:phone1 "Telefon 1" @ "Geräte" [ hostname="{{phone1_ip}}", retry=12, timeout=10000, refreshInterval=5000 ] // max 3.0 min
+network:pingdevice:phone2 "Telefon 2" @ "Geräte" [ hostname="{{phone2_ip}}", retry=12, timeout=10000, refreshInterval=5000 ] // max 3.0 min
 
-robonect:mower:automower [ host="{{automower_ip}}", pollInterval="15", offlineTimeout="300", user="{{vault_automower_device_username}}", password = "{{vault_automower_device_password}}"]
+robonect:mower:automower "Rasenmäher" @ "Geräte" [ host="{{automower_ip}}", pollInterval="15", offlineTimeout="300", user="{{vault_automower_device_username}}", password = "{{vault_automower_device_password}}"]
 
-astro:moon:local [ geolocation="{{location}}", interval=300 ]
-astro:sun:local [ geolocation="{{location}}", interval=300 ]
-ntp:ntp:local [ hostname="de.pool.ntp.org", refreshInterval=60, refreshNtp=30 ]
+astro:moon:local "Astro Monddaten" @ "Services" [ geolocation="{{location}}", interval=300 ]
+astro:sun:local "Astro Sonnendaten" @ "Services" [ geolocation="{{location}}", interval=300 ]
+ntp:ntp:local "NTP" @ "Services" [ hostname="de.pool.ntp.org", refreshInterval=60, refreshNtp=30 ]
 
 Bridge hue:bridge:default [ ipAddress="{{hue_ip}}", userName="{{vault_hue_user_id}}" ] {
 	0210 lamp1 [ lightId="1" ]
