@@ -783,6 +783,15 @@ sitemap haus label="Main Menu"
                 }
                 Text label="Server" icon="selfcomputer"{
                     Frame label="Daten" {
+                        Group item=State_Server {
+                            Frame label="Daten" {
+                                Text item=State_Server
+                            }
+                            Frame label="Auswertung" {
+                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/grafana/server.html?fromItem=Chart_From" icon=none height=72
+                            }
+                        }
                         Group item=FritzboxDslStatus label="DSL Status [MAP(network_states.map):%s]" {
                             Frame label="Status" {
                                 Text item=FritzboxDslEnable
@@ -806,11 +815,22 @@ sitemap haus label="Main Menu"
                                 Text item=FritzboxDslCRCErrors
                             }
                         }
-                        Text item=State_Server
-                    }
-                    Frame label="Auswertung" {
-                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/grafana/server.html?fromItem=Chart_From" icon=none height=72
+                        Group item=PrinterStatus label="Drucker Status [%s]" {
+                            Frame label="Status" {
+                                Text item=PrinterStatus
+                            }
+                            Frame label="Füllstand" {
+                                Text item=PrinterBlackLevel
+                                Text item=PrinterCyanLevel
+                                Text item=PrinterMagentaLevel
+                                Text item=PrinterYellowLevel
+                            }
+                            Frame label="Druckvolumen" {
+                                Text item=PrinterTotalPages
+                                Text item=PrinterTotalColourPages
+                                Text item=PrinterTotalMonochromePages
+                            }
+                        }
                     }
                 }
             }
