@@ -3,7 +3,7 @@ import urllib2
 from custom.helper import rule, getItemState, postUpdate, postUpdateIfChanged
 from core.triggers import ItemStateChangeTrigger, ItemCommandTrigger
 
-@rule("presence_actions.py")
+@rule("tablet.py")
 class WakeupRule:
     def __init__(self):
         self.triggers = [
@@ -17,7 +17,7 @@ class WakeupRule:
             urllib2.urlopen("http://192.168.0.40:5000/wakeup").read()
 
 
-@rule("scenes_common.py")
+@rule("tablet.py")
 class ManualReloadRule:
     def __init__(self):
         self.triggers = [ItemCommandTrigger("Scene7")]
@@ -27,7 +27,7 @@ class ManualReloadRule:
         postUpdate("Scene7", OFF)
 
 
-@rule("scenes_common.py")
+@rule("tablet.py")
 class ManualWakeupRule:
     def __init__(self):
         self.triggers = [ItemCommandTrigger("Scene8")]
@@ -39,7 +39,7 @@ class ManualWakeupRule:
             urllib2.urlopen("http://192.168.0.40:5000/wakeup").read()
 
 
-@rule("scenes_common.py")
+@rule("tablet.py")
 class ManualThemeRule:
     def __init__(self):
         self.triggers = [ItemCommandTrigger("Scene9")]

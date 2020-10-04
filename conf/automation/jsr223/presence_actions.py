@@ -10,8 +10,8 @@ class LeavingActionRule:
         self.triggers = [ItemStateChangeTrigger("State_Presence")]
 
     def execute(self, module, input):
-        self.log.info("test")
-        self.log.info("{}".format(input["event"].getItemState()))
+        #self.log.info("test")
+        #self.log.info("{}".format(input["event"].getItemState()))
         if input["event"].getItemState().intValue() == 1:
             postUpdateIfChanged("State_Notify", OFF)
         else:
