@@ -1,4 +1,4 @@
-from custom.helper import log, rule, itemLastChangeOlderThen, getNow, getItemState, postUpdate, sendNotification
+from custom.helper import log, rule, itemLastChangeOlderThen, getNow, getItemState, postUpdate, sendNotification, startTimer
 from core.triggers import ItemStateChangeTrigger
 
 @rule("presence_detection.py")
@@ -49,14 +49,30 @@ class WakeupRule:
             ItemStateChangeTrigger("Lights_FF",state="ON"),
             ItemStateChangeTrigger("Shutters_FF",state="0")
         ]
+        self.checkTimer = None
+        
+    def wakeup(self):
+        if getItemState("State_Presence").intValue() == 2:
+            postUpdate("State_Presence", 1)
+            sendNotification(u"System", u"Guten Morgen")
+        
+    def delayedWakeup(self):
+        if getItemState("Lights_FF") == ON:
+            self.wakeup()
+        self.checkTimer = None
 
     def execute(self, module, input):        
         # only possible if we are sleeping
         if getItemState("State_Presence").intValue() == 2:
             # sometimes the "Lights_FF" state switches back and forth for a couple of milliseconds when set "Lights_FF" state to OFF
-            if itemLastChangeOlderThen("State_Presence",getNow().minusSeconds(5)):
-                postUpdate("State_Presence", 1)
-                sendNotification(u"System", u"Guten Morgen")
+            #if itemLastChangeOlderThen("State_Presence",getNow().minusSeconds(5)):
+            if input['event'].getItemName() == "Shutters_FF":
+                if self.checkTimer != None:
+                    self.checkTimer.cancel()
+                    self.checkTimer = None
+                self.wakeup()
+            else:
+                self.checkTimer = startTimer(self.log, 300, self.delayedWakeup, oldTimer = self.checkTimer)
 
 @rule("presence_detection.py") 
 class SleepingRule:
@@ -69,6 +85,3 @@ class SleepingRule:
             postUpdate("State_Presence", 2)
             
         postUpdate("Scene4", OFF)
-
-log.info(u"{}".format(PercentType.ZERO))
-log.info(u"{}".format(getItemState("Shutters_FF")))

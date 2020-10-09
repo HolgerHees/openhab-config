@@ -177,7 +177,7 @@ def startTimer(log, duration, callback, args=[], kwargs={}, oldTimer = None, gro
             
     groupCount = groupCount - 1
     
-    if groupCount == 0:
+    if groupCount <= 0:
         callback(*args, **kwargs)
         
         return None
