@@ -1,4 +1,4 @@
-from custom.helper import log, rule, itemLastChangeOlderThen, getNow, getItemState, postUpdate, sendNotification, startTimer
+from custom.helper import log, rule, itemLastChangeOlderThen, getNow, getItemState, postUpdate, sendNotification, startTimer, getGroupMember
 from core.triggers import ItemStateChangeTrigger
 
 @rule("presence_detection.py")
@@ -55,12 +55,24 @@ class WakeupRule:
         if getItemState("State_Presence").intValue() == 2:
             postUpdate("State_Presence", 1)
             sendNotification(u"System", u"Guten Morgen")
-        
-    def delayedWakeup(self):
-        if getItemState("Lights_FF") == ON:
-            self.wakeup()
-        self.checkTimer = None
 
+    def delayedWakeup(self, checkCounter ):
+        if getItemState("Lights_FF") == ON:
+            lightCount = 0
+            for child in getGroupMember("Lights_FF"):
+                if getItemState(child) == ON:
+                    lightCount = lightCount + 1
+            # Signs (in first floor) for wake up are 
+            # - a light is ON for more then 10 minutes 
+            # - or more then 2 lights in total are ON
+            if checkCounter == 20 or lightCount > 2:
+                self.checkTimer = None                    
+                self.wakeup()
+            else:
+                self.checkTimer = startTimer(self.log, 30, self.delayedWakeup, args = [ checkCounter + 1 ], oldTimer = self.checkTimer)
+        else:
+            self.checkTimer = None                    
+        
     def execute(self, module, input):        
         # only possible if we are sleeping
         if getItemState("State_Presence").intValue() == 2:
@@ -69,10 +81,10 @@ class WakeupRule:
             if input['event'].getItemName() == "Shutters_FF":
                 if self.checkTimer != None:
                     self.checkTimer.cancel()
-                    self.checkTimer = None
+                    self.checkTimer = None                    
                 self.wakeup()
             else:
-                self.checkTimer = startTimer(self.log, 300, self.delayedWakeup, oldTimer = self.checkTimer)
+                self.checkTimer = startTimer(self.log, 30, self.delayedWakeup, args = [ 0 ], oldTimer = self.checkTimer)
 
 @rule("presence_detection.py") 
 class SleepingRule:

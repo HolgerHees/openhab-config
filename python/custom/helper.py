@@ -177,16 +177,16 @@ def startTimer(log, duration, callback, args=[], kwargs={}, oldTimer = None, gro
             
     groupCount = groupCount - 1
     
-    if groupCount <= 0:
+    if groupCount == 0:
         callback(*args, **kwargs)
         
         return None
-    else:
-        timer = createTimer(log, duration, callback, args, kwargs )
-        timer.start()
-        timer.groupCount = groupCount
 
-        return timer
+    timer = createTimer(log, duration, callback, args, kwargs )
+    timer.start()
+    timer.groupCount = groupCount
+
+    return timer
 
 class createTimer:
     def __init__(self,log, duration, callback, args=[], kwargs={}):
