@@ -10,6 +10,7 @@ class ValuesErrorMessagesRule:
             ItemStateChangeTrigger("Ventilation_Filter_Error_I"),
             ItemStateChangeTrigger("Ventilation_Filter_Error_E"),
             ItemStateChangeTrigger("Ventilation_Error_Message"),
+            ItemStateChangeTrigger("WeatherStation_Is_Working"),
             ItemStateChangeTrigger("Heating_Common_Fault"),
             ItemStateChangeTrigger("State_Server")
         ]
@@ -24,8 +25,14 @@ class ValuesErrorMessagesRule:
             active.append(u"Lüftung")
 
         if getItemState("Heating_Common_Fault").intValue() > 0:
-            active.append(u"Heizung")
+            active.append(u"Heizung Fehler")
 
+        if itemLastUpdateOlderThen("Heating_Common_Fault", getNow().minusMinutes(10)):
+            active.append(u"Heizung Update")
+            
+        if getItemState("WeatherStation_Is_Working") == OFF:
+            active.append(u"Wetterstation")
+            
         if getItemState("State_Server").intValue() > 1:
             active.append(u"Server")
 

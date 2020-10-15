@@ -123,7 +123,7 @@ Group Weatherstation "Wetterstation"
 String Outdoor_Temperature_Item_Name      "Item [%s]"	<selftemperature>
 
 String WeatherStation_Update_Message      "Letzte Änderung [%s]"        <selfclock>
-Switch WeatherStation_Is_Working          "Aktiv [%d]"                  <selfclock>
+Switch WeatherStation_Is_Working          "Aktiv [%s]"                  <selfclock>
 
 Number WeatherStation_Battery_Level       "Batterie Level [%d %%]"      <selfbattery> (PersistentChart,PersistentHistory)
 Number WeatherStation_Battery_Voltage     "Batterie Spannung [%d mV]"	<selfenergy> (Weatherstation,PersistentChart,PersistentHistory) {channel="mqtt:topic:mosquitto:weatherstation:batteryVoltage" }
@@ -137,7 +137,7 @@ Number WeatherStation_Rain_State          "Status Numerisch [%d]"	<selfrain>
 
 Number WeatherStation_Rain_Impulse        "Counter (current) [%d]"	<selfrain> (Weatherstation)        {channel="mqtt:topic:mosquitto:weatherstation:rainImpulse" }
 Number WeatherStation_Rain_Rate           "Rate Sensor [%d Ω]"	<selfrain> (Weatherstation,PersistentChart,PersistentHistory) {channel="mqtt:topic:mosquitto:weatherstation:rainRate" }
-Switch WeatherStation_Rain_Heater         "Heizung"	<heating>                                               {channel="mqtt:topic:mosquitto:weatherstation:rainHeater" }
+Switch WeatherStation_Rain_Heater         "Heizung"	<heating>                                          {channel="mqtt:topic:mosquitto:weatherstation:rainHeater" }
 String WeatherStation_Rain_Heater_Request "Heizung"	<heating>                                              {channel="mqtt:topic:mosquitto:weatherstation:rainHeaterRequest" }
 String WeatherStation_Rain_State_Message  "Status [%s]"	<selfrain>
 String WeatherStation_Rain_Message 	      "Regen [%s]"	<selfrain>
