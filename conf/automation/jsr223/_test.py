@@ -1,4 +1,4 @@
-from custom.helper import sendNotification
+from custom.helper import sendNotification, sendCommand
 
 #sendNotification("test","hallo")
 
@@ -6,3 +6,4 @@ from custom.helper import sendNotification
 
 #sendNotification("test","hallo sandra", recipient='bot2')
  
+#sendCommand("Light_FF_Utilityroom_Ceiling",REFRESH) 
