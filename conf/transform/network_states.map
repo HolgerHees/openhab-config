@@ -1,4 +1,5 @@
 OPEN=Aktiv
 CLOSED=Inaktiv
 Up=Verbunden
+NoSignal=Kein Signal
 Down=Nicht verbunden
