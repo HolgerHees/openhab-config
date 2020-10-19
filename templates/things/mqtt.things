@@ -1,4 +1,4 @@
-Bridge mqtt:broker:mosquitto [ host="127.0.0.1", secure=false ]
+Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
 {
     Thing topic vcontrol "Heizung" @ "Geräte" {
         Type number : operationMode "Betriebsart" [ stateTopic="/vcontrol/getBetriebsart", commandTopic="/vcontrol/setBetriebsartTo" ]

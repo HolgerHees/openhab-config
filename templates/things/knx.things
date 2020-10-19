@@ -2,7 +2,7 @@ Bridge	knx:ip:bridge [
 	type="TUNNEL",
 	ipAddress="{{knx_gateway_ip}}",
 	portNumber=3671,
-	localIp="{{server_ip}}",
+	useNAT=true,
 	readingPause=50,
 	responseTimeout=10,
 	readRetriesLimit=3,

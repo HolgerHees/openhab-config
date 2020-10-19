@@ -176,9 +176,9 @@ class WeatherstationLastUpdateRule:
         temperatureItemName = 'WeatherStation_Temperature' if states['WeatherStation_Temperature_Raw'][0] < 30 else 'Heating_Temperature_Outdoor'
         postUpdateIfChanged("Outdoor_Temperature_Item_Name", temperatureItemName )
             
-        #if oldestUpdateInMinutes > 10:
-        #    for state in states:
-        #        self.log.debug(states[state][1])
+        if oldestUpdateInMinutes > 10:
+            for state in states:
+                self.log.debug(states[state][1])
         #        
         #    if not self.notified:
         #        self.log.error("Weatherstation has problems")
