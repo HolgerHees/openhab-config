@@ -584,10 +584,10 @@ sitemap haus label="Main Menu"
             Frame label="Technik" {
                 Group item=Ventilation_Fan_Level label="Lüftung [MAP(level_de.map):%d]" icon="selfairing" {
                     Frame label="Steuerung" {
-                        Switch item=Ventilation_Auto_Mode label="Modus" mappings=[1="Auto", 0="Manuell"]
+                        Switch item=Ventilation_Auto_Mode label="Modus" mappings=[ON="Auto", OFF="Manuell"]
                         Switch item=Ventilation_Fan_Level label="Stufe" mappings=[1="A", 2="1", 3="2", 4="3"]
                         Setpoint item=Ventilation_Comfort_Temperature label="Komforttemperatur [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                        Switch item=Ventilation_Control mappings=[1="App", 0="CCEase"]
+                        Switch item=Ventilation_Control mappings=[ON="App", OFF="CCEase"]
                     }
                     Frame label="Sensordaten" {
                         Text item=Ventilation_Outdoor_Temperature_Message
@@ -596,9 +596,13 @@ sitemap haus label="Main Menu"
                         Text item=Ventilation_Bypass
                         Text item=Ventilation_Bypass_Efficiency
                         Text item=Ventilation_Filter_Runtime_Message
-    /*Switch Ventilation_Filter_Reset	"Filterreset" (Lueftung) {comfoair="filter_reset"}*/
-    /*Switch Ventilation_Error_Reset	"Fehlerreset" (Lueftung) {comfoair="error_reset"}*/
-                        Text item=Ventilation_State_Message
+                        Text item=Ventilation_State_Message visibility=[Ventilation_State_Message=="Alles in Ordnung"] 
+                        Text item=Ventilation_State_Message visibility=[Ventilation_State_Message!="Alles in Ordnung"] {
+                            Text item=Ventilation_Filter_Error
+                            Switch item=Ventilation_Filter_Reset
+                            Text item=Ventilation_Error_Message
+                            Switch item=Ventilation_Error_Reset
+                        }
                     }
                 }			
                 Group item=Heating_Operating_Mode label="Heizung [MAP(heating_de.map):%d]" icon="selfheating"{

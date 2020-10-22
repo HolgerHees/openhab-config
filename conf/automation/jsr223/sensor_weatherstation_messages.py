@@ -307,7 +307,8 @@ class WeatherstationRainRule:
     def execute(self, module, input):
         if 'event' not in input:
             postUpdateIfChanged("WeatherStation_Rain_Daily", 0)
-            self.delayUpdate()
+            # must be delayed, to give item update time to apply
+            self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer)
         elif input['event'].getItemName() == "WeatherStation_Rain_Heater":
             self.delayUpdate()
         else:

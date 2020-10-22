@@ -1,9 +1,9 @@
 //########### VENTILATION ##########
-Number Ventilation_Control						"Steuerung" 					<selfsettings>					{comfoair="activate"}
-Number Ventilation_Auto_Mode					"Modus"							<selfautomode>
-Number Ventilation_Fan_Level					"Stufe"        					<selfairing> 		            (PersistentHistory) {comfoair="fan_level"}
-Number Ventilation_Comfort_Temperature 			"Ziel [%.1f °C]"				<selftemperature> 				{comfoair="target_temperatur"}
-Number Ventilation_Bypass						"Bypass [MAP(bypass_de.map):%s]" <selfbypass> 					{comfoair="bypass_mode"}
+Switch Ventilation_Control						"Steuerung" 					<selfsettings>		{channel="comfoair:comfoair:default:bindingControl#activate"}
+Switch Ventilation_Auto_Mode					"Modus"							<selfautomode>
+Number Ventilation_Fan_Level					"Stufe"        					<selfairing> 	(PersistentHistory) {channel="comfoair:comfoair:default:ventilation#fanLevel"}
+Number Ventilation_Comfort_Temperature 			"Ziel [%.1f °C]"				<selftemperature> 	{channel="comfoair:comfoair:default:temperatures#targetTemperature"}
+Switch Ventilation_Bypass						"Bypass [MAP(ventilation_bypass_de.map):%s]" <selfbypass> 		{channel="comfoair:comfoair:default:menuP9#bypassState"}
 
 Number Ventilation_Bypass_Efficiency    		"Effizienz [%d %%]"              <selfbypass>
 String Ventilation_Outdoor_Temperature_Message	"Aussen [%s]"					<selftemperature>
@@ -12,15 +12,16 @@ String Ventilation_Fan_Message 					"Ventilator [%s]"				<selfairing>
 String Ventilation_Filter_Runtime_Message		"Filterlaufzeit [%s]" 			<selfruntime>
 String Ventilation_State_Message				"Status [%s]"					<selfinfo>
 
-Number Ventilation_Outdoor_Incoming_Temperature "Aussenzuluft [%.1f °C]"		<selftemperature>				{comfoair="outdoor_incomming_temperatur"}
-Number Ventilation_Outdoor_Outgoing_Temperature "Aussenabluft [%.1f °C]" 		<selftemperature>				{comfoair="outdoor_outgoing_temperatur"}
-Number Ventilation_Indoor_Incoming_Temperature 	"Raumzuluft [%.1f °C]" 			<selftemperature>				{comfoair="indoor_incomming_temperatur"}
-Number Ventilation_Indoor_Outgoing_Temperature 	"Raumabluft [%.1f °C]" 			<selftemperature>				{comfoair="indoor_outgoing_temperatur"}
-Number Ventilation_Incoming						"Ventilator Zuluft [%d %%]" 	<selfairing>					{comfoair="incomming_fan"}
-Number Ventilation_Outgoing						"Ventilator Abluft [%d %%]" 	<selfairing>					{comfoair="outgoing_fan"}
-Number Ventilation_Filter_Runtime				"Filterlaufzeit [%d h]" 		<selfruntime>					{comfoair="filter_running"}
-/*Switch Ventilation_Filter_Reset				"Filterreset" 													{comfoair="filter_reset"}*/
-Number Ventilation_Filter_Error_I				"Filter (intern) [MAP(filter_de.map):%s]" <selfFilterintern>	{comfoair="filter_error_intern"}
-Number Ventilation_Filter_Error_E				"Filter (extern) [MAP(filter_de.map):%s]" <selfFilterextern>	{comfoair="filter_error_extern"}
-/*Switch Ventilation_Error_Reset				"Fehlerreset" 													{comfoair="error_reset"}*/
-String Ventilation_Error_Message				"Fehlercode [%s]" 				<selfinfo> 						{comfoair="error_message"}
+Number Ventilation_Outdoor_Incoming_Temperature "Aussenzuluft [%.1f °C]"		<selftemperature>	{channel="comfoair:comfoair:default:temperatures#outdoorTemperatureIn"}
+Number Ventilation_Outdoor_Outgoing_Temperature "Aussenabluft [%.1f °C]" 		<selftemperature>	{channel="comfoair:comfoair:default:temperatures#outdoorTemperatureOut"}
+Number Ventilation_Indoor_Incoming_Temperature 	"Raumzuluft [%.1f °C]" 			<selftemperature>	{channel="comfoair:comfoair:default:temperatures#indoorTemperatureIn"}
+Number Ventilation_Indoor_Outgoing_Temperature 	"Raumabluft [%.1f °C]" 			<selftemperature>	{channel="comfoair:comfoair:default:temperatures#indoorTemperatureOut"}
+Number Ventilation_Incoming						"Ventilator Zuluft [%d %%]" 	<selfairing>		{channel="comfoair:comfoair:default:ventilation#fanInPercent"}
+Number Ventilation_Outgoing						"Ventilator Abluft [%d %%]" 	<selfairing>		{channel="comfoair:comfoair:default:ventilation#fanOutPercent"}
+Number Ventilation_Filter_Runtime				"Filterlaufzeit [%d h]" 		<selfruntime>		{channel="comfoair:comfoair:default:times#filterHours"}
+
+Switch Ventilation_Filter_Reset				    "Filterreset" <selfFilterintern>					{channel="comfoair:comfoair:myComfoAir:resets#filterReset"}
+Switch Ventilation_Filter_Error				    "Filter [MAP(ventilation_filter_de.map):%s]" <selfFilterintern>	                        {channel="comfoair:comfoair:default:errors#filterError"}
+
+Switch Ventilation_Error_Reset				    "Fehlerreset" 		            <selfinfo>		    {channel="comfoair:comfoair:myComfoAir:resets#errorReset"}
+String Ventilation_Error_Message				"Fehlercode [%s]" 				<selfinfo> 			{channel="comfoair:comfoair:default:errors#errorsCurrent"}

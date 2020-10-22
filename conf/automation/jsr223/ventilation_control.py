@@ -21,7 +21,7 @@ class VentilationEfficiencyRule:
     def delayUpdate(self):
         efficiency = 0
 
-        if getItemState("Ventilation_Bypass").intValue() == 0:
+        if getItemState("Ventilation_Bypass") == OFF:
             tempOutIn = getItemState("Ventilation_Outdoor_Incoming_Temperature").doubleValue()
             tempInOut = getItemState("Ventilation_Indoor_Outgoing_Temperature").doubleValue()
             tempInIn = getItemState("Ventilation_Indoor_Incoming_Temperature").doubleValue()
@@ -74,24 +74,17 @@ class FilterStateMessageRule:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("Ventilation_Error_Message"),
-            ItemStateChangeTrigger("Ventilation_Filter_Error_I"),
-            ItemStateChangeTrigger("Ventilation_Filter_Error_E")
+            ItemStateChangeTrigger("Ventilation_Filter_Error")
         ]
         self.updateTimer = None
 
     def delayUpdate(self):
         active = []
 
-        Ventilation_Filter_Error_I_State = getItemState("Ventilation_Filter_Error_I").intValue()
-        Ventilation_Filter_Error_E_State = getItemState("Ventilation_Filter_Error_E").intValue()
-        if Ventilation_Filter_Error_I_State == 1 or Ventilation_Filter_Error_E_State == 1:
-            value = u"Filter: "
-            if Ventilation_Filter_Error_I_State == 1: value = u"{}I".format(value)
-            if Ventilation_Filter_Error_I_State == 1 and Ventilation_Filter_Error_E_State == 1: value = u"{} & ".format(value)
-            if Ventilation_Filter_Error_E_State == 1: value = u"{}E".format(value)
-            active.append(value)
+        if getItemState("Ventilation_Filter_Error") == ON:
+            active.append(u"Filter")
 
-        if getItemState("Ventilation_Error_Message").toString() != "Ok":
+        if getItemState("Ventilation_Error_Message").toString() != "No Errors":
             active.append(u"Error: {}".format( getItemState("Ventilation_Error_Message").toString() ))
 
         if len(active) == 0:
@@ -170,7 +163,7 @@ class FilterManualActionRule:
         if autoChangeInProgress:
             autoChangeInProgress = False
         else:
-            postUpdate("Ventilation_Auto_Mode", 0)
+            postUpdate("Ventilation_Auto_Mode", OFF)
 
 
 @rule("ventilation_control.py")
@@ -183,7 +176,7 @@ class FilterFanLevelRule:
         ]
 
     def execute(self, module, input):
-        if getItemState("Ventilation_Auto_Mode").intValue() != 1:
+        if getItemState("Ventilation_Auto_Mode") == OFF:
             return
 
         currentLevel = getItemState("Ventilation_Fan_Level").intValue()

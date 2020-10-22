@@ -7,8 +7,7 @@ class ValuesErrorMessagesRule:
     def __init__(self):
         self.triggers = [
             CronTrigger("0 */5 * * * ?"),
-            ItemStateChangeTrigger("Ventilation_Filter_Error_I"),
-            ItemStateChangeTrigger("Ventilation_Filter_Error_E"),
+            ItemStateChangeTrigger("Ventilation_Filter_Error"),
             ItemStateChangeTrigger("Ventilation_Error_Message"),
             ItemStateChangeTrigger("WeatherStation_Is_Working"),
             ItemStateChangeTrigger("Heating_Common_Fault"),
@@ -19,9 +18,7 @@ class ValuesErrorMessagesRule:
         group = u"Fehler"
         active = []
 
-        if getItemState("Ventilation_Filter_Error_I").intValue() > 0 \
-                or getItemState("Ventilation_Filter_Error_E").intValue() > 0 \
-                or getItemState("Ventilation_Error_Message").toString() != "Ok":
+        if getItemState("Ventilation_Filter_Error") == ON or getItemState("Ventilation_Error_Message").toString() != "No Errors":
             active.append(u"Lüftung")
 
         if getItemState("Heating_Common_Fault").intValue() > 0:
