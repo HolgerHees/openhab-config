@@ -74,7 +74,7 @@ Switch Socket_Floor 				"Flur"			<selfsocket>	        (Sockets,FF_Floor) ["Switc
 Switch Socket_GuestWC 				"WC Radio"				<selfsocket>	(Sockets,FF_GuestWC) ["Switch"]	   { channel="knx:device:bridge:sockets_ff:guestWC" }
 Switch Socket_Bathroom_Left			"Badezimmer links"		<selfsocket>	(Sockets,SF_Bathroom) ["Switch"]   { channel="knx:device:bridge:sockets_sf:bathroomLeft" }
 Switch Socket_Bathroom_Right		"Badezimmer rechts"		<selfsocket>	(Sockets,SF_Bathroom) ["Switch"]   { channel="knx:device:bridge:sockets_sf:bathroomRight" }
-Switch Socket_Attic					"Dachboden"	<selfsocket>	            (Sockets,SF_Attic,Sockets) ["Switch"] { channel="knx:device:bridge:sockets_sf:attic" }
+Switch Socket_Attic					"Dachboden"	<selfsocket>	            (Sockets,SF_Attic) ["Switch"] { channel="knx:device:bridge:sockets_sf:attic" }
 Switch Socket_Streedside			"Aussen vorne" <selfsocket>	            (Sockets,Sockets_Outdoor,Outdoor) ["Switch"] { channel="knx:device:bridge:sockets_outdoor:streedside" }
 Switch Socket_Gardenside			"Aussen hinten" <selfsocket>	        (Sockets,Sockets_Outdoor,Outdoor) ["Switch"] { channel="knx:device:bridge:sockets_outdoor:gardenside" }
 Switch Socket_Mobile_1				"Mobile 1" <selfsocket>	                (Sockets) ["Switch"]					         { channel="hue:0010:default:socket1:switch" }

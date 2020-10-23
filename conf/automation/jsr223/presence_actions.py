@@ -1,6 +1,6 @@
 import urllib2
 
-from custom.helper import rule, getNow, getItemState, itemLastChangeOlderThen, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged, createTimer
+from custom.helper import rule, getNow, getItemState, itemLastChangeOlderThen, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged, createTimer, getGroupMember
 from core.triggers import ItemStateChangeTrigger
 
 
@@ -48,8 +48,13 @@ class ArrivingActionRule:
 class SleepingActionRule:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("State_Presence",state="2")]
-
+            
     def execute(self, module, input):
         sendCommandIfChanged("Lights_Indoor", OFF)
         sendCommandIfChanged("Motiondetector_Outdoor_Switch", ON)
-        sendCommandIfChanged("Socket_Livingroom_Fireplace", OFF)
+        
+        for child in getGroupMember("Sockets"):
+            if child.getName("Socket_Attic") == "":
+                continue
+            sendCommandIfChanged(child, OFF)
+    
