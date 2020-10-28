@@ -13,7 +13,7 @@ class PresenceCheckRule:
         itemName = input['event'].getItemName()
         itemState = input['event'].getItemState()
         
-        #sendNotification(u"{}".format(itemName), u"{}".format(itemState), recipient='bot1')
+        #sendNotification(u"{}".format(itemName), u"{}".format(itemState), recipients = ["bot1"])
         
         holgerPhone = itemState if itemName == "State_Holger_Presence" else getItemState("State_Holger_Presence")
         sandraPhone = itemState if itemName == "State_Sandra_Presence" else getItemState("State_Sandra_Presence")
@@ -30,14 +30,14 @@ class PresenceCheckRule:
                 postUpdate("State_Presence",0)
 
         if itemState == ON:
-            sendNotification(u"Tür", u"Willkommen", recipient=bot)
+            sendNotification(u"Tür", u"Willkommen", recipients = [bot])
         else:
             if holgerPhone == OFF and sandraPhone == OFF:
                 lightMsg = u" - LICHT an" if getItemState("Lights_Indoor") != OFF else u""
                 windowMsg = u" - FENSTER offen" if getItemState("Openingcontacts") != CLOSED else u""
-                sendNotification(u"Tür", u"Auf Wiedersehen{}{}".format(lightMsg,windowMsg), recipient=bot)
+                sendNotification(u"Tür", u"Auf Wiedersehen{}{}".format(lightMsg,windowMsg), recipients = [bot])
             else:
-                sendNotification(u"Tür", u"Auf Wiedersehen", recipient=bot)
+                sendNotification(u"Tür", u"Auf Wiedersehen", recipients = [bot])
         
 @rule("presence_detection.py")
 class WakeupRule:

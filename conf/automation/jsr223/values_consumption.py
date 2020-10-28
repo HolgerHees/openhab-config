@@ -396,9 +396,18 @@ class SolarConsumptionRule:
 
 
 @rule("values_consumption.py")
-class GasConsumptionRule:
+class GasConsumption5MinRule:
     def __init__(self):
         self.triggers = [CronTrigger("15 */5 * * * ?")]
+
+    def execute(self, module, input):
+        value5Min = getHistoricReference( self.log, "Gas_Current_Count", 300, 615, 900, 300 )
+        postUpdateIfChanged("Gas_Current_Consumption",value5Min)
+
+@rule("values_consumption.py")
+class GasConsumptionRule:
+    def __init__(self):
+        self.triggers = [ItemStateChangeTrigger("Gas_Pulse_Counter")]
 
     def execute(self, module, input):
         now = getNow()
@@ -418,10 +427,6 @@ class GasConsumptionRule:
         if zaehlerStandCurrent > zaehlerStandSaved:
             # Aktueller Zählerstand
             postUpdate("Gas_Current_Count", zaehlerStandCurrent )
-
-        # *** Aktueller Verbrauch ***
-        value5Min = getHistoricReference( self.log, "Gas_Current_Count", 300, 615, 900, 300 )
-        postUpdateIfChanged("Gas_Current_Consumption",value5Min)
 
         # *** Aktueller Tagesverbrauch ***
         zaehlerStandOld = getHistoricItemState("Gas_Current_Count", now.withTimeAtStartOfDay() ).doubleValue()

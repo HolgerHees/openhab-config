@@ -2,8 +2,8 @@
 samsungtv:tv:livingroom "Fernseher" @ "Geräte" [ hostName="{{tv_livingroom_ip}}", port=55000, refreshInterval=1000 ]
 
 // log:set DEBUG org.openhab.binding.network
-network:pingdevice:phone1 "Telefon 1" @ "Geräte" [ hostname="{{phone1_ip}}", retry=12, timeout=10000, refreshInterval=5000 ] // max 3.0 min
-network:pingdevice:phone2 "Telefon 2" @ "Geräte" [ hostname="{{phone2_ip}}", retry=12, timeout=10000, refreshInterval=5000 ] // max 3.0 min
+{% for username in userdata %}{% if userdata[username].phone_ip is defined %}network:pingdevice:phone{{loop.index}} "Telefon {{userdata[username].name}}" @ "Geräte" [ hostname="{{userdata[username].phone_ip}}", retry=12, timeout=10000, refreshInterval=5000 ] // max 3.0 min
+{% endif %}{% endfor %}
 
 robonect:mower:automower "Rasenmäher" @ "Geräte" [ host="{{automower_ip}}", pollInterval="15", offlineTimeout="300", user="{{vault_automower_device_username}}", password = "{{vault_automower_device_password}}"]
 

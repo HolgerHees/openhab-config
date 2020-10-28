@@ -1,4 +1,4 @@
-from custom.helper import rule, getNow, getItemState, getStableItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged, getItemLastUpdate, getItem, startTimer, createTimer, sendNotification, itemLastChangeOlderThen
+from custom.helper import rule, getNow, getItemState, getStableItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged, getItemLastUpdate, getItem, startTimer, createTimer, itemLastChangeOlderThen
 from core.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
 #from core.actions import Mqtt
 from custom.model.sun import SunRadiation

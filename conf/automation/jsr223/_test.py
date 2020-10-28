@@ -1,9 +1,11 @@
-from custom.helper import sendNotification, sendCommand
+from custom.helper import rule, sendNotification, sendCommand
 
-#sendNotification("test","hallo")
+@rule("_test.py")
+class TestRule:
+    def __init__(self):
+        pass
 
-#sendNotification("test","hallo holger", recipient='bot1')
+    def execute(self, module, input):
+        pass
 
-#sendNotification("test","hallo sandra", recipient='bot2')
- 
 #sendCommand("Light_FF_Utilityroom_Ceiling",REFRESH) 

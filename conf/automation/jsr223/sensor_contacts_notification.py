@@ -1,8 +1,8 @@
 from custom.helper import rule, getGroupMemberChangeTrigger, sendNotification, getItem, getItemState
 
 
-@rule("scene_contact_notifications.py")
-class SceneContactNotificationsRule:
+@rule("sensor_contact_notification.py")
+class SensorContactNotificationRule:
     def __init__(self):
         self.triggers = []
         self.triggers += getGroupMemberChangeTrigger("Sensor_Doors_FF")
