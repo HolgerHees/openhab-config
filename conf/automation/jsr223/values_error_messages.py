@@ -1,4 +1,4 @@
-from custom.helper import rule, getNow, itemLastUpdateOlderThen, sendNotification, getItemState, postUpdateIfChanged
+from custom.helper import rule, getNow, itemLastUpdateOlderThen, sendNotificationToAllAdmins, getItemState, postUpdateIfChanged
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 
@@ -58,4 +58,4 @@ class ValuesErrorMessagesRule:
         msg = u", ".join(active)
 
         if postUpdateIfChanged("MainStatus", msg):
-            sendNotification(group, msg, recipients = ["bot1"])
+            sendNotificationToAllAdmins(group, msg)

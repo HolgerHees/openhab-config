@@ -20,7 +20,7 @@ from core.triggers import ItemStateUpdateTrigger, ItemStateChangeTrigger
 
 from org.slf4j import LoggerFactory
 
-from configuration import LOG_PREFIX, allTelegramBots
+from configuration import LOG_PREFIX, allTelegramBots, allTelegramAdminBots
 
 #log = logging.getLogger(LOG_PREFIX)
 log = LoggerFactory.getLogger(LOG_PREFIX)
@@ -440,9 +440,13 @@ def getStableItemState( now, itemName, checkTimeRange ):
 
 # *** Notifications ***
 def sendNotification(header, message, url=None, recipients = None):
-    recipients = allTelegramBots
+    if recipients is None:
+        recipients = allTelegramBots
     for recipient in recipients:
         if url == None:
             Telegram.sendTelegram(recipient, "*" + header + "*: " + message)
         else:
             Telegram.sendTelegramPhoto(recipient, url, "*" + header + "*: " + message)
+
+def sendNotificationToAllAdmins(header, message, url=None, recipients = None):
+    sendNotification(header,message,url,allTelegramAdminBots)

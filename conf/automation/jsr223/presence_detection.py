@@ -1,4 +1,4 @@
-from custom.helper import log, rule, itemLastChangeOlderThen, getNow, getItemState, postUpdate, sendNotification, startTimer, getGroupMember
+from custom.helper import log, rule, itemLastChangeOlderThen, getNow, getItemState, postUpdate, sendNotification, sendNotificationToAllAdmins, startTimer, getGroupMember
 from core.triggers import ItemStateChangeTrigger
 
 @rule("presence_detection.py")
@@ -13,7 +13,7 @@ class PresenceCheckRule:
         itemName = input['event'].getItemName()
         itemState = input['event'].getItemState()
         
-        #sendNotification(u"{}".format(itemName), u"{}".format(itemState), recipients = ["bot1"])
+        #sendNotificationToAllAdmins(u"{}".format(itemName), u"{}".format(itemState))
         
         holgerPhone = itemState if itemName == "State_Holger_Presence" else getItemState("State_Holger_Presence")
         sandraPhone = itemState if itemName == "State_Sandra_Presence" else getItemState("State_Sandra_Presence")
