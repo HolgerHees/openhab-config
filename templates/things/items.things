@@ -5,6 +5,8 @@ samsungtv:tv:livingroom "Fernseher" @ "Geräte" [ hostName="{{tv_livingroom_ip}}
 {% for phone_name in phone_ips %}network:pingdevice:{{phone_name}} "Telefon {{loop.index}}" @ "Geräte" [ hostname="{{phone_ips[phone_name]}}", retry=12, timeout=10000, refreshInterval=5000 ] // max 3.0 min
 {% endfor %}
 
+network:speedtest:local "SpeedTest 50Mo" @ "Services" [refreshInterval=60, uploadSize=1000000, url="https://bouygues.testdebit.info/", fileName="10M.iso"]
+
 robonect:mower:automower "Rasenmäher" @ "Geräte" [ host="{{automower_ip}}", pollInterval="15", offlineTimeout="300", user="{{vault_automower_device_username}}", password = "{{vault_automower_device_password}}"]
 
 astro:moon:local "Astro Monddaten" @ "Services" [ geolocation="{{location}}", interval=300 ]

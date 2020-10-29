@@ -803,6 +803,10 @@ sitemap haus label="Main Menu"
                                 Text item=FritzboxUptime
                                 Switch item=FritzboxGuestWifi
                             }
+                            Frame item=Speedtest_Start label="Verbindung [%1$tH:%1$tM]" {
+                                Text item=Speedtest_UpstreamRate
+                                Text item=Speedtest_DownstreamRate
+                            }
                             Frame label="Verbindung" {
                                 Text item=FritzboxDslUpstreamCurrRate
                                 Text item=FritzboxDslDownstreamCurrRate
@@ -817,6 +821,10 @@ sitemap haus label="Main Menu"
                                 Text item=FritzboxDslFECErrors
                                 Text item=FritzboxDslHECErrors
                                 Text item=FritzboxDslCRCErrors
+                            }
+                            Frame label="Auswertung" {
+                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/grafana/internet.html?fromItem=Chart_From" icon=none height=12
                             }
                         }
                         Group item=PrinterStatus label="Drucker Status [%s]" {
