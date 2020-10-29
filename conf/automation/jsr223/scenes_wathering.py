@@ -1,6 +1,6 @@
 import math
 
-from custom.helper import rule, createTimer, getNow, getGroupMember, getItemState, postUpdate, sendCommand, getItemLastChange
+from shared.helper import rule, createTimer, getNow, getGroupMember, getItemState, postUpdate, sendCommand, getItemLastChange
 from core.triggers import ItemCommandTrigger, ItemStateChangeTrigger
 
 circuits = [

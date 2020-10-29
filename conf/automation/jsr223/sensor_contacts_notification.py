@@ -1,4 +1,4 @@
-from custom.helper import rule, getGroupMemberChangeTrigger, sendNotification, getItem, getItemState
+from shared.helper import rule, getGroupMemberChangeTrigger, sendNotification, getItem, getItemState
 
 
 @rule("sensor_contact_notification.py")

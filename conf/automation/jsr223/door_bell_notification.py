@@ -1,4 +1,4 @@
-from custom.helper import rule, getNow, itemStateOlderThen, sendNotification, postUpdate
+from shared.helper import rule, getNow, itemStateOlderThen, sendNotification, postUpdate
 from core.triggers import ItemStateChangeTrigger
 
 

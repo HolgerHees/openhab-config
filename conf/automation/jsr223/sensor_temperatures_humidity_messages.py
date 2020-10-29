@@ -1,4 +1,4 @@
-from custom.helper import rule, getNow, getItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged, startTimer
+from shared.helper import rule, getNow, getItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged, startTimer
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 infoConfig = [

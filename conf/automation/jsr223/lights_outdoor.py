@@ -1,6 +1,6 @@
 import time
 
-from custom.helper import rule, createTimer, getItemState, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged, getNow
+from shared.helper import rule, createTimer, getItemState, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged, getNow
 from core.triggers import ItemCommandTrigger, ItemStateChangeTrigger
 
 manualMappings = [

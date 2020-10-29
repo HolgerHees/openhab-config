@@ -1,4 +1,4 @@
-from custom.helper import rule, createTimer, getItemState, postUpdate, postUpdateIfChanged
+from shared.helper import rule, createTimer, getItemState, postUpdate, postUpdateIfChanged
 from core.triggers import ItemStateChangeTrigger
 
 

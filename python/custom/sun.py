@@ -4,8 +4,6 @@ import time
 import math
 from org.joda.time import DateTimeZone
 
-from custom.helper import getItemState
-
 class SunRadiation(object): 
     @staticmethod
     def _getSunData( time ):

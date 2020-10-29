@@ -1,4 +1,4 @@
-from custom.helper import rule, getItemState, postUpdate, sendCommand
+from shared.helper import rule, getItemState, postUpdate, sendCommand
 from core.triggers import ItemStateChangeTrigger
 
 @rule("rollershutter_auto.py")

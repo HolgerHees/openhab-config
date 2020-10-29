@@ -1,4 +1,4 @@
-from custom.helper import rule, getNow, itemLastUpdateOlderThen, sendNotificationToAllAdmins, getItemState, postUpdateIfChanged
+from shared.helper import rule, getNow, itemLastUpdateOlderThen, sendNotificationToAllAdmins, getItemState, postUpdateIfChanged
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 

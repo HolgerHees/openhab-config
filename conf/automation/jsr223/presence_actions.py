@@ -1,6 +1,6 @@
 import urllib2
 
-from custom.helper import rule, getNow, getItemState, itemLastChangeOlderThen, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged, createTimer, getGroupMember
+from shared.helper import rule, getNow, getItemState, itemLastChangeOlderThen, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged, createTimer, getGroupMember
 from core.triggers import ItemStateChangeTrigger
 
 

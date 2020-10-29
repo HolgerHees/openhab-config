@@ -1,4 +1,4 @@
-from custom.helper import rule, getItem, getItemState, sendCommand, postUpdate
+from shared.helper import rule, getItem, getItemState, sendCommand, postUpdate
 from core.triggers import ItemCommandTrigger
 
 

@@ -1,4 +1,4 @@
-from custom.helper import rule, getItemState, sendCommand, postUpdate, postUpdateIfChanged
+from shared.helper import rule, getItemState, sendCommand, postUpdate, postUpdateIfChanged
 from core.triggers import ItemStateChangeTrigger, ItemCommandTrigger, ThingEventTrigger
 
 @rule("tv_control.py")

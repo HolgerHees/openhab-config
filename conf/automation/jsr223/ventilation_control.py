@@ -1,7 +1,6 @@
 import math
 
-from custom.helper import rule, getNow, itemLastChangeOlderThen, getItemState, postUpdate, postUpdateIfChanged, \
-    sendCommand, startTimer
+from shared.helper import rule, getNow, itemLastChangeOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand, startTimer
 from core.triggers import CronTrigger, ItemCommandTrigger, ItemStateChangeTrigger
 
 autoChangeInProgress = False

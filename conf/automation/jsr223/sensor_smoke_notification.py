@@ -1,4 +1,4 @@
-from custom.helper import rule, ItemStateChangeTrigger, sendNotification
+from shared.helper import rule, ItemStateChangeTrigger, sendNotification
 
 
 @rule("scene_contact_notifications.py")

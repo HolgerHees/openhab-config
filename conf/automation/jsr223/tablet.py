@@ -1,6 +1,6 @@
 import urllib2
 
-from custom.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastChangeOlderThen, getNow
+from shared.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastChangeOlderThen, getNow
 from core.triggers import ItemStateChangeTrigger, ItemCommandTrigger
 
 @rule("tablet.py")

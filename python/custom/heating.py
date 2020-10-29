@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 import math
 
-from custom.helper import getNow, getItemState, itemLastUpdateOlderThen, itemLastChangeOlderThen, getItemLastUpdate, getItemLastChange, getStableItemState
-from custom.model.sun import SunRadiation
+from shared.helper import getNow, getItemState, itemLastUpdateOlderThen, itemLastChangeOlderThen, getItemLastUpdate, getItemLastChange, getStableItemState
+from custom.sun import SunRadiation
 
 from org.eclipse.smarthome.core.library.types import OnOffType
 from org.eclipse.smarthome.core.library.types import OpenClosedType
 from org.eclipse.smarthome.core.library.types import PercentType
 from org.eclipse.smarthome.core.library.types import DecimalType
 
-from custom.model.house import Window
-from custom.model.state import RoomState, HouseState, RoomHeatingState, HouseHeatingState
+from custom.house import Window
+from custom.state import RoomState, HouseState, RoomHeatingState, HouseHeatingState
 
 class Heating(object):
     INFINITE_HEATING_TIME = 999.0 # const value for an invifinte heating time

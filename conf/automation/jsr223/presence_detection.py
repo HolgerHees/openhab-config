@@ -1,4 +1,4 @@
-from custom.helper import log, rule, itemLastChangeOlderThen, getNow, getItemState, postUpdate, sendNotification, sendNotificationToAllAdmins, startTimer, getGroupMember
+from shared.helper import log, rule, itemLastChangeOlderThen, getNow, getItemState, postUpdate, sendNotification, sendNotificationToAllAdmins, startTimer, getGroupMember
 from core.triggers import ItemStateChangeTrigger
 
 @rule("presence_detection.py")

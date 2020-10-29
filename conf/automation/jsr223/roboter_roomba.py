@@ -1,6 +1,6 @@
 import time
 
-from custom.helper import rule, getNow, itemLastChangeOlderThen, getItemState, sendNotification, postUpdate, postUpdateIfChanged, sendCommand
+from shared.helper import rule, getNow, itemLastChangeOlderThen, getItemState, sendNotification, postUpdate, postUpdateIfChanged, sendCommand
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 

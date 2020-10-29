@@ -1,4 +1,4 @@
-from custom.helper import rule, sendNotification, sendCommand
+from shared.helper import rule, sendNotification, sendCommand
 
 from org.eclipse.smarthome.core.thing.link import ItemChannelLinkRegistry
 
