@@ -448,5 +448,5 @@ def sendNotification(header, message, url=None, recipients = None):
         else:
             Telegram.sendTelegramPhoto(recipient, url, "*" + header + "*: " + message)
 
-def sendNotificationToAllAdmins(header, message, url=None, recipients = None):
+def sendNotificationToAllAdmins(header, message, url=None):
     sendNotification(header,message,url,allTelegramAdminBots)

@@ -18,7 +18,7 @@ class PresenceCheckRule:
         holgerPhone = itemState if itemName == "State_Holger_Presence" else getItemState("State_Holger_Presence")
         sandraPhone = itemState if itemName == "State_Sandra_Presence" else getItemState("State_Sandra_Presence")
         
-        bot = 'bot1' if itemName == "State_Holger_Presence" else 'bot2'
+        bot = 'bot_holger' if itemName == "State_Holger_Presence" else 'bot_sandra'
         
         if holgerPhone == ON or sandraPhone == ON:
             # only possible if we are away
