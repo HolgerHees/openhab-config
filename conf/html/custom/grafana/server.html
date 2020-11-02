@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/static/shared/grafana/js/builder.js"></script>
+</head>
+<body>
+<script>
+    helper = new GrafanaBuilder([
+        [ "CPU_Utilisation", "server-health/server-health", 2,2,2 ],
+        [ "CPU_Load", "server-health/server-health", 4,4,4 ],
+        [ "Net_IO", "server-health/server-health", 10,10,10 ],
+        [ "Disk_IO", "server-health/server-health", 6,6,6 ],
+        [ "Memory", "server-health/server-health", 8,8,8 ],
+        [ "Data_Raid", "server-health/server-health", 12,12,12 ],
+        [ "Data_Disk", "server-health/server-health", 14,14,14 ],
+        [ "Root", "server-health/server-health", 16,16,16 ]
+    ]);
+</script>
+</body>
+</html>

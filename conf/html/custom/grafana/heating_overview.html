@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/static/shared/grafana/js/builder.js"></script>
+</head>
+<body>
+<script>
+    helper = new GrafanaBuilder([
+        [ "Temperatures", "heating/heating", 6,6,6 ],
+        [ "Pump_Speed", "heating/heating", 7,7,7 ],
+        [ "Burner_Starts", "heating/heating", 10,10,8 ],
+        [ "Burner_Runtime", "heating/heating", 11,11,9 ]
+    ]);
+</script>
+</body>
+</html>

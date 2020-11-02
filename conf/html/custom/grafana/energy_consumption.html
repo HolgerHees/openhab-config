@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/static/shared/grafana/js/builder.js"></script>
+</head>
+<body>
+<script>
+    helper = new GrafanaBuilder([
+        [ "Consumption_Energy", "energy/strom", 3,5,13 ],
+        [ "Consumption_Energy_Last_Year", "energy/strom", 12,11,10 ]
+    ]);
+</script>
+</body>
+</html>

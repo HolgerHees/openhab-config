@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/static/shared/grafana/js/builder.js"></script>
+</head>
+<body>
+<script>
+    helper = new GrafanaBuilder([
+        [ "Power", "solar-waerme/solar-waerme", 2,5,1 ],
+        [ "Temperatures", "solar-waerme/solar-waerme", 4,4,4 ],
+        [ "Pump_State", "solar-waerme/solar-waerme", 3,3,3 ]
+    ]);
+</script>
+</body>
+</html>

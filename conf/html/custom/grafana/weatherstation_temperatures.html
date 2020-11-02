@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/static/shared/grafana/js/builder.js"></script>
+</head>
+<body>
+<script>
+    helper = new GrafanaBuilder([
+        [ "Weatherstation_Temperatures", "weatherstation/wetterstation", 4,4,4 ],
+        [ "Weatherstation_Humidity", "weatherstation/wetterstation", 7,7,7 ],
+        [ "Weatherstation_Temperatures_Last_Year", "weatherstation/wetterstation", 12,12,12 ]
+    ]);
+</script>
+</body>
+</html>

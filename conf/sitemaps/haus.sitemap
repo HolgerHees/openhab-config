@@ -390,7 +390,7 @@ sitemap haus label="Main Menu"
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/grafana/temperatures_eg.html?fromItem=Chart_From" icon=none height=18
+                        Webview url="/static/custom/grafana/temperatures_eg.html?fromItem=Chart_From" icon=none height=18
                     }
                 }
                 Group item=Air_SF_Bedroom_Message label="OG [%s]"{
@@ -415,7 +415,7 @@ sitemap haus label="Main Menu"
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/grafana/temperatures_og.html?fromItem=Chart_From" icon=none height=18
+                        Webview url="/static/custom/grafana/temperatures_og.html?fromItem=Chart_From" icon=none height=18
                     }
                 }
                 Group item=WeatherStation_Air_Message label="Wetter [%s]" {
@@ -431,7 +431,7 @@ sitemap haus label="Main Menu"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/weatherstation_temperatures.html?fromItem=Chart_From" icon=none height=18
+                                Webview url="/static/custom/grafana/weatherstation_temperatures.html?fromItem=Chart_From" icon=none height=18
                             }
                             Frame label="Debug" {
                                 Text item=WeatherStation_Temperature_Raw
@@ -444,7 +444,7 @@ sitemap haus label="Main Menu"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/weatherstation_pressure.html?fromItem=Chart_From" icon=none height=7
+                                Webview url="/static/custom/grafana/weatherstation_pressure.html?fromItem=Chart_From" icon=none height=7
                             }
                         }
                         Group item=WeatherStation_Rain_Message {
@@ -455,7 +455,7 @@ sitemap haus label="Main Menu"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/weatherstation_rain.html?fromItem=Chart_From" icon=none height=14
+                                Webview url="/static/custom/grafana/weatherstation_rain.html?fromItem=Chart_From" icon=none height=14
                             }
                             Frame label="Debug" {
                                 Text item=WeatherStation_Rain_State
@@ -474,7 +474,7 @@ sitemap haus label="Main Menu"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/weatherstation_wind.html?fromItem=Chart_From" icon=none height=7
+                                Webview url="/static/custom/grafana/weatherstation_wind.html?fromItem=Chart_From" icon=none height=7
                             }
                             Frame label="Debug" {
                                 Text item=WeatherStation_Wind_Direction
@@ -490,7 +490,7 @@ sitemap haus label="Main Menu"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/weatherstation_uvindex.html?fromItem=Chart_From" icon=none height=7
+                                Webview url="/static/custom/grafana/weatherstation_uvindex.html?fromItem=Chart_From" icon=none height=7
                             }
                             Frame label="Debug" {
                                 Text item=WeatherStation_UV_A_Raw
@@ -503,7 +503,7 @@ sitemap haus label="Main Menu"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/weatherstation_lightlevel.html?fromItem=Chart_From" icon=none height=7
+                                Webview url="/static/custom/grafana/weatherstation_lightlevel.html?fromItem=Chart_From" icon=none height=7
                             }
                         }
                         Group item=WeatherStation_Solar_Power {
@@ -513,7 +513,7 @@ sitemap haus label="Main Menu"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/weatherstation_solarpower.html?fromItem=Chart_From" icon=none height=7
+                                Webview url="/static/custom/grafana/weatherstation_solarpower.html?fromItem=Chart_From" icon=none height=7
                             }
                             Frame label=Debug {
                                 Text item=WeatherStation_Solar_Temperature_Raw
@@ -530,7 +530,7 @@ sitemap haus label="Main Menu"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/weatherstation_battery.html?fromItem=Chart_From" icon=none height=14
+                                Webview url="/static/custom/grafana/weatherstation_battery.html?fromItem=Chart_From" icon=none height=14
                             }
                         }
                         Text item=WeatherStation_Update_Message visibility=[WeatherStation_Is_Working!=OFF] valuecolor=[!=""="#6bc305"]
@@ -554,7 +554,7 @@ sitemap haus label="Main Menu"
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/grafana/pflanzen.html?fromItem=Chart_From" icon=none height=18
+                        Webview url="/static/custom/grafana/pflanzen.html?fromItem=Chart_From" icon=none height=18
                     }
                 }
             }
@@ -639,10 +639,10 @@ sitemap haus label="Main Menu"
                         Text item=Heating_Demand label="Berechnungsdetails [MAP(yes_no_de.map):%d]" icon="selfheating"{
                             Frame {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/heating_details.html?fromItem=Chart_From" icon=none height=27
+                                Webview url="/static/custom/grafana/heating_details.html?fromItem=Chart_From" icon=none height=27
                             }
                             Frame {
-                                Webview url="/static/logs/heating.html" icon=none height=36
+                                Webview url="/static/custom/logs/heating.html" icon=none height=36
                             }
                         }
                         Text item=Heating_Temperature_Room_Target
@@ -659,7 +659,7 @@ sitemap haus label="Main Menu"
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/grafana/heating_overview.html?fromItem=Chart_From" icon=none height=36
+                        Webview url="/static/custom/grafana/heating_overview.html?fromItem=Chart_From" icon=none height=36
                     }
                 }
             }
@@ -684,7 +684,7 @@ sitemap haus label="Main Menu"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/energy_demand.html?fromItem=Chart_From" icon=none height=18
+                                Webview url="/static/custom/grafana/energy_demand.html?fromItem=Chart_From" icon=none height=18
                             }
                         }
                         Group label="Lieferung [%.2f kWh]" item=Electricity_Current_Daily_Supply {
@@ -700,7 +700,7 @@ sitemap haus label="Main Menu"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/energy_supply.html?fromItem=Chart_From" icon=none height=18
+                                Webview url="/static/custom/grafana/energy_supply.html?fromItem=Chart_From" icon=none height=18
                             }
                         }
                         Group label="Solar [%.2f kWh]" item=Solar_Daily_Yield {
@@ -715,7 +715,7 @@ sitemap haus label="Main Menu"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/solar_energy.html?fromItem=Chart_From" icon=none height=18
+                                Webview url="/static/custom/grafana/solar_energy.html?fromItem=Chart_From" icon=none height=18
                             }
                         }
                         Group label="Eigenverbrauch [%.2f kWh]" item=Solar_Daily_Consumption {
@@ -725,13 +725,13 @@ sitemap haus label="Main Menu"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/solar_consumption.html?fromItem=Chart_From" icon=none height=18
+                                Webview url="/static/custom/grafana/solar_consumption.html?fromItem=Chart_From" icon=none height=18
                             }
                         }
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/grafana/energy_consumption.html?fromItem=Chart_From" icon=none height=18
+                        Webview url="/static/custom/grafana/energy_consumption.html?fromItem=Chart_From" icon=none height=18
                     }
                 }
                 Group item=Gas_Current_Daily_Consumption label="Gas [%.2f m³]" {
@@ -744,7 +744,7 @@ sitemap haus label="Main Menu"
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/grafana/gas_consumption.html?fromItem=Chart_From" icon=none height=18
+                        Webview url="/static/custom/grafana/gas_consumption.html?fromItem=Chart_From" icon=none height=18
                     }
                 }
                 Group item=Heating_Solar_Power_Current_Daily label="Wasser [%.1f KW]" icon="selfwater"{
@@ -757,7 +757,7 @@ sitemap haus label="Main Menu"
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/grafana/solar_heating.html?fromItem=Chart_From" icon=none height=27
+                        Webview url="/static/custom/grafana/solar_heating.html?fromItem=Chart_From" icon=none height=27
                     }
                 
                 }
@@ -793,7 +793,7 @@ sitemap haus label="Main Menu"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/server.html?fromItem=Chart_From" icon=none height=72
+                                Webview url="/static/custom/grafana/server.html?fromItem=Chart_From" icon=none height=72
                             }
                         }
                         Group item=FritzboxDslStatus label="DSL Status [MAP(network_states.map):%s]" {
@@ -824,7 +824,7 @@ sitemap haus label="Main Menu"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/grafana/internet.html?fromItem=Chart_From" icon=none height=12
+                                Webview url="/static/custom/grafana/internet.html?fromItem=Chart_From" icon=none height=12
                             }
                         }
                         Group item=PrinterStatus label="Drucker Status [%s]" {
