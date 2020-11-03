@@ -12,7 +12,11 @@ class PresenceCheckRule:
     def execute(self, module, input):
         itemName = input['event'].getItemName()
         itemState = input['event'].getItemState()
-        
+
+        # sometimes, phones are losing wifi connections because of their sleep mode
+        if itemState == OFF and itemLastChangeOlderThen("Door_FF_Floor",getNow().minusMinutes(30)):
+            return
+          
         #sendNotificationToAllAdmins(u"{}".format(itemName), u"{}".format(itemState))
         
         holgerPhone = itemState if itemName == "State_Holger_Presence" else getItemState("State_Holger_Presence")
