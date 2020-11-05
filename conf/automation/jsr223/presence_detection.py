@@ -9,21 +9,21 @@ class PresenceCheckRule:
             ItemStateChangeTrigger("State_Sandra_Presence")
         ]
         
-        self.skippedStates = {}
+        #self.skippedStates = {}
         
     def execute(self, module, input):
         itemName = input['event'].getItemName()
         itemState = input['event'].getItemState()
 
         # sometimes, phones are losing wifi connections because of their sleep mode
-        if itemState == OFF:
-            if itemLastChangeOlderThen("Door_FF_Floor",getNow().minusMinutes(30)):
-                self.skippedStates[itemName] = True
-                return
-        else:
-            if itemName in self.skippedStates:
-                del self.skippedStates[itemName]
-                return
+        #if itemState == OFF:
+        #    if itemLastChangeOlderThen("Door_FF_Floor",getNow().minusMinutes(30)):
+        #        self.skippedStates[itemName] = True
+        #        return
+        #else:
+        #    if itemName in self.skippedStates:
+        #        del self.skippedStates[itemName]
+        #        return
           
         #sendNotificationToAllAdmins(u"{}".format(itemName), u"{}".format(itemState))
         
