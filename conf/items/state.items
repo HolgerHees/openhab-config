@@ -43,3 +43,5 @@ Switch Auto_Rollershutter						"Rollläden Automatik"			<selfautomode>
 Switch Auto_Sunprotection						"Beschattung Automatik"			<selfautomode>
 
 String Chart_From                               "Zeitraum"                      <selfcalendar>
+
+String HabpanelViewer_Control_Cmd               "Habpanel Command"              <selfautomode>
