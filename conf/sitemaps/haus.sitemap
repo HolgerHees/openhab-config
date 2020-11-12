@@ -422,8 +422,8 @@ sitemap haus label="Main Menu"
                     Frame label="Wetter" {
                         Group item=WeatherStation_Air_Message {
                             Frame label="Details" {
-                                Text item=WeatherStation_Temperature
-                                Text item=WeatherStation_Humidity
+                                Text item=WeatherStation_Temperature label="Temperature [%.1f °C]"
+                                Text item=WeatherStation_Humidity label="Luftfeuchtigkeit [%.1f %%]"
                                 Text item=WeatherStation_Dewpoint
                                 Text item=Heating_Temperature_Outdoor label="Garten (Schatten) [%.1f °C]"
                                 Text item=Temperature_Garden_Forecast4 label="Garten (in 4 Std) [%.1f °C]"

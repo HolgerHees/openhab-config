@@ -155,9 +155,9 @@ Number WeatherStation_Dewpoint            "Taupunkt [%.1f °C]"	<selftemperature
 String WeatherStation_Temperature_Stack   "Temperatur [%s]"	<selftemperature>
 
 Number WeatherStation_Temperature_Raw     "Temperatur Raw [%.1f °C]"	<selftemperature> (Weatherstation)                     {channel="mqtt:topic:mosquitto:weatherstation:temperature" }
-Number WeatherStation_Temperature         "Temperatur [%.1f °C]"	<selftemperature> (PersistentChart,PersistentHistory,Temperatures,Outdoor)
+Number WeatherStation_Temperature         "Garten [%.1f °C]"	<selftemperature> (PersistentChart,PersistentHistory,Temperatures,Outdoor)
 Number WeatherStation_Humidity_Raw        "Luftfeuchtigkeit Raw [%.1f %%]"	<humidity> (Weatherstation)                     {channel="mqtt:topic:mosquitto:weatherstation:humidity" }
-Number WeatherStation_Humidity            "Luftfeuchtigkeit [%.1f %%]"	<humidity> (PersistentChart,PersistentHistory,Humidity,Outdoor)
+Number WeatherStation_Humidity            "Garten [%.1f %%]"	<humidity> (PersistentChart,PersistentHistory,Humidity,Outdoor)
 String WeatherStation_Air_Message 		  "Luft [%s]"	<selftemperature>
 
 Number WeatherStation_Pressure            "Luftdruck [%.1f hPa]"	<selfruntime> (Weatherstation,PersistentChart,PersistentHistory)                      {channel="mqtt:topic:mosquitto:weatherstation:pressure" }
