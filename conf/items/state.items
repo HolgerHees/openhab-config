@@ -1,5 +1,5 @@
 Number State_Presence							"Präsenz"				<selfinfo>			(PersistentHistory) ["Presence"]
-Switch State_Holger_Presence                    "Holger anwesend"       <selfinfo>          (PersistentHistory) { channel="mqtt:topic:mosquitto:device_ping:phone_holger" }                                                       
+Switch State_Holger_Presence                    "Holger anwesend"       <selfinfo>          (PersistentHistory) { channel="mqtt:topic:mosquitto:device_ping:phone_hhees" }                                                       
 Switch State_Sandra_Presence                    "Sandra anwesend"       <selfinfo>          (PersistentHistory) { channel="mqtt:topic:mosquitto:device_ping:phone_sandra" }
 
 Switch State_Holidays_Active					"Urlaub aktiv"          <selfautomode>
