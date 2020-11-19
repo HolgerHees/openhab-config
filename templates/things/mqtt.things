@@ -1,7 +1,10 @@
 Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
 {
     Thing topic device_ping "Device Ping" @ "Geräte" {
-{% for phone_name in phone_ips %}        Type switch : {{phone_name}} "Device" [ stateTopic="/device_ping/{{phone_name}}" ]
+{% for username in userdata %}
+{% if userdata[username].phone_device is defined %}
+        Type switch : phone_{{username}} "Device" [ stateTopic="/device_ping/phone_{{username}}" ]
+{% endif %}
 {% endfor %}
     }
     Thing topic vcontrol "Heizung" @ "Geräte" {
