@@ -33,13 +33,18 @@ class HomeConnectWasherNotificationRule:
         self.triggers = [
             ItemStateChangeTrigger("Washer_OperationState")
         ]
+        
+        self.isRunning = False
 
     def execute(self, module, input):
       
         currentMode = input['event'].getItemState().toString()
-        prevMode = input['event'].getOldItemState().toString()
+        #prevMode = input['event'].getOldItemState().toString()
         
-        if currentMode == "Finished" and prevMode == "Run":
+        if currentMode == "Run":
+            self.isRunning = True
+        elif currentMode == "Finished" and self.isRunning == True:
             sendNotification("Waschmaschine", u"Wäsche ist fertig")
+            self.isRunning = False
         
         #if mode == "Fertig":
