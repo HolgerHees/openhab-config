@@ -1,6 +1,6 @@
 import urllib2
 
-from shared.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastChangeOlderThen, getNow
+from shared.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastChangeOlderThen, getNow, sendCommand
 from core.triggers import ItemStateChangeTrigger, ItemCommandTrigger
 
 @rule("tablet.py")
@@ -31,7 +31,8 @@ class ManualReloadRule:
         self.triggers = [ItemCommandTrigger("Scene7")]
 
     def execute(self, module, input):
-        urllib2.urlopen("http://192.168.0.40:5000/reload").read()
+        sendCommand("HabpanelViewer_Control_Cmd", "RELOAD")
+        #urllib2.urlopen("http://192.168.0.40:5000/reload").read()
         postUpdate("Scene7", OFF)
 
 

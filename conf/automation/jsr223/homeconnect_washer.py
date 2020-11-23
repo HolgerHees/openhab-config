@@ -46,6 +46,7 @@ class HomeConnectWasherNotificationRule:
             if runtime != NULL and runtime != UNDEF and runtime.intValue() > 0:
                 self.checkTimer = startTimer(self.log, runtime.intValue(), self.notify, args = [ False ], oldTimer = self.checkTimer)
         else:
+            currentMode = input['event'].getItemState().toString()
             if currentMode == "Finished" and self.checkTimer != None:
                 self.checkTimer.cancel()
                 self.notify( True )

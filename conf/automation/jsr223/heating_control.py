@@ -616,7 +616,7 @@ class HeatingControlRule():
         _sunSouthRadiation, _sunWestRadiation, _sunDebugInfo = SunRadiation.getSunPowerPerHour(offset,cloudCover,_messuredRadiation)
         effectiveSouthRadiationShortTerm = _sunSouthRadiation / 60.0
         effectiveWestRadiationShortTerm = _sunWestRadiation / 60.0
-        self.log.info(u"Gemessen Avg 10 min until {}: {} {}".format(offset,effectiveSouthRadiationShortTerm, effectiveWestRadiationShortTerm))
+        #self.log.info(u"Gemessen Avg 10 min until {}: {} {}".format(offset,effectiveSouthRadiationShortTerm, effectiveWestRadiationShortTerm))
 
         #azimut = getItemState("Sun_Azimuth").doubleValue()
         #longTermTimeWindow = 120 if azimut > 225 and azimut < 245 else 30 # in this direction a tree is hiding the sun
@@ -625,11 +625,11 @@ class HeatingControlRule():
         _sunSouthRadiation, _sunWestRadiation, _sunDebugInfo = SunRadiation.getSunPowerPerHour(offset,cloudCover,_messuredRadiation)
         effectiveSouthRadiationLongTerm = _sunSouthRadiation / 60.0
         effectiveWestRadiationLongTerm = _sunWestRadiation / 60.0
-        self.log.info(u"Gemessen Avg 30 min until {}: {} {}".format(offset,effectiveSouthRadiationLongTerm, effectiveWestRadiationLongTerm))
+        #self.log.info(u"Gemessen Avg 30 min until {}: {} {}".format(offset,effectiveSouthRadiationLongTerm, effectiveWestRadiationLongTerm))
       
         effectiveSouthRadiationMax = cr.getSunSouthRadiationMax() / 60.0
         effectiveWestRadiationMax = cr.getSunWestRadiationMax() / 60.0
-        self.log.info(u"Max: {} {}".format(effectiveSouthRadiationMax, effectiveWestRadiationMax))
+        #self.log.info(u"Max: {} {}".format(effectiveSouthRadiationMax, effectiveWestRadiationMax))
       
         currentOutdoorTemperature = cr.getReferenceTemperature()
         currentOutdoorTemperature4 = cr4.getReferenceTemperature()
