@@ -31,8 +31,8 @@ class ManualReloadRule:
         self.triggers = [ItemCommandTrigger("Scene7")]
 
     def execute(self, module, input):
-        sendCommand("HabpanelViewer_Control_Cmd", "RELOAD")
-        #urllib2.urlopen("http://192.168.0.40:5000/reload").read()
+        #sendCommand("HabpanelViewer_Control_Cmd", "RELOAD")
+        urllib2.urlopen("http://192.168.0.40:5000/reload").read()
         postUpdate("Scene7", OFF)
 
 
