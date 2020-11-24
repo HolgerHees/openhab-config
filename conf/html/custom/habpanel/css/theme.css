@@ -207,6 +207,9 @@ body {
 html:-webkit-full-screen .header {
     display: none;
 }
+html main {
+    padding: 0px !important;
+}
 html:-webkit-full-screen .gridster-desktop {
 	margin: 10px 10px;
 }
