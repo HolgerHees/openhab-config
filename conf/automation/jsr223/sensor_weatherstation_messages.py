@@ -263,6 +263,9 @@ class WeatherstationRainHeaterRule:
                 self.timer = createTimer(self.log, 300,self.disable) # max 5 min
                 self.timer.start()
 
+            # heating requests are not handled like normal mqtt topics with a stateTopic and a commandTopic. Instead:
+            # 1. the weather station is sending a WeatherStation_Rain_Heater_Request
+            # 2. openhab is answering this request with a mqtt response
             mqttActions = actions.get("mqtt","mqtt:broker:mosquitto")
             mqttActions.publishMQTT("mysensors-sub-1/1/4/1/0/2",u"{}".format(1 if getItemState("WeatherStation_Rain_Heater") == ON else 0))
 
