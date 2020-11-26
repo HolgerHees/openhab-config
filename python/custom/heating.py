@@ -973,6 +973,7 @@ class Heating(object):
                     # CF is not needed, because it is timebased
                     if rhs.getForcedInfo() == "PRE" and not nightModeActive:
                         del Heating._forcedHeatings[room.getName()]
+                        rhs = None
                     else:
                         rhs.setHeatingDemandEnergy(neededEnergy)
                         rhs.setHeatingDemandTime(neededTime)
