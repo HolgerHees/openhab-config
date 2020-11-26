@@ -33,3 +33,24 @@ class LightsOnRule:
                 # must be a timer, otherwise sometimes it does not work. Maybe a conflict with Socket_Mobile_1 action
                 timer = createTimer(self.log, 1.0,self.callback,[OFF])
                 timer.start()
+
+@rule("lights_indoor_auto_christmas.py")                
+class OutdoorLightsOnRule:
+    def __init__(self):
+        self.triggers = [
+            ItemStateChangeTrigger("State_Outdoorlights"),
+            ItemStateChangeTrigger("State_Presence")
+        ]
+
+    def execute(self, module, input):
+        if getItemState("Auto_Christmas") == ON:
+            if input['event'].getItemName() == "State_Outdoorlights":
+                if input["event"].getItemState() == ON:
+                    sendCommand("Socket_Streedside", ON)
+                else:
+                    sendCommand("Socket_Streedside", OFF)
+            else:
+                if input["event"].getItemState().intValue() == 1 and getItemState("State_Outdoorlights") == ON:
+                    sendCommand("Socket_Streedside", ON)
+                elif input["event"].getItemState().intValue() == 2:
+                    sendCommand("Socket_Streedside", OFF)

@@ -280,6 +280,7 @@ sitemap haus label="Main Menu"
 						Switch item=Socket_Floor visibility=[Auto_Christmas==ON]
 						Switch item=Socket_Mobile_1 visibility=[Auto_Christmas==ON]
 						Switch item=Socket_Mobile_2 visibility=[Auto_Christmas==ON]
+						Switch item=Socket_Streedside visibility=[Auto_Christmas==ON]
 					}
 					Frame label="Dachboden" {
 						Switch item=Auto_Attic_Light label="Modus" mappings=[1="OFF", 2="W", 3="B"]
