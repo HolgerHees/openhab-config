@@ -328,7 +328,9 @@ class Heating(object):
                 # if 50% of the circuits volume is active then 65.0% of self.totalHeatingVolume at 100%
                 possibleHeatingVolumeInPercent = ( activeHeatingVolume * 70.0 / Heating.totalHeatingVolume ) + 30.0
 
-                return possibleHeatingVolumeInPercent / activeHeatingVolume
+                #self.log.info(u"{} {} {}".format(possibleHeatingVolumeInPercent,activeHeatingVolume,Heating.totalHeatingVolume))
+
+                return possibleHeatingVolumeInPercent / 100.0
 
         return 1.0
     

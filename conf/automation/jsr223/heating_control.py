@@ -464,7 +464,10 @@ class HeatingControlRule():
 
         now = getNow()
         autoModeEnabled = getItemState("Heating_Auto_Mode").intValue() == 1
+
+        currentOperatingModeChange = getItemLastChange("Heating_Operating_Mode")
         currentOperatingMode = getItemState("Heating_Operating_Mode").intValue()
+
         currentHeatingDemand = getItemState("Heating_Demand")
 
         outdoorTemperatureItemName = getItemState("Outdoor_Temperature_Item_Name").toString()
@@ -508,6 +511,15 @@ class HeatingControlRule():
 
 
             # *** PERSIST AND CIRCUITS ************************
+            # forced open circuits are needed during burner startup phase to avoid burner start/stops
+            forcedOpenCircuitOnStart = ( # nur WW or Reduziert
+                                         # Forced circuits should stay open when burner is inactive
+                                         currentOperatingMode != 2
+                                         or 
+                                         # Heizen mit WW
+                                         # Forced circuits should stay open until burner is active for 5 min.
+                                         (currentOperatingMode == 2 and now.minusMinutes(5).getMillis() < currentOperatingModeChange.getMillis() )
+                                       )
             longestRuntime = 0
             lastCircuitOpenedAt = None
             for room in filter( lambda room: room.getHeatingVolume() != None,Heating.getRooms()):
@@ -534,7 +546,7 @@ class HeatingControlRule():
                 # *** CONTROL CIRCUITS AND HK ***
                 if room.getName() in controllableRooms and room not in maintenanceMode:
                     circuitItem = Heating.getHeatingCircuitItem(room)
-                    if heatingRequested and rhs.getHeatingDemandTime() > 0:
+                    if heatingRequested and ( rhs.getHeatingDemandTime() > 0 or forcedOpenCircuitOnStart ):
                         #self.log.info("ON")
                         if sendCommandIfChanged(circuitItem,ON):
                             circuitLastChange = now
@@ -550,18 +562,17 @@ class HeatingControlRule():
                     # wall radiator
                     if room.hasAdditionalRadiator():
                         # additional radiator should only be enabled in case of CF heating
-                        if heatingRequested and rhs.getForcedInfo() == 'CF':
+                        if heatingRequested and ( rhs.getForcedInfo() == 'CF' or forcedOpenCircuitOnStart ):
                             sendCommandIfChanged(Heating.getHeatingHKItem(room),ON)
                         else:
                             sendCommandIfChanged(Heating.getHeatingHKItem(room),OFF)
             # *************************************************
             
-            
             self.log.info(u"        : ---" )
             
             # a heating ciruit was opened less then 5 minutes ago.
             # delay heating request to give circuit some time to open
-            if currentHeatingDemand == OFF and lastCircuitOpenedAt != None and now.getMillis() - lastCircuitOpenedAt.getMillis() < 5 * 60 * 1000:
+            if currentHeatingDemand == OFF and lastCircuitOpenedAt != None and now.minusMinutes(5).getMillis() < lastCircuitOpenedAt.getMillis():
                 #self.log.info(u"{}".format(lastCircuitOpenedAt))
                 openedBeforeInMinutes = int( round( ( now.getMillis() - lastCircuitOpenedAt.getMillis() ) / 1000.0 / 60.0 ) )
                 self.log.info(u"Demand  : DELAYED • circuit was opened {} min. ago".format(openedBeforeInMinutes))
@@ -576,7 +587,7 @@ class HeatingControlRule():
                 lastChangeBeforeFormatted = lastChangeBeforeInMinutes if lastChangeBeforeInMinutes < 60 else '{:02d}:{:02d}'.format(*divmod(lastChangeBeforeInMinutes, 60));
                 self.log.info(u"Demand  : {} since {} • {} min. ago{}".format(heatingDemand, lastHeatingChangeFormatted, lastChangeBeforeFormatted,endMsg) )
                 
-                self.controlHeating(now,currentOperatingMode,heatingRequested)  
+                self.controlHeating(now,currentOperatingMode,currentOperatingModeChange,heatingRequested)  
         else:
             self.log.info(u"Demand  : SKIPPED • MANUAL MODE ACTIVE")
 
@@ -723,7 +734,7 @@ class HeatingControlRule():
         #        #else:
         #        #   self.log.info(u"SP not needed")
 
-    def controlHeating( self, now, currentOperatingMode, isHeatingRequested ):
+    def controlHeating( self, now, currentOperatingMode, currentOperatingModeChange, isHeatingRequested ):
 
         # 0 - Abschalten
         # 1 - Nur WW
@@ -738,7 +749,6 @@ class HeatingControlRule():
         forceRetryMsg = u" • RETRY {} {}".format(self.activeHeatingOperatingMode,currentOperatingMode) if forceRetry else u""
         delayedMsg = u""
         
-        currentOperatingModeChange = getItemLastChange("Heating_Operating_Mode")
         lastChangeBeforeInMinutes = int( math.floor( ( now.getMillis() - currentOperatingModeChange.getMillis() ) / 1000.0 / 60.0 ) )
         lastHeatingChangeFormatted = OFFSET_FORMATTER.print(currentOperatingModeChange)
         lastChangeBeforeFormatted = lastChangeBeforeInMinutes if lastChangeBeforeInMinutes < 60 else '{:02d}:{:02d}'.format(*divmod(lastChangeBeforeInMinutes, 60));
