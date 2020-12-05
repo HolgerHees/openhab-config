@@ -1,76 +1,76 @@
 //########### TEMPERATURE ##########
-Group Temperatures "Temperaturen" ["Temperature","Measurement"] { synonyms="warm,kalt" }
-Group Humidity "Feuchtigkeit" ["Humidity","Measurement"]
+Group Temperatures "Temperaturen"
+Group Humidity "Feuchtigkeit"
 
 Number Temperature_FF_Livingroom_Raw		{ channel="knx:device:bridge:sensors_ff:temperatureLivingroom" }
-Number Temperature_FF_Livingroom "Wohnzimmer [%.1f °C]"	<selftemperature> (PersistentChart,PersistentHistory,Temperatures,FF_Livingroom)
+Number Temperature_FF_Livingroom "Wohnzimmer [%.1f °C]"	<selftemperature> (PersistentChart,PersistentHistory,Temperatures,FF_Livingroom) ["Sensor","Measurement","Temperature"]
 Number Humidity_FF_Livingroom_Raw 			{ channel="knx:device:bridge:sensors_ff:humidityLivingroom" }
-Number Humidity_FF_Livingroom 				"Wohnzimmer [%.1f %%]"		    <chart>			  (PersistentChart,PersistentHistory,Humidity,FF_Livingroom)
+Number Humidity_FF_Livingroom 				"Wohnzimmer [%.1f %%]"		    <chart> (PersistentChart,PersistentHistory,Humidity,FF_Livingroom) ["Sensor","Measurement","Humidity"]
 String Air_FF_Livingroom_Message 			"Wohnzimmer [%s]"		<selftemperature>
 Number Temperature_FF_Boxroom_Raw  			{ channel="knx:device:bridge:sensors_ff:temperatureBoxroom" }
-Number Temperature_FF_Boxroom 	"Abstellkammer [%.1f °C]"			<selftemperature> (PersistentChart,PersistentHistory,Temperatures,FF_Boxroom)
+Number Temperature_FF_Boxroom 	"Abstellkammer [%.1f °C]"			<selftemperature> (PersistentChart,PersistentHistory,Temperatures,FF_Boxroom) ["Sensor","Measurement","Temperature"]
 Number Humidity_FF_Boxroom_Raw  			{ channel="knx:device:bridge:sensors_ff:humidityBoxroom" }
-Number Humidity_FF_Boxroom 					"Abstellkammer [%.1f %%]"			<chart>			  (PersistentChart,PersistentHistory,Humidity,FF_Boxroom)
+Number Humidity_FF_Boxroom 					"Abstellkammer [%.1f %%]"			<chart> (PersistentChart,PersistentHistory,Humidity,FF_Boxroom) ["Sensor","Measurement","Humidity"]
 String Air_FF_Boxroom_Message 				"Abstellkammer [%s]"	<selftemperature>
 Number Temperature_FF_Guestroom_Raw  		{ channel="knx:device:bridge:sensors_ff:temperatureGuestroom" }
-Number Temperature_FF_Guestroom "Gästezimmer [%.1f °C]"			<selftemperature> (PersistentChart,PersistentHistory,Temperatures,FF_Guestroom)
+Number Temperature_FF_Guestroom "Gästezimmer [%.1f °C]"			<selftemperature> (PersistentChart,PersistentHistory,Temperatures,FF_Guestroom) ["Sensor","Measurement","Temperature"]
 Number Humidity_FF_Guestroom_Raw  			{ channel="knx:device:bridge:sensors_ff:humidityGuestroom" }
-Number Humidity_FF_Guestroom 				"Gästezimmer [%.1f %%]"			<chart>			  (PersistentChart,PersistentHistory,Humidity,FF_Guestroom)
+Number Humidity_FF_Guestroom 				"Gästezimmer [%.1f %%]"			<chart> (PersistentChart,PersistentHistory,Humidity,FF_Guestroom) ["Sensor","Measurement","Humidity"]
 String Air_FF_Guestroom_Message 			"Gästezimmer [%s]"		<selftemperature>
 Number Temperature_FF_GuestWC_Raw  			{ channel="knx:device:bridge:sensors_ff:temperatureGuestWC" }
-Number Temperature_FF_GuestWC 	"Gäste WC [%.1f °C]"		        <selftemperature> (PersistentChart,PersistentHistory,Temperatures,FF_GuestWC)
+Number Temperature_FF_GuestWC 	"Gäste WC [%.1f °C]"		        <selftemperature> (PersistentChart,PersistentHistory,Temperatures,FF_GuestWC) ["Sensor","Measurement","Temperature"]
 Number Humidity_FF_GuestWC_Raw  			{ channel="knx:device:bridge:sensors_ff:humidityGuestWC" }
-Number Humidity_FF_GuestWC 					"Gäste WC [%.1f %%]"				<chart>			  (PersistentChart,PersistentHistory,Humidity,FF_GuestWC)
+Number Humidity_FF_GuestWC 					"Gäste WC [%.1f %%]"				<chart> (PersistentChart,PersistentHistory,Humidity,FF_GuestWC) ["Sensor","Measurement","Humidity"]
 String Air_FF_GuestWC_Message 				"Gäste WC [%s]"			<selftemperature>
 Number Temperature_FF_Floor_Raw  			{ channel="knx:device:bridge:sensors_ff:temperatureFloor" }
-Number Temperature_FF_Floor 	"Flur unten [%.1f °C]"			<selftemperature> (PersistentChart,PersistentHistory,Temperatures,FF_Floor)
+Number Temperature_FF_Floor 	"Flur unten [%.1f °C]"			<selftemperature> (PersistentChart,PersistentHistory,Temperatures,FF_Floor) ["Sensor","Measurement","Temperature"]
 Number Humidity_FF_Floor_Raw  				{ channel="knx:device:bridge:sensors_ff:humidityFloor" }
-Number Humidity_FF_Floor 					"Flur unten [%.1f %%]"			<chart>			  (PersistentChart,PersistentHistory,Humidity,FF_Floor)
+Number Humidity_FF_Floor 					"Flur unten [%.1f %%]"			<chart> (PersistentChart,PersistentHistory,Humidity,FF_Floor) ["Sensor","Measurement","Humidity"]
 String Air_FF_Floor_Message 				"Flur EG [%s]"			<selftemperature>
 Number Temperature_FF_Utilityroom_Raw  		{ channel="knx:device:bridge:sensors_ff:temperatureUtilityroom" }
-Number Temperature_FF_Utilityroom "HWR [%.1f °C]"					<selftemperature> (PersistentChart,PersistentHistory,Temperatures,FF_Utilityroom)
+Number Temperature_FF_Utilityroom "HWR [%.1f °C]"					<selftemperature> (PersistentChart,PersistentHistory,Temperatures,FF_Utilityroom) ["Sensor","Measurement","Temperature"]
 Number Humidity_FF_Utilityroom_Raw  		{ channel="knx:device:bridge:sensors_ff:humidityUtilityroom" }
-Number Humidity_FF_Utilityroom 				"HWR [%.1f %%]"					<chart>			  (PersistentChart,PersistentHistory,Humidity,FF_Utilityroom)
+Number Humidity_FF_Utilityroom 				"HWR [%.1f %%]"					<chart> (PersistentChart,PersistentHistory,Humidity,FF_Utilityroom) ["Sensor","Measurement","Humidity"]
 String Air_FF_Utilityroom_Message 			"HWR [%s]"				<selftemperature>
 Number Temperature_FF_Garage_Raw  			{ channel="knx:device:bridge:sensors_ff:temperatureGarage" }
-Number Temperature_FF_Garage 	"Schuppen [%.1f °C]"				<selftemperature> (PersistentChart,PersistentHistory,Temperatures,FF_Garage)
+Number Temperature_FF_Garage 	"Schuppen [%.1f °C]"				<selftemperature> (PersistentChart,PersistentHistory,Temperatures,FF_Garage) ["Sensor","Measurement","Temperature"]
 Number Humidity_FF_Garage_Raw  				{ channel="knx:device:bridge:sensors_ff:humidityGarage" }
-Number Humidity_FF_Garage 					"Schuppen [%.1f %%]"				<chart>			  (PersistentChart,PersistentHistory,Humidity,FF_Garage)
+Number Humidity_FF_Garage 					"Schuppen [%.1f %%]"				<chart> (PersistentChart,PersistentHistory,Humidity,FF_Garage) ["Sensor","Measurement","Humidity"]
 String Air_FF_Garage_Message 				"Schuppen [%s]"			<selftemperature>
 Number Temperature_SF_Bedroom_Raw  			{ channel="knx:device:bridge:sensors_sf:temperatureBedroom" }
-Number Temperature_SF_Bedroom 	"Schlafzimmer [%.1f °C]"			<selftemperature> (PersistentChart,PersistentHistory,Temperatures,SF_Bedroom)
+Number Temperature_SF_Bedroom 	"Schlafzimmer [%.1f °C]"			<selftemperature> (PersistentChart,PersistentHistory,Temperatures,SF_Bedroom) ["Sensor","Measurement","Temperature"]
 Number Humidity_SF_Bedroom_Raw  			{ channel="knx:device:bridge:sensors_sf:humidityBedroom" }
-Number Humidity_SF_Bedroom 					"Schlafzimmer [%.1f %%]"			<chart>			  (PersistentChart,PersistentHistory,Humidity,SF_Bedroom)
+Number Humidity_SF_Bedroom 					"Schlafzimmer [%.1f %%]"			<chart> (PersistentChart,PersistentHistory,Humidity,SF_Bedroom) ["Sensor","Measurement","Humidity"]
 String Air_SF_Bedroom_Message 				"Schlafzimmer [%s]"		<selftemperature>
 Number Temperature_SF_Dressingroom_Raw  	{ channel="knx:device:bridge:sensors_sf:temperatureDressingroom" }
-Number Temperature_SF_Dressingroom "Ankleide [%.1f °C]"			<selftemperature> (PersistentChart,PersistentHistory,Temperatures,SF_Dressingroom)
+Number Temperature_SF_Dressingroom "Ankleide [%.1f °C]"			<selftemperature> (PersistentChart,PersistentHistory,Temperatures,SF_Dressingroom) ["Sensor","Measurement","Temperature"]
 Number Humidity_SF_Dressingroom_Raw  		{ channel="knx:device:bridge:sensors_sf:humidityDressingroom" }
-Number Humidity_SF_Dressingroom 			"Ankleide [%.1f %%]"				<chart>			  (PersistentChart,PersistentHistory,Humidity,SF_Dressingroom)
+Number Humidity_SF_Dressingroom 			"Ankleide [%.1f %%]"				<chart> (PersistentChart,PersistentHistory,Humidity,SF_Dressingroom) ["Sensor","Measurement","Humidity"]
 String Air_SF_Dressingroom_Message 			"Ankleide [%s]"			<selftemperature>
 Number Temperature_SF_Child1_Raw  			{ channel="knx:device:bridge:sensors_sf:temperatureChild1" }
-Number Temperature_SF_Child1 	"Kindzimmer eins [%.1f °C]"		<selftemperature> (PersistentChart,PersistentHistory,Temperatures,SF_Child1)
+Number Temperature_SF_Child1 	"Kindzimmer eins [%.1f °C]"		<selftemperature> (PersistentChart,PersistentHistory,Temperatures,SF_Child1) ["Sensor","Measurement","Temperature"]
 Number Humidity_SF_Child1_Raw  				{ channel="knx:device:bridge:sensors_sf:humidityChild1" }
-Number Humidity_SF_Child1 					"Kindzimmer eins [%.1f %%]"		<chart>			  (PersistentChart,PersistentHistory,Humidity,SF_Child1)
+Number Humidity_SF_Child1 					"Kindzimmer eins [%.1f %%]"		<chart> (PersistentChart,PersistentHistory,Humidity,SF_Child1) ["Sensor","Measurement","Humidity"]
 String Air_SF_Child1_Message 				"Kind 1 [%s]"			<selftemperature>
 Number Temperature_SF_Child2_Raw 	 		{ channel="knx:device:bridge:sensors_sf:temperatureChild2" }
-Number Temperature_SF_Child2	"Kindzimmer zwei [%.1f °C]"		<selftemperature> (PersistentChart,PersistentHistory,Temperatures,SF_Child2)
+Number Temperature_SF_Child2	"Kindzimmer zwei [%.1f °C]"		<selftemperature> (PersistentChart,PersistentHistory,Temperatures,SF_Child2) ["Sensor","Measurement","Temperature"]
 Number Humidity_SF_Child2_Raw 	 			{ channel="knx:device:bridge:sensors_sf:humidityChild2" }
-Number Humidity_SF_Child2	 				"Kindzimmer zwei [%.1f %%]"		<chart>			  (PersistentChart,PersistentHistory,Humidity,SF_Child2)
+Number Humidity_SF_Child2	 				"Kindzimmer zwei [%.1f %%]"		<chart> (PersistentChart,PersistentHistory,Humidity,SF_Child2) ["Sensor","Measurement","Humidity"]
 String Air_SF_Child2_Message 				"Kind 2 [%s]"			<selftemperature>
 Number Temperature_SF_Bathroom_Raw  		{ channel="knx:device:bridge:sensors_sf:temperatureBathroom" }
-Number Temperature_SF_Bathroom 	"Badezimmer [%.1f °C]"			<selftemperature> (PersistentChart,PersistentHistory,Temperatures,SF_Bathroom)
+Number Temperature_SF_Bathroom 	"Badezimmer [%.1f °C]"			<selftemperature> (PersistentChart,PersistentHistory,Temperatures,SF_Bathroom) ["Sensor","Measurement","Temperature"]
 Number Humidity_SF_Bathroom_Raw  			{ channel="knx:device:bridge:sensors_sf:humidityBathroom" }
-Number Humidity_SF_Bathroom 				"Badezimmer [%.1f %%]"			<chart>			  (PersistentChart,PersistentHistory,Humidity,SF_Bathroom)
+Number Humidity_SF_Bathroom 				"Badezimmer [%.1f %%]"			<chart> (PersistentChart,PersistentHistory,Humidity,SF_Bathroom) ["Sensor","Measurement","Humidity"]
 String Air_SF_Bathroom_Message 				"Badezimmer [%s]"		<selftemperature>
 Number Temperature_SF_Floor_Raw  			{ channel="knx:device:bridge:sensors_sf:temperatureFloor" }
-Number Temperature_SF_Floor 	"Flur oben [%.1f °C]"				<selftemperature> (PersistentChart,PersistentHistory,Temperatures,SF_Floor)
+Number Temperature_SF_Floor 	"Flur oben [%.1f °C]"				<selftemperature> (PersistentChart,PersistentHistory,Temperatures,SF_Floor) ["Sensor","Measurement","Temperature"]
 Number Humidity_SF_Floor_Raw  				{ channel="knx:device:bridge:sensors_sf:humidityFloor" }
-Number Humidity_SF_Floor 					"Flur oben [%.1f %%]"				<chart>			  (PersistentChart,PersistentHistory,Humidity,SF_Floor)
+Number Humidity_SF_Floor 					"Flur oben [%.1f %%]"				<chart> (PersistentChart,PersistentHistory,Humidity,SF_Floor) ["Sensor","Measurement","Humidity"]
 String Air_SF_Floor_Message 				"Flur OG [%s]"			<selftemperature>
 Number Temperature_SF_Attic_Raw  			{ channel="knx:device:bridge:sensors_sf:temperatureAttic" }
-Number Temperature_SF_Attic 	"Dachboden [%.1f °C]"				<selftemperature> (PersistentChart,PersistentHistory,Temperatures,SF_Attic)
+Number Temperature_SF_Attic 	"Dachboden [%.1f °C]"				<selftemperature> (PersistentChart,PersistentHistory,Temperatures,SF_Attic) ["Sensor","Measurement","Temperature"]
 Number Humidity_SF_Attic_Raw  				{ channel="knx:device:bridge:sensors_sf:humidityAttic" }
-Number Humidity_SF_Attic 					"Dachboden [%.1f %%]"				<chart>			  (PersistentChart,PersistentHistory,Humidity,SF_Attic)
+Number Humidity_SF_Attic 					"Dachboden [%.1f %%]"				<chart> (PersistentChart,PersistentHistory,Humidity,SF_Attic) ["Sensor","Measurement","Humidity"]
 String Air_SF_Attic_Message  				"Dachboden [%s]"		<selftemperature>
 
 // Forecast
@@ -81,18 +81,18 @@ Number Temperature_Garden_Forecast4				"Garten (Vorhersage 4Std) [%.1f °C]" <se
 Number Cloud_Cover_Forecast8			"Wolken (Vorhersage 8Std) [%d]"	<selftemperature>
 Number Temperature_Garden_Forecast8				"Garten (Vorhersage 8Std) [%.1f °C]" <selftemperature>	(PersistentChart,PersistentHistory)
 
-//Number Temperature_Room_Target	        "Ziel [%.1f °C]"				<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
+//Number Temperature_Room_Target	        "Ziel [%.1f °C]"				<selftemperature>    ["RadiatorControl","Setpoint","Temperature"]
 
-Number Temperature_FF_GuestWC_Target	"Ziel Gäste WC [%.1f °C]"		<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
-Number Temperature_FF_Livingroom_Target	"Ziel Wohnzimmer [%.1f °C]"		<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
-Number Temperature_FF_Guestroom_Target	"Ziel Gästezimmer [%.1f °C]"	<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
-Number Temperature_FF_Floor_Target	    "Ziel Flur unten [%.1f °C]"		<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
-Number Temperature_SF_Floor_Target	    "Ziel Flur oben [%.1f °C]"		<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
-Number Temperature_SF_Child1_Target	    "Ziel Kind 1 [%.1f °C]"			<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
-Number Temperature_SF_Child2_Target	    "Ziel Kind 2 [%.1f °C]"			<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
-Number Temperature_SF_Bedroom_Target	"Ziel Schlafzimmer [%.1f °C]"	<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
-//Number Temperature_SF_Dressingroom_Target	"Ziel Ankleide [%.1f °C]"	<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
-Number Temperature_SF_Bathroom_Target	"Ziel Badezimmer [%.1f °C]"		<selftemperature>    ["Setpoint","Temperature","RadiatorControl"]
+Number Temperature_FF_GuestWC_Target	"Ziel Gäste WC [%.1f °C]"		<selftemperature>    ["RadiatorControl","Setpoint","Temperature"]
+Number Temperature_FF_Livingroom_Target	"Ziel Wohnzimmer [%.1f °C]"		<selftemperature>    ["RadiatorControl","Setpoint","Temperature"]
+Number Temperature_FF_Guestroom_Target	"Ziel Gästezimmer [%.1f °C]"	<selftemperature>    ["RadiatorControl","Setpoint","Temperature"]
+Number Temperature_FF_Floor_Target	    "Ziel Flur unten [%.1f °C]"		<selftemperature>    ["RadiatorControl","Setpoint","Temperature"]
+Number Temperature_SF_Floor_Target	    "Ziel Flur oben [%.1f °C]"		<selftemperature>    ["RadiatorControl","Setpoint","Temperature"]
+Number Temperature_SF_Child1_Target	    "Ziel Kind 1 [%.1f °C]"			<selftemperature>    ["RadiatorControl","Setpoint","Temperature"]
+Number Temperature_SF_Child2_Target	    "Ziel Kind 2 [%.1f °C]"			<selftemperature>    ["RadiatorControl","Setpoint","Temperature"]
+Number Temperature_SF_Bedroom_Target	"Ziel Schlafzimmer [%.1f °C]"	<selftemperature>    ["RadiatorControl","Setpoint","Temperature"]
+//Number Temperature_SF_Dressingroom_Target	"Ziel Ankleide [%.1f °C]"	<selftemperature>    ["RadiatorControl","Setpoint","Temperature"]
+Number Temperature_SF_Bathroom_Target	"Ziel Badezimmer [%.1f °C]"		<selftemperature>    ["RadiatorControl","Setpoint","Temperature"]
 
 //########### PLANT SENSORS ##########
 
@@ -125,14 +125,14 @@ String Outdoor_Temperature_Item_Name      "Item [%s]"	<selftemperature>
 String WeatherStation_Update_Message      "Letzte Änderung [%s]"        <selfclock>
 Switch WeatherStation_Is_Working          "Aktiv [%s]"                  <selfclock>
 
-Number WeatherStation_Battery_Level       "Batterie Level [%d %%]"      <selfbattery> (PersistentChart,PersistentHistory)
-Number WeatherStation_Battery_Voltage     "Batterie Spannung [%d mV]"	<selfenergy> (Weatherstation,PersistentChart,PersistentHistory) {channel="mqtt:topic:mosquitto:weatherstation:batteryVoltage" }
-Number WeatherStation_Battery_Current	  "Batterie Strom [%d mA]"	<selfenergy> (Weatherstation,PersistentChart,PersistentHistory) {channel="mqtt:topic:mosquitto:weatherstation:batteryCurrent" }
+Number WeatherStation_Battery_Level       "Batterie Level [%d %%]"      <selfbattery> (PersistentChart,PersistentHistory) ["Battery","Measurement"]
+Number WeatherStation_Battery_Voltage     "Batterie Spannung [%d mV]"	<selfenergy> (Weatherstation,PersistentChart,PersistentHistory) ["Battery","Measurement","Voltage"] {channel="mqtt:topic:mosquitto:weatherstation:batteryVoltage" }
+Number WeatherStation_Battery_Current	  "Batterie Strom [%d mA]"	<selfenergy> (Weatherstation,PersistentChart,PersistentHistory) ["Battery","Measurement","Power"] {channel="mqtt:topic:mosquitto:weatherstation:batteryCurrent" }
 String WeatherStation_Battery_Message 	  "Batterie [%s]"	<selfbattery>
 
 Number WeatherStation_Rain_Counter        "Counter (total) [%d]"	<selfrain> (PersistentHistory)
 Number WeatherStation_Rain_Current 		  "Aktuell [%.1f mm]" <chart> (PersistentChart,Outdoor)
-Number WeatherStation_Rain_Daily 		  "Heute [%.1f mm]"	<chart> (PersistentChart,Outdoor) ["Rain", "Measurement"]
+Number WeatherStation_Rain_Daily 		  "Heute [%.1f mm]"	<chart> (PersistentChart,Outdoor) ["Sensor","Measurement","Rain"]
 Number WeatherStation_Rain_State          "Status Numerisch [%d]"	<selfrain>
 
 Number WeatherStation_Rain_Impulse        "Counter (current) [%d]"	<selfrain> (Weatherstation)        {channel="mqtt:topic:mosquitto:weatherstation:rainImpulse" }
@@ -142,7 +142,7 @@ String WeatherStation_Rain_Heater_Request "Heizung"	<heating>                   
 String WeatherStation_Rain_State_Message  "Status [%s]"	<selfrain>
 String WeatherStation_Rain_Message 	      "Regen [%s]"	<selfrain>
 
-Number WeatherStation_Wind_Current        "Böe (15 min). [%.1f km/h]"	<wind> (PersistentChart,Outdoor) ["Wind", "Measurement"]
+Number WeatherStation_Wind_Current        "Böe (15 min). [%.1f km/h]"	<wind> (PersistentChart,Outdoor) ["Sensor","Measurement","Wind"] 
 
 Number WeatherStation_Wind_Speed          "Geschwindigkeit [%.1f km/h]"	<wind> (Weatherstation,PersistentHistory) {channel="mqtt:topic:mosquitto:weatherstation:windSpeed" }
 Number WeatherStation_Wind_Gust           "Böe [%.1f km/h]"	<wind> (Weatherstation)                       {channel="mqtt:topic:mosquitto:weatherstation:windGust" }
@@ -155,12 +155,12 @@ Number WeatherStation_Dewpoint            "Taupunkt [%.1f °C]"	<selftemperature
 String WeatherStation_Temperature_Stack   "Temperatur [%s]"	<selftemperature>
 
 Number WeatherStation_Temperature_Raw     "Temperatur Raw [%.1f °C]"	<selftemperature> (Weatherstation)                     {channel="mqtt:topic:mosquitto:weatherstation:temperature" }
-Number WeatherStation_Temperature         "Garten [%.1f °C]"	<selftemperature> (PersistentChart,PersistentHistory,Temperatures,Outdoor)
+Number WeatherStation_Temperature         "Garten [%.1f °C]"	<selftemperature> (PersistentChart,PersistentHistory,Temperatures,Outdoor) ["Sensor","Measurement","Temperature"]
 Number WeatherStation_Humidity_Raw        "Luftfeuchtigkeit Raw [%.1f %%]"	<humidity> (Weatherstation)                     {channel="mqtt:topic:mosquitto:weatherstation:humidity" }
-Number WeatherStation_Humidity            "Garten [%.1f %%]"	<humidity> (PersistentChart,PersistentHistory,Humidity,Outdoor)
+Number WeatherStation_Humidity            "Garten [%.1f %%]"	<humidity> (PersistentChart,PersistentHistory,Humidity,Outdoor) ["Sensor","Measurement","Humidity"]
 String WeatherStation_Air_Message 		  "Luft [%s]"	<selftemperature>
 
-Number WeatherStation_Pressure            "Luftdruck [%.1f hPa]"	<selfruntime> (Weatherstation,PersistentChart,PersistentHistory)                      {channel="mqtt:topic:mosquitto:weatherstation:pressure" }
+Number WeatherStation_Pressure            "Luftdruck [%.1f hPa]"	<selfruntime> (Weatherstation,PersistentChart,PersistentHistory,Outdoor) ["Sensor","Measurement","Pressure"]                      {channel="mqtt:topic:mosquitto:weatherstation:pressure" }
 
 Number SolarDiffCurrent		              "Solar Current [%.1f °C]" <selftemperature>	(PersistentChart,PersistentHistory)
 
@@ -170,7 +170,7 @@ Number WeatherStation_Solar_Power_Max     "Sonnenkraft Max. [%.1f Watt/m²]"	<se
 Number WeatherStation_Solar_Temperature_Raw "Sonnentemperatur Raw [%.1f °C]"	<selfsun> (Weatherstation){channel="mqtt:topic:mosquitto:weatherstation:solarTemperature" }
 Number WeatherStation_Solar_Power         "Sonnenkraft [%.1f Watt/m²]"	<selfsun> (PersistentChart,PersistentHistory)
 
-Number WeatherStation_Light_Level         "Helligkeit [%d lux]"	<selfsun> (Weatherstation,PersistentChart,PersistentHistory) {channel="mqtt:topic:mosquitto:weatherstation:lightLevel" }
+Number WeatherStation_Light_Level         "Helligkeit [%d lux]"	<selfsun> (Weatherstation,PersistentChart,PersistentHistory,Outdoor) ["Sensor","Measurement","Light"] {channel="mqtt:topic:mosquitto:weatherstation:lightLevel" }
 
 Number WeatherStation_UV_Index            "UV Index [%.1f]"	<selfsun> (PersistentChart,PersistentHistory)
 Number WeatherStation_UV_A_Raw            "UV A Raw [%.1f]"	<selfsun> (Weatherstation,PersistentChart,PersistentHistory) {channel="mqtt:topic:mosquitto:weatherstation:uvA" }
