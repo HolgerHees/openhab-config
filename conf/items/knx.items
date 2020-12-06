@@ -119,23 +119,23 @@ Group:Contact:OR(OPEN, CLOSED) 	Sensor_Doors_FF	"EG Türen [%d]"							<selfdoor
 Group:Contact:OR(OPEN, CLOSED) 	Sensor_Window_FF	"EG Fenster [%d]"					<selfwindow>		(Security,Openingcontacts)
 Group:Contact:OR(OPEN, CLOSED) 	Sensor_Window_SF	"OG Fenster [%d]"					<selfwindow>		(Security,Openingcontacts) ["Window","OpenState"]
 
-Contact Door_FF_Floor 	"Haustür [MAP(de.map):%s]"             <selfdoor> (PersistentHistory,FF_Floor,Sensor_Doors_FF) ["FrontDoor","OpenState"] { channel="knx:device:bridge:contacts_door:main" }
-Contact Door_FF_Garage1 "Schuppentür Strasse [MAP(de.map):%s]" <selfdoor> (PersistentHistory,FF_Garage,Sensor_Doors_FF) ["GarageDoor","OpenState"] { channel="knx:device:bridge:contacts_door:garageStreedside" }
-Contact Door_FF_Garage2 "Schuppentür Garten [MAP(de.map):%s]"  <selfdoor> (PersistentHistory,FF_Garage,Sensor_Doors_FF) ["GarageDoor","OpenState"] { channel="knx:device:bridge:contacts_door:garageGardenside" }
+Contact Door_FF_Floor 	"Haustür [MAP(de.map):%s]"             <selfdoor> (gPersistentHistory,FF_Floor,Sensor_Doors_FF) ["FrontDoor","OpenState"] { channel="knx:device:bridge:contacts_door:main" }
+Contact Door_FF_Garage1 "Schuppentür Strasse [MAP(de.map):%s]" <selfdoor> (gPersistentHistory,FF_Garage,Sensor_Doors_FF) ["GarageDoor","OpenState"] { channel="knx:device:bridge:contacts_door:garageStreedside" }
+Contact Door_FF_Garage2 "Schuppentür Garten [MAP(de.map):%s]"  <selfdoor> (gPersistentHistory,FF_Garage,Sensor_Doors_FF) ["GarageDoor","OpenState"] { channel="knx:device:bridge:contacts_door:garageGardenside" }
 
-Contact Window_FF_Livingroom_Terrace "Terasse [MAP(de.map):%s]" 	<selfwindow> (PersistentHistory,FF_Livingroom,Sensor_Window_FF) ["Window","OpenState"] { channel="knx:device:bridge:contacts_window_ff:livingroomTerrace" }
-Contact Window_FF_Livingroom_Couch   "Couch [MAP(de.map):%s]"		<selfwindow> (PersistentHistory,FF_Livingroom,Sensor_Window_FF) ["Window","OpenState"]	{ channel="knx:device:bridge:contacts_window_ff:livingroomCouch" }
-Contact Window_FF_Kitchen 			 "Küche [MAP(de.map):%s]"		<selfwindow> (PersistentHistory,FF_Kitchen,Sensor_Window_FF)    ["Window","OpenState"] { channel="knx:device:bridge:contacts_window_ff:kitchen" }
-Contact Window_FF_Guestroom			 "Gästezimmer [MAP(de.map):%s]"	<selfwindow> (PersistentHistory,FF_Guestroom,Sensor_Window_FF)	["Window","OpenState"] { channel="knx:device:bridge:contacts_window_ff:guestroom" }
-Contact Window_FF_GuestWC 			 "Gäste WC [MAP(de.map):%s]"	<selfwindow> (PersistentHistory,FF_GuestWC, Sensor_Window_FF)	["Window","OpenState"] { channel="knx:device:bridge:contacts_window_ff:guestWC" }
-Contact Window_FF_Garage 			 "Schuppenfenster [MAP(de.map):%s]" <selfwindow> (PersistentHistory,FF_Garage, Sensor_Window_FF)  ["Window","OpenState"] { channel="knx:device:bridge:contacts_window_ff:garage" }
+Contact Window_FF_Livingroom_Terrace "Terasse [MAP(de.map):%s]" 	<selfwindow> (gPersistentHistory,FF_Livingroom,Sensor_Window_FF) ["Window","OpenState"] { channel="knx:device:bridge:contacts_window_ff:livingroomTerrace" }
+Contact Window_FF_Livingroom_Couch   "Couch [MAP(de.map):%s]"		<selfwindow> (gPersistentHistory,FF_Livingroom,Sensor_Window_FF) ["Window","OpenState"]	{ channel="knx:device:bridge:contacts_window_ff:livingroomCouch" }
+Contact Window_FF_Kitchen 			 "Küche [MAP(de.map):%s]"		<selfwindow> (gPersistentHistory,FF_Kitchen,Sensor_Window_FF)    ["Window","OpenState"] { channel="knx:device:bridge:contacts_window_ff:kitchen" }
+Contact Window_FF_Guestroom			 "Gästezimmer [MAP(de.map):%s]"	<selfwindow> (gPersistentHistory,FF_Guestroom,Sensor_Window_FF)	["Window","OpenState"] { channel="knx:device:bridge:contacts_window_ff:guestroom" }
+Contact Window_FF_GuestWC 			 "Gäste WC [MAP(de.map):%s]"	<selfwindow> (gPersistentHistory,FF_GuestWC, Sensor_Window_FF)	["Window","OpenState"] { channel="knx:device:bridge:contacts_window_ff:guestWC" }
+Contact Window_FF_Garage 			 "Schuppenfenster [MAP(de.map):%s]" <selfwindow> (gPersistentHistory,FF_Garage, Sensor_Window_FF)  ["Window","OpenState"] { channel="knx:device:bridge:contacts_window_ff:garage" }
 
-Contact Window_SF_Bedroom 			 "Schlafzimmer [MAP(de.map):%s]" <selfwindow> (PersistentHistory,SF_Bedroom,Sensor_Window_SF) ["Window","OpenState"] { channel="knx:device:bridge:contacts_window_sf:bedroom" }
-Contact Window_SF_Dressingroom 		 "Ankleide [MAP(de.map):%s]"	<selfwindow> (PersistentHistory,SF_Dressingroom,Sensor_Window_SF) ["Window","OpenState"] { channel="knx:device:bridge:contacts_window_sf:dressingroom" }
-Contact Window_SF_Child1 			 "Kind 1 [MAP(de.map):%s]"		<selfwindow> (PersistentHistory,SF_Child1,Sensor_Window_SF) ["Window","OpenState"] { channel="knx:device:bridge:contacts_window_sf:child1" }
-Contact Window_SF_Child2 			 "Kind 2 [MAP(de.map):%s]"		<selfwindow> (PersistentHistory,SF_Child2,Sensor_Window_SF) ["Window","OpenState"] { channel="knx:device:bridge:contacts_window_sf:child2" }
-Contact Window_SF_Bathroom 			 "Badezimmer [MAP(de.map):%s]"	<selfwindow> (PersistentHistory,SF_Bathroom,Sensor_Window_SF) ["Window","OpenState"]{ channel="knx:device:bridge:contacts_window_sf:bathroom" }
-Contact Window_SF_Attic 			 "Dachboden [MAP(de.map):%s]"	<selfwindow> (PersistentHistory,SF_Attic,Sensor_Window_SF) ["Window","OpenState"] { channel="knx:device:bridge:contacts_window_sf:attic" }
+Contact Window_SF_Bedroom 			 "Schlafzimmer [MAP(de.map):%s]" <selfwindow> (gPersistentHistory,SF_Bedroom,Sensor_Window_SF) ["Window","OpenState"] { channel="knx:device:bridge:contacts_window_sf:bedroom" }
+Contact Window_SF_Dressingroom 		 "Ankleide [MAP(de.map):%s]"	<selfwindow> (gPersistentHistory,SF_Dressingroom,Sensor_Window_SF) ["Window","OpenState"] { channel="knx:device:bridge:contacts_window_sf:dressingroom" }
+Contact Window_SF_Child1 			 "Kind 1 [MAP(de.map):%s]"		<selfwindow> (gPersistentHistory,SF_Child1,Sensor_Window_SF) ["Window","OpenState"] { channel="knx:device:bridge:contacts_window_sf:child1" }
+Contact Window_SF_Child2 			 "Kind 2 [MAP(de.map):%s]"		<selfwindow> (gPersistentHistory,SF_Child2,Sensor_Window_SF) ["Window","OpenState"] { channel="knx:device:bridge:contacts_window_sf:child2" }
+Contact Window_SF_Bathroom 			 "Badezimmer [MAP(de.map):%s]"	<selfwindow> (gPersistentHistory,SF_Bathroom,Sensor_Window_SF) ["Window","OpenState"]{ channel="knx:device:bridge:contacts_window_sf:bathroom" }
+Contact Window_SF_Attic 			 "Dachboden [MAP(de.map):%s]"	<selfwindow> (gPersistentHistory,SF_Attic,Sensor_Window_SF) ["Window","OpenState"] { channel="knx:device:bridge:contacts_window_sf:attic" }
 
 //####### MOTIODETECTOR ########
 Switch Motiondetector_Outdoor_Switch "Gartenlicht autom."           <selflightmotion>	(Security)		{ channel="knx:device:bridge:motion_outdoor:main" }
@@ -168,12 +168,12 @@ Switch 		Dooropener_Timer 					"Türoffner" 							<selfdoor> 		(FF_Floor)
 Group 		Watering 							"Bewässerung [%d]" 						<selfwater>
 Group:Switch:OR(ON, OFF) Watering_Circuits 		"Bewässerung [%d]" 						<selfwater>		(Watering)
 
-Switch Watering_Gardenside_Lawn_left			"Bewässerung Rasen links"	<selfwater>		(Watering_Circuits,PersistentHistory)	{ channel="knx:device:bridge:wattering:gardensideLawnLeft" }
-Switch Watering_Gardenside_Lawn_right			"Bewässerung Rasen rechts"	<selfwater>		(Watering_Circuits,PersistentHistory)	{ channel="knx:device:bridge:wattering:gardensideLawnRight" }
-Switch Watering_Gardenside_Beds_front			"Bewässerung Beete Terasse"	<selfwater>		(Watering_Circuits,PersistentHistory)	{ channel="knx:device:bridge:wattering:gardensideBedsFront" }
-Switch Watering_Gardenside_Beds_back			"Bewässerung Beete hinten"	<selfwater>		(Watering_Circuits,PersistentHistory)	{ channel="knx:device:bridge:wattering:gardensideBedsBack" }
-Switch Watering_Streetside_Lawn					"Bewässerung Rasen vorne"	<selfwater>		(Watering_Circuits,PersistentHistory)	{ channel="knx:device:bridge:wattering:streetsideLawn" }
-Switch Watering_Streetside_Beds					"Bewässerung Beete vornee"	<selfwater>		(Watering_Circuits,PersistentHistory)	{ channel="knx:device:bridge:wattering:streetsideBeds" }
+Switch Watering_Gardenside_Lawn_left			"Bewässerung Rasen links"	<selfwater>		(Watering_Circuits,gPersistentHistory)	{ channel="knx:device:bridge:wattering:gardensideLawnLeft" }
+Switch Watering_Gardenside_Lawn_right			"Bewässerung Rasen rechts"	<selfwater>		(Watering_Circuits,gPersistentHistory)	{ channel="knx:device:bridge:wattering:gardensideLawnRight" }
+Switch Watering_Gardenside_Beds_front			"Bewässerung Beete Terasse"	<selfwater>		(Watering_Circuits,gPersistentHistory)	{ channel="knx:device:bridge:wattering:gardensideBedsFront" }
+Switch Watering_Gardenside_Beds_back			"Bewässerung Beete hinten"	<selfwater>		(Watering_Circuits,gPersistentHistory)	{ channel="knx:device:bridge:wattering:gardensideBedsBack" }
+Switch Watering_Streetside_Lawn					"Bewässerung Rasen vorne"	<selfwater>		(Watering_Circuits,gPersistentHistory)	{ channel="knx:device:bridge:wattering:streetsideLawn" }
+Switch Watering_Streetside_Beds					"Bewässerung Beete vornee"	<selfwater>		(Watering_Circuits,gPersistentHistory)	{ channel="knx:device:bridge:wattering:streetsideBeds" }
 
 String Watering_Program_State					"Status [%s]"				<selfinfo>		(Watering)
 

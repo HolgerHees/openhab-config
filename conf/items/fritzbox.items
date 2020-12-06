@@ -1,7 +1,7 @@
 Contact FritzboxDslEnable             "Aktiviert [MAP(network_states.map):%s]"              <selfinfo>                                        {fritzboxtr064="dslEnable"}
 String  FritzboxDslStatus             "Status [MAP(network_states.map):%s]"                 <selfinfo>                                        {fritzboxtr064="dslStatus"}
-Number  FritzboxDslUpstreamCurrRate   "Upstream Aktuell [JS(network_kbit_to_mbit.js):%s]"   <flowpipe>    (PersistentChart,PersistentHistory) {fritzboxtr064="dslUpstreamCurrRate"}
-Number  FritzboxDslDownstreamCurrRate "Downstream Aktuell [JS(network_kbit_to_mbit.js):%s]" <returnpipe>  (PersistentChart,PersistentHistory) {fritzboxtr064="dslDownstreamCurrRate"}
+Number  FritzboxDslUpstreamCurrRate   "Upstream Aktuell [JS(network_kbit_to_mbit.js):%s]"   <flowpipe>    (gPersistentChart,gPersistentHistory) {fritzboxtr064="dslUpstreamCurrRate"}
+Number  FritzboxDslDownstreamCurrRate "Downstream Aktuell [JS(network_kbit_to_mbit.js):%s]" <returnpipe>  (gPersistentChart,gPersistentHistory) {fritzboxtr064="dslDownstreamCurrRate"}
 Number  FritzboxDslUpstreamMaxRate    "Upstream Max [JS(network_kbit_to_mbit.js):%s]"       <flowpipe>                                        {fritzboxtr064="dslUpstreamMaxRate"}
 Number  FritzboxDslDownstreamMaxRate  "Downstream Max [JS(network_kbit_to_mbit.js):%s]"     <returnpipe>                                      {fritzboxtr064="dslDownstreamMaxRate"}
 Number  FritzboxDslUpstreamNoiseMargin "Upstream Rauschabstand [%s dB*10]"                  <selfinfo>                                        {fritzboxtr064="dslUpstreamNoiseMargin"}
@@ -14,6 +14,6 @@ Number  FritzboxDslCRCErrors          "CRC Fehler [%s]"                         
 Number  FritzboxUptime                "Uptime [JS(network_uptime.js):%s]"                   <line>                                            {fritzboxtr064="upTime"}
 Switch  FritzboxGuestWifi             "Gäste WLAN"                                          <network>                                         {fritzboxtr064="wifiGuestSwitch"}
 
-Number Speedtest_UpstreamRate    "Upstream Gemessen [%d MBit]"                                 <flowpipe> (PersistentChart,PersistentHistory)    {channel="network:speedtest:local:rateUp"}
-Number Speedtest_DownstreamRate  "Downstream Gemessen [%d MBit]"                               <returnpipe>   (PersistentChart,PersistentHistory) {channel="network:speedtest:local:rateDown"}
+Number Speedtest_UpstreamRate    "Upstream Gemessen [%d MBit]"                                 <flowpipe> (gPersistentChart,gPersistentHistory)    {channel="network:speedtest:local:rateUp"}
+Number Speedtest_DownstreamRate  "Downstream Gemessen [%d MBit]"                               <returnpipe>   (gPersistentChart,gPersistentHistory) {channel="network:speedtest:local:rateDown"}
 DateTime Speedtest_Start                          "Speedtest [%1$tH:%1$tM]"                 <time>                                            {channel="network:speedtest:local:testStart"}
