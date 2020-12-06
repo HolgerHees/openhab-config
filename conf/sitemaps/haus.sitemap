@@ -848,5 +848,14 @@ sitemap haus label="Main Menu"
                 }
             }
 		}
+		Text label="Test" icon="selfhouse" {
+            Group item=gLights label="Lampen [MAP(group_light.map):%d]" {
+                Group item=gLights_GroundFloor label="EG Lampen [MAP(group_light.map):%d]" {
+                    Switch item=Light_FF_Floor_Ceiling
+                    Switch item=Light_FF_Floor_Mirror
+                    Switch item=Light_FF_Floor_Hue
+                }
+            }
+		}
 	}
 }

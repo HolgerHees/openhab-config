@@ -4,13 +4,19 @@ Group:Switch:OR(ON, OFF) Lights_FF 				"EG" 							<selflight>
 Group:Switch:OR(ON, OFF) Lights_SF 				"OG" 							<selflight>
 Group:Switch:OR(ON, OFF) Lights_Outdoor 		"Aussen" 						<selflight>
 
-Group:Switch:OR(ON, OFF) Light_FF_Floor_Ceiling "Decke" 					    <selflight> (FF_Floor,lGroundFloor,Lights,Lights_Indoor,Lights_FF) ["Lightbulb"]
+Group:Switch:OR(ON, OFF) gLights 				"Alle"							<selflight>
+Group:Switch:OR(ON, OFF) gLights_Indoor 		"Innen"							<selflight> (gLights)
+Group:Switch:OR(ON, OFF) gLights_GroundFloor	"Erdgeschoss" 					<selflight> (gLights_Indoor)
+Group:Switch:OR(ON, OFF) gLights_FirstFloor 	"Obergeschoss" 					<selflight> (gLights_Indoor)
+Group:Switch:OR(ON, OFF) gLights_Outdoor 		"Aussen" 						<selflight> (gLights)
+
+Group:Switch:OR(ON, OFF) Light_FF_Floor_Ceiling "Decke" 					    <selflight> (FF_Floor,Lights,Lights_Indoor,Lights_FF,lGF_Corridor,gLights_GroundFloor) ["Lightbulb"]
 Switch Light_FF_Floor_Ceiling_Brightness 		"Helligkeit" 					<selflight>	(Light_FF_Floor_Ceiling) ["Switch","Light"] { channel="knx:device:bridge:lights_ff:floorCeiling" }
 
-Group:Switch:OR(ON, OFF) Light_FF_Floor_Mirror  "Spiegel" 					    <selflight> (FF_Floor,lGroundFloor,Lights,Lights_Indoor,Lights_FF)  ["Lightbulb"]
+Group:Switch:OR(ON, OFF) Light_FF_Floor_Mirror  "Spiegel" 					    <selflight> (FF_Floor,Lights,Lights_Indoor,Lights_FF,lGF_Corridor,gLights_GroundFloor)  ["Lightbulb"]
 Switch Light_FF_Floor_Mirror_Brightness 		"Helligkeit" 					<selflight>	(Light_FF_Floor_Mirror)	["Switch","Light"] { channel="knx:device:bridge:lights_ff:floorMirror" }
 
-Group:Switch:OR(ON, OFF) Light_FF_Floor_Hue     "Treppe" 					    <selflight> (FF_Floor,lGroundFloor,Lights,Lights_Indoor,Lights_FF) ["Lightbulb"]
+Group:Switch:OR(ON, OFF) Light_FF_Floor_Hue     "Treppe" 					    <selflight> (FF_Floor,Lights,Lights_Indoor,Lights_FF,lGF_Corridor,gLights_GroundFloor) ["Lightbulb"]
 Dimmer Light_FF_Floor_Hue_Brightness			"Helligkeit"				    <selflight>	(Light_FF_Floor_Hue)  ["Setpoint","Light"]	            { channel="hue:0210:default:lamp4:color" }
 Color Light_FF_Floor_Hue_Color					"Farbetemperatur"			    <colorwheel> (Light_FF_Floor_Hue) ["Control","ColorTemperature"]    { channel="hue:0210:default:lamp4:color"}
 
