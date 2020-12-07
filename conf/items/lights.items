@@ -3,12 +3,12 @@ Group:Switch:OR(ON, OFF) gGF_Lights                "Erdgeschoss"        <selflig
 Group:Switch:OR(ON, OFF) gFF_Lights                "Obergeschoss"       <selflight>
 Group:Switch:OR(ON, OFF) gOutdoor_Lights           "Aussen"             <selflight>
 
-Group:Switch:OR(ON, OFF) Light_GF_Corridor_Ceiling "Decke"              <selflight>  (lGF_Corridor,gGF_Lights,gIndoor_Lights)   ["Lightbulb"]                  { synonyms="Deckenlampe, Deckenlicht" }
-Switch Light_GF_Corridor_Ceiling_Brightness        "Helligkeit"         <selflight>  (Light_GF_Corridor_Ceiling)                ["Switch","Light"]             { channel="knx:device:bridge:lights_ff:floorCeiling" }
+Group:Switch:OR(ON, OFF) Light_GF_Corridor_Ceiling "Deckelampe"         <selflight>  (lGF_Corridor,gGF_Lights,gIndoor_Lights)   ["Lightbulb"]
+Switch Light_GF_Corridor_Ceiling_Brightness        "Deckenlicht"        <selflight>  (Light_GF_Corridor_Ceiling)                ["Switch","Light"]             { channel="knx:device:bridge:lights_ff:floorCeiling" }
 
-Group:Switch:OR(ON, OFF) Light_GF_Corridor_Mirror  "Spiegel"            <selflight>  (lGF_Corridor,gGF_Lights,gIndoor_Lights)   ["Lightbulb"]                  { synonyms="Spiegellampe, Spiegellicht" }
-Switch Light_GF_Corridor_Mirror_Brightness         "Helligkeit"         <selflight>  (Light_GF_Corridor_Mirror)                 ["Switch","Light"]             { channel="knx:device:bridge:lights_ff:floorMirror" }
+Group:Switch:OR(ON, OFF) Light_GF_Corridor_Mirror  "Spiegellampe"       <selflight>  (lGF_Corridor,gGF_Lights,gIndoor_Lights)   ["Lightbulb"]
+Switch Light_GF_Corridor_Mirror_Brightness         "Spiegellicht"       <selflight>  (Light_GF_Corridor_Mirror)                 ["Switch","Light"]             { channel="knx:device:bridge:lights_ff:floorMirror" }
 
-Group:Switch:OR(ON, OFF) Light_GF_Corridor_Hue     "Treppe"             <selflight>  (lGF_Corridor,gGF_Lights,gIndoor_Lights)   ["Lightbulb"]                  { synonyms="Treppenlampe, Treppenlicht, Indirektes Licht" }
-Dimmer Light_GF_Corridor_Hue_Brightness            "Helligkeit"         <selflight>  (Light_GF_Corridor_Hue)                    ["Setpoint","Light"]           { channel="hue:0210:default:lamp4:color" }
+Group:Switch:OR(ON, OFF) Light_GF_Corridor_Hue     "HUE Lampe"          <selflight>  (lGF_Corridor,gGF_Lights,gIndoor_Lights)   ["Lightbulb"]
+Dimmer Light_GF_Corridor_Hue_Brightness            "Indirektes Licht"   <selflight>  (Light_GF_Corridor_Hue)                    ["Setpoint","Light"]           { channel="hue:0210:default:lamp4:color" }
 Color Light_GF_Corridor_Hue_Color                  "Farbetemperatur"    <colorwheel> (Light_GF_Corridor_Hue)                    ["Control","ColorTemperature"] { channel="hue:0210:default:lamp4:color"}
