@@ -9,15 +9,15 @@ class Scene1Rule:
         self.triggers = [ItemCommandTrigger("Scene1",command="ON")]
 
     def execute(self, module, input):
-        sendCommand("Light_FF_Livingroom_Hue_Brightness", 60)
+        sendCommand("Light_GF_Livingroom_Hue_Brightness", 60)
 
         states = [OFF, PercentType.ZERO]
 
-        for child in getItem("Lights_FF").getAllMembers():
-            if child.getState() not in states and child.getName() != "Light_FF_Livingroom_Hue_Brightness":
+        for child in getItem("gGF_Lights").getAllMembers():
+            if child.getState() not in states and child.getName() != "Light_GF_Livingroom_Hue_Brightness":
                 sendCommand(child, OFF)
 
-        for child in getItem("Lights_SF").getAllMembers():
+        for child in getItem("gFF_Lights").getAllMembers():
             if child.getState() not in states:
                 sendCommand(child, OFF)
 
@@ -31,10 +31,10 @@ class Scene2Rule:
         self.triggers = [ItemCommandTrigger("Scene2",command="ON")]
 
     def execute(self, module, input):
-        sendCommand("Light_FF_Floor_Ceiling", ON)
-        sendCommand("Light_SF_Bathroom_Ceiling", ON)
-        sendCommand("Light_SF_Bathroom_Mirror", ON)
-        sendCommand("Light_SF_Bedroom_Ceiling", ON)
+        sendCommand("Light_GF_Corridor_Ceiling", ON)
+        sendCommand("Light_FF_Bathroom_Ceiling", ON)
+        sendCommand("Light_FF_Bathroom_Mirror", ON)
+        sendCommand("Light_FF_Bedroom_Ceiling", ON)
 
         postUpdate("Scene2", OFF)
 
@@ -46,19 +46,19 @@ class Scene3Rule:
         self.triggers = [ItemCommandTrigger("Scene3",command="ON")]
 
     def execute(self, module, input):
-        sendCommand("Light_FF_Floor_Hue_Brightness", 60)
-        sendCommand("Light_SF_Bathroom_Ceiling", ON)
-        sendCommand("Light_SF_Bathroom_Mirror", ON)
-        sendCommand("Light_SF_Bedroom_Right", ON)
+        sendCommand("Light_GF_Corridor_Hue_Brightness", 60)
+        sendCommand("Light_FF_Bathroom_Ceiling", ON)
+        sendCommand("Light_FF_Bathroom_Mirror", ON)
+        sendCommand("Light_FF_Bedroom_Right", ON)
 
         states = [OFF, PercentType.ZERO]
 
-        for child in getItem("Lights_FF").getAllMembers():
-            if child.getState() not in states and child.getName() != "Light_FF_Floor_Hue_Brightness":
+        for child in getItem("gGF_Lights").getAllMembers():
+            if child.getState() not in states and child.getName() != "Light_GF_Corridor_Hue_Brightness":
                 sendCommand(child, OFF)
 
-        #for child in getItem("Lights_SF").getAllMembers():
-        #    if child.getState() not in states and child.getName() not in ["Light_SF_Bathroom_Mirror", "Light_SF_Bedroom_Right"]:
+        #for child in getItem("gFF_Lights").getAllMembers():
+        #    if child.getState() not in states and child.getName() not in ["Light_FF_Bathroom_Mirror", "Light_FF_Bedroom_Right"]:
         #        sendCommand(child, OFF)
 
         sendCommand("Scene6", ON)

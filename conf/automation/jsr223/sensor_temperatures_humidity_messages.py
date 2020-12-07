@@ -2,53 +2,53 @@ from shared.helper import rule, getNow, getItemState, getHistoricItemState, getM
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 infoConfig = [
-    ["Air_FF_Livingroom_Message", "Temperature_FF_Livingroom", "Humidity_FF_Livingroom", "Temperature_FF_Livingroom_Target"],
-    ["Air_FF_Boxroom_Message", "Temperature_FF_Boxroom", "Humidity_FF_Boxroom", None],
-    ["Air_FF_Guestroom_Message", "Temperature_FF_Guestroom", "Humidity_FF_Guestroom", "Temperature_FF_Guestroom_Target"],
-    ["Air_FF_GuestWC_Message", "Temperature_FF_GuestWC", "Humidity_FF_GuestWC", "Temperature_FF_GuestWC_Target"],
-    ["Air_FF_Floor_Message", "Temperature_FF_Floor", "Humidity_FF_Floor", "Temperature_FF_Floor_Target"],
-    ["Air_FF_Utilityroom_Message", "Temperature_FF_Utilityroom", "Humidity_FF_Utilityroom", None],
-    ["Air_FF_Garage_Message", "Temperature_FF_Garage", "Humidity_FF_Garage", None],
-    ["Air_SF_Bedroom_Message", "Temperature_SF_Bedroom", "Humidity_SF_Bedroom", "Temperature_SF_Bedroom_Target"],
-    ["Air_SF_Dressingroom_Message", "Temperature_SF_Dressingroom", "Humidity_SF_Dressingroom", None],
-    ["Air_SF_Child1_Message", "Temperature_SF_Child1", "Humidity_SF_Child1", "Temperature_SF_Child1_Target"],
-    ["Air_SF_Child2_Message", "Temperature_SF_Child2", "Humidity_SF_Child2", "Temperature_SF_Child2_Target"],
-    ["Air_SF_Bathroom_Message", "Temperature_SF_Bathroom", "Humidity_SF_Bathroom", "Temperature_SF_Bathroom_Target"],
-    ["Air_SF_Floor_Message", "Temperature_SF_Floor", "Humidity_SF_Floor", "Temperature_SF_Floor_Target"],
-    ["Air_SF_Attic_Message", "Temperature_SF_Attic", "Humidity_SF_Attic", None]
+    ["Air_GF_Livingroom_Message", "Temperature_GF_Livingroom", "Humidity_GF_Livingroom", "Temperature_GF_Livingroom_Target"],
+    ["Air_GF_Boxroom_Message", "Temperature_GF_Boxroom", "Humidity_GF_Boxroom", None],
+    ["Air_GF_Guestroom_Message", "Temperature_GF_Guestroom", "Humidity_GF_Guestroom", "Temperature_GF_Guestroom_Target"],
+    ["Air_GF_GuestWC_Message", "Temperature_GF_GuestWC", "Humidity_GF_GuestWC", "Temperature_GF_GuestWC_Target"],
+    ["Air_GF_Corridor_Message", "Temperature_GF_Corridor", "Humidity_GF_Corridor", "Temperature_GF_Corridor_Target"],
+    ["Air_GF_Utilityroom_Message", "Temperature_GF_Utilityroom", "Humidity_GF_Utilityroom", None],
+    ["Air_Garage_Message", "Temperature_Garage", "Humidity_Garage", None],
+    ["Air_FF_Bedroom_Message", "Temperature_FF_Bedroom", "Humidity_FF_Bedroom", "Temperature_FF_Bedroom_Target"],
+    ["Air_FF_Dressingroom_Message", "Temperature_FF_Dressingroom", "Humidity_FF_Dressingroom", None],
+    ["Air_FF_Child1_Message", "Temperature_FF_Child1", "Humidity_FF_Child1", "Temperature_FF_Child1_Target"],
+    ["Air_FF_Child2_Message", "Temperature_FF_Child2", "Humidity_FF_Child2", "Temperature_FF_Child2_Target"],
+    ["Air_FF_Bathroom_Message", "Temperature_FF_Bathroom", "Humidity_FF_Bathroom", "Temperature_FF_Bathroom_Target"],
+    ["Air_FF_Corridor_Message", "Temperature_FF_Corridor", "Humidity_FF_Corridor", "Temperature_FF_Corridor_Target"],
+    ["Air_Attic_Message", "Temperature_Attic", "Humidity_Attic", None]
 ]
 
 rawItems = {
-    "Temperature_FF_Livingroom": ["Temperature_FF_Livingroom_Raw", -0.1, -1.4],
-    "Humidity_FF_Livingroom": ["Humidity_FF_Livingroom_Raw", 7.4, 0.0],
-    "Temperature_FF_Boxroom": ["Temperature_FF_Boxroom_Raw", -0.1, -1.4],
-    "Humidity_FF_Boxroom": ["Humidity_FF_Boxroom_Raw", 1.9, 0.0],
-    "Temperature_FF_Guestroom": ["Temperature_FF_Guestroom_Raw", -0.1, -1.4],
-    "Humidity_FF_Guestroom": ["Humidity_FF_Guestroom_Raw", 2.6, 0.0],
-    "Temperature_FF_GuestWC": ["Temperature_FF_GuestWC_Raw", 0.1, -1.4],
-    "Humidity_FF_GuestWC": ["Humidity_FF_GuestWC_Raw", 0.7, 0.0],
-    "Temperature_FF_GuestWC": ["Temperature_FF_GuestWC_Raw", 0.1, -1.4],
-    "Humidity_FF_GuestWC": ["Humidity_FF_GuestWC_Raw", 0.7, 0.0],
-    "Temperature_FF_Floor": ["Temperature_FF_Floor_Raw", 0.1, -1.4],
-    "Humidity_FF_Floor": ["Humidity_FF_Floor_Raw", 4.0, 0.0],
-    "Temperature_FF_Utilityroom": ["Temperature_FF_Utilityroom_Raw", -0.1, -1.4],
-    "Humidity_FF_Utilityroom": ["Humidity_FF_Utilityroom_Raw", 1.7, 0.0],
-    "Temperature_FF_Garage": ["Temperature_FF_Garage_Raw", 0.0, -1.4],
-    "Humidity_FF_Garage": ["Humidity_FF_Garage_Raw", 3.6, 0.0],
-    "Temperature_SF_Bedroom": ["Temperature_SF_Bedroom_Raw", -0.1, -1.4],
-    "Humidity_SF_Bedroom": ["Humidity_SF_Bedroom_Raw", 5.2, 0.0],
-    "Temperature_SF_Dressingroom": ["Temperature_SF_Dressingroom_Raw", 0.1, -1.4],
-    "Humidity_SF_Dressingroom": ["Humidity_SF_Dressingroom_Raw", 0.4, 0.0],
-    "Temperature_SF_Child1": ["Temperature_SF_Child1_Raw", 0.0, -1.4],
-    "Humidity_SF_Child1": ["Humidity_SF_Child1_Raw", 1.1, 0.0],
-    "Temperature_SF_Child2": ["Temperature_SF_Child2_Raw", 0.1, -1.4],
-    "Humidity_SF_Child2": ["Humidity_SF_Child2_Raw", 2.8, 0.0],
-    "Temperature_SF_Bathroom": ["Temperature_SF_Bathroom_Raw", 0.1, -1.4],
-    "Humidity_SF_Bathroom": ["Humidity_SF_Bathroom_Raw", 5.3, 0.0],
-    "Temperature_SF_Floor": ["Temperature_SF_Floor_Raw", 0.3, -1.4],
-    "Humidity_SF_Floor": ["Humidity_SF_Floor_Raw", 2.5, 0.0],
-    "Temperature_SF_Attic": ["Temperature_SF_Attic_Raw", -0.1, -0.9],
-    "Humidity_SF_Attic": ["Humidity_SF_Attic_Raw", 1.9, 0.0]
+    "Temperature_GF_Livingroom": ["Temperature_GF_Livingroom_Raw", -0.1, -1.4],
+    "Humidity_GF_Livingroom": ["Humidity_GF_Livingroom_Raw", 7.4, 0.0],
+    "Temperature_GF_Boxroom": ["Temperature_GF_Boxroom_Raw", -0.1, -1.4],
+    "Humidity_GF_Boxroom": ["Humidity_GF_Boxroom_Raw", 1.9, 0.0],
+    "Temperature_GF_Guestroom": ["Temperature_GF_Guestroom_Raw", -0.1, -1.4],
+    "Humidity_GF_Guestroom": ["Humidity_GF_Guestroom_Raw", 2.6, 0.0],
+    "Temperature_GF_GuestWC": ["Temperature_GF_GuestWC_Raw", 0.1, -1.4],
+    "Humidity_GF_GuestWC": ["Humidity_GF_GuestWC_Raw", 0.7, 0.0],
+    "Temperature_GF_GuestWC": ["Temperature_GF_GuestWC_Raw", 0.1, -1.4],
+    "Humidity_GF_GuestWC": ["Humidity_GF_GuestWC_Raw", 0.7, 0.0],
+    "Temperature_GF_Corridor": ["Temperature_GF_Corridor_Raw", 0.1, -1.4],
+    "Humidity_GF_Corridor": ["Humidity_GF_Corridor_Raw", 4.0, 0.0],
+    "Temperature_GF_Utilityroom": ["Temperature_GF_Utilityroom_Raw", -0.1, -1.4],
+    "Humidity_GF_Utilityroom": ["Humidity_GF_Utilityroom_Raw", 1.7, 0.0],
+    "Temperature_Garage": ["Temperature_Garage_Raw", 0.0, -1.4],
+    "Humidity_Garage": ["Humidity_Garage_Raw", 3.6, 0.0],
+    "Temperature_FF_Bedroom": ["Temperature_FF_Bedroom_Raw", -0.1, -1.4],
+    "Humidity_FF_Bedroom": ["Humidity_FF_Bedroom_Raw", 5.2, 0.0],
+    "Temperature_FF_Dressingroom": ["Temperature_FF_Dressingroom_Raw", 0.1, -1.4],
+    "Humidity_FF_Dressingroom": ["Humidity_FF_Dressingroom_Raw", 0.4, 0.0],
+    "Temperature_FF_Child1": ["Temperature_FF_Child1_Raw", 0.0, -1.4],
+    "Humidity_FF_Child1": ["Humidity_FF_Child1_Raw", 1.1, 0.0],
+    "Temperature_FF_Child2": ["Temperature_FF_Child2_Raw", 0.1, -1.4],
+    "Humidity_FF_Child2": ["Humidity_FF_Child2_Raw", 2.8, 0.0],
+    "Temperature_FF_Bathroom": ["Temperature_FF_Bathroom_Raw", 0.1, -1.4],
+    "Humidity_FF_Bathroom": ["Humidity_FF_Bathroom_Raw", 5.3, 0.0],
+    "Temperature_FF_Corridor": ["Temperature_FF_Corridor_Raw", 0.3, -1.4],
+    "Humidity_FF_Corridor": ["Humidity_FF_Corridor_Raw", 2.5, 0.0],
+    "Temperature_Attic": ["Temperature_Attic_Raw", -0.1, -0.9],
+    "Humidity_Attic": ["Humidity_Attic_Raw", 1.9, 0.0]
 }
 
 
@@ -102,7 +102,9 @@ class InfoValueRule:
         if temperatureTargetItem is not None:
             msg = u"{}({}) ".format(msg,getItemState(temperatureTargetItem).format("%.1f"))
 
+        #self.log.info(temperatureItem)
         msg = u"{}{} °C, ".format(msg,getItemState(temperatureItem).format("%.1f"))
+        #self.log.info(humidityItem)
         msg = u"{}{} %".format(msg,getItemState(humidityItem).format("%.1f"))
 
         postUpdateIfChanged(infoItem, msg)

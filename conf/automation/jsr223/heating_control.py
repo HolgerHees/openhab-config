@@ -8,8 +8,18 @@ from org.joda.time import DateTime
 from org.joda.time.format import DateTimeFormat
 from core.actions import Transformation
 import math
-
+ 
 OFFSET_FORMATTER = DateTimeFormat.forPattern("HH:mm")
+
+#postUpdate("Heating_GF_GuestWC_Demand",OFF)
+#postUpdate("Heating_GF_Livingroom_Demand",OFF)
+#postUpdate("Heating_GF_Guestroom_Demand",OFF)
+#postUpdate("Heating_GF_Corridor_Demand",OFF)
+#postUpdate("Heating_FF_Corridor_Demand",OFF)
+#postUpdate("Heating_FF_Child1_Demand",OFF)
+#postUpdate("Heating_FF_Child2_Demand",OFF)
+#postUpdate("Heating_FF_Bedroom_Demand",OFF)
+#postUpdate("Heating_FF_Bathroom_Demand",OFF)
 
 Heating.cloudCoverFC8Item = "Cloud_Cover_Forecast8"
 Heating.cloudCoverFC4Item = "Cloud_Cover_Forecast4"
@@ -71,16 +81,16 @@ Heating.heatingDemandItemPlaceholder = u"Heating_{}_Demand"
 
 rooms = [
     Room(
-        name='FF_Garage',
+        name='lGarage',
         volume=54.0702 * _atticFloorHeight / 2.0,
         walls=[
             Wall(direction='floor', area=27.456025, type=_atticFloor),
             Wall(direction='ceiling', area=27.456025, type=_firstSlopingCeiling),
             Wall(direction='west', area=5.319, type=_outer22Wall),
-            Wall(direction='north', area=4.18, type=_outer36Wall, bound="FF_Livingroom"),
-            Wall(direction='north', area=3.509, type=_outer36Wall, bound="FF_Boxroom"),
-            Wall(direction='north', area=5.5, type=_outer36Wall, bound="FF_Utilityroom"),
-            Wall(direction='north', area=3.85, type=_outer36Wall,bound="FF_GuestWC"),
+            Wall(direction='north', area=4.18, type=_outer36Wall, bound="lGF_Livingroom"),
+            Wall(direction='north', area=3.509, type=_outer36Wall, bound="lGF_Boxroom"),
+            Wall(direction='north', area=5.5, type=_outer36Wall, bound="lGF_Utilityroom"),
+            Wall(direction='north', area=3.85, type=_outer36Wall,bound="lGF_GuestWC"),
             Wall(direction='east', area=5.21, type=_outer22Wall),
             Wall(direction='south', area=17.039, type=_outer22Wall)
         ],
@@ -91,250 +101,250 @@ rooms = [
         ]
     ),
     Room(
-        name='FF_GuestWC',
+        name='lGF_GuestWC',
         additionalRadiator=True,
         heatingVolume=29.63,
         volume=4.92445 * _firstFloorHeight,
         walls=[
             Wall(direction='floor', area=6.29125, type=_groundFloor),
-            Wall(direction='ceiling', area=6.29125, type=_groundCeiling, bound="SF_Bathroom"),
-            Wall(direction='west', area=10.31765, type=_inner11Wall, bound="FF_Utilityroom"),
-            Wall(direction='north', area=3.4949, type=_inner17Wall, bound="FF_Floor"),
+            Wall(direction='ceiling', area=6.29125, type=_groundCeiling, bound="lFF_Bathroom"),
+            Wall(direction='west', area=10.31765, type=_inner11Wall, bound="lGF_Utilityroom"),
+            Wall(direction='north', area=3.4949, type=_inner17Wall, bound="lGF_Corridor"),
             Wall(direction='east', area=9.14345, type=_outer36Wall),
-            Wall(direction='south', area=5.0225, type=_garageWall, bound="FF_Garage")
+            Wall(direction='south', area=5.0225, type=_garageWall, bound="lGarage")
         ],
         transitions=[
-            Window(direction='east', area=1.045, type=_outerWindow, contactItem='Window_FF_GuestWC', shutterItem='Shutters_FF_GuestWC', shutterArea=0.1292)
+            Window(direction='east', area=1.045, type=_outerWindow, contactItem='Window_GF_GuestWC', shutterItem='Shutters_GF_GuestWC', shutterArea=0.1292)
         ]
     ),
     Room(
-        name='FF_Utilityroom',
+        name='lGF_Utilityroom',
         # TODO check
         #heatingVolume=27.04,
         volume=7.816325 * _firstFloorHeight,
         walls=[
             Wall(direction='floor', area=8.9875, type=_groundFloor),
-            Wall(direction='ceiling', area=8.9875, type=_groundCeiling, bound="SF_Bathroom"),
-            Wall(direction='west', area=10.31765, type=_inner11Wall, bound="FF_Boxroom"),
-            Wall(direction='north', area=5.39615, type=_inner17Wall, bound="FF_Floor"),
-            Wall(direction='east', area=10.31765, type=_inner11Wall, bound="FF_GuestWC"),
-            Wall(direction='south', area=5.294375, type=_garageWall, bound="FF_Garage")
+            Wall(direction='ceiling', area=8.9875, type=_groundCeiling, bound="lFF_Bathroom"),
+            Wall(direction='west', area=10.31765, type=_inner11Wall, bound="lGF_Boxroom"),
+            Wall(direction='north', area=5.39615, type=_inner17Wall, bound="lGF_Corridor"),
+            Wall(direction='east', area=10.31765, type=_inner11Wall, bound="lGF_GuestWC"),
+            Wall(direction='south', area=5.294375, type=_garageWall, bound="lGarage")
         ],
         transitions=[
-            Door(direction='south', area=1.880625, type=_utilityroomGarageDoor, bound="FF_Garage")
+            Door(direction='south', area=1.880625, type=_utilityroomGarageDoor, bound="lGarage")
         ]
     ),
     Room(
-        name='FF_Boxroom',
+        name='lGF_Boxroom',
         volume=4.72615 * _firstFloorHeight,
         walls=[
             Wall(direction='floor', area=5.734025, type=_groundFloor),
-            Wall(direction='ceiling', area=5.734025, type=_groundCeiling, bound="SF_Bedroom"), # Dressingroom
-            Wall(direction='west', area=8.5388, type=_inner17Wall, bound="FF_Livingroom"),
-            Wall(direction='north', area=4.57765, type=_inner17Wall, bound="FF_Livingroom"),
-            Wall(direction='east', area=10.31765, type=_inner11Wall, bound="FF_Utilityroom"),
-            Wall(direction='south', area=4.57765, type=_garageWall, bound="FF_Garage")
+            Wall(direction='ceiling', area=5.734025, type=_groundCeiling, bound="lFF_Bedroom"), # Dressingroom
+            Wall(direction='west', area=8.5388, type=_inner17Wall, bound="lGF_Livingroom"),
+            Wall(direction='north', area=4.57765, type=_inner17Wall, bound="lGF_Livingroom"),
+            Wall(direction='east', area=10.31765, type=_inner11Wall, bound="lGF_Utilityroom"),
+            Wall(direction='south', area=4.57765, type=_garageWall, bound="lGarage")
         ]
     ),
     Room(
-        name='FF_Livingroom',
+        name='lGF_Livingroom',
         heatingVolume=84.20 + 84.20 + 49.90,
         volume=37.9957 * _firstFloorHeight + 10.7406 * _firstFloorHeight,
         walls=[
             # Kitchen
             Wall(direction='floor', area=12.999225, type=_groundFloor),
-            Wall(direction='ceiling', area=12.999225, type=_groundCeiling, bound="SF_Bedroom"), # Dressingroom
-            Wall(direction='east', area=8.789925, type=_inner17Wall, bound="FF_Boxroom"),
-            Wall(direction='south', area=4.6781, type=_garageWall, bound="FF_Garage"),
+            Wall(direction='ceiling', area=12.999225, type=_groundCeiling, bound="lFF_Bedroom"), # Dressingroom
+            Wall(direction='east', area=8.789925, type=_inner17Wall, bound="lGF_Boxroom"),
+            Wall(direction='south', area=4.6781, type=_garageWall, bound="lGarage"),
             Wall(direction='south', area=5.453, type=_outer36Wall),
             Wall(direction='west', area=8.069575, type=_outer36Wall),
             #Wall(direction='north', area=4.57765, type=_inner17Wall),
 
             # Livingroom
             Wall(direction='floor', area=42.4732875, type=_groundFloor),
-            Wall(direction='ceiling', area=16.3125, type=_groundCeiling, bound="SF_Bedroom"),
-            Wall(direction='ceiling', area=17.07625, type=_groundCeiling, bound="SF_Child2"),
-            Wall(direction='ceiling', area=9.0845375, type=_groundCeiling, bound="SF_Floor"),
+            Wall(direction='ceiling', area=16.3125, type=_groundCeiling, bound="lFF_Bedroom"),
+            Wall(direction='ceiling', area=17.07625, type=_groundCeiling, bound="lFF_Child2"),
+            Wall(direction='ceiling', area=9.0845375, type=_groundCeiling, bound="lFF_Corridor"),
             Wall(direction='south', area=3.393775, type=_outer36Wall),
             Wall(direction='west', area=9.292675, type=_outer36Wall),
             Wall(direction='north', area=18.92765, type=_outer36Wall),
-            Wall(direction='east', area=7.34725, type=_inner17Wall, bound="FF_Floor"),
-            Wall(direction='east', area=10.339175, type=_inner17Wall, bound="FF_Guestroom"),
-            Wall(direction='south', area=6.177675, type=_inner17Wall, bound="FF_Boxroom")
+            Wall(direction='east', area=7.34725, type=_inner17Wall, bound="lGF_Corridor"),
+            Wall(direction='east', area=10.339175, type=_inner17Wall, bound="lGF_Guestroom"),
+            Wall(direction='south', area=6.177675, type=_inner17Wall, bound="lGF_Boxroom")
         ],
         transitions=[
-            Window(direction='west', area=2.2, type=_outerWindow, contactItem='Window_FF_Kitchen', shutterItem='Shutters_FF_Kitchen', shutterArea=0.2992, radiationArea=0.645*1.01*2.0, sunProtectionItem="State_Sunprotection_Livingroom"),
-            Window(direction='west', area=5.8232, type=_outerWindow, contactItem='Window_FF_Livingroom_Terrace', shutterItem='Shutters_FF_Livingroom_Terrace', shutterArea=0.4267, radiationArea=0.625*2.13*3.0),
-            Window(direction='west', area=4.0832, type=_outerWindow, contactItem='Window_FF_Livingroom_Couch', shutterItem='Shutters_FF_Livingroom_Couch', shutterArea=0.2992, radiationArea=0.625*2.13*2.0)
+            Window(direction='west', area=2.2, type=_outerWindow, contactItem='Window_GF_Kitchen', shutterItem='Shutters_GF_Kitchen', shutterArea=0.2992, radiationArea=0.645*1.01*2.0, sunProtectionItem="State_Sunprotection_Livingroom"),
+            Window(direction='west', area=5.8232, type=_outerWindow, contactItem='Window_GF_Livingroom_Terrace', shutterItem='Shutters_GF_Livingroom_Terrace', shutterArea=0.4267, radiationArea=0.625*2.13*3.0),
+            Window(direction='west', area=4.0832, type=_outerWindow, contactItem='Window_GF_Livingroom_Couch', shutterItem='Shutters_GF_Livingroom_Couch', shutterArea=0.2992, radiationArea=0.625*2.13*2.0)
         ]
     ),
     Room(
-        name='FF_Guestroom',
+        name='lGF_Guestroom',
         heatingVolume=60.19,
         volume=11.53445 * _firstFloorHeight,
         walls=[
             Wall(direction='floor', area=13.5891, type=_groundFloor),
-            Wall(direction='ceiling', area=13.5891, type=_groundCeiling, bound="SF_Child1"),
-            Wall(direction='west', area=10.31765, type=_inner17Wall, bound="FF_Livingroom"),
+            Wall(direction='ceiling', area=13.5891, type=_groundCeiling, bound="lFF_Child1"),
+            Wall(direction='west', area=10.31765, type=_inner17Wall, bound="lGF_Livingroom"),
             Wall(direction='north', area=10.8486, type=_outer36Wall),
             Wall(direction='east', area=7.9847, type=_outer36Wall),
-            Wall(direction='south', area=9.06975, type=_inner17Wall, bound="FF_Floor")
+            Wall(direction='south', area=9.06975, type=_inner17Wall, bound="lGF_Corridor")
         ],
         transitions=[
-            Window(direction='east', area=2.07625, type=_outerWindow, contactItem='Window_FF_Guestroom', shutterItem='Shutters_FF_Guestroom', shutterArea=0.2567)
+            Window(direction='east', area=2.07625, type=_outerWindow, contactItem='Window_GF_Guestroom', shutterItem='Shutters_GF_Guestroom', shutterArea=0.2567)
         ]
     ),
     Room(
-        name='FF_Floor',
+        name='lGF_Corridor',
         heatingVolume=40.93,
         volume=11.3076 * _firstFloorHeight,
         walls=[
             Wall(direction='floor', area=12.9843, type=_groundFloor),
-            Wall(direction='ceiling', area=2.0524125, type=_groundCeiling, bound="SF_Floor"),
-            Wall(direction='west', area=7.0746, type=_inner17Wall, bound="FF_Livingroom"),
-            Wall(direction='north', area=9.06975, type=_inner17Wall, bound="FF_Guestroom"),
+            Wall(direction='ceiling', area=2.0524125, type=_groundCeiling, bound="lFF_Corridor"),
+            Wall(direction='west', area=7.0746, type=_inner17Wall, bound="lGF_Livingroom"),
+            Wall(direction='north', area=9.06975, type=_inner17Wall, bound="lGF_Guestroom"),
             # east wall is shared between lower and upper floor
             Wall(direction='east', area=(5.19525+3.435)/2.0, type=_outer36Wall),
-            Wall(direction='south', area=3.4949, type=_inner17Wall, bound="FF_GuestWC"),
-            Wall(direction='south', area=4.04725, type=_inner17Wall, bound="FF_Utilityroom")
+            Wall(direction='south', area=3.4949, type=_inner17Wall, bound="lGF_GuestWC"),
+            Wall(direction='south', area=4.04725, type=_inner17Wall, bound="lGF_Utilityroom")
         ],
         transitions=[
             # count the main door only 50%, because other 50% is counted on upper floor
-            Door(direction='east', area=4.6632/2.0, type=_mainDoor, contactItem='Door_FF_Floor'),
+            Door(direction='east', area=4.6632/2.0, type=_mainDoor, contactItem='Door_GF_Corridor'),
             # count 50% of the sloping window from upper floor
             Window(direction='east', area=0.7676/2.0, type=_firstSlopingWindow)
         ]
     ),
     Room(
-        name='SF_Floor',
+        name='lFF_Corridor',
         heatingVolume=38.45,
         volume=18.1926 * _secondFloorHeight - 4.3968,
         walls=[
-            Wall(direction='floor', area=4.61578125, type=_firstFloor, bound="FF_Livingroom"),
-            Wall(direction='floor', area=4.61578125, type=_firstFloor, bound="FF_Floor"),
-            Wall(direction='ceiling', area=14.1436125, type=_firstCeiling, bound="SF_Attic"),
-            Wall(direction='west', area=7.77045, type=_inner11Wall, bound="SF_Bedroom"),
-            Wall(direction='north', area=8.51865, type=_inner17Wall, bound="SF_Child1"),
-            Wall(direction='north', area=1.69615, type=_inner17Wall, bound="SF_Child2"),
+            Wall(direction='floor', area=4.61578125, type=_firstFloor, bound="lGF_Livingroom"),
+            Wall(direction='floor', area=4.61578125, type=_firstFloor, bound="lGF_Corridor"),
+            Wall(direction='ceiling', area=14.1436125, type=_firstCeiling, bound="lAttic"),
+            Wall(direction='west', area=7.77045, type=_inner11Wall, bound="lFF_Bedroom"),
+            Wall(direction='north', area=8.51865, type=_inner17Wall, bound="lFF_Child1"),
+            Wall(direction='north', area=1.69615, type=_inner17Wall, bound="lFF_Child2"),
             # east wall is shared between lower and upper floor
             Wall(direction='east', area=(5.19525+3.435)/2.0, type=_outer36Wall),
             Wall(direction='east', area=8.026, type=_firstSlopingCeiling),
-            Wall(direction='south', area=8.51865, type=_inner17Wall, bound="SF_Bathroom"),
-            Wall(direction='south', area=1.69615, type=_inner17Wall, bound="SF_Bedroom"), # Dressingroom
+            Wall(direction='south', area=8.51865, type=_inner17Wall, bound="lFF_Bathroom"),
+            Wall(direction='south', area=1.69615, type=_inner17Wall, bound="lFF_Bedroom"), # Dressingroom
         ],
         transitions=[
             # count 50% of the main door from lower floor
-            Door(direction='east', area=4.6632/2.0, type=_mainDoor, contactItem='Door_FF_Floor'),
+            Door(direction='east', area=4.6632/2.0, type=_mainDoor, contactItem='Door_GF_Corridor'),
             # count the sloping window only 50%, because other 50% is counted on lower floor
             Window(direction='east', area=0.7676/2.0, type=_firstSlopingWindow)
         ]
     ),
     Room(
-        name='SF_Child1',
+        name='lFF_Child1',
         heatingVolume=39.61,
         volume=13.036325 * _secondFloorHeight - 4.6016,
         walls=[
-            Wall(direction='floor', area=4.0, type=_firstFloor, bound="FF_Livingroom"),
-            Wall(direction='floor', area=12.626875, type=_firstFloor, bound="FF_Guestroom"),
-            Wall(direction='ceiling', area=10.3266375, type=_firstCeiling, bound="SF_Attic"),
-            Wall(direction='west', area=9.9941, type=_inner11Wall, bound="SF_Child2"),
+            Wall(direction='floor', area=4.0, type=_firstFloor, bound="lGF_Livingroom"),
+            Wall(direction='floor', area=12.626875, type=_firstFloor, bound="lGF_Guestroom"),
+            Wall(direction='ceiling', area=10.3266375, type=_firstCeiling, bound="lAttic"),
+            Wall(direction='west', area=9.9941, type=_inner11Wall, bound="lFF_Child2"),
             Wall(direction='north', area=8.1533, type=_outer36Wall),
             Wall(direction='east', area=3.595, type=_outer36Wall),
             Wall(direction='east', area=9.2032, type=_firstSlopingCeiling),
-            Wall(direction='south', area=8.51865, type=_inner17Wall, bound="SF_Floor")
+            Wall(direction='south', area=8.51865, type=_inner17Wall, bound="lFF_Corridor")
         ],
         transitions=[
-            Window(direction='north', area=1.8875, type=_outerWindow, contactItem='Window_SF_Child1', shutterItem='Shutters_SF_Child1', shutterArea=0.2567)
+            Window(direction='north', area=1.8875, type=_outerWindow, contactItem='Window_FF_Child1', shutterItem='Shutters_FF_Child1', shutterArea=0.2567)
         ]
     ),
     Room(
-        name='SF_Child2',
+        name='lFF_Child2',
         heatingVolume=41.32,
         volume=14.99575 * _secondFloorHeight - 4.6016,
         walls=[
-            Wall(direction='floor', area=17.07625, type=_firstFloor, bound="FF_Livingroom"),
-            Wall(direction='ceiling', area=10.7760125, type=_firstCeiling, bound="SF_Attic"),
+            Wall(direction='floor', area=17.07625, type=_firstFloor, bound="lGF_Livingroom"),
+            Wall(direction='ceiling', area=10.7760125, type=_firstCeiling, bound="lAttic"),
             Wall(direction='west', area=3.595, type=_outer36Wall),
             Wall(direction='west', area=9.2032, type=_firstSlopingCeiling),
             Wall(direction='north', area=8.5008, type=_outer36Wall),
-            Wall(direction='east', area=9.9941, type=_inner11Wall, bound="SF_Child1"),
-            Wall(direction='south', area=7.17, type=_inner17Wall, bound="SF_Bedroom"),
-            Wall(direction='south', area=1.69615, type=_inner17Wall, bound="SF_Floor")
+            Wall(direction='east', area=9.9941, type=_inner11Wall, bound="lFF_Child1"),
+            Wall(direction='south', area=7.17, type=_inner17Wall, bound="lFF_Bedroom"),
+            Wall(direction='south', area=1.69615, type=_inner17Wall, bound="lFF_Corridor")
         ],
         transitions=[
-            Window(direction='north', area=1.8875, type=_outerWindow, contactItem='Window_SF_Child2', shutterItem='Shutters_SF_Child2', shutterArea=0.2567)
+            Window(direction='north', area=1.8875, type=_outerWindow, contactItem='Window_FF_Child2', shutterItem='Shutters_FF_Child2', shutterArea=0.2567)
         ]
     ),
     Room(
-        name='SF_Bedroom',
+        name='lFF_Bedroom',
         heatingVolume=35.87 + 39.33,
         volume=(14.3929 * _secondFloorHeight) + (14.88435 * _secondFloorHeight - 4.6016),
         walls=[
             # Bedroom
-            Wall(direction='floor', area=16.3125, type=_firstFloor, bound="FF_Livingroom"),
-            Wall(direction='ceiling', area=16.3125, type=_firstCeiling, bound="SF_Attic"),
+            Wall(direction='floor', area=16.3125, type=_firstFloor, bound="lGF_Livingroom"),
+            Wall(direction='ceiling', area=16.3125, type=_firstCeiling, bound="lAttic"),
             Wall(direction='west', area=5.9851, type=_outer36Wall),
-            Wall(direction='north', area=12.51, type=_inner17Wall, bound="SF_Child2"),
-            Wall(direction='east', area=8.03455, type=_inner11Wall, bound="SF_Floor"),
+            Wall(direction='north', area=12.51, type=_inner17Wall, bound="lFF_Child2"),
+            Wall(direction='east', area=8.03455, type=_inner11Wall, bound="lFF_Corridor"),
             Wall(direction='south', area=3.28735, type=_outer36Wall),
             Wall(direction='south', area=0.5, type=_firstSlopingCeiling),
 
             # Dressingroom
-            Wall(direction='floor', area=16.660625, type=_firstFloor, bound="FF_Livingroom"),
-            Wall(direction='ceiling', area=10.40850625, type=_firstCeiling, bound="SF_Attic"),
+            Wall(direction='floor', area=16.660625, type=_firstFloor, bound="lGF_Livingroom"),
+            Wall(direction='ceiling', area=10.40850625, type=_firstCeiling, bound="lAttic"),
             Wall(direction='west', area=3.5075, type=_outer36Wall),
             Wall(direction='west', area=8.9792, type=_firstSlopingCeiling),
-            Wall(direction='north', area=3.63485, type=_inner17Wall, bound="SF_Floor"),
-            Wall(direction='east', area=9.9941, type=_inner11Wall, bound="SF_Bathroom"),
+            Wall(direction='north', area=3.63485, type=_inner17Wall, bound="lFF_Corridor"),
+            Wall(direction='east', area=9.9941, type=_inner11Wall, bound="lFF_Bathroom"),
             Wall(direction='south', area=9.0333, type=_outer36Wall)
         ],
         transitions=[
-            Window(direction='west', area=3.1375, type=_outerWindow, contactItem='Window_SF_Bedroom', shutterItem='Shutters_SF_Bedroom', shutterArea=0.4267, radiationArea=0.615*1.00*3.0, sunProtectionItem="State_Sunprotection_Bedroom"),
-            Window(direction='south', area=1.41875, type=_outerWindow, contactItem='Window_SF_Dressingroom', shutterItem='Shutters_SF_Dressingroom', shutterArea=0.19295, radiationArea=0.86*1.00, sunProtectionItem="State_Sunprotection_Dressingroom")
+            Window(direction='west', area=3.1375, type=_outerWindow, contactItem='Window_FF_Bedroom', shutterItem='Shutters_FF_Bedroom', shutterArea=0.4267, radiationArea=0.615*1.00*3.0, sunProtectionItem="State_Sunprotection_Bedroom"),
+            Window(direction='south', area=1.41875, type=_outerWindow, contactItem='Window_FF_Dressingroom', shutterItem='Shutters_FF_Dressingroom', shutterArea=0.19295, radiationArea=0.86*1.00, sunProtectionItem="State_Sunprotection_Dressingroom")
 #        ]
         ]
     ),
 #    Room(
-#        name='SF_Dressingroom',
+#        name='lFF_Dressingroom',
 #        heatingVolume=57.58,
 #        volume=14.88435 * _secondFloorHeight - 4.6016,
 #        walls=[
-#            Wall(direction='floor', area=16.660625, type=_firstFloor, bound="FF_Livingroom"),
-#            Wall(direction='ceiling', area=10.40850625, type=_firstCeiling, bound="SF_Attic"),
+#            Wall(direction='floor', area=16.660625, type=_firstFloor, bound="lGF_Livingroom"),
+#            Wall(direction='ceiling', area=10.40850625, type=_firstCeiling, bound="lAttic"),
 #            Wall(direction='west', area=3.5075, type=_outer36Wall),
 #            Wall(direction='west', area=8.9792, type=_firstSlopingCeiling),
-#            Wall(direction='north', area=3.63485, type=_inner17Wall, bound="SF_Floor"),
-#            Wall(direction='east', area=9.9941, type=_inner11Wall, bound="SF_Bathroom"),
+#            Wall(direction='north', area=3.63485, type=_inner17Wall, bound="lFF_Corridor"),
+#            Wall(direction='east', area=9.9941, type=_inner11Wall, bound="lFF_Bathroom"),
 #            Wall(direction='south', area=9.0333, type=_outer36Wall)
 #        ],
 #        transitions=[
-#            Window(direction='south', area=1.41875, type=_outerWindow, contactItem='Window_SF_Dressingroom', shutterItem='Shutters_SF_Dressingroom', shutterArea=0.19295, radiationArea=0.86*1.00, sunProtectionItem="State_Sunprotection_Dressingroom")
+#            Window(direction='south', area=1.41875, type=_outerWindow, contactItem='Window_FF_Dressingroom', shutterItem='Shutters_FF_Dressingroom', shutterArea=0.19295, radiationArea=0.86*1.00, sunProtectionItem="State_Sunprotection_Dressingroom")
 #        ]
 #    ),
     Room(
-        name='SF_Bathroom',
+        name='lFF_Bathroom',
         additionalRadiator=True,
         heatingVolume=35.31,
         volume=12.51273 * _secondFloorHeight - 2.5884,
         walls=[
-            Wall(direction='floor', area=5.482375, type=_firstFloor, bound="FF_GuestWC"),
-            Wall(direction='floor', area=8.9875, type=_firstFloor, bound="FF_Utilityroom"),
-            Wall(direction='ceiling', area=10.3266375, type=_firstCeiling, bound="SF_Attic"),
-            Wall(direction='west', area=9.9941, type=_inner11Wall, bound="SF_Bedroom"), # Dressingroom
-            Wall(direction='north', area=7.4633, type=_inner17Wall, bound="SF_Floor"),
+            Wall(direction='floor', area=5.482375, type=_firstFloor, bound="lGF_GuestWC"),
+            Wall(direction='floor', area=8.9875, type=_firstFloor, bound="lGF_Utilityroom"),
+            Wall(direction='ceiling', area=10.3266375, type=_firstCeiling, bound="lAttic"),
+            Wall(direction='west', area=9.9941, type=_inner11Wall, bound="lFF_Bedroom"), # Dressingroom
+            Wall(direction='north', area=7.4633, type=_inner17Wall, bound="lFF_Corridor"),
             Wall(direction='east', area=5.033, type=_outer36Wall),
             Wall(direction='east', area=5.1768, type=_firstSlopingCeiling),
             Wall(direction='south', area=7.63045, type=_outer36Wall)
         ],
         transitions=[
-            Window(direction='south', area=1.41875, type=_outerWindow, contactItem='Window_SF_Bathroom', shutterItem='Shutters_SF_Bathroom', shutterArea=0.19295, radiationArea=0.86*1.00, sunProtectionItem="State_Sunprotection_Bathroom")
+            Window(direction='south', area=1.41875, type=_outerWindow, contactItem='Window_FF_Bathroom', shutterItem='Shutters_FF_Bathroom', shutterArea=0.19295, radiationArea=0.86*1.00, sunProtectionItem="State_Sunprotection_Bathroom")
         ]
     ),
     Room(
-        name='SF_Attic',
+        name='lAttic',
         volume=54.0702 * _atticFloorHeight / 2.0,
         walls=[
-            Wall(direction='floor', area=59.871875, type=_atticFloor, bound="SF_Bedroom" ),
+            Wall(direction='floor', area=59.871875, type=_atticFloor, bound="lFF_Bedroom" ),
             Wall(direction='west', area=9.9941, type=_outer36Wall),
             Wall(direction='west', area=49.9872093014803, type=_firstSlopingCeiling),
             Wall(direction='north', area=5.91675, type=_outer36Wall),
@@ -343,7 +353,7 @@ rooms = [
         ],
         transitions=[
             Window(direction='east', area=0.7676, type=_firstSlopingWindow),
-            Window(direction='south', area=0.7676, type=_outerWindow, contactItem='Window_SF_Attic', shutterItem='Shutters_SF_Attic', shutterArea=0.19295, radiationArea=0.72*1.00, sunProtectionItem="State_Sunprotection_Attic")
+            Window(direction='south', area=0.7676, type=_outerWindow, contactItem='Window_Attic', shutterItem='Shutters_Attic', shutterArea=0.19295, radiationArea=0.72*1.00, sunProtectionItem="State_Sunprotection_Attic")
         ]
     )
 ]
@@ -351,17 +361,15 @@ rooms = [
 Heating.init(rooms)
 
 controllableRooms = {
-  'FF_Livingroom': True,
-  'FF_Floor': True,
-  'FF_Guestroom': True,
-  'FF_GuestWC': True,
-  'FF_GuestWCHK': True,
-  'SF_Floor': True,
-  'SF_Child1': True,
-  'SF_Child2': True,
-  'SF_Bedroom': True,
-  'SF_Bathroom': True,
-  'SF_BathroomHK': True
+  'lGF_Livingroom': True,
+  'lGF_Corridor': True,
+  'lGF_Guestroom': True,
+  'lGF_GuestWC': True,
+  'lFF_Corridor': True,
+  'lFF_Child1': True,
+  'lFF_Child2': True,
+  'lFF_Bedroom': True,
+  'lFF_Bathroom': True
 }
 maintenanceMode = {}
 
@@ -634,7 +642,7 @@ class HeatingControlRule():
         currentOutdoorTemperature = cr.getReferenceTemperature()
         currentOutdoorTemperature4 = cr4.getReferenceTemperature()
 
-        fallbackTargetTemperature = hhs.getHeatingState("FF_Livingroom").getHeatingTargetTemperature()
+        fallbackTargetTemperature = hhs.getHeatingState("lGF_Livingroom").getHeatingTargetTemperature()
       
         for room in Heating.getRooms():
             rs = cr.getRoomState(room.getName())
@@ -702,7 +710,7 @@ class HeatingControlRule():
 
         #currentOutdoorTemperature = cr.getReferenceTemperature()
 
-        #fallbackTargetTemperature = hhs.getHeatingState("FF_Livingroom").getHeatingTargetTemperature()
+        #fallbackTargetTemperature = hhs.getHeatingState("lGF_Livingroom").getHeatingTargetTemperature()
       
         #for room in Heating.getRooms():
         #    rs = cr.getRoomState(room.getName())

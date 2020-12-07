@@ -27,28 +27,3 @@ Group lOutdoor			"Draussen"		<garden>                       ["Outdoor"]
 Group lGarden			"Garten"		<garden>        (lOutdoor)     ["Garden"]
 Group lTerrace			"Terasse"		<garden>        (lOutdoor)     ["Terrace"]
 Group lCarport			"Carport"		<garden>        (lOutdoor)     ["Carport"]
-
-
-
-
-
-
-
-Group Outdoor			"Garten"		<garden>              ["Garden"]
-
-Group FF_GuestWC 		"Gäste WC" 		<bath> 			(lGroundFloor) ["Room"] { synonyms="Gäste WC, Gäste Toilette" }
-Group FF_Utilityroom 	"HWR" 			<energy> 		(lGroundFloor) ["Room"] { synonyms="HWR, Hauswirtschaftsraum" }
-Group FF_Boxroom 		"Abstellkammer" <office> 		(lGroundFloor) ["Room"] { synonyms="Kammer,Abstellkammer,Vorratsraum" }
-Group FF_Kitchen 		"Küche" 		<kitchen> 		(lGroundFloor) ["Kitchen"]
-Group FF_Livingroom 	"Wohnzimmer" 	<sofa> 			(lGroundFloor) ["LivingRoom"]
-Group FF_Guestroom 		"Gästezimmer" 	<office> 		(lGroundFloor) ["Room"] { synonyms="Gästezimmer,Bastelzimmer" }
-Group FF_Floor 	    	"Flur" 			<corridor> 		(lGroundFloor) ["Floor"]
-Group FF_Garage			"Schuppen" 		<corridor> 		(lGroundFloor) ["Garage"]
-
-Group SF_Bathroom 		"Badezimmer" 	<bath> 			(lFirstFloor) ["Bathroom"]
-Group SF_Dressingroom 	"Ankleide" 		<wardrobe> 		(lFirstFloor) ["Room"] { synonyms="Ankleide" }
-Group SF_Bedroom 		"Schlafzimmer" 	<bedroom> 		(lFirstFloor) ["Bedroom"]
-Group SF_Child1 		"Kind 1" 		<boy1> 			(lFirstFloor) ["Room"] { synonyms="Sportraum,Sportzimmer" }
-Group SF_Child2 		"Kind 2" 		<boy1> 			(lFirstFloor) ["Room"] { synonyms="Trockenzimmer,hinteres Kinderzimmer" }
-Group SF_Floor 	    	"Flur" 			<corridor> 		(lFirstFloor) ["Floor"]
-Group SF_Attic			"Dachboden" 	<corridor> 		(lFirstFloor) ["Attic"]

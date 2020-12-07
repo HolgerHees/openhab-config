@@ -18,9 +18,9 @@ class DoorOpenerControlRule:
             self.timer = None
 
         if input["newState"] == OPEN:
-            postUpdate("Dooropener_FF_Floor", ON)
+            postUpdate("Dooropener_GF_Corridor", ON)
             self.timer = createTimer(self.log, 3.0, self.callback)
             self.timer.start()
 
         else:
-            postUpdateIfChanged("Dooropener_FF_Floor", OFF)
+            postUpdateIfChanged("Dooropener_GF_Corridor", OFF)

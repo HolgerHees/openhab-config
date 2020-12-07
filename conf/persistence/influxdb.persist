@@ -6,5 +6,5 @@ Strategies {
 Items {
   
 	// let's only store temperature values in rrd
-	gPersistentChart* : strategy = everyChange, everyHour
+	gPersistance_Chart* : strategy = everyChange, everyHour
 }

@@ -483,7 +483,7 @@ var mvInitializer = function(){
                     //console.log("mvTrigger: register");
                     
                     //window.setTimeout(function(){
-                    //    let testItem = {name: "Temperature_FF_Livingroom", state: "20.0"};
+                    //    let testItem = {name: "Temperature_GF_Livingroom", state: "20.0"};
                     //    $rootScope.$emit('openhab-update',testItem);
                     //},2000);
                     

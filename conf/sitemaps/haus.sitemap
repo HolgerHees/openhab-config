@@ -1,74 +1,74 @@
 sitemap haus label="Main Menu"
 {
 	Frame label="Hauptkategorien" {
-		Group item=Lights label="Lampen [MAP(group_light.map):%d]" {
+		Group item=gIndoor_Lights label="Lampen [MAP(group_light.map):%d]" {
 			Frame label="Alle" {
-				Switch item=Lights_Indoor label="Alle Lampen" mappings=[OFF="Aus",ON="An"]
+				Switch item=gIndoor_Lights label="Alle Lampen" mappings=[OFF="Aus",ON="An"]
 			}
 			Frame label="Etagen" {
-				Group item=Lights_FF label="EG Lampen [MAP(group_light.map):%d]" {
+				Group item=gGF_Lights label="EG Lampen [MAP(group_light.map):%d]" {
 					Frame label="Wohnzimmer & Küche" {
-						Slider item=Light_FF_Livingroom_Hue_Brightness label="Wohnzimmer Indirekt"
-						Text label="Wohnz. Indirekt anpassen" icon="selfcontrol" visibility=[Light_FF_Livingroom_Hue_Brightness>0] {
+						Slider item=Light_GF_Livingroom_Hue_Brightness label="Wohnzimmer Indirekt"
+						Text label="Wohnz. Indirekt anpassen" icon="selfcontrol" visibility=[Light_GF_Livingroom_Hue_Brightness>0] {
 							Frame label="Gruppe" {
-								Slider item=Light_FF_Livingroom_Hue_Brightness label="Alle Lampen [%d %%]"
-								Colorpicker item=Light_FF_Livingroom_Hue_Color label="Alle Lampen"
+								Slider item=Light_GF_Livingroom_Hue_Brightness label="Alle Lampen [%d %%]"
+								Colorpicker item=Light_GF_Livingroom_Hue_Color label="Alle Lampen"
                                 Switch item=State_Lightprogram label="Programm" mappings=[0="Aus", 1="1", 2="2"]
 							}
 							Frame label="Einzeln" {
-								Slider item=Light_FF_Livingroom_Hue_Brightness4 label="Küche Tresen [%d %%]"
-								Colorpicker item=Light_FF_Livingroom_Hue_Color4 label="Küche Tresen"
-								Slider item=Light_FF_Livingroom_Hue_Brightness5 label="Bücherregal [%d %%]"
-								Colorpicker item=Light_FF_Livingroom_Hue_Color5 label="Bücherregal"
-								Slider item=Light_FF_Livingroom_Hue_Brightness3 label="Stehlampe oben [%d %%]"
-								Colorpicker item=Light_FF_Livingroom_Hue_Color3 label="Stehlampe oben"
-								Slider item=Light_FF_Livingroom_Hue_Brightness2 label="Stehlampe unten [%d %%]"
-								Colorpicker item=Light_FF_Livingroom_Hue_Color2 label="Stehlampe unten"
-								Slider item=Light_FF_Livingroom_Hue_Brightness1 label="Couchecke [%d %%]"
-								Colorpicker item=Light_FF_Livingroom_Hue_Color1 label="Couchecke"
+								Slider item=Light_GF_Livingroom_Hue_Brightness4 label="Küche Tresen [%d %%]"
+								Colorpicker item=Light_GF_Livingroom_Hue_Color4 label="Küche Tresen"
+								Slider item=Light_GF_Livingroom_Hue_Brightness5 label="Bücherregal [%d %%]"
+								Colorpicker item=Light_GF_Livingroom_Hue_Color5 label="Bücherregal"
+								Slider item=Light_GF_Livingroom_Hue_Brightness3 label="Stehlampe oben [%d %%]"
+								Colorpicker item=Light_GF_Livingroom_Hue_Color3 label="Stehlampe oben"
+								Slider item=Light_GF_Livingroom_Hue_Brightness2 label="Stehlampe unten [%d %%]"
+								Colorpicker item=Light_GF_Livingroom_Hue_Color2 label="Stehlampe unten"
+								Slider item=Light_GF_Livingroom_Hue_Brightness1 label="Couchecke [%d %%]"
+								Colorpicker item=Light_GF_Livingroom_Hue_Color1 label="Couchecke"
 							}
 						}
-						Slider item=Light_FF_Livingroom_Diningtable label="Wohnzimmer Esstisch"
-						Slider item=Light_FF_Livingroom_Couch label="Wohnzimmer Couch"
-						Slider item=Light_FF_Kitchen_Ceiling label="Küche"
-						Switch item=Light_FF_Kitchen_Cupboard label="Küchenschrank"
+						Slider item=Light_GF_Livingroom_Diningtable label="Wohnzimmer Esstisch"
+						Slider item=Light_GF_Livingroom_Couch label="Wohnzimmer Couch"
+						Slider item=Light_GF_Kitchen_Ceiling label="Küche"
+						Switch item=Light_GF_Kitchen_Cupboard label="Küchenschrank"
 					}
 					Frame label="Sonstiges" {
-						Switch item=Light_FF_Floor_Ceiling label="Flur"
-						Switch item=Light_FF_Floor_Mirror label="Flur Spiegel"
-						Slider item=Light_FF_Floor_Hue_Brightness label="Flur Indirekt"
-						Colorpicker item=Light_FF_Floor_Hue_Color visibility=[Light_FF_Floor_Hue_Brightness>0]
-						Switch item=Light_FF_Guestroom_Ceiling label="Gästezimmer"
-						Switch item=Light_FF_GuestWC_Ceiling label="Gäste WC"
-						Switch item=Light_FF_GuestWC_Mirror label="Gäste WC Spiegel"
-						Switch item=Light_FF_Boxroom_Ceiling label="Abstellkammer"
-						Switch item=Light_FF_Utilityroom_Ceiling label="HWR"
-						Switch item=Light_FF_Garage label="Schuppen"
+						Switch item=Light_GF_Corridor_Ceiling label="Flur"
+						Switch item=Light_GF_Corridor_Mirror label="Flur Spiegel"
+						Slider item=Light_GF_Corridor_Hue_Brightness label="Flur Indirekt"
+						Colorpicker item=Light_GF_Corridor_Hue_Color visibility=[Light_GF_Corridor_Hue_Brightness>0]
+						Switch item=Light_GF_Guestroom_Ceiling label="Gästezimmer"
+						Switch item=Light_GF_GuestWC_Ceiling label="Gäste WC"
+						Switch item=Light_GF_GuestWC_Mirror label="Gäste WC Spiegel"
+						Switch item=Light_GF_Boxroom_Ceiling label="Abstellkammer"
+						Switch item=Light_GF_Utilityroom_Ceiling label="HWR"
 					}
 				}
-				Group item=Lights_SF label="OG Lampen [MAP(group_light.map):%d]" {
+				Group item=gFF_Lights label="OG Lampen [MAP(group_light.map):%d]" {
 					Frame label="Schlafzimmer & Ankleide" {
-						Switch item=Light_SF_Bedroom_Ceiling label="Schlafzimmer"
-						Slider item=Light_SF_Bedroom_Left_Hue_Brightness label="Schlafzimmer Bett Fenster HUE"
-						Colorpicker item=Light_SF_Bedroom_Left_Hue_Color label="Schlafzimmer Bett Fenster HUE Farbe" visibility=[Light_SF_Bedroom_Left_Hue_Brightness>0]
-						Slider item=Light_SF_Bedroom_Right_Hue_Brightness label="Schlafzimmer Bett Wand HUE"
-						Colorpicker item=Light_SF_Bedroom_Right_Hue_Color label="Schlafzimmer Bett Wand HUE Farbe" visibility=[Light_SF_Bedroom_Right_Hue_Brightness>0]
-						Switch item=Light_SF_Dressingroom_Ceiling label="Ankleide"
+						Switch item=Light_FF_Bedroom_Ceiling label="Schlafzimmer"
+						Slider item=Light_FF_Bedroom_Left_Hue_Brightness label="Schlafzimmer Bett Fenster HUE"
+						Colorpicker item=Light_FF_Bedroom_Left_Hue_Color label="Schlafzimmer Bett Fenster HUE Farbe" visibility=[Light_FF_Bedroom_Left_Hue_Brightness>0]
+						Slider item=Light_FF_Bedroom_Right_Hue_Brightness label="Schlafzimmer Bett Wand HUE"
+						Colorpicker item=Light_FF_Bedroom_Right_Hue_Color label="Schlafzimmer Bett Wand HUE Farbe" visibility=[Light_FF_Bedroom_Right_Hue_Brightness>0]
+						Switch item=Light_FF_Dressingroom_Ceiling label="Ankleide"
 					}
 					Frame label="Badezimmer" {
-						Switch item=Light_SF_Bathroom_Ceiling label="Badezimmer"
-						Switch item=Light_SF_Bathroom_Mirror label="Badezimmer Spiegel"
+						Switch item=Light_FF_Bathroom_Ceiling label="Badezimmer"
+						Switch item=Light_FF_Bathroom_Mirror label="Badezimmer Spiegel"
 					}
 					Frame label="Sonstiges" {
-						Switch item=Light_SF_Floor_Ceiling label="Flur oben"
-						Switch item=Light_SF_Attic label="Dachboden"
-						Switch item=Light_SF_Child1_Ceiling label="Kind 1"
-						Switch item=Light_SF_Child2_Ceiling label="Kind 2"
+						Switch item=Light_FF_Corridor_Ceiling label="Flur oben"
+						Switch item=Light_FF_Child1_Ceiling label="Kind 1"
+						Switch item=Light_FF_Child2_Ceiling label="Kind 2"
 					}
 				}
-			}
-            Frame label="Etagen" {
-				Group item=Lights_Outdoor label="Aussen Lampen [MAP(group_light.map):%d]" {
+				Switch item=Light_Attic label="Dachboden"
+            }
+            Frame label="Garten" {
+				Switch item=Light_Garage label="Schuppen"
+				Group item=gOutdoor_Lights label="Aussen Lampen [MAP(group_light.map):%d]" {
                     Slider item=Light_Outdoor_Terrace label="Terasse"
                     Switch item=Light_Outdoor_Frontdoor label="Haustür"
                     Switch item=Light_Outdoor_Carport label="Carport"
@@ -106,7 +106,7 @@ sitemap haus label="Main Menu"
 				Group item=Motiondetector_Counter label="Einstellungen"
 			}
 			Frame label="Licht & Steckdosen" {
-                Group item=Lights_Outdoor label="Lampen [MAP(group_light.map):%d]"
+                Group item=gOutdoor_Lights label="Lampen [MAP(group_light.map):%d]"
 				Group item=Sockets_Outdoor label="Steckdosen [MAP(group_socket.map):%d]" {
 					Switch item=Socket_Streedside
 					Switch item=Socket_Gardenside
@@ -271,7 +271,7 @@ sitemap haus label="Main Menu"
 					}
 					Frame label="Beleuchtung" {
 						Switch item=Auto_Lighting
-						Group item=Lights visibility=[Auto_Lighting==ON]
+						Group item=gIndoor_Lights visibility=[Auto_Lighting==ON]
 					}
 					Frame label="Weihnachten" {
 						Switch item=Auto_Christmas
@@ -371,48 +371,48 @@ sitemap haus label="Main Menu"
         Group item=SensorInfo label="Sensoren [%s]" valuecolor=[=="Alles normal"="#6bc305",=="Giessen"="#cbcb00",!="Alles normal"="#d72a2a"]{
             Frame label="Temperatur & Feuchtigkeit"
             {
-                Group item=Air_FF_Livingroom_Message label="EG [%s]"{
+                Group item=Air_GF_Livingroom_Message label="EG [%s]"{
                     Frame label="Daten" {
-                        Text item=Air_FF_Livingroom_Message {
-                            Setpoint item=Temperature_FF_Livingroom_Target label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        Text item=Air_GF_Livingroom_Message {
+                            Setpoint item=Temperature_GF_Livingroom_Target label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=Air_FF_Boxroom_Message
-                        Text item=Air_FF_Guestroom_Message {
-                            Setpoint item=Temperature_FF_Guestroom_Target label="Gästezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        Text item=Air_GF_Boxroom_Message
+                        Text item=Air_GF_Guestroom_Message {
+                            Setpoint item=Temperature_GF_Guestroom_Target label="Gästezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=Air_FF_GuestWC_Message {
-                            Setpoint item=Temperature_FF_GuestWC_Target label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        Text item=Air_GF_GuestWC_Message {
+                            Setpoint item=Temperature_GF_GuestWC_Target label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=Air_FF_Floor_Message {
-                            Setpoint item=Temperature_FF_Floor_Target label="Flur unten [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        Text item=Air_GF_Corridor_Message {
+                            Setpoint item=Temperature_GF_Corridor_Target label="Flur unten [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=Air_FF_Utilityroom_Message
-                        Text item=Air_FF_Garage_Message 
+                        Text item=Air_GF_Utilityroom_Message
+                        Text item=Air_Garage_Message 
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                         Webview url="/static/custom/grafana/temperatures_eg.html?fromItem=Chart_From" icon=none height=18
                     }
                 }
-                Group item=Air_SF_Bedroom_Message label="OG [%s]"{
+                Group item=Air_FF_Bedroom_Message label="OG [%s]"{
                     Frame label="Daten" {
-                        Text item=Air_SF_Bedroom_Message {
-                            Setpoint item=Temperature_SF_Bedroom_Target label="Schlafzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        Text item=Air_FF_Bedroom_Message {
+                            Setpoint item=Temperature_FF_Bedroom_Target label="Schlafzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=Air_SF_Dressingroom_Message
-                        Text item=Air_SF_Child1_Message {
-                            Setpoint item=Temperature_SF_Child1_Target label="Kind 1 [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        Text item=Air_FF_Dressingroom_Message
+                        Text item=Air_FF_Child1_Message {
+                            Setpoint item=Temperature_FF_Child1_Target label="Kind 1 [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=Air_SF_Child2_Message {
-                            Setpoint item=Temperature_SF_Child2_Target label="Kind 2 [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        Text item=Air_FF_Child2_Message {
+                            Setpoint item=Temperature_FF_Child2_Target label="Kind 2 [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=Air_SF_Bathroom_Message {
-                            Setpoint item=Temperature_SF_Bathroom_Target label="Badezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        Text item=Air_FF_Bathroom_Message {
+                            Setpoint item=Temperature_FF_Bathroom_Target label="Badezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=Air_SF_Floor_Message {
-                            Setpoint item=Temperature_SF_Floor_Target label="Flur oben [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        Text item=Air_FF_Corridor_Message {
+                            Setpoint item=Temperature_FF_Corridor_Target label="Flur oben [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=Air_SF_Attic_Message
+                        Text item=Air_Attic_Message
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
@@ -612,28 +612,28 @@ sitemap haus label="Main Menu"
                         Switch item=Heating_Operating_Mode label="Betrieb" mappings=[1.0="WW", 2.0="HZ", 3.0="RD"]  visibility=[Heating_Auto_Mode==0]
                         Text item=Heating_Operating_Mode visibility=[Heating_Auto_Mode==1]
                         Text label="Komforttemperaturen" icon="selfheating"{
-                            Setpoint item=Temperature_FF_GuestWC_Target label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=Temperature_FF_Livingroom_Target label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=Temperature_FF_Guestroom_Target label="Gästezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=Temperature_FF_Floor_Target label="Flur unten [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=Temperature_SF_Floor_Target label="Flur oben [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=Temperature_SF_Child1_Target label="Kind 1 [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=Temperature_SF_Child2_Target label="Kind 2 [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=Temperature_SF_Bedroom_Target label="Schlafzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=Temperature_SF_Bathroom_Target label="Badezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=Temperature_GF_GuestWC_Target label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=Temperature_GF_Livingroom_Target label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=Temperature_GF_Guestroom_Target label="Gästezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=Temperature_GF_Corridor_Target label="Flur unten [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=Temperature_GF_Corridor_Target label="Flur oben [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=Temperature_GF_Child1_Target label="Kind 1 [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=Temperature_GF_Child2_Target label="Kind 2 [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=Temperature_GF_Bedroom_Target label="Schlafzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=Temperature_GF_Bathroom_Target label="Badezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text label="Heizkreise" icon="selfheating"{
-                            Switch item=Heating_FF_Livingroom_Circuit label="WZ Kreis"
-                            Switch item=Heating_FF_Floor_Circuit label="Flur unten Kreis"
-                            Switch item=Heating_FF_Guestroom_Circuit label="Gästezimmer Kreis"
-                            Switch item=Heating_FF_GuestWC_Circuit label="Gäste WC Kreis"
-                            Switch item=Heating_FF_GuestWC_HK label="Gäste WC HK"
-                            Switch item=Heating_SF_Floor_Circuit label="Flur oben Kreis"
-                            Switch item=Heating_SF_Child1_Circuit label="Kind 1 Kreis"
-                            Switch item=Heating_SF_Child2_Circuit label="Kind 2 Kreis"
-                            Switch item=Heating_SF_Bedroom_Circuit label="Schlafzimmer Kreis"
-                            Switch item=Heating_SF_Bathroom_Circuit label="Badezimmer Kreis"
-                            Switch item=Heating_SF_Bathroom_HK label="Badezimmer HK"
+                            Switch item=Heating_GF_Livingroom_Circuit label="WZ Kreis"
+                            Switch item=Heating_GF_Corridor_Circuit label="Flur unten Kreis"
+                            Switch item=Heating_GF_Guestroom_Circuit label="Gästezimmer Kreis"
+                            Switch item=Heating_GF_GuestWC_Circuit label="Gäste WC Kreis"
+                            Switch item=Heating_GF_GuestWC_HK label="Gäste WC HK"
+                            Switch item=Heating_GF_Corridor_Circuit label="Flur oben Kreis"
+                            Switch item=Heating_GF_Child1_Circuit label="Kind 1 Kreis"
+                            Switch item=Heating_GF_Child2_Circuit label="Kind 2 Kreis"
+                            Switch item=Heating_GF_Bedroom_Circuit label="Schlafzimmer Kreis"
+                            Switch item=Heating_GF_Bathroom_Circuit label="Badezimmer Kreis"
+                            Switch item=Heating_GF_Bathroom_HK label="Badezimmer HK"
                         }
                     }
                     Frame label="Sensordaten" {
@@ -764,7 +764,7 @@ sitemap haus label="Main Menu"
                 }
             }
             Frame label="Sonstiges" {
-                Group item=Lights_Outdoor label="Lampen Garten (RAW) [MAP(group_socket.map):%d]"
+                Group item=gOutdoor_Lights label="Lampen Garten (RAW) [MAP(group_socket.map):%d]"
                 Group label="Schalten (RAW) [MAP(group_socket.map):%d]" icon="selfsocket" item=Sockets {
                     Frame label="Wohnen" {
                         Switch item=Socket_Livingroom_Bassbox label="Bassbox"
@@ -849,11 +849,12 @@ sitemap haus label="Main Menu"
             }
 		}
 		Text label="Test" icon="selfhouse" {
-            Group item=gLights label="Lampen [MAP(group_light.map):%d]" {
-                Group item=gLights_GroundFloor label="EG Lampen [MAP(group_light.map):%d]" {
-                    Switch item=Light_FF_Floor_Ceiling
-                    Switch item=Light_FF_Floor_Mirror
-                    Switch item=Light_FF_Floor_Hue
+            Group item=gIndoor_LightsTest label="Lampen [MAP(group_light.map):%d]" {
+                Switch item=gIndoor_LightsTest label="Alle Lampen" mappings=[OFF="Aus",ON="An"]
+                Group item=gGF_LightsTest label="EG Lampen [MAP(group_light.map):%d]" {
+                    Switch item=Light_GF_Corridor_Ceiling
+                    Switch item=Light_GF_Corridor_Mirror
+                    Switch item=Light_GF_Corridor_Hue
                 }
             }
 		}

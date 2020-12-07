@@ -1,7 +1,7 @@
 //########### VENTILATION ##########
 Switch Ventilation_Control						"Steuerung" 					<selfsettings>		{channel="comfoair:comfoair:default:bindingControl#activate"}
 Switch Ventilation_Auto_Mode					"Modus"							<selfautomode>
-Number Ventilation_Fan_Level					"Stufe"        					<selfairing> 	(gPersistentHistory) {channel="comfoair:comfoair:default:ventilation#fanLevel"}
+Number Ventilation_Fan_Level					"Stufe"        					<selfairing> 	(gPersistance_History) {channel="comfoair:comfoair:default:ventilation#fanLevel"}
 Number Ventilation_Comfort_Temperature 			"Ziel [%.1f °C]"				<selftemperature> 	{channel="comfoair:comfoair:default:temperatures#targetTemperature"}
 Switch Ventilation_Bypass						"Bypass [MAP(ventilation_bypass_de.map):%s]" <selfbypass> 		{channel="comfoair:comfoair:default:menuP9#bypassState"}
 

@@ -180,7 +180,7 @@ class FilterFanLevelRule:
 
         currentLevel = getItemState("Ventilation_Fan_Level").intValue()
 
-        raumTemperatur = getItemState("Temperature_FF_Livingroom").doubleValue()
+        raumTemperatur = getItemState("Temperature_GF_Livingroom").doubleValue()
         zielTemperatur = getItemState("Ventilation_Comfort_Temperature").doubleValue
         
         presenceSate = getItemState("State_Presence").intValue()

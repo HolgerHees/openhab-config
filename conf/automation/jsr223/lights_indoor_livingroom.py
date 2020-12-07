@@ -8,12 +8,12 @@ ruleTimeouts = {}
 class HueBrightnessRule:
     def __init__(self):
         self.triggers = [
-            ItemCommandTrigger("Light_FF_Livingroom_Hue_Brightness"),
-            ItemCommandTrigger("Light_FF_Livingroom_Hue_Brightness1"),
-            ItemCommandTrigger("Light_FF_Livingroom_Hue_Brightness2"),
-            ItemCommandTrigger("Light_FF_Livingroom_Hue_Brightness3"),
-            ItemCommandTrigger("Light_FF_Livingroom_Hue_Brightness4"),
-            ItemCommandTrigger("Light_FF_Livingroom_Hue_Brightness5")
+            ItemCommandTrigger("Light_GF_Livingroom_Hue_Brightness"),
+            ItemCommandTrigger("Light_GF_Livingroom_Hue_Brightness1"),
+            ItemCommandTrigger("Light_GF_Livingroom_Hue_Brightness2"),
+            ItemCommandTrigger("Light_GF_Livingroom_Hue_Brightness3"),
+            ItemCommandTrigger("Light_GF_Livingroom_Hue_Brightness4"),
+            ItemCommandTrigger("Light_GF_Livingroom_Hue_Brightness5")
         ]
 
     def execute(self, module, input):
@@ -22,7 +22,7 @@ class HueBrightnessRule:
 @rule("lights_indoor_livingroom_control.py")
 class HueColorMainRule:
     def __init__(self):
-        self.triggers = [ItemCommandTrigger("Light_FF_Livingroom_Hue_Color")]
+        self.triggers = [ItemCommandTrigger("Light_GF_Livingroom_Hue_Color")]
 
     def execute(self, module, input):
         global ruleTimeouts
@@ -37,11 +37,11 @@ class HueColorMainRule:
         
         command = u"{},{},{}".format(red,green,blue)
         
-        sendCommand("Light_FF_Livingroom_Hue_Color1", command)
-        sendCommand("Light_FF_Livingroom_Hue_Color2", command)
-        sendCommand("Light_FF_Livingroom_Hue_Color3", command)
-        sendCommand("Light_FF_Livingroom_Hue_Color4", command)
-        sendCommand("Light_FF_Livingroom_Hue_Color5", command)
+        sendCommand("Light_GF_Livingroom_Hue_Color1", command)
+        sendCommand("Light_GF_Livingroom_Hue_Color2", command)
+        sendCommand("Light_GF_Livingroom_Hue_Color3", command)
+        sendCommand("Light_GF_Livingroom_Hue_Color4", command)
+        sendCommand("Light_GF_Livingroom_Hue_Color5", command)
         
         sendCommand("State_Lightprogram", 0)
 
@@ -49,11 +49,11 @@ class HueColorMainRule:
 class HueColorIndividualRule:
     def __init__(self):
         self.triggers = [
-            ItemCommandTrigger("Light_FF_Livingroom_Hue_Color1"),
-            ItemCommandTrigger("Light_FF_Livingroom_Hue_Color2"),
-            ItemCommandTrigger("Light_FF_Livingroom_Hue_Color3"),
-            ItemCommandTrigger("Light_FF_Livingroom_Hue_Color4"),
-            ItemCommandTrigger("Light_FF_Livingroom_Hue_Color5")
+            ItemCommandTrigger("Light_GF_Livingroom_Hue_Color1"),
+            ItemCommandTrigger("Light_GF_Livingroom_Hue_Color2"),
+            ItemCommandTrigger("Light_GF_Livingroom_Hue_Color3"),
+            ItemCommandTrigger("Light_GF_Livingroom_Hue_Color4"),
+            ItemCommandTrigger("Light_GF_Livingroom_Hue_Color5")
         ]
 
     def execute(self, module, input):
@@ -83,22 +83,22 @@ class HueColorProgramRule:
         return int( color )
     
     def _getCurrentColors(self):
-        color1 = getItemState("Light_FF_Livingroom_Hue_Color1").toString().split(",")
-        color2 = getItemState("Light_FF_Livingroom_Hue_Color2").toString().split(",")
-        color3 = getItemState("Light_FF_Livingroom_Hue_Color3").toString().split(",")
-        color4 = getItemState("Light_FF_Livingroom_Hue_Color4").toString().split(",")
-        color5 = getItemState("Light_FF_Livingroom_Hue_Color5").toString().split(",")
+        color1 = getItemState("Light_GF_Livingroom_Hue_Color1").toString().split(",")
+        color2 = getItemState("Light_GF_Livingroom_Hue_Color2").toString().split(",")
+        color3 = getItemState("Light_GF_Livingroom_Hue_Color3").toString().split(",")
+        color4 = getItemState("Light_GF_Livingroom_Hue_Color4").toString().split(",")
+        color5 = getItemState("Light_GF_Livingroom_Hue_Color5").toString().split(",")
         return [color1,color2,color3,color4,color5]
     
     def _setCurrentColors(self,data):
         global ruleTimeouts
         ruleTimeouts["Livingroom_Hue_Color_Backward"] = getNow().getMillis()
         
-        sendCommand("Light_FF_Livingroom_Hue_Color1",u"{},{},{}".format(data[0][0],data[0][1],data[0][2]))
-        sendCommand("Light_FF_Livingroom_Hue_Color2",u"{},{},{}".format(data[1][0],data[1][1],data[1][2]))
-        sendCommand("Light_FF_Livingroom_Hue_Color3",u"{},{},{}".format(data[2][0],data[2][1],data[2][2]))
-        sendCommand("Light_FF_Livingroom_Hue_Color4",u"{},{},{}".format(data[3][0],data[3][1],data[3][2]))
-        sendCommand("Light_FF_Livingroom_Hue_Color5",u"{},{},{}".format(data[4][0],data[4][1],data[4][2]))
+        sendCommand("Light_GF_Livingroom_Hue_Color1",u"{},{},{}".format(data[0][0],data[0][1],data[0][2]))
+        sendCommand("Light_GF_Livingroom_Hue_Color2",u"{},{},{}".format(data[1][0],data[1][1],data[1][2]))
+        sendCommand("Light_GF_Livingroom_Hue_Color3",u"{},{},{}".format(data[2][0],data[2][1],data[2][2]))
+        sendCommand("Light_GF_Livingroom_Hue_Color4",u"{},{},{}".format(data[3][0],data[3][1],data[3][2]))
+        sendCommand("Light_GF_Livingroom_Hue_Color5",u"{},{},{}".format(data[4][0],data[4][1],data[4][2]))
 
     def _fade(self,step,fromColor,toColor,currentColor):
         start = float(fromColor[0])
@@ -155,20 +155,20 @@ class HueColorProgramRule:
         if getItemState("State_Lightprogram").intValue() == 0:
             return
         
-        color1 = getItemState("Light_FF_Livingroom_Hue_Color1")
-        color2 = getItemState("Light_FF_Livingroom_Hue_Color2")
-        color3 = getItemState("Light_FF_Livingroom_Hue_Color3")
-        color4 = getItemState("Light_FF_Livingroom_Hue_Color4")
-        color5 = getItemState("Light_FF_Livingroom_Hue_Color5")
+        color1 = getItemState("Light_GF_Livingroom_Hue_Color1")
+        color2 = getItemState("Light_GF_Livingroom_Hue_Color2")
+        color3 = getItemState("Light_GF_Livingroom_Hue_Color3")
+        color4 = getItemState("Light_GF_Livingroom_Hue_Color4")
+        color5 = getItemState("Light_GF_Livingroom_Hue_Color5")
             
         global ruleTimeouts
         ruleTimeouts["Livingroom_Hue_Color_Backward"] = getNow().getMillis()
     
-        sendCommand("Light_FF_Livingroom_Hue_Color1",color2)
-        sendCommand("Light_FF_Livingroom_Hue_Color2",color3)
-        sendCommand("Light_FF_Livingroom_Hue_Color3",color4)
-        sendCommand("Light_FF_Livingroom_Hue_Color4",color5)
-        sendCommand("Light_FF_Livingroom_Hue_Color5",color1)
+        sendCommand("Light_GF_Livingroom_Hue_Color1",color2)
+        sendCommand("Light_GF_Livingroom_Hue_Color2",color3)
+        sendCommand("Light_GF_Livingroom_Hue_Color3",color4)
+        sendCommand("Light_GF_Livingroom_Hue_Color4",color5)
+        sendCommand("Light_GF_Livingroom_Hue_Color5",color1)
                     
         self.timer = createTimer(self.log, self.timeout, self.callback )
         self.timer.start()

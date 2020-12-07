@@ -10,11 +10,11 @@ Strategies {
  * item (excl. the group item itself).
  */
 Items {
-	gPersistentHistory* : strategy = everyChange
+	gPersistance_History* : strategy = everyChange
 	Sensor_Window_FF* : strategy = everyChange
 	Sensor_Window_SF* : strategy = everyChange
-	Motiondetector_FF_Floor : strategy = everyChange
-	Motiondetector_FF_Livingroom : strategy = everyChange
-	Motiondetector_SF_Floor : strategy = everyChange
-	Door_FF_Floor : strategy = everyChange
+	Motiondetector_GF_Corridor : strategy = everyChange
+	Motiondetector_GF_Livingroom : strategy = everyChange
+	Motiondetector_FF_Corridor : strategy = everyChange
+	Door_GF_Corridor : strategy = everyChange
 }

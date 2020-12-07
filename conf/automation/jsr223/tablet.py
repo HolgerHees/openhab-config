@@ -8,7 +8,7 @@ class WakeupRule:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("State_Presence"),
-            ItemStateChangeTrigger("Lights_FF")
+            ItemStateChangeTrigger("gGF_Lights")
         ]
 
     def execute(self, module, input):
@@ -17,7 +17,7 @@ class WakeupRule:
                 urllib2.urlopen("http://192.168.0.40:5000/sleep").read()
             else:
                 urllib2.urlopen("http://192.168.0.40:5000/wakeup").read()
-        # check for itemLastChangeOlderThen to avoid flapping, because Lights_FF is affected by State_Presence
+        # check for itemLastChangeOlderThen to avoid flapping, because gGF_Lights is affected by State_Presence
         elif getItemState('State_Presence').intValue() == 2 and itemLastChangeOlderThen("State_Presence",getNow().minusSeconds(5)):
             if input["event"].getItemState() == OFF:
                 urllib2.urlopen("http://192.168.0.40:5000/sleep").read()

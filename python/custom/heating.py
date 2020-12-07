@@ -8,6 +8,7 @@ from org.eclipse.smarthome.core.library.types import OnOffType
 from org.eclipse.smarthome.core.library.types import OpenClosedType
 from org.eclipse.smarthome.core.library.types import PercentType
 from org.eclipse.smarthome.core.library.types import DecimalType
+from org.eclipse.smarthome.core.types import UnDefType
 
 from custom.house import Window
 from custom.state import RoomState, HouseState, RoomHeatingState, HouseHeatingState
@@ -101,31 +102,31 @@ class Heating(object):
 
     @staticmethod
     def getTemperatureSensorItem(room):
-        return Heating.temperatureSensorItemPlaceholder.format(room.getName())
+        return Heating.temperatureSensorItemPlaceholder.format(room.getName()[1:])
       
     @staticmethod
     def getTemperatureTargetItem(room):
-        return Heating.temperatureTargetItemPlaceholder.format(room.getName())
+        return Heating.temperatureTargetItemPlaceholder.format(room.getName()[1:])
       
     @staticmethod
     def getHeatingBufferItem(room):
-        return Heating.heatingBufferItemPlaceholder.format(room.getName())
+        return Heating.heatingBufferItemPlaceholder.format(room.getName()[1:])
       
     @staticmethod
     def getHeatingCircuitItem(room):
-        return Heating.heatingCircuitItemPlaceholder.format(room.getName())
+        return Heating.heatingCircuitItemPlaceholder.format(room.getName()[1:])
       
     @staticmethod
     def getHeatingHKItem(room):
-        return Heating.heatingHKItemPlaceholder.format(room.getName())
+        return Heating.heatingHKItemPlaceholder.format(room.getName()[1:])
 
     @staticmethod
     def getHeatingTargetTemperatureItem(room):
-        return Heating.heatingTargetTemperatureItemPlaceholder.format(room.getName())
+        return Heating.heatingTargetTemperatureItemPlaceholder.format(room.getName()[1:])
       
     @staticmethod
     def getHeatingDemandItem(room):
-        return Heating.heatingDemandItemPlaceholder.format(room.getName())
+        return Heating.heatingDemandItemPlaceholder.format(room.getName()[1:])
 
     def __init__(self,log,outdoorTemperatureItem):
         self.log = log 
@@ -147,7 +148,8 @@ class Heating(object):
         return self.cache[key]
 
     def getCachedItemFloat(self,itemName):
-        return self.getCachedItemState(itemName).floatValue()
+        state = self.getCachedItemState(itemName)
+        return 0 if state == UnDefType.NULL or state == UnDefType.UNDEF else state.floatValue()
 
     def getCachedItemState(self,itemName):
         if itemName not in self.cache:

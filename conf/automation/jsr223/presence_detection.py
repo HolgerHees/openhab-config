@@ -17,7 +17,7 @@ class PresenceCheckRule:
 
         # sometimes, phones are losing wifi connections because of their sleep mode
         if itemState == OFF:
-            if itemLastChangeOlderThen("Door_FF_Floor",getNow().minusMinutes(30)):
+            if itemLastChangeOlderThen("Door_GF_Corridor",getNow().minusMinutes(30)):
                 self.skippedStates[itemName] = True
                 sendNotification(u"Phone", u"Skipped state {} for {}".format(itemState,itemName), recipients = ['bot_holger'])
                 return
@@ -47,7 +47,7 @@ class PresenceCheckRule:
             sendNotification(u"Tür", u"Willkommen", recipients = [bot])
         else:
             if holgerPhone == OFF and sandraPhone == OFF:
-                lightMsg = u" - LICHT an" if getItemState("Lights_Indoor") != OFF else u""
+                lightMsg = u" - LICHT an" if getItemState("gIndoor_Lights") != OFF else u""
                 windowMsg = u" - FENSTER offen" if getItemState("Openingcontacts") != CLOSED else u""
                 sendNotification(u"Tür", u"Auf Wiedersehen{}{}".format(lightMsg,windowMsg), recipients = [bot])
             else:
@@ -57,10 +57,10 @@ class PresenceCheckRule:
 class WakeupRule:
     def __init__(self):
         self.triggers = [
-            #ItemStateChangeTrigger("Motiondetector_FF_Floor",state="OPEN"),
-            #ItemStateChangeTrigger("Motiondetector_FF_Livingroom",state="OPEN"),
-            #ItemStateChangeTrigger("Motiondetector_SF_Floor",state="OPEN"),
-            ItemStateChangeTrigger("Lights_FF",state="ON"),
+            #ItemStateChangeTrigger("Motiondetector_GF_Corridor",state="OPEN"),
+            #ItemStateChangeTrigger("Motiondetector_GF_Livingroom",state="OPEN"),
+            #ItemStateChangeTrigger("Motiondetector_FF_Corridor",state="OPEN"),
+            ItemStateChangeTrigger("gGF_Lights",state="ON"),
             ItemStateChangeTrigger("Shutters_FF",state="0")
         ]
         self.checkTimer = None
@@ -71,9 +71,9 @@ class WakeupRule:
             sendNotification(u"System", u"Guten Morgen")
 
     def delayedWakeup(self, checkCounter ):
-        if getItemState("Lights_FF") == ON:
+        if getItemState("gGF_Lights") == ON:
             lightCount = 0
-            for child in getGroupMember("Lights_FF"):
+            for child in getGroupMember("gGF_Lights"):
                 if getItemState(child) == ON:
                     lightCount = lightCount + 1
             # Signs (in first floor) for wake up are 
@@ -90,7 +90,7 @@ class WakeupRule:
     def execute(self, module, input):        
         # only possible if we are sleeping
         if getItemState("State_Presence").intValue() == 2:
-            # sometimes the "Lights_FF" state switches back and forth for a couple of milliseconds when set "Lights_FF" state to OFF
+            # sometimes the "gGF_Lights" state switches back and forth for a couple of milliseconds when set "gGF_Lights" state to OFF
             #if itemLastChangeOlderThen("State_Presence",getNow().minusSeconds(5)):
             if input['event'].getItemName() == "Shutters_FF":
                 if self.checkTimer != None:
