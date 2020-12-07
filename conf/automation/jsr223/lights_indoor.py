@@ -8,7 +8,7 @@ class AwayEveningRule:
 
     def execute(self, module, input):
         if getItemState("Auto_Lighting") == ON and getItemState("State_Presence").intValue() == 0:
-            sendCommand("Light_GF_Corridor_Hue_Brightness", 30)
+            sendCommand("pGF_Corridor_Light_Hue_Brightness_Brightness", 30)
             sendCommand("Light_GF_Livingroom_Hue_Brightness4", 30)
 
 
@@ -19,9 +19,9 @@ class HolidayGoSleepingRule:
 
     def execute(self, module, input):
         if getItemState("Auto_Lighting") == ON and getItemState("State_Presence").intValue() == 0:
-            sendCommand("Light_GF_Corridor_Hue_Brightness", OFF)
+            sendCommand("pGF_Corridor_Light_Hue_Brightness_Brightness", OFF)
             sendCommand("Light_GF_Livingroom_Hue_Brightness4", OFF)
-            sendCommand("Light_GF_Corridor_Ceiling", ON)
+            sendCommand("pGF_Corridor_Light_Ceiling_Brightness", ON)
 
 
 @rule("lights_indoor.py")
@@ -31,4 +31,4 @@ class HolidayNightRule:
 
     def execute(self, module, input):
         if getItemState("Auto_Lighting") == ON and getItemState("State_Presence").intValue() == 0:
-            sendCommand("Light_GF_Corridor_Ceiling", OFF)
+            sendCommand("pGF_Corridor_Light_Ceiling_Brightness", OFF)

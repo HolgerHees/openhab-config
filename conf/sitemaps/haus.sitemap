@@ -34,10 +34,10 @@ sitemap haus label="Main Menu"
 						Switch item=Light_GF_Kitchen_Cupboard label="Küchenschrank"
 					}
 					Frame label="Sonstiges" {
-						Switch item=Light_GF_Corridor_Ceiling label="Flur"
-						Switch item=Light_GF_Corridor_Mirror label="Flur Spiegel"
-						Slider item=Light_GF_Corridor_Hue_Brightness label="Flur Indirekt"
-						Colorpicker item=Light_GF_Corridor_Hue_Color visibility=[Light_GF_Corridor_Hue_Brightness>0]
+						Switch item=pGF_Corridor_Light_Ceiling_Brightness label="Flur"
+						Switch item=pGF_Corridor_Light_Mirror_Brightness label="Flur Spiegel"
+						Slider item=pGF_Corridor_Light_Hue_Brightness_Brightness label="Flur Indirekt"
+						Colorpicker item=pGF_Corridor_Light_Hue_Brightness_Color visibility=[pGF_Corridor_Light_Hue_Brightness_Brightness>0]
 						Switch item=Light_GF_Guestroom_Ceiling label="Gästezimmer"
 						Switch item=Light_GF_GuestWC_Ceiling label="Gäste WC"
 						Switch item=Light_GF_GuestWC_Mirror label="Gäste WC Spiegel"
@@ -852,9 +852,9 @@ sitemap haus label="Main Menu"
             Group item=gIndoor_LightsTest label="Lampen [MAP(group_light.map):%d]" {
                 Switch item=gIndoor_LightsTest label="Alle Lampen" mappings=[OFF="Aus",ON="An"]
                 Group item=gGF_LightsTest label="EG Lampen [MAP(group_light.map):%d]" {
-                    Switch item=Light_GF_Corridor_Ceiling
-                    Switch item=Light_GF_Corridor_Mirror
-                    Switch item=Light_GF_Corridor_Hue
+                    Switch item=pGF_Corridor_Light_Ceiling_Brightness
+                    Switch item=pGF_Corridor_Light_Mirror_Brightness
+                    Switch item=pGF_Corridor_Light_Hue_Brightness
                 }
             }
 		}

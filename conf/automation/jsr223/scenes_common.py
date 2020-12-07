@@ -31,7 +31,7 @@ class Scene2Rule:
         self.triggers = [ItemCommandTrigger("Scene2",command="ON")]
 
     def execute(self, module, input):
-        sendCommand("Light_GF_Corridor_Ceiling", ON)
+        sendCommand("pGF_Corridor_Light_Ceiling_Brightness", ON)
         sendCommand("Light_FF_Bathroom_Ceiling", ON)
         sendCommand("Light_FF_Bathroom_Mirror", ON)
         sendCommand("Light_FF_Bedroom_Ceiling", ON)
@@ -46,7 +46,7 @@ class Scene3Rule:
         self.triggers = [ItemCommandTrigger("Scene3",command="ON")]
 
     def execute(self, module, input):
-        sendCommand("Light_GF_Corridor_Hue_Brightness", 60)
+        sendCommand("pGF_Corridor_Light_Hue_Brightness_Brightness", 60)
         sendCommand("Light_FF_Bathroom_Ceiling", ON)
         sendCommand("Light_FF_Bathroom_Mirror", ON)
         sendCommand("Light_FF_Bedroom_Right", ON)
@@ -54,7 +54,7 @@ class Scene3Rule:
         states = [OFF, PercentType.ZERO]
 
         for child in getItem("gGF_Lights").getAllMembers():
-            if child.getState() not in states and child.getName() != "Light_GF_Corridor_Hue_Brightness":
+            if child.getState() not in states and child.getName() != "pGF_Corridor_Light_Hue_Brightness_Brightness":
                 sendCommand(child, OFF)
 
         #for child in getItem("gFF_Lights").getAllMembers():
