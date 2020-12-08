@@ -129,7 +129,7 @@ Switch pOutdoor_Carport_Light_Brightness 		   "Carportlicht"	     <selflight>  (
 
 // **** OUTDOOR TERRACE ****
 Group  eOutdoor_Terrace_Light                      "Terassenlampen"      <selflight>  (lTerrace)                                             ["Lightbulb"]
-Dimmer pOutdoor_Terrace_Light_Brightness	       "Terassenlicht"       <selflight>  (eOutdoor_Terrace_Light,gOutdoor_Lights)               ["Setpoint","Light"] { channel="knx:device:bridge:lights_outdoor:outdoorTerracer"}
+Dimmer pOutdoor_Terrace_Light_Brightness	       "Terassenlicht"       <selflight>  (eOutdoor_Terrace_Light,gOutdoor_Lights)               ["Setpoint","Light"] { channel="knx:device:bridge:lights_outdoor:outdoorTerrace"}
 
 // **** OUTDOOR GARAGE STREEDSIDE ****
 Group  eOutdoor_Garage_Gardenside_Light            "Schuppentürlampe - Garten" <selflight> (lOutdoor)                                       ["Lightbulb"]

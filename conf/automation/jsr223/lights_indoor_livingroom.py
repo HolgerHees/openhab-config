@@ -195,4 +195,4 @@ class HueColorProgramRule:
             elif itemState == 2:
         
                 self.timer = createTimer(self.log, 1, self.callbackFaded, [1, self.orgColors])
-                self.timer.start()'''
+                self.timer.start()
