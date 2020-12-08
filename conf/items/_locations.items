@@ -3,7 +3,7 @@ Group lIndoor			"Drinnen"		<group>                        ["Indoor"]
 Group lHouse			"Haus"		    <group>         (lIndoor)      ["Building"]
 
 Group lGroundFloor      "Erdgeschoss"	<groundfloor>   (lHouse)       ["GroundFloor"]
-Group lGF_GuestWC 		"Gäste WC" 		<bath> 			(lGroundFloor) ["Bathroom"]     { synonyms="Gäste WC, Gäste Toilette" }
+Group lGF_Guesttoilet 	"Gäste WC" 		<bath> 			(lGroundFloor) ["Bathroom"]     { synonyms="Gäste WC, Gäste Toilette" }
 Group lGF_Utilityroom 	"HWR" 			<energy> 		(lGroundFloor) ["Room"]         { synonyms="HWR, Hauswirtschaftsraum" }
 Group lGF_Boxroom 		"Abstellkammer" <office> 		(lGroundFloor) ["Room"]         { synonyms="Kammer,Abstellkammer,Vorratsraum" }
 Group lGF_Kitchen 		"Küche" 		<kitchen> 		(lGroundFloor) ["Kitchen"]

@@ -21,5 +21,5 @@ class TestRule:
     def execute(self, module, input):
         pass
 
-#sendCommand("Light_GF_Utilityroom_Ceiling",REFRESH) 
+#sendCommand("pGF_Utilityroom_Light_Ceiling_Brightness",REFRESH) 
  

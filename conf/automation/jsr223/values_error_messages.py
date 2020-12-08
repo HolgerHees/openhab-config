@@ -38,7 +38,7 @@ class ValuesErrorMessagesRule:
         if itemLastUpdateOlderThen("Temperature_GF_Livingroom", refDate) \
                 or itemLastUpdateOlderThen("Temperature_GF_Boxroom", refDate) \
                 or itemLastUpdateOlderThen("Temperature_GF_Guestroom", refDate) \
-                or itemLastUpdateOlderThen("Temperature_GF_GuestWC", refDate) \
+                or itemLastUpdateOlderThen("Temperature_GF_Guesttoilet", refDate) \
                 or itemLastUpdateOlderThen("Temperature_GF_Corridor", refDate) \
                 or itemLastUpdateOlderThen("Temperature_GF_Utilityroom", refDate) \
                 or itemLastUpdateOlderThen("Temperature_Garage", refDate) \

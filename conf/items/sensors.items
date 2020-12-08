@@ -17,11 +17,11 @@ Number Temperature_GF_Guestroom "Gästezimmer [%.1f °C]"			<selftemperature> (g
 Number Humidity_GF_Guestroom_Raw  			{ channel="knx:device:bridge:sensors_ff:humidityGuestroom" }
 Number Humidity_GF_Guestroom 				"Gästezimmer [%.1f %%]"			<chart> (gPersistance_Chart,gPersistance_History,Humidity,lGF_Guestroom) ["Sensor","Measurement","Humidity"]
 String Air_GF_Guestroom_Message 			"Gästezimmer [%s]"		<selftemperature>
-Number Temperature_GF_GuestWC_Raw  			{ channel="knx:device:bridge:sensors_ff:temperatureGuestWC" }
-Number Temperature_GF_GuestWC 	"Gäste WC [%.1f °C]"		        <selftemperature> (gPersistance_Chart,gPersistance_History,Temperatures,lGF_GuestWC) ["Sensor","Measurement","Temperature"]
-Number Humidity_GF_GuestWC_Raw  			{ channel="knx:device:bridge:sensors_ff:humidityGuestWC" }
-Number Humidity_GF_GuestWC 					"Gäste WC [%.1f %%]"				<chart> (gPersistance_Chart,gPersistance_History,Humidity,lGF_GuestWC) ["Sensor","Measurement","Humidity"]
-String Air_GF_GuestWC_Message 				"Gäste WC [%s]"			<selftemperature>
+Number Temperature_GF_Guesttoilet_Raw  			{ channel="knx:device:bridge:sensors_ff:temperatureGuesttoilet" }
+Number Temperature_GF_Guesttoilet 	"Gäste WC [%.1f °C]"		        <selftemperature> (gPersistance_Chart,gPersistance_History,Temperatures,lGF_Guesttoilet) ["Sensor","Measurement","Temperature"]
+Number Humidity_GF_Guesttoilet_Raw  			{ channel="knx:device:bridge:sensors_ff:humidityGuesttoilet" }
+Number Humidity_GF_Guesttoilet 					"Gäste WC [%.1f %%]"				<chart> (gPersistance_Chart,gPersistance_History,Humidity,lGF_Guesttoilet) ["Sensor","Measurement","Humidity"]
+String Air_GF_Guesttoilet_Message 				"Gäste WC [%s]"			<selftemperature>
 Number Temperature_GF_Corridor_Raw  			{ channel="knx:device:bridge:sensors_ff:temperatureFloor" }
 Number Temperature_GF_Corridor 	"Flur unten [%.1f °C]"			<selftemperature> (gPersistance_Chart,gPersistance_History,Temperatures,lGF_Corridor) ["Sensor","Measurement","Temperature"]
 Number Humidity_GF_Corridor_Raw  				{ channel="knx:device:bridge:sensors_ff:humidityFloor" }
@@ -83,7 +83,7 @@ Number Temperature_Garden_Forecast8				"Garten (Vorhersage 8Std) [%.1f °C]" <se
 
 //Number Temperature_Room_Target	        "Ziel [%.1f °C]"				<selftemperature>    ["RadiatorControl","Setpoint","Temperature"]
 
-Number Temperature_GF_GuestWC_Target	"Ziel Gäste WC [%.1f °C]"		<selftemperature>    ["RadiatorControl","Setpoint","Temperature"]
+Number Temperature_GF_Guesttoilet_Target	"Ziel Gäste WC [%.1f °C]"		<selftemperature>    ["RadiatorControl","Setpoint","Temperature"]
 Number Temperature_GF_Livingroom_Target	"Ziel Wohnzimmer [%.1f °C]"		<selftemperature>    ["RadiatorControl","Setpoint","Temperature"]
 Number Temperature_GF_Guestroom_Target	"Ziel Gästezimmer [%.1f °C]"	<selftemperature>    ["RadiatorControl","Setpoint","Temperature"]
 Number Temperature_GF_Corridor_Target	    "Ziel Flur unten [%.1f °C]"	<selftemperature>    ["RadiatorControl","Setpoint","Temperature"]

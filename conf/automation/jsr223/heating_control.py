@@ -11,7 +11,7 @@ import math
  
 OFFSET_FORMATTER = DateTimeFormat.forPattern("HH:mm")
 
-#postUpdate("Heating_GF_GuestWC_Demand",OFF)
+#postUpdate("Heating_GF_Guesttoilet_Demand",OFF)
 #postUpdate("Heating_GF_Livingroom_Demand",OFF)
 #postUpdate("Heating_GF_Guestroom_Demand",OFF)
 #postUpdate("Heating_GF_Corridor_Demand",OFF)
@@ -90,7 +90,7 @@ rooms = [
             Wall(direction='north', area=4.18, type=_outer36Wall, bound="lGF_Livingroom"),
             Wall(direction='north', area=3.509, type=_outer36Wall, bound="lGF_Boxroom"),
             Wall(direction='north', area=5.5, type=_outer36Wall, bound="lGF_Utilityroom"),
-            Wall(direction='north', area=3.85, type=_outer36Wall,bound="lGF_GuestWC"),
+            Wall(direction='north', area=3.85, type=_outer36Wall,bound="lGF_Guesttoilet"),
             Wall(direction='east', area=5.21, type=_outer22Wall),
             Wall(direction='south', area=17.039, type=_outer22Wall)
         ],
@@ -101,7 +101,7 @@ rooms = [
         ]
     ),
     Room(
-        name='lGF_GuestWC',
+        name='lGF_Guesttoilet',
         additionalRadiator=True,
         heatingVolume=29.63,
         volume=4.92445 * _firstFloorHeight,
@@ -114,7 +114,7 @@ rooms = [
             Wall(direction='south', area=5.0225, type=_garageWall, bound="lGarage")
         ],
         transitions=[
-            Window(direction='east', area=1.045, type=_outerWindow, contactItem='Window_GF_GuestWC', shutterItem='Shutters_GF_GuestWC', shutterArea=0.1292)
+            Window(direction='east', area=1.045, type=_outerWindow, contactItem='Window_GF_Guesttoilet', shutterItem='Shutters_GF_Guesttoilet', shutterArea=0.1292)
         ]
     ),
     Room(
@@ -127,7 +127,7 @@ rooms = [
             Wall(direction='ceiling', area=8.9875, type=_groundCeiling, bound="lFF_Bathroom"),
             Wall(direction='west', area=10.31765, type=_inner11Wall, bound="lGF_Boxroom"),
             Wall(direction='north', area=5.39615, type=_inner17Wall, bound="lGF_Corridor"),
-            Wall(direction='east', area=10.31765, type=_inner11Wall, bound="lGF_GuestWC"),
+            Wall(direction='east', area=10.31765, type=_inner11Wall, bound="lGF_Guesttoilet"),
             Wall(direction='south', area=5.294375, type=_garageWall, bound="lGarage")
         ],
         transitions=[
@@ -205,7 +205,7 @@ rooms = [
             Wall(direction='north', area=9.06975, type=_inner17Wall, bound="lGF_Guestroom"),
             # east wall is shared between lower and upper floor
             Wall(direction='east', area=(5.19525+3.435)/2.0, type=_outer36Wall),
-            Wall(direction='south', area=3.4949, type=_inner17Wall, bound="lGF_GuestWC"),
+            Wall(direction='south', area=3.4949, type=_inner17Wall, bound="lGF_Guesttoilet"),
             Wall(direction='south', area=4.04725, type=_inner17Wall, bound="lGF_Utilityroom")
         ],
         transitions=[
@@ -327,7 +327,7 @@ rooms = [
         heatingVolume=35.31,
         volume=12.51273 * _secondFloorHeight - 2.5884,
         walls=[
-            Wall(direction='floor', area=5.482375, type=_firstFloor, bound="lGF_GuestWC"),
+            Wall(direction='floor', area=5.482375, type=_firstFloor, bound="lGF_Guesttoilet"),
             Wall(direction='floor', area=8.9875, type=_firstFloor, bound="lGF_Utilityroom"),
             Wall(direction='ceiling', area=10.3266375, type=_firstCeiling, bound="lAttic"),
             Wall(direction='west', area=9.9941, type=_inner11Wall, bound="lFF_Bedroom"), # Dressingroom
@@ -364,7 +364,7 @@ controllableRooms = {
   'lGF_Livingroom': True,
   'lGF_Corridor': True,
   'lGF_Guestroom': True,
-  'lGF_GuestWC': True,
+  'lGF_Guesttoilet': True,
   'lFF_Corridor': True,
   'lFF_Child1': True,
   'lFF_Child2': True,

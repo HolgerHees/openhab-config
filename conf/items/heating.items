@@ -5,8 +5,8 @@ Group Solar_Temperatures
 Switch Heating_GF_Livingroom_Circuit		"Wohnzimmer Kreis"		<selfsettings>	(gPersistance_History) { channel="knx:device:bridge:heating_ff:livingroomCircuit" }
 Switch Heating_GF_Corridor_Circuit				"Flur unten Kreis"		<selfsettings>	(gPersistance_History) { channel="knx:device:bridge:heating_ff:floorCircuit" }
 Switch Heating_GF_Guestroom_Circuit			"Gästezimmer Kreis"		<selfsettings>	(gPersistance_History) { channel="knx:device:bridge:heating_ff:guestroomCircuit" }
-Switch Heating_GF_GuestWC_Circuit			"Gäste WC Kreis"		<selfsettings>	(gPersistance_History) { channel="knx:device:bridge:heating_ff:guestWCCircuit" }
-Switch Heating_GF_GuestWC_HK			    "Gäste WC HK"	    	<selfsettings>	(gPersistance_History) { channel="knx:device:bridge:heating_ff:guestWCHK" }
+Switch Heating_GF_Guesttoilet_Circuit			"Gäste WC Kreis"		<selfsettings>	(gPersistance_History) { channel="knx:device:bridge:heating_ff:guestWCCircuit" }
+Switch Heating_GF_Guesttoilet_HK			    "Gäste WC HK"	    	<selfsettings>	(gPersistance_History) { channel="knx:device:bridge:heating_ff:guestWCHK" }
 
 Switch Heating_FF_Corridor_Circuit				"Flur oben Kreis"		<selfsettings>	(gPersistance_History) { channel="knx:device:bridge:heating_sf:floorCircuit" }
 Switch Heating_FF_Child1_Circuit			"Kind 1 Kreis"			<selfsettings>	(gPersistance_History) { channel="knx:device:bridge:heating_sf:child1Circuit" }
@@ -16,7 +16,7 @@ Switch Heating_FF_Bedroom_Circuit			"Schlafzimmer Kreis"	<selfsettings>	(gPersis
 Switch Heating_FF_Bathroom_Circuit			"Badezimmer Kreis"		<selfsettings>	(gPersistance_History) { channel="knx:device:bridge:heating_sf:bathroomCircuit" }
 Switch Heating_FF_Bathroom_HK       		"Badezimmer HK"		    <selfsettings>	(gPersistance_History) { channel="knx:device:bridge:heating_sf:bathroomHK" }
 
-Number Heating_GF_GuestWC_Charged			"Gäste WC Geladen"		<selfsettings>
+Number Heating_GF_Guesttoilet_Charged			"Gäste WC Geladen"		<selfsettings>
 Number Heating_GF_Livingroom_Charged		"Wohnzimmer Geladen"	<selfsettings>
 Number Heating_GF_Guestroom_Charged			"Gästezimmer Geladen"	<selfsettings>
 Number Heating_GF_Corridor_Charged				"Flur unten Geladen"	<selfsettings>
@@ -27,7 +27,7 @@ Number Heating_FF_Bedroom_Charged			"Schlafzimmer Geladen"	<selfsettings>
 //Number Heating_FF_Dressingroom_Charged		"Ankleide Geladen"		<selfsettings>
 Number Heating_FF_Bathroom_Charged			"Badezimmer Geladen"	<selfsettings>
 
-Number Heating_GF_GuestWC_Target_Temperature	"Ziel Gäste WC"		<selfsettings>
+Number Heating_GF_Guesttoilet_Target_Temperature	"Ziel Gäste WC"		<selfsettings>
 Number Heating_GF_Livingroom_Target_Temperature	"Ziel Wohnzimmer"	<selfsettings>
 Number Heating_GF_Guestroom_Target_Temperature	"Ziel Gästezimmer"	<selfsettings>
 Number Heating_GF_Corridor_Target_Temperature	"Ziel Flur unten"		<selfsettings>
@@ -38,7 +38,7 @@ Number Heating_FF_Bedroom_Target_Temperature		"Ziel Schlafzimmer"	<selfsettings>
 //Number Heating_FF_Dressingroom_Target_Temperature		"Ziel Ankleide"	<selfsettings>
 Number Heating_FF_Bathroom_Target_Temperature		"Ziel Badezimmer"	<selfsettings>
 
-Switch Heating_GF_GuestWC_Demand			"Heizung Gäste WC [%d]"		<selfsettings>
+Switch Heating_GF_Guesttoilet_Demand			"Heizung Gäste WC [%d]"		<selfsettings>
 Switch Heating_GF_Livingroom_Demand			"Heizung Wohnzimmer [%d]"	<selfsettings>
 Switch Heating_GF_Guestroom_Demand			"Heizung Gästezimmer [%d]"	<selfsettings>
 Switch Heating_GF_Corridor_Demand				"Heizung Flur unten [%d]"	<selfsettings>

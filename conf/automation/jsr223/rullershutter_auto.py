@@ -22,7 +22,7 @@ class RollershutterAutoRule:
                 if getItemState("Window_GF_Livingroom_Couch") == CLOSED: sendCommand("Shutters_GF_Livingroom_Couch", DOWN)
                 if getItemState("Window_GF_Kitchen") == CLOSED: sendCommand("Shutters_GF_Kitchen", DOWN)
                 if getItemState("Window_GF_Guestroom") == CLOSED: sendCommand("Shutters_GF_Guestroom", DOWN)
-                if getItemState("Window_GF_GuestWC") == CLOSED: sendCommand("Shutters_GF_GuestWC", DOWN)
+                if getItemState("Window_GF_Guesttoilet") == CLOSED: sendCommand("Shutters_GF_Guesttoilet", DOWN)
 
                 if getItemState("Window_FF_Bedroom") == CLOSED: sendCommand("Shutters_FF_Bedroom", DOWN)
                 if getItemState("Window_FF_Dressingroom") == CLOSED: sendCommand("Shutters_FF_Dressingroom", DOWN)
