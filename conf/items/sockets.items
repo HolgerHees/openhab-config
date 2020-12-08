@@ -1,0 +1,16 @@
+Group:Switch:OR(ON, OFF) gAll_Sockets 		    "Alle"							<selfsocket>
+Group:Switch:OR(ON, OFF) gOutdoor_Sockets	"Garten"						<selfsocket>
+
+Switch Socket_Livingroom_Bassbox	"Wohnzimmer Bassbox" <selfsocket>       (gSockets,lGF_Livingroom) ["PowerOutlet","Speaker"] { channel="knx:device:bridge:sockets_ff:livingroomBassbox" }
+Switch Socket_Livingroom_Couch  	"Wohnzimmer Stehlampe"	<selfsocket>    (gSockets,lGF_Livingroom) ["PowerOutlet","Switch","Power"] { channel="knx:device:bridge:sockets_ff:livingroomCouch" }
+Switch Socket_Livingroom_Fireplace	"Wohnzimmer Kamin"    	<selfsocket>    (gSockets,lGF_Livingroom) ["PowerOutlet","Switch","Power"] { channel="knx:device:bridge:sockets_ff:livingroomFireplace" }
+Switch Socket_Floor 				"Flur"			<selfsocket>	        (gSockets,lGF_Corridor) ["PowerOutlet","Switch","Power"]	   { channel="knx:device:bridge:sockets_ff:floor" }
+Switch Socket_Guesttoilet 				"WC Radio"				<selfsocket>	(gSockets,lGF_Guesttoilet) ["PowerOutlet","Switch","Power"]	   { channel="knx:device:bridge:sockets_ff:guesttoilet" }
+Switch Socket_Bathroom_Left			"Badezimmer links"		<selfsocket>	(gSockets,lFF_Bathroom) ["PowerOutlet","Switch","Power"]   { channel="knx:device:bridge:sockets_sf:bathroomLeft" }
+Switch Socket_Bathroom_Right		"Badezimmer rechts"		<selfsocket>	(gSockets,lFF_Bathroom) ["PowerOutlet","Switch","Power"]   { channel="knx:device:bridge:sockets_sf:bathroomRight" }
+Switch Socket_Attic					"Dachboden"	<selfsocket>	            (gSockets,lAttic) ["PowerOutlet","Switch","Power"] { channel="knx:device:bridge:sockets_sf:attic" }
+Switch Socket_Streedside			"Aussen vorne" <selfsocket>	            (gAll_Sockets,gOutdoor_Sockets,lOutdoor) ["PowerOutlet","Switch","Power"] { channel="knx:device:bridge:sockets_outdoor:streedside" }
+Switch Socket_Gardenside			"Aussen hinten" <selfsocket>	        (gAll_Sockets,gOutdoor_Sockets,lOutdoor) ["PowerOutlet","Switch","Power"] { channel="knx:device:bridge:sockets_outdoor:gardenside" }
+Switch Socket_Mobile_1				"Mobile 1" <selfsocket>	                (gSockets) ["PowerOutlet","Switch","Power"]					         { channel="hue:0010:default:socket1:switch" }
+Switch Socket_Mobile_2				"Mobile 2" <selfsocket>	                (gSockets) ["PowerOutlet","Switch","Power"]					         { channel="hue:0010:default:socket2:switch" }
+

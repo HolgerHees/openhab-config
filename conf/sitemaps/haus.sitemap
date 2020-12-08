@@ -107,7 +107,7 @@ sitemap haus label="Main Menu"
 			}
 			Frame label="Licht & Steckdosen" {
                 Group item=gOutdoor_Lights label="Lampen [MAP(group_light.map):%d]"
-				Group item=Sockets_Outdoor label="Steckdosen [MAP(group_socket.map):%d]" {
+				Group item=gOutdoor_Sockets label="Steckdosen [MAP(group_socket.map):%d]" {
 					Switch item=Socket_Streedside
 					Switch item=Socket_Gardenside
 				}
@@ -765,7 +765,7 @@ sitemap haus label="Main Menu"
             }
             Frame label="Sonstiges" {
                 Group item=gOutdoor_Lights label="Lampen Garten (RAW) [MAP(group_socket.map):%d]"
-                Group label="Schalten (RAW) [MAP(group_socket.map):%d]" icon="selfsocket" item=Sockets {
+                Group label="Schalten (RAW) [MAP(group_socket.map):%d]" icon="selfsocket" item=gAll_Sockets {
                     Frame label="Wohnen" {
                         Switch item=Socket_Livingroom_Bassbox label="Bassbox"
                         Switch item=Socket_Guesttoilet label="Gäste WC Radio"

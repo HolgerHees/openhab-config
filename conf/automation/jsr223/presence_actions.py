@@ -53,7 +53,7 @@ class SleepingActionRule:
         sendCommandIfChanged("gIndoor_Lights", OFF)
         sendCommandIfChanged("Motiondetector_Outdoor_Switch", ON)
         
-        for child in getGroupMember("Sockets"):
+        for child in getGroupMember("gAll_Sockets"):
             if child.getName() == "Socket_Attic":
                 continue
             sendCommandIfChanged(child, OFF)

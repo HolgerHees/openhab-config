@@ -1,23 +1,6 @@
 Switch Light_FF_Bedroom_Left_Long_Pressed 		"Schlafz. Bett Fenster (lang)" 		{ channel="knx:device:bridge:other:bedroomLeftLongPressed" }
 Switch Light_FF_Bedroom_Right_Long_Pressed		"Schlafz. Bett Wand (lang)" 		{ channel="knx:device:bridge:other:bedroomRightLongPressed" }
 
-//####### Sockets ########
-Group:Switch:OR(ON, OFF) Sockets 			"Alle"							<selfsocket>
-Group:Switch:OR(ON, OFF) Sockets_Outdoor	"Garten"						<selfsocket>
-
-Switch Socket_Livingroom_Bassbox	"Wohnzimmer Bassbox" <selfsocket>       (Sockets,lGF_Livingroom) ["PowerOutlet","Speaker"] { channel="knx:device:bridge:sockets_ff:livingroomBassbox" }
-Switch Socket_Livingroom_Couch  	"Wohnzimmer Stehlampe"	<selfsocket>    (Sockets,lGF_Livingroom) ["PowerOutlet","Switch","Power"] { channel="knx:device:bridge:sockets_ff:livingroomCouch" }
-Switch Socket_Livingroom_Fireplace	"Wohnzimmer Kamin"    	<selfsocket>    (Sockets,lGF_Livingroom) ["PowerOutlet","Switch","Power"] { channel="knx:device:bridge:sockets_ff:livingroomFireplace" }
-Switch Socket_Floor 				"Flur"			<selfsocket>	        (Sockets,lGF_Corridor) ["PowerOutlet","Switch","Power"]	   { channel="knx:device:bridge:sockets_ff:floor" }
-Switch Socket_Guesttoilet 				"WC Radio"				<selfsocket>	(Sockets,lGF_Guesttoilet) ["PowerOutlet","Switch","Power"]	   { channel="knx:device:bridge:sockets_ff:guesttoilet" }
-Switch Socket_Bathroom_Left			"Badezimmer links"		<selfsocket>	(Sockets,lFF_Bathroom) ["PowerOutlet","Switch","Power"]   { channel="knx:device:bridge:sockets_sf:bathroomLeft" }
-Switch Socket_Bathroom_Right		"Badezimmer rechts"		<selfsocket>	(Sockets,lFF_Bathroom) ["PowerOutlet","Switch","Power"]   { channel="knx:device:bridge:sockets_sf:bathroomRight" }
-Switch Socket_Attic					"Dachboden"	<selfsocket>	            (Sockets,lAttic) ["PowerOutlet","Switch","Power"] { channel="knx:device:bridge:sockets_sf:attic" }
-Switch Socket_Streedside			"Aussen vorne" <selfsocket>	            (Sockets,Sockets_Outdoor,lOutdoor) ["PowerOutlet","Switch","Power"] { channel="knx:device:bridge:sockets_outdoor:streedside" }
-Switch Socket_Gardenside			"Aussen hinten" <selfsocket>	        (Sockets,Sockets_Outdoor,lOutdoor) ["PowerOutlet","Switch","Power"] { channel="knx:device:bridge:sockets_outdoor:gardenside" }
-Switch Socket_Mobile_1				"Mobile 1" <selfsocket>	                (Sockets) ["PowerOutlet","Switch","Power"]					         { channel="hue:0010:default:socket1:switch" }
-Switch Socket_Mobile_2				"Mobile 2" <selfsocket>	                (Sockets) ["PowerOutlet","Switch","Power"]					         { channel="hue:0010:default:socket2:switch" }
-
 //####### Shutters ########
 Group:Switch:OR(OFF,ON)	_Shutters	"Alle" <selfrollershutter>
 Group:Switch:OR(OFF,ON)	_Shutters_FF	"EG" 	 <selfrollershutter>
