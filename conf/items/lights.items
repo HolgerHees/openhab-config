@@ -65,10 +65,10 @@ Switch pGF_Guestroom_Light_Ceiling_Brightness 	   "Deckenlicht"         <selflig
 
 // **** GF GUESTTOILET ****
 Group  eGF_Guesttoilet_Light_Ceiling               "Deckenlampe"         <selflight>  (lGF_Kitchen)                                          ["Lightbulb"]
-Switch pGF_Guesttoilet_Light_Ceiling_Brightness    "Deckenlicht" 	     <selflight>  (eGF_Guesttoilet_Light_Ceiling,gIndoor_Lights,gGF_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_ff:guestWCCeiling" }
+Switch pGF_Guesttoilet_Light_Ceiling_Brightness    "Deckenlicht" 	     <selflight>  (eGF_Guesttoilet_Light_Ceiling,gIndoor_Lights,gGF_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_ff:guesttoiletCeiling" }
 
 Group  eGF_Guesttoilet_Light_Mirror                "Spiegellampe"        <selflight>  (lGF_Kitchen)                                          ["Lightbulb"]
-Switch pGF_Guesttoilet_Light_Mirror_Brightness 	   "Spiegellicht"        <selflight>  (eGF_Guesttoilet_Light_Mirror,gIndoor_Lights,gGF_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_ff:guestWCMirror" }
+Switch pGF_Guesttoilet_Light_Mirror_Brightness 	   "Spiegellicht"        <selflight>  (eGF_Guesttoilet_Light_Mirror,gIndoor_Lights,gGF_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_ff:guesttoiletMirror" }
 
 // **** FF CORRIDOR ****
 Group  eFF_Corridor_Light_Ceiling                  "Deckenlampe"         <selflight>  (lFF_Corridor)                                         ["Lightbulb"]

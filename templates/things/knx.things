@@ -54,8 +54,8 @@ Bridge	knx:ip:bridge [
         Type    number  :       humidityBoxroom         "Abstellkammer Feuchtigkeit" [ ga="0/7/4" ]
         Type    number  :       temperatureGuestroom    "Gästezimmer Temperatur"     [ ga="0/7/5" ]
         Type    number  :       humidityGuestroom       "Gästezimmer Feuchtigkeit"   [ ga="0/7/6" ]
-        Type    number  :       temperatureGuesttoilet      "Gäste WC Temperatur"        [ ga="0/7/7" ]
-        Type    number  :       humidityGuesttoilet         "Gäste WC Feuchtigkeit"      [ ga="0/7/8" ]
+        Type    number  :       temperatureGuesttoilet  "Gäste WC Temperatur"        [ ga="0/7/7" ]
+        Type    number  :       humidityGuesttoilet     "Gäste WC Feuchtigkeit"      [ ga="0/7/8" ]
         Type    number  :       temperatureFloor        "Flur EG Temperatur"         [ ga="0/7/9" ]
         Type    number  :       humidityFloor           "Flur EG Feuchtigkeit"       [ ga="0/7/10" ]
         Type    number  :       temperatureUtilityroom  "HWR Temperatur"             [ ga="0/7/11" ]
@@ -89,8 +89,8 @@ Bridge	knx:ip:bridge [
         Type    switch  :       garage                  "Schuppen Licht"             [ ga="0/0/14+<0/0/15" ]
         Type    switch  :       boxroomCeiling          "Kammer"                     [ ga="0/0/16+<0/0/17" ]
         Type    switch  :       utilityroomCeiling      "HWR"                        [ ga="0/0/18+<0/0/19" ]
-        Type    switch  :       guestWCCeiling          "Gäste WC Decke"             [ ga="0/0/20+<0/0/21" ]
-        Type    switch  :       guestWCMirror           "Gäste WC Spiegel"           [ ga="0/0/22+<0/0/23" ]
+        Type    switch  :       guesttoiletCeiling          "Gäste WC Decke"             [ ga="0/0/20+<0/0/21" ]
+        Type    switch  :       guesttoiletMirror           "Gäste WC Spiegel"           [ ga="0/0/22+<0/0/23" ]
         Type    switch  :       guestroomCeiling        "Gästezimmer"                [ ga="0/0/24+<0/0/25" ]
         Type    switch  :       floorCeiling            "Flur Decke"                 [ ga="0/0/26+<0/0/27" ]
         Type    switch  :       floorMirror             "Flur Spiegel"               [ ga="0/0/28+<0/0/29" ]
@@ -116,7 +116,7 @@ Bridge	knx:ip:bridge [
     }
     Thing device sockets_ff "KNX Steckdosen" @ "Erdgeschoss"
     {
-        Type    switch  :       guestWC                 "WC Radio"                   [ ga="0/1/1+<0/1/2" ]
+        Type    switch  :       guesttoilet             "WC Radio"                   [ ga="0/1/1+<0/1/2" ]
         Type    switch  :       livingroomBassbox       "Wohnzimmersteckdose Bassbox" [ ga="0/1/3+<0/1/4" ]
         Type    switch  :       livingroomCouch         "Wohnzimmersteckdose Stehlampe" [ ga="0/1/5+<0/1/6" ]
         Type    switch  :       floor                   "Flursteckdose"              [ ga="0/1/7+<0/1/8" ]

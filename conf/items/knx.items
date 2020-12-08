@@ -9,7 +9,7 @@ Switch Socket_Livingroom_Bassbox	"Wohnzimmer Bassbox" <selfsocket>       (Socket
 Switch Socket_Livingroom_Couch  	"Wohnzimmer Stehlampe"	<selfsocket>    (Sockets,lGF_Livingroom) ["PowerOutlet","Switch","Power"] { channel="knx:device:bridge:sockets_ff:livingroomCouch" }
 Switch Socket_Livingroom_Fireplace	"Wohnzimmer Kamin"    	<selfsocket>    (Sockets,lGF_Livingroom) ["PowerOutlet","Switch","Power"] { channel="knx:device:bridge:sockets_ff:livingroomFireplace" }
 Switch Socket_Floor 				"Flur"			<selfsocket>	        (Sockets,lGF_Corridor) ["PowerOutlet","Switch","Power"]	   { channel="knx:device:bridge:sockets_ff:floor" }
-Switch Socket_Guesttoilet 				"WC Radio"				<selfsocket>	(Sockets,lGF_Guesttoilet) ["PowerOutlet","Switch","Power"]	   { channel="knx:device:bridge:sockets_ff:guestWC" }
+Switch Socket_Guesttoilet 				"WC Radio"				<selfsocket>	(Sockets,lGF_Guesttoilet) ["PowerOutlet","Switch","Power"]	   { channel="knx:device:bridge:sockets_ff:guesttoilet" }
 Switch Socket_Bathroom_Left			"Badezimmer links"		<selfsocket>	(Sockets,lFF_Bathroom) ["PowerOutlet","Switch","Power"]   { channel="knx:device:bridge:sockets_sf:bathroomLeft" }
 Switch Socket_Bathroom_Right		"Badezimmer rechts"		<selfsocket>	(Sockets,lFF_Bathroom) ["PowerOutlet","Switch","Power"]   { channel="knx:device:bridge:sockets_sf:bathroomRight" }
 Switch Socket_Attic					"Dachboden"	<selfsocket>	            (Sockets,lAttic) ["PowerOutlet","Switch","Power"] { channel="knx:device:bridge:sockets_sf:attic" }
