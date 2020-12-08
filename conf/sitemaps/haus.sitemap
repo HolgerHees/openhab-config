@@ -31,49 +31,49 @@ sitemap haus label="Main Menu"
 						Slider item=pGF_Livingroom_Light_Diningtable_Brightness label="Wohnzimmer Esstisch"
 						Slider item=pGF_Livingroom_Light_Couchtable_Brightness label="Wohnzimmer Couch"
 						Slider item=pGF_Kitchen_Light_Ceiling_Brightness label="Küche"
-						Switch item=pGF_Kitchen_Light_Cupboard_Brightness label="Küchenschrank"
+						Switch item=pGF_Kitchen_Light_Cupboard_Powered label="Küchenschrank"
 					}
 					Frame label="Sonstiges" {
-						Switch item=pGF_Corridor_Light_Ceiling_Brightness label="Flur"
-						Switch item=pGF_Corridor_Light_Mirror_Brightness label="Flur Spiegel"
+						Switch item=pGF_Corridor_Light_Ceiling_Powered label="Flur"
+						Switch item=pGF_Corridor_Light_Mirror_Powered label="Flur Spiegel"
 						Slider item=pGF_Corridor_Light_Hue_Brightness label="Flur Indirekt"
 						Colorpicker item=pGF_Corridor_Light_Hue_Color visibility=[pGF_Corridor_Light_Hue_Brightness>0]
-						Switch item=pGF_Guestroom_Light_Ceiling_Brightness label="Gästezimmer"
-						Switch item=pGF_Guesttoilet_Light_Ceiling_Brightness label="Gäste WC"
-						Switch item=pGF_Guesttoilet_Light_Mirror_Brightness label="Gäste WC Spiegel"
-						Switch item=pGF_Boxroom_Light_Ceiling_Brightness label="Abstellkammer"
-						Switch item=pGF_Utilityroom_Light_Ceiling_Brightness label="HWR"
+						Switch item=pGF_Guestroom_Light_Ceiling_Powered label="Gästezimmer"
+						Switch item=pGF_Guesttoilet_Light_Ceiling_Powered label="Gäste WC"
+						Switch item=pGF_Guesttoilet_Light_Mirror_Powered label="Gäste WC Spiegel"
+						Switch item=pGF_Boxroom_Light_Ceiling_Powered label="Abstellkammer"
+						Switch item=pGF_Utilityroom_Light_Ceiling_Powered label="HWR"
 					}
 				}
 				Group item=gFF_Lights label="OG Lampen [MAP(group_light.map):%d]" {
 					Frame label="Schlafzimmer & Ankleide" {
-						Switch item=pFF_Bedroom_Light_Ceiling_Brightness label="Schlafzimmer"
+						Switch item=pFF_Bedroom_Light_Ceiling_Powered label="Schlafzimmer"
 						Slider item=pFF_Bedroom_Light_Hue_Left_Brightness label="Schlafzimmer Bett Fenster HUE"
 						Colorpicker item=pFF_Bedroom_Light_Hue_Left_Color label="Schlafzimmer Bett Fenster HUE Farbe" visibility=[pFF_Bedroom_Light_Hue_Left_Brightness>0]
 						Slider item=pFF_Bedroom_Light_Hue_Right_Brightness label="Schlafzimmer Bett Wand HUE"
 						Colorpicker item=pFF_Bedroom_Light_Hue_Right_Color label="Schlafzimmer Bett Wand HUE Farbe" visibility=[pFF_Bedroom_Light_Hue_Right_Brightness>0]
-						Switch item=pFF_Dressingroom_Light_Ceiling_Brightness label="Ankleide"
+						Switch item=pFF_Dressingroom_Light_Ceiling_Powered label="Ankleide"
 					}
 					Frame label="Badezimmer" {
-						Switch item=pFF_Bathroom_Light_Ceiling_Brightness label="Badezimmer"
-						Switch item=pFF_Bathroom_Light_Mirror_Brightness label="Badezimmer Spiegel"
+						Switch item=pFF_Bathroom_Light_Ceiling_Powered label="Badezimmer"
+						Switch item=pFF_Bathroom_Light_Mirror_Powered label="Badezimmer Spiegel"
 					}
 					Frame label="Sonstiges" {
-						Switch item=pFF_Corridor_Light_Ceiling_Brightness label="Flur oben"
-						Switch item=pFF_Child1_Light_Ceiling_Brightness label="Kind 1"
-						Switch item=pFF_Child2_Light_Ceiling_Brightness label="Kind 2"
+						Switch item=pFF_Corridor_Light_Ceiling_Powered label="Flur oben"
+						Switch item=pFF_Child1_Light_Ceiling_Powered label="Kind 1"
+						Switch item=pFF_Child2_Light_Ceiling_Powered label="Kind 2"
 					}
 				}
-				Switch item=pFF_Attic_Light_Ceiling_Brightness label="Dachboden"
+				Switch item=pFF_Attic_Light_Ceiling_Powered label="Dachboden"
             }
             Frame label="Garten" {
-				Switch item=pFF_Garage_Light_Ceiling_Brightness label="Schuppen"
+				Switch item=pFF_Garage_Light_Ceiling_Powered label="Schuppen"
 				Group item=gOutdoor_Lights label="Aussen Lampen [MAP(group_light.map):%d]" {
                     Slider item=pOutdoor_Terrace_Light_Brightness label="Terasse"
-                    Switch item=pOutdoor_Frontdoor_Light_Brightness label="Haustür"
-                    Switch item=pOutdoor_Carport_Light_Brightness label="Carport"
-                    Switch item=pOutdoor_Garage_Streedside_Light_Brightness label="Schuppentür vorne"
-                    Switch item=pOutdoor_Garage_Gardenside_Light_Brightness label="Schuppentür hinten"
+                    Switch item=pOutdoor_Frontdoor_Light_Powered label="Haustür"
+                    Switch item=pOutdoor_Carport_Light_Powered label="Carport"
+                    Switch item=pOutdoor_Garage_Streedside_Light_Powered label="Schuppentür vorne"
+                    Switch item=pOutdoor_Garage_Gardenside_Powered label="Schuppentür hinten"
 				}
 			}
 		}
@@ -108,8 +108,8 @@ sitemap haus label="Main Menu"
 			Frame label="Licht & Steckdosen" {
                 Group item=gOutdoor_Lights label="Lampen [MAP(group_light.map):%d]"
 				Group item=gOutdoor_Sockets label="Steckdosen [MAP(group_socket.map):%d]" {
-					Switch item=Socket_Streedside
-					Switch item=Socket_Gardenside
+					Switch item=pOutdoor_Socket_Streeside_Powered
+					Switch item=pOutdoor_Socket_Gardenside_Powered
 				}
                 Group label="Bewässerung [MAP(group_watering.map):%d]" item=Watering_Circuits {
                     Frame label="Programm" {
@@ -275,16 +275,16 @@ sitemap haus label="Main Menu"
 					}
 					Frame label="Weihnachten" {
 						Switch item=Auto_Christmas
-						Switch item=Socket_Livingroom_Couch visibility=[Auto_Christmas==ON]
+						Switch item=pGF_Livingroom_Socket_Couch_Powered visibility=[Auto_Christmas==ON]
 						Switch item=Socket_Livingroom_Fireplace visibility=[Auto_Christmas==ON]
-						Switch item=Socket_Floor visibility=[Auto_Christmas==ON]
-						Switch item=Socket_Mobile_1 visibility=[Auto_Christmas==ON]
-						Switch item=Socket_Mobile_2 visibility=[Auto_Christmas==ON]
-						Switch item=Socket_Streedside visibility=[Auto_Christmas==ON]
+						Switch item=pGF_Corridor_Socket_Powered visibility=[Auto_Christmas==ON]
+						Switch item=eMobile_Socket_1_Powered visibility=[Auto_Christmas==ON]
+						Switch item=eMobile_Socket_2_Powered visibility=[Auto_Christmas==ON]
+						Switch item=pOutdoor_Socket_Streeside_Powered visibility=[Auto_Christmas==ON]
 					}
 					Frame label="Dachboden" {
 						Switch item=Auto_Attic_Light label="Modus" mappings=[1="OFF", 2="W", 3="B"]
-						Switch item=Socket_Attic visibility=[Auto_Attic_Light!=1]
+						Switch item=pAttic_Socket_Powered visibility=[Auto_Attic_Light!=1]
 					}
 				}
                 Text label="Szenen" icon="selfcontrol" {
@@ -767,20 +767,20 @@ sitemap haus label="Main Menu"
                 Group item=gOutdoor_Lights label="Lampen Garten (RAW) [MAP(group_socket.map):%d]"
                 Group label="Schalten (RAW) [MAP(group_socket.map):%d]" icon="selfsocket" item=gAll_Sockets {
                     Frame label="Wohnen" {
-                        Switch item=Socket_Livingroom_Bassbox label="Bassbox"
-                        Switch item=Socket_Guesttoilet label="Gäste WC Radio"
-                        Switch item=Socket_Livingroom_Couch label="Wohnz. neben Stehlampe"
+                        Switch item=pGF_Livingroom_Socket_Bassbox_Powered label="Bassbox"
+                        Switch item=pGF_Guesttoilet_Socket_Powered label="Gäste WC Radio"
+                        Switch item=pGF_Livingroom_Socket_Couch_Powered label="Wohnz. neben Stehlampe"
                         Switch item=Socket_Livingroom_Fireplace label="Wohnz. Kamin"
-                        Switch item=Socket_Floor label="Flur unter Treppe"
-						Switch item=Socket_Attic label="Dachboden"
+                        Switch item=pGF_Corridor_Socket_Powered label="Flur unter Treppe"
+						Switch item=pAttic_Socket_Powered label="Dachboden"
                     }
                     Frame label="Garten" {
-                        Switch item=Socket_Streedside label="Aussen vorne"
-                        Switch item=Socket_Gardenside label="Aussen hinten"
+                        Switch item=pOutdoor_Socket_Streeside_Powered label="Aussen vorne"
+                        Switch item=pOutdoor_Socket_Gardenside_Powered label="Aussen hinten"
                     }
                     Frame label="Mobile" {
-                        Switch item=Socket_Mobile_1 label="Steckdose 1"
-                        Switch item=Socket_Mobile_2 label="Steckdose 2"
+                        Switch item=eMobile_Socket_1_Powered label="Steckdose 1"
+                        Switch item=eMobile_Socket_2_Powered label="Steckdose 2"
                     }
                     Frame label="Sonstiges" {
                         Switch item=TV_KEY_POWER label="Wohnzimmer Fernseher"
@@ -852,8 +852,8 @@ sitemap haus label="Main Menu"
             Group item=gIndoor_LightsTest label="Lampen [MAP(group_light.map):%d]" {
                 Switch item=gIndoor_LightsTest label="Alle Lampen" mappings=[OFF="Aus",ON="An"]
                 Group item=gGF_LightsTest label="EG Lampen [MAP(group_light.map):%d]" {
-                    Switch item=pGF_Corridor_Light_Ceiling_Brightness
-                    Switch item=pGF_Corridor_Light_Mirror_Brightness
+                    Switch item=pGF_Corridor_Light_Ceiling_Powered
+                    Switch item=pGF_Corridor_Light_Mirror_Powered
                     Switch item=pGF_Corridor_Light_Hue_Brightness
                 }
             }

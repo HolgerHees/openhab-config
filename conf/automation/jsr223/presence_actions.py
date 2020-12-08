@@ -34,7 +34,7 @@ class ArrivingActionRule:
         if input["event"].getItemName() == "Door_GF_Corridor":
             if self.isArriving:
                 if getItemState("State_Outdoorlights") == ON:
-                    sendCommand("pGF_Corridor_Light_Ceiling_Brightness",ON)
+                    sendCommand("pGF_Corridor_Light_Ceiling_Powered",ON)
                 self.isArriving = False
         # 10 minutes matches the max time ranges used by presence detection to ping phones => see pingdevice thing configuration
         # it can happen that State_Presence changes after Door_GF_Corridor was opened
@@ -54,7 +54,7 @@ class SleepingActionRule:
         sendCommandIfChanged("Motiondetector_Outdoor_Switch", ON)
         
         for child in getGroupMember("gAll_Sockets"):
-            if child.getName() == "Socket_Attic":
+            if child.getName() == "pAttic_Socket_Powered":
                 continue
             sendCommandIfChanged(child, OFF)
     

@@ -31,10 +31,10 @@ class Scene2Rule:
         self.triggers = [ItemCommandTrigger("Scene2",command="ON")]
 
     def execute(self, module, input):
-        sendCommand("pGF_Corridor_Light_Ceiling_Brightness", ON)
-        sendCommand("pFF_Bathroom_Light_Ceiling_Brightness", ON)
-        sendCommand("pFF_Bathroom_Light_Mirror_Brightness", ON)
-        sendCommand("pFF_Bedroom_Light_Ceiling_Brightness", ON)
+        sendCommand("pGF_Corridor_Light_Ceiling_Powered", ON)
+        sendCommand("pFF_Bathroom_Light_Ceiling_Powered", ON)
+        sendCommand("pFF_Bathroom_Light_Mirror_Powered", ON)
+        sendCommand("pFF_Bedroom_Light_Ceiling_Powered", ON)
 
         postUpdate("Scene2", OFF)
 
@@ -47,8 +47,8 @@ class Scene3Rule:
 
     def execute(self, module, input):
         sendCommand("pGF_Corridor_Light_Hue_Brightness", 60)
-        sendCommand("pFF_Bathroom_Light_Ceiling_Brightness", ON)
-        sendCommand("pFF_Bathroom_Light_Mirror_Brightness", ON)
+        sendCommand("pFF_Bathroom_Light_Ceiling_Powered", ON)
+        sendCommand("pFF_Bathroom_Light_Mirror_Powered", ON)
         sendCommand("pFF_Bedroom_Light_Hue_Right_Switch", ON)
 
         states = [OFF, PercentType.ZERO]
@@ -58,7 +58,7 @@ class Scene3Rule:
                 sendCommand(child, OFF)
 
         #for child in getItem("gFF_Lights").getAllMembers():
-        #    if child.getState() not in states and child.getName() not in ["pFF_Bathroom_Light_Mirror_Brightness", "pFF_Bedroom_Light_Hue_Right_Switch"]:
+        #    if child.getState() not in states and child.getName() not in ["pFF_Bathroom_Light_Mirror_Powered", "pFF_Bedroom_Light_Hue_Right_Switch"]:
         #        sendCommand(child, OFF)
 
         sendCommand("Scene6", ON)

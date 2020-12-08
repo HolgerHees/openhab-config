@@ -17,11 +17,11 @@ class LightsIndoorAutoAtticRule:
         
         if state == 2:
             if hour == 5:
-                sendCommand("Socket_Attic", ON)
+                sendCommand("pAttic_Socket_Powered", ON)
             elif hour == 23:
-                sendCommand("Socket_Attic", OFF)
+                sendCommand("pAttic_Socket_Powered", OFF)
         elif state == 3:
             if hour == 8:
-                sendCommand("Socket_Attic", ON)
+                sendCommand("pAttic_Socket_Powered", ON)
             elif hour == 20:
-                sendCommand("Socket_Attic", OFF)
+                sendCommand("pAttic_Socket_Powered", OFF)

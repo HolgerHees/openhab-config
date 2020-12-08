@@ -8,6 +8,6 @@ class ReceiverControlRule:
 
     def execute(self, module, input):
         if input["newState"] == OPEN:
-            sendCommand("Socket_Livingroom_Bassbox", ON)
+            sendCommand("pGF_Livingroom_Socket_Bassbox_Powered", ON)
         else:
-            sendCommand("Socket_Livingroom_Bassbox", OFF)
+            sendCommand("pGF_Livingroom_Socket_Bassbox_Powered", OFF)

@@ -1,16 +1,45 @@
-Group:Switch:OR(ON, OFF) gAll_Sockets 		    "Alle"							<selfsocket>
-Group:Switch:OR(ON, OFF) gOutdoor_Sockets	"Garten"						<selfsocket>
+Group:Switch:OR(ON, OFF) gAll_Sockets          "Alle"               <selfsocket>
+Group:Switch:OR(ON, OFF) gOutdoor_Sockets      "Garten"             <selfsocket>
 
-Switch Socket_Livingroom_Bassbox	"Wohnzimmer Bassbox" <selfsocket>       (gSockets,lGF_Livingroom) ["PowerOutlet","Speaker"] { channel="knx:device:bridge:sockets_ff:livingroomBassbox" }
-Switch Socket_Livingroom_Couch  	"Wohnzimmer Stehlampe"	<selfsocket>    (gSockets,lGF_Livingroom) ["PowerOutlet","Switch","Power"] { channel="knx:device:bridge:sockets_ff:livingroomCouch" }
-Switch Socket_Livingroom_Fireplace	"Wohnzimmer Kamin"    	<selfsocket>    (gSockets,lGF_Livingroom) ["PowerOutlet","Switch","Power"] { channel="knx:device:bridge:sockets_ff:livingroomFireplace" }
-Switch Socket_Floor 				"Flur"			<selfsocket>	        (gSockets,lGF_Corridor) ["PowerOutlet","Switch","Power"]	   { channel="knx:device:bridge:sockets_ff:floor" }
-Switch Socket_Guesttoilet 				"WC Radio"				<selfsocket>	(gSockets,lGF_Guesttoilet) ["PowerOutlet","Switch","Power"]	   { channel="knx:device:bridge:sockets_ff:guesttoilet" }
-Switch Socket_Bathroom_Left			"Badezimmer links"		<selfsocket>	(gSockets,lFF_Bathroom) ["PowerOutlet","Switch","Power"]   { channel="knx:device:bridge:sockets_sf:bathroomLeft" }
-Switch Socket_Bathroom_Right		"Badezimmer rechts"		<selfsocket>	(gSockets,lFF_Bathroom) ["PowerOutlet","Switch","Power"]   { channel="knx:device:bridge:sockets_sf:bathroomRight" }
-Switch Socket_Attic					"Dachboden"	<selfsocket>	            (gSockets,lAttic) ["PowerOutlet","Switch","Power"] { channel="knx:device:bridge:sockets_sf:attic" }
-Switch Socket_Streedside			"Aussen vorne" <selfsocket>	            (gAll_Sockets,gOutdoor_Sockets,lOutdoor) ["PowerOutlet","Switch","Power"] { channel="knx:device:bridge:sockets_outdoor:streedside" }
-Switch Socket_Gardenside			"Aussen hinten" <selfsocket>	        (gAll_Sockets,gOutdoor_Sockets,lOutdoor) ["PowerOutlet","Switch","Power"] { channel="knx:device:bridge:sockets_outdoor:gardenside" }
-Switch Socket_Mobile_1				"Mobile 1" <selfsocket>	                (gSockets) ["PowerOutlet","Switch","Power"]					         { channel="hue:0010:default:socket1:switch" }
-Switch Socket_Mobile_2				"Mobile 2" <selfsocket>	                (gSockets) ["PowerOutlet","Switch","Power"]					         { channel="hue:0010:default:socket2:switch" }
+// **** GF LIVINGROOM ****
+Group  eGF_Livingroom_Socket_Bassbox           "Bassbox"            <selfsocket> (lGF_Livingroom) ["PowerOutlet"]
+Switch pGF_Livingroom_Socket_Bassbox_Powered   "Bassbox"            <selfsocket> (eGF_Livingroom_Socket_Bassbox,gAll_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_ff:livingroomBassbox" }
 
+Group  eGF_Livingroom_Socket_Couch             "Stehlampe"          <selfsocket> (lGF_Livingroom) ["PowerOutlet"]
+Switch pGF_Livingroom_Socket_Couch_Powered     "Stehlampe"          <selfsocket> (eGF_Livingroom_Socket_Couch,gAll_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_ff:livingroomCouch" }
+
+Group  eGF_Livingroom_Socket_Fireplace         "Kamin"              <selfsocket> (lGF_Livingroom) ["PowerOutlet"]
+Switch pGF_Livingroom_Socket_Fireplace_Powered "Kamin"              <selfsocket> (eGF_Livingroom_Socket_Fireplace,gAll_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_ff:livingroomFireplace" }
+
+// **** GF CORRIDOR ****
+Group  eGF_Corridor_Socket                     "Treppe"             <selfsocket> (lGF_Corridor) ["PowerOutlet"]
+Switch pGF_Corridor_Socket_Powered             "Treppe"             <selfsocket> (eGF_Corridor_Socket,gAll_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_ff:floor" }
+
+// **** GF GUESTTOILET ****
+Group  eGF_Guesttoilet_Socket                  "WC Radio"           <selfsocket> (lGF_Guesttoilet) ["PowerOutlet"]
+Switch pGF_Guesttoilet_Socket_Powered          "WC Radio"           <selfsocket> (eGF_Guesttoilet_Socket,gAll_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_ff:guesttoilet" }
+
+// **** FF BATHROOM ****
+Group  eFF_Bathroom_Socket_Left                "Waschbecken links"  <selfsocket> (lFF_Bathroom) ["PowerOutlet"]
+Switch pFF_Bathroom_Socket_Left_Powered        "Waschbecken links"  <selfsocket> (eFF_Bathroom_Socket_Left,gAll_Sockets) ["Switch","Power"]   { channel="knx:device:bridge:sockets_sf:bathroomLeft" }
+
+Group  eFF_Bathroom_Socket_Right               "Waschbecken rechts" <selfsocket> (lFF_Bathroom) ["PowerOutlet"]
+Switch pFF_Bathroom_Socket_Right_Powered       "Waschbecken rechts" <selfsocket> (eFF_Bathroom_Socket_Right,gAll_Sockets) ["Switch","Power"]   { channel="knx:device:bridge:sockets_sf:bathroomRight" }
+
+// **** ATTIC ****
+Group  eAttic_Socket                           "Schornstein"        <selfsocket> (lAttic) ["PowerOutlet"]
+Switch pAttic_Socket_Powered                   "Schornstein"        <selfsocket> (eAttic_Socket,gAll_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_sf:attic" }
+
+// **** GARDEN ****
+Group  eOutdoor_Socket_Streeside               "Strasse"            <selfsocket> (lOutdoor) ["PowerOutlet"]
+Switch pOutdoor_Socket_Streeside_Powered       "Strasse"            <selfsocket> (eOutdoor_Socket_Streeside,gAll_Sockets,gOutdoor_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_outdoor:streedside" }
+
+Group  eOutdoor_Socket_Gardenside              "Garten"             <selfsocket> (lOutdoor) ["PowerOutlet"]
+Switch pOutdoor_Socket_Gardenside_Powered      "Garten"             <selfsocket>(eOutdoor_Socket_Gardenside,gAll_Sockets,gOutdoor_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_outdoor:gardenside" }
+
+// **** MOBILE ****
+Group  eMobile_Socket_1                        "Mobile 1"           <selfsocket> (lIndoor) ["PowerOutlet"]
+Switch eMobile_Socket_1_Powered                "Mobile 1"           <selfsocket> (eMobile_Socket_1,gAll_Sockets) ["Switch","Power"]              { channel="hue:0010:default:socket1:switch" }
+
+Group  eMobile_Socket_2                        "Mobile 2"           <selfsocket> (lIndoor) ["PowerOutlet"]
+Switch eMobile_Socket_2_Powered                "Mobile 2"           <selfsocket> (eMobile_Socket_2,gAll_Sockets) ["Switch","Power"]              { channel="hue:0010:default:socket2:switch" }
