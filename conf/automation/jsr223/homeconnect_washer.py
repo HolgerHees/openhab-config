@@ -7,16 +7,16 @@ class HomeConnectWasherMessageRule:
     def __init__(self):
         self.triggers = [
             #CronTrigger("0/5 * * * * ?"),
-            ItemStateChangeTrigger("Washer_RemainingProgramTimeState"),
-            ItemStateChangeTrigger("Washer_OperationState")
+            ItemStateChangeTrigger("pGF_Utilityroom_Washer_RemainingProgramTimeState"),
+            ItemStateChangeTrigger("pGF_Utilityroom_Washer_OperationState")
         ]
 
     def execute(self, module, input):
         
-        mode = Transformation.transform("MAP", "washer_mode.map", getItemState("Washer_OperationState").toString() )
+        mode = Transformation.transform("MAP", "washer_mode.map", getItemState("pGF_Utilityroom_Washer_OperationState").toString() )
         msg = u"{}".format(mode)
         
-        runtime = getItemState("Washer_RemainingProgramTimeState")
+        runtime = getItemState("pGF_Utilityroom_Washer_RemainingProgramTimeState")
         
         #self.log.info(u"{}".format(runtime))
         
@@ -24,14 +24,14 @@ class HomeConnectWasherMessageRule:
             runtime = Transformation.transform("JS", "washer_runtime.js", u"{}".format(runtime.intValue()) )
             msg = u"{}, {}".format(msg,runtime)
             
-        postUpdateIfChanged("Washer_Message", msg)
+        postUpdateIfChanged("pGF_Utilityroom_Washer_Message", msg)
 
 @rule("homeconnect_washer.py")
 class HomeConnectWasherNotificationRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("Washer_RemainingProgramTimeState"),
-            ItemStateChangeTrigger("Washer_OperationState")
+            ItemStateChangeTrigger("pGF_Utilityroom_Washer_RemainingProgramTimeState"),
+            ItemStateChangeTrigger("pGF_Utilityroom_Washer_OperationState")
         ]
 
         self.checkTimer = None
@@ -41,7 +41,7 @@ class HomeConnectWasherNotificationRule:
         sendNotification("Waschmaschine", u"Wäsche ist fertig" if state else u"Wäsche ist wahrscheinlich fertig" )
   
     def execute(self, module, input):
-        if input['event'].getItemName() == "Washer_RemainingProgramTimeState":
+        if input['event'].getItemName() == "pGF_Utilityroom_Washer_RemainingProgramTimeState":
             runtime = input['event'].getItemState()
             if runtime != NULL and runtime != UNDEF and runtime.intValue() > 0 and self.checkTimer != None:
                 # refresh timer with additional 10 min delay as a fallback

@@ -1,7 +1,35 @@
+//####### PRESENCE ########
 Number State_Presence							"Präsenz"				<selfinfo>			(gPersistance_History) ["Presence"]
 Switch State_Holger_Presence                    "Holger anwesend"       <selfinfo>          (gPersistance_History) { channel="mqtt:topic:mosquitto:device_ping:phone_hhees" }                                                       
 Switch State_Sandra_Presence                    "Sandra anwesend"       <selfinfo>          (gPersistance_History) { channel="mqtt:topic:mosquitto:device_ping:phone_sandra" }
 
+//####### Bell ########
+Contact 	Bell_State 																								 { channel="knx:device:bridge:other:switchBell" }
+DateTime	Bell_Last_Change					"Klingel [%1$tH:%1$tM:%1$tS, %1$td.%1$tm]"	<selfbell>
+Switch 		Dooropener_GF_Corridor 				"Türöffner" 							<selfdoor> 		(lGF_Corridor)	 { channel="knx:device:bridge:other:switchDooropener" }
+Switch 		Dooropener_Timer 					"Türoffner" 							<selfdoor> 		(lGF_Corridor)
+
+//####### Common States ########
+Contact		Receiver_State														      { channel="knx:device:bridge:other:receiverState" }
+Contact		Smoke_Detector						 "Rauchmelder [MAP(smoke_detector_de.map):%s]"	<smoke>	  { channel="knx:device:bridge:other:smokeDetector" }
+
+//####### HELPER SWITCH STATES ######
+Switch Light_FF_Bedroom_Left_Long_Pressed 		"Schlafz. Bett Fenster (lang)" 		{ channel="knx:device:bridge:other:bedroomLeftLongPressed" }
+Switch Light_FF_Bedroom_Right_Long_Pressed		"Schlafz. Bett Wand (lang)" 		{ channel="knx:device:bridge:other:bedroomRightLongPressed" }
+
+//####### OUTDOOR LIGHT LOGIC STATES ########
+Switch Motiondetector_Outdoor_Switch "Gartenlicht autom."           <selflightmotion>		{ channel="knx:device:bridge:motion_outdoor:main" }
+
+Group:Number:SUM 	Motiondetector_Counter 		"Gartenlicht Details. [MAP(motiondetector_counter_de.map):%s]" <selflightInfo>
+Switch Motiondetector_Outdoor_Garage_Streetside_Switch	"Schuppen vorne" 				<selflightmotion>	(Motiondetector_Counter)
+Switch Motiondetector_Outdoor_Frontdoor_Switch 	"Haustuer" 						<selflightmotion> 		(Motiondetector_Counter)
+Switch Motiondetector_Outdoor_Carport_Switch 	"Carport"						<selflightmotion> 		(Motiondetector_Counter)
+Switch Motiondetector_Outdoor_Terrace_Switch 	"Terasse"						<selflightmotion> 		(Motiondetector_Counter)
+Switch Motiondetector_Outdoor_Garage_Gardenside_Switch	"Schuppen hinten"				<selflightmotion>	(Motiondetector_Counter)
+
+//####### STATE FLAGS #######
+Switch State_Notify				                 "Benachrichtigen"		<selfshield> 							{ channel="knx:device:bridge:other:stateNotify" }
+Switch State_Holiday			                "Urlaubsmodus" 		<selfshield> 							{ channel="knx:device:bridge:other:stateHoliday" }
 Switch State_Holidays_Active					"Urlaub aktiv"          <selfautomode>
 
 Switch State_Solar								"Solar Aktiv"		<selfsun>
@@ -45,3 +73,5 @@ Switch Auto_Sunprotection						"Beschattung Automatik"			<selfautomode>
 String Chart_From                               "Zeitraum"                      <selfcalendar>
 
 String HabpanelViewer_Control_Cmd               "Habpanel Command"              <selfautomode>
+
+String VoiceCommand                             "Sprachbefehl"                  <recorder>

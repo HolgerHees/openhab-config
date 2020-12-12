@@ -1,0 +1,23 @@
+Group:Contact:OR(OPEN, CLOSED)	Openingcontacts	"Öffnungssensoren [%d]"					<shield>
+Group:Contact:OR(OPEN, CLOSED) 	Sensor_Doors_FF	"EG Türen [%d]"							<selfdoor>			(Openingcontacts)
+Group:Contact:OR(OPEN, CLOSED) 	Sensor_Window_FF	"EG Fenster [%d]"					<selfwindow>		(Openingcontacts)
+Group:Contact:OR(OPEN, CLOSED) 	Sensor_Window_SF	"OG Fenster [%d]"					<selfwindow>		(Openingcontacts) ["OpenState"]
+
+Contact Door_GF_Corridor 	"Haustür [MAP(de.map):%s]"             <selfdoor> (gPersistance_History,lGF_Corridor,Sensor_Doors_FF) ["OpenState"] { channel="knx:device:bridge:contacts_door:main" }
+Contact Door_Garage1 "Schuppentür Strasse [MAP(de.map):%s]" <selfdoor> (gPersistance_History,lGarage,Sensor_Doors_FF) ["OpenState"] { channel="knx:device:bridge:contacts_door:garageStreedside" }
+Contact Door_Garage2 "Schuppentür Garten [MAP(de.map):%s]"  <selfdoor> (gPersistance_History,lGarage,Sensor_Doors_FF) ["OpenState"] { channel="knx:device:bridge:contacts_door:garageGardenside" }
+
+Contact Window_GF_Livingroom_Terrace "Terasse [MAP(de.map):%s]" 	<selfwindow> (gPersistance_History,lGF_Livingroom,Sensor_Window_FF) ["OpenState"] { channel="knx:device:bridge:contacts_window_ff:livingroomTerrace" }
+Contact Window_GF_Livingroom_Couch   "Couch [MAP(de.map):%s]"		<selfwindow> (gPersistance_History,lGF_Livingroom,Sensor_Window_FF) ["OpenState"]	{ channel="knx:device:bridge:contacts_window_ff:livingroomCouch" }
+Contact Window_GF_Kitchen 			 "Küche [MAP(de.map):%s]"		<selfwindow> (gPersistance_History,lGF_Kitchen,Sensor_Window_FF)    ["OpenState"] { channel="knx:device:bridge:contacts_window_ff:kitchen" }
+Contact Window_GF_Guestroom			 "Gästezimmer [MAP(de.map):%s]"	<selfwindow> (gPersistance_History,lGF_Guestroom,Sensor_Window_FF)	["OpenState"] { channel="knx:device:bridge:contacts_window_ff:guestroom" }
+Contact Window_GF_Guesttoilet 			 "Gäste WC [MAP(de.map):%s]"	<selfwindow> (gPersistance_History,lGF_Guesttoilet, Sensor_Window_FF)	["OpenState"] { channel="knx:device:bridge:contacts_window_ff:guestWC" }
+Contact Window_Garage 			 "Schuppenfenster [MAP(de.map):%s]" <selfwindow> (gPersistance_History,lGarage, Sensor_Window_FF)  ["OpenState"] { channel="knx:device:bridge:contacts_window_ff:garage" }
+
+Contact Window_FF_Bedroom 			 "Schlafzimmer [MAP(de.map):%s]" <selfwindow> (gPersistance_History,lFF_Bedroom,Sensor_Window_SF) ["OpenState"] { channel="knx:device:bridge:contacts_window_sf:bedroom" }
+Contact Window_FF_Dressingroom 		 "Ankleide [MAP(de.map):%s]"	<selfwindow> (gPersistance_History,lFF_Dressingroom,Sensor_Window_SF) ["OpenState"] { channel="knx:device:bridge:contacts_window_sf:dressingroom" }
+Contact Window_FF_Child1 			 "Kind 1 [MAP(de.map):%s]"		<selfwindow> (gPersistance_History,lFF_Child1,Sensor_Window_SF) ["OpenState"] { channel="knx:device:bridge:contacts_window_sf:child1" }
+Contact Window_FF_Child2 			 "Kind 2 [MAP(de.map):%s]"		<selfwindow> (gPersistance_History,lFF_Child2,Sensor_Window_SF) ["OpenState"] { channel="knx:device:bridge:contacts_window_sf:child2" }
+Contact Window_FF_Bathroom 			 "Badezimmer [MAP(de.map):%s]"	<selfwindow> (gPersistance_History,lFF_Bathroom,Sensor_Window_SF) ["OpenState"]{ channel="knx:device:bridge:contacts_window_sf:bathroom" }
+Contact Window_Attic 			 "Dachboden [MAP(de.map):%s]"	<selfwindow> (gPersistance_History,lAttic,Sensor_Window_SF) ["OpenState"] { channel="knx:device:bridge:contacts_window_sf:attic" }
+

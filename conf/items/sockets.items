@@ -5,8 +5,8 @@ Group:Switch:OR(ON, OFF) gOutdoor_Sockets      "Garten"             <selfsocket>
 Group  eGF_Livingroom_Socket_Bassbox           "Bassbox"            <selfsocket> (lGF_Livingroom) ["PowerOutlet"]
 Switch pGF_Livingroom_Socket_Bassbox_Powered   "Bassbox"            <selfsocket> (eGF_Livingroom_Socket_Bassbox,gAll_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_ff:livingroomBassbox" }
 
-Group  eGF_Livingroom_Socket_Couch             "Stehlampe"          <selfsocket> (lGF_Livingroom) ["PowerOutlet"]
-Switch pGF_Livingroom_Socket_Couch_Powered     "Stehlampe"          <selfsocket> (eGF_Livingroom_Socket_Couch,gAll_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_ff:livingroomCouch" }
+Group  eGF_Livingroom_Socket_Couch             "Couch"              <selfsocket> (lGF_Livingroom) ["PowerOutlet"]
+Switch pGF_Livingroom_Socket_Couch_Powered     "Couch"              <selfsocket> (eGF_Livingroom_Socket_Couch,gAll_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_ff:livingroomCouch" }
 
 Group  eGF_Livingroom_Socket_Fireplace         "Kamin"              <selfsocket> (lGF_Livingroom) ["PowerOutlet"]
 Switch pGF_Livingroom_Socket_Fireplace_Powered "Kamin"              <selfsocket> (eGF_Livingroom_Socket_Fireplace,gAll_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_ff:livingroomFireplace" }
@@ -31,11 +31,11 @@ Group  eAttic_Socket                           "Schornstein"        <selfsocket>
 Switch pAttic_Socket_Powered                   "Schornstein"        <selfsocket> (eAttic_Socket,gAll_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_sf:attic" }
 
 // **** GARDEN ****
-Group  eOutdoor_Socket_Streeside               "Strasse"            <selfsocket> (lOutdoor) ["PowerOutlet"]
-Switch pOutdoor_Socket_Streeside_Powered       "Strasse"            <selfsocket> (eOutdoor_Socket_Streeside,gAll_Sockets,gOutdoor_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_outdoor:streedside" }
+Group  eOutdoor_Streedside_Socket              "Steckdosen"         <selfsocket> (lOutdoor_Streedside) ["PowerOutlet"]
+Switch pOutdoor_Streeside_Socket_Powered       "Steckdosen"         <selfsocket> (eOutdoor_Streedside_Socket,gAll_Sockets,gOutdoor_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_outdoor:streedside" }
 
-Group  eOutdoor_Socket_Gardenside              "Garten"             <selfsocket> (lOutdoor) ["PowerOutlet"]
-Switch pOutdoor_Socket_Gardenside_Powered      "Garten"             <selfsocket>(eOutdoor_Socket_Gardenside,gAll_Sockets,gOutdoor_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_outdoor:gardenside" }
+Group  eOutdoor_Garden_Terrace_Socket          "Steckdosen"         <selfsocket> (lOutdoor_Garden_Terrace) ["PowerOutlet"]
+Switch pOutdoor_Garden_Terrace_Socket_Powered  "Steckdosen"         <selfsocket> (eOutdoor_Garden_Terrace_Socket,gAll_Sockets,gOutdoor_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_outdoor:gardenside" }
 
 // **** MOBILE ****
 Group  eMobile_Socket_1                        "Mobile 1"           <selfsocket> (lIndoor) ["PowerOutlet"]

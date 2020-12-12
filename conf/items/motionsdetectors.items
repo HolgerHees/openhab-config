@@ -1,0 +1,13 @@
+Group:Contact:OR(OPEN, CLOSED) 	Sensor_Outdoor	"Aussen [%d]"			<selfmotion>
+Group:Contact:OR(OPEN, CLOSED) 	Sensor_Indoor	"EG [%d]"				<selfmotion>
+
+Contact Motiondetector_Outdoor_Terrace1 "Terasse 1 [MAP(motion_de.map):%s]" <selfmotion> (lOutdoor, Sensor_Outdoor) ["MotionDetector"] { channel="knx:device:bridge:motion_outdoor:terrace1" }
+Contact Motiondetector_Outdoor_Terrace2 "Terasse 2 [MAP(motion_de.map):%s]" <selfmotion> (lOutdoor, Sensor_Outdoor) ["MotionDetector"] { channel="knx:device:bridge:motion_outdoor:terrace2" }
+Contact Motiondetector_Outdoor_Frontdoor "Haustür [MAP(motion_de.map):%s]" <selfmotion> (lOutdoor, Sensor_Outdoor)  ["MotionDetector"] { channel="knx:device:bridge:motion_outdoor:frontdoor" }
+Contact Motiondetector_Outdoor_Carport "Carport [MAP(motion_de.map):%s]" <selfmotion> (lOutdoor, Sensor_Outdoor)  ["MotionDetector"] { channel="knx:device:bridge:motion_outdoor:carport" }
+Contact Motiondetector_Outdoor_Garage_Streetside "Schuppen (vorne) [MAP(motion_de.map):%s]" <selfmotion> (lOutdoor, Sensor_Outdoor) ["MotionDetector"] { channel="knx:device:bridge:motion_outdoor:garageStreetside" }
+Contact Motiondetector_Outdoor_Garage_Gardenside "Schuppen (hinten) [MAP(motion_de.map):%s]" <selfmotion> (lOutdoor, Sensor_Outdoor)  ["MotionDetector"] { channel="knx:device:bridge:motion_outdoor:garageGardenside" }
+
+Contact Motiondetector_GF_Livingroom "Wohnzimmer [MAP(motion_de.map):%s]" <selfmotion> (lGF_Livingroom,Sensor_Indoor) ["MotionDetector"] { channel="knx:device:bridge:motion_indoor:livingroom" }
+Contact Motiondetector_GF_Corridor 	 "Flur unten [MAP(motion_de.map):%s]" <selfmotion> (lGF_Corridor,Sensor_Indoor) ["MotionDetector"] { channel="knx:device:bridge:motion_indoor:ffFloor" }
+Contact Motiondetector_FF_Corridor 	 "Flur oben [MAP(motion_de.map):%s]" <selfmotion> (lFF_Corridor,Sensor_Indoor) ["MotionDetector"] { channel="knx:device:bridge:motion_indoor:sfFloor" }

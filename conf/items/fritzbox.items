@@ -1,19 +1,18 @@
-Contact FritzboxDslEnable             "Aktiviert [MAP(network_states.map):%s]"              <selfinfo>                                        {fritzboxtr064="dslEnable"}
-String  FritzboxDslStatus             "Status [MAP(network_states.map):%s]"                 <selfinfo>                                        {fritzboxtr064="dslStatus"}
-Number  FritzboxDslUpstreamCurrRate   "Upstream Aktuell [JS(network_kbit_to_mbit.js):%s]"   <flowpipe>    (gPersistance_Chart,gPersistance_History) {fritzboxtr064="dslUpstreamCurrRate"}
-Number  FritzboxDslDownstreamCurrRate "Downstream Aktuell [JS(network_kbit_to_mbit.js):%s]" <returnpipe>  (gPersistance_Chart,gPersistance_History) {fritzboxtr064="dslDownstreamCurrRate"}
-Number  FritzboxDslUpstreamMaxRate    "Upstream Max [JS(network_kbit_to_mbit.js):%s]"       <flowpipe>                                        {fritzboxtr064="dslUpstreamMaxRate"}
-Number  FritzboxDslDownstreamMaxRate  "Downstream Max [JS(network_kbit_to_mbit.js):%s]"     <returnpipe>                                      {fritzboxtr064="dslDownstreamMaxRate"}
-Number  FritzboxDslUpstreamNoiseMargin "Upstream Rauschabstand [%s dB*10]"                  <selfinfo>                                        {fritzboxtr064="dslUpstreamNoiseMargin"}
-Number  FritzboxDslDownstreamNoiseMargin "Downstream Rauschabstand [%s dB*10]"              <selfinfo>                                        {fritzboxtr064="dslDownstreamNoiseMargin"}
-Number  FritzboxDslUpstreamAttenuation "Upstream Dämpfung [%s dB*10]"                       <selfinfo>                                        {fritzboxtr064="dslUpstreamAttenuation"}
-Number  FritzboxDslDownstreamAttenuation "Downstream Dämpfung [%s dB*10]"                   <selfinfo>                                        {fritzboxtr064="dslDownstreamAttenuation"}
-Number  FritzboxDslFECErrors          "FEC Fehler [%s]"                                     <error>                                           {fritzboxtr064="dslFECErrors"}
-Number  FritzboxDslHECErrors          "HEC Fehler [%s]"                                     <error>                                           {fritzboxtr064="dslHECErrors"}
-Number  FritzboxDslCRCErrors          "CRC Fehler [%s]"                                     <error>                                           {fritzboxtr064="dslCRCErrors"} 
-Number  FritzboxUptime                "Uptime [JS(network_uptime.js):%s]"                   <line>                                            {fritzboxtr064="upTime"}
-Switch  FritzboxGuestWifi             "Gäste WLAN"                                          <network>                                         {fritzboxtr064="wifiGuestSwitch"}
+// **** FRITZBOX ****
+Group   eGF_Corridor_Fritzbox                       "Fritzbox"                                            <selfinfo> (lGF_Corridor) ["Equipment"]
 
-Number Speedtest_UpstreamRate    "Upstream Gemessen [%d MBit]"                                 <flowpipe> (gPersistance_Chart,gPersistance_History)    {channel="network:speedtest:local:rateUp"}
-Number Speedtest_DownstreamRate  "Downstream Gemessen [%d MBit]"                               <returnpipe>   (gPersistance_Chart,gPersistance_History) {channel="network:speedtest:local:rateDown"}
-DateTime Speedtest_Start                          "Speedtest [%1$tH:%1$tM]"                 <time>                                            {channel="network:speedtest:local:testStart"}
+Contact pGF_Corridor_Fritzbox_DslEnable             "Aktiviert [MAP(network_states.map):%s]"              <selfinfo> (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="dslEnable"}
+String  pGF_Corridor_Fritzbox_DslStatus             "Status [MAP(network_states.map):%s]"                 <selfinfo> (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="dslStatus"}
+Number  pGF_Corridor_Fritzbox_DslUpstreamCurrRate   "Upstream Aktuell [JS(network_kbit_to_mbit.js):%s]"   <flowpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"] {fritzboxtr064="dslUpstreamCurrRate"}
+Number  pGF_Corridor_Fritzbox_DslDownstreamCurrRate "Downstream Aktuell [JS(network_kbit_to_mbit.js):%s]" <returnpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"] {fritzboxtr064="dslDownstreamCurrRate"}
+Number  pGF_Corridor_Fritzbox_DslUpstreamMaxRate    "Upstream Max [JS(network_kbit_to_mbit.js):%s]"       <flowpipe> (eGF_Corridor_Fritzbox) {fritzboxtr064="dslUpstreamMaxRate"}
+Number  pGF_Corridor_Fritzbox_DslDownstreamMaxRate  "Downstream Max [JS(network_kbit_to_mbit.js):%s]"     <returnpipe> (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="dslDownstreamMaxRate"}
+Number  pGF_Corridor_Fritzbox_DslUpstreamNoiseMargin "Upstream Rauschabstand [%s dB*10]"                  <selfinfo> (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="dslUpstreamNoiseMargin"}
+Number  pGF_Corridor_Fritzbox_DslDownstreamNoiseMargin "Downstream Rauschabstand [%s dB*10]"              <selfinfo> (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="dslDownstreamNoiseMargin"}
+Number  pGF_Corridor_Fritzbox_DslUpstreamAttenuation "Upstream Dämpfung [%s dB*10]"                       <selfinfo> (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="dslUpstreamAttenuation"}
+Number  pGF_Corridor_Fritzbox_DslDownstreamAttenuation "Downstream Dämpfung [%s dB*10]"                   <selfinfo> (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="dslDownstreamAttenuation"}
+Number  pGF_Corridor_Fritzbox_DslFECErrors          "FEC Fehler [%s]"                                     <error>    (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="dslFECErrors"}
+Number  pGF_Corridor_Fritzbox_DslHECErrors          "HEC Fehler [%s]"                                     <error>    (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="dslHECErrors"}
+Number  pGF_Corridor_Fritzbox_DslCRCErrors          "CRC Fehler [%s]"                                     <error>    (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="dslCRCErrors"} 
+Number  pGF_Corridor_Fritzbox_Uptime                "Uptime [JS(network_uptime.js):%s]"                   <line>     (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="upTime"}
+Switch  pGF_Corridor_Fritzbox_GuestWifi             "Gäste WLAN"                                          <network>  (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="wifiGuestSwitch"}

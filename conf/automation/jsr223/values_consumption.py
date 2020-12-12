@@ -26,6 +26,15 @@ startGasImpulseCounter = 0
 
 dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS")
 
+#value = getHistoricItemState("pGF_Utilityroom_Electricity_Current_Daily_Demand",getNow()).doubleValue()
+#postUpdate("pGF_Utilityroom_Electricity_Current_Daily_Demand",value)
+#value = getHistoricItemState("pGF_Utilityroom_Electricity_Current_Daily_Supply",getNow()).doubleValue()
+#postUpdate("pGF_Utilityroom_Electricity_Current_Daily_Supply",value)
+#value = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Supply",getNow()).doubleValue()
+#postUpdate("pGF_Utilityroom_Electricity_Total_Supply",value)
+#value = getHistoricItemState("pGF_Garage_Solar_Inverter_Power_Limitation",getNow()).intValue()
+#postUpdate("pGF_Garage_Solar_Inverter_Power_Limitation",value)
+
 def getHistoricReference(log, itemName, valueTime, outdatetTime, messureTime, intervalTime):
     endTime = getItemLastChange(itemName)
     endTimestampInMillis = endTime.getMillis()
@@ -88,95 +97,95 @@ class SolarPower5minRule:
         self.triggers = [CronTrigger("45 */30 * * * ?")]
 
     def execute(self, module, input):
-        value5Min = getHistoricReference(self.log, "Heating_Solar_Power", 300, 3600, 5600, 1800)
-        postUpdateIfChanged("Heating_Solar_Power_Current5Min",value5Min)
+        value5Min = getHistoricReference(self.log, "pGF_Utilityroom_Heating_Solar_Power", 300, 3600, 5600, 1800)
+        postUpdateIfChanged("pGF_Utilityroom_Heating_Solar_Power_Current5Min",value5Min)
 
 
 @rule("values_consumption.py")
 class EnergyCounterDemandRule:
     def __init__(self):
         self.triggers = [
-          ItemStateChangeTrigger("Energy_Demand_Active"),
+          ItemStateChangeTrigger("pGF_Utilityroom_Energy_Demand_Active"),
           CronTrigger("1 0 0 * * ?")
         ]
 
     def execute(self, module, input):
         now = getNow()
         
-        demandCurrent = getItemState("Energy_Demand_Active").intValue() / 1000.0
+        demandCurrent = getItemState("pGF_Utilityroom_Energy_Demand_Active").intValue() / 1000.0
         zaehlerStandCurrent = ( startEnergyTotalDemandValue + demandCurrent )
-        postUpdateIfChanged("Electricity_Total_Demand",zaehlerStandCurrent)
+        postUpdateIfChanged("pGF_Utilityroom_Electricity_Total_Demand",zaehlerStandCurrent)
         
-        postUpdateIfChanged("Electricity_Meter_Demand",(zaehlerStandCurrent-startElectricityMeterDemandValue) * energyTotalDemandCorrectureFactor)
+        postUpdateIfChanged("pGF_Utilityroom_Electricity_Meter_Demand",(zaehlerStandCurrent-startElectricityMeterDemandValue) * energyTotalDemandCorrectureFactor)
 
         # *** Tagesbezug ***
-        zaehlerStandOld = getHistoricItemState("Electricity_Total_Demand", now.withTimeAtStartOfDay() ).doubleValue()
+        zaehlerStandOld = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Demand", now.withTimeAtStartOfDay() ).doubleValue()
         currentDemand = zaehlerStandCurrent - zaehlerStandOld
         
-        postUpdateIfChanged("Electricity_Current_Daily_Demand",currentDemand)
+        postUpdateIfChanged("pGF_Utilityroom_Electricity_Current_Daily_Demand",currentDemand)
 
         # *** Jahresbezug ***
-        zaehlerStandOld = getHistoricItemState("Electricity_Total_Demand", now.withDate(now.getYear(), 1, 1 ).withTimeAtStartOfDay()).doubleValue()
+        zaehlerStandOld = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Demand", now.withDate(now.getYear(), 1, 1 ).withTimeAtStartOfDay()).doubleValue()
         currentDemand = zaehlerStandCurrent - zaehlerStandOld
 
-        if postUpdateIfChanged("Electricity_Current_Annual_Demand", currentDemand ):
+        if postUpdateIfChanged("pGF_Utilityroom_Electricity_Current_Annual_Demand", currentDemand ):
             # Hochrechnung
-            zaehlerStandCurrentOneYearBefore = getHistoricItemState("Electricity_Total_Demand", now.minusYears(1) ).doubleValue()
+            zaehlerStandCurrentOneYearBefore = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Demand", now.minusYears(1) ).doubleValue()
             forecastDemand = zaehlerStandOld - zaehlerStandCurrentOneYearBefore
 
-            zaehlerStandOldOneYearBefore = getHistoricItemState("Electricity_Total_Demand", now.withDate(now.getYear()-1, 1, 1 ).withTimeAtStartOfDay()).doubleValue()
+            zaehlerStandOldOneYearBefore = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Demand", now.withDate(now.getYear()-1, 1, 1 ).withTimeAtStartOfDay()).doubleValue()
 
             hochrechnungDemand = int( round( currentDemand + forecastDemand ) )
             vorjahresDemand = int( round( zaehlerStandOld - zaehlerStandOldOneYearBefore ) )
             msg = u"{} kWh, {} kWh".format(hochrechnungDemand,vorjahresDemand)
-            postUpdate("Electricity_Current_Annual_Demand_Forecast", msg )
+            postUpdate("pGF_Utilityroom_Electricity_Current_Annual_Demand_Forecast", msg )
 
 
 @rule("values_consumption.py")
 class EnergyCounterSupplyRule:
     def __init__(self):
         self.triggers = [
-          ItemStateChangeTrigger("Energy_Supply_Active"),
+          ItemStateChangeTrigger("pGF_Utilityroom_Energy_Supply_Active"),
           CronTrigger("1 0 0 * * ?")
         ]
 
     def execute(self, module, input):
         now = getNow()
         
-        supplyCurrent = getItemState("Energy_Supply_Active").intValue() / 1000.0
+        supplyCurrent = getItemState("pGF_Utilityroom_Energy_Supply_Active").intValue() / 1000.0
         zaehlerStandCurrent = ( startEnergyTotalSupplyValue + supplyCurrent )
-        postUpdateIfChanged("Electricity_Total_Supply",zaehlerStandCurrent)
+        postUpdateIfChanged("pGF_Utilityroom_Electricity_Total_Supply",zaehlerStandCurrent)
 
         postUpdateIfChanged("Electricity_Meter_Supply",(zaehlerStandCurrent-startElectricityMeterSupplyValue) * energyTotalSupplyCorrectureFactor)
 
         # *** Tageslieferung ***
-        zaehlerStandOld = getHistoricItemState("Electricity_Total_Supply", now.withTimeAtStartOfDay() ).doubleValue()
+        zaehlerStandOld = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Supply", now.withTimeAtStartOfDay() ).doubleValue()
         currentSupply = zaehlerStandCurrent - zaehlerStandOld
 
-        postUpdateIfChanged("Electricity_Current_Daily_Supply",currentSupply)
+        postUpdateIfChanged("pGF_Utilityroom_Electricity_Current_Daily_Supply",currentSupply)
         # *** Jahreslieferung ***
 
-        zaehlerStandOld = getHistoricItemState("Electricity_Total_Supply", now.withDate(now.getYear(), 1, 1 ).withTimeAtStartOfDay()).doubleValue()
+        zaehlerStandOld = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Supply", now.withDate(now.getYear(), 1, 1 ).withTimeAtStartOfDay()).doubleValue()
         currentSupply = zaehlerStandCurrent - zaehlerStandOld
 
-        if postUpdateIfChanged("Electricity_Current_Annual_Supply", currentSupply ):
+        if postUpdateIfChanged("pGF_Utilityroom_Electricity_Current_Annual_Supply", currentSupply ):
             # Hochrechnung
-            zaehlerStandCurrentOneYearBefore = getHistoricItemState("Electricity_Total_Supply", now.minusYears(1) ).doubleValue()
+            zaehlerStandCurrentOneYearBefore = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Supply", now.minusYears(1) ).doubleValue()
             forecastSupply = zaehlerStandOld - zaehlerStandCurrentOneYearBefore
 
-            zaehlerStandOldOneYearBefore = getHistoricItemState("Electricity_Total_Supply", now.withDate(now.getYear()-1, 1, 1 ).withTimeAtStartOfDay()).doubleValue()
+            zaehlerStandOldOneYearBefore = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Supply", now.withDate(now.getYear()-1, 1, 1 ).withTimeAtStartOfDay()).doubleValue()
 
             hochrechnungSupply = int( round( currentSupply + forecastSupply ) )
             vorjahresSupply = int( round( zaehlerStandOld - zaehlerStandOldOneYearBefore ) )
             msg = u"{}kWh, {} kWh".format(hochrechnungSupply,vorjahresSupply)
-            postUpdate("Electricity_Current_Annual_Supply_Forecast", msg )
+            postUpdate("pGF_Utilityroom_Electricity_Current_Annual_Supply_Forecast", msg )
 
 
 @rule("values_consumption.py")
 class EnergySupplyRule:
     def __init__(self):
         self.triggers = [
-          ItemStateChangeTrigger("Electricity_Current_Consumption"),
+          ItemStateChangeTrigger("pGF_Utilityroom_Electricity_Current_Consumption"),
           CronTrigger("0 */5 * * * ?")
         ]
 
@@ -224,11 +233,11 @@ class EnergySupplyRule:
       
         now = getNow().getMillis()
         
-        currentACPower = getItemState("Solar_AC_Power").intValue()
+        currentACPower = getItemState("pGF_Garage_Solar_Inverter_AC_Power").intValue()
 
-        currentPowerLimitation = getItemState("Solar_Power_Limitation").intValue()
+        currentPowerLimitation = getItemState("pGF_Garage_Solar_Inverter_Power_Limitation").intValue()
 
-        currentConsumptionValue = getItemState("Electricity_Current_Consumption").intValue()
+        currentConsumptionValue = getItemState("pGF_Utilityroom_Electricity_Current_Consumption").intValue()
         # must be called to fill history stack
         avgConsumptionValue = self.getAvgConsumption(now,currentConsumptionValue)
         
@@ -241,20 +250,20 @@ class EnergySupplyRule:
             if possiblePowerLimitation >= currentPowerLimitation:
                 self.lastLimitationIncrease = now
                 if possiblePowerLimitation > currentPowerLimitation:
-                    sendCommand("Solar_Power_Limitation",possiblePowerLimitation)
+                    sendCommand("pGF_Garage_Solar_Inverter_Power_Limitation",possiblePowerLimitation)
                     self.log.info(u"Increase power limitation from {}% to {}%".format( currentPowerLimitation, possiblePowerLimitation ))
                     return
             elif now - self.lastLimitationIncrease > maxTimeSlot:
                 if possibleAvgPowerLimitation < currentPowerLimitation:
-                    sendCommand("Solar_Power_Limitation",possibleAvgPowerLimitation)
+                    sendCommand("pGF_Garage_Solar_Inverter_Power_Limitation",possibleAvgPowerLimitation)
                     self.log.info(u"Decrease power limitation from {}% to {}%".format( currentPowerLimitation, possibleAvgPowerLimitation ))
                     return
                 
-            if len(input) == 0 and itemLastChangeOlderThen("Solar_Power_Limitation",getNow().minusMinutes(4)):
-                sendCommand("Solar_Power_Limitation",currentPowerLimitation)
+            if len(input) == 0 and itemLastChangeOlderThen("pGF_Garage_Solar_Inverter_Power_Limitation",getNow().minusMinutes(4)):
+                sendCommand("pGF_Garage_Solar_Inverter_Power_Limitation",currentPowerLimitation)
                 self.log.info(u"Refresh power limitation of {}%".format( currentPowerLimitation ))
         elif currentPowerLimitation != 100:
-            postUpdate("Solar_Power_Limitation",100)
+            postUpdate("pGF_Garage_Solar_Inverter_Power_Limitation",100)
             self.log.info(u"Shutdown power limitation")
 
 @rule("values_consumption.py")
@@ -267,88 +276,88 @@ class EnergyTotalYieldRefreshRule:
     def execute(self, module, input):
         if getItemState("State_Solar") == ON:
             # triggers solar value update
-            sendCommand("Solar_Total_Yield",REFRESH)
+            sendCommand("pGF_Garage_Solar_Inverter_Total_Yield",REFRESH)
         
 @rule("values_consumption.py")
 class EnergyCurrentDemandAndConsumptionRule:
     def __init__(self):
         self.triggers = [
-          ItemStateChangeTrigger("Power_Demand_Active"),
-          ItemStateChangeTrigger("Power_Supply_Active"),
-          ItemStateUpdateTrigger("Solar_AC_Power")
+          ItemStateChangeTrigger("pGF_Utilityroom_Power_Demand_Active"),
+          ItemStateChangeTrigger("pGF_Utilityroom_Power_Supply_Active"),
+          ItemStateUpdateTrigger("pGF_Garage_Solar_Inverter_AC_Power")
         ]
         
     def updateConsumption(self,solarPower):
         consumption = self.currentDemand + solarPower
         
         if consumption > 0:
-            postUpdateIfChanged("Electricity_Current_Consumption",consumption)
+            postUpdateIfChanged("pGF_Utilityroom_Electricity_Current_Consumption",consumption)
         else:
             self.log.info(u"Skip consumption update. powerDemand: {}, powerSupply: {}, solarPower: {}".format(self.powerDemand,self.powerSupply,solarPower))
 
     def execute(self, module, input):
-        if input["event"].getItemName() == "Solar_AC_Power":
+        if input["event"].getItemName() == "pGF_Garage_Solar_Inverter_AC_Power":
             self.updateConsumption(input['event'].getItemState().intValue())
         else:
-            if input["event"].getItemName() == "Power_Demand_Active":
+            if input["event"].getItemName() == "pGF_Utilityroom_Power_Demand_Active":
                 self.powerDemand = input["event"].getItemState().intValue()
-                self.powerSupply = getItemState("Power_Supply_Active").intValue()
+                self.powerSupply = getItemState("pGF_Utilityroom_Power_Supply_Active").intValue()
                 
-                if self.powerDemand != getItemState("Power_Demand_Active").intValue():
-                    self.log.error("Item demand state differences: {}, item state: {}".format(self.powerDemand,getItemState("Power_Demand_Active").intValue()))
+                if self.powerDemand != getItemState("pGF_Utilityroom_Power_Demand_Active").intValue():
+                    self.log.error("Item demand state differences: {}, item state: {}".format(self.powerDemand,getItemState("pGF_Utilityroom_Power_Demand_Active").intValue()))
             else:
-                self.powerDemand = getItemState("Power_Demand_Active").intValue()
+                self.powerDemand = getItemState("pGF_Utilityroom_Power_Demand_Active").intValue()
                 self.powerSupply = input["event"].getItemState().intValue()
                 
-                if self.powerSupply != getItemState("Power_Supply_Active").intValue():
-                    self.log.error("Item supply state differences: {}, item state: {}".format(self.powerSupply,getItemState("Power_Supply_Active").intValue()))
+                if self.powerSupply != getItemState("pGF_Utilityroom_Power_Supply_Active").intValue():
+                    self.log.error("Item supply state differences: {}, item state: {}".format(self.powerSupply,getItemState("pGF_Utilityroom_Power_Supply_Active").intValue()))
 
             self.currentDemand = self.powerDemand - self.powerSupply
             
             if getItemState("State_Solar") == ON:
                 # solar value update was not successful for a while
                 #solarActive = getItemState("State_Solar") == ON
-                #if itemLastUpdateOlderThen("Solar_Total_Yield", getNow().minusHours(5) if solarActive else getNow().minusHours(14)):
-                if itemLastUpdateOlderThen("Solar_Total_Yield", getNow().minusHours(24)):
+                #if itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_Total_Yield", getNow().minusHours(5) if solarActive else getNow().minusHours(14)):
+                if itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_Total_Yield", getNow().minusHours(24)):
                     self.log.info(u"Solar: ERROR • Values not updated. Fallback to '0' values.")
-                    postUpdate("Solar_AC_Power",0)
-                    postUpdateIfChanged("Solar_DC_Power",0)
-                    postUpdateIfChanged("Solar_DC_Current",0)
-                    postUpdateIfChanged("Solar_DC_Voltage",0)
-                    postUpdateIfChanged("Solar_Daily_Yield",0)
+                    postUpdate("pGF_Garage_Solar_Inverter_AC_Power",0)
+                    postUpdateIfChanged("pGF_Garage_Solar_Inverter_DC_Power",0)
+                    postUpdateIfChanged("pGF_Garage_Solar_Inverter_DC_Current",0)
+                    postUpdateIfChanged("pGF_Garage_Solar_Inverter_DC_Voltage",0)
+                    postUpdateIfChanged("pGF_Garage_Solar_Inverter_Daily_Yield",0)
 
                 # triggers solar value update
-                sendCommand("Solar_AC_Power",REFRESH)
+                sendCommand("pGF_Garage_Solar_Inverter_AC_Power",REFRESH)
             else:
                 self.updateConsumption(0)
 
-            postUpdateIfChanged("Electricity_Current_Demand",self.currentDemand)
+            postUpdateIfChanged("pGF_Utilityroom_Electricity_Current_Demand",self.currentDemand)
 
 
 @rule("values_consumption.py")
 class EnergyDailyConsumptionRule:
     def __init__(self):
         self.triggers = [
-          #ItemStateChangeTrigger("Electricity_Current_Daily_Demand"),
-          #ItemStateChangeTrigger("Electricity_Current_Daily_Supply"),
-          #ItemStateChangeTrigger("Solar_Daily_Yield")
+          #ItemStateChangeTrigger("pGF_Utilityroom_Electricity_Current_Daily_Demand"),
+          #ItemStateChangeTrigger("pGF_Utilityroom_Electricity_Current_Daily_Supply"),
+          #ItemStateChangeTrigger("pGF_Garage_Solar_Inverter_Daily_Yield")
           # should be cron based, otherwise it will create until 3 times more values if it is based on ItemStateChangeTrigger
           CronTrigger("30 */5 * * * ?")
         ]
 
     def execute(self, module, input):
-        dailyEnergyDemand = getItemState("Electricity_Current_Daily_Demand").doubleValue()
-        dailyEnergySupply = getItemState("Electricity_Current_Daily_Supply").doubleValue()
-        dailySolarSupply = getItemState("Solar_Daily_Yield").doubleValue()
+        dailyEnergyDemand = getItemState("pGF_Utilityroom_Electricity_Current_Daily_Demand").doubleValue()
+        dailyEnergySupply = getItemState("pGF_Utilityroom_Electricity_Current_Daily_Supply").doubleValue()
+        dailySolarSupply = getItemState("pGF_Garage_Solar_Inverter_Daily_Yield").doubleValue()
 
-        postUpdateIfChanged("Electricity_Current_Daily_Consumption",dailyEnergyDemand - dailyEnergySupply + dailySolarSupply)
+        postUpdateIfChanged("pGF_Utilityroom_Electricity_Current_Daily_Consumption",dailyEnergyDemand - dailyEnergySupply + dailySolarSupply)
 
 @rule("values_consumption.py")
 class SolarConsumptionRule:
     def __init__(self):
         self.triggers = [
           #ItemStateChangeTrigger("Electricity_Meter_Supply"),
-          #ItemStateChangeTrigger("Solar_Total_Yield"),
+          #ItemStateChangeTrigger("pGF_Garage_Solar_Inverter_Total_Yield"),
           # should be cron based, otherwise it will create until 3 times more values if it is based on ItemStateChangeTrigger
           CronTrigger("15 */5 * * * ?")
         ]
@@ -356,12 +365,12 @@ class SolarConsumptionRule:
     def execute(self, module, input):
         now = getNow()
       
-        currentSupply = getItemState("Electricity_Total_Supply").doubleValue()
-        currentYield = getItemState("Solar_Total_Yield").doubleValue()
+        currentSupply = getItemState("pGF_Utilityroom_Electricity_Total_Supply").doubleValue()
+        currentYield = getItemState("pGF_Garage_Solar_Inverter_Total_Yield").doubleValue()
         
         # Tagesverbrauch
-        startSupply = getHistoricItemState("Electricity_Total_Supply", now.withTimeAtStartOfDay() ).doubleValue()
-        startYield = getHistoricItemState("Solar_Total_Yield", now.withTimeAtStartOfDay() ).doubleValue()
+        startSupply = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Supply", now.withTimeAtStartOfDay() ).doubleValue()
+        startYield = getHistoricItemState("pGF_Garage_Solar_Inverter_Total_Yield", now.withTimeAtStartOfDay() ).doubleValue()
 
         # sometimes solar converter is providing wrong value. Mostly if he is inactive in the night
         if currentYield > 1000000000 or startYield > 1000000000:
@@ -373,17 +382,17 @@ class SolarConsumptionRule:
         totalYield = currentYield - startYield
         dailyConsumption = totalYield - totalSupply
         
-        postUpdateIfChanged("Solar_Daily_Yield",totalYield)
+        postUpdateIfChanged("pGF_Garage_Solar_Inverter_Daily_Yield",totalYield)
         
         #self.log.info(u"A {} {}".format(currentSupply,currentYield))
         #self.log.info(u"B {} {}".format(startSupply,startYield))
         #self.log.info(u"C {} {}".format(totalSupply,totalYield))
         
-        postUpdateIfChanged("Solar_Daily_Consumption",dailyConsumption)
+        postUpdateIfChanged("pGF_Garage_Solar_Inverter_Daily_Consumption",dailyConsumption)
         
         # Jahresverbrauch
-        startSupply = getHistoricItemState("Electricity_Total_Supply", now.withDate(now.getYear(), 1, 1 ).withTimeAtStartOfDay() ).doubleValue()
-        startYield = getHistoricItemState("Solar_Total_Yield", now.withDate(now.getYear(), 1, 1 ).withTimeAtStartOfDay() ).doubleValue()
+        startSupply = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Supply", now.withDate(now.getYear(), 1, 1 ).withTimeAtStartOfDay() ).doubleValue()
+        startYield = getHistoricItemState("pGF_Garage_Solar_Inverter_Total_Yield", now.withDate(now.getYear(), 1, 1 ).withTimeAtStartOfDay() ).doubleValue()
 
         totalSupply = currentSupply - startSupply
         totalYield = currentYield - startYield
@@ -392,7 +401,7 @@ class SolarConsumptionRule:
         #self.log.info(u"D {} {}".format(startSupply,startYield))
         #self.log.info(u"E {}".format(annualConsumption))
         
-        postUpdateIfChanged("Solar_Annual_Consumption",annualConsumption)
+        postUpdateIfChanged("pGF_Garage_Solar_Inverter_Annual_Consumption",annualConsumption)
 
 
 @rule("values_consumption.py")
@@ -401,22 +410,22 @@ class GasConsumption5MinRule:
         self.triggers = [CronTrigger("15 */5 * * * ?")]
 
     def execute(self, module, input):
-        value5Min = getHistoricReference( self.log, "Gas_Current_Count", 300, 615, 900, 300 )
-        postUpdateIfChanged("Gas_Current_Consumption",value5Min)
+        value5Min = getHistoricReference( self.log, "pGF_Utilityroom_Gas_Meter_Current_Count", 300, 615, 900, 300 )
+        postUpdateIfChanged("pGF_Utilityroom_Gas_Current_Consumption",value5Min)
 
 @rule("values_consumption.py")
 class GasConsumptionRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("Gas_Pulse_Counter")]
+        self.triggers = [ItemStateChangeTrigger("pGF_Utilityroom_Gas_Meter_Pulse_Counter")]
 
     def execute(self, module, input):
         now = getNow()
-        Aktuell_End = getItemState("Gas_Pulse_Counter").doubleValue()
+        Aktuell_End = getItemState("pGF_Utilityroom_Gas_Meter_Pulse_Counter").doubleValue()
 
         # Aktueller Zählerstand
         zaehlerStandCurrent = startGasMeterValue + ((Aktuell_End - startGasImpulseCounter) * 0.01)
 
-        zaehlerStandSaved = getItemState("Gas_Current_Count").doubleValue()
+        zaehlerStandSaved = getItemState("pGF_Utilityroom_Gas_Meter_Current_Count").doubleValue()
         
         #self.log.info("{}".format(zaehlerStandCurrent))
         
@@ -426,30 +435,30 @@ class GasConsumptionRule:
 
         if zaehlerStandCurrent > zaehlerStandSaved:
             # Aktueller Zählerstand
-            postUpdate("Gas_Current_Count", zaehlerStandCurrent )
+            postUpdate("pGF_Utilityroom_Gas_Meter_Current_Count", zaehlerStandCurrent )
 
         # *** Aktueller Tagesverbrauch ***
-        zaehlerStandOld = getHistoricItemState("Gas_Current_Count", now.withTimeAtStartOfDay() ).doubleValue()
+        zaehlerStandOld = getHistoricItemState("pGF_Utilityroom_Gas_Meter_Current_Count", now.withTimeAtStartOfDay() ).doubleValue()
         currentConsumption = zaehlerStandCurrent - zaehlerStandOld
         if currentConsumption < 0:
             currentConsumption = 0
 
-        postUpdateIfChanged("Gas_Current_Daily_Consumption",currentConsumption)
+        postUpdateIfChanged("pGF_Utilityroom_Gas_Current_Daily_Consumption",currentConsumption)
 
         # *** Jahresverbrauch ***
-        zaehlerStandOld = getHistoricItemState("Gas_Current_Count", now.withDate(now.getYear(), 1, 1 ).withTimeAtStartOfDay()).doubleValue()
+        zaehlerStandOld = getHistoricItemState("pGF_Utilityroom_Gas_Meter_Current_Count", now.withDate(now.getYear(), 1, 1 ).withTimeAtStartOfDay()).doubleValue()
         currentConsumption = zaehlerStandCurrent - zaehlerStandOld
         if currentConsumption < 0:
             currentConsumption = 0
 
-        if postUpdateIfChanged("Gas_Annual_Consumption", currentConsumption ):
+        if postUpdateIfChanged("pGF_Utilityroom_Gas_Annual_Consumption", currentConsumption ):
             # Hochrechnung
-            zaehlerStandCurrentOneYearBefore = getHistoricItemState("Gas_Current_Count", now.minusYears(1) ).doubleValue()
+            zaehlerStandCurrentOneYearBefore = getHistoricItemState("pGF_Utilityroom_Gas_Meter_Current_Count", now.minusYears(1) ).doubleValue()
             forecastConsumtion = zaehlerStandOld - zaehlerStandCurrentOneYearBefore
 
-            zaehlerStandOldOneYearBefore = getHistoricItemState("Gas_Current_Count", now.withDate(now.getYear()-1, 1, 1 ).withTimeAtStartOfDay()).doubleValue()
+            zaehlerStandOldOneYearBefore = getHistoricItemState("pGF_Utilityroom_Gas_Meter_Current_Count", now.withDate(now.getYear()-1, 1, 1 ).withTimeAtStartOfDay()).doubleValue()
 
             hochrechnungVerbrauch = round( currentConsumption + forecastConsumtion )
 
             msg = u"{} m³, {} m³".format(hochrechnungVerbrauch,int( round( zaehlerStandOld - zaehlerStandOldOneYearBefore ) ))
-            postUpdate("Gas_Forecast", msg )
+            postUpdate("pGF_Utilityroom_Gas_Forecast", msg )

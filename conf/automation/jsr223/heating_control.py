@@ -11,16 +11,17 @@ import math
  
 OFFSET_FORMATTER = DateTimeFormat.forPattern("HH:mm")
 
-#postUpdate("Heating_GF_Guesttoilet_Demand",OFF)
-#postUpdate("Heating_GF_Livingroom_Demand",OFF)
-#postUpdate("Heating_GF_Guestroom_Demand",OFF)
-#postUpdate("Heating_GF_Corridor_Demand",OFF)
-#postUpdate("Heating_FF_Corridor_Demand",OFF)
-#postUpdate("Heating_FF_Child1_Demand",OFF)
-#postUpdate("Heating_FF_Child2_Demand",OFF)
-#postUpdate("Heating_FF_Bedroom_Demand",OFF)
-#postUpdate("Heating_FF_Bathroom_Demand",OFF)
-
+#postUpdate("pGF_Utilityroom_Heating_Demand",OFF)
+#postUpdate("pGF_Guesttoilet_Heating_Demand",OFF)
+#postUpdate("pGF_Livingroom_Heating_Demand",OFF)
+#postUpdate("pGF_Guestroom_Heating_Demand",OFF)
+#postUpdate("pGF_Corridor_Heating_Demand",OFF)
+#postUpdate("pFF_Corridor_Heating_Demand",OFF)
+#postUpdate("pFF_Child1_Heating_Demand",OFF)
+#postUpdate("pFF_Child2_Heating_Demand",OFF)
+#postUpdate("pFF_Bedroom_Heating_Demand",OFF)
+#postUpdate("pFF_Bathroom_Heating_Demand",OFF)
+ 
 Heating.cloudCoverFC8Item = "Cloud_Cover_Forecast8"
 Heating.cloudCoverFC4Item = "Cloud_Cover_Forecast4"
 Heating.cloudCoverItem = "Cloud_Cover_Current"
@@ -34,13 +35,13 @@ Heating.ventilationLevelItem = "Ventilation_Outgoing"
 Heating.ventilationOutgoingTemperatureItem = "Ventilation_Outdoor_Outgoing_Temperature"
 Heating.ventilationIncommingTemperatureItem = "Ventilation_Outdoor_Incoming_Temperature"
 
-Heating.heatingPower = "Heating_Power"
-Heating.heatingCircuitPumpSpeedItem = "Heating_Circuit_Pump_Speed"
-Heating.heatingTemperaturePipeOutItem = "Heating_Temperature_Pipe_Out"
-Heating.heatingTemperaturePipeInItem = "Heating_Temperature_Pipe_In"
+Heating.heatingPower = "pGF_Utilityroom_Heating_Power"
+Heating.heatingCircuitPumpSpeedItem = "pGF_Utilityroom_Heating_Circuit_Pump_Speed"
+Heating.heatingTemperaturePipeOutItem = "pGF_Utilityroom_Heating_Temperature_Pipe_Out"
+Heating.heatingTemperaturePipeInItem = "pGF_Utilityroom_Heating_Temperature_Pipe_In"
 
 Heating.holidayStatusItem = "State_Holidays_Active"
-
+ 
 _groundFloor = ThermalStorageType( capacity=164.0, uValue=0.320, uOffset=0.08, factor=0.60 )
 _groundCeiling = ThermalStorageType( capacity=308.0, uValue=0.610, uOffset=0.1, factor=1.0 )
 
@@ -71,13 +72,6 @@ _garageDoor = ThermalBridgeType( uValue=3.49, uOffset=0.1, factor=1.0 )
 _firstFloorHeight = 2.57
 _secondFloorHeight = 2.45
 _atticFloorHeight = 2.10
-
-Heating.temperatureSensorItemPlaceholder = u"Temperature_{}"
-Heating.temperatureTargetItemPlaceholder = u"Temperature_{}_Target"
-Heating.heatingBufferItemPlaceholder = u"Heating_{}_Charged"
-Heating.heatingCircuitItemPlaceholder = u"Heating_{}_Circuit"
-Heating.heatingTargetTemperatureItemPlaceholder = u"Heating_{}_Target_Temperature"
-Heating.heatingDemandItemPlaceholder = u"Heating_{}_Demand"
 
 rooms = [
     Room(
@@ -114,7 +108,7 @@ rooms = [
             Wall(direction='south', area=5.0225, type=_garageWall, bound="lGarage")
         ],
         transitions=[
-            Window(direction='east', area=1.045, type=_outerWindow, contactItem='Window_GF_Guesttoilet', shutterItem='Shutters_GF_Guesttoilet', shutterArea=0.1292)
+            Window(direction='east', area=1.045, type=_outerWindow, contactItem='Window_GF_Guesttoilet', shutterItem='pGF_Guesttoilet_Shutter_Control', shutterArea=0.1292)
         ]
     ),
     Room(
@@ -173,9 +167,9 @@ rooms = [
             Wall(direction='south', area=6.177675, type=_inner17Wall, bound="lGF_Boxroom")
         ],
         transitions=[
-            Window(direction='west', area=2.2, type=_outerWindow, contactItem='Window_GF_Kitchen', shutterItem='Shutters_GF_Kitchen', shutterArea=0.2992, radiationArea=0.645*1.01*2.0, sunProtectionItem="State_Sunprotection_Livingroom"),
-            Window(direction='west', area=5.8232, type=_outerWindow, contactItem='Window_GF_Livingroom_Terrace', shutterItem='Shutters_GF_Livingroom_Terrace', shutterArea=0.4267, radiationArea=0.625*2.13*3.0),
-            Window(direction='west', area=4.0832, type=_outerWindow, contactItem='Window_GF_Livingroom_Couch', shutterItem='Shutters_GF_Livingroom_Couch', shutterArea=0.2992, radiationArea=0.625*2.13*2.0)
+            Window(direction='west', area=2.2, type=_outerWindow, contactItem='Window_GF_Kitchen', shutterItem='pGF_Kitchen_Shutter_Control', shutterArea=0.2992, radiationArea=0.645*1.01*2.0, sunProtectionItem="State_Sunprotection_Livingroom"),
+            Window(direction='west', area=5.8232, type=_outerWindow, contactItem='Window_GF_Livingroom_Terrace', shutterItem='pGFLivingroom_Shutter_Terrace_Control', shutterArea=0.4267, radiationArea=0.625*2.13*3.0),
+            Window(direction='west', area=4.0832, type=_outerWindow, contactItem='Window_GF_Livingroom_Couch', shutterItem='pGFLivingroom_Shutter_Couch_Control', shutterArea=0.2992, radiationArea=0.625*2.13*2.0)
         ]
     ),
     Room(
@@ -191,7 +185,7 @@ rooms = [
             Wall(direction='south', area=9.06975, type=_inner17Wall, bound="lGF_Corridor")
         ],
         transitions=[
-            Window(direction='east', area=2.07625, type=_outerWindow, contactItem='Window_GF_Guestroom', shutterItem='Shutters_GF_Guestroom', shutterArea=0.2567)
+            Window(direction='east', area=2.07625, type=_outerWindow, contactItem='Window_GF_Guestroom', shutterItem='pGF_Guestroom_Shutter_Control', shutterArea=0.2567)
         ]
     ),
     Room(
@@ -254,7 +248,7 @@ rooms = [
             Wall(direction='south', area=8.51865, type=_inner17Wall, bound="lFF_Corridor")
         ],
         transitions=[
-            Window(direction='north', area=1.8875, type=_outerWindow, contactItem='Window_FF_Child1', shutterItem='Shutters_FF_Child1', shutterArea=0.2567)
+            Window(direction='north', area=1.8875, type=_outerWindow, contactItem='Window_FF_Child1', shutterItem='pFF_Child1_Shutter_Control', shutterArea=0.2567)
         ]
     ),
     Room(
@@ -272,7 +266,7 @@ rooms = [
             Wall(direction='south', area=1.69615, type=_inner17Wall, bound="lFF_Corridor")
         ],
         transitions=[
-            Window(direction='north', area=1.8875, type=_outerWindow, contactItem='Window_FF_Child2', shutterItem='Shutters_FF_Child2', shutterArea=0.2567)
+            Window(direction='north', area=1.8875, type=_outerWindow, contactItem='Window_FF_Child2', shutterItem='pFF_Child2_Shutter_Control', shutterArea=0.2567)
         ]
     ),
     Room(
@@ -299,8 +293,8 @@ rooms = [
             Wall(direction='south', area=9.0333, type=_outer36Wall)
         ],
         transitions=[
-            Window(direction='west', area=3.1375, type=_outerWindow, contactItem='Window_FF_Bedroom', shutterItem='Shutters_FF_Bedroom', shutterArea=0.4267, radiationArea=0.615*1.00*3.0, sunProtectionItem="State_Sunprotection_Bedroom"),
-            Window(direction='south', area=1.41875, type=_outerWindow, contactItem='Window_FF_Dressingroom', shutterItem='Shutters_FF_Dressingroom', shutterArea=0.19295, radiationArea=0.86*1.00, sunProtectionItem="State_Sunprotection_Dressingroom")
+            Window(direction='west', area=3.1375, type=_outerWindow, contactItem='Window_FF_Bedroom', shutterItem='pFF_Bedroom_Shutter_Control', shutterArea=0.4267, radiationArea=0.615*1.00*3.0, sunProtectionItem="State_Sunprotection_Bedroom"),
+            Window(direction='south', area=1.41875, type=_outerWindow, contactItem='Window_FF_Dressingroom', shutterItem='pFF_Dressingroom_Shutter_Control', shutterArea=0.19295, radiationArea=0.86*1.00, sunProtectionItem="State_Sunprotection_Dressingroom")
 #        ]
         ]
     ),
@@ -318,7 +312,7 @@ rooms = [
 #            Wall(direction='south', area=9.0333, type=_outer36Wall)
 #        ],
 #        transitions=[
-#            Window(direction='south', area=1.41875, type=_outerWindow, contactItem='Window_FF_Dressingroom', shutterItem='Shutters_FF_Dressingroom', shutterArea=0.19295, radiationArea=0.86*1.00, sunProtectionItem="State_Sunprotection_Dressingroom")
+#            Window(direction='south', area=1.41875, type=_outerWindow, contactItem='Window_FF_Dressingroom', shutterItem='pFF_Dressingroom_Shutter_Control', shutterArea=0.19295, radiationArea=0.86*1.00, sunProtectionItem="State_Sunprotection_Dressingroom")
 #        ]
 #    ),
     Room(
@@ -337,7 +331,7 @@ rooms = [
             Wall(direction='south', area=7.63045, type=_outer36Wall)
         ],
         transitions=[
-            Window(direction='south', area=1.41875, type=_outerWindow, contactItem='Window_FF_Bathroom', shutterItem='Shutters_FF_Bathroom', shutterArea=0.19295, radiationArea=0.86*1.00, sunProtectionItem="State_Sunprotection_Bathroom")
+            Window(direction='south', area=1.41875, type=_outerWindow, contactItem='Window_FF_Bathroom', shutterItem='pFF_Bathroom_Shutter_Control', shutterArea=0.19295, radiationArea=0.86*1.00, sunProtectionItem="State_Sunprotection_Bathroom")
         ]
     ),
     Room(
@@ -353,7 +347,7 @@ rooms = [
         ],
         transitions=[
             Window(direction='east', area=0.7676, type=_firstSlopingWindow),
-            Window(direction='south', area=0.7676, type=_outerWindow, contactItem='Window_Attic', shutterItem='Shutters_Attic', shutterArea=0.19295, radiationArea=0.72*1.00, sunProtectionItem="State_Sunprotection_Attic")
+            Window(direction='south', area=0.7676, type=_outerWindow, contactItem='Window_Attic', shutterItem='pAttic_Shutter_Control', shutterArea=0.19295, radiationArea=0.72*1.00, sunProtectionItem="State_Sunprotection_Attic")
         ]
     )
 ]
@@ -461,7 +455,7 @@ class HeatingVentileRule():
 class HeatingControlRule():
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("Heating_Auto_Mode"),
+            ItemStateChangeTrigger("pGF_Utilityroom_Heating_Auto_Mode"),
             CronTrigger("15 * * * * ?")
 #            CronTrigger("*/15 * * * * ?")
         ]
@@ -471,12 +465,12 @@ class HeatingControlRule():
         self.log.info(u"--------: >>>" )
 
         now = getNow()
-        autoModeEnabled = getItemState("Heating_Auto_Mode").intValue() == 1
+        autoModeEnabled = getItemState("pGF_Utilityroom_Heating_Auto_Mode").intValue() == 1
 
-        currentOperatingModeChange = getItemLastChange("Heating_Operating_Mode")
-        currentOperatingMode = getItemState("Heating_Operating_Mode").intValue()
+        currentOperatingModeChange = getItemLastChange("pGF_Utilityroom_Heating_Operating_Mode")
+        currentOperatingMode = getItemState("pGF_Utilityroom_Heating_Operating_Mode").intValue()
 
-        currentHeatingDemand = getItemState("Heating_Demand")
+        currentHeatingDemand = getItemState("pGF_Utilityroom_Heating_Demand")
 
         outdoorTemperatureItemName = getItemState("Outdoor_Temperature_Item_Name").toString()
         heating = Heating(self.log,outdoorTemperatureItemName)
@@ -586,10 +580,10 @@ class HeatingControlRule():
                 self.log.info(u"Demand  : DELAYED • circuit was opened {} min. ago".format(openedBeforeInMinutes))
             else:
                 heatingDemand = ON if heatingRequested else OFF
-                postUpdateIfChanged("Heating_Demand", heatingDemand )
+                postUpdateIfChanged("pGF_Utilityroom_Heating_Demand", heatingDemand )
             
                 endMsg = u" • {} min. to go".format(Heating.visualizeHeatingDemandTime(longestRuntime)) if longestRuntime > 0 else u""
-                lastHeatingDemandChange = getItemLastUpdate("Heating_Demand") # can be "getItemLastUpdate" datetime, because it is changed only from heating rule
+                lastHeatingDemandChange = getItemLastUpdate("pGF_Utilityroom_Heating_Demand") # can be "getItemLastUpdate" datetime, because it is changed only from heating rule
                 lastChangeBeforeInMinutes = int( round( ( now.getMillis() - lastHeatingDemandChange.getMillis() ) / 1000.0 / 60.0 ) )
                 lastHeatingChangeFormatted = OFFSET_FORMATTER.print(lastHeatingDemandChange)
                 lastChangeBeforeFormatted = lastChangeBeforeInMinutes if lastChangeBeforeInMinutes < 60 else '{:02d}:{:02d}'.format(*divmod(lastChangeBeforeInMinutes, 60));
@@ -606,7 +600,7 @@ class HeatingControlRule():
     def setSunStates(self, now, cr, cr4, hhs ):
         cloudCover = cr.getCloudCover()
 
-        azimut = getItemState("Sun_Azimuth").doubleValue()
+        azimut = getItemState("pOutdoor_Astro_Sun_Azimuth").doubleValue()
 
         # 225 => 15:32:30.781
         # 245 => 16:57:30.784
@@ -626,7 +620,7 @@ class HeatingControlRule():
         effectiveWestRadiationShortTerm = _sunWestRadiation / 60.0
         #self.log.info(u"Gemessen Avg 10 min until {}: {} {}".format(offset,effectiveSouthRadiationShortTerm, effectiveWestRadiationShortTerm))
 
-        #azimut = getItemState("Sun_Azimuth").doubleValue()
+        #azimut = getItemState("pOutdoor_Astro_Sun_Azimuth").doubleValue()
         #longTermTimeWindow = 120 if azimut > 225 and azimut < 245 else 30 # in this direction a tree is hiding the sun
         #longTermTimeWindow = 120 if azimut > 228 and azimut < 242 else 30 # in this direction a tree is hiding the sun
         _messuredRadiation = getStableItemState(offset,"WeatherStation_Solar_Power",30)
@@ -767,11 +761,11 @@ class HeatingControlRule():
         if currentOperatingMode == 1:
             # Temperatur sollte seit XX min nicht OK sein und 'Nur WW' sollte mindestens XX min aktiv sein um 'flattern' zu vermeiden
             if isHeatingRequested:
-                isRunningLongEnough = itemLastChangeOlderThen("Heating_Operating_Mode", now.minusMinutes(Heating.MIN_ONLY_WW_TIME))
+                isRunningLongEnough = itemLastChangeOlderThen("pGF_Utilityroom_Heating_Operating_Mode", now.minusMinutes(Heating.MIN_ONLY_WW_TIME))
                 
                 if forceRetry or isRunningLongEnough:
                     self.activeHeatingOperatingMode = 2
-                    sendCommand("Heating_Operating_Mode", self.activeHeatingOperatingMode)
+                    sendCommand("pGF_Utilityroom_Heating_Operating_Mode", self.activeHeatingOperatingMode)
                 else:
                     runtimeToGo = Heating.MIN_ONLY_WW_TIME - int( round( ( now.getMillis() - currentOperatingModeChange.getMillis() ) / 1000.0 / 60.0 ) )
                     delayedMsg = u" in {} min.".format(runtimeToGo)
@@ -780,7 +774,7 @@ class HeatingControlRule():
 
         # Heizen mit WW
         elif currentOperatingMode == 2:
-            currentPowerState = getItemState("Heating_Power").intValue()
+            currentPowerState = getItemState("pGF_Utilityroom_Heating_Power").intValue()
             
             if currentPowerState == 0 and lastChangeBeforeInMinutes < 1:
                 self.log.info(u"Delayed : Give the heating system more time to react")
@@ -790,11 +784,11 @@ class HeatingControlRule():
             #if Heating_Circuit_Pump_Speed.state > 0:
             # Temperatur sollte seit XX min OK sein und Brenner sollte entweder nicht laufen oder mindestens XX min am Stück gelaufen sein
             if not isHeatingRequested:
-                isRunningLongEnough = itemLastChangeOlderThen("Heating_Operating_Mode",now.minusMinutes(Heating.MIN_HEATING_TIME))
+                isRunningLongEnough = itemLastChangeOlderThen("pGF_Utilityroom_Heating_Operating_Mode",now.minusMinutes(Heating.MIN_HEATING_TIME))
                 
                 if currentPowerState == 0 or forceRetry or isRunningLongEnough:
                     self.activeHeatingOperatingMode = 1
-                    sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
+                    sendCommand("pGF_Utilityroom_Heating_Operating_Mode",self.activeHeatingOperatingMode)
                 else:
                     runtimeToGo = Heating.MIN_HEATING_TIME - int( round( ( now.getMillis() - currentOperatingModeChange.getMillis() ) / 1000.0 / 60.0 ) )
                     delayedMsg = u" in {} min.".format(runtimeToGo)
@@ -809,7 +803,7 @@ class HeatingControlRule():
                 # TODO also if Heating_Power is going from 0 to 65 and one minute later from 65 to 0 is a hint for a unsuccessful start
                 
                 # No burner starts since a while
-                if itemLastChangeOlderThen("Heating_Power",now.minusMinutes(5)) and itemLastChangeOlderThen("Heating_Operating_Mode",now.minusMinutes(5)):
+                if itemLastChangeOlderThen("pGF_Utilityroom_Heating_Power",now.minusMinutes(5)) and itemLastChangeOlderThen("pGF_Utilityroom_Heating_Operating_Mode",now.minusMinutes(5)):
                     forceReducedMsg = u" • No burner starts"
                 else:
                     burnerStarts = self.getBurnerStarts(now)
@@ -820,7 +814,7 @@ class HeatingControlRule():
                 if forceReducedMsg != None:
                     self.activeHeatingOperatingMode = 3
                    
-                    sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
+                    sendCommand("pGF_Utilityroom_Heating_Operating_Mode",self.activeHeatingOperatingMode)
                     self.log.info(u"Switch  : Reduziert{}{}".format(forceReducedMsg,forceRetryMsg))
         
         # Reduziert
@@ -828,7 +822,7 @@ class HeatingControlRule():
             # Wenn Temperatur seit XX min OK ist und der brenner sowieso aus ist kann gleich in 'Nur WW' gewechselt werden
             if not isHeatingRequested:
                 self.activeHeatingOperatingMode = 1
-                sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
+                sendCommand("pGF_Utilityroom_Heating_Operating_Mode",self.activeHeatingOperatingMode)
                 self.log.info(u"Switch  : Nur WW because heating is not needed anymore{}".format(forceRetryMsg))
             else:
                 lastReducedRuntime = self.getLastReductionTime( currentOperatingModeChange )
@@ -846,9 +840,9 @@ class HeatingControlRule():
                 #self.log.info(u"E {}".format(targetReducedTime))
                     
                 # Dauernd reduziert läuft seit mindestens XX Minuten
-                if forceRetry or itemLastChangeOlderThen("Heating_Operating_Mode",now.minusMinutes(targetReducedTime) ):
+                if forceRetry or itemLastChangeOlderThen("pGF_Utilityroom_Heating_Operating_Mode",now.minusMinutes(targetReducedTime) ):
                     self.activeHeatingOperatingMode = 2
-                    sendCommand("Heating_Operating_Mode",self.activeHeatingOperatingMode)
+                    sendCommand("pGF_Utilityroom_Heating_Operating_Mode",self.activeHeatingOperatingMode)
                 elif not forceRetry:
                     runtimeToGo = targetReducedTime - int( round( ( now.getMillis() - currentOperatingModeChange.getMillis() ) / 1000.0 / 60.0 ) )
                     delayedMsg = u" in {} min.".format(runtimeToGo)
@@ -857,7 +851,7 @@ class HeatingControlRule():
                 
     def getBurnerStarts( self, now ):
         # max 5 min.
-        minTimestamp = getHistoricItemEntry("Heating_Operating_Mode",now).getTimestamp().getTime()
+        minTimestamp = getHistoricItemEntry("pGF_Utilityroom_Heating_Operating_Mode",now).getTimestamp().getTime()
         _minTimestamp = now.minusMinutes(5).getMillis()
         if minTimestamp < _minTimestamp:
             minTimestamp = _minTimestamp
@@ -867,9 +861,9 @@ class HeatingControlRule():
         burnerStarts = 0
         
         # check for new burner starts during this time periode
-        # "Heating_Burner_Starts" is not useable because of wather heating
+        # "pGF_Utilityroom_Heating_Burner_Starts" is not useable because of wather heating
         while currentTime.getMillis() > minTimestamp:
-            currentItemEntry = getHistoricItemEntry("Heating_Power", currentTime)
+            currentItemEntry = getHistoricItemEntry("pGF_Utilityroom_Heating_Power", currentTime)
             if lastItemEntry is not None:
                 currentHeating = ( currentItemEntry.getState().doubleValue() != 0.0 )
                 lastHeating = ( lastItemEntry.getState().doubleValue() != 0.0 )
@@ -883,7 +877,7 @@ class HeatingControlRule():
         return burnerStarts
     
     def getLastReductionTime( self, currentOperatingModeUpdate ):
-        lastOperatingMode = getHistoricItemEntry("Heating_Operating_Mode",currentOperatingModeUpdate.minusSeconds(1))
+        lastOperatingMode = getHistoricItemEntry("pGF_Utilityroom_Heating_Operating_Mode",currentOperatingModeUpdate.minusSeconds(1))
         #self.log.info(u"A {}".format(lastOperatingMode.getState().intValue()))
         
         # last mode was "Heizen mit WW"
@@ -895,7 +889,7 @@ class HeatingControlRule():
             # last mode was running less then MIN_HEATING_TIME
             if lastHeatingTime < Heating.MIN_HEATING_TIME * 60 * 1000:
                 # mode before was "Reduziert"
-                previousOperatingMode = getHistoricItemEntry("Heating_Operating_Mode",lastOperatingModeUpdate.minusSeconds(1))
+                previousOperatingMode = getHistoricItemEntry("pGF_Utilityroom_Heating_Operating_Mode",lastOperatingModeUpdate.minusSeconds(1))
                 #self.log.info(u"C {}".format(previousOperatingMode.getState().intValue()))
 
                 if previousOperatingMode.getState().intValue() == 3:

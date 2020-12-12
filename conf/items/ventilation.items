@@ -25,3 +25,4 @@ Switch Ventilation_Filter_Error				    "Filter [MAP(ventilation_filter_de.map):%
 
 Switch Ventilation_Error_Reset				    "Fehlerreset" 		            <selfinfo>		    {channel="comfoair:comfoair:myComfoAir:resets#errorReset"}
 String Ventilation_Error_Message				"Fehlercode [%s]" 				<selfinfo> 			{channel="comfoair:comfoair:default:errors#errorsCurrent"}
+ 

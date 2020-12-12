@@ -2,19 +2,19 @@ from shared.helper import rule, getNow, getItemState, getHistoricItemState, getM
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 infoConfig = [
-    ["Air_GF_Livingroom_Message", "Temperature_GF_Livingroom", "Humidity_GF_Livingroom", "Temperature_GF_Livingroom_Target"],
+    ["Air_GF_Livingroom_Message", "Temperature_GF_Livingroom", "Humidity_GF_Livingroom", "pGF_Livingroom_Heating_Temperature_Desired"],
     ["Air_GF_Boxroom_Message", "Temperature_GF_Boxroom", "Humidity_GF_Boxroom", None],
-    ["Air_GF_Guestroom_Message", "Temperature_GF_Guestroom", "Humidity_GF_Guestroom", "Temperature_GF_Guestroom_Target"],
-    ["Air_GF_Guesttoilet_Message", "Temperature_GF_Guesttoilet", "Humidity_GF_Guesttoilet", "Temperature_GF_Guesttoilet_Target"],
-    ["Air_GF_Corridor_Message", "Temperature_GF_Corridor", "Humidity_GF_Corridor", "Temperature_GF_Corridor_Target"],
+    ["Air_GF_Guestroom_Message", "Temperature_GF_Guestroom", "Humidity_GF_Guestroom", "pGF_Guestroom_Heating_Temperature_Desired"],
+    ["Air_GF_Guesttoilet_Message", "Temperature_GF_Guesttoilet", "Humidity_GF_Guesttoilet", "pGF_Guesttoilet_Heating_Temperature_Desired"],
+    ["Air_GF_Corridor_Message", "Temperature_GF_Corridor", "Humidity_GF_Corridor", "pGF_Corridor_Heating_Temperature_Desired"],
     ["Air_GF_Utilityroom_Message", "Temperature_GF_Utilityroom", "Humidity_GF_Utilityroom", None],
     ["Air_Garage_Message", "Temperature_Garage", "Humidity_Garage", None],
-    ["Air_FF_Bedroom_Message", "Temperature_FF_Bedroom", "Humidity_FF_Bedroom", "Temperature_FF_Bedroom_Target"],
+    ["Air_FF_Bedroom_Message", "Temperature_FF_Bedroom", "Humidity_FF_Bedroom", "pFF_Bedroom_Heating_Temperature_Desired"],
     ["Air_FF_Dressingroom_Message", "Temperature_FF_Dressingroom", "Humidity_FF_Dressingroom", None],
-    ["Air_FF_Child1_Message", "Temperature_FF_Child1", "Humidity_FF_Child1", "Temperature_FF_Child1_Target"],
-    ["Air_FF_Child2_Message", "Temperature_FF_Child2", "Humidity_FF_Child2", "Temperature_FF_Child2_Target"],
-    ["Air_FF_Bathroom_Message", "Temperature_FF_Bathroom", "Humidity_FF_Bathroom", "Temperature_FF_Bathroom_Target"],
-    ["Air_FF_Corridor_Message", "Temperature_FF_Corridor", "Humidity_FF_Corridor", "Temperature_FF_Corridor_Target"],
+    ["Air_FF_Child1_Message", "Temperature_FF_Child1", "Humidity_FF_Child1", "pFF_Child1_Heating_Temperature_Desired"],
+    ["Air_FF_Child2_Message", "Temperature_FF_Child2", "Humidity_FF_Child2", "pFF_Child2_Heating_Temperature_Desired"],
+    ["Air_FF_Bathroom_Message", "Temperature_FF_Bathroom", "Humidity_FF_Bathroom", "pFF_Bathroom_Heating_Temperature_Desired"],
+    ["Air_FF_Corridor_Message", "Temperature_FF_Corridor", "Humidity_FF_Corridor", "pFF_Corridor_Heating_Temperature_Desired"],
     ["Air_Attic_Message", "Temperature_Attic", "Humidity_Attic", None]
 ]
 

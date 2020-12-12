@@ -12,15 +12,15 @@ class ValuesDependingOnBrightnessRule:
     def execute(self, module, input):
         now = getNow()
         
-        # Dawn_Time
-        # Sunrise_Time
-        # Sunset_Time
-        # Dusk_Time
+        # pOutdoor_Astro_Dawn_Time
+        # pOutdoor_Astro_Sunrise_Time
+        # pOutdoor_Astro_Sunset_Time
+        # pOutdoor_Astro_Dusk_Time
         
         cloudCover = getItemState("Cloud_Cover_Current").intValue()
                 
         if getItemState("State_Rollershutter") == ON:
-            _upTime = getItemState("Sunrise_Time").calendar.getTimeInMillis()
+            _upTime = getItemState("pOutdoor_Astro_Sunrise_Time").calendar.getTimeInMillis()
             _upTime = int(_upTime + ( cloudCover * 30.0 / 9.0 ) * 60 * 1000)
 
             _lastDownTime = getItemState("State_Rollershutter_Down").calendar.getTimeInMillis()
@@ -30,7 +30,7 @@ class ValuesDependingOnBrightnessRule:
 
             postUpdateIfChanged("State_Rollershutter_Up", DateTime(_upTime).toString() )
         else:
-            _downTime = getItemState("Dusk_Time").calendar.getTimeInMillis()
+            _downTime = getItemState("pOutdoor_Astro_Dusk_Time").calendar.getTimeInMillis()
             _downTime = int(_downTime - ( cloudCover * 30.0 / 9.0 ) * 60 * 1000)
             
             if now.getMillis() > _downTime:
@@ -41,12 +41,12 @@ class ValuesDependingOnBrightnessRule:
 
 
 
-        if itemStateOlderThen("Sunset_Time", now) or itemStateNewerThen("Sunrise_Time", now):
+        if itemStateOlderThen("pOutdoor_Astro_Sunset_Time", now) or itemStateNewerThen("pOutdoor_Astro_Sunrise_Time", now):
             postUpdateIfChanged("State_Outdoorlights", ON)
         else:
             postUpdateIfChanged("State_Outdoorlights", OFF)
             
-        if itemStateOlderThen("Dusk_Time", now) or itemStateNewerThen("Dawn_Time", now):
+        if itemStateOlderThen("pOutdoor_Astro_Dusk_Time", now) or itemStateNewerThen("pOutdoor_Astro_Dawn_Time", now):
             postUpdateIfChanged("State_Solar", OFF)
         else:
             postUpdateIfChanged("State_Solar", ON)

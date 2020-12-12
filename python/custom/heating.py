@@ -62,12 +62,13 @@ class Heating(object):
     totalHeatingVolume = None
     
     temperatureSensorItemPlaceholder = u"Temperature_{}"
-    temperatureTargetItemPlaceholder = u"Temperature_{}_Target"
-    heatingBufferItemPlaceholder = u"Heating_{}_Charged"
-    heatingCircuitItemPlaceholder = u"Heating_{}_Circuit"
-    heatingHKItemPlaceholder = u"Heating_{}_HK"
-    heatingTargetTemperatureItemPlaceholder = u"Heating_{}_Target_Temperature"
-    heatingDemandItemPlaceholder = u"Heating_{}_Demand"
+    temperatureTargetItemPlaceholder = u"p{}_Heating_Temperature_Desired"
+    
+    heatingHKItemPlaceholder = u"p{}_Heating_HK"
+    heatingCircuitItemPlaceholder = u"p{}_Heating_Circuit"
+    heatingBufferItemPlaceholder = u"p{}_Heating_Charged"
+    heatingDemandItemPlaceholder = u"p{}_Heating_Demand"
+    heatingTargetTemperatureItemPlaceholder = u"p{}_Heating_Temperature_Target"
 
     lastRuntime = None
     

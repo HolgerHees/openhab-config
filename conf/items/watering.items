@@ -1,0 +1,27 @@
+Group 		Watering 							"Bewässerung [%d]" 						<selfwater>
+Group:Switch:OR(ON, OFF) Watering_Circuits 		"Bewässerung [%d]" 						<selfwater>		(Watering)
+
+Switch Watering_Gardenside_Lawn_left			"Bewässerung Rasen links"	<selfwater>		(Watering_Circuits,gPersistance_History)	{ channel="knx:device:bridge:wattering:gardensideLawnLeft" }
+Switch Watering_Gardenside_Lawn_right			"Bewässerung Rasen rechts"	<selfwater>		(Watering_Circuits,gPersistance_History)	{ channel="knx:device:bridge:wattering:gardensideLawnRight" }
+Switch Watering_Gardenside_Beds_front			"Bewässerung Beete Terasse"	<selfwater>		(Watering_Circuits,gPersistance_History)	{ channel="knx:device:bridge:wattering:gardensideBedsFront" }
+Switch Watering_Gardenside_Beds_back			"Bewässerung Beete hinten"	<selfwater>		(Watering_Circuits,gPersistance_History)	{ channel="knx:device:bridge:wattering:gardensideBedsBack" }
+Switch Watering_Streetside_Lawn					"Bewässerung Rasen vorne"	<selfwater>		(Watering_Circuits,gPersistance_History)	{ channel="knx:device:bridge:wattering:streetsideLawn" }
+Switch Watering_Streetside_Beds					"Bewässerung Beete vornee"	<selfwater>		(Watering_Circuits,gPersistance_History)	{ channel="knx:device:bridge:wattering:streetsideBeds" }
+
+String Watering_Program_State					"Status [%s]"				<selfinfo>		(Watering)
+
+Number Watering_Program_Duration				"Programm Dauer [%d]"		<selfruntime>	(Watering)
+Switch Watering_Program_Start					"Programm starten"			<selfautomode>	(Watering)
+
+Switch Watering_Gardenside_Lawn_left_Auto		"Automatik Rasen links"	  <selfwater>
+String Watering_Gardenside_Lawn_left_Info		"Info Rasen links [%s]"	  <selfwater>
+Switch Watering_Gardenside_Lawn_right_Auto		"Automatik Rasen rechts"	  <selfwater>
+String Watering_Gardenside_Lawn_right_Info		"Info Rasen rechts [%s]"	  <selfwater>
+Switch Watering_Gardenside_Beds_front_Auto		"Automatik Beete Terasse"  <selfwater>
+String Watering_Gardenside_Beds_front_Info		"Info Beete Terasse [%s]"  <selfwater>
+Switch Watering_Gardenside_Beds_back_Auto		"Automatik Beete hinten"	  <selfwater>
+String Watering_Gardenside_Beds_back_Info		"Info Beete hinten [%s]"	  <selfwater>
+Switch Watering_Streetside_Lawn_Auto			"Automatik Rasen vorne"    <selfwater>
+String Watering_Streetside_Lawn_Info			"Info Rasen vorne [%s]"    <selfwater>
+Switch Watering_Streetside_Beds_Auto			"Automatik Beete vorne"    <selfwater>
+String Watering_Streetside_Beds_Info			"Info Beete vorne [%s]"	  <selfwater>

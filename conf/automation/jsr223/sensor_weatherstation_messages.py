@@ -490,8 +490,8 @@ class WeatherstationAirRule:
                 
             postUpdateIfChanged("WeatherStation_Solar_Power", 0)
             
-        azimut = getItemState("Sun_Azimuth").doubleValue()
-        elevation = getItemState("Sun_Elevation").doubleValue()
+        azimut = getItemState("pOutdoor_Astro_Sun_Azimuth").doubleValue()
+        elevation = getItemState("pOutdoor_Astro_Sun_Elevation").doubleValue()
         _usedRadians = math.radians(elevation)
         if _usedRadians < 0.0: _usedRadians = 0.0
         

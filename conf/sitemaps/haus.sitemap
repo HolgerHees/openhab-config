@@ -67,27 +67,27 @@ sitemap haus label="Main Menu"
 				Switch item=pFF_Attic_Light_Ceiling_Powered label="Dachboden"
             }
             Frame label="Garten" {
-				Switch item=pFF_Garage_Light_Ceiling_Powered label="Schuppen"
+				Switch item=pGarage_Light_Ceiling_Powered label="Schuppen"
 				Group item=gOutdoor_Lights label="Aussen Lampen [MAP(group_light.map):%d]" {
-                    Slider item=pOutdoor_Terrace_Light_Brightness label="Terasse"
-                    Switch item=pOutdoor_Frontdoor_Light_Powered label="Haustür"
+                    Slider item=pOutdoor_Garden_Terrace_Light_Brightness label="Terasse"
+                    Switch item=pOutdoor_Streedside_Frontdoor_Light_Powered label="Haustür"
                     Switch item=pOutdoor_Carport_Light_Powered label="Carport"
-                    Switch item=pOutdoor_Garage_Streedside_Light_Powered label="Schuppentür vorne"
-                    Switch item=pOutdoor_Garage_Gardenside_Powered label="Schuppentür hinten"
+                    Switch item=pOutdoor_Streedside_Garage_Light_Powered label="Schuppentür vorne"
+                    Switch item=pOutdoor_Garden_Garage_Light_Powered label="Schuppentür hinten"
 				}
 			}
 		}
-		Group item=_Shutters label="Rollläden [MAP(group_rollershutter.map):%d]" {
+		Group item=gShutters_Count label="Rollläden [MAP(group_rollershutter.map):%d]" {
 			Frame label="Alle" {
-				Switch item=Shutters label="Rollläden" mappings=[UP="Hoch",DOWN="Runter"]
+				Switch item=gShutters label="Rollläden" mappings=[UP="Hoch",DOWN="Runter"]
 			}
 			Frame label="Etagen" {
-				Group item=_Shutters_FF label="EG Rollläden [MAP(group_rollershutter_ff.map):%d]"
-				Group item=_Shutters_SF label="OG Rollläden [MAP(group_rollershutter_sf.map):%d]"
+				Group item=gGF_Shutters_Count label="EG Rollläden [MAP(group_rollershutter_ff.map):%d]"
+				Group item=gFF_Shutters_Count label="OG Rollläden [MAP(group_rollershutter_sf.map):%d]"
 			}
 			Frame label="Beschattung" {
-				Switch item=Shutters_SOUTH label="Südseite" mappings=[UP="Hoch",DOWN="Runter"]
-				Switch item=Shutters_WEST label="Westseite" mappings=[UP="Hoch",DOWN="Runter"]
+				Switch item=gSouth_Shutters label="Südseite" mappings=[UP="Hoch",DOWN="Runter"]
+				Switch item=gWest_Shutters label="Westseite" mappings=[UP="Hoch",DOWN="Runter"]
 			}
 		}
 	}
@@ -108,8 +108,8 @@ sitemap haus label="Main Menu"
 			Frame label="Licht & Steckdosen" {
                 Group item=gOutdoor_Lights label="Lampen [MAP(group_light.map):%d]"
 				Group item=gOutdoor_Sockets label="Steckdosen [MAP(group_socket.map):%d]" {
-					Switch item=pOutdoor_Socket_Streeside_Powered
-					Switch item=pOutdoor_Socket_Gardenside_Powered
+					Switch item=pOutdoor_Streeside_Socket_Powered
+					Switch item=pOutdoor_Garden_Terrace_Socket_Powered
 				}
                 Group label="Bewässerung [MAP(group_watering.map):%d]" item=Watering_Circuits {
                     Frame label="Programm" {
@@ -158,26 +158,26 @@ sitemap haus label="Main Menu"
 		}
 		Group label="Geräte [%s]" item=RoboterStatus icon="roomba" valuecolor=[=="Alles normal"="#6bc305",!="Alles normal"="#d72a2a"] {
             Frame label="Haus" {
-                Text label="Waschmaschine [%s]" item=Washer_Message icon="whitegood" {
+                Text label="Waschmaschine [%s]" item=pGF_Utilityroom_Washer_Message icon="whitegood" {
                     Frame label="Status" {
-                        Text item=Washer_ProgramProgressState
-                        Text item=Washer_RemainingProgramTimeState
-                        Text item=Washer_OperationState
-                        Text item=Washer_DoorState
+                        Text item=pGF_Utilityroom_Washer_ProgramProgressState
+                        Text item=pGF_Utilityroom_Washer_RemainingProgramTimeState
+                        Text item=pGF_Utilityroom_Washer_OperationState
+                        Text item=pGF_Utilityroom_Washer_DoorState
                     }
                     Frame label="Programm" {
-                        Text item=Washer_ActiveProgramState
-                        Text item=Washer_SelectedProgramState
-                        Text item=Washer_WashingProgramTemperature
-                        Text item=Washer_WashingProgramSpinSpeed
-                        Text item=Washer_WashingProgramDosingLevel1
-                        Text item=Washer_WashingProgramDosingLevel2
-                        Text item=Washer_WashingProgramActions
+                        Text item=pGF_Utilityroom_Washer_ActiveProgramState
+                        Text item=pGF_Utilityroom_Washer_SelectedProgramState
+                        Text item=pGF_Utilityroom_Washer_WashingProgramTemperature
+                        Text item=pGF_Utilityroom_Washer_WashingProgramSpinSpeed
+                        Text item=pGF_Utilityroom_Washer_WashingProgramDosingLevel1
+                        Text item=pGF_Utilityroom_Washer_WashingProgramDosingLevel2
+                        Text item=pGF_Utilityroom_Washer_WashingProgramActions
                     }
                     Frame label="Sonstiges" {
-                        Text item=Washer_RemoteStartAllowanceState
-                        Text item=Washer_RemoteControlActiveState
-                        Text item=Washer_LocalControlActiveState
+                        Text item=pGF_Utilityroom_Washer_RemoteStartAllowanceState
+                        Text item=pGF_Utilityroom_Washer_RemoteControlActiveState
+                        Text item=pGF_Utilityroom_Washer_LocalControlActiveState
                     }
                 }
                 Text label="Roomba" item=roomba_StatusFormatted icon="roomba"{
@@ -267,7 +267,7 @@ sitemap haus label="Main Menu"
 					Frame label="Rollläden" {
 						Switch item=Auto_Rollershutter
 						Switch item=Auto_Sunprotection visibility=[Auto_Rollershutter==ON]
-						Group item=Shutters visibility=[Auto_Rollershutter==ON]
+						Group item=gShutters visibility=[Auto_Rollershutter==ON]
 					}
 					Frame label="Beleuchtung" {
 						Switch item=Auto_Lighting
@@ -276,11 +276,11 @@ sitemap haus label="Main Menu"
 					Frame label="Weihnachten" {
 						Switch item=Auto_Christmas
 						Switch item=pGF_Livingroom_Socket_Couch_Powered visibility=[Auto_Christmas==ON]
-						Switch item=Socket_Livingroom_Fireplace visibility=[Auto_Christmas==ON]
+						Switch item=pGF_Livingroom_Socket_Fireplace_Powered visibility=[Auto_Christmas==ON]
 						Switch item=pGF_Corridor_Socket_Powered visibility=[Auto_Christmas==ON]
 						Switch item=eMobile_Socket_1_Powered visibility=[Auto_Christmas==ON]
 						Switch item=eMobile_Socket_2_Powered visibility=[Auto_Christmas==ON]
-						Switch item=pOutdoor_Socket_Streeside_Powered visibility=[Auto_Christmas==ON]
+						Switch item=pOutdoor_Streeside_Socket_Powered visibility=[Auto_Christmas==ON]
 					}
 					Frame label="Dachboden" {
 						Switch item=Auto_Attic_Light label="Modus" mappings=[1="OFF", 2="W", 3="B"]
@@ -337,33 +337,33 @@ sitemap haus label="Main Menu"
 				Text label="Sonnenauf & Untergang" icon="selfsun" {
                     Frame label="Tageszeiten"
                     {
-                        Text item=Dawn_Time
-                        Text item=Sunrise_Time
-                        Text item=Sunset_Time
-                        Text item=Dusk_Time
+                        Text item=pOutdoor_Astro_Dawn_Time
+                        Text item=pOutdoor_Astro_Sunrise_Time
+                        Text item=pOutdoor_Astro_Sunset_Time
+                        Text item=pOutdoor_Astro_Dusk_Time
                     }
                     Frame label="Sonnenstand"
                     {
-                        Text item=Sun_Azimuth        
-                        Text item=Sun_Elevation      
-                        Text item=Total_Radiation    
-                        Text item=Diffuse_Radiation  
+                        Text item=pOutdoor_Astro_Sun_Azimuth        
+                        Text item=pOutdoor_Astro_Sun_Elevation      
+                        Text item=pOutdoor_Astro_Total_Radiation    
+                        Text item=pOutdoor_Astro_Diffuse_Radiation  
                     }
                     Frame label="Details"
                     {
-                        Text item=Zodiac_Name          
-                        Text item=Season             
-                        Text item=MoonPhase          
-                        Text item=FullMoon         
-                        Text item=NewMoon          
-                        Text item=Eclipse_Time       
+                        Text item=pOutdoor_Astro_Zodiac_Name          
+                        Text item=pOutdoor_Astro_Season             
+                        Text item=pOutdoor_Astro_MoonPhase          
+                        Text item=pOutdoor_Astro_FullMoon         
+                        Text item=pOutdoor_Astro_NewMoon          
+                        Text item=pOutdoor_Astro_Eclipse_Time       
                     }
                     Frame label="Begin & Ende"
                     {
-                        Text item=Spring_Time		
-                        Text item=Summer_Time		
-                        Text item=Autumn_Time		
-                        Text item=Winter_Time		
+                        Text item=pOutdoor_Astro_Spring_Time		
+                        Text item=pOutdoor_Astro_Summer_Time		
+                        Text item=pOutdoor_Astro_Autumn_Time		
+                        Text item=pOutdoor_Astro_Winter_Time		
                     }
 				}
             }
@@ -374,17 +374,17 @@ sitemap haus label="Main Menu"
                 Group item=Air_GF_Livingroom_Message label="EG [%s]"{
                     Frame label="Daten" {
                         Text item=Air_GF_Livingroom_Message {
-                            Setpoint item=Temperature_GF_Livingroom_Target label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pGF_Livingroom_Heating_Temperature_Desired label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=Air_GF_Boxroom_Message
                         Text item=Air_GF_Guestroom_Message {
-                            Setpoint item=Temperature_GF_Guestroom_Target label="Gästezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pGF_Guestroom_Heating_Temperature_Desired label="Gästezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=Air_GF_Guesttoilet_Message {
-                            Setpoint item=Temperature_GF_Guesttoilet_Target label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pGF_Guesttoilet_Heating_Temperature_Desired label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=Air_GF_Corridor_Message {
-                            Setpoint item=Temperature_GF_Corridor_Target label="Flur unten [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pGF_Corridor_Heating_Temperature_Desired label="Flur unten [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=Air_GF_Utilityroom_Message
                         Text item=Air_Garage_Message 
@@ -397,20 +397,20 @@ sitemap haus label="Main Menu"
                 Group item=Air_FF_Bedroom_Message label="OG [%s]"{
                     Frame label="Daten" {
                         Text item=Air_FF_Bedroom_Message {
-                            Setpoint item=Temperature_FF_Bedroom_Target label="Schlafzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pFF_Bedroom_Heating_Temperature_Desired label="Schlafzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=Air_FF_Dressingroom_Message
                         Text item=Air_FF_Child1_Message {
-                            Setpoint item=Temperature_FF_Child1_Target label="Kind 1 [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pFF_Child1_Heating_Temperature_Desired label="Kind 1 [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=Air_FF_Child2_Message {
-                            Setpoint item=Temperature_FF_Child2_Target label="Kind 2 [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pFF_Child2_Heating_Temperature_Desired label="Kind 2 [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=Air_FF_Bathroom_Message {
-                            Setpoint item=Temperature_FF_Bathroom_Target label="Badezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pFF_Bathroom_Heating_Temperature_Desired label="Badezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=Air_FF_Corridor_Message {
-                            Setpoint item=Temperature_FF_Corridor_Target label="Flur oben [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pFF_Corridor_Heating_Temperature_Desired label="Flur oben [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=Air_Attic_Message
                     }
@@ -426,7 +426,7 @@ sitemap haus label="Main Menu"
                                 Text item=WeatherStation_Temperature label="Temperature [%.1f °C]"
                                 Text item=WeatherStation_Humidity label="Luftfeuchtigkeit [%.1f %%]"
                                 Text item=WeatherStation_Dewpoint
-                                Text item=Heating_Temperature_Outdoor label="Garten (Schatten) [%.1f °C]"
+                                Text item=pGF_Utilityroom_Heating_Temperature_Outdoor label="Garten (Schatten) [%.1f °C]"
                                 Text item=Temperature_Garden_Forecast4 label="Garten (in 4 Std) [%.1f °C]"
                                 Text item=Temperature_Garden_Forecast8 label="Garten (in 8 Std) [%.1f °C]"
                             }
@@ -559,7 +559,7 @@ sitemap haus label="Main Menu"
                     }
                 }
             }
-            Frame label="Bewegung • [%1$tH:%1$tM:%1$tS, %1$td.%1$tm]" item=Security_Last_Change
+            Frame label="Bewegung"
             {
                 Group item=Sensor_Indoor label="Innen [MAP(group_motion.map):%d]" valuecolor=[!=CLOSED="#d72a2a"]
                 Group item=Sensor_Outdoor label="Aussen [MAP(group_motion.map):%d]" valuecolor=[!=CLOSED="#d72a2a"]
@@ -606,11 +606,11 @@ sitemap haus label="Main Menu"
                         }
                     }
                 }			
-                Group item=Heating_Operating_Mode label="Heizung [MAP(heating_de.map):%d]" icon="selfheating"{
+                Group item=pGF_Utilityroom_Heating_Operating_Mode label="Heizung [MAP(heating_de.map):%d]" icon="selfheating"{
                     Frame label="Steuerung" {
-                        Switch item=Heating_Auto_Mode label="Modus" mappings=[1="Auto", 0="Manuell"]
-                        Switch item=Heating_Operating_Mode label="Betrieb" mappings=[1.0="WW", 2.0="HZ", 3.0="RD"]  visibility=[Heating_Auto_Mode==0]
-                        Text item=Heating_Operating_Mode visibility=[Heating_Auto_Mode==1]
+                        Switch item=pGF_Utilityroom_Heating_Auto_Mode label="Modus" mappings=[1="Auto", 0="Manuell"]
+                        Switch item=pGF_Utilityroom_Heating_Operating_Mode label="Betrieb" mappings=[1.0="WW", 2.0="HZ", 3.0="RD"]  visibility=[pGF_Utilityroom_Heating_Auto_Mode==0]
+                        Text item=pGF_Utilityroom_Heating_Operating_Mode visibility=[pGF_Utilityroom_Heating_Auto_Mode==1]
                         Text label="Komforttemperaturen" icon="selfheating"{
                             Setpoint item=Temperature_GF_Guesttoilet_Target label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
                             Setpoint item=Temperature_GF_Livingroom_Target label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
@@ -623,21 +623,21 @@ sitemap haus label="Main Menu"
                             Setpoint item=Temperature_GF_Bathroom_Target label="Badezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text label="Heizkreise" icon="selfheating"{
-                            Switch item=Heating_GF_Livingroom_Circuit label="WZ Kreis"
-                            Switch item=Heating_GF_Corridor_Circuit label="Flur unten Kreis"
-                            Switch item=Heating_GF_Guestroom_Circuit label="Gästezimmer Kreis"
-                            Switch item=Heating_GF_Guesttoilet_Circuit label="Gäste WC Kreis"
-                            Switch item=Heating_GF_Guesttoilet_HK label="Gäste WC HK"
-                            Switch item=Heating_GF_Corridor_Circuit label="Flur oben Kreis"
-                            Switch item=Heating_GF_Child1_Circuit label="Kind 1 Kreis"
-                            Switch item=Heating_GF_Child2_Circuit label="Kind 2 Kreis"
-                            Switch item=Heating_GF_Bedroom_Circuit label="Schlafzimmer Kreis"
-                            Switch item=Heating_GF_Bathroom_Circuit label="Badezimmer Kreis"
-                            Switch item=Heating_GF_Bathroom_HK label="Badezimmer HK"
+                            Switch item=pGF_Livingroom_Heating_Circuit label="WZ Kreis"
+                            Switch item=pGF_Corridor_Heating_Circuit label="Flur unten Kreis"
+                            Switch item=pGF_Guestroom_Heating_Circuit label="Gästezimmer Kreis"
+                            Switch item=pGF_Guesttoilet_Heating_Circuit label="Gäste WC Kreis"
+                            Switch item=pGF_Guesttoilet_Heating_HK label="Gäste WC HK"
+                            Switch item=pFF_Corridor_Heating_Circuit label="Flur oben Kreis"
+                            Switch item=pFF_Child1_Heating_Circuit label="Kind 1 Kreis"
+                            Switch item=pFF_Child2_Heating_Circuit label="Kind 2 Kreis"
+                            Switch item=pFF_Bedroom_Heating_Circuit label="Schlafzimmer Kreis"
+                            Switch item=pFF_Bathroom_Heating_Circuit label="Badezimmer Kreis"
+                            Switch item=pFF_Bathroom_Heating_HK label="Badezimmer HK"
                         }
                     }
                     Frame label="Sensordaten" {
-                        Text item=Heating_Demand label="Berechnungsdetails [MAP(yes_no_de.map):%d]" icon="selfheating"{
+                        Text item=pGF_Utilityroom_Heating_Demand label="Berechnungsdetails [MAP(yes_no_de.map):%d]" icon="selfheating"{
                             Frame {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                                 Webview url="/static/custom/grafana/heating_details.html?fromItem=Chart_From" icon=none height=27
@@ -646,17 +646,17 @@ sitemap haus label="Main Menu"
                                 Webview url="/static/custom/logs/heating.html" icon=none height=36
                             }
                         }
-                        Text item=Heating_Temperature_Room_Target
-                        Text item=Heating_Power_Message
-                        Text item=Heating_Temperature_Outdoor_Message
-                        Text item=Heating_Temperature_Offset_Message
-                        Text item=Heating_Temperature_Boiler_Message
-                        Text item=Heating_Temperature_Wather_Storage
-                        Text item=Heating_Temperature_Pipe_Out
-                        Text item=Heating_Temperature_Pipe_In
-                        Text item=Heating_Burner_Starts_Message
-                        Text item=Heating_Burner_Hours_Message
-                        Text item=Heating_Common_Fault
+                        Text item=pGF_Utilityroom_Heating_Temperature_Room_Target
+                        Text item=pGF_Utilityroom_Heating_Power_Message
+                        Text item=pGF_Utilityroom_Heating_Temperature_Outdoor_Message
+                        Text item=pGF_Utilityroom_Heating_Temperature_Offset_Message
+                        Text item=pGF_Utilityroom_Heating_Temperature_Boiler_Message
+                        Text item=pGF_Utilityroom_Heating_Temperature_Wather_Storage
+                        Text item=pGF_Utilityroom_Heating_Temperature_Pipe_Out
+                        Text item=pGF_Utilityroom_Heating_Temperature_Pipe_In
+                        Text item=pGF_Utilityroom_Heating_Burner_Starts_Message
+                        Text item=pGF_Utilityroom_Heating_Burner_Hours_Message
+                        Text item=pGF_Utilityroom_Heating_Common_Fault
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
@@ -665,64 +665,64 @@ sitemap haus label="Main Menu"
                 }
             }
             Frame label="Versorgung" {
-                Group item=Electricity_Current_Daily_Consumption label="Strom [%.2f kWh]"{
+                Group item=pGF_Utilityroom_Electricity_Current_Daily_Consumption label="Strom [%.2f kWh]"{
                     Frame label="Verbrauch" {
-                        Text item=Electricity_Current_Daily_Consumption label="Tagesverbrauch [%.2f kWh]"
-                        Text item=Electricity_Current_Consumption
-                        Text item=Electricity_Current_Demand valuecolor=[>=0="#fea400",<0="#6bc305"]
+                        Text item=pGF_Utilityroom_Electricity_Current_Daily_Consumption label="Tagesverbrauch [%.2f kWh]"
+                        Text item=pGF_Utilityroom_Electricity_Current_Consumption
+                        Text item=pGF_Utilityroom_Electricity_Current_Demand valuecolor=[>=0="#fea400",<0="#6bc305"]
                     }
                     Frame label="Details" {
-                        Group label="Bezug [%.2f kWh]" item=Electricity_Current_Daily_Demand {
+                        Group label="Bezug [%.2f kWh]" item=pGF_Utilityroom_Electricity_Current_Daily_Demand {
                             Frame label="Daten" {
-                                Text item=Electricity_Current_Daily_Demand label="Heute [%.2f kWh]"
-                                Text item=Electricity_Current_Annual_Demand label="Periode [%.2f kWh]"
-                                Text item=Electricity_Meter_Demand label="Zählerstand [%.2f kWh]"
-                                Text item=Electricity_Current_Annual_Demand_Forecast label="Hochrechnung [%s]"
+                                Text item=pGF_Utilityroom_Electricity_Current_Daily_Demand label="Heute [%.2f kWh]"
+                                Text item=pGF_Utilityroom_Electricity_Current_Annual_Demand label="Periode [%.2f kWh]"
+                                Text item=pGF_Utilityroom_Electricity_Meter_Demand label="Zählerstand [%.2f kWh]"
+                                Text item=pGF_Utilityroom_Electricity_Current_Annual_Demand_Forecast label="Hochrechnung [%s]"
                             }
                             Frame label="Raw" {
-                                Text item=Power_Demand_Active
-                                Text item=Energy_Demand_Active
+                                Text item=pGF_Utilityroom_Power_Demand_Active
+                                Text item=pGF_Utilityroom_Energy_Demand_Active
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                                 Webview url="/static/custom/grafana/energy_demand.html?fromItem=Chart_From" icon=none height=18
                             }
                         }
-                        Group label="Lieferung [%.2f kWh]" item=Electricity_Current_Daily_Supply {
+                        Group label="Lieferung [%.2f kWh]" item=pGF_Utilityroom_Electricity_Current_Daily_Supply {
                             Frame label="Daten" {
-                                Text item=Electricity_Current_Daily_Supply label="Heute [%.2f kWh]"
-                                Text item=Electricity_Current_Annual_Supply label="Periode [%.2f kWh]"
+                                Text item=pGF_Utilityroom_Electricity_Current_Daily_Supply label="Heute [%.2f kWh]"
+                                Text item=pGF_Utilityroom_Electricity_Current_Annual_Supply label="Periode [%.2f kWh]"
                                 Text item=Electricity_Meter_Supply label="Zählerstand [%.2f kWh]"
-                                Text item=Electricity_Current_Annual_Supply_Forecast label="Hochrechnung [%s]"
+                                Text item=pGF_Utilityroom_Electricity_Current_Annual_Supply_Forecast label="Hochrechnung [%s]"
                             }
                             Frame label="Raw" {
-                                Text item=Power_Supply_Active
-                                Text item=Energy_Supply_Active
+                                Text item=pGF_Utilityroom_Power_Supply_Active
+                                Text item=pGF_Utilityroom_Energy_Supply_Active
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                                 Webview url="/static/custom/grafana/energy_supply.html?fromItem=Chart_From" icon=none height=18
                             }
                         }
-                        Group label="Solar [%.2f kWh]" item=Solar_Daily_Yield {
+                        Group label="Solar [%.2f kWh]" item=pGF_Garage_Solar_Inverter_Daily_Yield {
                             Frame label="Solar" {
-                                Text item=Solar_Daily_Yield
-                                Text item=Solar_AC_Power
-                                Text item=Solar_DC_Power
-                                Text item=Solar_DC_Voltage
-                                Text item=Solar_DC_Current
-                                Text item=Solar_Total_Yield
-                                Text item=Solar_Power_Limitation
+                                Text item=pGF_Garage_Solar_Inverter_Daily_Yield
+                                Text item=pGF_Garage_Solar_Inverter_AC_Power
+                                Text item=pGF_Garage_Solar_Inverter_DC_Power
+                                Text item=pGF_Garage_Solar_Inverter_DC_Voltage
+                                Text item=pGF_Garage_Solar_Inverter_DC_Current
+                                Text item=pGF_Garage_Solar_Inverter_Total_Yield
+                                Text item=pGF_Garage_Solar_Inverter_Power_Limitation
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                                 Webview url="/static/custom/grafana/solar_energy.html?fromItem=Chart_From" icon=none height=18
                             }
                         }
-                        Group label="Eigenverbrauch [%.2f kWh]" item=Solar_Daily_Consumption {
+                        Group label="Eigenverbrauch [%.2f kWh]" item=pGF_Garage_Solar_Inverter_Daily_Consumption {
                             Frame label="Daten" {
-                                Text item=Solar_Daily_Consumption
-                                Text item=Solar_Annual_Consumption
+                                Text item=pGF_Garage_Solar_Inverter_Daily_Consumption
+                                Text item=pGF_Garage_Solar_Inverter_Annual_Consumption
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
@@ -735,26 +735,26 @@ sitemap haus label="Main Menu"
                         Webview url="/static/custom/grafana/energy_consumption.html?fromItem=Chart_From" icon=none height=18
                     }
                 }
-                Group item=Gas_Current_Daily_Consumption label="Gas [%.2f m³]" {
+                Group item=pGF_Utilityroom_Gas_Current_Daily_Consumption label="Gas [%.2f m³]" {
                     Frame label="Daten" {
-                        Text item=Gas_Current_Daily_Consumption
-                        Text item=Gas_Current_Consumption
-                        Text item=Gas_Annual_Consumption
-                        Text item=Gas_Current_Count
-                        Text item=Gas_Forecast
+                        Text item=pGF_Utilityroom_Gas_Current_Daily_Consumption
+                        Text item=pGF_Utilityroom_Gas_Current_Consumption
+                        Text item=pGF_Utilityroom_Gas_Annual_Consumption
+                        Text item=pGF_Utilityroom_Gas_Meter_Current_Count
+                        Text item=pGF_Utilityroom_Gas_Forecast
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                         Webview url="/static/custom/grafana/gas_consumption.html?fromItem=Chart_From" icon=none height=18
                     }
                 }
-                Group item=Heating_Solar_Power_Current_Daily label="Wasser [%.1f KW]" icon="selfwater"{
+                Group item=pGF_Utilityroom_Heating_Solar_Power_Current_Daily label="Wasser [%.1f KW]" icon="selfwater"{
                     Frame label="Daten" {
-                        Text item=Heating_Solar_State_Message
-                        Text item=Heating_Temperature_Solar_Message
-                        Text item=Heating_Temperature_Wather_Storage
-                        Text item=Heating_Solar_Hours_Message
-                        Text item=Heating_Solar_Power_Message
+                        Text item=pGF_Utilityroom_Heating_Solar_State_Message
+                        Text item=pGF_Utilityroom_Heating_Temperature_Solar_Message
+                        Text item=pGF_Utilityroom_Heating_Temperature_Wather_Storage
+                        Text item=pGF_Utilityroom_Heating_Solar_Hours_Message
+                        Text item=pGF_Utilityroom_Heating_Solar_Power_Message
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
@@ -770,13 +770,13 @@ sitemap haus label="Main Menu"
                         Switch item=pGF_Livingroom_Socket_Bassbox_Powered label="Bassbox"
                         Switch item=pGF_Guesttoilet_Socket_Powered label="Gäste WC Radio"
                         Switch item=pGF_Livingroom_Socket_Couch_Powered label="Wohnz. neben Stehlampe"
-                        Switch item=Socket_Livingroom_Fireplace label="Wohnz. Kamin"
+                        Switch item=pGF_Livingroom_Socket_Fireplace_Powered label="Wohnz. Kamin"
                         Switch item=pGF_Corridor_Socket_Powered label="Flur unter Treppe"
 						Switch item=pAttic_Socket_Powered label="Dachboden"
                     }
                     Frame label="Garten" {
-                        Switch item=pOutdoor_Socket_Streeside_Powered label="Aussen vorne"
-                        Switch item=pOutdoor_Socket_Gardenside_Powered label="Aussen hinten"
+                        Switch item=pOutdoor_Streeside_Socket_Powered label="Aussen vorne"
+                        Switch item=pOutdoor_Garden_Terrace_Socket_Powered label="Aussen hinten"
                     }
                     Frame label="Mobile" {
                         Switch item=eMobile_Socket_1_Powered label="Steckdose 1"
@@ -797,31 +797,31 @@ sitemap haus label="Main Menu"
                                 Webview url="/static/custom/grafana/server.html?fromItem=Chart_From" icon=none height=72
                             }
                         }
-                        Group item=FritzboxDslStatus label="DSL Status [MAP(network_states.map):%s]" {
+                        Group item=pGF_Corridor_Fritzbox_DslStatus label="DSL Status [MAP(network_states.map):%s]" {
                             Frame label="Status" {
-                                Text item=FritzboxDslEnable
-                                Text item=FritzboxDslStatus
-                                Text item=FritzboxUptime
-                                Switch item=FritzboxGuestWifi
+                                Text item=pGF_Corridor_Fritzbox_DslEnable
+                                Text item=pGF_Corridor_Fritzbox_DslStatus
+                                Text item=pGF_Corridor_Fritzbox_Uptime
+                                Switch item=pGF_Corridor_Fritzbox_GuestWifi
                             }
                             Frame item=Speedtest_Start label="Verbindung [%1$tH:%1$tM]" {
                                 Text item=Speedtest_UpstreamRate
                                 Text item=Speedtest_DownstreamRate
                             }
                             Frame label="Verbindung" {
-                                Text item=FritzboxDslUpstreamCurrRate
-                                Text item=FritzboxDslDownstreamCurrRate
-                                Text item=FritzboxDslUpstreamMaxRate
-                                Text item=FritzboxDslDownstreamMaxRate
-                                Text item=FritzboxDslUpstreamNoiseMargin
-                                Text item=FritzboxDslDownstreamNoiseMargin
-                                Text item=FritzboxDslUpstreamAttenuation
-                                Text item=FritzboxDslDownstreamAttenuation
+                                Text item=pGF_Corridor_Fritzbox_DslUpstreamCurrRate
+                                Text item=pGF_Corridor_Fritzbox_DslDownstreamCurrRate
+                                Text item=pGF_Corridor_Fritzbox_DslUpstreamMaxRate
+                                Text item=pGF_Corridor_Fritzbox_DslDownstreamMaxRate
+                                Text item=pGF_Corridor_Fritzbox_DslUpstreamNoiseMargin
+                                Text item=pGF_Corridor_Fritzbox_DslDownstreamNoiseMargin
+                                Text item=pGF_Corridor_Fritzbox_DslUpstreamAttenuation
+                                Text item=pGF_Corridor_Fritzbox_DslDownstreamAttenuation
                             }
                             Frame label="Fehler" {
-                                Text item=FritzboxDslFECErrors
-                                Text item=FritzboxDslHECErrors
-                                Text item=FritzboxDslCRCErrors
+                                Text item=pGF_Corridor_Fritzbox_DslFECErrors
+                                Text item=pGF_Corridor_Fritzbox_DslHECErrors
+                                Text item=pGF_Corridor_Fritzbox_DslCRCErrors
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
@@ -845,16 +845,6 @@ sitemap haus label="Main Menu"
                             }
                         }
                     }
-                }
-            }
-		}
-		Text label="Test" icon="selfhouse" {
-            Group item=gIndoor_LightsTest label="Lampen [MAP(group_light.map):%d]" {
-                Switch item=gIndoor_LightsTest label="Alle Lampen" mappings=[OFF="Aus",ON="An"]
-                Group item=gGF_LightsTest label="EG Lampen [MAP(group_light.map):%d]" {
-                    Switch item=pGF_Corridor_Light_Ceiling_Powered
-                    Switch item=pGF_Corridor_Light_Mirror_Powered
-                    Switch item=pGF_Corridor_Light_Hue_Brightness
                 }
             }
 		}

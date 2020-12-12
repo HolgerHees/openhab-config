@@ -61,7 +61,7 @@ class WakeupRule:
             #ItemStateChangeTrigger("Motiondetector_GF_Livingroom",state="OPEN"),
             #ItemStateChangeTrigger("Motiondetector_FF_Corridor",state="OPEN"),
             ItemStateChangeTrigger("gGF_Lights",state="ON"),
-            ItemStateChangeTrigger("Shutters_FF",state="0")
+            ItemStateChangeTrigger("gGF_Shutters",state="0")
         ]
         self.checkTimer = None
         
@@ -92,7 +92,7 @@ class WakeupRule:
         if getItemState("State_Presence").intValue() == 2:
             # sometimes the "gGF_Lights" state switches back and forth for a couple of milliseconds when set "gGF_Lights" state to OFF
             #if itemLastChangeOlderThen("State_Presence",getNow().minusSeconds(5)):
-            if input['event'].getItemName() == "Shutters_FF":
+            if input['event'].getItemName() == "gGF_Shutters":
                 if self.checkTimer != None:
                     self.checkTimer.cancel()
                     self.checkTimer = None                    

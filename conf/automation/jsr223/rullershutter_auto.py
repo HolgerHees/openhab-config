@@ -18,20 +18,20 @@ class RollershutterAutoRule:
     def execute(self, module, input):
         if getItemState("Auto_Rollershutter") == ON:
             if getItemState("State_Rollershutter") == ON:
-                if getItemState("Window_GF_Livingroom_Terrace") == CLOSED: sendCommand("Shutters_GF_Livingroom_Terrace", DOWN)
-                if getItemState("Window_GF_Livingroom_Couch") == CLOSED: sendCommand("Shutters_GF_Livingroom_Couch", DOWN)
-                if getItemState("Window_GF_Kitchen") == CLOSED: sendCommand("Shutters_GF_Kitchen", DOWN)
-                if getItemState("Window_GF_Guestroom") == CLOSED: sendCommand("Shutters_GF_Guestroom", DOWN)
-                if getItemState("Window_GF_Guesttoilet") == CLOSED: sendCommand("Shutters_GF_Guesttoilet", DOWN)
+                if getItemState("Window_GF_Livingroom_Terrace") == CLOSED: sendCommand("pGFLivingroom_Shutter_Terrace_Control", DOWN)
+                if getItemState("Window_GF_Livingroom_Couch") == CLOSED: sendCommand("pGFLivingroom_Shutter_Couch_Control", DOWN)
+                if getItemState("Window_GF_Kitchen") == CLOSED: sendCommand("pGF_Kitchen_Shutter_Control", DOWN)
+                if getItemState("Window_GF_Guestroom") == CLOSED: sendCommand("pGF_Guestroom_Shutter_Control", DOWN)
+                if getItemState("Window_GF_Guesttoilet") == CLOSED: sendCommand("pGF_Guesttoilet_Shutter_Control", DOWN)
 
-                if getItemState("Window_FF_Bedroom") == CLOSED: sendCommand("Shutters_FF_Bedroom", DOWN)
-                if getItemState("Window_FF_Dressingroom") == CLOSED: sendCommand("Shutters_FF_Dressingroom", DOWN)
-                if getItemState("Window_FF_Child1") == CLOSED: sendCommand("Shutters_FF_Child1", DOWN)
-                if getItemState("Window_FF_Child2") == CLOSED: sendCommand("Shutters_FF_Child2", DOWN)
-                if getItemState("Window_FF_Bathroom") == CLOSED: sendCommand("Shutters_FF_Bathroom", DOWN)
-                if getItemState("Window_Attic") == CLOSED: sendCommand("Shutters_Attic", DOWN)
+                if getItemState("Window_FF_Bedroom") == CLOSED: sendCommand("pFF_Bedroom_Shutter_Control", DOWN)
+                if getItemState("Window_FF_Dressingroom") == CLOSED: sendCommand("pFF_Dressingroom_Shutter_Control", DOWN)
+                if getItemState("Window_FF_Child1") == CLOSED: sendCommand("pFF_Child1_Shutter_Control", DOWN)
+                if getItemState("Window_FF_Child2") == CLOSED: sendCommand("pFF_Child2_Shutter_Control", DOWN)
+                if getItemState("Window_FF_Bathroom") == CLOSED: sendCommand("pFF_Bathroom_Shutter_Control", DOWN)
+                if getItemState("Window_Attic") == CLOSED: sendCommand("pAttic_Shutter_Control", DOWN)
             elif getItemState("State_Presence").intValue() == 0:
-                sendCommand("Shutters", UP)
+                sendCommand("gShutters", UP)
 
 
 @rule("rollershutter_auto.py")
@@ -42,9 +42,9 @@ class AtticSunprotectionRule:
     def execute(self, module, input):
         if getItemState("Auto_Sunprotection") == ON:
             if getItemState("State_Sunprotection_Attic") == ON:
-                sendCommand("Shutters_Attic", DOWN)
+                sendCommand("pAttic_Shutter_Control", DOWN)
             else:
-                sendCommand("Shutters_Attic", UP)
+                sendCommand("pAttic_Shutter_Control", UP)
 
 
 @rule("rollershutter_auto.py")
@@ -55,9 +55,9 @@ class BathroomSunprotectionRule:
     def execute(self, module, input):
         if getItemState("Auto_Sunprotection") == ON:
             if getItemState("State_Sunprotection_Bathroom") == ON:
-                sendCommand("Shutters_FF_Bathroom", DOWN)
+                sendCommand("pFF_Bathroom_Shutter_Control", DOWN)
             else:
-                sendCommand("Shutters_FF_Bathroom", UP)
+                sendCommand("pFF_Bathroom_Shutter_Control", UP)
 
 
 @rule("rollershutter_auto.py")
@@ -68,9 +68,9 @@ class DressingroomSunprotectionRule:
     def execute(self, module, input):
         if getItemState("Auto_Sunprotection") == ON:
             if getItemState("State_Sunprotection_Dressingroom") == ON:
-                sendCommand("Shutters_FF_Dressingroom", DOWN)
+                sendCommand("pFF_Dressingroom_Shutter_Control", DOWN)
             else:
-                sendCommand("Shutters_FF_Dressingroom", UP)
+                sendCommand("pFF_Dressingroom_Shutter_Control", UP)
 
 
 @rule("rollershutter_auto.py")
@@ -81,9 +81,9 @@ class BedroomSunprotectionRule:
     def execute(self, module, input):
         if getItemState("Auto_Sunprotection") == ON:
             if getItemState("State_Sunprotection_Bedroom") == ON:
-                sendCommand("Shutters_FF_Bedroom", DOWN)
+                sendCommand("pFF_Bedroom_Shutter_Control", DOWN)
             else:
-                sendCommand("Shutters_FF_Bedroom", UP)
+                sendCommand("pFF_Bedroom_Shutter_Control", UP)
 
 
 @rule("rollershutter_auto.py")
@@ -94,11 +94,11 @@ class LivingroomSunprotectionRule:
     def execute(self, module, input):
         if getItemState("Auto_Sunprotection") == ON and getItemState("State_Presence").intValue() == 0:
             if getItemState("State_Sunprotection_Livingroom") == ON:
-                sendCommand("Shutters_GF_Kitchen", DOWN)
-                sendCommand("Shutters_GF_Livingroom_Couch", DOWN)
+                sendCommand("pGF_Kitchen_Shutter_Control", DOWN)
+                sendCommand("pGFLivingroom_Shutter_Couch_Control", DOWN)
                 if getItemState("Window_GF_Livingroom_Terrace") == CLOSED:
-                    sendCommand("Shutters_GF_Livingroom_Terrace", DOWN)
+                    sendCommand("pGFLivingroom_Shutter_Terrace_Control", DOWN)
             else:
-                sendCommand("Shutters_GF_Kitchen", UP)
-                sendCommand("Shutters_GF_Livingroom_Couch", UP)
-                sendCommand("Shutters_GF_Livingroom_Terrace", UP)
+                sendCommand("pGF_Kitchen_Shutter_Control", UP)
+                sendCommand("pGFLivingroom_Shutter_Couch_Control", UP)
+                sendCommand("pGFLivingroom_Shutter_Terrace_Control", UP)

@@ -1,93 +1,116 @@
-//########### HEATING ##########
-Group Heating_Temperatures
-Group Solar_Temperatures
+// **** GF CORRIDOR ****
+Group  eGF_Corridor_Heating                         "Heizung"              <selfinfo>     (lGF_Corridor) ["RadiatorControl"]
+Switch pGF_Corridor_Heating_Circuit                 "Kreis"                <selfsettings> (eGF_Corridor_Heating,gPersistance_History) ["Point"] { channel="knx:device:bridge:heating_ff:floorCircuit" }
+Switch pGF_Corridor_Heating_Demand                  "Bedarf [%d]"          <selfsettings> (eGF_Corridor_Heating) ["Point"]
+Number pGF_Corridor_Heating_Charged                 "Geladen"              <selfsettings> (eGF_Corridor_Heating) ["Point"]
+Number pGF_Corridor_Heating_Temperature_Target      "Ziel - aktiv"         <selfsettings> (eGF_Corridor_Heating) ["Point"]
+Number pGF_Corridor_Heating_Temperature_Desired     "Ziel [%.1f °C]"       <selftemperature> (eGF_Corridor_Heating) ["Setpoint","Temperature"]
 
-Switch Heating_GF_Livingroom_Circuit		"Wohnzimmer Kreis"		<selfsettings>	(gPersistance_History) { channel="knx:device:bridge:heating_ff:livingroomCircuit" }
-Switch Heating_GF_Corridor_Circuit				"Flur unten Kreis"		<selfsettings>	(gPersistance_History) { channel="knx:device:bridge:heating_ff:floorCircuit" }
-Switch Heating_GF_Guestroom_Circuit			"Gästezimmer Kreis"		<selfsettings>	(gPersistance_History) { channel="knx:device:bridge:heating_ff:guestroomCircuit" }
-Switch Heating_GF_Guesttoilet_Circuit			"Gäste WC Kreis"		<selfsettings>	(gPersistance_History) { channel="knx:device:bridge:heating_ff:guestWCCircuit" }
-Switch Heating_GF_Guesttoilet_HK			    "Gäste WC HK"	    	<selfsettings>	(gPersistance_History) { channel="knx:device:bridge:heating_ff:guestWCHK" }
+// **** GF GUESTTOILET ****
+Group  eGF_Guesttoilet_Heating                      "Heizung"              <selfinfo>     (lGF_Guesttoilet) ["RadiatorControl"]
+Switch pGF_Guesttoilet_Heating_Circuit              "Kreis"                <selfsettings> (eGF_Guesttoilet_Heating,gPersistance_History) { channel="knx:device:bridge:heating_ff:guestWCCircuit" }
+Switch pGF_Guesttoilet_Heating_HK                   "HK"                   <selfsettings> (eGF_Guesttoilet_Heating,gPersistance_History) { channel="knx:device:bridge:heating_ff:guestWCHK" }
+Switch pGF_Guesttoilet_Heating_Demand               "Bedarf"               <selfsettings> (eGF_Guesttoilet_Heating) ["Point"]
+Number pGF_Guesttoilet_Heating_Charged              "Geladen"              <selfsettings> (eGF_Guesttoilet_Heating) ["Point"]
+Number pGF_Guesttoilet_Heating_Temperature_Target   "Ziel - aktiv"         <selfsettings> (eGF_Guesttoilet_Heating) ["Point"]
+Number pGF_Guesttoilet_Heating_Temperature_Desired  "Ziel [%.1f °C]"       <selftemperature> (eGF_Guesttoilet_Heating)  ["Setpoint","Temperature"]
 
-Switch Heating_FF_Corridor_Circuit				"Flur oben Kreis"		<selfsettings>	(gPersistance_History) { channel="knx:device:bridge:heating_sf:floorCircuit" }
-Switch Heating_FF_Child1_Circuit			"Kind 1 Kreis"			<selfsettings>	(gPersistance_History) { channel="knx:device:bridge:heating_sf:child1Circuit" }
-Switch Heating_FF_Child2_Circuit			"Kind 2 Kreis"			<selfsettings>	(gPersistance_History) { channel="knx:device:bridge:heating_sf:child2Circuit" }
-Switch Heating_FF_Bedroom_Circuit			"Schlafzimmer Kreis"	<selfsettings>	(gPersistance_History) { channel="knx:device:bridge:heating_sf:bedroomCircuit" }
-//Number Heating_GF_Dressingroom_Circuit		"Ankleide Kreis"		<selfsettings>	{ channel="knx:device:bridge:heating_sf:dressingroomCircuit" }
-Switch Heating_FF_Bathroom_Circuit			"Badezimmer Kreis"		<selfsettings>	(gPersistance_History) { channel="knx:device:bridge:heating_sf:bathroomCircuit" }
-Switch Heating_FF_Bathroom_HK       		"Badezimmer HK"		    <selfsettings>	(gPersistance_History) { channel="knx:device:bridge:heating_sf:bathroomHK" }
+// **** GF LIVINGROOM ****
+Group  eGF_Livingroom_Heating                       "Heizung"              <selfinfo>     (lGF_Livingroom) ["RadiatorControl"]
+Switch pGF_Livingroom_Heating_Circuit               "Kreis"                <selfsettings> (eGF_Livingroom_Heating,gPersistance_History) ["Point"] { channel="knx:device:bridge:heating_ff:livingroomCircuit" }
+Switch pGF_Livingroom_Heating_Demand                "Bedarf [%d]"          <selfsettings> (eGF_Livingroom_Heating) ["Point"]
+Number pGF_Livingroom_Heating_Charged               "Geladen"              <selfsettings> (eGF_Livingroom_Heating) ["Point"]
+Number pGF_Livingroom_Heating_Temperature_Target    "Ziel - aktiv"         <selfsettings> (eGF_Livingroom_Heating) ["Point"]
+Number pGF_Livingroom_Heating_Temperature_Desired   "Ziel [%.1f °C]"       <selftemperature> (eGF_Livingroom_Heating) ["Setpoint","Temperature"]
 
-Number Heating_GF_Guesttoilet_Charged			"Gäste WC Geladen"		<selfsettings>
-Number Heating_GF_Livingroom_Charged		"Wohnzimmer Geladen"	<selfsettings>
-Number Heating_GF_Guestroom_Charged			"Gästezimmer Geladen"	<selfsettings>
-Number Heating_GF_Corridor_Charged				"Flur unten Geladen"	<selfsettings>
-Number Heating_FF_Corridor_Charged				"Flur oben Geladen"		<selfsettings>
-Number Heating_FF_Child1_Charged			"Kind 1 Geladen"		<selfsettings>
-Number Heating_FF_Child2_Charged			"Kind 2 Geladen"		<selfsettings>
-Number Heating_FF_Bedroom_Charged			"Schlafzimmer Geladen"	<selfsettings>
-//Number Heating_FF_Dressingroom_Charged		"Ankleide Geladen"		<selfsettings>
-Number Heating_FF_Bathroom_Charged			"Badezimmer Geladen"	<selfsettings>
+// **** GF GUESTROOM ****
+Group  eGF_Guestroom_Heating                        "Heizung"              <selfinfo>     (lGF_Guestroom) ["RadiatorControl"]
+Switch pGF_Guestroom_Heating_Circuit                "Gästezimmer Kreis"    <selfsettings> (eGF_Guestroom_Heating,gPersistance_History) ["Point"] { channel="knx:device:bridge:heating_ff:guestroomCircuit" }
+Switch pGF_Guestroom_Heating_Demand                 "Bedarf [%d]"          <selfsettings> (eGF_Guestroom_Heating) ["Point"]
+Number pGF_Guestroom_Heating_Charged                "Gästezimmer Geladen"  <selfsettings> (eGF_Guestroom_Heating) ["Point"]
+Number pGF_Guestroom_Heating_Temperature_Target     "Ziel - aktiv"         <selfsettings> (eGF_Guestroom_Heating) ["Point"]
+Number pGF_Guestroom_Heating_Temperature_Desired    "Ziel [%.1f °C]"       <selftemperature> (eGF_Guestroom_Heating) ["Setpoint","Temperature"]
 
-Number Heating_GF_Guesttoilet_Target_Temperature	"Ziel Gäste WC"		<selfsettings>
-Number Heating_GF_Livingroom_Target_Temperature	"Ziel Wohnzimmer"	<selfsettings>
-Number Heating_GF_Guestroom_Target_Temperature	"Ziel Gästezimmer"	<selfsettings>
-Number Heating_GF_Corridor_Target_Temperature	"Ziel Flur unten"		<selfsettings>
-Number Heating_FF_Corridor_Target_Temperature		"Ziel Flur oben"	<selfsettings>
-Number Heating_FF_Child1_Target_Temperature		"Ziel Kind 1"		<selfsettings>
-Number Heating_FF_Child2_Target_Temperature		"Ziel Kind 2"		<selfsettings>
-Number Heating_FF_Bedroom_Target_Temperature		"Ziel Schlafzimmer"	<selfsettings>
-//Number Heating_FF_Dressingroom_Target_Temperature		"Ziel Ankleide"	<selfsettings>
-Number Heating_FF_Bathroom_Target_Temperature		"Ziel Badezimmer"	<selfsettings>
+// **** FF CORRIDOR ****
+Group  eFF_Corridor_Heating                         "Heizung"              <selfinfo>     (lFF_Corridor) ["RadiatorControl"]
+Switch pFF_Corridor_Heating_Circuit                 "Kreis"                <selfsettings> (eFF_Corridor_Heating,gPersistance_History) { channel="knx:device:bridge:heating_sf:floorCircuit" }
+Switch pFF_Corridor_Heating_Demand                  "Bedarf [%d]"          <selfsettings> (eFF_Corridor_Heating) ["Point"]
+Number pFF_Corridor_Heating_Charged                 "Geladen"              <selfsettings> (eFF_Corridor_Heating) ["Point"]
+Number pFF_Corridor_Heating_Temperature_Target      "Ziel - aktiv"         <selfsettings> (eFF_Corridor_Heating) ["Point"]
+Number pFF_Corridor_Heating_Temperature_Desired     "Ziel [%.1f °C]"       <selftemperature> (eFF_Corridor_Heating) ["Setpoint","Temperature"]
 
-Switch Heating_GF_Guesttoilet_Demand			"Heizung Gäste WC [%d]"		<selfsettings>
-Switch Heating_GF_Livingroom_Demand			"Heizung Wohnzimmer [%d]"	<selfsettings>
-Switch Heating_GF_Guestroom_Demand			"Heizung Gästezimmer [%d]"	<selfsettings>
-Switch Heating_GF_Corridor_Demand				"Heizung Flur unten [%d]"	<selfsettings>
-Switch Heating_FF_Corridor_Demand				"Heizung Flur oben [%d]"	<selfsettings>
-Switch Heating_FF_Child1_Demand				"Heizung Kind 1 [%d]"		<selfsettings>
-Switch Heating_FF_Child2_Demand				"Heizung Kind 2 [%d]"		<selfsettings>
-Switch Heating_FF_Bedroom_Demand			"Heizung Schlafzimmer [%d]"	<selfsettings>
-//Switch Heating_FF_Dressingroom_Demand		"Heizung Ankleide [%d]"		<selfsettings>
-Switch Heating_FF_Bathroom_Demand			"Heizung Badezimmer [%d]"	<selfsettings>
+// **** FF BATHROOM ****
+Group  eFF_Bathroom_Heating                         "Heizung"              <selfinfo>     (lFF_Bathroom) ["RadiatorControl"]
+Switch pFF_Bathroom_Heating_Circuit                 "Kreis"                <selfsettings> (eFF_Bathroom_Heating,gPersistance_History) { channel="knx:device:bridge:heating_sf:bathroomCircuit" }
+Switch pFF_Bathroom_Heating_HK                      "HK"                   <selfsettings> (eFF_Bathroom_Heating,gPersistance_History) { channel="knx:device:bridge:heating_sf:bathroomHK" }
+Switch pFF_Bathroom_Heating_Demand                  "Bedarf [%d]"          <selfsettings> (eFF_Bathroom_Heating) ["Point"]
+Number pFF_Bathroom_Heating_Charged                 "Geladen"              <selfsettings> (eFF_Bathroom_Heating) ["Point"]
+Number pFF_Bathroom_Heating_Temperature_Target      "Ziel - aktiv"         <selfsettings> (eFF_Bathroom_Heating) ["Point"]
+Number pFF_Bathroom_Heating_Temperature_Desired     "Ziel [%.1f °C]"       <selftemperature> (eFF_Bathroom_Heating) ["Setpoint","Temperature"]
 
+// **** FF BEDROOM ****
+Group  eFF_Bedroom_Heating                          "Heizung"              <selfinfo>     (lFF_Bedroom) ["RadiatorControl"]
+Switch pFF_Bedroom_Heating_Circuit                  "Kreis"                <selfsettings> (eFF_Bedroom_Heating,gPersistance_History) { channel="knx:device:bridge:heating_sf:bedroomCircuit" }
+Switch pFF_Bedroom_Heating_Demand                   "Bedarf [%d]"          <selfsettings> (eFF_Bedroom_Heating) ["Point"]
+Number pFF_Bedroom_Heating_Charged                  "Geladen"              <selfsettings> (eFF_Bedroom_Heating) ["Point"]
+Number pFF_Bedroom_Heating_Temperature_Target       "Ziel - aktiv"         <selfsettings> (eFF_Bedroom_Heating) ["Point"]
+Number pFF_Bedroom_Heating_Temperature_Desired      "Ziel [%.1f °C]"       <selftemperature> (eFF_Bedroom_Heating) ["Setpoint","Temperature"]
 
-Switch Heating_Demand							"Heizung [%d]"					<selfsettings>
+// **** FF CHILD 1 ****
+Group  eFF_Child1_Heating                           "Heizung"              <selfinfo>     (lFF_Child1) ["RadiatorControl"]
+Switch pFF_Child1_Heating_Circuit                   "Kreis"                <selfsettings> (eFF_Child1_Heating,gPersistance_History) { channel="knx:device:bridge:heating_sf:child1Circuit" }
+Switch pFF_Child1_Heating_Demand                    "Bedarf [%d]"          <selfsettings> (eFF_Child1_Heating) ["Point"]
+Number pFF_Child1_Heating_Charged                   "Geladen"              <selfsettings> (eFF_Child1_Heating) ["Point"]
+Number pFF_Child1_Heating_Temperature_Target        "Ziel - aktiv"         <selfsettings> (eFF_Child1_Heating) ["Point"]
+Number pFF_Child1_Heating_Temperature_Desired       "Ziel [%.1f °C]"       <selftemperature> (eFF_Child1_Heating) ["Setpoint","Temperature"]
 
-Number Heating_Auto_Mode						"Modus"							<selfautomode>
-Number Heating_Operating_Mode					"Betriebsart [MAP(heating_de.map):%s]" <selfsettings> (gPersistance_History) {channel="mqtt:topic:mosquitto:vcontrol:operationMode" }
-Number Heating_Power							"Leistung [%.1f %%]"			<selfruntime>       (gPersistance_Chart,gPersistance_History) {channel="mqtt:topic:mosquitto:vcontrol:power" }
-Number Heating_Circuit_Pump_Speed				"Heizkreispumpe (Drehzahl) [%.1f %%]" <selfruntime>	(gPersistance_Chart,gPersistance_History){channel="mqtt:topic:mosquitto:vcontrol:pumpSpeed" }
-String Heating_Power_Message					"Brenner, Heizkreis [%s]"		<selffire>
-Number Heating_Temperature_Room_Target	 		"Ziel [%.1f °C]" 				<selftemperature>      {channel="mqtt:topic:mosquitto:vcontrol:targetTemperature" }
-Number Heating_Temperature_Outdoor				"Aussen (Ist) [%.1f °C]"		<selftemperature>	(gPersistance_Chart,gPersistance_History,Heating_Temperatures) {channel="mqtt:topic:mosquitto:vcontrol:outdoorTemperature" }
-Number Heating_Temperature_Outdoor_Subdued		"Aussen (Ged.) [%.1f °C]"		<selftemperature>	(gPersistance_Chart,gPersistance_History,Heating_Temperatures) {channel="mqtt:topic:mosquitto:vcontrol:outdoorTemperatureSubdued" }
-String Heating_Temperature_Outdoor_Message		"Aussen [%s]"					<selftemperature>	
-Number Heating_Temperature_Offset_Target		"Vorlauf (Soll) [%.1f °C]"		<selftemperature>	(gPersistance_Chart,gPersistance_History,Heating_Temperatures) {channel="mqtt:topic:mosquitto:vcontrol:offsetTemperatureTarget" }
-Number Heating_Temperature_Offset				"Vorlauf (Ist) [%.1f °C]"		<selftemperature>	(gPersistance_Chart,gPersistance_History,Heating_Temperatures) {channel="mqtt:topic:mosquitto:vcontrol:offsetTemperature" }
-String Heating_Temperature_Offset_Message		"Vorlauf [%s]	"				<selftemperature>	
-Number Heating_Temperature_Boiler_Target		"Kessel (Soll) [%.1f °C]"		<selftemperature>	   {channel="mqtt:topic:mosquitto:vcontrol:boilerTemperatureTarget" }
-Number Heating_Temperature_Boiler				"Kessel (Ist) [%.1f °C]"		<selftemperature>	   {channel="mqtt:topic:mosquitto:vcontrol:boilerTemperature" }
-String Heating_Temperature_Boiler_Message		"Kessel [%s]"					<selftemperature>	
-Number Heating_Burner_Starts					"Brennerstarts [%d]"			<selfsettings>		(gPersistance_History) {channel="mqtt:topic:mosquitto:vcontrol:burnerStarts" }
-Number Heating_Burner_Starts_Current_Daily		"Brennerstarts (heute) [%.1f]"	<selfsettings>		(gPersistance_Chart)
-String Heating_Burner_Starts_Message			"Brennerstarts [%s]"			<selffire>		
-Number Heating_Burner_Hours						"Brennerstunden [%.1f]"			<selfruntime>		(gPersistance_History) {channel="mqtt:topic:mosquitto:vcontrol:burnerHours" }
-Number Heating_Burner_Hours_Current_Daily		"Brennerstunden (heute) [%.1f]"	<selfruntime>		(gPersistance_Chart)
-String Heating_Burner_Hours_Message				"Brennerstunden [%s]"			<selffire>		
-Number Heating_Temperature_Wather_Storage		"Wasser [%.1f °C]"				<selftemperature>	(gPersistance_Chart,gPersistance_History,Solar_Temperatures,Heating_Temperatures)                                  {channel="mqtt:topic:mosquitto:vcontrol:watherTemperatureStorage" }
-Number Heating_Temperature_Solar_Collector		"Solar Kollektor [%.1f °C]"		<selftemperature>	(gPersistance_Chart,gPersistance_History,Solar_Temperatures) {channel="mqtt:topic:mosquitto:vcontrol:watherTemperatureSolarCollector" }
-Number Heating_Temperature_Solar_Storage		"Solar Speicher [%.1f °C]"		<selftemperature>	(gPersistance_Chart,gPersistance_History,Solar_Temperatures) {channel="mqtt:topic:mosquitto:vcontrol:watherTemperatureSolarStorage" }
-String Heating_Temperature_Solar_Message		"Kollektor, Speicher [%s]"		<selftemperature>	
-Number Heating_Solar_Hours						"Solar Stunden [%d]"			<selfruntime>		(gPersistance_History)  {channel="mqtt:topic:mosquitto:vcontrol:solarHours" }
-String Heating_Solar_Hours_Message				"Solar Stunden [%s]"			<selfruntime>		
-Number Heating_Solar_Power						"Solar Leistung [%.1f KW]"		<selfsun>			(gPersistance_History)  {channel="mqtt:topic:mosquitto:vcontrol:solarPower" }
-Number Heating_Solar_Power_Current_Daily		"Solar Leistung (heute) [%.1f KW]"	<selfsun>		(gPersistance_Chart)
-Number Heating_Solar_Power_Current5Min			"Solar Leistung [%.1f KW]"		<selfsun>			(gPersistance_Chart)
-String Heating_Solar_Power_Message				"Solar Leistung [%s]"			<selfsun>			
-Number Heating_Solar_Pump_State					"Solar Pumpe [MAP(heating_pump_de.map):%s]" <selfruntime> (gPersistance_Chart,gPersistance_History) {channel="mqtt:topic:mosquitto:vcontrol:pumpState" }
-Number Heating_Solar_Reheating_State			"Nachladeunterdrückung [MAP(heating_state_de.map):%s]" <selfruntime> 
-{channel="mqtt:topic:mosquitto:vcontrol:solarReheatingState" }
-String Heating_Solar_State_Message				"Pumpe, Nachladeunterdr. [%s]"	<selfsettings>
-Number Heating_Common_Fault						"Status [MAP(heating_state_de.map):%s]" <selfinfo>           {channel="mqtt:topic:mosquitto:vcontrol:commonFault" }
+// **** FF CHILD 2 ****
+Group  eFF_Child2_Heating                           "Heizung"              <selfinfo>     (lFF_Child2) ["RadiatorControl"]
+Switch pFF_Child2_Heating_Circuit                   "Kreis"                <selfsettings> (eFF_Child2_Heating,gPersistance_History) { channel="knx:device:bridge:heating_sf:child2Circuit" }
+Switch pFF_Child2_Heating_Demand                    "Bedarf [%d]"          <selfsettings> (eFF_Child2_Heating) ["Point"]
+Number pFF_Child2_Heating_Charged                   "Geladen"              <selfsettings> (eFF_Child2_Heating) ["Point"]
+Number pFF_Child2_Heating_Temperature_Target        "Ziel - aktiv"         <selfsettings> (eFF_Child2_Heating) ["Point"]
+Number pFF_Child2_Heating_Temperature_Desired       "Ziel [%.1f °C]"       <selftemperature> (eFF_Child2_Heating)["Setpoint","Temperature"]
 
-Number Heating_Temperature_Pipe_Out				"Gem. Vorlauf (Ist) [%.1f °C]"	<selftemperature>	(gPersistance_Chart,gPersistance_History,Heating_Temperatures)
-Number Heating_Temperature_Pipe_In				"Gem. Rücklauf (Ist) [%.1f °C]"	<selftemperature>	(gPersistance_Chart,gPersistance_History,Heating_Temperatures)
+// **** HEATING DEVICE ****
+Group  eGF_Utilityroom_Heating_Boiler                               "Heizterme"                         <selfinfo> (lGF_Utilityroom) ["RadiatorControl"]
+
+Switch pGF_Utilityroom_Heating_Demand                               "Heizung [%d]"                      <selfsettings> (eGF_Utilityroom_Heating_Boiler) ["Point"]
+Number pGF_Utilityroom_Heating_Auto_Mode                            "Modus"                             <selfautomode> (eGF_Utilityroom_Heating_Boiler) ["Point"]
+Number pGF_Utilityroom_Heating_Operating_Mode                       "Betriebsart [MAP(heating_de.map):%s]" <selfsettings> (eGF_Utilityroom_Heating_Boiler,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:operationMode" }
+Number pGF_Utilityroom_Heating_Power                                "Leistung [%.1f %%]"                <selfruntime> (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:power" }
+Number pGF_Utilityroom_Heating_Circuit_Pump_Speed                   "Heizkreispumpe (Drehzahl) [%.1f %%]" <selfruntime> (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:pumpSpeed" }
+String pGF_Utilityroom_Heating_Power_Message                        "Brenner, Heizkreis [%s]"           <selffire> (eGF_Utilityroom_Heating_Boiler) ["Point"]
+Number pGF_Utilityroom_Heating_Temperature_Room_Target              "Ziel [%.1f °C]"                    <selftemperature> (eGF_Utilityroom_Heating_Boiler) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:targetTemperature" }
+Number pGF_Utilityroom_Heating_Temperature_Outdoor                  "Aussen (Ist) [%.1f °C]"            <selftemperature> (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:outdoorTemperature" }
+Number pGF_Utilityroom_Heating_Temperature_Outdoor_Subdued          "Aussen (Ged.) [%.1f °C]"           <selftemperature> (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:outdoorTemperatureSubdued" }
+String pGF_Utilityroom_Heating_Temperature_Outdoor_Message          "Aussen [%s]"                       <selftemperature> (eGF_Utilityroom_Heating_Boiler) ["Point"]    
+Number pGF_Utilityroom_Heating_Temperature_Offset_Target            "Vorlauf (Soll) [%.1f °C]"          <selftemperature> (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:offsetTemperatureTarget" }
+Number pGF_Utilityroom_Heating_Temperature_Offset                   "Vorlauf (Ist) [%.1f °C]"           <selftemperature> (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:offsetTemperature" }
+String pGF_Utilityroom_Heating_Temperature_Offset_Message           "Vorlauf [%s]    "                  <selftemperature> (eGF_Utilityroom_Heating_Boiler) ["Point"]    
+Number pGF_Utilityroom_Heating_Temperature_Boiler_Target            "Kessel (Soll) [%.1f °C]"           <selftemperature> (eGF_Utilityroom_Heating_Boiler) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:boilerTemperatureTarget" }
+Number pGF_Utilityroom_Heating_Temperature_Boiler                   "Kessel (Ist) [%.1f °C]"            <selftemperature> (eGF_Utilityroom_Heating_Boiler) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:boilerTemperature" }
+String pGF_Utilityroom_Heating_Temperature_Boiler_Message           "Kessel [%s]"                       <selftemperature> (eGF_Utilityroom_Heating_Boiler) ["Point"]    
+Number pGF_Utilityroom_Heating_Burner_Starts                        "Brennerstarts [%d]"                <selfsettings>    (eGF_Utilityroom_Heating_Boiler,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:burnerStarts" }
+Number pGF_Utilityroom_Heating_Burner_Starts_Current_Daily          "Brennerstarts (heute) [%.1f]"      <selfsettings>    (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart) ["Point"]
+String pGF_Utilityroom_Heating_Burner_Starts_Message                "Brennerstarts [%s]"                <selffire>        (eGF_Utilityroom_Heating_Boiler) ["Point"]
+Number pGF_Utilityroom_Heating_Burner_Hours                         "Brennerstunden [%.1f]"             <selfruntime>     (eGF_Utilityroom_Heating_Boiler,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:burnerHours" }
+Number pGF_Utilityroom_Heating_Burner_Hours_Current_Daily           "Brennerstunden (heute) [%.1f]"     <selfruntime>     (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart) ["Point"]
+String pGF_Utilityroom_Heating_Burner_Hours_Message                 "Brennerstunden [%s]"               <selffire>        (eGF_Utilityroom_Heating_Boiler) ["Point"]
+Number pGF_Utilityroom_Heating_Temperature_Wather_Storage           "Wasser [%.1f °C]"                  <selftemperature> (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"]                                 {channel="mqtt:topic:mosquitto:vcontrol:watherTemperatureStorage" }
+Number pGF_Utilityroom_Heating_Temperature_Solar_Collector          "Solar Kollektor [%.1f °C]"         <selftemperature> (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:watherTemperatureSolarCollector" }
+Number pGF_Utilityroom_Heating_Temperature_Solar_Storage            "Solar Speicher [%.1f °C]"          <selftemperature> (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:watherTemperatureSolarStorage" }
+String pGF_Utilityroom_Heating_Temperature_Solar_Message            "Kollektor, Speicher [%s]"          <selftemperature> (eGF_Utilityroom_Heating_Boiler) ["Point"]   
+Number pGF_Utilityroom_Heating_Solar_Hours                          "Solar Stunden [%d]"                <selfruntime>     (eGF_Utilityroom_Heating_Boiler,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:solarHours" }
+String pGF_Utilityroom_Heating_Solar_Hours_Message                  "Solar Stunden [%s]"                <selfruntime>     (eGF_Utilityroom_Heating_Boiler) ["Point"]   
+Number pGF_Utilityroom_Heating_Solar_Power                          "Solar Leistung [%.1f KW]"          <selfsun>         (eGF_Utilityroom_Heating_Boiler,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:solarPower" }
+Number pGF_Utilityroom_Heating_Solar_Power_Current_Daily            "Solar Leistung (heute) [%.1f KW]"  <selfsun>         (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart) ["Point"]
+Number pGF_Utilityroom_Heating_Solar_Power_Current5Min              "Solar Leistung [%.1f KW]"          <selfsun>         (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart) ["Point"]
+String pGF_Utilityroom_Heating_Solar_Power_Message                  "Solar Leistung [%s]"               <selfsun>         (eGF_Utilityroom_Heating_Boiler) ["Point"] 
+Number pGF_Utilityroom_Heating_Solar_Pump_State                     "Solar Pumpe [MAP(heating_pump_de.map):%s]" <selfruntime> (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) {channel="mqtt:topic:mosquitto:vcontrol:pumpState" }
+Number pGF_Utilityroom_Heating_Solar_Reheating_State                "Nachladeunterdrückung [MAP(heating_state_de.map):%s]" <selfruntime> (eGF_Utilityroom_Heating_Boiler) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:solarReheatingState" }
+String pGF_Utilityroom_Heating_Solar_State_Message                  "Pumpe, Nachladeunterdr. [%s]"      <selfsettings>    (eGF_Utilityroom_Heating_Boiler) ["Point"] 
+Number pGF_Utilityroom_Heating_Common_Fault                         "Status [MAP(heating_state_de.map):%s]" <selfinfo>    (eGF_Utilityroom_Heating_Boiler) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:commonFault" }
+
+Number pGF_Utilityroom_Heating_Temperature_Pipe_Out                 "Gem. Vorlauf (Ist) [%.1f °C]"      <selftemperature>    (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_HistorypGF_Utilityroom_Temperatures) ["Point"]
+Number pGF_Utilityroom_Heating_Temperature_Pipe_In                  "Gem. Rücklauf (Ist) [%.1f °C]"     <selftemperature>    (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_HistorypGF_Utilityroom_Temperatures) ["Point"]
