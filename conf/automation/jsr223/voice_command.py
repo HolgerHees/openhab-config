@@ -73,6 +73,8 @@ class SemanticItem:
         self.synonyms = []
         self.search_terms = []
 
+        self.parents = []
+
     def __repr__(self):
         return self.item.getName() + " (" + str(self.label) + "|" + str(self.tags) + "|" + str(self.synonyms) + ")"
 
@@ -119,16 +121,33 @@ class SemanticData:
                 if search_term in self.semantic_search_regex:
                     continue
                 self.semantic_search_regex[search_term] = re.compile(config["main"]["phrase_matcher"].format(search_term))
-
+ 
         # prepare semantic locations
-        self.location_search_map = {}
+        location_map = {}
         for semantic_item in self.semantic_items.values():
             if semantic_item.type == "Location":
-                for search_term in semantic_item.search_terms:
-                    if search_term not in self.location_search_map:
-                        self.location_search_map[search_term] = []
-                    self.location_search_map[search_term].append(semantic_item)
+                location_map[semantic_item.item.getName()] = semantic_item
+
+        # prepare location search map
+        self.location_search_map = {}
+        for semantic_item in location_map.values():
+            groups = self.getGroups(location_map,semantic_item.item,[])
+            semantic_item.groups = groups
+
+            for search_term in semantic_item.search_terms:
+                if search_term not in self.location_search_map:
+                    self.location_search_map[search_term] = []
+                self.location_search_map[search_term].append(semantic_item)
+ 
         self.location_search_terms = sorted(self.location_search_map, key=len, reverse=True)
+
+    def getGroups(self,location_map,item,groups):
+        for group_name in item.getGroupNames():
+            if group_name in groups:
+                continue
+            groups.append(group_name)
+            self.getGroups(location_map,location_map[group_name].item,groups)
+        return groups
  
     def getType(self,semantic_tags,item):
         item_tags = item.getTags()
@@ -152,14 +171,7 @@ semantic_data = SemanticData()
 class VoiceCommandRule:
     def __init__(self):
         self.triggers = [ ItemStateUpdateTrigger("VoiceCommand") ]
-
-    def parseData(self,input):
-        data = input.split("|")
-        if len(data) == 1:
-            return [ data[0], None, None ]
-        else:
-            return [ data[0], data[1], allAlexaDevices[data[1]] ]
-
+ 
     def getByType(self,parent,type):
         result = []
         if parent.getType() == "Group":
@@ -200,21 +212,25 @@ class VoiceCommandRule:
                     continue
                 processed_search.append(search_term)
                 unprocessed_search = unprocessed_search.replace(search_term,"")
-                _matched_items += search_map[search_term]
-                break
-            if len(_matched_items) > 0:
+                _matched_items = search_map[search_term]
                 matched_items = _matched_items
+                break
             search_map, search_terms = self.buildSearchMap(_matched_items)
-
+  
         # check for sub item matches of same type
         # e.g. aussen vorne
         # => lOutdoor => lOutdoor_Streedside
-        for matched_item in matched_items:
-            sub_item_search_map, sub_item_search_terms, all_sub_item = self.getByTypeSorted(matched_item.item,matched_item.type)
+        if len(matched_items) > 0:
+            sub_items = []
+            for matched_item in matched_items:
+                sub_items += self.getByType(matched_item.item,matched_item.type)
+            sub_item_search_map, sub_item_search_terms = self.buildSearchMap(sub_items)
+
             #self.log.info(u"{}".format(sub_item_search_map))
-            matched_sub_items, processed_sub_search, unprocessed_sub_search = self.searchSemanticItems(sub_item_search_map,sub_item_search_terms,unprocessed_search)
+            matched_sub_items, processed_sub_search, unprocessed_search = self.searchSemanticItems(sub_item_search_map,sub_item_search_terms,unprocessed_search)
             if len(matched_sub_items) > 0:
-                return matched_sub_items, processed_sub_search, unprocessed_sub_search
+                matched_items = matched_sub_items
+                processed_search += processed_sub_search
 
         return matched_items, processed_search, unprocessed_search
  
@@ -247,13 +263,13 @@ class VoiceCommandRule:
                     continue
                 location_name = allAlexaDevices[client_id]
                 action.locations = [ semantic_data.locations[location_name] ]
-    
+
     def checkPoints(self,action,cmd):
         matched_equipments = []
         processed_search = []
         for location in action.locations:
             # search for equipments    
-            #self.log.info(u"LOCATION: {} {}".format(location,cmd))
+            #self.log.info(u"  location: {} {}".format(location,cmd))
             equipment_search_map, equipment_search_terms, all_equipments = self.getByTypeSorted(location.item,"Equipment")
             _matched_equipments, _processed_search, unprocessed_search = self.searchSemanticItems(equipment_search_map,equipment_search_terms,cmd)
             matched_equipments = matched_equipments + _matched_equipments
@@ -304,7 +320,7 @@ class VoiceCommandRule:
         for processed_search_term in processed_search_terms:
             cmd = cmd.replace(processed_search_term,"")
 
-        return cmd
+        return cmd 
 
     def detectPoints(self,actions):
         last_cmd = None
@@ -401,6 +417,13 @@ class VoiceCommandRule:
         #for attribute in semantic_data.item_attributes:
         #    self.log.info(u"{}".format(semantic_data.item_attributes[attribute]))
 
+    def parseData(self,input):
+        data = input.split("|")
+        if len(data) == 1:
+            return [ data[0], None, None ]
+        else:
+            return [ data[0], data[1], allAlexaDevices[data[1]] ]
+
     def execute(self, module, input):
         voice_command, client_id, fallback_room = self.parseData(input['event'].getItemState().toString())
         self.process(voice_command, client_id, fallback_room)
@@ -439,4 +462,4 @@ class TestRule:
                 raise Exception("Wrong detection")
 
     def execute(self, module, input):
-        pass                                                               
+        pass
