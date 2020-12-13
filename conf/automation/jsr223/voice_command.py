@@ -2,18 +2,18 @@ from shared.helper import rule, postUpdate
 
 from core.triggers import ItemStateUpdateTrigger
 
-from alexa import allAlexaDevices
+from alexa.configuration import allAlexaDevices
 
 #https://github.com/openhab/openhab-core/blob/master/bundles/org.openhab.core.semantics/model/SemanticTags.csv
-from semantic import SemanticTagsAsCsv
-from semantic_test import Cases
+from alexa.semantic_type import SemanticTagsAsCsv
+from alexa.semantic_test import Cases
 
 from core.actions import HTTP
 
 import re
 
 import json
-
+ 
 config = {
     "i18n": {
         "nothing_found": "ich habe leider keine Geräte gefunden",
