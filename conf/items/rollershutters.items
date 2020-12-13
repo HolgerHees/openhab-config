@@ -9,11 +9,11 @@ Group:Rollershutter:OR(UP, DOWN) gSouth_Shutters	"Süden" <selfrollershutter>
 Group:Rollershutter:OR(UP, DOWN) gWest_Shutters	"Westen" <selfrollershutter>
 
 // **** GF LIVINGROOM ****
-Group  eGF_Livingroom_Shutter_Terrace "Terasse Rollladen" <selfrollershutter> (lGF_Livingroom) ["Blinds"]
-Rollershutter pGFLivingroom_Shutter_Terrace_Control "Terasse" <selfrollershutter> (eGF_Livingroom_Shutter_Terrace,gShutters,gGF_Shutters,gShutters_Count,gGF_Shutters_Count,gWest_Shutters) ["Control"] { channel="knx:device:bridge:shutter_ff:livingroomTerrace" }
+Group  eGF_Livingroom_Shutter_Terrace "Terasse Rollladen" <selfrollershutter> (lGF_Livingroom) ["Blinds"] {synonyms="Esstisch,Terasse"}
+Rollershutter pGF_Livingroom_Shutter_Terrace_Control "Terasse" <selfrollershutter> (eGF_Livingroom_Shutter_Terrace,gShutters,gGF_Shutters,gShutters_Count,gGF_Shutters_Count,gWest_Shutters) ["Control"] { channel="knx:device:bridge:shutter_ff:livingroomTerrace" }
 
-Group  eGF_Livingroom_Shutter_Couch "Couch Rollladen" <selfrollershutter> (lGF_Livingroom) ["Blinds"]
-Rollershutter pGFLivingroom_Shutter_Couch_Control "Couch" <selfrollershutter> (eGF_Livingroom_Shutter_Couch,gShutters,gGF_Shutters,gShutters_Count,gGF_Shutters_Count,gWest_Shutters) ["Control"] { channel="knx:device:bridge:shutter_ff:livingroomCouch" }
+Group  eGF_Livingroom_Shutter_Couch "Couch Rollladen" <selfrollershutter> (lGF_Livingroom) ["Blinds"] {synonyms="Couch"}
+Rollershutter pGF_Livingroom_Shutter_Couch_Control "Couch" <selfrollershutter> (eGF_Livingroom_Shutter_Couch,gShutters,gGF_Shutters,gShutters_Count,gGF_Shutters_Count,gWest_Shutters) ["Control"] { channel="knx:device:bridge:shutter_ff:livingroomCouch" }
 
 // **** GF KITCHEN ****
 Group  eGF_Kitchen_Shutter "Küchen Rollladen" <selfrollershutter> (lGF_Kitchen) ["Blinds"]

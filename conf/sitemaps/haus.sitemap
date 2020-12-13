@@ -64,7 +64,7 @@ sitemap haus label="Main Menu"
 						Switch item=pFF_Child2_Light_Ceiling_Powered label="Kind 2"
 					}
 				}
-				Switch item=pFF_Attic_Light_Ceiling_Powered label="Dachboden"
+				Switch item=pAttic_Light_Ceiling_Powered label="Dachboden"
             }
             Frame label="Garten" {
 				Switch item=pGarage_Light_Ceiling_Powered label="Schuppen"

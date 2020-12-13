@@ -38,7 +38,7 @@ config = {
         "OFF": { "search": ["aus","ausschalten","beenden","beende","deaktiviere","stoppe","stoppen"], "types": ["Switch","Dimmer"] },
         "ON": { "search": ["an","ein","einschalten","starten","aktiviere","aktivieren"], "types": ["Switch","Dimmer"] },
         "DOWN": { "search": ["runter","schliessen"], "types": ["Rollershutter"] },
-        "UP": { "search": ["hoch","öffnen"], "types": ["Rollershutter"] },
+        "UP": { "search": ["hoch","rauf","öffnen"], "types": ["Rollershutter"] },
         "PERCENT": { "search": [u"/.* ([0-9a-zA-ZäÄöÖüÜß]+)[\\s]*(prozent|%).*/"], "types": ["Dimmer"] },
         "READ": { "search": ["wie","wieviel","was"], "types": ["Number","String"] }
     }
@@ -48,12 +48,11 @@ class VoiceAction:
     def __init__(self,voice_cmd):
         self.voice_cmd_complete = voice_cmd
         self.voice_cmd_unprocessed = voice_cmd
-        self.locations = {}
-        self.equipments = {}
-        self.points = {}
+        self.locations = []
+        self.points = []
 
         self.item_cmd = None
-        self.item_actions = {}
+        self.item_actions = []
 
 class ItemCommand:
     def __init__(self,cmd,types):
@@ -112,6 +111,14 @@ class SemanticData:
                 elif attribute['source'] == "METADATA":
                     semantic_item.synonyms.append(attribute['value'].lower())
             semantic_item.search_terms = semantic_item.label + semantic_item.synonyms + semantic_item.tags
+
+        # prepare regex matcher
+        self.semantic_search_regex = {}
+        for semantic_item in self.semantic_items.values():
+            for search_term in semantic_item.search_terms:
+                if search_term in self.semantic_search_regex:
+                    continue
+                self.semantic_search_regex[search_term] = re.compile(config["main"]["phrase_matcher"].format(search_term))
 
         # prepare semantic locations
         self.location_search_map = {}
@@ -182,14 +189,14 @@ class VoiceCommandRule:
 
     def searchSemanticItems(self,search_map,search_terms,unprocessed_search):
         # search for items and reduce result until no new matches found
-        # like first matches 'indirekt'
+        # like first matches 'indirect'
         # then matches 'couch' etc
         matched_items = []
         processed_search = []
         while len(search_terms) > 0:
             _matched_items = []
             for search_term in search_terms:
-                if not re.match(config["main"]["phrase_matcher"].format(search_term), unprocessed_search):
+                if not semantic_data.semantic_search_regex[search_term].match(unprocessed_search):
                     continue
                 processed_search.append(search_term)
                 unprocessed_search = unprocessed_search.replace(search_term,"")
@@ -198,17 +205,26 @@ class VoiceCommandRule:
             if len(_matched_items) > 0:
                 matched_items = _matched_items
             search_map, search_terms = self.buildSearchMap(_matched_items)
-        return matched_items, processed_search, unprocessed_search
 
+        # check for sub item matches of same type
+        # e.g. aussen vorne
+        # => lOutdoor => lOutdoor_Streedside
+        for matched_item in matched_items:
+            sub_item_search_map, sub_item_search_terms, all_sub_item = self.getByTypeSorted(matched_item.item,matched_item.type)
+            #self.log.info(u"{}".format(sub_item_search_map))
+            matched_sub_items, processed_sub_search, unprocessed_sub_search = self.searchSemanticItems(sub_item_search_map,sub_item_search_terms,unprocessed_search)
+            if len(matched_sub_items) > 0:
+                return matched_sub_items, processed_sub_search, unprocessed_sub_search
+
+        return matched_items, processed_search, unprocessed_search
+ 
     def detectLocations(self,actions,client_id):
-        last_locations = {}
+        last_locations = []
         for action in actions:
             # search for locations
             matched_locations, processed_search, unprocessed_search = self.searchSemanticItems(semantic_data.location_search_map,semantic_data.location_search_terms,action.voice_cmd_unprocessed)
             action.voice_cmd_unprocessed = unprocessed_search
-
-            for location in matched_locations:
-                action.locations[location.item.getName()] = location
+            action.locations = matched_locations
 
             # if no location found use the last one
             if len(action.locations) == 0:
@@ -217,7 +233,7 @@ class VoiceCommandRule:
                 last_locations = action.locations
  
         # Fill missing locations backward
-        last_locations = {}
+        last_locations = []
         for action in reversed(actions):
             if len(action.locations) == 0:
                 action.locations = last_locations
@@ -227,18 +243,18 @@ class VoiceCommandRule:
         # Fill missing locations with fallbacks
         if client_id != None:
             for action in actions:
-                if len(action.locations.keys()) != 0:
+                if len(action.locations) != 0:
                     continue
                 location_name = allAlexaDevices[client_id]
-                action.locations = { location_name: semantic_data.locations[location_name] }
-     
+                action.locations = [ semantic_data.locations[location_name] ]
+    
     def checkPoints(self,action,cmd):
         matched_equipments = []
         processed_search = []
-        for location in action.locations.values():
+        for location in action.locations:
             # search for equipments    
-            # self.log.info(u"LOCATION: {} {}".format(location,cmd))
-            equipment_search_map, equipment_search_terms,all_equipments = self.getByTypeSorted(location.item,"Equipment")
+            #self.log.info(u"LOCATION: {} {}".format(location,cmd))
+            equipment_search_map, equipment_search_terms, all_equipments = self.getByTypeSorted(location.item,"Equipment")
             _matched_equipments, _processed_search, unprocessed_search = self.searchSemanticItems(equipment_search_map,equipment_search_terms,cmd)
             matched_equipments = matched_equipments + _matched_equipments
             processed_search = processed_search + _processed_search
@@ -246,32 +262,29 @@ class VoiceCommandRule:
         # remove processed search words
         for search in processed_search:
             cmd = cmd.replace(search,"")
-     
+    
         # check points of equipments 
         if len(matched_equipments) > 0:
-            processed_search_terms = []
-            point_matches = False
             all_points = []
+            point_matches = False
+            processed_search_terms = []
             for equipment in matched_equipments:
                 #self.log.info(u"  equipment, leftover: '{}', item: {}".format(cmd,equipment.item.getName()))
-                point_search_map, point_search_terms,equipment_points = self.getByTypeSorted(equipment.item,"Point")
+                point_search_map, point_search_terms, equipment_points = self.getByTypeSorted(equipment.item,"Point")
                 all_points = all_points + equipment_points
 
                 # add all points which matches to cmd
-                for point_search_term in point_search_terms:
-                    if re.match(config["main"]["phrase_matcher"].format(point_search_term), cmd):
-                        for point in point_search_map[point_search_term]:
-                            #self.log.info(u"point '{}' {}".format(point_search_term,point.item))
-                            action.points[point.item.getName()] = point
-                        processed_search_terms.append(point_search_term)
-                        point_matches = True
-                        break
+                _matched_points, _processed_search, unprocessed_search = self.searchSemanticItems(point_search_map,point_search_terms,cmd)
+                action.points = action.points + _matched_points
+                processed_search_terms = processed_search_terms + _processed_search
+                if len(_matched_points) > 0:
+                    point_matches = True
 
             # if no points where found, add all points
             if not point_matches:
                 #self.log.info("test2")
                 for point in all_points:
-                    action.points[point.item.getName()] = point
+                    action.points.append(point)
 
             # clean cmd's
             for processed_search_term in processed_search_terms:
@@ -280,20 +293,18 @@ class VoiceCommandRule:
 
             return cmd
 
-        # no equipments matches, search for all points in location
-        #self.log.info(u"{}".format("------"))
-        point_search_map, point_search_terms, location_points = self.getByTypeSorted(location.item,"Point")
-        #self.log.info(u"3 {}".format(point_search_term))
-        for point_search_term in point_search_terms:
-            #elf.log.info(u"{} {} {}".format(point_search_term,cmd,point_search_map[point_search_term]))
-            if re.match(config["main"]["phrase_matcher"].format(point_search_term),cmd):
-                for point in point_search_map[point_search_term]:
-                    action.points[point.item.getName()] = point
-                cmd = cmd.replace(point_search_term,"")
-                return cmd
-            #self.log.info(u"done")
+        processed_search_terms = []
+        for location in action.locations:
+            # no equipments matches, search for all points in location
+            point_search_map, point_search_terms, location_points = self.getByTypeSorted(location.item,"Point")
+            _matched_points, _processed_search, unprocessed_search = self.searchSemanticItems(point_search_map,point_search_terms,cmd)
+            action.points = action.points + _matched_points
+            processed_search_terms = processed_search_terms + _processed_search
 
-        return None
+        for processed_search_term in processed_search_terms:
+            cmd = cmd.replace(processed_search_term,"")
+
+        return cmd
 
     def detectPoints(self,actions):
         last_cmd = None
@@ -305,7 +316,7 @@ class VoiceCommandRule:
                 action.voice_cmd_unprocessed = voice_cmd_unprocessed
 
             # if no points where found search again based on the last cmd with points
-            if len(action.points.values()) == 0:
+            if len(action.points) == 0:
                 if last_cmd != None:
                     self.checkPoints(action,last_cmd)
             else:
@@ -316,7 +327,7 @@ class VoiceCommandRule:
         # Fill missing points backward
         last_cmd = None
         for action in reversed(actions):
-            if len(action.points.values()) == 0:
+            if len(action.points) == 0:
                 if last_cmd != None:
                     self.checkPoints(action,last_cmd)
             else:
@@ -361,9 +372,9 @@ class VoiceCommandRule:
     def validateActions(self,actions):
         for action in actions:
             for point in action.points:
-                if action.cmd is None or action.points[point].item.getType() not in action.cmd.types:
+                if action.cmd is None or point.item.getType() not in action.cmd.types:
                     continue
-                action.item_actions[point] = ItemAction(action.cmd.cmd,action.points[point].item)
+                action.item_actions.append(ItemAction(action.cmd.cmd,point.item))
 
     def process(self,voice_command, client_id, fallback_room):
         sub_voice_commands = voice_command.lower().split(config["main"]["phrase_separator"])
@@ -377,19 +388,15 @@ class VoiceCommandRule:
 
         self.detectCommand(actions)
 
-        #for action in actions:
-        #    for location in action.locations:
-        #        self.log.info(u"Location: {}".format(location))
-        #    for point in action.points:
-        #        self.log.info(u"Location: {}".format(point))
-
         self.validateActions(actions)
 
-        item_actions = []
+        item_actions = {}
         for action in actions:
-            item_actions = item_actions + action.item_actions.values()
+            for item_action in action.item_actions:
+                #self.log.info(u"{}".format(item_action.item.getName()))
+                item_actions[item_action.item.getName()] = item_action
 
-        return item_actions
+        return list(item_actions.values())
  
         #for attribute in semantic_data.item_attributes:
         #    self.log.info(u"{}".format(semantic_data.item_attributes[attribute]))
@@ -398,11 +405,6 @@ class VoiceCommandRule:
         voice_command, client_id, fallback_room = self.parseData(input['event'].getItemState().toString())
         self.process(voice_command, client_id, fallback_room)
         
-#postUpdate("VoiceCommand","Schalte Licht im Wohnzimmer")
-#postUpdate("VoiceCommand","Rollläden im Wohnzimmer hoch und Licht an")
-#postUpdate("VoiceCommand","Rollläden im Wohnzimmer und Schlafzimmer hoch")
-#postUpdate("VoiceCommand","Schalte Licht im Wohnzimmer an und im Obergeschoss aus")
-
 @rule("voice_command.py")
 class TestRule:
     def __init__(self):
@@ -436,6 +438,5 @@ class TestRule:
                     self.log.info(u"       MATCH       => {} => {}".format(item_action.item.getName(),item_action.cmd))
                 raise Exception("Wrong detection")
 
-
     def execute(self, module, input):
-        pass                                
+        pass                                                               

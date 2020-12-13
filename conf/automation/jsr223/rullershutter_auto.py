@@ -18,8 +18,8 @@ class RollershutterAutoRule:
     def execute(self, module, input):
         if getItemState("Auto_Rollershutter") == ON:
             if getItemState("State_Rollershutter") == ON:
-                if getItemState("Window_GF_Livingroom_Terrace") == CLOSED: sendCommand("pGFLivingroom_Shutter_Terrace_Control", DOWN)
-                if getItemState("Window_GF_Livingroom_Couch") == CLOSED: sendCommand("pGFLivingroom_Shutter_Couch_Control", DOWN)
+                if getItemState("Window_GF_Livingroom_Terrace") == CLOSED: sendCommand("pGF_Livingroom_Shutter_Terrace_Control", DOWN)
+                if getItemState("Window_GF_Livingroom_Couch") == CLOSED: sendCommand("pGF_Livingroom_Shutter_Couch_Control", DOWN)
                 if getItemState("Window_GF_Kitchen") == CLOSED: sendCommand("pGF_Kitchen_Shutter_Control", DOWN)
                 if getItemState("Window_GF_Guestroom") == CLOSED: sendCommand("pGF_Guestroom_Shutter_Control", DOWN)
                 if getItemState("Window_GF_Guesttoilet") == CLOSED: sendCommand("pGF_Guesttoilet_Shutter_Control", DOWN)
@@ -95,10 +95,10 @@ class LivingroomSunprotectionRule:
         if getItemState("Auto_Sunprotection") == ON and getItemState("State_Presence").intValue() == 0:
             if getItemState("State_Sunprotection_Livingroom") == ON:
                 sendCommand("pGF_Kitchen_Shutter_Control", DOWN)
-                sendCommand("pGFLivingroom_Shutter_Couch_Control", DOWN)
+                sendCommand("pGF_Livingroom_Shutter_Couch_Control", DOWN)
                 if getItemState("Window_GF_Livingroom_Terrace") == CLOSED:
-                    sendCommand("pGFLivingroom_Shutter_Terrace_Control", DOWN)
+                    sendCommand("pGF_Livingroom_Shutter_Terrace_Control", DOWN)
             else:
                 sendCommand("pGF_Kitchen_Shutter_Control", UP)
-                sendCommand("pGFLivingroom_Shutter_Couch_Control", UP)
-                sendCommand("pGFLivingroom_Shutter_Terrace_Control", UP)
+                sendCommand("pGF_Livingroom_Shutter_Couch_Control", UP)
+                sendCommand("pGF_Livingroom_Shutter_Terrace_Control", UP)

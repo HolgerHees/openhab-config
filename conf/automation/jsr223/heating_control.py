@@ -168,8 +168,8 @@ rooms = [
         ],
         transitions=[
             Window(direction='west', area=2.2, type=_outerWindow, contactItem='Window_GF_Kitchen', shutterItem='pGF_Kitchen_Shutter_Control', shutterArea=0.2992, radiationArea=0.645*1.01*2.0, sunProtectionItem="State_Sunprotection_Livingroom"),
-            Window(direction='west', area=5.8232, type=_outerWindow, contactItem='Window_GF_Livingroom_Terrace', shutterItem='pGFLivingroom_Shutter_Terrace_Control', shutterArea=0.4267, radiationArea=0.625*2.13*3.0),
-            Window(direction='west', area=4.0832, type=_outerWindow, contactItem='Window_GF_Livingroom_Couch', shutterItem='pGFLivingroom_Shutter_Couch_Control', shutterArea=0.2992, radiationArea=0.625*2.13*2.0)
+            Window(direction='west', area=5.8232, type=_outerWindow, contactItem='Window_GF_Livingroom_Terrace', shutterItem='pGF_Livingroom_Shutter_Terrace_Control', shutterArea=0.4267, radiationArea=0.625*2.13*3.0),
+            Window(direction='west', area=4.0832, type=_outerWindow, contactItem='Window_GF_Livingroom_Couch', shutterItem='pGF_Livingroom_Shutter_Couch_Control', shutterArea=0.2992, radiationArea=0.625*2.13*2.0)
         ]
     ),
     Room(

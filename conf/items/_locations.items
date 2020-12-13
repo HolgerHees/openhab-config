@@ -4,8 +4,8 @@ Group lHouse            "Haus"          <group>         (lIndoor)      ["Buildin
 
 Group lGroundFloor      "Erdgeschoss"   <groundfloor>   (lHouse)       ["GroundFloor"]  { synonyms="Untergeschoss,Unten" }
 Group lGF_Guesttoilet   "Gäste WC"      <bath>          (lGroundFloor) ["Room"]         { synonyms="Gäste Toilette,Gäste Bad" }
-Group lGF_Utilityroom   "HWR"           <energy>        (lGroundFloor) ["Room"]         { synonyms="Hauswirtschaftsraum" }
-Group lGF_Boxroom       "Abstellkammer" <office>        (lGroundFloor) ["Room"]         { synonyms="Kammer,Vorratsraum" }
+Group lGF_Utilityroom   "HWR"           <energy>        (lGroundFloor) ["Room"]         { synonyms="Hauswirtschaft" }
+Group lGF_Boxroom       "Abstellkammer" <office>        (lGroundFloor) ["Room"]         { synonyms="Kammer,Vorrat" }
 Group lGF_Kitchen       "Küche"         <kitchen>       (lGroundFloor) ["Kitchen"]
 Group lGF_Livingroom    "Wohnzimmer"    <sofa>          (lGroundFloor) ["LivingRoom"]
 Group lGF_Guestroom     "Gästezimmer"   <office>        (lGroundFloor) ["Room"]         { synonyms="Bastelzimmer" }
@@ -15,8 +15,8 @@ Group lFirstFloor       "Obergeschoss"  <firstfloor>    (lHouse)       ["FirstFl
 Group lFF_Bathroom      "Badezimmer"    <bath>          (lFirstFloor)  ["Bathroom"]     { synonyms="Bad" }
 Group lFF_Dressingroom  "Ankleide"      <wardrobe>      (lFirstFloor)  ["Room"]
 Group lFF_Bedroom       "Schlafzimmer"  <bedroom>       (lFirstFloor)  ["Bedroom"]
-Group lFF_Child1        "Kind 1"        <boy1>          (lFirstFloor)  ["Room"]         { synonyms="Sportraum,Sportzimmer" }
-Group lFF_Child2        "Kind 2"        <boy1>          (lFirstFloor)  ["Room"]         { synonyms="Trockenzimmer,hinteres Kinderzimmer" }
+Group lFF_Child1        "Kind 1"        <boy1>          (lFirstFloor)  ["Room"]         { synonyms="Sportraum,Sport" }
+Group lFF_Child2        "Kind 2"        <boy1>          (lFirstFloor)  ["Room"]         { synonyms="Trocken,hinteres Kinderzimmer,Schmink" }
 Group lFF_Corridor      "Flur oben"     <corridor>      (lFirstFloor)  ["Floor"]        { synonyms="Flur Obergeschoss" }
 
 Group lAttic            "Dachboden"     <attic>         (lHouse)       ["Attic"]
@@ -24,12 +24,13 @@ Group lAttic            "Dachboden"     <attic>         (lHouse)       ["Attic"]
 Group lGarage           "Schuppen"      <corridor>      (lIndoor)      ["Garage"]
 
 Group lOutdoor          "Draussen"      <garden>                       ["Outdoor"]      { synonyms="aussen" }
-Group lOutdoor_Streedside "Garten vorne" <garden>     (lOutdoor)       ["Garden"]       { synonyms="Strassenseite" }
-Group lOutdoor_Streedside_Garage "Schuppen vorne" <garden> (lOutdoor_Streedside) ["Garden"]
+Group lOutdoor_Streedside "Vorgarten" <garden>     (lOutdoor)          ["Garden"]       { synonyms="Strassenseite, vorne" }
+Group lOutdoor_Streedside_Garage "Schuppen vorne" <garden> (lOutdoor_Streedside) ["Garden"] { synonyms="Garage vorne" }
 Group lOutdoor_Streedside_Frontdoor "Haustür" <garden> (lOutdoor_Streedside) ["Garden"]
 Group lOutdoor_Carport  "Carport"       <garden>        (lOutdoor)     ["Garden"]
-Group lOutdoor_Garden_Garage  "Schuppen hinten" <garden> (lOutdoor)    ["Garden"]
-Group lOutdoor_Garden_Terrace  "Terasse" <garden>       (lOutdoor)     ["Garden"]
+Group lOutdoor_Garden   "Garten"        <garden> (lOutdoor)            ["Garden"]       { synonyms="hinten" }
+Group lOutdoor_Garden_Garage  "Schuppen hinten" <garden> (lOutdoor_Garden) ["Garden"]   { synonyms="Garage hinten" }
+Group lOutdoor_Garden_Terrace  "Terasse" <garden>       (lOutdoor_Garden) ["Garden"]
 Group lOutdoor_Garden_Left "Garten links" <garden>      (lOutdoor)     ["Garden"]
 Group lOutdoor_Garden_Right "Garten rechts" <garden>    (lOutdoor)     ["Garden"]
 Group lOutdoor_Garden_Back "Garten hinten" <garden>     (lOutdoor)     ["Garden"]

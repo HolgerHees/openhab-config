@@ -15,22 +15,22 @@ Dimmer pGF_Corridor_Light_Hue_Brightness        "Indirektes Licht"   <selflight>
 Color  pGF_Corridor_Light_Hue_Color             "Farbe"              <colorwheel> (eGF_Corridor_Light_Hue)                              ["Control","ColorTemperature"] { channel="hue:0210:default:lamp4:color"}
 
 // **** GF GUESTTOILET ****
-Group  eGF_Guesttoilet_Light_Ceiling            "Deckenlampe"        <selflight> (lGF_Guesttoilet)                                      ["Lightbulb"]
+Group  eGF_Guesttoilet_Light_Ceiling            "Deckenlampe"        <selflight> (lGF_Guesttoilet)                                      ["Lightbulb"] { synonyms="Decke" }
 Switch pGF_Guesttoilet_Light_Ceiling_Powered    "Deckenlicht"        <selflight> (eGF_Guesttoilet_Light_Ceiling,gIndoor_Lights,gGF_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_ff:guesttoiletCeiling" }
 
-Group  eGF_Guesttoilet_Light_Mirror             "Spiegellampe"       <selflight> (lGF_Guesttoilet)                                      ["Lightbulb"]
+Group  eGF_Guesttoilet_Light_Mirror             "Spiegellampe"       <selflight> (lGF_Guesttoilet)                                      ["Lightbulb"] { synonyms="Spiegel" }
 Switch pGF_Guesttoilet_Light_Mirror_Powered     "Spiegellicht"       <selflight> (eGF_Guesttoilet_Light_Mirror,gIndoor_Lights,gGF_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_ff:guesttoiletMirror" }
 
 // **** GF UTILITYROOM ****
-Group  eGF_Utilityroom_Light_Ceiling            "Deckenlampe"        <selflight> (lGF_Utilityroom)                                      ["Lightbulb"]
+Group  eGF_Utilityroom_Light_Ceiling            "Deckenlampe"        <selflight> (lGF_Utilityroom)                                      ["Lightbulb"] { synonyms="Decke" }
 Switch pGF_Utilityroom_Light_Ceiling_Powered    "Deckenlicht"        <selflight> (eGF_Utilityroom_Light_Ceiling,gIndoor_Lights,gGF_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_ff:utilityroomCeiling" }
 
 // **** GF BOXROOM ****
-Group  eGF_Boxroom_Light_Ceiling                "Deckenlampe"        <selflight> (lGF_Boxroom)                                          ["Lightbulb"]
+Group  eGF_Boxroom_Light_Ceiling                "Deckenlampe"        <selflight> (lGF_Boxroom)                                          ["Lightbulb"] { synonyms="Decke" }
 Switch pGF_Boxroom_Light_Ceiling_Powered        "Deckenlicht"        <selflight> (eGF_Boxroom_Light_Ceiling,gIndoor_Lights,gGF_Lights)  ["Switch","Light"] { channel="knx:device:bridge:lights_ff:boxroomCeiling" }
 
 // **** GF KITCHEN ****
-Group  eGF_Kitchen_Light_Ceiling                "Deckenlampe"        <selflight> (lGF_Kitchen)                                          ["Lightbulb"]
+Group  eGF_Kitchen_Light_Ceiling                "Deckenlampe"        <selflight> (lGF_Kitchen)                                          ["Lightbulb"] { synonyms="Decke" }
 Dimmer pGF_Kitchen_Light_Ceiling_Brightness     "Deckenlicht"        <selflight> (eGF_Kitchen_Light_Ceiling,gIndoor_Lights,gGF_Lights)  ["Setpoint","Light"] { channel="knx:device:bridge:lights_ff:kitchenCeiling" }
 
 Group  eGF_Kitchen_Light_Cupboard               "Schranklampe"       <selflight> (lGF_Kitchen)                                          ["Lightbulb"]
@@ -69,52 +69,52 @@ Dimmer pGF_Livingroom_Light_Hue5_Brightness     "Indirektes Licht - Regal" <self
 Color  pGF_Livingroom_Light_Hue5_Color          "Farbe - Regal"      <colorwheel> (eGF_Livingroom_Light_Hue5)                            ["Control","ColorTemperature"] { channel="hue:0210:default:strip1:color"}
 
 // **** GF GUESTROOM ****
-Group  eGF_Guestroom_Light_Ceiling              "Deckenlampe"        <selflight> (lGF_Guestroom)                                        ["Lightbulb"]
+Group  eGF_Guestroom_Light_Ceiling              "Deckenlampe"        <selflight> (lGF_Guestroom)                                        ["Lightbulb"] { synonyms="Decke" }
 Switch pGF_Guestroom_Light_Ceiling_Powered      "Deckenlicht"        <selflight> (eGF_Guestroom_Light_Ceiling,gIndoor_Lights,gGF_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_ff:guestroomCeiling" }
 
 // **** FF CORRIDOR ****
-Group  eFF_Corridor_Light_Ceiling               "Deckenlampe"        <selflight> (lFF_Corridor)                                         ["Lightbulb"]
+Group  eFF_Corridor_Light_Ceiling               "Deckenlampe"        <selflight> (lFF_Corridor)                                         ["Lightbulb"] { synonyms="Decke" }
 Switch pFF_Corridor_Light_Ceiling_Powered       "Deckenlicht"        <selflight> (eFF_Corridor_Light_Ceiling,gIndoor_Lights,gFF_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_sf:floorCeiling" }
 
 // **** FF BATHROOM ****
-Group  eFF_Bathroom_Light_Ceiling               "Deckenlampe"        <selflight> (lFF_Bathroom)                                         ["Lightbulb"]
+Group  eFF_Bathroom_Light_Ceiling               "Deckenlampe"        <selflight> (lFF_Bathroom)                                         ["Lightbulb"] { synonyms="Decke" }
 Switch pFF_Bathroom_Light_Ceiling_Powered       "Deckenlicht"        <selflight> (eFF_Bathroom_Light_Ceiling,gIndoor_Lights,gFF_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_sf:bathroomCeiling" }
 
-Group  eFF_Bathroom_Light_Mirror                "Spiegellampe"       <selflight> (lFF_Bathroom)                                         ["Lightbulb"]
+Group  eFF_Bathroom_Light_Mirror                "Spiegellampe"       <selflight> (lFF_Bathroom)                                         ["Lightbulb"] { synonyms="Spiegel" }
 Switch pFF_Bathroom_Light_Mirror_Powered        "Spiegellicht"       <selflight> (eFF_Bathroom_Light_Mirror,gIndoor_Lights,gFF_Lights)  ["Switch","Light"] { channel="knx:device:bridge:lights_sf:bathroomMirror" }
 
 // **** FF BEDROOM ****
-Group  eFF_Bedroom_Light_Ceiling                "Deckenlampe"        <selflight> (lFF_Bedroom)                                          ["Lightbulb"]
+Group  eFF_Bedroom_Light_Ceiling                "Deckenlampe"        <selflight> (lFF_Bedroom)                                          ["Lightbulb"] { synonyms="Decke" }
 Switch pFF_Bedroom_Light_Ceiling_Powered        "Deckenlicht"        <selflight> (eFF_Bedroom_Light_Ceiling,gIndoor_Lights,gFF_Lights)  ["Switch","Light"] { channel="knx:device:bridge:lights_sf:bedroomCeiling" }
 
-Group  eFF_Bedroom_Light_Hue_Left               "HUE Lampe - Nachttisch links" <selflight> (lFF_Bedroom)                                 ["Lightbulb"]
+Group  eFF_Bedroom_Light_Hue_Left               "Nachttisch links" <selflight> (lFF_Bedroom)                                            ["Lightbulb"] { synonyms="Nachttisch, Bett, links, Fenster" }
 Dimmer pFF_Bedroom_Light_Hue_Left_Brightness    "Indirektes Licht - Nachttisch links" <selflight> (eFF_Bedroom_Light_Hue_Left,gIndoor_Lights,gFF_Lights) ["Setpoint","Light"] { channel="hue:0210:default:lamp5:color"}
-Color  pFF_Bedroom_Light_Hue_Left_Color         "Farbe - Nachttisch links" <colorwheel> (eFF_Bedroom_Light_Hue_Left)                     ["Control","ColorTemperature"] { channel="hue:0210:default:lamp5:color"}
-Switch pFF_Bedroom_Light_Hue_Left_Switch        "Taster - Nachttisch links" <selflight> (eFF_Bedroom_Light_Hue_Left)                     ["Point"] { channel="knx:device:bridge:other:bedroomLeft" }
+Color  pFF_Bedroom_Light_Hue_Left_Color         "Farbe - Nachttisch links" <colorwheel> (eFF_Bedroom_Light_Hue_Left)                    ["Control","ColorTemperature"] { channel="hue:0210:default:lamp5:color"}
+Switch pFF_Bedroom_Light_Hue_Left_Switch        "Taster - Nachttisch links" <selflight> (eFF_Bedroom_Light_Hue_Left)                    ["Point"] { channel="knx:device:bridge:other:bedroomLeft" }
 
-Group  eFF_Bedroom_Light_Hue_Right              "HUE Lampe - Nachttisch rechts" <selflight> (lFF_Bedroom)                                ["Lightbulb"]
+Group  eFF_Bedroom_Light_Hue_Right              "Nachttisch rechts" <selflight> (lFF_Bedroom)                                           ["Lightbulb"] { synonyms="Nachttisch, Bett, rechts, Wand" }
 Dimmer pFF_Bedroom_Light_Hue_Right_Brightness   "Indirektes Licht - Nachttisch rechts" <selflight> (eFF_Bedroom_Light_Hue_Right,gIndoor_Lights,gFF_Lights) ["Setpoint","Light"] { channel="hue:0210:default:lamp6:color"}
-Color  pFF_Bedroom_Light_Hue_Right_Color        "Farbe - Nachttisch rechts" <colorwheel> (eFF_Bedroom_Light_Hue_Right)                   ["Control","ColorTemperature"] { channel="hue:0210:default:lamp6:color"}
-Switch pFF_Bedroom_Light_Hue_Right_Switch       "Taster - Nachttisch rechts" <selflight> (eFF_Bedroom_Light_Hue_Right)                   ["Point"] { channel="knx:device:bridge:other:bedroomRight" }
+Color  pFF_Bedroom_Light_Hue_Right_Color        "Farbe - Nachttisch rechts" <colorwheel> (eFF_Bedroom_Light_Hue_Right)                  ["Control","ColorTemperature"] { channel="hue:0210:default:lamp6:color"}
+Switch pFF_Bedroom_Light_Hue_Right_Switch       "Taster - Nachttisch rechts" <selflight> (eFF_Bedroom_Light_Hue_Right)                  ["Point"] { channel="knx:device:bridge:other:bedroomRight" }
 
 // **** FF DRESSINGROOM ****
-Group  eFF_Dressingroom_Light_Ceiling           "Deckenlampe"        <selflight> (lFF_Dressingroom)                                     ["Lightbulb"]
+Group  eFF_Dressingroom_Light_Ceiling           "Deckenlampe"        <selflight> (lFF_Dressingroom)                                     ["Lightbulb"] { synonyms="Decke" }
 Switch pFF_Dressingroom_Light_Ceiling_Powered   "Deckenlicht"        <selflight> (eFF_Dressingroom_Light_Ceiling,gIndoor_Lights,gFF_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_sf:dressingroomCeiling" }
 
 // **** FF CHILD 1 ****
-Group  eFF_Child1_Light_Ceiling                 "Deckenlampe"        <selflight> (lFF_Child1)                                           ["Lightbulb"]
+Group  eFF_Child1_Light_Ceiling                 "Deckenlampe"        <selflight> (lFF_Child1)                                           ["Lightbulb"] { synonyms="Decke" }
 Switch pFF_Child1_Light_Ceiling_Powered         "Deckenlicht"        <selflight> (eFF_Child1_Light_Ceiling,gIndoor_Lights,gFF_Lights)   ["Switch","Light"] { channel="knx:device:bridge:lights_sf:child1Ceiling" }
 
 // **** FF CHILD 2 ****
-Group  eFF_Child2_Light_Ceiling                 "Deckenlampe"        <selflight> (lFF_Child2)                                           ["Lightbulb"]
+Group  eFF_Child2_Light_Ceiling                 "Deckenlampe"        <selflight> (lFF_Child2)                                           ["Lightbulb"] { synonyms="Decke" }
 Switch pFF_Child2_Light_Ceiling_Powered         "Deckenlicht"        <selflight> (eFF_Child2_Light_Ceiling,gIndoor_Lights,gFF_Lights)   ["Switch","Light"] { channel="knx:device:bridge:lights_sf:child2Ceiling" }
 
 // **** ATTIC ****
-Group  eFF_Attic_Light_Ceiling                  "Deckenlampe"        <selflight> (lAttic)                                               ["Lightbulb"]
-Switch pFF_Attic_Light_Ceiling_Powered          "Deckenlicht"        <selflight> (eFF_Attic_Light_Ceiling,gIndoor_Lights,gFF_Lights)    ["Switch","Light"] { channel="knx:device:bridge:lights_sf:attic" }
+Group  eFF_Attic_Light_Ceiling                  "Deckenlampe"        <selflight> (lAttic)                                               ["Lightbulb"] { synonyms="Decke" }
+Switch pAttic_Light_Ceiling_Powered          "Deckenlicht"        <selflight> (eFF_Attic_Light_Ceiling,gIndoor_Lights,gFF_Lights)    ["Switch","Light"] { channel="knx:device:bridge:lights_sf:attic" }
 
 // **** GARAGE ****
-Group  eGarage_Light_Ceiling                    "Deckenlampe"        <selflight> (lGarage)                                              ["Lightbulb"]
+Group  eGarage_Light_Ceiling                    "Deckenlampe"        <selflight> (lGarage)                                              ["Lightbulb"] { synonyms="Decke" }
 Switch pGarage_Light_Ceiling_Powered            "Deckenlicht"        <selflight> (eGarage_Light_Ceiling,gOutdoor_Lights)                ["Switch","Light"] { channel="knx:device:bridge:lights_ff:garage" }
 
 // **** OUTDOOR GARAGE STREEDSIDE ****
