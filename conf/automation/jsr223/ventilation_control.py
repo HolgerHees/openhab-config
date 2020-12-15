@@ -180,7 +180,7 @@ class FilterFanLevelRule:
 
         currentLevel = getItemState("pGF_Utilityroom_Ventilation_Fan_Level").intValue()
 
-        raumTemperatur = getItemState("Temperature_GF_Livingroom").doubleValue()
+        raumTemperatur = getItemState("pGF_Livingroom_Air_Sensor_Temperature_Value").doubleValue()
         zielTemperatur = getItemState("pGF_Utilityroom_Ventilation_Comfort_Temperature").doubleValue
         
         presenceSate = getItemState("pOther_Presence_State").intValue()

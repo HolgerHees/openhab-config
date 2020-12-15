@@ -112,5 +112,5 @@ Number pGF_Utilityroom_Heating_Solar_Reheating_State                "Nachladeunt
 String pGF_Utilityroom_Heating_Solar_State_Message                  "Pumpe, Nachladeunterdr. [%s]"      <selfsettings>    (eGF_Utilityroom_Heating_Boiler) ["Point"] 
 Number pGF_Utilityroom_Heating_Common_Fault                         "Status [MAP(heating_state_de.map):%s]" <selfinfo>    (eGF_Utilityroom_Heating_Boiler) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:commonFault" }
 
-Number pGF_Utilityroom_Heating_Temperature_Pipe_Out                 "Gem. Vorlauf (Ist) [%.1f °C]"      <selftemperature>    (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_HistorypGF_Utilityroom_Temperatures) ["Point"]
-Number pGF_Utilityroom_Heating_Temperature_Pipe_In                  "Gem. Rücklauf (Ist) [%.1f °C]"     <selftemperature>    (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_HistorypGF_Utilityroom_Temperatures) ["Point"]
+Number pGF_Utilityroom_Heating_Temperature_Pipe_Out                 "Gem. Vorlauf (Ist) [%.1f °C]"      <selftemperature>    (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"]
+Number pGF_Utilityroom_Heating_Temperature_Pipe_In                  "Gem. Rücklauf (Ist) [%.1f °C]"     <selftemperature>    (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"]

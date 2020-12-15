@@ -371,48 +371,48 @@ sitemap haus label="Main Menu"
         Group item=pIndoor_Plant_Sensor_Main_Info label="Sensoren [%s]" valuecolor=[=="Alles normal"="#6bc305",=="Giessen"="#cbcb00",!="Alles normal"="#d72a2a"]{
             Frame label="Temperatur & Feuchtigkeit"
             {
-                Group item=Air_GF_Livingroom_Message label="EG [%s]"{
+                Group item=pGF_Livingroom_Air_Sensor_Message label="EG [%s]"{
                     Frame label="Daten" {
-                        Text item=Air_GF_Livingroom_Message {
+                        Text item=pGF_Livingroom_Air_Sensor_Message {
                             Setpoint item=pGF_Livingroom_Heating_Temperature_Desired label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=Air_GF_Boxroom_Message
-                        Text item=Air_GF_Guestroom_Message {
+                        Text item=pGF_Boxroom_Air_Sensor_Message
+                        Text item=pGF_Guestroom_Air_Sensor_Message {
                             Setpoint item=pGF_Guestroom_Heating_Temperature_Desired label="Gästezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=Air_GF_Guesttoilet_Message {
+                        Text item=pGF_Guesttoilet_Air_Sensor_Message {
                             Setpoint item=pGF_Guesttoilet_Heating_Temperature_Desired label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=Air_GF_Corridor_Message {
+                        Text item=pGF_Corridor_Air_Sensor_Message {
                             Setpoint item=pGF_Corridor_Heating_Temperature_Desired label="Flur unten [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=Air_GF_Utilityroom_Message
-                        Text item=Air_GF_Garage_Message 
+                        Text item=pGF_Utilityroom_Air_Sensor_Message
+                        Text item=pGF_Garage_Air_Sensor_Message 
                     }
                     Frame label="Auswertung" {
                         Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                         Webview url="/static/custom/grafana/temperatures_eg.html?fromItem=pOther_Helper_Chart_From" icon=none height=18
                     }
                 }
-                Group item=Air_FF_Bedroom_Message label="OG [%s]"{
+                Group item=pFF_Bedroom_Air_Sensor_Message label="OG [%s]"{
                     Frame label="Daten" {
-                        Text item=Air_FF_Bedroom_Message {
+                        Text item=pFF_Bedroom_Air_Sensor_Message {
                             Setpoint item=pFF_Bedroom_Heating_Temperature_Desired label="Schlafzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=Air_FF_Dressingroom_Message
-                        Text item=Air_FF_Child1_Message {
+                        Text item=pFF_Dressingroom_Air_Sensor_Message
+                        Text item=pFF_Child1_Air_Sensor_Message {
                             Setpoint item=pFF_Child1_Heating_Temperature_Desired label="Kind 1 [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=Air_FF_Child2_Message {
+                        Text item=pFF_Child2_Air_Sensor_Message {
                             Setpoint item=pFF_Child2_Heating_Temperature_Desired label="Kind 2 [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=Air_FF_Bathroom_Message {
+                        Text item=pFF_Bathroom_Air_Sensor_Message {
                             Setpoint item=pFF_Bathroom_Heating_Temperature_Desired label="Badezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=Air_FF_Corridor_Message {
+                        Text item=pFF_Corridor_Air_Sensor_Message {
                             Setpoint item=pFF_Corridor_Heating_Temperature_Desired label="Flur oben [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=Air_FF_Attic_Message
+                        Text item=pFF_Attic_Air_Sensor_Message
                     }
                     Frame label="Auswertung" {
                         Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]

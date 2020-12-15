@@ -35,20 +35,20 @@ class ValuesErrorMessagesRule:
 
         refDate = getNow().minusMinutes(1440)  # last 24 hours
 
-        if itemLastUpdateOlderThen("Temperature_GF_Livingroom", refDate) \
-                or itemLastUpdateOlderThen("Temperature_GF_Boxroom", refDate) \
-                or itemLastUpdateOlderThen("Temperature_GF_Guestroom", refDate) \
-                or itemLastUpdateOlderThen("Temperature_GF_Guesttoilet", refDate) \
-                or itemLastUpdateOlderThen("Temperature_GF_Corridor", refDate) \
-                or itemLastUpdateOlderThen("Temperature_GF_Utilityroom", refDate) \
-                or itemLastUpdateOlderThen("Temperature_GF_Garage", refDate) \
-                or itemLastUpdateOlderThen("Temperature_FF_Bedroom", refDate) \
-                or itemLastUpdateOlderThen("Temperature_FF_Dressingroom", refDate) \
-                or itemLastUpdateOlderThen("Temperature_FF_Child1", refDate) \
-                or itemLastUpdateOlderThen("Temperature_FF_Child2", refDate) \
-                or itemLastUpdateOlderThen("Temperature_FF_Bathroom", refDate) \
-                or itemLastUpdateOlderThen("Temperature_FF_Corridor", refDate) \
-                or itemLastUpdateOlderThen("Temperature_FF_Attic", refDate):
+        if itemLastUpdateOlderThen("pGF_Livingroom_Air_Sensor_Temperature_Value", refDate) \
+                or itemLastUpdateOlderThen("pGF_Boxroom_Air_Sensor_Temperature_Value", refDate) \
+                or itemLastUpdateOlderThen("pGF_Guestroom_Air_Sensor_Temperature_Value", refDate) \
+                or itemLastUpdateOlderThen("pGF_Guesttoilet_Air_Sensor_Temperature_Value", refDate) \
+                or itemLastUpdateOlderThen("pGF_Corridor_Air_Sensor_Temperature_Value", refDate) \
+                or itemLastUpdateOlderThen("pGF_Utilityroom_Air_Sensor_Temperature_Value", refDate) \
+                or itemLastUpdateOlderThen("pGF_Garage_Air_Sensor_Temperature_Value", refDate) \
+                or itemLastUpdateOlderThen("pFF_Bedroom_Air_Sensor_Temperature_Value", refDate) \
+                or itemLastUpdateOlderThen("pFF_Dressingroom_Air_Sensor_Temperature_Value", refDate) \
+                or itemLastUpdateOlderThen("pFF_Child1_Air_Sensor_Temperature_Value", refDate) \
+                or itemLastUpdateOlderThen("pFF_Child2_Air_Sensor_Temperature_Value", refDate) \
+                or itemLastUpdateOlderThen("pFF_Bathroom_Air_Sensor_Temperature_Value", refDate) \
+                or itemLastUpdateOlderThen("pFF_Corridor_Air_Sensor_Temperature_Value", refDate) \
+                or itemLastUpdateOlderThen("pFF_Attic_Air_Sensor_Temperature_Value", refDate):
             active.append("Sensors")
 
         if len(active) == 0:

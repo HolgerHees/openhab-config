@@ -8,6 +8,9 @@ import math
 import json
 import traceback
 
+#value = getHistoricItemState("pOutdoor_WeatherStation_Rain_Counter",getNow()).intValue()
+#postUpdate("pOutdoor_WeatherStation_Rain_Counter",value)
+
 # base offset measured at 25°C
 #OFFSET_TEMPERATURE  = 1.1
 OFFSET_TEMPERATURE  = 1.1

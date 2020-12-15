@@ -21,7 +21,7 @@ OFFSET_FORMATTER = DateTimeFormat.forPattern("HH:mm")
 #postUpdate("pFF_Child2_Heating_Demand",OFF)
 #postUpdate("pFF_Bedroom_Heating_Demand",OFF)
 #postUpdate("pFF_Bathroom_Heating_Demand",OFF)
- 
+
 Heating.cloudCoverFC8Item = "pOutdoor_Weather_Forecast_Cloud_Cover_8h"
 Heating.cloudCoverFC4Item = "pOutdoor_Weather_Forecast_Cloud_Cover_4h"
 Heating.cloudCoverItem = "pOutdoor_Weather_Current_Cloud_Cover"

@@ -61,7 +61,7 @@ class Heating(object):
     totalVolume = 0
     totalHeatingVolume = None
     
-    temperatureSensorItemPlaceholder = u"Temperature_{}"
+    temperatureSensorItemPlaceholder = u"p{}_Air_Sensor_Temperature_Value"
     temperatureTargetItemPlaceholder = u"p{}_Heating_Temperature_Desired"
     
     heatingHKItemPlaceholder = u"p{}_Heating_HK"
