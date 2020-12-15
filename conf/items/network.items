@@ -1,3 +1,0 @@
-Number Speedtest_UpstreamRate    "Upstream Gemessen [%d MBit]"                                 <flowpipe> (gPersistance_Chart,gPersistance_History)    {channel="network:speedtest:local:rateUp"}
-Number Speedtest_DownstreamRate  "Downstream Gemessen [%d MBit]"                               <returnpipe>   (gPersistance_Chart,gPersistance_History) {channel="network:speedtest:local:rateDown"}
-DateTime Speedtest_Start                          "Speedtest [%1$tH:%1$tM]"                 <time>                                            {channel="network:speedtest:local:testStart"}

@@ -7,45 +7,45 @@ from core.triggers import CronTrigger, ItemStateChangeTrigger
 @rule("roboter_roomba.py")
 class RoombaBoostControlRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("roomba_boost")]
+        self.triggers = [ItemStateChangeTrigger("pIndoor_Roomba_boost")]
 
     def execute(self, module, input):
-        state = getItemState("roomba_boost").toString()
+        state = getItemState("pIndoor_Roomba_boost").toString()
 
         if state == "eco":
-            sendCommand("roomba_carpetBoost", OFF)
+            sendCommand("pIndoor_Roomba_carpetBoost", OFF)
             time.sleep(2)
-            sendCommand("roomba_vacHigh", OFF)
+            sendCommand("pIndoor_Roomba_vacHigh", OFF)
         elif state == "auto":
-            sendCommand("roomba_carpetBoost", ON)
+            sendCommand("pIndoor_Roomba_carpetBoost", ON)
             time.sleep(2)
-            sendCommand("roomba_vacHigh", OFF)
+            sendCommand("pIndoor_Roomba_vacHigh", OFF)
         elif state == "performance":
-            sendCommand("roomba_carpetBoost", OFF)
+            sendCommand("pIndoor_Roomba_carpetBoost", OFF)
             time.sleep(2)
-            sendCommand("roomba_vacHigh", ON)
+            sendCommand("pIndoor_Roomba_vacHigh", ON)
 
 
 @rule("roboter_roomba.py")
 class RoombaPassesControlRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("roomba_passes")]
+        self.triggers = [ItemStateChangeTrigger("pIndoor_Roomba_passes")]
 
     def execute(self, module, input):
-        state = getItemState("roomba_passes").toString()
+        state = getItemState("pIndoor_Roomba_passes").toString()
 
         if state == "auto":
-            sendCommand("roomba_noAutoPasses", OFF)
+            sendCommand("pIndoor_Roomba_noAutoPasses", OFF)
             time.sleep(2)
-            sendCommand("roomba_twoPass", OFF)
+            sendCommand("pIndoor_Roomba_twoPass", OFF)
         elif state == "one":
-            sendCommand("roomba_noAutoPasses", ON)
+            sendCommand("pIndoor_Roomba_noAutoPasses", ON)
             time.sleep(2)
-            sendCommand("roomba_twoPass", OFF)
+            sendCommand("pIndoor_Roomba_twoPass", OFF)
         elif state == "two":
-            sendCommand("roomba_noAutoPasses", OFF)
+            sendCommand("pIndoor_Roomba_noAutoPasses", OFF)
             time.sleep(2)
-            sendCommand("roomba_twoPass", ON)
+            sendCommand("pIndoor_Roomba_twoPass", ON)
 
 
 @rule("roboter_roomba.py")
@@ -53,18 +53,18 @@ class RoombaLastUpdateTimestampRule:
     def __init__(self):
         self.triggers = [
             CronTrigger("0 2,17,32,47 * * * ?"),
-            ItemStateChangeTrigger("roomba_online"),
-            ItemStateChangeTrigger("roomba_status")
+            ItemStateChangeTrigger("pIndoor_Roomba_online"),
+            ItemStateChangeTrigger("pIndoor_Roomba_status")
         ]
 
     def execute(self, module, input):
         msg = ""
         cleaning_state = OFF
 
-        if getItemState("roomba_online") == OFF:
+        if getItemState("pIndoor_Roomba_online") == OFF:
             msg = "Offline"
         else:
-            status = getItemState("roomba_status").toString()
+            status = getItemState("pIndoor_Roomba_status").toString()
 
             if status == "Running":
                 msg = "Reinigt"
@@ -76,61 +76,61 @@ class RoombaLastUpdateTimestampRule:
             else:
                 msg = status
 
-        postUpdateIfChanged("roomba_StatusFormatted", msg)
+        postUpdateIfChanged("pIndoor_Roomba_StatusFormatted", msg)
 
-        postUpdateIfChanged("roomba_cleaning_state", cleaning_state)
+        postUpdateIfChanged("pIndoor_Roomba_cleaning_state", cleaning_state)
 
 
 @rule("roboter_roomba.py")
 class RoombaErrorRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("roomba_error")]
+        self.triggers = [ItemStateChangeTrigger("pIndoor_Roomba_error")]
 
     def execute(self, module, input):
-        if getItemState("roomba_error") == ON:
-            postUpdate("roomba_errorFormatted", getItemState("roomba_errortext").toString())
+        if getItemState("pIndoor_Roomba_error") == ON:
+            postUpdate("pIndoor_Roomba_errorFormatted", getItemState("pIndoor_Roomba_errortext").toString())
         else:
-            postUpdate("roomba_errorFormatted", "Alles OK")
+            postUpdate("pIndoor_Roomba_errorFormatted", "Alles OK")
 
 
 @rule("roboter_roomba.py")
 class RoombaCleanedAreaRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("roomba_sqft")]
+        self.triggers = [ItemStateChangeTrigger("pIndoor_Roomba_sqft")]
 
     def execute(self, module, input):
-        postUpdate("roomba_sqm", u"{}".format( round(getItemState("roomba_sqft").doubleValue() / 10.76391041671) ))
+        postUpdate("pIndoor_Roomba_sqm", u"{}".format( round(getItemState("pIndoor_Roomba_sqft").doubleValue() / 10.76391041671) ))
 
 
 @rule("roboter_roomba.py")
 class RoombaUpdateCommandRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("roomba_phase")]
+        self.triggers = [ItemStateChangeTrigger("pIndoor_Roomba_phase")]
 
     def execute(self, module, input):
-        state = getItemState("roomba_phase").toString()
+        state = getItemState("pIndoor_Roomba_phase").toString()
         if state == "run":
-            postUpdate("roomba_command", "start")
+            postUpdate("pIndoor_Roomba_command", "start")
         elif state == "hmUsrDock":
-            postUpdate("roomba_command", "pause")
+            postUpdate("pIndoor_Roomba_command", "pause")
         elif state == "hmMidMsn":
-            postUpdate("roomba_command", "pause")
+            postUpdate("pIndoor_Roomba_command", "pause")
         elif state == "hmPostMsn":
-            postUpdate("roomba_command", "dock")
+            postUpdate("pIndoor_Roomba_command", "dock")
         elif state == "charge":
-            postUpdate("roomba_command", "dock")
+            postUpdate("pIndoor_Roomba_command", "dock")
         elif state == "stop":
-            postUpdate("roomba_command", "stop")
+            postUpdate("pIndoor_Roomba_command", "stop")
         elif state == "pause":
-            postUpdate("roomba_command", "pause")
+            postUpdate("pIndoor_Roomba_command", "pause")
         elif state == "stuck":
-            postUpdate("roomba_command", "stop")
+            postUpdate("pIndoor_Roomba_command", "stop")
 
 
 @rule("roboter_roomba.py")
 class RoombaBinFullNotificationRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("roomba_full", state="ON")]
+        self.triggers = [ItemStateChangeTrigger("pIndoor_Roomba_full", state="ON")]
 
     def execute(self, module, input):
         sendNotification("Roomba", u"Behälter ist voll")
@@ -139,7 +139,7 @@ class RoombaBinFullNotificationRule:
 @rule("roboter_roomba.py")
 class RoombaErrorNotificationRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("roomba_error", state="ON")]
+        self.triggers = [ItemStateChangeTrigger("pIndoor_Roomba_error", state="ON")]
 
     def execute(self, module, input):
         sendNotification("Roomba", u"Es ist ein Fehler aufgetreten")
@@ -148,10 +148,10 @@ class RoombaErrorNotificationRule:
 @rule("roboter_roomba.py")
 class RoombaNotificationRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("roomba_StatusFormatted")]
+        self.triggers = [ItemStateChangeTrigger("pIndoor_Roomba_StatusFormatted")]
 
     def execute(self, module, input):
-        sendNotification("Roomba", getItemState("roomba_StatusFormatted").toString())
+        sendNotification("Roomba", getItemState("pIndoor_Roomba_StatusFormatted").toString())
 
 
 @rule("roboter_roomba.py")
@@ -160,12 +160,12 @@ class RoombaAutomaticRule:
         self.triggers = [CronTrigger("0 2,17,32,47 8-15 ? * MON-FRI")]
 
     def execute(self, module, input):
-        if getItemState("State_Presence").intValue() == 0 \
-                and getItemState("roomba_auto") == ON \
-                and getItemState("roomba_status").toString() == "Charging" \
-                and getItemState("roomba_batPct").intValue() >= 100 \
-                and getItemState("roomba_error") == OFF \
-                and getItemState("roomba_full") == OFF:
-            if itemLastChangeOlderThen("roomba_cleaning_state", getNow().minusMinutes(360)) \
-                    and itemLastChangeOlderThen("State_Presence", getNow().minusMinutes(60)):
-                sendCommand("roomba_command", "start")
+        if getItemState("pOther_Presence_State").intValue() == 0 \
+                and getItemState("pIndoor_Roomba_auto") == ON \
+                and getItemState("pIndoor_Roomba_status").toString() == "Charging" \
+                and getItemState("pIndoor_Roomba_batPct").intValue() >= 100 \
+                and getItemState("pIndoor_Roomba_error") == OFF \
+                and getItemState("pIndoor_Roomba_full") == OFF:
+            if itemLastChangeOlderThen("pIndoor_Roomba_cleaning_state", getNow().minusMinutes(360)) \
+                    and itemLastChangeOlderThen("pOther_Presence_State", getNow().minusMinutes(60)):
+                sendCommand("pIndoor_Roomba_command", "start")

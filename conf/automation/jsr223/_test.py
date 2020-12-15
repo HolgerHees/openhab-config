@@ -13,7 +13,7 @@ class TestRule:
         #for child in getItem("gGF_Lights").getAllMembers():
         #    self.log.info(u"{} {}".format(child.getName(),child.getState()))
                           
-        #channels = reg.getBoundChannels("State_Holger_Presence").toArray()
+        #channels = reg.getBoundChannels("pOther_Presence_Holger_State").toArray()
         #self.log.info(u"{}".format(len(channels)))
         #for channeluuids in channels:
         #	self.log.info(str(channeluuids.getThingUID()))

@@ -6,14 +6,14 @@ from core.triggers import CronTrigger, ItemStateChangeTrigger
 class LightsOnRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("State_Presence")
+            ItemStateChangeTrigger("pOther_Presence_State")
         ]
         
     def callback(self,state):
         sendCommand("eMobile_Socket_2_Powered", state)
 
     def execute(self, module, input):
-        if getItemState("Auto_Christmas") == ON:
+        if getItemState("pOther_Manual_State_Auto_Christmas") == ON:
             if input["event"].getItemState().intValue() == 1:
                 sendCommand("pGF_Corridor_Socket_Powered", ON)
                 sendCommand("pGF_Livingroom_Socket_Couch_Powered", ON)
@@ -38,19 +38,19 @@ class LightsOnRule:
 class OutdoorLightsOnRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("State_Outdoorlights"),
-            ItemStateChangeTrigger("State_Presence")
+            ItemStateChangeTrigger("pOther_Automatic_State_Outdoorlights"),
+            ItemStateChangeTrigger("pOther_Presence_State")
         ]
 
     def execute(self, module, input):
-        if getItemState("Auto_Christmas") == ON:
-            if input['event'].getItemName() == "State_Outdoorlights":
+        if getItemState("pOther_Manual_State_Auto_Christmas") == ON:
+            if input['event'].getItemName() == "pOther_Automatic_State_Outdoorlights":
                 if input["event"].getItemState() == ON:
                     sendCommand("pOutdoor_Streeside_Socket_Powered", ON)
                 else:
                     sendCommand("pOutdoor_Streeside_Socket_Powered", OFF)
             else:
-                if input["event"].getItemState().intValue() == 1 and getItemState("State_Outdoorlights") == ON:
+                if input["event"].getItemState().intValue() == 1 and getItemState("pOther_Automatic_State_Outdoorlights") == ON:
                     sendCommand("pOutdoor_Streeside_Socket_Powered", ON)
                 elif input["event"].getItemState().intValue() == 2:
                     sendCommand("pOutdoor_Streeside_Socket_Powered", OFF)

@@ -1,26 +1,20 @@
 // **** ELECTRICITY METER ****
 Group  eGF_Utilityroom_Electricity_Meter                        "Stromzähler" <selfinfo> (lGF_Utilityroom) ["Sensor"]
-
 Number pGF_Utilityroom_Electricity_Meter_Demand					"Zählerstand Bezug [%.2f KWh]"		<selfenergy_demand> (eGF_Utilityroom_Electricity_Meter) ["Messurement"]
 Number pGF_Utilityroom_Electricity_Meter_Supply					"Zählerstand Lieferung [%.2f KWh]"	<selfenergy_supply> (eGF_Utilityroom_Electricity_Meter) ["Messurement"]
-
 Number pGF_Utilityroom_Energy_Demand_Active					    "Wirkenergie Bezug [%d Watt/h]"		<selfenergy_demand> (eGF_Utilityroom_Electricity_Meter) ["Messurement","Power"] { channel="knx:device:bridge:other:energyDemandActive" }
 Number pGF_Utilityroom_Energy_Supply_Active					    "Wirkenergie Lieferung [%d Watt/h]"	<selfenergy_supply> (eGF_Utilityroom_Electricity_Meter) ["Messurement","Power"] { channel="knx:device:bridge:other:energySupplyActive" }
 Number pGF_Utilityroom_Power_Demand_Active					    "Wirkleistung Bezug [%d Watt]"		<selfenergy_demand> (eGF_Utilityroom_Electricity_Meter) ["Messurement","Power"] { channel="knx:device:bridge:other:powerDemandActive" }
 Number pGF_Utilityroom_Power_Supply_Active					    "Wirkleistung Lieferung [%d Watt]"	<selfenergy_supply> (eGF_Utilityroom_Electricity_Meter) ["Messurement","Power"] { channel="knx:device:bridge:other:powerSupplyActive" }
-
 Number pGF_Utilityroom_Electricity_Total_Demand					"Gesamt Bezug [%.2f KWh]"		<selfenergy_demand> (eGF_Utilityroom_Electricity_Meter,gPersistance_History) ["Point"]
 Number pGF_Utilityroom_Electricity_Total_Supply					"Gesamt Lieferung [%.2f KWh]"	<selfenergy_supply> (eGF_Utilityroom_Electricity_Meter,gPersistance_History) ["Point"]
 Number pGF_Utilityroom_Electricity_Current_Consumption 			"Aktueller Verbrauch [%d Watt]"	<selfenergy> (eGF_Utilityroom_Electricity_Meter,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]
 Number pGF_Utilityroom_Electricity_Current_Daily_Consumption	"Tagesverbrauch [%.2f KWh]"	<selfenergy> (eGF_Utilityroom_Electricity_Meter,gPersistance_Chart,gPersistance_History) ["Point"]
 //Number pGF_Utilityroom_Electricity_Current_Annual_Consumption "Jahresverbrauch [%.2f KWh]"	<selfenergy> (eGF_Utilityroom_Electricity_Meter) ["Point"]
-
 Number pGF_Utilityroom_Electricity_Current_Demand				"Aktueller Bezug [%d Watt]"	<selfenergy_demand> (eGF_Utilityroom_Electricity_Meter) ["Messurement","Power"]
-
 Number pGF_Utilityroom_Electricity_Current_Daily_Demand 		"Tagesbezug [%.2f KWh]"	<selfenergy_demand> (eGF_Utilityroom_Electricity_Meter,gPersistance_Chart,gPersistance_History) ["Point"]
 Number pGF_Utilityroom_Electricity_Current_Annual_Demand 		"Jahresbezug [%.2f KWh]"	<selfenergy_demand> (eGF_Utilityroom_Electricity_Meter) ["Point"]
 String pGF_Utilityroom_Electricity_Current_Annual_Demand_Forecast "Bezugs Hochrechnung [%s]"	<selfenergy_demand> (eGF_Utilityroom_Electricity_Meter) ["Point"]
-
 Number pGF_Utilityroom_Electricity_Current_Daily_Supply			"Tageslieferung [%.2f KWh]"	<selfenergy_supply> (eGF_Utilityroom_Electricity_Meter,gPersistance_Chart,gPersistance_History) ["Point"]
 Number pGF_Utilityroom_Electricity_Current_Annual_Supply		"Jahreslieferung [%.2f KWh]"	<selfenergy_supply> (eGF_Utilityroom_Electricity_Meter) ["Point"]
 String pGF_Utilityroom_Electricity_Current_Annual_Supply_Forecast "Lieferung Hochrechnung [%s]"	<selfenergy_supply> (eGF_Utilityroom_Electricity_Meter) ["Point"]

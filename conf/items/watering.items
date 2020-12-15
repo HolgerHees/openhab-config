@@ -1,27 +1,37 @@
-Group 		Watering 							"Bewässerung [%d]" 						<selfwater>
-Group:Switch:OR(ON, OFF) Watering_Circuits 		"Bewässerung [%d]" 						<selfwater>		(Watering)
+Group:Switch:OR(ON, OFF) gOutdoor_Watering_Circuits "Bewässerung [%d]" <selfwater>
 
-Switch Watering_Gardenside_Lawn_left			"Bewässerung Rasen links"	<selfwater>		(Watering_Circuits,gPersistance_History)	{ channel="knx:device:bridge:wattering:gardensideLawnLeft" }
-Switch Watering_Gardenside_Lawn_right			"Bewässerung Rasen rechts"	<selfwater>		(Watering_Circuits,gPersistance_History)	{ channel="knx:device:bridge:wattering:gardensideLawnRight" }
-Switch Watering_Gardenside_Beds_front			"Bewässerung Beete Terasse"	<selfwater>		(Watering_Circuits,gPersistance_History)	{ channel="knx:device:bridge:wattering:gardensideBedsFront" }
-Switch Watering_Gardenside_Beds_back			"Bewässerung Beete hinten"	<selfwater>		(Watering_Circuits,gPersistance_History)	{ channel="knx:device:bridge:wattering:gardensideBedsBack" }
-Switch Watering_Streetside_Lawn					"Bewässerung Rasen vorne"	<selfwater>		(Watering_Circuits,gPersistance_History)	{ channel="knx:device:bridge:wattering:streetsideLawn" }
-Switch Watering_Streetside_Beds					"Bewässerung Beete vornee"	<selfwater>		(Watering_Circuits,gPersistance_History)	{ channel="knx:device:bridge:wattering:streetsideBeds" }
+Group  eOutdoor_Garden_Left_Watering             "Bewässerung" <selfinfo> (lOutdoor_Garden_Left) ["Equipment"]
+Switch pOutdoor_Garden_Left_Watering_Powered     "Bewässerung" <selfwater> (gOutdoor_Watering_Circuits,gPersistance_History) { channel="knx:device:bridge:wattering:gardensideLawnLeft" }
+Switch pOutdoor_Garden_Left_Watering_Auto        "Automatik"   <selfwater> (eOutdoor_Garden_Left_Watering) ["Point"]
+String pOutdoor_Garden_Left_Watering_Info        "Info [%s]"   <selfwater> (eOutdoor_Garden_Left_Watering) ["Status"]
 
-String Watering_Program_State					"Status [%s]"				<selfinfo>		(Watering)
+Group  eOutdoor_Garden_Right_Watering            "Bewässerung" <selfinfo> (lOutdoor_Garden_Right) ["Equipment"]
+Switch pOutdoor_Garden_Right_Watering_Powered    "Bewässerung" <selfwater> (gOutdoor_Watering_Circuits,gPersistance_History) { channel="knx:device:bridge:wattering:gardensideLawnRight" }
+Switch pOutdoor_Garden_Right_Watering_Auto       "Automatik"   <selfwater> (eOutdoor_Garden_Right_Watering) ["Point"]
+String pOutdoor_Garden_Right_Watering_Info       "Info [%s]"   <selfwater> (eOutdoor_Garden_Right_Watering) ["Status"]
 
-Number Watering_Program_Duration				"Programm Dauer [%d]"		<selfruntime>	(Watering)
-Switch Watering_Program_Start					"Programm starten"			<selfautomode>	(Watering)
+Group  eOutdoor_Garden_Terrace_Watering          "Bewässerung" <selfinfo> (lOutdoor_Garden_Terrace) ["Equipment"]
+Switch pOutdoor_Garden_Terrace_Watering_Powered  "Bewässerung" <selfwater> (gOutdoor_Watering_Circuits,gPersistance_History) { channel="knx:device:bridge:wattering:gardensideBedsFront" }
+Switch pOutdoor_Garden_Terrace_Watering_Auto     "Automatik"   <selfwater> (eOutdoor_Garden_Terrace_Watering) ["Point"]
+String pOutdoor_Garden_Terrace_Watering_Info     "Info [%s]"   <selfwater> (eOutdoor_Garden_Terrace_Watering) ["Status"]
 
-Switch Watering_Gardenside_Lawn_left_Auto		"Automatik Rasen links"	  <selfwater>
-String Watering_Gardenside_Lawn_left_Info		"Info Rasen links [%s]"	  <selfwater>
-Switch Watering_Gardenside_Lawn_right_Auto		"Automatik Rasen rechts"	  <selfwater>
-String Watering_Gardenside_Lawn_right_Info		"Info Rasen rechts [%s]"	  <selfwater>
-Switch Watering_Gardenside_Beds_front_Auto		"Automatik Beete Terasse"  <selfwater>
-String Watering_Gardenside_Beds_front_Info		"Info Beete Terasse [%s]"  <selfwater>
-Switch Watering_Gardenside_Beds_back_Auto		"Automatik Beete hinten"	  <selfwater>
-String Watering_Gardenside_Beds_back_Info		"Info Beete hinten [%s]"	  <selfwater>
-Switch Watering_Streetside_Lawn_Auto			"Automatik Rasen vorne"    <selfwater>
-String Watering_Streetside_Lawn_Info			"Info Rasen vorne [%s]"    <selfwater>
-Switch Watering_Streetside_Beds_Auto			"Automatik Beete vorne"    <selfwater>
-String Watering_Streetside_Beds_Info			"Info Beete vorne [%s]"	  <selfwater>
+Group  eOutdoor_Garden_Back_Watering             "Bewässerung" <selfinfo> (lOutdoor_Garden_Back) ["Equipment"]
+Switch pOutdoor_Garden_Back_Watering_Powered     "Bewässerung" <selfwater> (gOutdoor_Watering_Circuits,gPersistance_History) { channel="knx:device:bridge:wattering:gardensideBedsBack" }
+Switch pOutdoor_Garden_Back_Watering_Auto        "Automatik"   <selfwater> (eOutdoor_Garden_Back_Watering) ["Point"]
+String pOutdoor_Garden_Back_Watering_Info        "Info [%s]"   <selfwater> (eOutdoor_Garden_Back_Watering) ["Status"]
+
+Group  eOutdoor_Streetside_Lawn_Watering         "Bewässerung" <selfinfo> (lOutdoor_Streedside) ["Equipment"]
+Switch pOutdoor_Streetside_Lawn_Watering_Powered "Bewässerung" <selfwater> (gOutdoor_Watering_Circuits,gPersistance_History) { channel="knx:device:bridge:wattering:streetsideLawn" }
+Switch pOutdoor_Streetside_Lawn_Watering_Auto    "Automatik"   <selfwater> (eOutdoor_Streetside_Lawn_Watering) ["Point"]
+String pOutdoor_Streetside_Lawn_Watering_Info    "Info [%s]"   <selfwater> (eOutdoor_Streetside_Lawn_Watering) ["Status"]
+
+Group  eOutdoor_Streetside_Beds_Watering         "Bewässerung" <selfinfo> (lOutdoor_Streedside) ["Equipment"]
+Switch pOutdoor_Streetside_Beds_Watering_Powered "Bewässerung" <selfwater> (gOutdoor_Watering_Circuits,gPersistance_History) { channel="knx:device:bridge:wattering:streetsideBeds" }
+Switch pOutdoor_Streetside_Beds_Watering_Auto    "Automatik"   <selfwater> (eOutdoor_Streetside_Beds_Watering) ["Point"]
+String pOutdoor_Streetside_Beds_Watering_Info    "Info [%s]"   <selfwater> (eOutdoor_Streetside_Beds_Watering) ["Status"]
+
+// **** WATERING LOGIC ****
+Group  eOutdoor_Watering_Logic                   "Bewässerung" <selfinfo> (lOutdoor) ["Equipment"]
+String pOutdoor_Watering_Logic_Program_State     "Status [%s]" <selfinfo> (eOutdoor_Watering_Logic) ["Point"]
+Number pOutdoor_Watering_Logic_Program_Duration  "Programm Dauer [%d]" <selfruntime> (eOutdoor_Watering_Logic) ["Status"]
+Switch pOutdoor_Watering_Logic_Program_Start     "Programm starten" <selfautomode> (eOutdoor_Watering_Logic) ["Control"]

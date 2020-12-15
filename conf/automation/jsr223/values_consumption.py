@@ -274,7 +274,7 @@ class EnergyTotalYieldRefreshRule:
         ]
         
     def execute(self, module, input):
-        if getItemState("State_Solar") == ON:
+        if getItemState("pOther_Automatic_State_Solar") == ON:
             # triggers solar value update
             sendCommand("pGF_Garage_Solar_Inverter_Total_Yield",REFRESH)
         
@@ -314,9 +314,9 @@ class EnergyCurrentDemandAndConsumptionRule:
 
             self.currentDemand = self.powerDemand - self.powerSupply
             
-            if getItemState("State_Solar") == ON:
+            if getItemState("pOther_Automatic_State_Solar") == ON:
                 # solar value update was not successful for a while
-                #solarActive = getItemState("State_Solar") == ON
+                #solarActive = getItemState("pOther_Automatic_State_Solar") == ON
                 #if itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_Total_Yield", getNow().minusHours(5) if solarActive else getNow().minusHours(14)):
                 if itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_Total_Yield", getNow().minusHours(24)):
                     self.log.info(u"Solar: ERROR • Values not updated. Fallback to '0' values.")

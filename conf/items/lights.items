@@ -53,10 +53,10 @@ Dimmer pGF_Livingroom_Light_Hue1_Brightness     "Indirektes Licht - Bassbox" <se
 Color  pGF_Livingroom_Light_Hue1_Color          "Farb - Bassbox"     <colorwheel> (eGF_Livingroom_Light_Hue1)                           ["Control","ColorTemperature"] { channel="hue:0210:default:lamp1:color"}
 
 Group  eGF_Livingroom_Light_Hue2_3              "HUE Lampe - Stehlampe" <selflight> (lGF_Livingroom)                                    ["Lightbulb"] { synonyms="Stehlampe,Couch,Indirekt" }
-Group  eGF_Livingroom_Light_Hue2                "HUE Lampe - Stehlampe unten" <selflight> (eGF_Livingroom_Light_Hue2_3)                 ["Lightbulb"] { synonyms="Stehlampe unten" }
+Group  eGF_Livingroom_Light_Hue2                "HUE Lampe - Stehlampe unten" <selflight> (eGF_Livingroom_Light_Hue2_3)                 ["Lightbulb"] { synonyms="unten" }
 Dimmer pGF_Livingroom_Light_Hue2_Brightness     "Indirektes Licht - Stehlampe unten" <selflight> (eGF_Livingroom_Light_Hue2,gGF_Livingroom_Light_Hue_Brightness,gIndoor_Lights,gGF_Lights) ["Setpoint","Light"] { channel="hue:0210:default:lamp2:color"}
 Color  pGF_Livingroom_Light_Hue2_Color          "Farbe - Stehlampe unten" <colorwheel> (eGF_Livingroom_Light_Hue2)                      ["Control","ColorTemperature"] { channel="hue:0210:default:lamp2:color"}
-Group  eGF_Livingroom_Light_Hue3                "HUE Lampe - Stehlampe oben" <selflight> (eGF_Livingroom_Light_Hue2_3)                  ["Lightbulb"] { synonyms="Stehlampe oben" }
+Group  eGF_Livingroom_Light_Hue3                "HUE Lampe - Stehlampe oben" <selflight> (eGF_Livingroom_Light_Hue2_3)                  ["Lightbulb"] { synonyms="oben" }
 Dimmer pGF_Livingroom_Light_Hue3_Brightness     "Indirektes Licht - Stehlampe oben" <selflight> (eGF_Livingroom_Light_Hue3,gGF_Livingroom_Light_Hue_Brightness,gIndoor_Lights,gGF_Lights) ["Setpoint","Light"] { channel="hue:0210:default:lamp3:color"}
 Color  pGF_Livingroom_Light_Hue3_Color          "Farbe - Stehlampe oben" <colorwheel> (eGF_Livingroom_Light_Hue3)                       ["Control","ColorTemperature"] { channel="hue:0210:default:lamp3:color"}
 
@@ -71,6 +71,10 @@ Color  pGF_Livingroom_Light_Hue5_Color          "Farbe - Regal"      <colorwheel
 // **** GF GUESTROOM ****
 Group  eGF_Guestroom_Light_Ceiling              "Deckenlampe"        <selflight> (lGF_Guestroom)                                        ["Lightbulb"] { synonyms="Decke" }
 Switch pGF_Guestroom_Light_Ceiling_Powered      "Deckenlicht"        <selflight> (eGF_Guestroom_Light_Ceiling,gIndoor_Lights,gGF_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_ff:guestroomCeiling" }
+
+// **** GF GARAGE ****
+Group  eGF_Garage_Light_Ceiling                 "Deckenlampe"        <selflight> (lGF_Garage)                                              ["Lightbulb"] { synonyms="Decke" }
+Switch pGF_Garage_Light_Ceiling_Powered         "Deckenlicht"        <selflight> (eGF_Garage_Light_Ceiling,gOutdoor_Lights)                ["Switch","Light"] { channel="knx:device:bridge:lights_ff:garage" }
 
 // **** FF CORRIDOR ****
 Group  eFF_Corridor_Light_Ceiling               "Deckenlampe"        <selflight> (lFF_Corridor)                                         ["Lightbulb"] { synonyms="Decke" }
@@ -109,30 +113,40 @@ Switch pFF_Child1_Light_Ceiling_Powered         "Deckenlicht"        <selflight>
 Group  eFF_Child2_Light_Ceiling                 "Deckenlampe"        <selflight> (lFF_Child2)                                           ["Lightbulb"] { synonyms="Decke" }
 Switch pFF_Child2_Light_Ceiling_Powered         "Deckenlicht"        <selflight> (eFF_Child2_Light_Ceiling,gIndoor_Lights,gFF_Lights)   ["Switch","Light"] { channel="knx:device:bridge:lights_sf:child2Ceiling" }
 
-// **** ATTIC ****
-Group  eFF_Attic_Light_Ceiling                  "Deckenlampe"        <selflight> (lAttic)                                               ["Lightbulb"] { synonyms="Decke" }
-Switch pAttic_Light_Ceiling_Powered          "Deckenlicht"        <selflight> (eFF_Attic_Light_Ceiling,gIndoor_Lights,gFF_Lights)    ["Switch","Light"] { channel="knx:device:bridge:lights_sf:attic" }
+// **** FF ATTIC ****
+Group  eFF_Attic_Light_Ceiling                  "Deckenlampe"        <selflight> (lFF_Attic)                                               ["Lightbulb"] { synonyms="Decke" }
+Switch pFF_Attic_Light_Ceiling_Powered          "Deckenlicht"        <selflight> (eFF_Attic_Light_Ceiling,gIndoor_Lights,gFF_Lights)    ["Switch","Light"] { channel="knx:device:bridge:lights_sf:attic" }
 
-// **** GARAGE ****
-Group  eGarage_Light_Ceiling                    "Deckenlampe"        <selflight> (lGarage)                                              ["Lightbulb"] { synonyms="Decke" }
-Switch pGarage_Light_Ceiling_Powered            "Deckenlicht"        <selflight> (eGarage_Light_Ceiling,gOutdoor_Lights)                ["Switch","Light"] { channel="knx:device:bridge:lights_ff:garage" }
+Group:Number:SUM gOutdoor_Motiondetector_Counter "Automatik [MAP(motiondetector_counter_de.map):%s]" <selflightInfo>
 
 // **** OUTDOOR GARAGE STREEDSIDE ****
 Group  eOutdoor_Streedside_Garage_Light         "Lampe"              <selflight> (lOutdoor_Streedside_Garage)                           ["Lightbulb"]
-Switch pOutdoor_Streedside_Garage_Light_Powered "Licht"              <selflight> (eOutdoor_Streedside_Garage_Light,gOutdoor_Lights)     ["Switch","Light"] { channel="knx:device:bridge:lights_outdoor:garageStreedside" }
+Switch pOutdoor_Streedside_Garage_Light_Powered "Licht"              <selflight> (eOutdoor_Streedside_Garage_Light,gOutdoor_Lights)     ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:garageStreedside" }
+Switch pOutdoor_Streedside_Garage_Automatic_Switch	"Automatik"      <selflight> (eOutdoor_Streedside_Garage_Light,gOutdoor_Motiondetector_Counter) ["Switch","Light"]
 
 // **** OUTDOOR FRONT ****
 Group  eOutdoor_Streedside_Frontdoor_Light      "Lampe"              <selflight> (lOutdoor_Streedside_Frontdoor)                        ["Lightbulb"]
-Switch pOutdoor_Streedside_Frontdoor_Light_Powered "Licht"           <selflight> (eOutdoor_Streedside_Frontdoor_Light,gOutdoor_Lights)  ["Switch","Light"] { channel="knx:device:bridge:lights_outdoor:frontdoor" }
+Switch pOutdoor_Streedside_Frontdoor_Light_Powered "Licht"           <selflight> (eOutdoor_Streedside_Frontdoor_Light,gOutdoor_Lights)  ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:frontdoor" }
+Switch pOutdoor_Streedside_Frontdoor_Automatic_Switch "Automatik"    <selflight> (eOutdoor_Streedside_Frontdoor_Light,gOutdoor_Motiondetector_Counter) ["Switch","Light"]
 
 // **** OUTDOOR CARPORT ****
 Group  eOutdoor_Carport_Light                   "Lampe"              <selflight> (lOutdoor_Carport)                                     ["Lightbulb"]
-Switch pOutdoor_Carport_Light_Powered           "Licht"              <selflight> (eOutdoor_Carport_Light,gOutdoor_Lights)               ["Switch","Light"] { channel="knx:device:bridge:lights_outdoor:carport" }
+Switch pOutdoor_Carport_Light_Powered           "Licht"              <selflight> (eOutdoor_Carport_Light,gOutdoor_Lights)               ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:carport" }
+Switch pOutdoor_Carport_Automatic_Switch        "Automatik"          <selflight> (eOutdoor_Carport_Light,gOutdoor_Motiondetector_Counter) ["Switch","Light"]
 
 // **** OUTDOOR TERRACE ****
 Group  eOutdoor_Garden_Terrace_Light            "Lampen"             <selflight> (lOutdoor_Garden_Terrace)                              ["Lightbulb"]
-Dimmer pOutdoor_Garden_Terrace_Light_Brightness "Licht"              <selflight> (eOutdoor_Garden_Terrace_Light,gOutdoor_Lights)        ["Setpoint","Light"] { channel="knx:device:bridge:lights_outdoor:outdoorTerrace"}
+Dimmer pOutdoor_Garden_Terrace_Light_Brightness "Licht"              <selflight> (eOutdoor_Garden_Terrace_Light,gOutdoor_Lights)        ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:outdoorTerrace"}
+Switch pOutdoor_Garden_Terrace_Automatic_Switch "Automatik"          <selflight> (eOutdoor_Garden_Terrace_Light,gOutdoor_Motiondetector_Counter) ["Switch","Light"]
 
-// **** OUTDOOR GARAGE STREEDSIDE ****
+// **** OUTDOOR GARAGE GARDEN ****
 Group  eOutdoor_Garden_Garage_Light             "Lampe"              <selflight> (lOutdoor_Garden_Garage)                               ["Lightbulb"]
-Switch pOutdoor_Garden_Garage_Light_Powered     "Licht"              <selflight> (eOutdoor_Garden_Garage_Light,gOutdoor_Lights)         ["Switch","Light"] { channel="knx:device:bridge:lights_outdoor:garageGardenside" }
+Switch pOutdoor_Garden_Garage_Light_Powered     "Licht"              <selflight> (eOutdoor_Garden_Garage_Light,gOutdoor_Lights)         ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:garageGardenside" }
+Switch pOutdoor_Garden_Garage_Automatic_Switch	"Automatik"          <selflight> (eOutdoor_Garden_Garage_Light,gOutdoor_Motiondetector_Counter) ["Switch","Light"]
+
+//####### OUTDOOR LIGHT LOGIC STATES ########
+Group  eOutdoor_Light_Automatic_Logic           "Schalter"           <selfinfo> (lOutdoor) ["Equipment"]
+Switch pOutdoor_Light_Automatic_Main_Switch     "Gartenlicht autom." <selfinfo> (eOutdoor_Light_Automatic_Logic) ["Point"] { channel="knx:device:bridge:motion_outdoor:main" }
+
+
+

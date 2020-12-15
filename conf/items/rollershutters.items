@@ -9,7 +9,7 @@ Group:Rollershutter:OR(UP, DOWN) gSouth_Shutters	"Süden" <selfrollershutter>
 Group:Rollershutter:OR(UP, DOWN) gWest_Shutters	"Westen" <selfrollershutter>
 
 // **** GF LIVINGROOM ****
-Group  eGF_Livingroom_Shutter_Terrace "Terasse Rollladen" <selfrollershutter> (lGF_Livingroom) ["Blinds"] {synonyms="Esstisch,Terasse"}
+Group  eGF_Livingroom_Shutter_Terrace "Terasse Rollladen" <selfrollershutter> (lGF_Livingroom,lOutdoor_Garden_Terrace) ["Blinds"] {synonyms="Esstisch"}
 Rollershutter pGF_Livingroom_Shutter_Terrace_Control "Terasse" <selfrollershutter> (eGF_Livingroom_Shutter_Terrace,gShutters,gGF_Shutters,gShutters_Count,gGF_Shutters_Count,gWest_Shutters) ["Control"] { channel="knx:device:bridge:shutter_ff:livingroomTerrace" }
 
 Group  eGF_Livingroom_Shutter_Couch "Couch Rollladen" <selfrollershutter> (lGF_Livingroom) ["Blinds"] {synonyms="Couch"}
@@ -48,6 +48,6 @@ Group  eFF_Bathroom_Shutter "Badezimmer Rollladen" <selfrollershutter> (lFF_Bath
 Rollershutter pFF_Bathroom_Shutter_Control "Badezimmer" <selfrollershutter> (eFF_Bathroom_Shutter,gShutters,gFF_Shutters,gShutters_Count,gFF_Shutters_Count,gSouth_Shutters) ["Control"] { channel="knx:device:bridge:shutter_sf:bathroom" }
 
 // **** Attic ****
-Group  eAttic_Shutter "Dachboden Rollladen" <selfrollershutter> (lAttic) ["Blinds"]
-Rollershutter pAttic_Shutter_Control "Dachboden" <selfrollershutter> (eAttic_Shutter,gShutters,gFF_Shutters,gShutters_Count,gFF_Shutters_Count,gSouth_Shutters) ["Control"] { channel="knx:device:bridge:shutter_sf:attic" }
+Group  eFF_Attic_Shutter "Dachboden Rollladen" <selfrollershutter> (lFF_Attic) ["Blinds"]
+Rollershutter pFF_Attic_Shutter_Control "Dachboden" <selfrollershutter> (eFF_Attic_Shutter,gShutters,gFF_Shutters,gShutters_Count,gFF_Shutters_Count,gSouth_Shutters) ["Control"] { channel="knx:device:bridge:shutter_sf:attic" }
 

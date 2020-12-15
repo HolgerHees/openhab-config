@@ -8,56 +8,56 @@ circuits = [
       2.0 / 3.0,
       u"Strasse",
       [
-        'Watering_Streetside_Lawn'
+        'pOutdoor_Streetside_Lawn_Watering_Powered'
       ]
     ],[
       1.0,
       u"Beete",
       [
-        'Watering_Streetside_Beds',
-        'Watering_Gardenside_Beds_front',
-        'Watering_Gardenside_Beds_back'
+        'pOutdoor_Streetside_Beds_Watering_Powered',
+        'pOutdoor_Garden_Terrace_Watering_Powered',
+        'pOutdoor_Garden_Back_Watering_Powered'
       ]
     ],[
       1.0,
       u"Garten rechts",
       [
-        'Watering_Gardenside_Lawn_right'
+        'pOutdoor_Garden_Right_Watering_Powered'
       ]
     ],[
       1.0,
       u"Garten links",
       [
-        'Watering_Gardenside_Lawn_left'
+        'pOutdoor_Garden_Left_Watering_Powered'
       ]
     ]
 ]
       
 #circuits = [
 #    [
-#        ['Watering_Streetside_Lawn', u"Strasse", 2.0 / 3.0 ],
-#        ['Watering_Gardenside_Lawn_right', u"Garten rechts", 1.0 ],
-#        ['Watering_Gardenside_Lawn_left', u"Garten links", 1.0 ]
+#        ['pOutdoor_Streetside_Lawn_Watering_Powered', u"Strasse", 2.0 / 3.0 ],
+#        ['pOutdoor_Garden_Right_Watering_Powered', u"Garten rechts", 1.0 ],
+#        ['pOutdoor_Garden_Left_Watering_Powered', u"Garten links", 1.0 ]
 #    ], [
-#        ['Watering_Streetside_Beds', u"Beete", 1.0 ]
+#        ['pOutdoor_Streetside_Beds_Watering_Powered', u"Beete", 1.0 ]
 #    ], [
-#        ['Watering_Gardenside_Beds_front', u"Beete", 1.0 ]
+#        ['pOutdoor_Garden_Terrace_Watering_Powered', u"Beete", 1.0 ]
 #    ], [
-#        ['Watering_Gardenside_Beds_back', u"Beete", 1.0 ]
+#        ['pOutdoor_Garden_Back_Watering_Powered', u"Beete", 1.0 ]
 #    ]
 #]
     
 @rule("scenes_wathering.py")
 class ScenesWatheringRule():
     def __init__(self):
-        self.triggers = [ ItemStateChangeTrigger("Watering_Program_Duration") ]
+        self.triggers = [ ItemStateChangeTrigger("pOutdoor_Watering_Logic_Program_Duration") ]
         
         for group in circuits:
             for circuit in group[2]:
                 self.triggers.append(ItemStateChangeTrigger(circuit+"_Auto"))
 
     def execute(self, module, input):
-        reference_duration = getItemState("Watering_Program_Duration").intValue()
+        reference_duration = getItemState("pOutdoor_Watering_Logic_Program_Duration").intValue()
 
         for i in range(len(circuits)):
             for circuit in circuits[i][2]:
@@ -98,15 +98,15 @@ class WatheringHelperOld:
 @rule("scenes_wathering.py")
 class ScenesWatheringRule(WatheringHelperOld):
     def __init__(self):
-        self.triggers = [ItemCommandTrigger("Watering_Program_Start")]
+        self.triggers = [ItemCommandTrigger("pOutdoor_Watering_Logic_Program_Start")]
 
         self.progressTimer = None
         self.currentProgressMsg = ""
 
     def disableAllCircuits(self):
-        for child in getGroupMember("Watering_Circuits"):
+        for child in getGroupMember("gOutdoor_Watering_Circuits"):
             sendCommand(child, OFF)
-        postUpdate("Watering_Program_State", u"läuft nicht")
+        postUpdate("pOutdoor_Watering_Logic_Program_State", u"läuft nicht")
 
     def cancelProgressTimer(self):
         if self.progressTimer is not None:
@@ -118,7 +118,7 @@ class ScenesWatheringRule(WatheringHelperOld):
         self.currentProgressMsg = ""
         
     def findStep(self):
-        duration = getItemState("Watering_Program_Duration").intValue() * 60.0 * 1000.0
+        duration = getItemState("pOutdoor_Watering_Logic_Program_Duration").intValue() * 60.0 * 1000.0
         
         remaining = 0
         info = u""
@@ -150,7 +150,7 @@ class ScenesWatheringRule(WatheringHelperOld):
         
             if nextIndex == -1:
                 self.disableAllCircuits()
-                postUpdate("Watering_Program_Start", OFF)
+                postUpdate("pOutdoor_Watering_Logic_Program_Start", OFF)
             else:
                 for circuit in circuits[nextIndex][2]:
                     if getItemState(circuit + "_Auto") == ON:
@@ -171,7 +171,7 @@ class ScenesWatheringRule(WatheringHelperOld):
         return [ info, remaining ]
 
     def callbackProgress(self):
-        if self.progressTimer is not None and self.currentProgressMsg != getItemState("Watering_Program_State").toString():
+        if self.progressTimer is not None and self.currentProgressMsg != getItemState("pOutdoor_Watering_Logic_Program_State").toString():
             self.log.info("Cancel Watering Progress Zombie Timer")
             self.cleanProgressTimer()
             return
@@ -190,7 +190,7 @@ class ScenesWatheringRule(WatheringHelperOld):
             msg = u"{} gleich fertig".format(msg)
 
         self.currentProgressMsg = msg
-        postUpdate("Watering_Program_State", self.currentProgressMsg)
+        postUpdate("pOutdoor_Watering_Logic_Program_State", self.currentProgressMsg)
 
         self.progressTimer = createTimer(self.log, 60.0, self.callbackProgress)
         self.progressTimer.start()

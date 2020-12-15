@@ -6,18 +6,18 @@ from core.triggers import ItemStateChangeTrigger
 class ScenesWatheringMessagesRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("Watering_Program_State"),
-            ItemStateChangeTrigger("Watering_Circuits"),
-            ItemStateChangeTrigger("Motiondetector_Outdoor_Switch")
+            ItemStateChangeTrigger("pOutdoor_Watering_Logic_Program_State"),
+            ItemStateChangeTrigger("gOutdoor_Watering_Circuits"),
+            ItemStateChangeTrigger("pOutdoor_Light_Automatic_Main_Switch")
         ]
 
     def execute(self, module, input):
         active = []
         
-        if getItemState("Watering_Circuits") == ON:
+        if getItemState("gOutdoor_Watering_Circuits") == ON:
             active.append(u"Bewässerung")
 
-        if getItemState("Motiondetector_Outdoor_Switch") != ON:
+        if getItemState("pOutdoor_Light_Automatic_Main_Switch") != ON:
             active.append(u"Beleuchtung")
 
         if len(active) == 0:
@@ -25,4 +25,4 @@ class ScenesWatheringMessagesRule:
 
         msg = ", ".join(active)
 
-        postUpdateIfChanged("GardenStatus", msg)
+        postUpdateIfChanged("pOther_State_Message_Garden", msg)

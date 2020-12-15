@@ -27,8 +27,8 @@ Group  eFF_Bathroom_Socket_Right               "Waschbecken rechts" <selfsocket>
 Switch pFF_Bathroom_Socket_Right_Powered       "Waschbecken rechts" <selfsocket> (eFF_Bathroom_Socket_Right,gAll_Sockets) ["Switch","Power"]   { channel="knx:device:bridge:sockets_sf:bathroomRight" }
 
 // **** ATTIC ****
-Group  eAttic_Socket                           "Schornstein"        <selfsocket> (lAttic) ["PowerOutlet"]
-Switch pAttic_Socket_Powered                   "Schornstein"        <selfsocket> (eAttic_Socket,gAll_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_sf:attic" }
+Group  eFF_Attic_Socket                           "Schornstein"        <selfsocket> (lFF_Attic) ["PowerOutlet"]
+Switch pFF_Attic_Socket_Powered                   "Schornstein"        <selfsocket> (eFF_Attic_Socket,gAll_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_sf:attic" }
 
 // **** GARDEN ****
 Group  eOutdoor_Streedside_Socket              "Steckdosen"         <selfsocket> (lOutdoor_Streedside) ["PowerOutlet"] { synonyms="aussensteckdose" }

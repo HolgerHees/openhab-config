@@ -1,11 +1,11 @@
-String PrinterStatus "Status [%s]" <selfinfo> { channel="hpprinter:printer:laserjet:status#status" }
-
-Number:Dimensionless PrinterBlackLevel "Schwarz [%d %%]" <colorpicker> { channel="hpprinter:printer:laserjet:ink#blackLevel" }
-Number:Dimensionless PrinterCyanLevel "Cyan [%d %%]" <colorpicker> { channel="hpprinter:printer:laserjet:ink#cyanLevel" }
-Number:Dimensionless PrinterMagentaLevel "Magenta [%d %%]" <colorpicker> { channel="hpprinter:printer:laserjet:ink#magentaLevel" }
-Number:Dimensionless PrinterYellowLevel "Gelb [%d %%]" <colorpicker> { channel="hpprinter:printer:laserjet:ink#yellowLevel" }
-
-Number PrinterTotalPages "Gesamt [%d]" <selfinfo> { channel="hpprinter:printer:laserjet:usage#totalCount" }
-Number PrinterTotalColourPages "Farbe [%d]" <selfinfo> { channel="hpprinter:printer:laserjet:usage#totalColorCount" }
-Number PrinterTotalMonochromePages "Schwarz/Weiss [%d]" <selfinfo> { channel="hpprinter:printer:laserjet:usage#totalMonochromeCount" }
+// **** PRINTER ****
+Group  eGF_Guestroom_Printer                           "Drucker" <selfinfo> (lGF_Guestroom) ["Equipment"]
+String pGF_Guestroom_PrinterStatus                     "Status [%s]" <selfinfo> (eGF_Guestroom_Printer) ["Status"] { channel="hpprinter:printer:laserjet:status#status" }
+Number:Dimensionless pGF_Guestroom_PrinterBlackLevel   "Schwarz [%d %%]" <colorpicker> (eGF_Guestroom_Printer) ["Point"] { channel="hpprinter:printer:laserjet:ink#blackLevel" }
+Number:Dimensionless pGF_Guestroom_PrinterCyanLevel    "Cyan [%d %%]" <colorpicker> (eGF_Guestroom_Printer) ["Point"] { channel="hpprinter:printer:laserjet:ink#cyanLevel" }
+Number:Dimensionless pGF_Guestroom_PrinterMagentaLevel "Magenta [%d %%]" <colorpicker> (eGF_Guestroom_Printer) ["Point"] { channel="hpprinter:printer:laserjet:ink#magentaLevel" }
+Number:Dimensionless pGF_Guestroom_PrinterYellowLevel  "Gelb [%d %%]" <colorpicker> (eGF_Guestroom_Printer) ["Point"] { channel="hpprinter:printer:laserjet:ink#yellowLevel" }
+Number pGF_Guestroom_PrinterTotalPages                 "Gesamt [%d]" <selfinfo> (eGF_Guestroom_Printer) ["Point"] { channel="hpprinter:printer:laserjet:usage#totalCount" }
+Number pGF_Guestroom_PrinterTotalColourPages           "Farbe [%d]" <selfinfo> (eGF_Guestroom_Printer) ["Point"] { channel="hpprinter:printer:laserjet:usage#totalColorCount" }
+Number pGF_Guestroom_PrinterTotalMonochromePages       "Schwarz/Weiss [%d]" <selfinfo> (eGF_Guestroom_Printer) ["Point"] { channel="hpprinter:printer:laserjet:usage#totalMonochromeCount" }
  

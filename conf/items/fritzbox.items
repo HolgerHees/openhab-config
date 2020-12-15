@@ -16,3 +16,7 @@ Number  pGF_Corridor_Fritzbox_DslHECErrors          "HEC Fehler [%s]"           
 Number  pGF_Corridor_Fritzbox_DslCRCErrors          "CRC Fehler [%s]"                                     <error>    (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="dslCRCErrors"} 
 Number  pGF_Corridor_Fritzbox_Uptime                "Uptime [JS(network_uptime.js):%s]"                   <line>     (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="upTime"}
 Switch  pGF_Corridor_Fritzbox_GuestWifi             "Gäste WLAN"                                          <network>  (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="wifiGuestSwitch"}
+
+Number  pGF_Corridor_Speedtest_UpstreamRate         "Upstream Gemessen [%d MBit]"                         <flowpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"] {channel="network:speedtest:local:rateUp"}
+Number  pGF_Corridor_Speedtest_DownstreamRate       "Downstream Gemessen [%d MBit]"                       <returnpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"] {channel="network:speedtest:local:rateDown"}
+DateTime pGF_Corridor_Speedtest_Start               "Speedtest [%1$tH:%1$tM]"                             <time>     (eGF_Corridor_Fritzbox) ["Point"] {channel="network:speedtest:local:testStart"}

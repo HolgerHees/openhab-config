@@ -27,18 +27,18 @@ class HeatingTemperatureOutdoorMessageRule:
         self.triggers = [
             ItemStateChangeTrigger("pGF_Utilityroom_Heating_Temperature_Outdoor"),
             ItemStateChangeTrigger("pGF_Utilityroom_Heating_Temperature_Outdoor_Subdued"),
-            ItemStateChangeTrigger("Temperature_Garden_Forecast4")
+            ItemStateChangeTrigger("pOutdoor_Weather_Forecast_Temperature_4h")
         ]
         self.updateTimer = None
 
     def delayUpdate(self):
-        msg = u"({}°C) {}°C, {}°C".format(getItemState("Temperature_Garden_Forecast4").format("%.1f"),getItemState("pGF_Utilityroom_Heating_Temperature_Outdoor").format("%.1f"),getItemState("pGF_Utilityroom_Heating_Temperature_Outdoor_Subdued").format("%.1f"))
+        msg = u"({}°C) {}°C, {}°C".format(getItemState("pOutdoor_Weather_Forecast_Temperature_4h").format("%.1f"),getItemState("pGF_Utilityroom_Heating_Temperature_Outdoor").format("%.1f"),getItemState("pGF_Utilityroom_Heating_Temperature_Outdoor_Subdued").format("%.1f"))
         postUpdateIfChanged("pGF_Utilityroom_Heating_Temperature_Outdoor_Message", msg)
 
         self.updateTimer = None
 
     def execute(self, module, input):
-        if input['event'].getItemName() == "Temperature_Garden_Forecast4":
+        if input['event'].getItemName() == "pOutdoor_Weather_Forecast_Temperature_4h":
             self.delayUpdate()
         else:
             self.updateTimer = startTimer(self.log,DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers) - 1)

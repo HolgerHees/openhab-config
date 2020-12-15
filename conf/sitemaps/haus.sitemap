@@ -13,7 +13,7 @@ sitemap haus label="Main Menu"
 							Frame label="Gruppe" {
 								Slider item=gGF_Livingroom_Light_Hue_Brightness label="Alle Lampen [%d %%]"
 								Colorpicker item=gGF_Livingroom_Light_Hue_Color label="Alle Lampen"
-                                Switch item=State_Lightprogram label="Programm" mappings=[0="Aus", 1="1", 2="2"]
+                                Switch item=pOther_Manual_State_Lightprogram label="Programm" mappings=[0="Aus", 1="1", 2="2"]
 							}
 							Frame label="Einzeln" {
 								Slider item=pGF_Livingroom_Light_Hue4_Brightness label="Küche Tresen [%d %%]"
@@ -64,10 +64,10 @@ sitemap haus label="Main Menu"
 						Switch item=pFF_Child2_Light_Ceiling_Powered label="Kind 2"
 					}
 				}
-				Switch item=pAttic_Light_Ceiling_Powered label="Dachboden"
+				Switch item=pFF_Attic_Light_Ceiling_Powered label="Dachboden"
             }
             Frame label="Garten" {
-				Switch item=pGarage_Light_Ceiling_Powered label="Schuppen"
+				Switch item=pGF_Garage_Light_Ceiling_Powered label="Schuppen"
 				Group item=gOutdoor_Lights label="Aussen Lampen [MAP(group_light.map):%d]" {
                     Slider item=pOutdoor_Garden_Terrace_Light_Brightness label="Terasse"
                     Switch item=pOutdoor_Streedside_Frontdoor_Light_Powered label="Haustür"
@@ -92,9 +92,9 @@ sitemap haus label="Main Menu"
 		}
 	}
 	Frame label="Steuern" {
-		Group label="Garten [%s]" icon="selfgarden" item=GardenStatus valuecolor=[=="Alles normal"="#6bc305",!="Alles normal"="#d72a2a"] {
-			Frame label="Allgemein • Letztes klingeln [%1$tH:%1$tM:%1$tS, %1$td.%1$tm]" item=Bell_Last_Change{
-				Switch item=Dooropener_Timer
+		Group label="Garten [%s]" icon="selfgarden" item=pOther_State_Message_Garden valuecolor=[=="Alles normal"="#6bc305",!="Alles normal"="#d72a2a"] {
+			Frame label="Allgemein • Letztes klingeln [%1$tH:%1$tM:%1$tS, %1$td.%1$tm]" item=pOutdoor_Streedside_Gardendoor_Bell_Last_Change{
+				Switch item=pOutdoor_Streedside_Gardendoor_Opener_Timer
 				Text label="Kameras" icon="camera"
 				{
 					Image url="https://smartmarvin.de/cameraStrasseImage" label="Strasse" refresh=2000
@@ -102,8 +102,8 @@ sitemap haus label="Main Menu"
 				}
 			}
 			Frame label="Licht Bewegungsmelder" {
-				Switch item=Motiondetector_Outdoor_Switch label="Aktiv"
-				Group item=Motiondetector_Counter label="Einstellungen"
+				Switch item=pOutdoor_Light_Automatic_Main_Switch label="Aktiv"
+				Group item=gOutdoor_Motiondetector_Counter label="Einstellungen"
 			}
 			Frame label="Licht & Steckdosen" {
                 Group item=gOutdoor_Lights label="Lampen [MAP(group_light.map):%d]"
@@ -111,52 +111,52 @@ sitemap haus label="Main Menu"
 					Switch item=pOutdoor_Streeside_Socket_Powered
 					Switch item=pOutdoor_Garden_Terrace_Socket_Powered
 				}
-                Group label="Bewässerung [MAP(group_watering.map):%d]" item=Watering_Circuits {
+                Group label="Bewässerung [MAP(group_watering.map):%d]" item=gOutdoor_Watering_Circuits {
                     Frame label="Programm" {
-                        Text item=Watering_Program_State
-                        Switch item=Watering_Program_Start
-                        Setpoint item=Watering_Program_Duration step=1.0 minValue=10 maxValue=60
+                        Text item=pOutdoor_Watering_Logic_Program_State
+                        Switch item=pOutdoor_Watering_Logic_Program_Start
+                        Setpoint item=pOutdoor_Watering_Logic_Program_Duration step=1.0 minValue=10 maxValue=60
                     }
                     Frame label="Rasen" {
-                        Text item=Watering_Gardenside_Lawn_left_Info label="Garten links [%s]" {
-                            Switch item=Watering_Gardenside_Lawn_left_Auto label="Garten links"
+                        Text item=pOutdoor_Garden_Left_Watering_Info label="Garten links [%s]" {
+                            Switch item=pOutdoor_Garden_Left_Watering_Auto label="Garten links"
                         }
-                        Text item=Watering_Gardenside_Lawn_right_Info label="Garten rechts [%s]" {
-                            Switch item=Watering_Gardenside_Lawn_right_Auto label="Garten rechts"
+                        Text item=pOutdoor_Garden_Right_Watering_Info label="Garten rechts [%s]" {
+                            Switch item=pOutdoor_Garden_Right_Watering_Auto label="Garten rechts"
                         }
-                        Text item=Watering_Streetside_Lawn_Info label="Strasse [%s]" {
-                            Switch item=Watering_Streetside_Lawn_Auto label="Strasse"
+                        Text item=pOutdoor_Streetside_Lawn_Watering_Info label="Strasse [%s]" {
+                            Switch item=pOutdoor_Streetside_Lawn_Watering_Auto label="Strasse"
                         }
                     }
                     Frame label="Beete & Hecken" {
-                        Text item=Watering_Gardenside_Beds_front_Info label="Terasse [%s]" {
-                            Switch item=Watering_Gardenside_Beds_front_Auto label="Terasse"
+                        Text item=pOutdoor_Garden_Terrace_Watering_Info label="Terasse [%s]" {
+                            Switch item=pOutdoor_Garden_Terrace_Watering_Auto label="Terasse"
                         }
-                        Text item=Watering_Streetside_Beds_Info label="Strasse [%s]" {
-                            Switch item=Watering_Streetside_Beds_Auto label="Strasse "
+                        Text item=pOutdoor_Streetside_Beds_Watering_Info label="Strasse [%s]" {
+                            Switch item=pOutdoor_Streetside_Beds_Watering_Auto label="Strasse "
                         }
-                        Text item=Watering_Gardenside_Beds_back_Info label="Brombeeren [%s]" {
-                            Switch item=Watering_Gardenside_Beds_back_Auto label="Brombeeren"
+                        Text item=pOutdoor_Garden_Back_Watering_Info label="Brombeeren [%s]" {
+                            Switch item=pOutdoor_Garden_Back_Watering_Auto label="Brombeeren"
                         }
                     }
                     Frame label="Direkt" {
-                        Group item=Watering_Circuits label="Bewässerungskreise [%d]" {
+                        Group item=gOutdoor_Watering_Circuits label="Bewässerungskreise [%d]" {
                             Frame label="Garten" {
-                                Switch item=Watering_Gardenside_Lawn_left label="Rasen links"
-                                Switch item=Watering_Gardenside_Lawn_right label="Rasen rechts"
-                                Switch item=Watering_Gardenside_Beds_front label="Beete Terasse & Hecke"
-                                Switch item=Watering_Gardenside_Beds_back label="Beete hinten"
+                                Switch item=pOutdoor_Garden_Left_Watering_Powered label="Rasen links"
+                                Switch item=pOutdoor_Garden_Right_Watering_Powered label="Rasen rechts"
+                                Switch item=pOutdoor_Garden_Terrace_Watering_Powered label="Beete Terasse & Hecke"
+                                Switch item=pOutdoor_Garden_Back_Watering_Powered label="Beete hinten"
                             }
                             Frame label="Strasse" {
-                                Switch item=Watering_Streetside_Lawn label="Rasen"
-                                Switch item=Watering_Streetside_Beds label="Beete & Hecke"
+                                Switch item=pOutdoor_Streetside_Lawn_Watering_Powered label="Rasen"
+                                Switch item=pOutdoor_Streetside_Beds_Watering_Powered label="Beete & Hecke"
                             }
                         }
                     }
                 }
 			}
 		}
-		Group label="Geräte [%s]" item=RoboterStatus icon="roomba" valuecolor=[=="Alles normal"="#6bc305",!="Alles normal"="#d72a2a"] {
+		Group label="Geräte [%s]" item=pOther_State_Message_Robot icon="roomba" valuecolor=[=="Alles normal"="#6bc305",!="Alles normal"="#d72a2a"] {
             Frame label="Haus" {
                 Text label="Waschmaschine [%s]" item=pGF_Utilityroom_Washer_Message icon="whitegood" {
                     Frame label="Status" {
@@ -180,54 +180,54 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Utilityroom_Washer_LocalControlActiveState
                     }
                 }
-                Text label="Roomba" item=roomba_StatusFormatted icon="roomba"{
+                Text label="Roomba" item=pIndoor_Roomba_StatusFormatted icon="roomba"{
                     Frame label="Status" {
-                        Text item=roomba_batPct
-                        Text item=roomba_StatusFormatted
-                        Selection item=roomba_command mappings=[start="Start",stop="Stop",pause="Pause",dock="Dock",resume="Weiter"]
-                        Switch item=roomba_auto mappings=[ON="Auto", OFF="Man"]
+                        Text item=pIndoor_Roomba_batPct
+                        Text item=pIndoor_Roomba_StatusFormatted
+                        Selection item=pIndoor_Roomba_command mappings=[start="Start",stop="Stop",pause="Pause",dock="Dock",resume="Weiter"]
+                        Switch item=pIndoor_Roomba_auto mappings=[ON="Auto", OFF="Man"]
                     }
                     Frame label="Reinigung" {
                         Text label="Karte" icon="map"
                         {
                             Image url="https://smartmarvin.de/roomba/map_notext.png" refresh=2000
                         }
-                        Text item=roomba_mssnM
-                        Text item=roomba_sqm
+                        Text item=pIndoor_Roomba_mssnM
+                        Text item=pIndoor_Roomba_sqm
                     }
                     Frame label="Infos" {
-                        Text item=roomba_full
-                        Text item=roomba_bin_present
-                        Text item=roomba_rssi
-                        Text item=roomba_errorFormatted
+                        Text item=pIndoor_Roomba_full
+                        Text item=pIndoor_Roomba_bin_present
+                        Text item=pIndoor_Roomba_rssi
+                        Text item=pIndoor_Roomba_errorFormatted
                     }
                     Frame label="Sonstiges" {
                         Text label="Settings" icon="selfsettings" {
                             Frame label="Settings" {
-                                Selection item=roomba_boost mappings=[auto="Auto",eco="Eco",performance="Performance"]
-                                Selection item=roomba_passes mappings=[auto="Auto",one="Ein",two="Zwei"]
-                                Switch item=roomba_edgeClean
-                                Switch item=roomba_binPause
+                                Selection item=pIndoor_Roomba_boost mappings=[auto="Auto",eco="Eco",performance="Performance"]
+                                Selection item=pIndoor_Roomba_passes mappings=[auto="Auto",one="Ein",two="Zwei"]
+                                Switch item=pIndoor_Roomba_edgeClean
+                                Switch item=pIndoor_Roomba_binPause
                             }
                             Frame label="Info" {
-                                Text item=roomba_noAutoPasses
-                                Text item=roomba_twoPass
-                                Text item=roomba_carpetBoost
-                                Text item=roomba_vacHigh
+                                Text item=pIndoor_Roomba_noAutoPasses
+                                Text item=pIndoor_Roomba_twoPass
+                                Text item=pIndoor_Roomba_carpetBoost
+                                Text item=pIndoor_Roomba_vacHigh
                             }
                         }
-                        Text item=roomba_lastcommand
-                        Text item=roomba_mission
-                        Text item=roomba_initiator
-                        Text item=roomba_expireM
-                        Text item=roomba_rechrgM
-                        Text item=roomba_status
-                        Text item=roomba_phase
+                        Text item=pIndoor_Roomba_lastcommand
+                        Text item=pIndoor_Roomba_mission
+                        Text item=pIndoor_Roomba_initiator
+                        Text item=pIndoor_Roomba_expireM
+                        Text item=pIndoor_Roomba_rechrgM
+                        Text item=pIndoor_Roomba_status
+                        Text item=pIndoor_Roomba_phase
                     }
                     
                     //Text label="Map" {
                         //Image url="http://your_OH_ip_address:port/static/map.png" refresh=1000
-                        //Webview url="http://your_OH_ip_address:port/static/roomba_map.html" icon=none height=21
+                        //Webview url="http://your_OH_ip_address:port/static/pIndoor_Roomba_map.html" icon=none height=21
                     //}
                 }
             }
@@ -236,20 +236,20 @@ sitemap haus label="Main Menu"
 				{
 					Image url="https://smartmarvin.de/cameraAutomowerImage" label="Automower" refresh=5000
 				}
-                Text label="Automower" item=MowerStatus icon="mower" {
+                Text label="Automower" item=pOutdoor_Mower_Status icon="mower" {
                     Frame label="Status" {
-                        Text item=MowerBattery
-                        Text item=MowerStatusFormatted
-                        Switch item=MowerStarted mappings=[ON="Start", OFF="Stop"]
-                        Selection item=MowerMode mappings=[HOME="Parken", EOD="Morgen weitermachen", AUTO="Automatisch", MANUAL="Manuell"]
+                        Text item=pOutdoor_Mower_Battery
+                        Text item=pOutdoor_Mower_StatusFormatted
+                        Switch item=pOutdoor_Mower_Started mappings=[ON="Start", OFF="Stop"]
+                        Selection item=pOutdoor_Mower_Mode mappings=[HOME="Parken", EOD="Morgen weitermachen", AUTO="Automatisch", MANUAL="Manuell"]
                     }
                     Frame label="Infos" {
-                        Text item=MowerTimerStatusFormatted
-                        Text item=MowerWlanSignal
-                        Text item=MowerErrorCode
-                        Text item=MowerErrorMessage
-                        Text item=MowerErrorDate
-                        Text item=MowerHours
+                        Text item=pOutdoor_Mower_TimerStatusFormatted
+                        Text item=pOutdoor_Mower_WlanSignal
+                        Text item=pOutdoor_Mower_ErrorCode
+                        Text item=pOutdoor_Mower_ErrorMessage
+                        Text item=pOutdoor_Mower_ErrorDate
+                        Text item=pOutdoor_Mower_Hours
                     }
                 }
             }
@@ -257,44 +257,44 @@ sitemap haus label="Main Menu"
 	}
 	Frame label="Sonstiges"
 	{
-		Group label="Status [%s]" icon="selfstate" item=RoomStatus valuecolor=[=="Alles geschlossen"="#6bc305",!="Alles geschlossen"="#d72a2a"]
+		Group label="Status [%s]" icon="selfstate" item=pOther_State_Message_Room valuecolor=[=="Alles geschlossen"="#6bc305",!="Alles geschlossen"="#d72a2a"]
         {
 			Frame label="Steuerung"
 			{
-				Switch item=State_Notify label="Benachrichtigung"
-                Switch item=State_Holidays_Active label="Urlaub aktiv"
-				Group label="Programme [%s]" icon="selfcontrol" item=AutoStatus valuecolor=[AutoStatus=="Inaktiv"="#d72a2a"]{
+				Switch item=pOther_Manual_State_Notify label="Benachrichtigung"
+                Switch item=pOther_Manual_State_Holiday label="Urlaub aktiv"
+				Group label="Programme [%s]" icon="selfcontrol" item=pOther_State_Message_Auto valuecolor=[pOther_State_Message_Auto=="Inaktiv"="#d72a2a"]{
 					Frame label="Rollläden" {
-						Switch item=Auto_Rollershutter
-						Switch item=Auto_Sunprotection visibility=[Auto_Rollershutter==ON]
-						Group item=gShutters visibility=[Auto_Rollershutter==ON]
+						Switch item=pOther_Manual_State_Auto_Rollershutter
+						Switch item=pOther_Manual_State_Auto_Sunprotection visibility=[pOther_Manual_State_Auto_Rollershutter==ON]
+						Group item=gShutters visibility=[pOther_Manual_State_Auto_Rollershutter==ON]
 					}
 					Frame label="Beleuchtung" {
-						Switch item=Auto_Lighting
-						Group item=gIndoor_Lights visibility=[Auto_Lighting==ON]
+						Switch item=pOther_Manual_State_Auto_Lighting
+						Group item=gIndoor_Lights visibility=[pOther_Manual_State_Auto_Lighting==ON]
 					}
 					Frame label="Weihnachten" {
-						Switch item=Auto_Christmas
-						Switch item=pGF_Livingroom_Socket_Couch_Powered visibility=[Auto_Christmas==ON]
-						Switch item=pGF_Livingroom_Socket_Fireplace_Powered visibility=[Auto_Christmas==ON]
-						Switch item=pGF_Corridor_Socket_Powered visibility=[Auto_Christmas==ON]
-						Switch item=eMobile_Socket_1_Powered visibility=[Auto_Christmas==ON]
-						Switch item=eMobile_Socket_2_Powered visibility=[Auto_Christmas==ON]
-						Switch item=pOutdoor_Streeside_Socket_Powered visibility=[Auto_Christmas==ON]
+						Switch item=pOther_Manual_State_Auto_Christmas
+						Switch item=pGF_Livingroom_Socket_Couch_Powered visibility=[pOther_Manual_State_Auto_Christmas==ON]
+						Switch item=pGF_Livingroom_Socket_Fireplace_Powered visibility=[pOther_Manual_State_Auto_Christmas==ON]
+						Switch item=pGF_Corridor_Socket_Powered visibility=[pOther_Manual_State_Auto_Christmas==ON]
+						Switch item=eMobile_Socket_1_Powered visibility=[pOther_Manual_State_Auto_Christmas==ON]
+						Switch item=eMobile_Socket_2_Powered visibility=[pOther_Manual_State_Auto_Christmas==ON]
+						Switch item=pOutdoor_Streeside_Socket_Powered visibility=[pOther_Manual_State_Auto_Christmas==ON]
 					}
 					Frame label="Dachboden" {
-						Switch item=Auto_Attic_Light label="Modus" mappings=[1="OFF", 2="W", 3="B"]
-						Switch item=pAttic_Socket_Powered visibility=[Auto_Attic_Light!=1]
+						Switch item=pOther_Manual_State_Auto_Attic_Light label="Modus" mappings=[1="OFF", 2="W", 3="B"]
+						Switch item=pFF_Attic_Socket_Powered visibility=[pOther_Manual_State_Auto_Attic_Light!=1]
 					}
 				}
                 Text label="Szenen" icon="selfcontrol" {
                     Frame label="Wohnen" {
-                        Switch item=Scene1 label="Fernsehen" icon="selfcouch"
+                        Switch item=pOther_Scene1 label="Fernsehen" icon="selfcouch"
                     }
                     Frame label="Sonstiges" {
-                        Switch item=Scene2 label="Aufstehen" icon="selfbedwakeup"
-                        Switch item=Scene3 label="Schlafen gehen" icon="selfbedsleep"
-                        Switch item=Scene4 label="Schlafen" icon="selfbedsleep"
+                        Switch item=pOther_Scene2 label="Aufstehen" icon="selfbedwakeup"
+                        Switch item=pOther_Scene3 label="Schlafen gehen" icon="selfbedsleep"
+                        Switch item=pOther_Scene4 label="Schlafen" icon="selfbedsleep"
                     }
                 }
 			}
@@ -302,30 +302,30 @@ sitemap haus label="Main Menu"
 			{ 
 				Text label="Präsenz & Schlafen" icon="selfsettings"
                 {
-                    Switch item=State_Presence label="Präsenz" mappings=[0="Abwesend", 1="Anwesend", 2="Schlafend"]
-                    Text item=State_Holger_Presence label="Holger anwesend [%s]"
-                    Text item=State_Sandra_Presence label="Sandra anwesend [%s]"
-                    Switch item=Scene7 label="Tablet Reload [%s]"
-                    Switch item=Scene8 label="Tablet Wakeup [%s]"
-                    Switch item=Scene9 label="Tablet Light Theme [%s]"
+                    Switch item=pOther_Presence_State label="Präsenz" mappings=[0="Abwesend", 1="Anwesend", 2="Schlafend"]
+                    Text item=pOther_Presence_Holger_State label="Holger anwesend [%s]"
+                    Text item=pOther_Presence_Sandra_State label="Sandra anwesend [%s]"
+                    Switch item=pOther_Scene7 label="Tablet Reload [%s]"
+                    Switch item=pOther_Scene8 label="Tablet Wakeup [%s]"
+                    Switch item=pOther_Scene9 label="Tablet Light Theme [%s]"
                 }
 				Text label="Beschattung, Beleuchtung & Solar" icon="selfsun"
                 {
 					Frame label="Sonstiges"
 					{
-                        Text item=State_Outdoorlights label="Aussenbeleuchtung aktiv [%s]"
-                        Text item=State_Solar label="Solaranlage wird abgefragt [%s]"
-                        Text item=State_Rollershutter label="Rollläden sollten unten sein [%s]"
-                        Text item=State_Rollershutter_Up
-                        Text item=State_Rollershutter_Down
+                        Text item=pOther_Automatic_State_Outdoorlights label="Aussenbeleuchtung aktiv [%s]"
+                        Text item=pOther_Automatic_State_Solar label="Solaranlage wird abgefragt [%s]"
+                        Text item=pOther_Automatic_State_Rollershutter label="Rollläden sollten unten sein [%s]"
+                        Text item=pOther_Automatic_State_Rollershutter_Up
+                        Text item=pOther_Automatic_State_Rollershutter_Down
                     }
 					Frame label="Sonnenschutz"
 					{
-                        Text item=State_Sunprotection_Attic label="Beschattung Dachboden [%s]"
-                        Text item=State_Sunprotection_Bathroom label="Beschattung Badezimmer [%s]"
-                        Text item=State_Sunprotection_Dressingroom label="Beschattung Ankleide [%s]"
-                        Text item=State_Sunprotection_Bedroom label="Beschattung Schlafzimmer [%s]"
-                        Text item=State_Sunprotection_Livingroom label="Beschattung Wohnzimmer [%s]"
+                        Text item=pOther_Automatic_State_Sunprotection_Attic label="Beschattung Dachboden [%s]"
+                        Text item=pOther_Automatic_State_Sunprotection_Bathroom label="Beschattung Badezimmer [%s]"
+                        Text item=pOther_Automatic_State_Sunprotection_Dressingroom label="Beschattung Ankleide [%s]"
+                        Text item=pOther_Automatic_State_Sunprotection_Bedroom label="Beschattung Schlafzimmer [%s]"
+                        Text item=pOther_Automatic_State_Sunprotection_Livingroom label="Beschattung Wohnzimmer [%s]"
                     }
 				}
 			}
@@ -368,7 +368,7 @@ sitemap haus label="Main Menu"
 				}
             }
 		}
-        Group item=SensorInfo label="Sensoren [%s]" valuecolor=[=="Alles normal"="#6bc305",=="Giessen"="#cbcb00",!="Alles normal"="#d72a2a"]{
+        Group item=pIndoor_Plant_Sensor_Main_Info label="Sensoren [%s]" valuecolor=[=="Alles normal"="#6bc305",=="Giessen"="#cbcb00",!="Alles normal"="#d72a2a"]{
             Frame label="Temperatur & Feuchtigkeit"
             {
                 Group item=Air_GF_Livingroom_Message label="EG [%s]"{
@@ -387,11 +387,11 @@ sitemap haus label="Main Menu"
                             Setpoint item=pGF_Corridor_Heating_Temperature_Desired label="Flur unten [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=Air_GF_Utilityroom_Message
-                        Text item=Air_Garage_Message 
+                        Text item=Air_GF_Garage_Message 
                     }
                     Frame label="Auswertung" {
-                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/custom/grafana/temperatures_eg.html?fromItem=Chart_From" icon=none height=18
+                        Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="/static/custom/grafana/temperatures_eg.html?fromItem=pOther_Helper_Chart_From" icon=none height=18
                     }
                 }
                 Group item=Air_FF_Bedroom_Message label="OG [%s]"{
@@ -412,157 +412,157 @@ sitemap haus label="Main Menu"
                         Text item=Air_FF_Corridor_Message {
                             Setpoint item=pFF_Corridor_Heating_Temperature_Desired label="Flur oben [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=Air_Attic_Message
+                        Text item=Air_FF_Attic_Message
                     }
                     Frame label="Auswertung" {
-                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/custom/grafana/temperatures_og.html?fromItem=Chart_From" icon=none height=18
+                        Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="/static/custom/grafana/temperatures_og.html?fromItem=pOther_Helper_Chart_From" icon=none height=18
                     }
                 }
-                Group item=WeatherStation_Air_Message label="Wetter [%s]" {
+                Group item=pOutdoor_WeatherStation_Air_Message label="Wetter [%s]" {
                     Frame label="Wetter" {
-                        Group item=WeatherStation_Air_Message {
+                        Group item=pOutdoor_WeatherStation_Air_Message {
                             Frame label="Details" {
-                                Text item=WeatherStation_Temperature label="Temperature [%.1f °C]"
-                                Text item=WeatherStation_Humidity label="Luftfeuchtigkeit [%.1f %%]"
-                                Text item=WeatherStation_Dewpoint
+                                Text item=pOutdoor_WeatherStation_Temperature label="Temperature [%.1f °C]"
+                                Text item=pOutdoor_WeatherStation_Humidity label="Luftfeuchtigkeit [%.1f %%]"
+                                Text item=pOutdoor_WeatherStation_Dewpoint
                                 Text item=pGF_Utilityroom_Heating_Temperature_Outdoor label="Garten (Schatten) [%.1f °C]"
-                                Text item=Temperature_Garden_Forecast4 label="Garten (in 4 Std) [%.1f °C]"
-                                Text item=Temperature_Garden_Forecast8 label="Garten (in 8 Std) [%.1f °C]"
+                                Text item=pOutdoor_Weather_Forecast_Temperature_4h label="Garten (in 4 Std) [%.1f °C]"
+                                Text item=pOutdoor_Weather_Forecast_Temperature_8h label="Garten (in 8 Std) [%.1f °C]"
                             }
                             Frame label="Auswertung" {
-                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/custom/grafana/weatherstation_temperatures.html?fromItem=Chart_From" icon=none height=18
+                                Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/custom/grafana/weatherstation_temperatures.html?fromItem=pOther_Helper_Chart_From" icon=none height=18
                             }
                             Frame label="Debug" {
-                                Text item=WeatherStation_Temperature_Raw
-                                Text item=WeatherStation_Humidity_Raw
+                                Text item=pOutdoor_WeatherStation_Temperature_Raw
+                                Text item=pOutdoor_WeatherStation_Humidity_Raw
                             }
                         }
-                        Group item=WeatherStation_Pressure {
+                        Group item=pOutdoor_WeatherStation_Pressure {
                             Frame label="Details" {
-                                Text item=WeatherStation_Pressure
+                                Text item=pOutdoor_WeatherStation_Pressure
                             }
                             Frame label="Auswertung" {
-                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/custom/grafana/weatherstation_pressure.html?fromItem=Chart_From" icon=none height=7
+                                Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/custom/grafana/weatherstation_pressure.html?fromItem=pOther_Helper_Chart_From" icon=none height=7
                             }
                         }
-                        Group item=WeatherStation_Rain_Message {
+                        Group item=pOutdoor_WeatherStation_Rain_Message {
                             Frame label="Details" {
-                                Text item=WeatherStation_Rain_Current
-                                Text item=WeatherStation_Rain_Daily
-                                Text item=WeatherStation_Rain_State_Message
+                                Text item=pOutdoor_WeatherStation_Rain_Current
+                                Text item=pOutdoor_WeatherStation_Rain_Daily
+                                Text item=pOutdoor_WeatherStation_Rain_State_Message
                             }
                             Frame label="Auswertung" {
-                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/custom/grafana/weatherstation_rain.html?fromItem=Chart_From" icon=none height=14
+                                Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/custom/grafana/weatherstation_rain.html?fromItem=pOther_Helper_Chart_From" icon=none height=14
                             }
                             Frame label="Debug" {
-                                Text item=WeatherStation_Rain_State
-                                Text item=WeatherStation_Rain_Counter
-                                Text item=WeatherStation_Rain_Impulse
-                                Text item=WeatherStation_Rain_Rate
-                                Switch item=WeatherStation_Rain_Heater
+                                Text item=pOutdoor_WeatherStation_Rain_State
+                                Text item=pOutdoor_WeatherStation_Rain_Counter
+                                Text item=pOutdoor_WeatherStation_Rain_Impulse
+                                Text item=pOutdoor_WeatherStation_Rain_Rate
+                                Switch item=pOutdoor_WeatherStation_Rain_Heater
                             }
                         }
-                        Group item=WeatherStation_Wind_Message {
+                        Group item=pOutdoor_WeatherStation_Wind_Message {
                             Frame label="Details" {
-                                Text item=WeatherStation_Wind_Speed
-                                Text item=WeatherStation_Wind_Direction_Message
-                                Text item=WeatherStation_Wind_Current
-                                Text item=WeatherStation_Wind_Gust
+                                Text item=pOutdoor_WeatherStation_Wind_Speed
+                                Text item=pOutdoor_WeatherStation_Wind_Direction_Message
+                                Text item=pOutdoor_WeatherStation_Wind_Current
+                                Text item=pOutdoor_WeatherStation_Wind_Gust
                             }
                             Frame label="Auswertung" {
-                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/custom/grafana/weatherstation_wind.html?fromItem=Chart_From" icon=none height=7
+                                Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/custom/grafana/weatherstation_wind.html?fromItem=pOther_Helper_Chart_From" icon=none height=7
                             }
                             Frame label="Debug" {
-                                Text item=WeatherStation_Wind_Direction
+                                Text item=pOutdoor_WeatherStation_Wind_Direction
                             }
                         }
                     }
                     Frame label="Sonne" {
-                        Group item=WeatherStation_UV_Message {
+                        Group item=pOutdoor_WeatherStation_UV_Message {
                             Frame label="Details" {
-                                Text item=WeatherStation_UV_Index
-                                Text item=WeatherStation_UV_A
-                                Text item=WeatherStation_UV_B
+                                Text item=pOutdoor_WeatherStation_UV_Index
+                                Text item=pOutdoor_WeatherStation_UV_A
+                                Text item=pOutdoor_WeatherStation_UV_B
                             }
                             Frame label="Auswertung" {
-                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/custom/grafana/weatherstation_uvindex.html?fromItem=Chart_From" icon=none height=7
+                                Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/custom/grafana/weatherstation_uvindex.html?fromItem=pOther_Helper_Chart_From" icon=none height=7
                             }
                             Frame label="Debug" {
-                                Text item=WeatherStation_UV_A_Raw
-                                Text item=WeatherStation_UV_B_Raw
+                                Text item=pOutdoor_WeatherStation_UV_A_Raw
+                                Text item=pOutdoor_WeatherStation_UV_B_Raw
                             }
                         }
-                        Group item=WeatherStation_Light_Level {
+                        Group item=pOutdoor_WeatherStation_Light_Level {
                             Frame label="Details" {
-                                Text item=WeatherStation_Light_Level
+                                Text item=pOutdoor_WeatherStation_Light_Level
                             }
                             Frame label="Auswertung" {
-                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/custom/grafana/weatherstation_lightlevel.html?fromItem=Chart_From" icon=none height=7
+                                Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/custom/grafana/weatherstation_lightlevel.html?fromItem=pOther_Helper_Chart_From" icon=none height=7
                             }
                         }
-                        Group item=WeatherStation_Solar_Power {
+                        Group item=pOutdoor_WeatherStation_Solar_Power {
                             Frame label="Details" {
-                                Text item=WeatherStation_Solar_Power label="Sonnenkraft akt. [%.1f Watt/m²]"
-                                Text item=WeatherStation_Solar_Power_Max label="Sonnenkraft max [%.1f Watt/m²]"
+                                Text item=pOutdoor_WeatherStation_Solar_Power label="Sonnenkraft akt. [%.1f Watt/m²]"
+                                Text item=pOutdoor_WeatherStation_Solar_Power_Max label="Sonnenkraft max [%.1f Watt/m²]"
                             }
                             Frame label="Auswertung" {
-                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/custom/grafana/weatherstation_solarpower.html?fromItem=Chart_From" icon=none height=7
+                                Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/custom/grafana/weatherstation_solarpower.html?fromItem=pOther_Helper_Chart_From" icon=none height=7
                             }
                             Frame label=Debug {
-                                Text item=WeatherStation_Solar_Temperature_Raw
-                                Text item=WeatherStation_Temperature_Raw
+                                Text item=pOutdoor_WeatherStation_Solar_Temperature_Raw
+                                Text item=pOutdoor_WeatherStation_Temperature_Raw
                             }
                         }
                     }
                     Frame label="Sonstiges" {
-                        Group item=WeatherStation_Battery_Message valuecolor=[WeatherStation_Battery_Current>=0="#6bc305"] {
+                        Group item=pOutdoor_WeatherStation_Battery_Message valuecolor=[pOutdoor_WeatherStation_Battery_Current>=0="#6bc305"] {
                             Frame label="Details" {
-                                Text item=WeatherStation_Battery_Level
-                                Text item=WeatherStation_Battery_Voltage
-                                Text item=WeatherStation_Battery_Current
+                                Text item=pOutdoor_WeatherStation_Battery_Level
+                                Text item=pOutdoor_WeatherStation_Battery_Voltage
+                                Text item=pOutdoor_WeatherStation_Battery_Current
                             }
                             Frame label="Auswertung" {
-                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/custom/grafana/weatherstation_battery.html?fromItem=Chart_From" icon=none height=14
+                                Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/custom/grafana/weatherstation_battery.html?fromItem=pOther_Helper_Chart_From" icon=none height=14
                             }
                         }
-                        Text item=WeatherStation_Update_Message visibility=[WeatherStation_Is_Working!=OFF] valuecolor=[!=""="#6bc305"]
-                        Text item=WeatherStation_Update_Message visibility=[WeatherStation_Is_Working==OFF] valuecolor=[!=""="#d72a2a"]
+                        Text item=pOutdoor_WeatherStation_Update_Message visibility=[pOutdoor_WeatherStation_Is_Working!=OFF] valuecolor=[!=""="#6bc305"]
+                        Text item=pOutdoor_WeatherStation_Update_Message visibility=[pOutdoor_WeatherStation_Is_Working==OFF] valuecolor=[!=""="#d72a2a"]
                     }
                 }
-                Group item=PlantSensorInfo label="Pflanzen [%s]" valuecolor=[=="Feucht genug"="#6bc305",=="Giessen"="#cbcb00",=="Jetzt Giessen"="#d72a2a"]{
+                Group item=pIndoor_Plant_Sensor_Watering_Info label="Pflanzen [%s]" valuecolor=[=="Feucht genug"="#6bc305",=="Giessen"="#cbcb00",=="Jetzt Giessen"="#d72a2a"]{
                     Frame label="Daten" {
-                        Text item=SoilMoistSensor1
-                        Text item=SoilMoistSensor2
-                        Text item=SoilMoistSensor3
-                        Text item=SoilMoistSensor4
-                        Text item=SoilMoistSensorInfo label="Überwachen [%s]"{
-                            Switch item=SoilMoistSensor1Enabled
-                            Switch item=SoilMoistSensor2Enabled
-                            Switch item=SoilMoistSensor3Enabled
-                            Switch item=SoilMoistSensor4Enabled
-                            Switch item=SoilMoistSensor5Enabled
-                            Switch item=SoilMoistSensor6Enabled 
+                        Text item=pIndoor_Plant_Sensor_Device_State1
+                        Text item=pIndoor_Plant_Sensor_Device_State2
+                        Text item=pIndoor_Plant_Sensor_Device_State3
+                        Text item=pIndoor_Plant_Sensor_Device_State4
+                        Text item=pIndoor_Plant_Sensor_Activation_Info label="Überwachen [%s]"{
+                            Switch item=pIndoor_Plant_Sensor_Device_Enabled1
+                            Switch item=pIndoor_Plant_Sensor_Device_Enabled2
+                            Switch item=pIndoor_Plant_Sensor_Device_Enabled3
+                            Switch item=pIndoor_Plant_Sensor_Device_Enabled4
+                            Switch item=pIndoor_Plant_Sensor_Device_Enabled5
+                            Switch item=pIndoor_Plant_Sensor_Device_Enabled6 
                         }
                     }
                     Frame label="Auswertung" {
-                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/custom/grafana/pflanzen.html?fromItem=Chart_From" icon=none height=18
+                        Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="/static/custom/grafana/pflanzen.html?fromItem=pOther_Helper_Chart_From" icon=none height=18
                     }
                 }
             }
             Frame label="Bewegung"
             {
-                Group item=Sensor_Indoor label="Innen [MAP(group_motion.map):%d]" valuecolor=[!=CLOSED="#d72a2a"]
-                Group item=Sensor_Outdoor label="Aussen [MAP(group_motion.map):%d]" valuecolor=[!=CLOSED="#d72a2a"]
+                Group item=gSensor_Indoor label="Innen [MAP(group_motion.map):%d]" valuecolor=[!=CLOSED="#d72a2a"]
+                Group item=gSensor_Outdoor label="Aussen [MAP(group_motion.map):%d]" valuecolor=[!=CLOSED="#d72a2a"]
                 Text label="Kameras" icon="camera"
                 {
                     Image url="https://smartmarvin.de/cameraStrasseImage" label="Strasse Video" refresh=2000
@@ -571,38 +571,38 @@ sitemap haus label="Main Menu"
             }
             Frame label="Fenster & Türen"
             {
-                Group item=Sensor_Doors_FF label="EG Türen [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"]
-                Group item=Sensor_Window_FF label="EG Fenster [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"]
-                Group item=Sensor_Window_SF label="OG Fenster [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"]
+                Group item=gGF_Sensor_Doors label="EG Türen [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"]
+                Group item=gGF_Sensor_Window label="EG Fenster [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"]
+                Group item=gFF_Sensor_Window label="OG Fenster [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"]
             }
             Frame label="Sonstiges"
             {
-                Text item=Smoke_Detector valuecolor=[!=CLOSED="#d72a2a"]
+                Text item=pOther_Smoke_Detector_State valuecolor=[!=CLOSED="#d72a2a"]
             }
         }
-		Group label="Technik [%s]" icon="selfhouse" item=MainStatus valuecolor=[=="Alles normal"="#6bc305",=="Lüftung"="#cbcb00",!="Alles normal"="#d72a2a"]
+		Group label="Technik [%s]" icon="selfhouse" item=pOther_State_Message_Main valuecolor=[=="Alles normal"="#6bc305",=="Lüftung"="#cbcb00",!="Alles normal"="#d72a2a"]
 		{
             Frame label="Technik" {
-                Group item=Ventilation_Fan_Level label="Lüftung [MAP(level_de.map):%d]" icon="selfairing" {
+                Group item=pGF_Utilityroom_Ventilation_Fan_Level label="Lüftung [MAP(level_de.map):%d]" icon="selfairing" {
                     Frame label="Steuerung" {
-                        Switch item=Ventilation_Auto_Mode label="Modus" mappings=[ON="Auto", OFF="Manuell"]
-                        Switch item=Ventilation_Fan_Level label="Stufe" mappings=[1="A", 2="1", 3="2", 4="3"]
-                        Setpoint item=Ventilation_Comfort_Temperature label="Komforttemperatur [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                        Switch item=Ventilation_Control mappings=[ON="App", OFF="CCEase"]
+                        Switch item=pGF_Utilityroom_Ventilation_Auto_Mode label="Modus" mappings=[ON="Auto", OFF="Manuell"]
+                        Switch item=pGF_Utilityroom_Ventilation_Fan_Level label="Stufe" mappings=[1="A", 2="1", 3="2", 4="3"]
+                        Setpoint item=pGF_Utilityroom_Ventilation_Comfort_Temperature label="Komforttemperatur [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        Switch item=pGF_Utilityroom_Ventilation_Control mappings=[ON="App", OFF="CCEase"]
                     }
                     Frame label="Sensordaten" {
-                        Text item=Ventilation_Outdoor_Temperature_Message
-                        Text item=Ventilation_Indoor_Temperature_Message
-                        Text item=Ventilation_Fan_Message
-                        Text item=Ventilation_Bypass
-                        Text item=Ventilation_Bypass_Efficiency
-                        Text item=Ventilation_Filter_Runtime_Message
-                        Text item=Ventilation_State_Message visibility=[Ventilation_State_Message=="Alles in Ordnung"] 
-                        Text item=Ventilation_State_Message visibility=[Ventilation_State_Message!="Alles in Ordnung"] {
-                            Text item=Ventilation_Filter_Error
-                            Switch item=Ventilation_Filter_Reset
-                            Text item=Ventilation_Error_Message
-                            Switch item=Ventilation_Error_Reset
+                        Text item=pGF_Utilityroom_Ventilation_Outdoor_Temperature_Message
+                        Text item=pGF_Utilityroom_Ventilation_Indoor_Temperature_Message
+                        Text item=pGF_Utilityroom_Ventilation_Fan_Message
+                        Text item=pGF_Utilityroom_Ventilation_Bypass
+                        Text item=pGF_Utilityroom_Ventilation_Bypass_Efficiency
+                        Text item=pGF_Utilityroom_Ventilation_Filter_Runtime_Message
+                        Text item=pGF_Utilityroom_Ventilation_State_Message visibility=[pGF_Utilityroom_Ventilation_State_Message=="Alles in Ordnung"] 
+                        Text item=pGF_Utilityroom_Ventilation_State_Message visibility=[pGF_Utilityroom_Ventilation_State_Message!="Alles in Ordnung"] {
+                            Text item=pGF_Utilityroom_Ventilation_Filter_Error
+                            Switch item=pGF_Utilityroom_Ventilation_Filter_Reset
+                            Text item=pGF_Utilityroom_Ventilation_Error_Message
+                            Switch item=pGF_Utilityroom_Ventilation_Error_Reset
                         }
                     }
                 }			
@@ -639,8 +639,8 @@ sitemap haus label="Main Menu"
                     Frame label="Sensordaten" {
                         Text item=pGF_Utilityroom_Heating_Demand label="Berechnungsdetails [MAP(yes_no_de.map):%d]" icon="selfheating"{
                             Frame {
-                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/custom/grafana/heating_details.html?fromItem=Chart_From" icon=none height=27
+                                Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/custom/grafana/heating_details.html?fromItem=pOther_Helper_Chart_From" icon=none height=27
                             }
                             Frame {
                                 Webview url="/static/custom/logs/heating.html" icon=none height=36
@@ -659,8 +659,8 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Utilityroom_Heating_Common_Fault
                     }
                     Frame label="Auswertung" {
-                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/custom/grafana/heating_overview.html?fromItem=Chart_From" icon=none height=36
+                        Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="/static/custom/grafana/heating_overview.html?fromItem=pOther_Helper_Chart_From" icon=none height=36
                     }
                 }
             }
@@ -684,8 +684,8 @@ sitemap haus label="Main Menu"
                                 Text item=pGF_Utilityroom_Energy_Demand_Active
                             }
                             Frame label="Auswertung" {
-                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/custom/grafana/energy_demand.html?fromItem=Chart_From" icon=none height=18
+                                Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/custom/grafana/energy_demand.html?fromItem=pOther_Helper_Chart_From" icon=none height=18
                             }
                         }
                         Group label="Lieferung [%.2f kWh]" item=pGF_Utilityroom_Electricity_Current_Daily_Supply {
@@ -700,8 +700,8 @@ sitemap haus label="Main Menu"
                                 Text item=pGF_Utilityroom_Energy_Supply_Active
                             }
                             Frame label="Auswertung" {
-                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/custom/grafana/energy_supply.html?fromItem=Chart_From" icon=none height=18
+                                Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/custom/grafana/energy_supply.html?fromItem=pOther_Helper_Chart_From" icon=none height=18
                             }
                         }
                         Group label="Solar [%.2f kWh]" item=pGF_Garage_Solar_Inverter_Daily_Yield {
@@ -715,8 +715,8 @@ sitemap haus label="Main Menu"
                                 Text item=pGF_Garage_Solar_Inverter_Power_Limitation
                             }
                             Frame label="Auswertung" {
-                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/custom/grafana/solar_energy.html?fromItem=Chart_From" icon=none height=18
+                                Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/custom/grafana/solar_energy.html?fromItem=pOther_Helper_Chart_From" icon=none height=18
                             }
                         }
                         Group label="Eigenverbrauch [%.2f kWh]" item=pGF_Garage_Solar_Inverter_Daily_Consumption {
@@ -725,14 +725,14 @@ sitemap haus label="Main Menu"
                                 Text item=pGF_Garage_Solar_Inverter_Annual_Consumption
                             }
                             Frame label="Auswertung" {
-                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/custom/grafana/solar_consumption.html?fromItem=Chart_From" icon=none height=18
+                                Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/custom/grafana/solar_consumption.html?fromItem=pOther_Helper_Chart_From" icon=none height=18
                             }
                         }
                     }
                     Frame label="Auswertung" {
-                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/custom/grafana/energy_consumption.html?fromItem=Chart_From" icon=none height=18
+                        Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="/static/custom/grafana/energy_consumption.html?fromItem=pOther_Helper_Chart_From" icon=none height=18
                     }
                 }
                 Group item=pGF_Utilityroom_Gas_Current_Daily_Consumption label="Gas [%.2f m³]" {
@@ -744,8 +744,8 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Utilityroom_Gas_Forecast
                     }
                     Frame label="Auswertung" {
-                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/custom/grafana/gas_consumption.html?fromItem=Chart_From" icon=none height=18
+                        Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="/static/custom/grafana/gas_consumption.html?fromItem=pOther_Helper_Chart_From" icon=none height=18
                     }
                 }
                 Group item=pGF_Utilityroom_Heating_Solar_Power_Current_Daily label="Wasser [%.1f KW]" icon="selfwater"{
@@ -757,8 +757,8 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Utilityroom_Heating_Solar_Power_Message
                     }
                     Frame label="Auswertung" {
-                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/custom/grafana/solar_heating.html?fromItem=Chart_From" icon=none height=27
+                        Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="/static/custom/grafana/solar_heating.html?fromItem=pOther_Helper_Chart_From" icon=none height=27
                     }
                 
                 }
@@ -772,7 +772,7 @@ sitemap haus label="Main Menu"
                         Switch item=pGF_Livingroom_Socket_Couch_Powered label="Wohnz. neben Stehlampe"
                         Switch item=pGF_Livingroom_Socket_Fireplace_Powered label="Wohnz. Kamin"
                         Switch item=pGF_Corridor_Socket_Powered label="Flur unter Treppe"
-						Switch item=pAttic_Socket_Powered label="Dachboden"
+						Switch item=pFF_Attic_Socket_Powered label="Dachboden"
                     }
                     Frame label="Garten" {
                         Switch item=pOutdoor_Streeside_Socket_Powered label="Aussen vorne"
@@ -783,18 +783,18 @@ sitemap haus label="Main Menu"
                         Switch item=eMobile_Socket_2_Powered label="Steckdose 2"
                     }
                     Frame label="Sonstiges" {
-                        Switch item=TV_KEY_POWER label="Wohnzimmer Fernseher"
+                        Switch item=pGF_Livingroom_Television_KeyPOWER label="Wohnzimmer Fernseher"
                     }
                 }
                 Text label="Server" icon="selfcomputer"{
                     Frame label="Daten" {
-                        Group item=State_Server {
+                        Group item=pOther_State_Message_Server {
                             Frame label="Daten" {
-                                Text item=State_Server
+                                Text item=pOther_State_Message_Server
                             }
                             Frame label="Auswertung" {
-                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/custom/grafana/server.html?fromItem=Chart_From" icon=none height=72
+                                Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/custom/grafana/server.html?fromItem=pOther_Helper_Chart_From" icon=none height=72
                             }
                         }
                         Group item=pGF_Corridor_Fritzbox_DslStatus label="DSL Status [MAP(network_states.map):%s]" {
@@ -804,9 +804,9 @@ sitemap haus label="Main Menu"
                                 Text item=pGF_Corridor_Fritzbox_Uptime
                                 Switch item=pGF_Corridor_Fritzbox_GuestWifi
                             }
-                            Frame item=Speedtest_Start label="Verbindung [%1$tH:%1$tM]" {
-                                Text item=Speedtest_UpstreamRate
-                                Text item=Speedtest_DownstreamRate
+                            Frame item=pGF_Corridor_Speedtest_Start label="Verbindung [%1$tH:%1$tM]" {
+                                Text item=pGF_Corridor_Speedtest_UpstreamRate
+                                Text item=pGF_Corridor_Speedtest_DownstreamRate
                             }
                             Frame label="Verbindung" {
                                 Text item=pGF_Corridor_Fritzbox_DslUpstreamCurrRate
@@ -824,24 +824,24 @@ sitemap haus label="Main Menu"
                                 Text item=pGF_Corridor_Fritzbox_DslCRCErrors
                             }
                             Frame label="Auswertung" {
-                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/custom/grafana/internet.html?fromItem=Chart_From" icon=none height=12
+                                Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/custom/grafana/internet.html?fromItem=pOther_Helper_Chart_From" icon=none height=12
                             }
                         }
-                        Group item=PrinterStatus label="Drucker Status [%s]" {
+                        Group item=pGF_Guestroom_PrinterStatus label="Drucker Status [%s]" {
                             Frame label="Status" {
-                                Text item=PrinterStatus
+                                Text item=pGF_Guestroom_PrinterStatus
                             }
                             Frame label="Füllstand" {
-                                Text item=PrinterBlackLevel
-                                Text item=PrinterCyanLevel
-                                Text item=PrinterMagentaLevel
-                                Text item=PrinterYellowLevel
+                                Text item=pGF_Guestroom_PrinterBlackLevel
+                                Text item=pGF_Guestroom_PrinterCyanLevel
+                                Text item=pGF_Guestroom_PrinterMagentaLevel
+                                Text item=pGF_Guestroom_PrinterYellowLevel
                             }
                             Frame label="Druckvolumen" {
-                                Text item=PrinterTotalPages
-                                Text item=PrinterTotalColourPages
-                                Text item=PrinterTotalMonochromePages
+                                Text item=pGF_Guestroom_PrinterTotalPages
+                                Text item=pGF_Guestroom_PrinterTotalColourPages
+                                Text item=pGF_Guestroom_PrinterTotalMonochromePages
                             }
                         }
                     }

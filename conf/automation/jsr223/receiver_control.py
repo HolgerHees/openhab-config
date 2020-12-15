@@ -4,7 +4,7 @@ from core.triggers import ItemStateChangeTrigger
 @rule("receiver_control.py")
 class ReceiverControlRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("Receiver_State")]
+        self.triggers = [ItemStateChangeTrigger("pGF_Livingroom_Receiver_State")]
 
     def execute(self, module, input):
         if input["newState"] == OPEN:

@@ -11,19 +11,19 @@ DELAYED_UPDATE_TIMEOUT = 3
 class VentilationEfficiencyRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("Ventilation_Outdoor_Incoming_Temperature"),
-            ItemStateChangeTrigger("Ventilation_Indoor_Incoming_Temperature"),
-            ItemStateChangeTrigger("Ventilation_Indoor_Outgoing_Temperature")
+            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature"),
+            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Indoor_Incoming_Temperature"),
+            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Indoor_Outgoing_Temperature")
         ]
         self.updateTimer = None
     
     def delayUpdate(self):
         efficiency = 0
 
-        if getItemState("Ventilation_Bypass") == OFF:
-            tempOutIn = getItemState("Ventilation_Outdoor_Incoming_Temperature").doubleValue()
-            tempInOut = getItemState("Ventilation_Indoor_Outgoing_Temperature").doubleValue()
-            tempInIn = getItemState("Ventilation_Indoor_Incoming_Temperature").doubleValue()
+        if getItemState("pGF_Utilityroom_Ventilation_Bypass") == OFF:
+            tempOutIn = getItemState("pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature").doubleValue()
+            tempInOut = getItemState("pGF_Utilityroom_Ventilation_Indoor_Outgoing_Temperature").doubleValue()
+            tempInIn = getItemState("pGF_Utilityroom_Ventilation_Indoor_Incoming_Temperature").doubleValue()
 
             if tempInOut != tempOutIn:
                 efficiency = ( tempInIn - tempOutIn ) / ( tempInOut - tempOutIn ) * 100
@@ -33,7 +33,7 @@ class VentilationEfficiencyRule:
         else:
             efficiency = 0
 
-        postUpdateIfChanged("Ventilation_Bypass_Efficiency", efficiency )
+        postUpdateIfChanged("pGF_Utilityroom_Ventilation_Bypass_Efficiency", efficiency )
 
         self.updateTimer = None
 
@@ -43,10 +43,10 @@ class VentilationEfficiencyRule:
 @rule("ventilation_control.py")
 class FilterRuntimeRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("Ventilation_Filter_Runtime")]
+        self.triggers = [ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Filter_Runtime")]
 
     def execute(self, module, input):
-        laufzeit = getItemState("Ventilation_Filter_Runtime").doubleValue()
+        laufzeit = getItemState("pGF_Utilityroom_Ventilation_Filter_Runtime").doubleValue()
 
         weeks = int(math.floor(laufzeit / 168.0))
         days = int(math.floor((laufzeit - (weeks * 168.0)) / 24))
@@ -66,32 +66,32 @@ class FilterRuntimeRule:
 
         msg = u", ".join(active)
 
-        postUpdateIfChanged("Ventilation_Filter_Runtime_Message", msg)
+        postUpdateIfChanged("pGF_Utilityroom_Ventilation_Filter_Runtime_Message", msg)
  
 @rule("ventilation_control.py")
 class FilterStateMessageRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("Ventilation_Error_Message"),
-            ItemStateChangeTrigger("Ventilation_Filter_Error")
+            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Error_Message"),
+            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Filter_Error")
         ]
         self.updateTimer = None
 
     def delayUpdate(self):
         active = []
 
-        if getItemState("Ventilation_Filter_Error") == ON:
+        if getItemState("pGF_Utilityroom_Ventilation_Filter_Error") == ON:
             active.append(u"Filter")
 
-        if getItemState("Ventilation_Error_Message").toString() != "No Errors":
-            active.append(u"Error: {}".format( getItemState("Ventilation_Error_Message").toString() ))
+        if getItemState("pGF_Utilityroom_Ventilation_Error_Message").toString() != "No Errors":
+            active.append(u"Error: {}".format( getItemState("pGF_Utilityroom_Ventilation_Error_Message").toString() ))
 
         if len(active) == 0:
             active.append(u"Alles in Ordnung")
 
         msg = ", ".join(active)
 
-        postUpdateIfChanged("Ventilation_State_Message", msg)
+        postUpdateIfChanged("pGF_Utilityroom_Ventilation_State_Message", msg)
         
         self.updateTimer = None
 
@@ -102,14 +102,14 @@ class FilterStateMessageRule:
 class FilterOutdoorTemperatureMessageRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("Ventilation_Outdoor_Incoming_Temperature"),
-            ItemStateChangeTrigger("Ventilation_Outdoor_Outgoing_Temperature")
+            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature"),
+            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Outdoor_Outgoing_Temperature")
         ]
         self.updateTimer = None
 
     def delayUpdate(self):
-        msg = u"→ {}°C, ← {}°C".format(getItemState("Ventilation_Outdoor_Incoming_Temperature").format("%.1f"),getItemState("Ventilation_Outdoor_Outgoing_Temperature").format("%.1f"))
-        postUpdateIfChanged("Ventilation_Outdoor_Temperature_Message", msg)
+        msg = u"→ {}°C, ← {}°C".format(getItemState("pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature").format("%.1f"),getItemState("pGF_Utilityroom_Ventilation_Outdoor_Outgoing_Temperature").format("%.1f"))
+        postUpdateIfChanged("pGF_Utilityroom_Ventilation_Outdoor_Temperature_Message", msg)
         
         self.updateTimer = None
 
@@ -120,14 +120,14 @@ class FilterOutdoorTemperatureMessageRule:
 class FilterIndoorTemperatureMessageRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("Ventilation_Indoor_Incoming_Temperature"),
-            ItemStateChangeTrigger("Ventilation_Indoor_Outgoing_Temperature")
+            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Indoor_Incoming_Temperature"),
+            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Indoor_Outgoing_Temperature")
         ]
         self.updateTimer = None
 
     def delayUpdate(self):
-        msg = u"→ {}°C, ← {}°C".format(getItemState("Ventilation_Indoor_Incoming_Temperature").format("%.1f"),getItemState("Ventilation_Indoor_Outgoing_Temperature").format("%.1f"))
-        postUpdateIfChanged("Ventilation_Indoor_Temperature_Message", msg)
+        msg = u"→ {}°C, ← {}°C".format(getItemState("pGF_Utilityroom_Ventilation_Indoor_Incoming_Temperature").format("%.1f"),getItemState("pGF_Utilityroom_Ventilation_Indoor_Outgoing_Temperature").format("%.1f"))
+        postUpdateIfChanged("pGF_Utilityroom_Ventilation_Indoor_Temperature_Message", msg)
         
         self.updateTimer = None
 
@@ -138,14 +138,14 @@ class FilterIndoorTemperatureMessageRule:
 class FilterVentilationMessageRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("Ventilation_Incoming"),
-            ItemStateChangeTrigger("Ventilation_Outgoing")
+            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Incoming"),
+            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Outgoing")
         ]
         self.updateTimer = None
 
     def delayUpdate(self):
-        msg = u"→ {}%, ← {}%".format(getItemState("Ventilation_Incoming").toString(),getItemState("Ventilation_Outgoing").toString())
-        postUpdateIfChanged("Ventilation_Fan_Message", msg)
+        msg = u"→ {}%, ← {}%".format(getItemState("pGF_Utilityroom_Ventilation_Incoming").toString(),getItemState("pGF_Utilityroom_Ventilation_Outgoing").toString())
+        postUpdateIfChanged("pGF_Utilityroom_Ventilation_Fan_Message", msg)
         
         self.updateTimer = None
 
@@ -155,39 +155,39 @@ class FilterVentilationMessageRule:
 @rule("ventilation_control.py")
 class FilterManualActionRule:
     def __init__(self):
-        self.triggers = [ItemCommandTrigger("Ventilation_Fan_Level")]
+        self.triggers = [ItemCommandTrigger("pGF_Utilityroom_Ventilation_Fan_Level")]
 
     def execute(self, module, input):
         global autoChangeInProgress
         if autoChangeInProgress:
             autoChangeInProgress = False
         else:
-            postUpdate("Ventilation_Auto_Mode", OFF)
+            postUpdate("pGF_Utilityroom_Ventilation_Auto_Mode", OFF)
 
 
 @rule("ventilation_control.py")
 class FilterFanLevelRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("Ventilation_Auto_Mode"),
-            ItemStateChangeTrigger("State_Presence"),
+            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Auto_Mode"),
+            ItemStateChangeTrigger("pOther_Presence_State"),
             CronTrigger("0 */1 * * * ?"),
         ]
 
     def execute(self, module, input):
-        if getItemState("Ventilation_Auto_Mode") == OFF:
+        if getItemState("pGF_Utilityroom_Ventilation_Auto_Mode") == OFF:
             return
 
-        currentLevel = getItemState("Ventilation_Fan_Level").intValue()
+        currentLevel = getItemState("pGF_Utilityroom_Ventilation_Fan_Level").intValue()
 
         raumTemperatur = getItemState("Temperature_GF_Livingroom").doubleValue()
-        zielTemperatur = getItemState("Ventilation_Comfort_Temperature").doubleValue
+        zielTemperatur = getItemState("pGF_Utilityroom_Ventilation_Comfort_Temperature").doubleValue
         
-        presenceSate = getItemState("State_Presence").intValue()
+        presenceSate = getItemState("pOther_Presence_State").intValue()
         
         isTooWarm = raumTemperatur >= zielTemperatur
         
-        outdoorTemperatureItemName = getItemState("Outdoor_Temperature_Item_Name").toString()
+        outdoorTemperatureItemName = getItemState("pOutdoor_WeatherStation_Temperature_Item_Name").toString()
         coolingPossible = getItemState(outdoorTemperatureItemName).doubleValue() < raumTemperatur
 
         # Sleep
@@ -196,7 +196,7 @@ class FilterFanLevelRule:
             defaultLevel = 2    # Level 1
             coolingLevel = 2    # Level 1
         # Away since 30 minutes
-        elif presenceSate == 0 and itemLastChangeOlderThen("State_Presence", getNow().minusMinutes(60)):
+        elif presenceSate == 0 and itemLastChangeOlderThen("pOther_Presence_State", getNow().minusMinutes(60)):
             reducedLevel = 1    # Level A
             defaultLevel = 2    # Level 1
             coolingLevel = 3    # Level 2
@@ -218,10 +218,10 @@ class FilterFanLevelRule:
                 # must be > 1. Otherwise cangedSince dows not work propperly
                 waitBeforeChange = 2
 
-            isModeUpdate = 'event' in input.keys() and input['event'].getItemName() == "Ventilation_Auto_Mode"
+            isModeUpdate = 'event' in input.keys() and input['event'].getItemName() == "pGF_Utilityroom_Ventilation_Auto_Mode"
             
-            if isModeUpdate or itemLastChangeOlderThen("Ventilation_Fan_Level", getNow().minusMinutes(waitBeforeChange)):
+            if isModeUpdate or itemLastChangeOlderThen("pGF_Utilityroom_Ventilation_Fan_Level", getNow().minusMinutes(waitBeforeChange)):
                 global autoChangeInProgress
                 autoChangeInProgress = True
 
-                sendCommand("Ventilation_Fan_Level", newLevel)
+                sendCommand("pGF_Utilityroom_Ventilation_Fan_Level", newLevel)

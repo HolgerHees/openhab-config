@@ -22,25 +22,25 @@ OFFSET_FORMATTER = DateTimeFormat.forPattern("HH:mm")
 #postUpdate("pFF_Bedroom_Heating_Demand",OFF)
 #postUpdate("pFF_Bathroom_Heating_Demand",OFF)
  
-Heating.cloudCoverFC8Item = "Cloud_Cover_Forecast8"
-Heating.cloudCoverFC4Item = "Cloud_Cover_Forecast4"
-Heating.cloudCoverItem = "Cloud_Cover_Current"
+Heating.cloudCoverFC8Item = "pOutdoor_Weather_Forecast_Cloud_Cover_8h"
+Heating.cloudCoverFC4Item = "pOutdoor_Weather_Forecast_Cloud_Cover_4h"
+Heating.cloudCoverItem = "pOutdoor_Weather_Current_Cloud_Cover"
 
-Heating.temperatureGardenFC8Item = "Temperature_Garden_Forecast8"
-Heating.temperatureGardenFC4Item = "Temperature_Garden_Forecast4"
+Heating.temperatureGardenFC8Item = "pOutdoor_Weather_Forecast_Temperature_8h"
+Heating.temperatureGardenFC4Item = "pOutdoor_Weather_Forecast_Temperature_4h"
 
-Heating.ventilationFilterRuntimeItem = "Ventilation_Filter_Runtime"
+Heating.ventilationFilterRuntimeItem = "pGF_Utilityroom_Ventilation_Filter_Runtime"
 
-Heating.ventilationLevelItem = "Ventilation_Outgoing"
-Heating.ventilationOutgoingTemperatureItem = "Ventilation_Outdoor_Outgoing_Temperature"
-Heating.ventilationIncommingTemperatureItem = "Ventilation_Outdoor_Incoming_Temperature"
+Heating.ventilationLevelItem = "pGF_Utilityroom_Ventilation_Outgoing"
+Heating.ventilationOutgoingTemperatureItem = "pGF_Utilityroom_Ventilation_Outdoor_Outgoing_Temperature"
+Heating.ventilationIncommingTemperatureItem = "pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature"
 
 Heating.heatingPower = "pGF_Utilityroom_Heating_Power"
 Heating.heatingCircuitPumpSpeedItem = "pGF_Utilityroom_Heating_Circuit_Pump_Speed"
 Heating.heatingTemperaturePipeOutItem = "pGF_Utilityroom_Heating_Temperature_Pipe_Out"
 Heating.heatingTemperaturePipeInItem = "pGF_Utilityroom_Heating_Temperature_Pipe_In"
 
-Heating.holidayStatusItem = "State_Holidays_Active"
+Heating.holidayStatusItem = "pOther_Manual_State_Holiday"
  
 _groundFloor = ThermalStorageType( capacity=164.0, uValue=0.320, uOffset=0.08, factor=0.60 )
 _groundCeiling = ThermalStorageType( capacity=308.0, uValue=0.610, uOffset=0.1, factor=1.0 )
@@ -75,7 +75,7 @@ _atticFloorHeight = 2.10
 
 rooms = [
     Room(
-        name='lGarage',
+        name='lGF_Garage',
         volume=54.0702 * _atticFloorHeight / 2.0,
         walls=[
             Wall(direction='floor', area=27.456025, type=_atticFloor),
@@ -105,10 +105,10 @@ rooms = [
             Wall(direction='west', area=10.31765, type=_inner11Wall, bound="lGF_Utilityroom"),
             Wall(direction='north', area=3.4949, type=_inner17Wall, bound="lGF_Corridor"),
             Wall(direction='east', area=9.14345, type=_outer36Wall),
-            Wall(direction='south', area=5.0225, type=_garageWall, bound="lGarage")
+            Wall(direction='south', area=5.0225, type=_garageWall, bound="lGF_Garage")
         ],
         transitions=[
-            Window(direction='east', area=1.045, type=_outerWindow, contactItem='Window_GF_Guesttoilet', shutterItem='pGF_Guesttoilet_Shutter_Control', shutterArea=0.1292)
+            Window(direction='east', area=1.045, type=_outerWindow, contactItem='pGF_Guesttoilet_Openingcontact_Window_State', shutterItem='pGF_Guesttoilet_Shutter_Control', shutterArea=0.1292)
         ]
     ),
     Room(
@@ -122,10 +122,10 @@ rooms = [
             Wall(direction='west', area=10.31765, type=_inner11Wall, bound="lGF_Boxroom"),
             Wall(direction='north', area=5.39615, type=_inner17Wall, bound="lGF_Corridor"),
             Wall(direction='east', area=10.31765, type=_inner11Wall, bound="lGF_Guesttoilet"),
-            Wall(direction='south', area=5.294375, type=_garageWall, bound="lGarage")
+            Wall(direction='south', area=5.294375, type=_garageWall, bound="lGF_Garage")
         ],
         transitions=[
-            Door(direction='south', area=1.880625, type=_utilityroomGarageDoor, bound="lGarage")
+            Door(direction='south', area=1.880625, type=_utilityroomGarageDoor, bound="lGF_Garage")
         ]
     ),
     Room(
@@ -137,7 +137,7 @@ rooms = [
             Wall(direction='west', area=8.5388, type=_inner17Wall, bound="lGF_Livingroom"),
             Wall(direction='north', area=4.57765, type=_inner17Wall, bound="lGF_Livingroom"),
             Wall(direction='east', area=10.31765, type=_inner11Wall, bound="lGF_Utilityroom"),
-            Wall(direction='south', area=4.57765, type=_garageWall, bound="lGarage")
+            Wall(direction='south', area=4.57765, type=_garageWall, bound="lGF_Garage")
         ]
     ),
     Room(
@@ -149,7 +149,7 @@ rooms = [
             Wall(direction='floor', area=12.999225, type=_groundFloor),
             Wall(direction='ceiling', area=12.999225, type=_groundCeiling, bound="lFF_Bedroom"), # Dressingroom
             Wall(direction='east', area=8.789925, type=_inner17Wall, bound="lGF_Boxroom"),
-            Wall(direction='south', area=4.6781, type=_garageWall, bound="lGarage"),
+            Wall(direction='south', area=4.6781, type=_garageWall, bound="lGF_Garage"),
             Wall(direction='south', area=5.453, type=_outer36Wall),
             Wall(direction='west', area=8.069575, type=_outer36Wall),
             #Wall(direction='north', area=4.57765, type=_inner17Wall),
@@ -167,9 +167,9 @@ rooms = [
             Wall(direction='south', area=6.177675, type=_inner17Wall, bound="lGF_Boxroom")
         ],
         transitions=[
-            Window(direction='west', area=2.2, type=_outerWindow, contactItem='Window_GF_Kitchen', shutterItem='pGF_Kitchen_Shutter_Control', shutterArea=0.2992, radiationArea=0.645*1.01*2.0, sunProtectionItem="State_Sunprotection_Livingroom"),
-            Window(direction='west', area=5.8232, type=_outerWindow, contactItem='Window_GF_Livingroom_Terrace', shutterItem='pGF_Livingroom_Shutter_Terrace_Control', shutterArea=0.4267, radiationArea=0.625*2.13*3.0),
-            Window(direction='west', area=4.0832, type=_outerWindow, contactItem='Window_GF_Livingroom_Couch', shutterItem='pGF_Livingroom_Shutter_Couch_Control', shutterArea=0.2992, radiationArea=0.625*2.13*2.0)
+            Window(direction='west', area=2.2, type=_outerWindow, contactItem='pGF_Kitchen_Openingcontact_Window_State', shutterItem='pGF_Kitchen_Shutter_Control', shutterArea=0.2992, radiationArea=0.645*1.01*2.0, sunProtectionItem="pOther_Automatic_State_Sunprotection_Livingroom"),
+            Window(direction='west', area=5.8232, type=_outerWindow, contactItem='pGF_Livingroom_Openingcontact_Window_Terrace_State', shutterItem='pGF_Livingroom_Shutter_Terrace_Control', shutterArea=0.4267, radiationArea=0.625*2.13*3.0),
+            Window(direction='west', area=4.0832, type=_outerWindow, contactItem='pGF_Livingroom_Openingcontact_Window_Couch_State', shutterItem='pGF_Livingroom_Shutter_Couch_Control', shutterArea=0.2992, radiationArea=0.625*2.13*2.0)
         ]
     ),
     Room(
@@ -185,7 +185,7 @@ rooms = [
             Wall(direction='south', area=9.06975, type=_inner17Wall, bound="lGF_Corridor")
         ],
         transitions=[
-            Window(direction='east', area=2.07625, type=_outerWindow, contactItem='Window_GF_Guestroom', shutterItem='pGF_Guestroom_Shutter_Control', shutterArea=0.2567)
+            Window(direction='east', area=2.07625, type=_outerWindow, contactItem='pGF_Guestroom_Openingcontact_Window_State', shutterItem='pGF_Guestroom_Shutter_Control', shutterArea=0.2567)
         ]
     ),
     Room(
@@ -204,7 +204,7 @@ rooms = [
         ],
         transitions=[
             # count the main door only 50%, because other 50% is counted on upper floor
-            Door(direction='east', area=4.6632/2.0, type=_mainDoor, contactItem='Door_GF_Corridor'),
+            Door(direction='east', area=4.6632/2.0, type=_mainDoor, contactItem='pGF_Corridor_Openingcontact_Door_State'),
             # count 50% of the sloping window from upper floor
             Window(direction='east', area=0.7676/2.0, type=_firstSlopingWindow)
         ]
@@ -216,7 +216,7 @@ rooms = [
         walls=[
             Wall(direction='floor', area=4.61578125, type=_firstFloor, bound="lGF_Livingroom"),
             Wall(direction='floor', area=4.61578125, type=_firstFloor, bound="lGF_Corridor"),
-            Wall(direction='ceiling', area=14.1436125, type=_firstCeiling, bound="lAttic"),
+            Wall(direction='ceiling', area=14.1436125, type=_firstCeiling, bound="lFF_Attic"),
             Wall(direction='west', area=7.77045, type=_inner11Wall, bound="lFF_Bedroom"),
             Wall(direction='north', area=8.51865, type=_inner17Wall, bound="lFF_Child1"),
             Wall(direction='north', area=1.69615, type=_inner17Wall, bound="lFF_Child2"),
@@ -228,7 +228,7 @@ rooms = [
         ],
         transitions=[
             # count 50% of the main door from lower floor
-            Door(direction='east', area=4.6632/2.0, type=_mainDoor, contactItem='Door_GF_Corridor'),
+            Door(direction='east', area=4.6632/2.0, type=_mainDoor, contactItem='pGF_Corridor_Openingcontact_Door_State'),
             # count the sloping window only 50%, because other 50% is counted on lower floor
             Window(direction='east', area=0.7676/2.0, type=_firstSlopingWindow)
         ]
@@ -240,7 +240,7 @@ rooms = [
         walls=[
             Wall(direction='floor', area=4.0, type=_firstFloor, bound="lGF_Livingroom"),
             Wall(direction='floor', area=12.626875, type=_firstFloor, bound="lGF_Guestroom"),
-            Wall(direction='ceiling', area=10.3266375, type=_firstCeiling, bound="lAttic"),
+            Wall(direction='ceiling', area=10.3266375, type=_firstCeiling, bound="lFF_Attic"),
             Wall(direction='west', area=9.9941, type=_inner11Wall, bound="lFF_Child2"),
             Wall(direction='north', area=8.1533, type=_outer36Wall),
             Wall(direction='east', area=3.595, type=_outer36Wall),
@@ -248,7 +248,7 @@ rooms = [
             Wall(direction='south', area=8.51865, type=_inner17Wall, bound="lFF_Corridor")
         ],
         transitions=[
-            Window(direction='north', area=1.8875, type=_outerWindow, contactItem='Window_FF_Child1', shutterItem='pFF_Child1_Shutter_Control', shutterArea=0.2567)
+            Window(direction='north', area=1.8875, type=_outerWindow, contactItem='pFF_Child1_Openingcontact_Window_State', shutterItem='pFF_Child1_Shutter_Control', shutterArea=0.2567)
         ]
     ),
     Room(
@@ -257,7 +257,7 @@ rooms = [
         volume=14.99575 * _secondFloorHeight - 4.6016,
         walls=[
             Wall(direction='floor', area=17.07625, type=_firstFloor, bound="lGF_Livingroom"),
-            Wall(direction='ceiling', area=10.7760125, type=_firstCeiling, bound="lAttic"),
+            Wall(direction='ceiling', area=10.7760125, type=_firstCeiling, bound="lFF_Attic"),
             Wall(direction='west', area=3.595, type=_outer36Wall),
             Wall(direction='west', area=9.2032, type=_firstSlopingCeiling),
             Wall(direction='north', area=8.5008, type=_outer36Wall),
@@ -266,7 +266,7 @@ rooms = [
             Wall(direction='south', area=1.69615, type=_inner17Wall, bound="lFF_Corridor")
         ],
         transitions=[
-            Window(direction='north', area=1.8875, type=_outerWindow, contactItem='Window_FF_Child2', shutterItem='pFF_Child2_Shutter_Control', shutterArea=0.2567)
+            Window(direction='north', area=1.8875, type=_outerWindow, contactItem='pFF_Child2_Openingcontact_Window_State', shutterItem='pFF_Child2_Shutter_Control', shutterArea=0.2567)
         ]
     ),
     Room(
@@ -276,7 +276,7 @@ rooms = [
         walls=[
             # Bedroom
             Wall(direction='floor', area=16.3125, type=_firstFloor, bound="lGF_Livingroom"),
-            Wall(direction='ceiling', area=16.3125, type=_firstCeiling, bound="lAttic"),
+            Wall(direction='ceiling', area=16.3125, type=_firstCeiling, bound="lFF_Attic"),
             Wall(direction='west', area=5.9851, type=_outer36Wall),
             Wall(direction='north', area=12.51, type=_inner17Wall, bound="lFF_Child2"),
             Wall(direction='east', area=8.03455, type=_inner11Wall, bound="lFF_Corridor"),
@@ -285,7 +285,7 @@ rooms = [
 
             # Dressingroom
             Wall(direction='floor', area=16.660625, type=_firstFloor, bound="lGF_Livingroom"),
-            Wall(direction='ceiling', area=10.40850625, type=_firstCeiling, bound="lAttic"),
+            Wall(direction='ceiling', area=10.40850625, type=_firstCeiling, bound="lFF_Attic"),
             Wall(direction='west', area=3.5075, type=_outer36Wall),
             Wall(direction='west', area=8.9792, type=_firstSlopingCeiling),
             Wall(direction='north', area=3.63485, type=_inner17Wall, bound="lFF_Corridor"),
@@ -293,8 +293,8 @@ rooms = [
             Wall(direction='south', area=9.0333, type=_outer36Wall)
         ],
         transitions=[
-            Window(direction='west', area=3.1375, type=_outerWindow, contactItem='Window_FF_Bedroom', shutterItem='pFF_Bedroom_Shutter_Control', shutterArea=0.4267, radiationArea=0.615*1.00*3.0, sunProtectionItem="State_Sunprotection_Bedroom"),
-            Window(direction='south', area=1.41875, type=_outerWindow, contactItem='Window_FF_Dressingroom', shutterItem='pFF_Dressingroom_Shutter_Control', shutterArea=0.19295, radiationArea=0.86*1.00, sunProtectionItem="State_Sunprotection_Dressingroom")
+            Window(direction='west', area=3.1375, type=_outerWindow, contactItem='pFF_Bedroom_Openingcontact_Window_State', shutterItem='pFF_Bedroom_Shutter_Control', shutterArea=0.4267, radiationArea=0.615*1.00*3.0, sunProtectionItem="pOther_Automatic_State_Sunprotection_Bedroom"),
+            Window(direction='south', area=1.41875, type=_outerWindow, contactItem='pFF_Dressingroom_Openingcontact_Window_State', shutterItem='pFF_Dressingroom_Shutter_Control', shutterArea=0.19295, radiationArea=0.86*1.00, sunProtectionItem="pOther_Automatic_State_Sunprotection_Dressingroom")
 #        ]
         ]
     ),
@@ -304,7 +304,7 @@ rooms = [
 #        volume=14.88435 * _secondFloorHeight - 4.6016,
 #        walls=[
 #            Wall(direction='floor', area=16.660625, type=_firstFloor, bound="lGF_Livingroom"),
-#            Wall(direction='ceiling', area=10.40850625, type=_firstCeiling, bound="lAttic"),
+#            Wall(direction='ceiling', area=10.40850625, type=_firstCeiling, bound="lFF_Attic"),
 #            Wall(direction='west', area=3.5075, type=_outer36Wall),
 #            Wall(direction='west', area=8.9792, type=_firstSlopingCeiling),
 #            Wall(direction='north', area=3.63485, type=_inner17Wall, bound="lFF_Corridor"),
@@ -312,7 +312,7 @@ rooms = [
 #            Wall(direction='south', area=9.0333, type=_outer36Wall)
 #        ],
 #        transitions=[
-#            Window(direction='south', area=1.41875, type=_outerWindow, contactItem='Window_FF_Dressingroom', shutterItem='pFF_Dressingroom_Shutter_Control', shutterArea=0.19295, radiationArea=0.86*1.00, sunProtectionItem="State_Sunprotection_Dressingroom")
+#            Window(direction='south', area=1.41875, type=_outerWindow, contactItem='pFF_Dressingroom_Openingcontact_Window_State', shutterItem='pFF_Dressingroom_Shutter_Control', shutterArea=0.19295, radiationArea=0.86*1.00, sunProtectionItem="pOther_Automatic_State_Sunprotection_Dressingroom")
 #        ]
 #    ),
     Room(
@@ -323,7 +323,7 @@ rooms = [
         walls=[
             Wall(direction='floor', area=5.482375, type=_firstFloor, bound="lGF_Guesttoilet"),
             Wall(direction='floor', area=8.9875, type=_firstFloor, bound="lGF_Utilityroom"),
-            Wall(direction='ceiling', area=10.3266375, type=_firstCeiling, bound="lAttic"),
+            Wall(direction='ceiling', area=10.3266375, type=_firstCeiling, bound="lFF_Attic"),
             Wall(direction='west', area=9.9941, type=_inner11Wall, bound="lFF_Bedroom"), # Dressingroom
             Wall(direction='north', area=7.4633, type=_inner17Wall, bound="lFF_Corridor"),
             Wall(direction='east', area=5.033, type=_outer36Wall),
@@ -331,11 +331,11 @@ rooms = [
             Wall(direction='south', area=7.63045, type=_outer36Wall)
         ],
         transitions=[
-            Window(direction='south', area=1.41875, type=_outerWindow, contactItem='Window_FF_Bathroom', shutterItem='pFF_Bathroom_Shutter_Control', shutterArea=0.19295, radiationArea=0.86*1.00, sunProtectionItem="State_Sunprotection_Bathroom")
+            Window(direction='south', area=1.41875, type=_outerWindow, contactItem='pFF_Bathroom_Openingcontact_Window_State', shutterItem='pFF_Bathroom_Shutter_Control', shutterArea=0.19295, radiationArea=0.86*1.00, sunProtectionItem="pOther_Automatic_State_Sunprotection_Bathroom")
         ]
     ),
     Room(
-        name='lAttic',
+        name='lFF_Attic',
         volume=54.0702 * _atticFloorHeight / 2.0,
         walls=[
             Wall(direction='floor', area=59.871875, type=_atticFloor, bound="lFF_Bedroom" ),
@@ -347,7 +347,7 @@ rooms = [
         ],
         transitions=[
             Window(direction='east', area=0.7676, type=_firstSlopingWindow),
-            Window(direction='south', area=0.7676, type=_outerWindow, contactItem='Window_Attic', shutterItem='pAttic_Shutter_Control', shutterArea=0.19295, radiationArea=0.72*1.00, sunProtectionItem="State_Sunprotection_Attic")
+            Window(direction='south', area=0.7676, type=_outerWindow, contactItem='pFF_Attic_Openingcontact_Window_State', shutterItem='pFF_Attic_Shutter_Control', shutterArea=0.19295, radiationArea=0.72*1.00, sunProtectionItem="pOther_Automatic_State_Sunprotection_Attic")
         ]
     )
 ]
@@ -472,7 +472,7 @@ class HeatingControlRule():
 
         currentHeatingDemand = getItemState("pGF_Utilityroom_Heating_Demand")
 
-        outdoorTemperatureItemName = getItemState("Outdoor_Temperature_Item_Name").toString()
+        outdoorTemperatureItemName = getItemState("pOutdoor_WeatherStation_Temperature_Item_Name").toString()
         heating = Heating(self.log,outdoorTemperatureItemName)
 
         cr, cr4, cr8, hhs = heating.calculate(currentHeatingDemand == ON)    
@@ -614,7 +614,7 @@ class HeatingControlRule():
         else:
             offset = now
             
-        _messuredRadiation = getStableItemState(offset,"WeatherStation_Solar_Power",10)
+        _messuredRadiation = getStableItemState(offset,"pOutdoor_WeatherStation_Solar_Power",10)
         _sunSouthRadiation, _sunWestRadiation, _sunDebugInfo = SunRadiation.getSunPowerPerHour(offset,cloudCover,_messuredRadiation)
         effectiveSouthRadiationShortTerm = _sunSouthRadiation / 60.0
         effectiveWestRadiationShortTerm = _sunWestRadiation / 60.0
@@ -623,7 +623,7 @@ class HeatingControlRule():
         #azimut = getItemState("pOutdoor_Astro_Sun_Azimuth").doubleValue()
         #longTermTimeWindow = 120 if azimut > 225 and azimut < 245 else 30 # in this direction a tree is hiding the sun
         #longTermTimeWindow = 120 if azimut > 228 and azimut < 242 else 30 # in this direction a tree is hiding the sun
-        _messuredRadiation = getStableItemState(offset,"WeatherStation_Solar_Power",30)
+        _messuredRadiation = getStableItemState(offset,"pOutdoor_WeatherStation_Solar_Power",30)
         _sunSouthRadiation, _sunWestRadiation, _sunDebugInfo = SunRadiation.getSunPowerPerHour(offset,cloudCover,_messuredRadiation)
         effectiveSouthRadiationLongTerm = _sunSouthRadiation / 60.0
         effectiveWestRadiationLongTerm = _sunWestRadiation / 60.0

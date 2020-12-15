@@ -1388,8 +1388,8 @@ var mvInitializer = function(){
                 restrict: "A",
                 link: function (scope, elem, attrs) 
                 {
-                    let stateItemName = "Watering_Program_State";
-                    let circuitItemName = "Watering_Circuits";
+                    let stateItemName = "pOutdoor_Watering_Logic_Program_State";
+                    let circuitItemName = "gOutdoor_Watering_Circuits";
                     
                     function getSVG(icon_name)
                     {
@@ -1428,7 +1428,7 @@ var mvInitializer = function(){
 
                         scope.addUpdateListener(function( updatedItemName )
                         {
-                            //console.log("Watering_Circuits initialized");
+                            //console.log("gOutdoor_Watering_Circuits initialized");
                             if( updatedItemName != null && updatedItemName != stateItemName && updatedItemName != circuitItemName )
                             {
                                 return;

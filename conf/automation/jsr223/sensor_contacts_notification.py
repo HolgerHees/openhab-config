@@ -5,13 +5,13 @@ from shared.helper import rule, getGroupMemberChangeTrigger, sendNotification, g
 class SensorContactNotificationRule:
     def __init__(self):
         self.triggers = []
-        self.triggers += getGroupMemberChangeTrigger("Sensor_Doors_FF")
-        self.triggers += getGroupMemberChangeTrigger("Sensor_Window_FF")
-        self.triggers += getGroupMemberChangeTrigger("Sensor_Window_SF")
+        self.triggers += getGroupMemberChangeTrigger("gGF_Sensor_Doors")
+        self.triggers += getGroupMemberChangeTrigger("gGF_Sensor_Window")
+        self.triggers += getGroupMemberChangeTrigger("gFF_Sensor_Window")
         self.timer = None
 
     def execute(self, module, input):
-        if getItemState("State_Notify") == ON:
+        if getItemState("pOther_Manual_State_Notify") == ON:
             itemName = input['event'].getItemName()
             item = getItem(itemName)
 

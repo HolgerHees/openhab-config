@@ -17,7 +17,7 @@ class HueBrightnessRule:
         ]
 
     def execute(self, module, input):
-        sendCommand("State_Lightprogram", 0)
+        sendCommand("pOther_Manual_State_Lightprogram", 0)
 
 @rule("lights_indoor_livingroom_control.py")
 class HueColorMainRule:
@@ -43,7 +43,7 @@ class HueColorMainRule:
         sendCommand("pGF_Livingroom_Light_Hue4_Color", command)
         sendCommand("pGF_Livingroom_Light_Hue5_Color", command)
         
-        sendCommand("State_Lightprogram", 0)
+        sendCommand("pOther_Manual_State_Lightprogram", 0)
 
 @rule("lights_indoor_livingroom_control.py")
 class HueColorIndividualRule:
@@ -62,12 +62,12 @@ class HueColorIndividualRule:
         last = ruleTimeouts.get("Livingroom_Hue_Color_Backward",0)
         
         if now - last > 1000:
-            sendCommand("State_Lightprogram", 0)
+            sendCommand("pOther_Manual_State_Lightprogram", 0)
 
 @rule("lights_indoor_livingroom_control.py")
 class HueColorProgramRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("State_Lightprogram")]
+        self.triggers = [ItemStateChangeTrigger("pOther_Manual_State_Lightprogram")]
         self.orgColors = None
         self.timer = None
         
@@ -116,7 +116,7 @@ class HueColorProgramRule:
         return [u"{}".format(red),u"{}".format(green),u"{}".format(blue)]
     
     def callbackFaded(self,step,data):
-        if getItemState("State_Lightprogram").intValue() == 0:
+        if getItemState("pOther_Manual_State_Lightprogram").intValue() == 0:
             return
             
         color1, color2, color3, color4, color5 = data
@@ -152,7 +152,7 @@ class HueColorProgramRule:
             self.timer.start()
     
     def callback(self):
-        if getItemState("State_Lightprogram").intValue() == 0:
+        if getItemState("pOther_Manual_State_Lightprogram").intValue() == 0:
             return
         
         color1 = getItemState("pGF_Livingroom_Light_Hue1_Color")

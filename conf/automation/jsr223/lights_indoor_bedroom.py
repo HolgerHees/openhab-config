@@ -6,12 +6,12 @@ from core.triggers import ItemStateChangeTrigger, ItemStateUpdateTrigger
 class LightsIndoorBedroomControlRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("Light_FF_Bedroom_Left_Long_Pressed", state="ON"),
-            ItemStateChangeTrigger("Light_FF_Bedroom_Right_Long_Pressed", state="ON")
+            ItemStateChangeTrigger("pFF_Bedroom_Switches_Long_Pressed_Left_State", state="ON"),
+            ItemStateChangeTrigger("pFF_Bedroom_Switches_Long_Pressed_Right_State", state="ON")
         ]
 
     def execute(self, module, input):
-        sendCommand("Scene4", ON)
+        sendCommand("pOther_Scene4", ON)
 
 @rule("lights_indoor_bedroom_left_control.py")
 class LightsIndoorBedroomLeftControlRule:

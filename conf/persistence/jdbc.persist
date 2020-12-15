@@ -11,10 +11,10 @@ Strategies {
  */
 Items {
 	gPersistance_History* : strategy = everyChange
-	Sensor_Window_FF* : strategy = everyChange
-	Sensor_Window_SF* : strategy = everyChange
-	Motiondetector_GF_Corridor : strategy = everyChange
-	Motiondetector_GF_Livingroom : strategy = everyChange
-	Motiondetector_FF_Corridor : strategy = everyChange
-	Door_GF_Corridor : strategy = everyChange
+	gGF_Sensor_Window* : strategy = everyChange
+	gFF_Sensor_Window* : strategy = everyChange
+	pGF_Corridor_Motiondetector_State : strategy = everyChange
+	pGF_Livingroom_Motiondetector_State : strategy = everyChange
+	pFF_Corridor_Motiondetector_State : strategy = everyChange
+	pGF_Corridor_Openingcontact_Door_State : strategy = everyChange
 }

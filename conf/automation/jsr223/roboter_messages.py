@@ -5,23 +5,23 @@ from core.triggers import CronTrigger, ItemStateChangeTrigger
 class RoboterMessagesRule:
     def __init__(self):
         self.triggers = [
-            CronTrigger("0 */5 * * * ?"),
-            ItemStateChangeTrigger("roomba_status"),
-            ItemStateChangeTrigger("roomba_full"),
-            ItemStateChangeTrigger("MowerStatus")
+            CronTrigger("*/15 * * * * ?"),
+            ItemStateChangeTrigger("pIndoor_Roomba_status"),
+            ItemStateChangeTrigger("pIndoor_Roomba_full"),
+            ItemStateChangeTrigger("pOutdoor_Mower_Status")
         ]
 
     def execute(self, module, input):
         group = "Fehler"
         active = []
-        url = None
+        #url = None
         
-        if getItemState("roomba_status").toString() == "Stuck" or getItemState("roomba_full") == ON:
+        if getItemState("pIndoor_Roomba_status") != NULL and ( getItemState("pIndoor_Roomba_status").toString() == "Stuck" or getItemState("pIndoor_Roomba_full") == ON ):
             active.append("Roomba")
 
-        if getItemState("MowerStatus").intValue() == 7 or getItemState("MowerStatus").intValue() == 8:
-            active.append("Mower")
-            url = "https://smartmarvin.de/cameraAutomowerImage"
+        if getItemState("pOutdoor_Mower_Status") != NULL and ( getItemState("pOutdoor_Mower_Status").intValue() == 7 or getItemState("pOutdoor_Mower_Status").intValue() == 8 ):
+            active.append("pOutdoor_Mower_")
+            #url = "https://smartmarvin.de/cameraAutomowerImage"
 
         if len(active) == 0:
             active.append("Alles normal")
@@ -29,6 +29,6 @@ class RoboterMessagesRule:
 
         msg = ", ".join(active)
 
-        if postUpdateIfChanged("RoboterStatus", msg):
+        if postUpdateIfChanged("pOther_State_Message_Robot", msg):
             sendNotification("Roboter " + group, msg)
 

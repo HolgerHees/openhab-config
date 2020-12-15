@@ -1,6 +1,5 @@
 // **** GAS METER ****
 Group  eGF_Utilityroom_Gas_Meter                     "Gaszähler" <selfinfo> (lGF_Utilityroom) ["Sensor"]
-
 Number pGF_Utilityroom_Gas_Meter_Pulse_Counter       "Impuls Zähler" <selfgas> (eGF_Utilityroom_Gas_Meter,gPersistance_History) ["Point"] { channel="knx:device:bridge:other:gasCounter" }
 Number pGF_Utilityroom_Gas_Meter_Current_Count       "Zählerstand [%.2f m³]" <selfgas> (eGF_Utilityroom_Gas_Meter,gPersistance_History) ["Point"]
 Number pGF_Utilityroom_Gas_Current_Daily_Consumption "Tagesverbrauch [%.2f m³]" <selfgas> (eGF_Utilityroom_Gas_Meter,gPersistance_Chart) ["Point"]

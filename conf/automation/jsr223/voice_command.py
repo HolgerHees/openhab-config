@@ -32,7 +32,9 @@ config = {
     },
     "main": {
         "phrase_separator": " und ",
-        "phrase_matcher": u"(.*[^a-zA-Z]+|^){}(.*|$)"
+        "phrase_matcher": u"(.*[^a-zA-Z]+|^){}(.*|$)",
+        "phrase_sub": ["vorne","hinten","links","rechts","oben","unten"],
+        "phrase_equipment": "eOther_Scenes"
     },
     "commands": {
         "OFF": { "search": ["aus","ausschalten","beenden","beende","deaktiviere","stoppe","stoppen"], "types": ["Switch","Dimmer"] },
@@ -73,7 +75,7 @@ class SemanticItem:
         self.synonyms = []
         self.search_terms = []
 
-        self.parents = []
+        self.children = []
 
     def __repr__(self):
         return self.item.getName() + " (" + str(self.label) + "|" + str(self.tags) + "|" + str(self.synonyms) + ")"
@@ -112,7 +114,21 @@ class SemanticData:
                     semantic_item.tags.append(attribute['value'].lower())
                 elif attribute['source'] == "METADATA":
                     semantic_item.synonyms.append(attribute['value'].lower())
-            semantic_item.search_terms = semantic_item.label + semantic_item.synonyms + semantic_item.tags
+            semantic_item.search_terms = list(set(semantic_item.label + semantic_item.synonyms + semantic_item.tags))
+
+        # prepare semantic locations and children
+        location_map = {}
+        self.root_locations = []
+        for semantic_item in self.semantic_items.values():
+            if semantic_item.item.getType() == "Group":
+                children = semantic_item.item.getMembers()
+                for item in children:
+                    semantic_item.children.append(self.semantic_items[item.getName()])
+
+                if semantic_item.type == "Location":
+                    location_map[semantic_item.item.getName()] = semantic_item
+                    if len(semantic_item.item.getGroupNames()) == 0:
+                        self.root_locations.append(semantic_item)
 
         # prepare regex matcher
         self.semantic_search_regex = {}
@@ -122,17 +138,12 @@ class SemanticData:
                     continue
                 self.semantic_search_regex[search_term] = re.compile(config["main"]["phrase_matcher"].format(search_term))
  
-        # prepare semantic locations
-        location_map = {}
-        for semantic_item in self.semantic_items.values():
-            if semantic_item.type == "Location":
-                location_map[semantic_item.item.getName()] = semantic_item
-
         # prepare location search map
         self.location_search_map = {}
         for semantic_item in location_map.values():
-            groups = self.getGroups(location_map,semantic_item.item,[])
-            semantic_item.groups = groups
+            #parent_names = semantic_item.item.getGroupNames()
+            #for parent_name in parent_names:
+            #    semantic_item.parents.append(self.semantic_items[parent_name])
 
             for search_term in semantic_item.search_terms:
                 if search_term not in self.location_search_map:
@@ -140,14 +151,6 @@ class SemanticData:
                 self.location_search_map[search_term].append(semantic_item)
  
         self.location_search_terms = sorted(self.location_search_map, key=len, reverse=True)
-
-    def getGroups(self,location_map,item,groups):
-        for group_name in item.getGroupNames():
-            if group_name in groups:
-                continue
-            groups.append(group_name)
-            self.getGroups(location_map,location_map[group_name].item,groups)
-        return groups
  
     def getType(self,semantic_tags,item):
         item_tags = item.getTags()
@@ -172,18 +175,6 @@ class VoiceCommandRule:
     def __init__(self):
         self.triggers = [ ItemStateUpdateTrigger("VoiceCommand") ]
  
-    def getByType(self,parent,type):
-        result = []
-        if parent.getType() == "Group":
-            #self.log.info(u" => {} {}".format(parent.getName(),parent.getType()))
-            items = parent.getMembers()
-            for item in items:
-                #self.log.info(u" => {}".format(item.getName()))
-                if semantic_data.semantic_items[item.getName()].type == type:
-                    result.append(semantic_data.semantic_items[item.getName()])
-                result = result + self.getByType(item,type)
-        return result
-
     def buildSearchMap(self,items):
         search_map = {}
         for semantic_item in items:
@@ -194,51 +185,83 @@ class VoiceCommandRule:
         search_terms = sorted(search_map, key=len, reverse=True)
         return search_map, search_terms
 
-    def getByTypeSorted(self,parent,type):
-        result = self.getByType(parent,type)
-        search_map, search_terms = self.buildSearchMap(result)
-        return search_map, search_terms, result
+    def getItemsByType(self,parent,type):
+        result = []
+        if parent.item.getType() == "Group":
+            #self.log.info(u" => {} {}".format(parent.getName(),parent.getType()))
+            items = parent.item.getMembers()
+            for item in items:
+                semantic_item = semantic_data.semantic_items[item.getName()]
+                #self.log.info(u" => {}".format(item.getName()))
+                if semantic_item.type == type:
+                    result.append(semantic_item)
+                else:
+                    result = result + self.getItemsByType(semantic_item,type)
+        return result
 
-    def searchSemanticItems(self,search_map,search_terms,unprocessed_search):
-        # search for items and reduce result until no new matches found
-        # like first matches 'indirect'
-        # then matches 'couch' etc
+    def _searchItems(self,items,unprocessed_search,recursive,is_sub_search):
+        #self.log.info(u"_searchItems: {}".format(','.join([str(item.item.getName()) for item in items]) ))
+        # check for matches in items
         matched_items = []
-        processed_search = []
-        while len(search_terms) > 0:
-            _matched_items = []
-            for search_term in search_terms:
-                if not semantic_data.semantic_search_regex[search_term].match(unprocessed_search):
-                    continue
-                processed_search.append(search_term)
-                unprocessed_search = unprocessed_search.replace(search_term,"")
-                _matched_items = search_map[search_term]
-                matched_items = _matched_items
-                break
-            search_map, search_terms = self.buildSearchMap(_matched_items)
+        matched_search = None
+        search_map, search_terms = self.buildSearchMap(items)
+        for search_term in search_terms:
+            if not is_sub_search and search_term in config["main"]["phrase_sub"]:
+                continue
   
-        # check for sub item matches of same type
-        # e.g. aussen vorne
-        # => lOutdoor => lOutdoor_Streedside
-        if len(matched_items) > 0:
-            sub_items = []
-            for matched_item in matched_items:
-                sub_items += self.getByType(matched_item.item,matched_item.type)
-            sub_item_search_map, sub_item_search_terms = self.buildSearchMap(sub_items)
-
-            #self.log.info(u"{}".format(sub_item_search_map))
-            matched_sub_items, processed_sub_search, unprocessed_search = self.searchSemanticItems(sub_item_search_map,sub_item_search_terms,unprocessed_search)
-            if len(matched_sub_items) > 0:
-                matched_items = matched_sub_items
-                processed_search += processed_sub_search
-
-        return matched_items, processed_search, unprocessed_search
+            if semantic_data.semantic_search_regex[search_term].match(unprocessed_search):
+                matched_items =  search_map[search_term]
+                matched_search = search_term
+                #self.log.info(u"matched_items: {} {}".format(search_term,','.join([str(item.item.getName()) for item in matched_items])))
+                break
  
+        if recursive:
+            # collect items which does not match and collect their children of same type
+            missing_items = list(set(items) - set(matched_items))
+            #self.log.info(u"missing_items: {}".format(','.join([str(item.item.getName()) for item in missing_items]) ))
+            to_check = []
+            for item in missing_items:
+                members = item.item.getMembers()
+                for member in members:
+                    semantic_member = semantic_data.semantic_items[member.getName()]
+                    if member.getType() != "Group" or semantic_member.type != item.type:
+                        continue
+                    to_check.append(semantic_member)
+        
+            # check children for matches
+            if len(to_check)>0:
+                #self.log.info(u"to_check: {}".format(','.join([str(item.item.getName()) for item in to_check])))
+                _matched_items, _matched_search, _unprocessed_search = self._searchItems(to_check,matched_search if matched_search is not None else unprocessed_search,recursive,is_sub_search)
+                if matched_search == None:
+                    unprocessed_search = _unprocessed_search
+                    matched_search = _matched_search
+                matched_items += _matched_items 
+    
+        if matched_search != None:
+            unprocessed_search = unprocessed_search.replace(search_term,"")
+
+        return matched_items, matched_search, unprocessed_search
+
+    def searchItems(self,items,unprocessed_search,recursive):
+        matched_items = []
+        while True:
+            #self.log.info(u"search items")
+            _items, _matched_search, _unprocessed_search = self._searchItems(items,unprocessed_search,recursive,len(matched_items)>0)
+            if len(_items) == 0:
+                break
+            matched_items = _items
+            items = matched_items
+            unprocessed_search = _unprocessed_search
+
+        #self.log.info(u"found items: {}".format(','.join([str(item.item.getName()) for item in matched_items]) ))
+        #raise Exception("test")
+        return matched_items, unprocessed_search
+
     def detectLocations(self,actions,client_id):
         last_locations = []
         for action in actions:
             # search for locations
-            matched_locations, processed_search, unprocessed_search = self.searchSemanticItems(semantic_data.location_search_map,semantic_data.location_search_terms,action.voice_cmd_unprocessed)
+            matched_locations, unprocessed_search = self.searchItems(semantic_data.root_locations,action.voice_cmd_unprocessed,True)
             action.voice_cmd_unprocessed = unprocessed_search
             action.locations = matched_locations
 
@@ -263,64 +286,40 @@ class VoiceCommandRule:
                     continue
                 location_name = allAlexaDevices[client_id]
                 action.locations = [ semantic_data.locations[location_name] ]
-
-    def checkPoints(self,action,cmd):
-        matched_equipments = []
-        processed_search = []
+ 
+    def checkPoints(self,action,unprocessed_search):
+        equipments = []
         for location in action.locations:
             # search for equipments    
-            #self.log.info(u"  location: {} {}".format(location,cmd))
-            equipment_search_map, equipment_search_terms, all_equipments = self.getByTypeSorted(location.item,"Equipment")
-            _matched_equipments, _processed_search, unprocessed_search = self.searchSemanticItems(equipment_search_map,equipment_search_terms,cmd)
-            matched_equipments = matched_equipments + _matched_equipments
-            processed_search = processed_search + _processed_search
+            #self.log.info(u"  location: {} {}".format(location,unprocessed_search))
+            equipments += self.getItemsByType(location,"Equipment")
 
-        # remove processed search words
-        for search in processed_search:
-            cmd = cmd.replace(search,"")
+        matched_equipments, unprocessed_search = self.searchItems(equipments,unprocessed_search,True)
     
         # check points of equipments 
         if len(matched_equipments) > 0:
-            all_points = []
-            point_matches = False
-            processed_search_terms = []
+            points = []
+            #point_matches = False
+            #processed_search_terms = []
             for equipment in matched_equipments:
                 #self.log.info(u"  equipment, leftover: '{}', item: {}".format(cmd,equipment.item.getName()))
-                point_search_map, point_search_terms, equipment_points = self.getByTypeSorted(equipment.item,"Point")
-                all_points = all_points + equipment_points
+                points += self.getItemsByType(equipment,"Point")
 
-                # add all points which matches to cmd
-                _matched_points, _processed_search, unprocessed_search = self.searchSemanticItems(point_search_map,point_search_terms,cmd)
-                action.points = action.points + _matched_points
-                processed_search_terms = processed_search_terms + _processed_search
-                if len(_matched_points) > 0:
-                    point_matches = True
+            matched_points, unprocessed_search = self.searchItems(points,unprocessed_search,False)
 
-            # if no points where found, add all points
-            if not point_matches:
-                #self.log.info("test2")
-                for point in all_points:
-                    action.points.append(point)
+            # add matched points or all equipment points if there are no matches
+            action.points = points if len(matched_points) == 0 else matched_points
+            return unprocessed_search
 
-            # clean cmd's
-            for processed_search_term in processed_search_terms:
-                cmd = cmd.replace(processed_search_term,"")
-            #self.log.info(u"  unprocessed: {}".format(cmd))
-
-            return cmd
-
-        processed_search_terms = []
+        # check points of locations
+        points = []
         for location in action.locations:
-            # no equipments matches, search for all points in location
-            point_search_map, point_search_terms, location_points = self.getByTypeSorted(location.item,"Point")
-            _matched_points, _processed_search, unprocessed_search = self.searchSemanticItems(point_search_map,point_search_terms,cmd)
-            action.points = action.points + _matched_points
-            processed_search_terms = processed_search_terms + _processed_search
+            points += self.getItemsByType(location,"Point")
 
-        for processed_search_term in processed_search_terms:
-            cmd = cmd.replace(processed_search_term,"")
+        matched_points, unprocessed_search = self.searchItems(points,unprocessed_search,False)
+        action.points = matched_points
 
-        return cmd 
+        return unprocessed_search 
 
     def detectPoints(self,actions):
         last_cmd = None
@@ -462,4 +461,4 @@ class TestRule:
                 raise Exception("Wrong detection")
 
     def execute(self, module, input):
-        pass
+        pass 

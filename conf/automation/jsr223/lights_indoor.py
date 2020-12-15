@@ -4,10 +4,10 @@ from core.triggers import CronTrigger, ItemStateChangeTrigger
 @rule("lights_indoor.py")
 class AwayEveningRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("State_Outdoorlights", state="ON")]
+        self.triggers = [ItemStateChangeTrigger("pOther_Automatic_State_Outdoorlights", state="ON")]
 
     def execute(self, module, input):
-        if getItemState("Auto_Lighting") == ON and getItemState("State_Presence").intValue() == 0:
+        if getItemState("pOther_Manual_State_Auto_Lighting") == ON and getItemState("pOther_Presence_State").intValue() == 0:
             sendCommand("pGF_Corridor_Light_Hue_Brightness", 30)
             sendCommand("pGF_Livingroom_Light_Hue4_Brightness", 30)
 
@@ -18,7 +18,7 @@ class HolidayGoSleepingRule:
         self.triggers = [CronTrigger("0 0 22 * * ?")]
 
     def execute(self, module, input):
-        if getItemState("Auto_Lighting") == ON and getItemState("State_Presence").intValue() == 0:
+        if getItemState("pOther_Manual_State_Auto_Lighting") == ON and getItemState("pOther_Presence_State").intValue() == 0:
             sendCommand("pGF_Corridor_Light_Hue_Brightness", OFF)
             sendCommand("pGF_Livingroom_Light_Hue4_Brightness", OFF)
             sendCommand("pGF_Corridor_Light_Ceiling_Powered", ON)
@@ -30,5 +30,5 @@ class HolidayNightRule:
         self.triggers = [CronTrigger("0 30 22 * * ?")]
 
     def execute(self, module, input):
-        if getItemState("Auto_Lighting") == ON and getItemState("State_Presence").intValue() == 0:
+        if getItemState("pOther_Manual_State_Auto_Lighting") == ON and getItemState("pOther_Presence_State").intValue() == 0:
             sendCommand("pGF_Corridor_Light_Ceiling_Powered", OFF)

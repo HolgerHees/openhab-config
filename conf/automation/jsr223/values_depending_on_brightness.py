@@ -17,36 +17,36 @@ class ValuesDependingOnBrightnessRule:
         # pOutdoor_Astro_Sunset_Time
         # pOutdoor_Astro_Dusk_Time
         
-        cloudCover = getItemState("Cloud_Cover_Current").intValue()
+        cloudCover = getItemState("pOutdoor_Weather_Current_Cloud_Cover").intValue()
                 
-        if getItemState("State_Rollershutter") == ON:
+        if getItemState("pOther_Automatic_State_Rollershutter") == ON:
             _upTime = getItemState("pOutdoor_Astro_Sunrise_Time").calendar.getTimeInMillis()
             _upTime = int(_upTime + ( cloudCover * 30.0 / 9.0 ) * 60 * 1000)
 
-            _lastDownTime = getItemState("State_Rollershutter_Down").calendar.getTimeInMillis()
+            _lastDownTime = getItemState("pOther_Automatic_State_Rollershutter_Down").calendar.getTimeInMillis()
 
             if now.getMillis() > _upTime and _upTime > _lastDownTime:
-                postUpdate("State_Rollershutter", OFF)
+                postUpdate("pOther_Automatic_State_Rollershutter", OFF)
 
-            postUpdateIfChanged("State_Rollershutter_Up", DateTime(_upTime).toString() )
+            postUpdateIfChanged("pOther_Automatic_State_Rollershutter_Up", DateTime(_upTime).toString() )
         else:
             _downTime = getItemState("pOutdoor_Astro_Dusk_Time").calendar.getTimeInMillis()
             _downTime = int(_downTime - ( cloudCover * 30.0 / 9.0 ) * 60 * 1000)
             
             if now.getMillis() > _downTime:
-                postUpdate("State_Rollershutter", ON)
+                postUpdate("pOther_Automatic_State_Rollershutter", ON)
 
-            postUpdateIfChanged("State_Rollershutter_Down", DateTime(_downTime).toString() )
+            postUpdateIfChanged("pOther_Automatic_State_Rollershutter_Down", DateTime(_downTime).toString() )
 
 
 
 
         if itemStateOlderThen("pOutdoor_Astro_Sunset_Time", now) or itemStateNewerThen("pOutdoor_Astro_Sunrise_Time", now):
-            postUpdateIfChanged("State_Outdoorlights", ON)
+            postUpdateIfChanged("pOther_Automatic_State_Outdoorlights", ON)
         else:
-            postUpdateIfChanged("State_Outdoorlights", OFF)
+            postUpdateIfChanged("pOther_Automatic_State_Outdoorlights", OFF)
             
         if itemStateOlderThen("pOutdoor_Astro_Dusk_Time", now) or itemStateNewerThen("pOutdoor_Astro_Dawn_Time", now):
-            postUpdateIfChanged("State_Solar", OFF)
+            postUpdateIfChanged("pOther_Automatic_State_Solar", OFF)
         else:
-            postUpdateIfChanged("State_Solar", ON)
+            postUpdateIfChanged("pOther_Automatic_State_Solar", ON)

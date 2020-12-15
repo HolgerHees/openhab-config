@@ -5,37 +5,38 @@ from core.triggers import ItemStateChangeTrigger
 @rule("scene_plant_messages.py")
 class SummeryRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("PlantSensorInfo")]
+        self.triggers = [ItemStateChangeTrigger("pIndoor_Plant_Sensor_Watering_Info")]
 
     def execute(self, module, input):
-        state = getItemState("PlantSensorInfo").toString()
+        state = getItemState("pIndoor_Plant_Sensor_Watering_Info").toString()
 
         if state != "Feucht genug" and state != "Nicht aktiv":
             msg = state
         else:
             msg = u"Alles normal"
 
-        postUpdateIfChanged("SensorInfo", msg)
+        postUpdateIfChanged("pIndoor_Plant_Sensor_Main_Info", msg)
 
 
 @rule("scene_plant_messages.py")
 class DetailRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("SoilMoistSensor1"),
-            ItemStateChangeTrigger("SoilMoistSensor2"),
-            ItemStateChangeTrigger("SoilMoistSensor3"),
-            ItemStateChangeTrigger("SoilMoistSensor4")
+            ItemStateChangeTrigger("pOther_Manual_State_Auto_Attic_Light"),
+            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Device_State1"),
+            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Device_State2"),
+            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Device_State3"),
+            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Device_State4")
         ]
 
     def execute(self, module, input):
         msg = u"Nicht aktiv"
 
-        if getItemState("Auto_Attic_Light").intValue() != 1:
-            soilMoistSensor1 = getItemState("SoilMoistSensor1").intValue() if getItemState("SoilMoistSensor1Enabled") == ON else 1000
-            soilMoistSensor2 = getItemState("SoilMoistSensor2").intValue() if getItemState("SoilMoistSensor2Enabled") == ON else 1000
-            soilMoistSensor3 = getItemState("SoilMoistSensor3").intValue() if getItemState("SoilMoistSensor3Enabled") == ON else 1000
-            soilMoistSensor4 = getItemState("SoilMoistSensor4").intValue() if getItemState("SoilMoistSensor4Enabled") == ON else 1000
+        if getItemState("pOther_Manual_State_Auto_Attic_Light").intValue() != 1:
+            soilMoistSensor1 = getItemState("pIndoor_Plant_Sensor_Device_State1").intValue() if getItemState("pIndoor_Plant_Sensor_Device_Enabled1") == ON else 1000
+            soilMoistSensor2 = getItemState("pIndoor_Plant_Sensor_Device_State2").intValue() if getItemState("pIndoor_Plant_Sensor_Device_Enabled2") == ON else 1000
+            soilMoistSensor3 = getItemState("pIndoor_Plant_Sensor_Device_State3").intValue() if getItemState("pIndoor_Plant_Sensor_Device_Enabled3") == ON else 1000
+            soilMoistSensor4 = getItemState("pIndoor_Plant_Sensor_Device_State4").intValue() if getItemState("pIndoor_Plant_Sensor_Device_Enabled4") == ON else 1000
 
             if soilMoistSensor1 < 380 or soilMoistSensor2 < 380 or soilMoistSensor3 < 380 or soilMoistSensor4 < 380:
                 msg = u"Jetzt Giessen"
@@ -44,33 +45,33 @@ class DetailRule:
             else:
                 msg = u"Feucht genug"
 
-        postUpdateIfChanged("PlantSensorInfo", msg)
+        postUpdateIfChanged("pIndoor_Plant_Sensor_Watering_Info", msg)
 
 @rule("scene_plant_messages.py")
 class EnabledRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("SoilMoistSensor1Enabled"),
-            ItemStateChangeTrigger("SoilMoistSensor2Enabled"),
-            ItemStateChangeTrigger("SoilMoistSensor3Enabled"),
-            ItemStateChangeTrigger("SoilMoistSensor4Enabled"),
-            ItemStateChangeTrigger("SoilMoistSensor5Enabled"),
-            ItemStateChangeTrigger("SoilMoistSensor6Enabled")
+            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Device_Enabled1"),
+            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Device_Enabled2"),
+            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Device_Enabled3"),
+            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Device_Enabled4"),
+            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Device_Enabled5"),
+            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Device_Enabled6")
         ]
 
     def execute(self, module, input):
         active = []
-        if getItemState("SoilMoistSensor1Enabled") == ON:
+        if getItemState("pIndoor_Plant_Sensor_Device_Enabled1") == ON:
             active.append("1")
-        if getItemState("SoilMoistSensor2Enabled") == ON:
+        if getItemState("pIndoor_Plant_Sensor_Device_Enabled2") == ON:
             active.append("2")
-        if getItemState("SoilMoistSensor3Enabled") == ON:
+        if getItemState("pIndoor_Plant_Sensor_Device_Enabled3") == ON:
             active.append("3")
-        if getItemState("SoilMoistSensor4Enabled") == ON:
+        if getItemState("pIndoor_Plant_Sensor_Device_Enabled4") == ON:
             active.append("4")
-        if getItemState("SoilMoistSensor5Enabled") == ON:
+        if getItemState("pIndoor_Plant_Sensor_Device_Enabled5") == ON:
             active.append("5")
-        if getItemState("SoilMoistSensor6Enabled") == ON:
+        if getItemState("pIndoor_Plant_Sensor_Device_Enabled6") == ON:
             active.append("6")
-        postUpdateIfChanged("SoilMoistSensorInfo", u", ".join(active)) 
+        postUpdateIfChanged("pIndoor_Plant_Sensor_Activation_Info", u", ".join(active)) 
             

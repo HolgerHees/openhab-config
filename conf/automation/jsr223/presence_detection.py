@@ -5,8 +5,8 @@ from core.triggers import ItemStateChangeTrigger
 class PresenceCheckRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("State_Holger_Presence"),
-            ItemStateChangeTrigger("State_Sandra_Presence")
+            ItemStateChangeTrigger("pOther_Presence_Holger_State"),
+            ItemStateChangeTrigger("pOther_Presence_Sandra_State")
         ]
         
         self.skippedStates = {}
@@ -17,7 +17,7 @@ class PresenceCheckRule:
 
         # sometimes, phones are losing wifi connections because of their sleep mode
         if itemState == OFF:
-            if itemLastChangeOlderThen("Door_GF_Corridor",getNow().minusMinutes(30)):
+            if itemLastChangeOlderThen("pGF_Corridor_Openingcontact_Door_State",getNow().minusMinutes(30)):
                 self.skippedStates[itemName] = True
                 sendNotification(u"Phone", u"Skipped state {} for {}".format(itemState,itemName), recipients = ['bot_holger'])
                 return
@@ -29,26 +29,26 @@ class PresenceCheckRule:
           
         #sendNotificationToAllAdmins(u"{}".format(itemName), u"{}".format(itemState))
         
-        holgerPhone = itemState if itemName == "State_Holger_Presence" else getItemState("State_Holger_Presence")
-        sandraPhone = itemState if itemName == "State_Sandra_Presence" else getItemState("State_Sandra_Presence")
+        holgerPhone = itemState if itemName == "pOther_Presence_Holger_State" else getItemState("pOther_Presence_Holger_State")
+        sandraPhone = itemState if itemName == "pOther_Presence_Sandra_State" else getItemState("pOther_Presence_Sandra_State")
         
-        bot = 'bot_holger' if itemName == "State_Holger_Presence" else 'bot_sandra'
+        bot = 'bot_holger' if itemName == "pOther_Presence_Holger_State" else 'bot_sandra'
         
         if holgerPhone == ON or sandraPhone == ON:
             # only possible if we are away
-            if getItemState("State_Presence").intValue() == 0:
-                postUpdate("State_Presence",1)
+            if getItemState("pOther_Presence_State").intValue() == 0:
+                postUpdate("pOther_Presence_State",1)
         else:
             # only possible if we are present and not sleeping
-            if getItemState("State_Presence").intValue() == 1:
-                postUpdate("State_Presence",0)
+            if getItemState("pOther_Presence_State").intValue() == 1:
+                postUpdate("pOther_Presence_State",0)
 
         if itemState == ON:
             sendNotification(u"Tür", u"Willkommen", recipients = [bot])
         else:
             if holgerPhone == OFF and sandraPhone == OFF:
                 lightMsg = u" - LICHT an" if getItemState("gIndoor_Lights") != OFF else u""
-                windowMsg = u" - FENSTER offen" if getItemState("Openingcontacts") != CLOSED else u""
+                windowMsg = u" - FENSTER offen" if getItemState("gOpeningcontacts") != CLOSED else u""
                 sendNotification(u"Tür", u"Auf Wiedersehen{}{}".format(lightMsg,windowMsg), recipients = [bot])
             else:
                 sendNotification(u"Tür", u"Auf Wiedersehen", recipients = [bot])
@@ -57,17 +57,17 @@ class PresenceCheckRule:
 class WakeupRule:
     def __init__(self):
         self.triggers = [
-            #ItemStateChangeTrigger("Motiondetector_GF_Corridor",state="OPEN"),
-            #ItemStateChangeTrigger("Motiondetector_GF_Livingroom",state="OPEN"),
-            #ItemStateChangeTrigger("Motiondetector_FF_Corridor",state="OPEN"),
+            #ItemStateChangeTrigger("pGF_Corridor_Motiondetector_State",state="OPEN"),
+            #ItemStateChangeTrigger("pGF_Livingroom_Motiondetector_State",state="OPEN"),
+            #ItemStateChangeTrigger("pFF_Corridor_Motiondetector_State",state="OPEN"),
             ItemStateChangeTrigger("gGF_Lights",state="ON"),
             ItemStateChangeTrigger("gGF_Shutters",state="0")
         ]
         self.checkTimer = None
         
     def wakeup(self):
-        if getItemState("State_Presence").intValue() == 2:
-            postUpdate("State_Presence", 1)
+        if getItemState("pOther_Presence_State").intValue() == 2:
+            postUpdate("pOther_Presence_State", 1)
             sendNotification(u"System", u"Guten Morgen")
 
     def delayedWakeup(self, checkCounter ):
@@ -89,9 +89,9 @@ class WakeupRule:
         
     def execute(self, module, input):        
         # only possible if we are sleeping
-        if getItemState("State_Presence").intValue() == 2:
+        if getItemState("pOther_Presence_State").intValue() == 2:
             # sometimes the "gGF_Lights" state switches back and forth for a couple of milliseconds when set "gGF_Lights" state to OFF
-            #if itemLastChangeOlderThen("State_Presence",getNow().minusSeconds(5)):
+            #if itemLastChangeOlderThen("pOther_Presence_State",getNow().minusSeconds(5)):
             if input['event'].getItemName() == "gGF_Shutters":
                 if self.checkTimer != None:
                     self.checkTimer.cancel()
@@ -103,11 +103,11 @@ class WakeupRule:
 @rule("presence_detection.py") 
 class SleepingRule:
     def __init__(self):
-        self.triggers = [ ItemStateChangeTrigger("Scene4",state="ON") ]
+        self.triggers = [ ItemStateChangeTrigger("pOther_Scene4",state="ON") ]
 
     def execute(self, module, input):
         # only possible if we are present
-        if getItemState("State_Presence").intValue() == 1:
-            postUpdate("State_Presence", 2)
+        if getItemState("pOther_Presence_State").intValue() == 1:
+            postUpdate("pOther_Presence_State", 2)
             
-        postUpdate("Scene4", OFF)
+        postUpdate("pOther_Scene4", OFF)
