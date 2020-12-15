@@ -1,87 +1,101 @@
-//########### TEMPERATURE ##########
-Number Temperature_GF_Guesttoilet_Raw              { channel="knx:device:bridge:sensors_ff:temperatureGuesttoilet" }
-Number Temperature_GF_Guesttoilet     "Gäste WC [%.1f °C]"                <selftemperature> (gPersistance_Chart,gPersistance_History,lGF_Guesttoilet) ["Measurement","Temperature"]
-Number Humidity_GF_Guesttoilet_Raw              { channel="knx:device:bridge:sensors_ff:humidityGuesttoilet" }
-Number Humidity_GF_Guesttoilet                     "Gäste WC [%.1f %%]"                <chart> (gPersistance_Chart,gPersistance_History,lGF_Guesttoilet) ["Measurement","Humidity"]
-String Air_GF_Guesttoilet_Message                 "Gäste WC [%s]"            <selftemperature>
+// **** AIR SENSORS ****
+Group  eGF_Guesttoilet_Air_Sensor     "Luftsensor"            <selfinfo>        (lGF_Guesttoilet) ["Sensor"]
+Number Temperature_GF_Guesttoilet_Raw                                           (eGF_Guesttoilet_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_ff:temperatureGuesttoilet" }
+Number Temperature_GF_Guesttoilet     "Temperatur [%.1f °C]"  <selftemperature> (eGF_Guesttoilet_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Temperature"]
+Number Humidity_GF_Guesttoilet_Raw                                              (eGF_Guesttoilet_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_ff:humidityGuesttoilet" }
+Number Humidity_GF_Guesttoilet        "Luftfeuchtigkeit [%.1f %%]" <chart>      (eGF_Guesttoilet_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
+String Air_GF_Guesttoilet_Message     "Luft [%s]"             <selftemperature> (eGF_Guesttoilet_Air_Sensor) ["Status"]
 
-Number Temperature_GF_Utilityroom_Raw          { channel="knx:device:bridge:sensors_ff:temperatureUtilityroom" }
-Number Temperature_GF_Utilityroom "HWR [%.1f °C]"                    <selftemperature> (gPersistance_Chart,gPersistance_History,lGF_Utilityroom) ["Measurement","Temperature"]
-Number Humidity_GF_Utilityroom_Raw          { channel="knx:device:bridge:sensors_ff:humidityUtilityroom" }
-Number Humidity_GF_Utilityroom                 "HWR [%.1f %%]"                    <chart> (gPersistance_Chart,gPersistance_History,lGF_Utilityroom) ["Measurement","Humidity"]
-String Air_GF_Utilityroom_Message             "HWR [%s]"                <selftemperature>
+Group  eGF_Utilityroom_Air_Sensor     "Luftsensor"            <selfinfo>        (lGF_Utilityroom) ["Sensor"]
+Number Temperature_GF_Utilityroom_Raw                                           (eGF_Utilityroom_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_ff:temperatureUtilityroom" }
+Number Temperature_GF_Utilityroom     "Temperatur [%.1f °C]"  <selftemperature> (eGF_Utilityroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Temperature"]
+Number Humidity_GF_Utilityroom_Raw                                              (eGF_Utilityroom_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_ff:humidityUtilityroom" }
+Number Humidity_GF_Utilityroom        "Luftfeuchtigkeit [%.1f %%]" <chart>      (eGF_Utilityroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
+String Air_GF_Utilityroom_Message     "Luft [%s]"             <selftemperature> (eGF_Guesttoilet_Air_Sensor) ["Status"]
 
-Number Temperature_GF_Boxroom_Raw              { channel="knx:device:bridge:sensors_ff:temperatureBoxroom" }
-Number Temperature_GF_Boxroom     "Abstellkammer [%.1f °C]"            <selftemperature> (gPersistance_Chart,gPersistance_History,lGF_Boxroom) ["Measurement","Temperature"]
-Number Humidity_GF_Boxroom_Raw              { channel="knx:device:bridge:sensors_ff:humidityBoxroom" }
-Number Humidity_GF_Boxroom                     "Abstellkammer [%.1f %%]"            <chart> (gPersistance_Chart,gPersistance_History,lGF_Boxroom) ["Measurement","Humidity"]
-String Air_GF_Boxroom_Message                 "Abstellkammer [%s]"    <selftemperature>
+Group  eGF_Boxroom_Air_Sensor         "Luftsensor"            <selfinfo>        (lGF_Boxroom) ["Sensor"]
+Number Temperature_GF_Boxroom_Raw                                               (eGF_Boxroom_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_ff:temperatureBoxroom" }
+Number Temperature_GF_Boxroom         "Temperatur [%.1f °C]"  <selftemperature> (eGF_Boxroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Temperature"]
+Number Humidity_GF_Boxroom_Raw                                                  (eGF_Boxroom_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_ff:humidityBoxroom" }
+Number Humidity_GF_Boxroom            "Luftfeuchtigkeit [%.1f %%]" <chart>      (eGF_Boxroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
+String Air_GF_Boxroom_Message         "Luft [%s]"             <selftemperature> (eGF_Boxroom_Air_Sensor) ["Status"]
 
-Number Temperature_GF_Livingroom_Raw        { channel="knx:device:bridge:sensors_ff:temperatureLivingroom" }
-Number Temperature_GF_Livingroom "Wohnzimmer [%.1f °C]"    <selftemperature> (gPersistance_Chart,gPersistance_History,lGF_Livingroom) ["Measurement","Temperature"]
-Number Humidity_GF_Livingroom_Raw             { channel="knx:device:bridge:sensors_ff:humidityLivingroom" }
-Number Humidity_GF_Livingroom                 "Wohnzimmer [%.1f %%]"            <chart> (gPersistance_Chart,gPersistance_History,lGF_Livingroom) ["Measurement","Humidity"]
-String Air_GF_Livingroom_Message             "Wohnzimmer [%s]"        <selftemperature>
+Group  eGF_Livingroom_Air_Sensor      "Luftsensor"            <selfinfo>        (lGF_Livingroom) ["Sensor"]
+Number Temperature_GF_Livingroom_Raw                                            (eGF_Livingroom_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_ff:temperatureLivingroom" }
+Number Temperature_GF_Livingroom      "Temperatur [%.1f °C]"  <selftemperature> (eGF_Livingroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Temperature"]
+Number Humidity_GF_Livingroom_Raw                                               (eGF_Livingroom_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_ff:humidityLivingroom" }
+Number Humidity_GF_Livingroom         "Luftfeuchtigkeit [%.1f %%]" <chart>      (eGF_Livingroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
+String Air_GF_Livingroom_Message      "Luft [%s]"             <selftemperature> (eGF_Livingroom_Air_Sensor) ["Status"]
 
-Number Temperature_GF_Guestroom_Raw          { channel="knx:device:bridge:sensors_ff:temperatureGuestroom" }
-Number Temperature_GF_Guestroom "Gästezimmer [%.1f °C]"            <selftemperature> (gPersistance_Chart,gPersistance_History,lGF_Guestroom) ["Measurement","Temperature"]
-Number Humidity_GF_Guestroom_Raw              { channel="knx:device:bridge:sensors_ff:humidityGuestroom" }
-Number Humidity_GF_Guestroom                 "Gästezimmer [%.1f %%]"            <chart> (gPersistance_Chart,gPersistance_History,lGF_Guestroom) ["Measurement","Humidity"]
-String Air_GF_Guestroom_Message             "Gästezimmer [%s]"        <selftemperature>
+Group  eGF_Guestroom_Air_Sensor       "Luftsensor"            <selfinfo>        (lGF_Guestroom) ["Sensor"]
+Number Temperature_GF_Guestroom_Raw                                             (eGF_Guestroom_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_ff:temperatureGuestroom" }
+Number Temperature_GF_Guestroom       "Temperatur [%.1f °C]"  <selftemperature> (eGF_Guestroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Temperature"]
+Number Humidity_GF_Guestroom_Raw                                                (eGF_Guestroom_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_ff:humidityGuestroom" }
+Number Humidity_GF_Guestroom          "Luftfeuchtigkeit [%.1f %%]" <chart>      (eGF_Guestroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
+String Air_GF_Guestroom_Message       "Luft [%s]"             <selftemperature> (eGF_Guestroom_Air_Sensor) ["Status"]
 
-Number Temperature_GF_Corridor_Raw              { channel="knx:device:bridge:sensors_ff:temperatureFloor" }
-Number Temperature_GF_Corridor     "Flur unten [%.1f °C]"            <selftemperature> (gPersistance_Chart,gPersistance_History,lGF_Corridor) ["Measurement","Temperature"]
-Number Humidity_GF_Corridor_Raw                  { channel="knx:device:bridge:sensors_ff:humidityFloor" }
-Number Humidity_GF_Corridor                     "Flur unten [%.1f %%]"            <chart> (gPersistance_Chart,gPersistance_History,lGF_Corridor) ["Measurement","Humidity"]
-String Air_GF_Corridor_Message                 "Flur EG [%s]"            <selftemperature>
+Group  eGF_Corridor_Air_Sensor        "Luftsensor"            <selfinfo>        (lGF_Corridor) ["Sensor"]
+Number Temperature_GF_Corridor_Raw                                              (eGF_Corridor_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_ff:temperatureFloor" }
+Number Temperature_GF_Corridor        "Temperatur [%.1f °C]"  <selftemperature> (eGF_Corridor_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Temperature"]
+Number Humidity_GF_Corridor_Raw                                                 (eGF_Corridor_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_ff:humidityFloor" }
+Number Humidity_GF_Corridor           "Luftfeuchtigkeit [%.1f %%]" <chart>      (eGF_Corridor_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
+String Air_GF_Corridor_Message        "Luft [%s]"             <selftemperature> (eGF_Corridor_Air_Sensor) ["Status"]
 
-Number Temperature_GF_Garage_Raw              { channel="knx:device:bridge:sensors_ff:temperatureGarage" }
-Number Temperature_GF_Garage     "Schuppen [%.1f °C]"                <selftemperature> (gPersistance_Chart,gPersistance_History,lGF_Garage) ["Measurement","Temperature"]
-Number Humidity_GF_Garage_Raw                  { channel="knx:device:bridge:sensors_ff:humidityGarage" }
-Number Humidity_GF_Garage                     "Schuppen [%.1f %%]"                <chart> (gPersistance_Chart,gPersistance_History,lGF_Garage) ["Measurement","Humidity"]
-String Air_GF_Garage_Message                 "Schuppen [%s]"            <selftemperature>
+Group  eGF_Garage_Air_Sensor          "Luftsensor"            <selfinfo>        (lGF_Garage) ["Sensor"]
+Number Temperature_GF_Garage_Raw                                                (eGF_Garage_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_ff:temperatureGarage" }
+Number Temperature_GF_Garage          "Temperatur [%.1f °C]"  <selftemperature> (eGF_Garage_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Temperature"]
+Number Humidity_GF_Garage_Raw                                                   (eGF_Garage_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_ff:humidityGarage" }
+Number Humidity_GF_Garage             "Luftfeuchtigkeit [%.1f %%]" <chart>      (eGF_Garage_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
+String Air_GF_Garage_Message          "Luft [%s]"             <selftemperature> (eGF_Garage_Air_Sensor) ["Status"]
 
-Number Temperature_FF_Bathroom_Raw          { channel="knx:device:bridge:sensors_sf:temperatureBathroom" }
-Number Temperature_FF_Bathroom     "Badezimmer [%.1f °C]"            <selftemperature> (gPersistance_Chart,gPersistance_History,lFF_Bathroom) ["Measurement","Temperature"]
-Number Humidity_FF_Bathroom_Raw              { channel="knx:device:bridge:sensors_sf:humidityBathroom" }
-Number Humidity_FF_Bathroom                 "Badezimmer [%.1f %%]"            <chart> (gPersistance_Chart,gPersistance_History,lFF_Bathroom) ["Measurement","Humidity"]
-String Air_FF_Bathroom_Message                 "Badezimmer [%s]"        <selftemperature>
+Group  eFF_Bathroom_Air_Sensor        "Luftsensor"            <selfinfo>        (lFF_Bathroom) ["Sensor"]
+Number Temperature_FF_Bathroom_Raw                                              (eFF_Bathroom_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_sf:temperatureBathroom" }
+Number Temperature_FF_Bathroom        "Temperatur [%.1f °C]"  <selftemperature> (eFF_Bathroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Temperature"]
+Number Humidity_FF_Bathroom_Raw                                                 (eFF_Bathroom_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_sf:humidityBathroom" }
+Number Humidity_FF_Bathroom           "Luftfeuchtigkeit [%.1f %%]" <chart>      (eFF_Bathroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
+String Air_FF_Bathroom_Message        "Luft [%s]"             <selftemperature> (eFF_Bathroom_Air_Sensor) ["Status"]
 
-Number Temperature_FF_Dressingroom_Raw      { channel="knx:device:bridge:sensors_sf:temperatureDressingroom" }
-Number Temperature_FF_Dressingroom "Ankleide [%.1f °C]"            <selftemperature> (gPersistance_Chart,gPersistance_History,lFF_Dressingroom) ["Measurement","Temperature"]
-Number Humidity_FF_Dressingroom_Raw          { channel="knx:device:bridge:sensors_sf:humidityDressingroom" }
-Number Humidity_FF_Dressingroom             "Ankleide [%.1f %%]"                <chart> (gPersistance_Chart,gPersistance_History,lFF_Dressingroom) ["Measurement","Humidity"]
-String Air_FF_Dressingroom_Message             "Ankleide [%s]"            <selftemperature>
+Group  eFF_Dressingroom_Air_Sensor    "Luftsensor"            <selfinfo>        (lFF_Dressingroom) ["Sensor"]
+Number Temperature_FF_Dressingroom_Raw                                          (eFF_Dressingroom_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_sf:temperatureDressingroom" }
+Number Temperature_FF_Dressingroom    "Temperatur [%.1f °C]"  <selftemperature> (eFF_Dressingroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Temperature"]
+Number Humidity_FF_Dressingroom_Raw                                             (eFF_Dressingroom_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_sf:humidityDressingroom" }
+Number Humidity_FF_Dressingroom       "Luftfeuchtigkeit [%.1f %%]" <chart>      (eFF_Dressingroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
+String Air_FF_Dressingroom_Message    "Luft [%s]"             <selftemperature> (eFF_Dressingroom_Air_Sensor) ["Status"]
 
-Number Temperature_FF_Bedroom_Raw              { channel="knx:device:bridge:sensors_sf:temperatureBedroom" }
-Number Temperature_FF_Bedroom     "Schlafzimmer [%.1f °C]"            <selftemperature> (gPersistance_Chart,gPersistance_History,lFF_Bedroom) ["Measurement","Temperature"]
-Number Humidity_FF_Bedroom_Raw              { channel="knx:device:bridge:sensors_sf:humidityBedroom" }
-Number Humidity_FF_Bedroom                     "Schlafzimmer [%.1f %%]"            <chart> (gPersistance_Chart,gPersistance_History,lFF_Bedroom) ["Measurement","Humidity"]
-String Air_FF_Bedroom_Message                 "Schlafzimmer [%s]"        <selftemperature>
+Group  eFF_Bedroom_Air_Sensor         "Luftsensor"            <selfinfo>        (lFF_Bedroom) ["Sensor"]
+Number Temperature_FF_Bedroom_Raw                                               (eFF_Bedroom_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_sf:temperatureBedroom" }
+Number Temperature_FF_Bedroom         "Temperatur [%.1f °C]"  <selftemperature> (eFF_Bedroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Temperature"]
+Number Humidity_FF_Bedroom_Raw                                                  (eFF_Bedroom_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_sf:humidityBedroom" }
+Number Humidity_FF_Bedroom            "Luftfeuchtigkeit [%.1f %%]" <chart>      (eFF_Bedroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
+String Air_FF_Bedroom_Message         "Luft [%s]"             <selftemperature> (eFF_Bedroom_Air_Sensor) ["Status"]
 
-Number Temperature_FF_Child1_Raw              { channel="knx:device:bridge:sensors_sf:temperatureChild1" }
-Number Temperature_FF_Child1     "Kindzimmer eins [%.1f °C]"        <selftemperature> (gPersistance_Chart,gPersistance_History,lFF_Child1) ["Measurement","Temperature"]
-Number Humidity_FF_Child1_Raw                  { channel="knx:device:bridge:sensors_sf:humidityChild1" }
-Number Humidity_FF_Child1                     "Kindzimmer eins [%.1f %%]"        <chart> (gPersistance_Chart,gPersistance_History,lFF_Child1) ["Measurement","Humidity"]
-String Air_FF_Child1_Message                 "Kind 1 [%s]"            <selftemperature>
+Group  eFF_Child1_Air_Sensor          "Luftsensor"            <selfinfo>        (lFF_Child1) ["Sensor"]
+Number Temperature_FF_Child1_Raw                                                (eFF_Child1_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_sf:temperatureChild1" }
+Number Temperature_FF_Child1          "Temperatur [%.1f °C]"  <selftemperature> (eFF_Child1_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Temperature"]
+Number Humidity_FF_Child1_Raw                                                   (eFF_Child1_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_sf:humidityChild1" }
+Number Humidity_FF_Child1             "Luftfeuchtigkeit [%.1f %%]" <chart>      (eFF_Child1_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
+String Air_FF_Child1_Message          "Luft [%s]"             <selftemperature> (eFF_Child1_Air_Sensor) ["Status"]
 
-Number Temperature_FF_Child2_Raw              { channel="knx:device:bridge:sensors_sf:temperatureChild2" }
-Number Temperature_FF_Child2    "Kindzimmer zwei [%.1f °C]"        <selftemperature> (gPersistance_Chart,gPersistance_History,lFF_Child2) ["Measurement","Temperature"]
-Number Humidity_FF_Child2_Raw                  { channel="knx:device:bridge:sensors_sf:humidityChild2" }
-Number Humidity_FF_Child2                     "Kindzimmer zwei [%.1f %%]"        <chart> (gPersistance_Chart,gPersistance_History,lFF_Child2) ["Measurement","Humidity"]
-String Air_FF_Child2_Message                 "Kind 2 [%s]"            <selftemperature>
+Group  eFF_Child2_Air_Sensor          "Luftsensor"            <selfinfo>        (lFF_Child2) ["Sensor"]
+Number Temperature_FF_Child2_Raw                                                (eFF_Child2_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_sf:temperatureChild2" }
+Number Temperature_FF_Child2          "Temperatur [%.1f °C]"  <selftemperature> (eFF_Child2_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Temperature"]
+Number Humidity_FF_Child2_Raw                                                   (eFF_Child2_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_sf:humidityChild2" }
+Number Humidity_FF_Child2             "Luftfeuchtigkeit [%.1f %%]" <chart>      (eFF_Child2_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
+String Air_FF_Child2_Message          "Luft [%s]"             <selftemperature> (eFF_Child2_Air_Sensor) ["Status"]
 
-Number Temperature_FF_Corridor_Raw              { channel="knx:device:bridge:sensors_sf:temperatureFloor" }
-Number Temperature_FF_Corridor     "Flur oben [%.1f °C]"                <selftemperature> (gPersistance_Chart,gPersistance_History,lFF_Corridor) ["Measurement","Temperature"]
-Number Humidity_FF_Corridor_Raw                  { channel="knx:device:bridge:sensors_sf:humidityFloor" }
-Number Humidity_FF_Corridor                    "Flur oben [%.1f %%]"                <chart> (gPersistance_Chart,gPersistance_History,lFF_Corridor) ["Measurement","Humidity"]
-String Air_FF_Corridor_Message                 "Flur OG [%s]"            <selftemperature>
+Group  eFF_Corridor_Air_Sensor        "Luftsensor"            <selfinfo>        (lFF_Corridor) ["Sensor"]
+Number Temperature_FF_Corridor_Raw                                              (eFF_Corridor_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_sf:temperatureFloor" }
+Number Temperature_FF_Corridor        "Temperatur [%.1f °C]"  <selftemperature> (eFF_Corridor_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Temperature"]
+Number Humidity_FF_Corridor_Raw                                                 (eFF_Corridor_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_sf:humidityFloor" }
+Number Humidity_FF_Corridor           "Luftfeuchtigkeit [%.1f %%]" <chart>      (eFF_Corridor_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
+String Air_FF_Corridor_Message        "Luft [%s]"             <selftemperature> (eFF_Corridor_Air_Sensor) ["Status"]
 
-Number Temperature_FF_Attic_Raw              { channel="knx:device:bridge:sensors_sf:temperatureAttic" }
-Number Temperature_FF_Attic     "Dachboden [%.1f °C]"                <selftemperature> (gPersistance_Chart,gPersistance_History,lFF_Attic) ["Measurement","Temperature"]
-Number Humidity_FF_Attic_Raw                  { channel="knx:device:bridge:sensors_sf:humidityAttic" }
-Number Humidity_FF_Attic                     "Dachboden [%.1f %%]"                <chart> (gPersistance_Chart,gPersistance_History,lFF_Attic) ["Measurement","Humidity"]
-String Air_FF_Attic_Message                  "Dachboden [%s]"        <selftemperature>
+Group  eFF_Attic_Air_Sensor           "Luftsensor"            <selfinfo>        (lFF_Attic) ["Sensor"]
+Number Temperature_FF_Attic_Raw                                                 (eFF_Attic_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_sf:temperatureAttic" }
+Number Temperature_FF_Attic           "Temperatur [%.1f °C]"  <selftemperature> (eFF_Attic_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Temperature"]
+Number Humidity_FF_Attic_Raw                                                    (eFF_Attic_Air_Sensor) ["Point"] { channel="knx:device:bridge:sensors_sf:humidityAttic" }
+Number Humidity_FF_Attic              "Luftfeuchtigkeit [%.1f %%]" <chart>      (eFF_Attic_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
+String Air_FF_Attic_Message           "Luft [%s]"             <selftemperature> (eFF_Attic_Air_Sensor) ["Status"]
 
 // **** PLANT SENSORS ****
 Group eIndoor_Plant_Sensor "Blumensensor" <selfinfo> (lIndoor) ["Sensor"]

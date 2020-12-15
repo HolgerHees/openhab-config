@@ -612,15 +612,15 @@ sitemap haus label="Main Menu"
                         Switch item=pGF_Utilityroom_Heating_Operating_Mode label="Betrieb" mappings=[1.0="WW", 2.0="HZ", 3.0="RD"]  visibility=[pGF_Utilityroom_Heating_Auto_Mode==0]
                         Text item=pGF_Utilityroom_Heating_Operating_Mode visibility=[pGF_Utilityroom_Heating_Auto_Mode==1]
                         Text label="Komforttemperaturen" icon="selfheating"{
-                            Setpoint item=Temperature_GF_Guesttoilet_Target label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=Temperature_GF_Livingroom_Target label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=Temperature_GF_Guestroom_Target label="Gästezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=Temperature_GF_Corridor_Target label="Flur unten [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=Temperature_GF_Corridor_Target label="Flur oben [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=Temperature_GF_Child1_Target label="Kind 1 [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=Temperature_GF_Child2_Target label="Kind 2 [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=Temperature_GF_Bedroom_Target label="Schlafzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=Temperature_GF_Bathroom_Target label="Badezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pGF_Guesttoilet_Heating_Temperature_Target label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pGF_Livingroom_Heating_Temperature_Target label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pGF_Guestroom_Heating_Temperature_Target label="Gästezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pGF_Corridor_Heating_Temperature_Target label="Flur unten [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pFF_Corridor_Heating_Temperature_Target label="Flur oben [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pFF_Child1_Heating_Temperature_Target label="Kind 1 [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pFF_Child2_Heating_Temperature_Target label="Kind 2 [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pFF_Bedroom_Heating_Temperature_Target label="Schlafzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pFF_Bathroom_Heating_Temperature_Target label="Badezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text label="Heizkreise" icon="selfheating"{
                             Switch item=pGF_Livingroom_Heating_Circuit label="WZ Kreis"
