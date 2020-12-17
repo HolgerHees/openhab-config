@@ -4,7 +4,7 @@ Switch pGF_Corridor_Heating_Circuit                 "Kreis"                <self
 Switch pGF_Corridor_Heating_Demand                  "Bedarf [%d]"          <selfsettings> (eGF_Corridor_Heating) ["Point"]
 Number pGF_Corridor_Heating_Charged                 "Geladen"              <selfsettings> (eGF_Corridor_Heating) ["Point"]
 Number pGF_Corridor_Heating_Temperature_Target      "Ziel - aktiv"         <selfsettings> (eGF_Corridor_Heating) ["Point"]
-Number pGF_Corridor_Heating_Temperature_Desired     "Ziel [%.1f °C]"       <selftemperature> (eGF_Corridor_Heating) ["Setpoint","Temperature"]
+Number pGF_Corridor_Heating_Temperature_Desired     "Ziel [%.1f °C]"       <selftemperature> (eGF_Corridor_Heating) ["Setpoint"]
 
 // **** GF GUESTTOILET ****
 Group  eGF_Guesttoilet_Heating                      "Heizung"              <selfinfo>     (lGF_Guesttoilet) ["RadiatorControl"]
@@ -13,7 +13,7 @@ Switch pGF_Guesttoilet_Heating_HK                   "HK"                   <self
 Switch pGF_Guesttoilet_Heating_Demand               "Bedarf"               <selfsettings> (eGF_Guesttoilet_Heating) ["Point"]
 Number pGF_Guesttoilet_Heating_Charged              "Geladen"              <selfsettings> (eGF_Guesttoilet_Heating) ["Point"]
 Number pGF_Guesttoilet_Heating_Temperature_Target   "Ziel - aktiv"         <selfsettings> (eGF_Guesttoilet_Heating) ["Point"]
-Number pGF_Guesttoilet_Heating_Temperature_Desired  "Ziel [%.1f °C]"       <selftemperature> (eGF_Guesttoilet_Heating)  ["Setpoint","Temperature"]
+Number pGF_Guesttoilet_Heating_Temperature_Desired  "Ziel [%.1f °C]"       <selftemperature> (eGF_Guesttoilet_Heating)  ["Setpoint"]
 
 // **** GF LIVINGROOM ****
 Group  eGF_Livingroom_Heating                       "Heizung"              <selfinfo>     (lGF_Livingroom) ["RadiatorControl"]
@@ -21,7 +21,7 @@ Switch pGF_Livingroom_Heating_Circuit               "Kreis"                <self
 Switch pGF_Livingroom_Heating_Demand                "Bedarf [%d]"          <selfsettings> (eGF_Livingroom_Heating) ["Point"]
 Number pGF_Livingroom_Heating_Charged               "Geladen"              <selfsettings> (eGF_Livingroom_Heating) ["Point"]
 Number pGF_Livingroom_Heating_Temperature_Target    "Ziel - aktiv"         <selfsettings> (eGF_Livingroom_Heating) ["Point"]
-Number pGF_Livingroom_Heating_Temperature_Desired   "Ziel [%.1f °C]"       <selftemperature> (eGF_Livingroom_Heating) ["Setpoint","Temperature"]
+Number pGF_Livingroom_Heating_Temperature_Desired   "Ziel [%.1f °C]"       <selftemperature> (eGF_Livingroom_Heating) ["Setpoint"]
 
 // **** GF GUESTROOM ****
 Group  eGF_Guestroom_Heating                        "Heizung"              <selfinfo>     (lGF_Guestroom) ["RadiatorControl"]
@@ -29,7 +29,7 @@ Switch pGF_Guestroom_Heating_Circuit                "Gästezimmer Kreis"    <sel
 Switch pGF_Guestroom_Heating_Demand                 "Bedarf [%d]"          <selfsettings> (eGF_Guestroom_Heating) ["Point"]
 Number pGF_Guestroom_Heating_Charged                "Gästezimmer Geladen"  <selfsettings> (eGF_Guestroom_Heating) ["Point"]
 Number pGF_Guestroom_Heating_Temperature_Target     "Ziel - aktiv"         <selfsettings> (eGF_Guestroom_Heating) ["Point"]
-Number pGF_Guestroom_Heating_Temperature_Desired    "Ziel [%.1f °C]"       <selftemperature> (eGF_Guestroom_Heating) ["Setpoint","Temperature"]
+Number pGF_Guestroom_Heating_Temperature_Desired    "Ziel [%.1f °C]"       <selftemperature> (eGF_Guestroom_Heating) ["Setpoint"]
 
 // **** FF CORRIDOR ****
 Group  eFF_Corridor_Heating                         "Heizung"              <selfinfo>     (lFF_Corridor) ["RadiatorControl"]
@@ -37,7 +37,7 @@ Switch pFF_Corridor_Heating_Circuit                 "Kreis"                <self
 Switch pFF_Corridor_Heating_Demand                  "Bedarf [%d]"          <selfsettings> (eFF_Corridor_Heating) ["Point"]
 Number pFF_Corridor_Heating_Charged                 "Geladen"              <selfsettings> (eFF_Corridor_Heating) ["Point"]
 Number pFF_Corridor_Heating_Temperature_Target      "Ziel - aktiv"         <selfsettings> (eFF_Corridor_Heating) ["Point"]
-Number pFF_Corridor_Heating_Temperature_Desired     "Ziel [%.1f °C]"       <selftemperature> (eFF_Corridor_Heating) ["Setpoint","Temperature"]
+Number pFF_Corridor_Heating_Temperature_Desired     "Ziel [%.1f °C]"       <selftemperature> (eFF_Corridor_Heating) ["Setpoint"]
 
 // **** FF BATHROOM ****
 Group  eFF_Bathroom_Heating                         "Heizung"              <selfinfo>     (lFF_Bathroom) ["RadiatorControl"]
@@ -46,7 +46,7 @@ Switch pFF_Bathroom_Heating_HK                      "HK"                   <self
 Switch pFF_Bathroom_Heating_Demand                  "Bedarf [%d]"          <selfsettings> (eFF_Bathroom_Heating) ["Point"]
 Number pFF_Bathroom_Heating_Charged                 "Geladen"              <selfsettings> (eFF_Bathroom_Heating) ["Point"]
 Number pFF_Bathroom_Heating_Temperature_Target      "Ziel - aktiv"         <selfsettings> (eFF_Bathroom_Heating) ["Point"]
-Number pFF_Bathroom_Heating_Temperature_Desired     "Ziel [%.1f °C]"       <selftemperature> (eFF_Bathroom_Heating) ["Setpoint","Temperature"]
+Number pFF_Bathroom_Heating_Temperature_Desired     "Ziel [%.1f °C]"       <selftemperature> (eFF_Bathroom_Heating) ["Setpoint"]
 
 // **** FF BEDROOM ****
 Group  eFF_Bedroom_Heating                          "Heizung"              <selfinfo>     (lFF_Bedroom) ["RadiatorControl"]
@@ -54,7 +54,7 @@ Switch pFF_Bedroom_Heating_Circuit                  "Kreis"                <self
 Switch pFF_Bedroom_Heating_Demand                   "Bedarf [%d]"          <selfsettings> (eFF_Bedroom_Heating) ["Point"]
 Number pFF_Bedroom_Heating_Charged                  "Geladen"              <selfsettings> (eFF_Bedroom_Heating) ["Point"]
 Number pFF_Bedroom_Heating_Temperature_Target       "Ziel - aktiv"         <selfsettings> (eFF_Bedroom_Heating) ["Point"]
-Number pFF_Bedroom_Heating_Temperature_Desired      "Ziel [%.1f °C]"       <selftemperature> (eFF_Bedroom_Heating) ["Setpoint","Temperature"]
+Number pFF_Bedroom_Heating_Temperature_Desired      "Ziel [%.1f °C]"       <selftemperature> (eFF_Bedroom_Heating) ["Setpoint"]
 
 // **** FF CHILD 1 ****
 Group  eFF_Child1_Heating                           "Heizung"              <selfinfo>     (lFF_Child1) ["RadiatorControl"]
@@ -62,7 +62,7 @@ Switch pFF_Child1_Heating_Circuit                   "Kreis"                <self
 Switch pFF_Child1_Heating_Demand                    "Bedarf [%d]"          <selfsettings> (eFF_Child1_Heating) ["Point"]
 Number pFF_Child1_Heating_Charged                   "Geladen"              <selfsettings> (eFF_Child1_Heating) ["Point"]
 Number pFF_Child1_Heating_Temperature_Target        "Ziel - aktiv"         <selfsettings> (eFF_Child1_Heating) ["Point"]
-Number pFF_Child1_Heating_Temperature_Desired       "Ziel [%.1f °C]"       <selftemperature> (eFF_Child1_Heating) ["Setpoint","Temperature"]
+Number pFF_Child1_Heating_Temperature_Desired       "Ziel [%.1f °C]"       <selftemperature> (eFF_Child1_Heating) ["Setpoint"]
 
 // **** FF CHILD 2 ****
 Group  eFF_Child2_Heating                           "Heizung"              <selfinfo>     (lFF_Child2) ["RadiatorControl"]
@@ -70,7 +70,7 @@ Switch pFF_Child2_Heating_Circuit                   "Kreis"                <self
 Switch pFF_Child2_Heating_Demand                    "Bedarf [%d]"          <selfsettings> (eFF_Child2_Heating) ["Point"]
 Number pFF_Child2_Heating_Charged                   "Geladen"              <selfsettings> (eFF_Child2_Heating) ["Point"]
 Number pFF_Child2_Heating_Temperature_Target        "Ziel - aktiv"         <selfsettings> (eFF_Child2_Heating) ["Point"]
-Number pFF_Child2_Heating_Temperature_Desired       "Ziel [%.1f °C]"       <selftemperature> (eFF_Child2_Heating)["Setpoint","Temperature"]
+Number pFF_Child2_Heating_Temperature_Desired       "Ziel [%.1f °C]"       <selftemperature> (eFF_Child2_Heating)["Setpoint"]
 
 // **** HEATING DEVICE ****
 Group  eGF_Utilityroom_Heating_Boiler                               "Heizterme"                         <selfinfo> (lGF_Utilityroom) ["RadiatorControl"]

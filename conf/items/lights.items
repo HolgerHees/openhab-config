@@ -145,8 +145,8 @@ Switch pOutdoor_Garden_Garage_Light_Powered     "Licht"              <selflight>
 Switch pOutdoor_Garden_Garage_Automatic_Switch	"Automatik"          <selflight> (eOutdoor_Garden_Garage_Light,gOutdoor_Motiondetector_Counter) ["Point"]
 
 //####### OUTDOOR LIGHT LOGIC STATES ########
-Group  eOutdoor_Light_Automatic_Logic           "Schalter"           <selfinfo> (lOutdoor) ["Equipment"]
-Switch pOutdoor_Light_Automatic_Main_Switch     "Gartenlicht autom." <selfinfo> (eOutdoor_Light_Automatic_Logic) ["Point"] { channel="knx:device:bridge:motion_outdoor:main" }
+Group  eOutdoor_Light_Automatic_Logic           "Beleuchtung Steuerung"           <selfinfo> (lOutdoor) ["Equipment"]
+Switch pOutdoor_Light_Automatic_Main_Switch     "Automatik" <selfinfo> (eOutdoor_Light_Automatic_Logic) ["Point"] { channel="knx:device:bridge:motion_outdoor:main" }
 
 
 

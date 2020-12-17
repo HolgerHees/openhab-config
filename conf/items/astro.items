@@ -11,7 +11,7 @@ Number   pOutdoor_Astro_Sun_Elevation     "Elevation [%.2f]"                  <s
 Number   pOutdoor_Astro_Total_Radiation   "Radiation [%.2f]"                  <selfinfo>     (eOutdoor_Astro) ["Point"] { channel="astro:sun:local:radiation#total" }
 Number   pOutdoor_Astro_Diffuse_Radiation "Diffuse Radiation [%.2f]"          <selfinfo>     (eOutdoor_Astro) ["Point"] { channel="astro:sun:local:radiation#diffuse" }
 String   pOutdoor_Astro_Zodiac_Name       "Tierkreis [MAP(zodiac.map):%s]"    <selfinfo>     (eOutdoor_Astro) ["Point"] { channel="astro:sun:local:zodiac#sign" }
-DateTime pOutdoor_Astro_Eclipse_Time      "Sonnenfinsterniss [%1$td.%1$tm.%1$tY %1$tH:%1$tM]" <selfcalendar> ["Point"] { channel="astro:sun:local:eclipse#total" }
+DateTime pOutdoor_Astro_Eclipse_Time      "Sonnenfinsterniss [%1$td.%1$tm.%1$tY %1$tH:%1$tM]" <selfcalendar> (eOutdoor_Astro) ["Point"] { channel="astro:sun:local:eclipse#total" }
 String   pOutdoor_Astro_Season            "Jahreszeit [MAP(season.map):%s]"   <selfinfo>     (eOutdoor_Astro) ["Point"] { channel="astro:sun:local:season#name" }
 DateTime pOutdoor_Astro_Spring_Time       "Frühlinganfang [%1$td.%1$tm.]"     <selfcalendar> (eOutdoor_Astro) ["Point"] { channel="astro:sun:local:season#spring"}
 DateTime pOutdoor_Astro_Summer_Time       "Sommeranfang [%1$td.%1$tm.]"       <selfcalendar> (eOutdoor_Astro) ["Point"] { channel="astro:sun:local:season#summer"}

@@ -20,7 +20,7 @@ Group   eOther_Smoke_Detector                   "Rauchmelder"     <selfinfo> (lO
 Contact pOther_Smoke_Detector_State             "Rauchmelder [MAP(smoke_detector_de.map):%s]" <smoke> (eOther_Smoke_Detector) ["Point"] { channel="knx:device:bridge:other:smokeDetector" }
 
 //####### HELPER SWITCH STATES ######
-Group  eFF_Bedroom_Switches_Long_Pressed        "Schalter"        <selfinfo> (lFF_Livingroom) ["WallSwitch"]
+Group  eFF_Bedroom_Switches_Long_Pressed        "Schalter"        <selfinfo> (lFF_Bedroom) ["WallSwitch"]
 Switch pFF_Bedroom_Switches_Long_Pressed_Left_State "Schlafz. Bett Fenster (lang)" (eFF_Bedroom_Switches_Long_Pressed) ["Switch"] { channel="knx:device:bridge:other:bedroomLeftLongPressed" }
 Switch pFF_Bedroom_Switches_Long_Pressed_Right_State "Schlafz. Bett Wand (lang)" (eFF_Bedroom_Switches_Long_Pressed) ["Switch"] { channel="knx:device:bridge:other:bedroomRightLongPressed" }
 
@@ -74,3 +74,4 @@ Group  eOther_Helper                            "Helper" <selfinfo> (lOther) ["E
 String pOther_Helper_Chart_From                 "Zeitraum" <selfcalendar> (eOther_Helper) ["Point"]
 String pOther_Helper_HabpanelViewer_Control_Cmd "Habpanel Command" <selfautomode> (eOther_Helper) ["Point"]
 String VoiceCommand                             "Sprachbefehl" <recorder> (eOther_Helper) ["Point"]
+String VoiceMessage                             "Sprachnachricht" <recorder> (eOther_Helper) ["Point"]

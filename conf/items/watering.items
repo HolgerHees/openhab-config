@@ -31,7 +31,7 @@ Switch pOutdoor_Streetside_Beds_Watering_Auto    "Automatik"   <selfwater> (eOut
 String pOutdoor_Streetside_Beds_Watering_Info    "Info [%s]"   <selfwater> (eOutdoor_Streetside_Beds_Watering) ["Status"]
 
 // **** WATERING LOGIC ****
-Group  eOutdoor_Watering_Logic                   "Bewässerung" <selfinfo> (lOutdoor) ["Equipment"]
+Group  eOutdoor_Watering_Logic                   "Bewässerung Steuerung" <selfinfo> (lOutdoor) ["Equipment"]
 String pOutdoor_Watering_Logic_Program_State     "Status [%s]" <selfinfo> (eOutdoor_Watering_Logic) ["Point"]
 Number pOutdoor_Watering_Logic_Program_Duration  "Programm Dauer [%d]" <selfruntime> (eOutdoor_Watering_Logic) ["Status"]
 Switch pOutdoor_Watering_Logic_Program_Start     "Programm starten" <selfautomode> (eOutdoor_Watering_Logic) ["Control"]
