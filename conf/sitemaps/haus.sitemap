@@ -844,6 +844,12 @@ sitemap haus label="Main Menu"
                                 Text item=pGF_Guestroom_PrinterTotalMonochromePages
                             }
                         }
+                        Text label="Alexa" {
+                            Frame label="Status" {
+                                Text item=VoiceCommand
+                                Text item=VoiceMessage
+                            }
+                        }
                     }
                 }
             }

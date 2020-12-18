@@ -13,10 +13,10 @@ Group   eGF_Guesttoilet_Openingcontact_Window              "Öffnungssensor" <se
 Contact pGF_Guesttoilet_Openingcontact_Window_State        "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eGF_Guesttoilet_Openingcontact_Window,gPersistance_History,gGF_Sensor_Window)    ["OpenState"] { channel="knx:device:bridge:contacts_window_ff:guestWC" }
 
 // **** GF LIVINGROOM ****
-Group   eGF_Livingroom_Openingcontact_Window_Terrace       "Öffnungssensor" <selfinfo> (lGF_Livingroom) ["Window"]
+Group   eGF_Livingroom_Openingcontact_Window_Terrace       "Öffnungssensor" <selfinfo> (lGF_Livingroom) ["Window"] {synonyms="Terasse"}
 Contact pGF_Livingroom_Openingcontact_Window_Terrace_State "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eGF_Livingroom_Openingcontact_Window_Terrace,gPersistance_History,gGF_Sensor_Window) ["OpenState"] { channel="knx:device:bridge:contacts_window_ff:livingroomTerrace" }
 
-Group   eGF_Livingroom_Openingcontact_Window_Couch         "Öffnungssensor" <selfinfo> (lGF_Livingroom) ["Window"]
+Group   eGF_Livingroom_Openingcontact_Window_Couch         "Öffnungssensor" <selfinfo> (lGF_Livingroom) ["Window"] {synonyms="Couch"}
 Contact pGF_Livingroom_Openingcontact_Window_Couch_State   "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eGF_Livingroom_Openingcontact_Window_Couch,gPersistance_History,gGF_Sensor_Window) ["OpenState"]    { channel="knx:device:bridge:contacts_window_ff:livingroomCouch" }
 
 // **** GF KITCHEN ****

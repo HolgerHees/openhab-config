@@ -73,5 +73,5 @@ Switch pOther_Scene9                            "Scene 9" <selfautomode> (eOther
 Group  eOther_Helper                            "Helper" <selfinfo> (lOther) ["Equipment"]
 String pOther_Helper_Chart_From                 "Zeitraum" <selfcalendar> (eOther_Helper) ["Point"]
 String pOther_Helper_HabpanelViewer_Control_Cmd "Habpanel Command" <selfautomode> (eOther_Helper) ["Point"]
-String VoiceCommand                             "Sprachbefehl" <recorder> (eOther_Helper) ["Point"]
-String VoiceMessage                             "Sprachnachricht" <recorder> (eOther_Helper) ["Point"]
+String VoiceCommand                             "Sprachbefehl [%s]" <recorder> (eOther_Helper) ["Point"]
+String VoiceMessage                             "Sprachnachricht [%s]" <recorder> (eOther_Helper) ["Point"]
