@@ -50,7 +50,7 @@ Color  gGF_Livingroom_Light_Hue_Color           "Farbe"              <colorwheel
 
 Group  eGF_Livingroom_Light_Hue1                "HUE Lampe - Bassbox" <selflight> (lGF_Livingroom)                                      ["Lightbulb"] { synonyms="Bassbox,Couch,Indirekt" }
 Dimmer pGF_Livingroom_Light_Hue1_Brightness     "Indirektes Licht - Bassbox" <selflight> (eGF_Livingroom_Light_Hue1,gGF_Livingroom_Light_Hue_Brightness,gIndoor_Lights,gGF_Lights) ["Setpoint","Light"] { channel="hue:0210:default:lamp1:color"}
-Color  pGF_Livingroom_Light_Hue1_Color          "Farb - Bassbox"     <colorwheel> (eGF_Livingroom_Light_Hue1)                           ["Control","ColorTemperature"] { channel="hue:0210:default:lamp1:color"}
+Color  pGF_Livingroom_Light_Hue1_Color          "Farbe - Bassbox"     <colorwheel> (eGF_Livingroom_Light_Hue1)                           ["Control","ColorTemperature"] { channel="hue:0210:default:lamp1:color"}
 
 Group  eGF_Livingroom_Light_Hue2_3              "HUE Lampe - Stehlampe" <selflight> (lGF_Livingroom)                                    ["Lightbulb"] { synonyms="Stehlampe,Couch,Indirekt" }
 Group  eGF_Livingroom_Light_Hue2                "HUE Lampe - Stehlampe unten" <selflight> (eGF_Livingroom_Light_Hue2_3)                 ["Lightbulb"] { synonyms="unten" }

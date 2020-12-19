@@ -1,5 +1,5 @@
 // **** FRITZBOX ****
-Group   eGF_Corridor_Fritzbox                       "Fritzbox"                                            <selfinfo> (lGF_Corridor) ["Equipment"]
+Group   eGF_Corridor_Fritzbox                       "Fritzbox"                                            <selfinfo> (lGF_Corridor) ["NetworkAppliance"] {synonyms="Internet"}
 
 Contact pGF_Corridor_Fritzbox_DslEnable             "Aktiviert [MAP(network_states.map):%s]"              <selfinfo> (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="dslEnable"}
 String  pGF_Corridor_Fritzbox_DslStatus             "Status [MAP(network_states.map):%s]"                 <selfinfo> (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="dslStatus"}

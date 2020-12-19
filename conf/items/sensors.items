@@ -165,7 +165,7 @@ String pOutdoor_WeatherStation_Wind_Direction_Message "Richtung [%s]" <wind> (eO
 String pOutdoor_WeatherStation_Wind_Message          "Wind [%s]" <wind> (eOutdoor_WeatherStation) ["Point"]
 
 Number pOutdoor_WeatherStation_Dewpoint              "Taupunkt [%.1f °C]" <selftemperature> (eOutdoor_WeatherStation) ["Point"]
-String pOutdoor_WeatherStation_Temperature_Stack     "Temperatur [%s]" <selftemperature> (eOutdoor_WeatherStation) ["Point"]
+String pOutdoor_WeatherStation_Temperature_Stack                          <selftemperature> (eOutdoor_WeatherStation) ["Point"]
 
 Number pOutdoor_WeatherStation_Temperature_Raw       "Temperatur Raw [%.1f °C]" <selftemperature> (eOutdoor_WeatherStation,gWeatherstationInputValues) ["Point"] {channel="mqtt:topic:mosquitto:weatherstation:temperature" }
 Number pOutdoor_WeatherStation_Temperature           "Garten [%.1f °C]" <selftemperature> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History) ["Measurement","Temperature"]

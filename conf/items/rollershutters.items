@@ -9,45 +9,45 @@ Group:Rollershutter:OR(UP, DOWN) gSouth_Shutters	"Süden" <selfrollershutter>
 Group:Rollershutter:OR(UP, DOWN) gWest_Shutters	"Westen" <selfrollershutter>
 
 // **** GF LIVINGROOM ****
-Group  eGF_Livingroom_Shutter_Terrace "Terasse Rollladen" <selfrollershutter> (lGF_Livingroom,lOutdoor_Garden_Terrace) ["Blinds"] {synonyms="Esstisch"}
-Rollershutter pGF_Livingroom_Shutter_Terrace_Control "Terasse" <selfrollershutter> (eGF_Livingroom_Shutter_Terrace,gShutters,gGF_Shutters,gShutters_Count,gGF_Shutters_Count,gWest_Shutters) ["Control"] { channel="knx:device:bridge:shutter_ff:livingroomTerrace" }
+Group  eGF_Livingroom_Shutter_Terrace "Terassen-Rollladen" <selfrollershutter> (lGF_Livingroom,lOutdoor_Garden_Terrace) ["Blinds"] {synonyms="Esstisch,Terasse"}
+Rollershutter pGF_Livingroom_Shutter_Terrace_Control "Terassen-Rollladen" <selfrollershutter> (eGF_Livingroom_Shutter_Terrace,gShutters,gGF_Shutters,gShutters_Count,gGF_Shutters_Count,gWest_Shutters) ["Control"] { channel="knx:device:bridge:shutter_ff:livingroomTerrace" }
 
-Group  eGF_Livingroom_Shutter_Couch "Couch Rollladen" <selfrollershutter> (lGF_Livingroom) ["Blinds"] {synonyms="Couch"}
-Rollershutter pGF_Livingroom_Shutter_Couch_Control "Couch" <selfrollershutter> (eGF_Livingroom_Shutter_Couch,gShutters,gGF_Shutters,gShutters_Count,gGF_Shutters_Count,gWest_Shutters) ["Control"] { channel="knx:device:bridge:shutter_ff:livingroomCouch" }
+Group  eGF_Livingroom_Shutter_Couch "Couch-Rollladen" <selfrollershutter> (lGF_Livingroom) ["Blinds"] {synonyms="Couch"}
+Rollershutter pGF_Livingroom_Shutter_Couch_Control "Couch-Rollladen" <selfrollershutter> (eGF_Livingroom_Shutter_Couch,gShutters,gGF_Shutters,gShutters_Count,gGF_Shutters_Count,gWest_Shutters) ["Control"] { channel="knx:device:bridge:shutter_ff:livingroomCouch" }
 
 // **** GF KITCHEN ****
-Group  eGF_Kitchen_Shutter "Küchen Rollladen" <selfrollershutter> (lGF_Kitchen) ["Blinds"]
-Rollershutter pGF_Kitchen_Shutter_Control "Küche"  <selfrollershutter> (eGF_Kitchen_Shutter,gShutters,gGF_Shutters,gShutters_Count,gGF_Shutters_Count,gWest_Shutters) ["Control"] { channel="knx:device:bridge:shutter_ff:kitchen" }
+Group  eGF_Kitchen_Shutter "Rollladen" <selfrollershutter> (lGF_Kitchen) ["Blinds"]
+Rollershutter pGF_Kitchen_Shutter_Control "Rollladen"  <selfrollershutter> (eGF_Kitchen_Shutter,gShutters,gGF_Shutters,gShutters_Count,gGF_Shutters_Count,gWest_Shutters) ["Control"] { channel="knx:device:bridge:shutter_ff:kitchen" }
 
 // **** GF GUESTROOM ****
-Group  eGF_Guestroom_Shutter "Gästezimmer Rollladen" <selfrollershutter> (lGF_Guestroom) ["Blinds"]
-Rollershutter pGF_Guestroom_Shutter_Control "Gästezimmer"  <selfrollershutter> (eGF_Guestroom_Shutter,gShutters,gGF_Shutters,gShutters_Count,gGF_Shutters_Count) ["Control"] { channel="knx:device:bridge:shutter_ff:guestroom" }
+Group  eGF_Guestroom_Shutter "Rollladen" <selfrollershutter> (lGF_Guestroom) ["Blinds"]
+Rollershutter pGF_Guestroom_Shutter_Control "Rollladen"  <selfrollershutter> (eGF_Guestroom_Shutter,gShutters,gGF_Shutters,gShutters_Count,gGF_Shutters_Count) ["Control"] { channel="knx:device:bridge:shutter_ff:guestroom" }
 
 // **** GF GUESTTOILET ****
-Group  eGF_Guesttoilet_Shutter "Gäste WC Rollladen" <selfrollershutter> (lGF_Guesttoilet) ["Blinds"]
-Rollershutter pGF_Guesttoilet_Shutter_Control "Gäste WC" <selfrollershutter> (eGF_Guesttoilet_Shutter,gShutters,gGF_Shutters,gShutters_Count,gGF_Shutters_Count) ["Control"] { channel="knx:device:bridge:shutter_ff:guestWC" }
+Group  eGF_Guesttoilet_Shutter "Rollladen" <selfrollershutter> (lGF_Guesttoilet) ["Blinds"]
+Rollershutter pGF_Guesttoilet_Shutter_Control "Rollladen" <selfrollershutter> (eGF_Guesttoilet_Shutter,gShutters,gGF_Shutters,gShutters_Count,gGF_Shutters_Count) ["Control"] { channel="knx:device:bridge:shutter_ff:guestWC" }
 
 // **** FF BEDROOM ****
-Group  eFF_Bedroom_Shutter "Schlafzimmer Rollladen" <selfrollershutter> (lFF_Bedroom) ["Blinds"]
-Rollershutter pFF_Bedroom_Shutter_Control "Schlafzimmer" 	<selfrollershutter> (eFF_Bedroom_Shutter,gShutters,gFF_Shutters,gShutters_Count,gFF_Shutters_Count,gWest_Shutters) ["Control"] { channel="knx:device:bridge:shutter_sf:bedroom" }
+Group  eFF_Bedroom_Shutter "Rollladen" <selfrollershutter> (lFF_Bedroom) ["Blinds"]
+Rollershutter pFF_Bedroom_Shutter_Control "Rollladen" 	<selfrollershutter> (eFF_Bedroom_Shutter,gShutters,gFF_Shutters,gShutters_Count,gFF_Shutters_Count,gWest_Shutters) ["Control"] { channel="knx:device:bridge:shutter_sf:bedroom" }
  
 // **** FF BEDROOM ****
-Group  eFF_Dressingroom_Shutter "Ankleide Rollladen" <selfrollershutter> (lFF_Dressingroom) ["Blinds"]
-Rollershutter pFF_Dressingroom_Shutter_Control "Ankleide"  <selfrollershutter>	(eFF_Dressingroom_Shutter,gShutters,gFF_Shutters,gShutters_Count,gFF_Shutters_Count,gSouth_Shutters) ["Control"] { channel="knx:device:bridge:shutter_sf:dressingroom" }
+Group  eFF_Dressingroom_Shutter "Rollladen" <selfrollershutter> (lFF_Dressingroom) ["Blinds"]
+Rollershutter pFF_Dressingroom_Shutter_Control "Rollladen"  <selfrollershutter>	(eFF_Dressingroom_Shutter,gShutters,gFF_Shutters,gShutters_Count,gFF_Shutters_Count,gSouth_Shutters) ["Control"] { channel="knx:device:bridge:shutter_sf:dressingroom" }
 
 // **** FF CHILD 1 ****
-Group  eFF_Child1_Shutter "Kindzimmer 1 Rollladen" <selfrollershutter> (lFF_Child1) ["Blinds"]
-Rollershutter pFF_Child1_Shutter_Control "Kindzimmer 1"  <selfrollershutter> (eFF_Child1_Shutter,gShutters,gFF_Shutters,gShutters_Count,gFF_Shutters_Count) ["Control"] { channel="knx:device:bridge:shutter_sf:child1" }
+Group  eFF_Child1_Shutter "Rollladen" <selfrollershutter> (lFF_Child1) ["Blinds"]
+Rollershutter pFF_Child1_Shutter_Control "Rollladen"  <selfrollershutter> (eFF_Child1_Shutter,gShutters,gFF_Shutters,gShutters_Count,gFF_Shutters_Count) ["Control"] { channel="knx:device:bridge:shutter_sf:child1" }
 
 // **** FF CHILD 2 ****
-Group  eFF_Child2_Shutter "Kindzimmer 2 Rollladen" <selfrollershutter> (lFF_Child2) ["Blinds"]
-Rollershutter pFF_Child2_Shutter_Control "Kindzimmer 2"  <selfrollershutter> (eFF_Child2_Shutter,gShutters,gFF_Shutters,gShutters_Count,gFF_Shutters_Count) ["Control"] { channel="knx:device:bridge:shutter_sf:child2" }
+Group  eFF_Child2_Shutter "Rollladen" <selfrollershutter> (lFF_Child2) ["Blinds"]
+Rollershutter pFF_Child2_Shutter_Control "Rollladen"  <selfrollershutter> (eFF_Child2_Shutter,gShutters,gFF_Shutters,gShutters_Count,gFF_Shutters_Count) ["Control"] { channel="knx:device:bridge:shutter_sf:child2" }
 
 // **** FF BATHROOM ****
-Group  eFF_Bathroom_Shutter "Badezimmer Rollladen" <selfrollershutter> (lFF_Bathroom) ["Blinds"]
-Rollershutter pFF_Bathroom_Shutter_Control "Badezimmer" <selfrollershutter> (eFF_Bathroom_Shutter,gShutters,gFF_Shutters,gShutters_Count,gFF_Shutters_Count,gSouth_Shutters) ["Control"] { channel="knx:device:bridge:shutter_sf:bathroom" }
+Group  eFF_Bathroom_Shutter "Rollladen" <selfrollershutter> (lFF_Bathroom) ["Blinds"]
+Rollershutter pFF_Bathroom_Shutter_Control "Rollladen" <selfrollershutter> (eFF_Bathroom_Shutter,gShutters,gFF_Shutters,gShutters_Count,gFF_Shutters_Count,gSouth_Shutters) ["Control"] { channel="knx:device:bridge:shutter_sf:bathroom" }
 
 // **** Attic ****
-Group  eFF_Attic_Shutter "Dachboden Rollladen" <selfrollershutter> (lFF_Attic) ["Blinds"]
-Rollershutter pFF_Attic_Shutter_Control "Dachboden" <selfrollershutter> (eFF_Attic_Shutter,gShutters,gFF_Shutters,gShutters_Count,gFF_Shutters_Count,gSouth_Shutters) ["Control"] { channel="knx:device:bridge:shutter_sf:attic" }
+Group  eFF_Attic_Shutter "Rollladen" <selfrollershutter> (lFF_Attic) ["Blinds"]
+Rollershutter pFF_Attic_Shutter_Control "Rollladen" <selfrollershutter> (eFF_Attic_Shutter,gShutters,gFF_Shutters,gShutters_Count,gFF_Shutters_Count,gSouth_Shutters) ["Control"] { channel="knx:device:bridge:shutter_sf:attic" }
 

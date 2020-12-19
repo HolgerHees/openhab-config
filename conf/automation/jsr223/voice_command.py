@@ -25,10 +25,10 @@ class VoiceAction:
         self.item_actions = []
 
 class ItemCommand:
-    def __init__(self,cmd,types,argument):
-        self.cmd = cmd
-        self.types = types
-        self.argument = argument
+    def __init__(self,cmd_config,cmd_name,cmd_argument):
+        self.cmd_config = cmd_config
+        self.cmd_name = cmd_name
+        self.cmd_argument = cmd_argument
 
 class ItemAction:
     def __init__(self,item,cmd_name,cmd_argument):
@@ -170,7 +170,7 @@ class VoiceCommandRule:
                 if len(action.locations) != 0:
                     continue
                 action.locations = [ self.semantic_items.semantic_items[fallback_location_name] ]
-
+   
     def checkPoints(self,action,unprocessed_search,items_to_skip):
         #self.log.info(u"checkPoints")
         equipments = []
@@ -180,7 +180,7 @@ class VoiceCommandRule:
             equipments += self.getItemsByType(location,"Equipment")
 
         matched_equipments, unprocessed_search = self.searchItems(equipments,unprocessed_search,recursive=True,full_match=False,items_to_skip=items_to_skip)
- 
+  
         # check points of equipments 
         if len(matched_equipments) > 0:
             points = []
@@ -251,20 +251,20 @@ class VoiceCommandRule:
                         if number in SemanticConfig["main"]["number_mapping"]:
                             number = SemanticConfig["main"]["number_mapping"][number]
                         if number.isnumeric():
-                            return cmd, SemanticConfig["commands"][cmd]["types"], number
+                            return cmd, SemanticConfig["commands"][cmd], number
                         return None, None, None
                 else:
                     parts = action.voice_cmd_unprocessed.split(" ")
                     if search in parts:
-                        return cmd, SemanticConfig["commands"][cmd]["types"], None
+                        return cmd, SemanticConfig["commands"][cmd], None
         return None, None, None
     
     def detectCommand(self,actions):
         for action in actions:
             # search for cmd based on voice_cmd
-            cmd, item_types, argument = self.checkCommand(action)
-            if cmd is not None:
-                action.cmd = ItemCommand(cmd,item_types,argument)
+            cmd_name, cmd_config, cmd_argument = self.checkCommand(action)
+            if cmd_name is not None:
+                action.cmd = ItemCommand(cmd_config,cmd_name,cmd_argument)
 
 
     def fillCommandFallbacks(self,actions):
@@ -292,10 +292,13 @@ class VoiceCommandRule:
             for point in action.points:
                 item_name = point.item.getName()
                 #self.log.info(u"{}".format(item_name))
-                if item_name in processed_items or action.cmd is None or ( point.item.getType() not in action.cmd.types and action.cmd.types[0] !=  "*" ):
+                if item_name in processed_items \
+                    or action.cmd is None \
+                    or ( "types" in action.cmd.cmd_config and point.item.getType() not in action.cmd.cmd_config["types"] ) \
+                    or ( "tags" in action.cmd.cmd_config and len(filter(lambda x: x in action.cmd.cmd_config["tags"], point.item.getTags()))==0  ):
                     continue
                 processed_items[item_name] = True
-                action.item_actions.append(ItemAction(point.item,action.cmd.cmd,action.cmd.argument))
+                action.item_actions.append(ItemAction(point.item,action.cmd.cmd_name,action.cmd.cmd_argument))
         #self.log.info(u"{}".format(processed_items.keys()))
     
     def process(self,voice_command, fallback_location_name):
@@ -336,6 +339,26 @@ class VoiceCommandRule:
  
         return actions
 
+    def getFormattedValue(self,item):
+        value = getItemState(item).toString()
+        if item.getType() == "Dimmer":
+            if value == "0":
+                value = SemanticConfig["states"]["OFF"]
+            elif value == "100":
+                value = SemanticConfig["states"]["ON"]
+            else:
+                value = u"{} %".format(value)
+        elif item.getType() == "Rollershutter":
+            if value == "0":
+                value = SemanticConfig["states"]["UP"]
+            elif value == "100":
+                value = SemanticConfig["states"]["DOWN"]
+            else:
+                value = u"{} %".format(value)
+        if value in SemanticConfig["states"]:
+            value = SemanticConfig["states"][value]
+        return value
+
     def getParentByType(self,semantic_item,type):
         for parent in semantic_item.parents:
             if parent.type == "Group":
@@ -346,35 +369,29 @@ class VoiceCommandRule:
 
     def getAnswer(self,item):
         semantic_item = self.semantic_items.semantic_items[item.getName()]
-        semantic_parent = self.getParentByType(semantic_item,"Location")
-
-        msg = None
-        value = getItemState(item).toString()
+        semantic_equipment = self.getParentByType(semantic_item,"Equipment")
+        semantic_location = self.getParentByType(semantic_equipment,"Location")
+        #semantic_location = self.getParentByType(semantic_item,"Location")
+ 
+        value = self.getFormattedValue(item)
+        
         for tag in item.getTags():
             if tag not in SemanticConfig["answers"]:
                 continue
-            msg = SemanticConfig["answers"][tag].format(semantic_parent.item.getLabel(),value)
-            break
-        if msg == None:
-            if value in SemanticConfig["states"]:
-                value = SemanticConfig["states"][value]
-            msg = SemanticConfig["answers"]["Default"].format(semantic_parent.item.getLabel(),value)
-        return msg
+            return SemanticConfig["answers"][tag].format(room=semantic_location.item.getLabel(),state=value)
 
+        semantic_reference = semantic_equipment if len(semantic_equipment.children) == 1 else semantic_item
+
+        return SemanticConfig["answers"]["Default"].format(equipment=semantic_reference.item.getLabel(),room=semantic_location.item.getLabel(),state=value)
+        
     def applyActions(self,actions,voice_command,dry_run):
-        msg = None
         missing_locations = []
         missing_points = []
         missing_cmds = []
         unsupported_cmds = []
         for action in actions:
             if len(action.item_actions) > 0:
-                read_actions = filter(lambda item_action: item_action.cmd_name == "READ", action.item_actions)
-                if len(read_actions) > 1:
-                    msg = SemanticConfig["i18n"]["only_one_read_supported"]
-                    break
-                else:
-                    continue
+                continue
  
             if len(action.locations) == 0:
                 missing_locations.append(action.voice_cmd_complete)
@@ -386,27 +403,27 @@ class VoiceCommandRule:
                 unsupported_cmds.append(action.voice_cmd_complete)
 
         is_valid = False
-        if msg == None:
-            join_seperator = SemanticConfig["i18n"]["message_join_separator"]
-            if len(actions) == len(missing_locations):
-                msg = SemanticConfig["i18n"]["nothing_found"].format(voice_command)
-            elif len(missing_locations) > 0:
-                msg = SemanticConfig["i18n"]["nothing_found"].format(join_seperator.join(missing_locations))
-            elif len(missing_points) > 0:
-                msg = SemanticConfig["i18n"]["no_equipment_found_in_phrase"].format(join_seperator.join(missing_points))
-            elif len(missing_cmds) > 0:
-                msg = SemanticConfig["i18n"]["no_cmd_found_in_phrase"].format(join_seperator.join(missing_cmds))
-            elif len(unsupported_cmds) > 0:
-                msg = SemanticConfig["i18n"]["no_supported_cmd_in_phrase"].format(join_seperator.join(unsupported_cmds))
-            else:
-                msg = SemanticConfig["i18n"]["ok_message"]
-                is_valid = True
+        join_seperator = SemanticConfig["i18n"]["message_join_separator"]
+        if len(actions) == len(missing_locations):
+            msg = SemanticConfig["i18n"]["nothing_found"].format(term=voice_command)
+        elif len(missing_locations) > 0:
+            msg = SemanticConfig["i18n"]["nothing_found"].format(term=join_seperator.join(missing_locations))
+        elif len(missing_points) > 0:
+            msg = SemanticConfig["i18n"]["no_equipment_found_in_phrase"].format(term=join_seperator.join(missing_points))
+        elif len(missing_cmds) > 0:
+            msg = SemanticConfig["i18n"]["no_cmd_found_in_phrase"].format(term=join_seperator.join(missing_cmds))
+        elif len(unsupported_cmds) > 0:
+            msg = SemanticConfig["i18n"]["no_supported_cmd_in_phrase"].format(term=join_seperator.join(unsupported_cmds))
+        else:
+            msg = SemanticConfig["i18n"]["ok_message"]
+            is_valid = True
 
         if is_valid:
+            msg_r = []
             for action in actions:
                 for item_action in action.item_actions:
                     if item_action.cmd_name == "READ":
-                        msg = self.getAnswer(item_action.item)
+                        msg_r.append(self.getAnswer(item_action.item))
                         #answer_data.append([item_action.item,value])
                     elif not dry_run:
                         if item_action.cmd_name == "PERCENT":
@@ -414,7 +431,12 @@ class VoiceCommandRule:
                         else:
                             #self.log.info(u"postUpdate {} {}".format(item_action.item.getName(),item_action.cmd_name))
                             sendCommandIfChanged(item_action.item,item_action.cmd_name)
-  
+            if len(msg_r) > 0:
+                if len(msg_r) > 2:
+                    msg_r = [ msg_r[0], SemanticConfig["i18n"]["more_results"].format(count=len(msg_r)-1) ]
+
+                msg = SemanticConfig["i18n"]["message_join_separator"].join(msg_r)
+ 
         return msg, is_valid
  
     def parseData(self,input):
@@ -471,8 +493,10 @@ class TestRule:
                             item_actions_applied.append(item_action)
                             item_actions_skipped.remove(item_action)
                             case_actions_excpected.remove(case_action)
-   
-            if (("is_valid" in case and case["is_valid"] == is_valid) or is_valid ) \
+
+            excpected_result = case["is_valid"] == is_valid if "is_valid" in case else is_valid
+    
+            if excpected_result \
                 and len(item_actions_skipped) == 0 and len(item_actions_applied) == len(case["items"]):
                 self.log.info(u"OK  - Input: '{}' - MSG: '{}'".format(voice_command,msg))
             else:

@@ -1,5 +1,5 @@
 // **** TELEVISION ****
-Group  eGF_Livingroom_Television                  "Fernseher"    <selfinfo> (lGF_Livingroom) ["Equipment"]
+Group  eGF_Livingroom_Television                  "Fernseher"    <selfinfo> (lGF_Livingroom) ["Screen"]
 Switch pGF_Livingroom_Television_Key_POWER        "An / Aus"     <selfsettings> (eGF_Livingroom_Television) ["Control"]
 String pGF_Livingroom_Television_Key_CODE         "Tastendruck"  <selfsettings> (eGF_Livingroom_Television) ["Control"] {channel="samsungtv:tv:livingroom:keyCode"} 
 Switch pGF_Livingroom_Television_Key_POWER_ON     "TV An"           <selfsettings> (eGF_Livingroom_Television) ["Control"] { wol="192.168.0.73#FC:03:9F:1D:28:38" }
