@@ -73,7 +73,7 @@ Number pFF_Child2_Heating_Temperature_Target        "Ziel - aktiv"         <self
 Number pFF_Child2_Heating_Temperature_Desired       "Ziel [%.1f °C]"       <selftemperature> (eFF_Child2_Heating)["Setpoint"]
 
 // **** HEATING DEVICE ****
-Group  eGF_Utilityroom_Heating_Boiler                               "Heizterme"                         <selfinfo> (lGF_Utilityroom) ["RadiatorControl"]
+Group  eGF_Utilityroom_Heating_Boiler                               "Heizterme"                         <selfinfo> (lGF_Utilityroom) ["HVAC"]
 
 Switch pGF_Utilityroom_Heating_Demand                               "Heizung [%d]"                      <selfsettings> (eGF_Utilityroom_Heating_Boiler) ["Point"]
 Number pGF_Utilityroom_Heating_Auto_Mode                            "Modus"                             <selfautomode> (eGF_Utilityroom_Heating_Boiler) ["Point"]
