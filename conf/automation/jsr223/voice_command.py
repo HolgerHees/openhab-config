@@ -526,4 +526,4 @@ class TestRule:
                 raise Exception("Wrong detection")
 
     def execute(self, module, input):
-        pass     
+        pass      
