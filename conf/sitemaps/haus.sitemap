@@ -79,11 +79,24 @@ sitemap haus label="Main Menu"
 		}
 		Group item=gShutters_Count label="Rollläden [MAP(group_rollershutter.map):%d]" {
 			Frame label="Alle" {
-				Switch item=gShutters label="Rollläden" mappings=[UP="Hoch",DOWN="Runter"]
+				Switch item=gShutters label="Alle Rollläden" mappings=[UP="Hoch",DOWN="Runter"]
 			}
 			Frame label="Etagen" {
-				Group item=gGF_Shutters_Count label="EG Rollläden [MAP(group_rollershutter_ff.map):%d]"
-				Group item=gFF_Shutters_Count label="OG Rollläden [MAP(group_rollershutter_sf.map):%d]"
+				Group item=gGF_Shutters_Count label="EG Rollläden [MAP(group_rollershutter_ff.map):%d]" {
+                    Switch item=pGF_Livingroom_Shutter_Terrace_Control label="Wohnzimmer Terasse" mappings=[UP="Hoch",DOWN="Runter"]
+                    Switch item=pGF_Livingroom_Shutter_Couch_Control label="Wohnzimmer Couch" mappings=[UP="Hoch",DOWN="Runter"]
+                    Switch item=pGF_Kitchen_Shutter_Control label="Küche" mappings=[UP="Hoch",DOWN="Runter"]
+                    Switch item=pGF_Guestroom_Shutter_Control label="Gästezimmer" mappings=[UP="Hoch",DOWN="Runter"]
+                    Switch item=pGF_Guesttoilet_Shutter_Control label="Gäste WV" mappings=[UP="Hoch",DOWN="Runter"]
+                }
+				Group item=gFF_Shutters_Count label="OG Rollläden [MAP(group_rollershutter_sf.map):%d]" {
+                    Switch item=eFF_Bedroom_Shutter label="Schlafzimmer" mappings=[UP="Hoch",DOWN="Runter"]
+                    Switch item=pFF_Dressingroom_Shutter_Control label="Ankleide" mappings=[UP="Hoch",DOWN="Runter"]
+                    Switch item=pFF_Child1_Shutter_Control label="Sportzimmer" mappings=[UP="Hoch",DOWN="Runter"]
+                    Switch item=pFF_Child2_Shutter_Control label="Schminkzimmer" mappings=[UP="Hoch",DOWN="Runter"]
+                    Switch item=pFF_Bathroom_Shutter_Control label="Badezimmer" mappings=[UP="Hoch",DOWN="Runter"]
+                    Switch item=pFF_Attic_Shutter_Control label="Dachboden" mappings=[UP="Hoch",DOWN="Runter"]
+                }
 			}
 			Frame label="Beschattung" {
 				Switch item=gSouth_Shutters label="Südseite" mappings=[UP="Hoch",DOWN="Runter"]
@@ -103,13 +116,25 @@ sitemap haus label="Main Menu"
 			}
 			Frame label="Licht Bewegungsmelder" {
 				Switch item=pOutdoor_Light_Automatic_Main_Switch label="Aktiv"
-				Group item=gOutdoor_Motiondetector_Counter label="Einstellungen"
+				Group item=gOutdoor_Motiondetector_Counter label="Einstellungen" {
+                    Switch item=pOutdoor_Streedside_Garage_Automatic_Switch label="Garage Strassenseite"
+                    Switch item=pOutdoor_Streedside_Frontdoor_Automatic_Switch label="Haustür"
+                    Switch item=pOutdoor_Carport_Automatic_Switch label="Carport"
+                    Switch item=pOutdoor_Garden_Terrace_Automatic_Switch label="Terasse"
+                    Switch item=pOutdoor_Garden_Garage_Automatic_Switch label="Garage Gartenseite"
+                }
 			}
 			Frame label="Licht & Steckdosen" {
-                Group item=gOutdoor_Lights label="Lampen [MAP(group_light.map):%d]"
+                Group item=gOutdoor_Lights label="Lampen [MAP(group_light.map):%d]" {
+                    Slider item=pOutdoor_Garden_Terrace_Light_Brightness label="Terasse"
+                    Switch item=pOutdoor_Streedside_Frontdoor_Light_Powered label="Haustür"
+                    Switch item=pOutdoor_Carport_Light_Powered label="Carport"
+                    Switch item=pOutdoor_Streedside_Garage_Light_Powered label="Schuppentür vorne"
+                    Switch item=pOutdoor_Garden_Garage_Light_Powered label="Schuppentür hinten"
+                }
 				Group item=gOutdoor_Sockets label="Steckdosen [MAP(group_socket.map):%d]" {
-					Switch item=pOutdoor_Streeside_Socket_Powered
-					Switch item=pOutdoor_Garden_Terrace_Socket_Powered
+					Switch item=pOutdoor_Streeside_Socket_Powered label="Strassenseite"
+					Switch item=pOutdoor_Garden_Terrace_Socket_Powered label="Gartenseite"
 				}
                 Group label="Bewässerung [MAP(group_watering.map):%d]" item=gOutdoor_Watering_Circuits {
                     Frame label="Programm" {
@@ -373,21 +398,21 @@ sitemap haus label="Main Menu"
             {
                 Group item=pGF_Livingroom_Air_Sensor_Message label="EG [%s]"{
                     Frame label="Daten" {
-                        Text item=pGF_Livingroom_Air_Sensor_Message {
+                        Text item=pGF_Livingroom_Air_Sensor_Message label="Wohnzimmer" {
                             Setpoint item=pGF_Livingroom_Heating_Temperature_Desired label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=pGF_Boxroom_Air_Sensor_Message
-                        Text item=pGF_Guestroom_Air_Sensor_Message {
+                        Text item=pGF_Boxroom_Air_Sensor_Message label="Kammer"
+                        Text item=pGF_Guestroom_Air_Sensor_Message label="Gästezimmer" {
                             Setpoint item=pGF_Guestroom_Heating_Temperature_Desired label="Gästezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=pGF_Guesttoilet_Air_Sensor_Message {
+                        Text item=pGF_Guesttoilet_Air_Sensor_Message label="Gäste WC" {
                             Setpoint item=pGF_Guesttoilet_Heating_Temperature_Desired label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=pGF_Corridor_Air_Sensor_Message {
+                        Text item=pGF_Corridor_Air_Sensor_Message label="Flur unten" {
                             Setpoint item=pGF_Corridor_Heating_Temperature_Desired label="Flur unten [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=pGF_Utilityroom_Air_Sensor_Message
-                        Text item=pGF_Garage_Air_Sensor_Message 
+                        Text item=pGF_Utilityroom_Air_Sensor_Message label="HWR"
+                        Text item=pGF_Garage_Air_Sensor_Message label="Garage" 
                     }
                     Frame label="Auswertung" {
                         Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
@@ -396,23 +421,23 @@ sitemap haus label="Main Menu"
                 }
                 Group item=pFF_Bedroom_Air_Sensor_Message label="OG [%s]"{
                     Frame label="Daten" {
-                        Text item=pFF_Bedroom_Air_Sensor_Message {
+                        Text item=pFF_Bedroom_Air_Sensor_Message label="Schlafzimmer" {
                             Setpoint item=pFF_Bedroom_Heating_Temperature_Desired label="Schlafzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=pFF_Dressingroom_Air_Sensor_Message
-                        Text item=pFF_Child1_Air_Sensor_Message {
+                        Text item=pFF_Dressingroom_Air_Sensor_Message label="Ankleide"
+                        Text item=pFF_Child1_Air_Sensor_Message label="Sportzimmer"  {
                             Setpoint item=pFF_Child1_Heating_Temperature_Desired label="Kind 1 [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=pFF_Child2_Air_Sensor_Message {
+                        Text item=pFF_Child2_Air_Sensor_Message label="Schminkzimmer" {
                             Setpoint item=pFF_Child2_Heating_Temperature_Desired label="Kind 2 [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=pFF_Bathroom_Air_Sensor_Message {
+                        Text item=pFF_Bathroom_Air_Sensor_Message label="Badezimmer" {
                             Setpoint item=pFF_Bathroom_Heating_Temperature_Desired label="Badezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=pFF_Corridor_Air_Sensor_Message {
+                        Text item=pFF_Corridor_Air_Sensor_Message label="Flur oben" {
                             Setpoint item=pFF_Corridor_Heating_Temperature_Desired label="Flur oben [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=pFF_Attic_Air_Sensor_Message
+                        Text item=pFF_Attic_Air_Sensor_Message label="Dachboden"
                     }
                     Frame label="Auswertung" {
                         Selection item=pOther_Helper_Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
@@ -561,8 +586,19 @@ sitemap haus label="Main Menu"
             }
             Frame label="Bewegung"
             {
-                Group item=gSensor_Indoor label="Innen [MAP(group_motion.map):%d]" valuecolor=[!=CLOSED="#d72a2a"]
-                Group item=gSensor_Outdoor label="Aussen [MAP(group_motion.map):%d]" valuecolor=[!=CLOSED="#d72a2a"]
+                Group item=gSensor_Indoor label="Innen [MAP(group_motion.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
+                    Text item=pGF_Corridor_Motiondetector_State label="Flur unten"
+                    Text item=pGF_Livingroom_Motiondetector_State label="Wohnzimmer"
+                    Text item=pFF_Corridor_Motiondetector_State label="Flur oben"
+                }
+                Group item=gSensor_Outdoor label="Aussen [MAP(group_motion.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
+                    Text item=pOutdoor_Streedside_Garage_Motiondetector_State label="Garage Strassenseite"
+                    Text item=pOutdoor_Streedside_Frontdoor_Motiondetector_State label="Haustür"
+                    Text item=pOutdoor_Carport_Motiondetector_State label="Carport"
+                    Text item=pOutdoor_Garden_Terrace_Motiondetector_State1 label="Terasse rechts"
+                    Text item=pOutdoor_Garden_Terrace_Motiondetector_State2 label="Terasse links"
+                    Text item=pOutdoor_Garden_Garage_Motiondetector_State label="Garage Gartenseite"
+                }
                 Text label="Kameras" icon="camera"
                 {
                     Image url="https://smartmarvin.de/cameraStrasseImage" label="Strasse Video" refresh=2000
@@ -571,9 +607,27 @@ sitemap haus label="Main Menu"
             }
             Frame label="Fenster & Türen"
             {
-                Group item=gGF_Sensor_Doors label="EG Türen [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"]
-                Group item=gGF_Sensor_Window label="EG Fenster [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"]
-                Group item=gFF_Sensor_Window label="OG Fenster [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"]
+                Group item=gGF_Sensor_Doors label="EG Türen [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
+                    Text item=pGF_Corridor_Openingcontact_Door_State label="Haustür"
+                    Text item=pGF_Garage_Openingcontact_Door_Streedside_State label="Garage Strassenseite"
+                    Text item=pGF_Garage_Openingcontact_Door_Garden_State label="Garage Gartenseite"
+                }
+                Group item=gGF_Sensor_Window label="EG Fenster [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
+                    Text item=pGF_Guesttoilet_Openingcontact_Window_State label="Gäste WC"
+                    Text item=pGF_Kitchen_Openingcontact_Window_State label="Küche"
+                    Text item=pGF_Livingroom_Openingcontact_Window_Terrace_State label="Wohnzimmer Terasse"
+                    Text item=pGF_Livingroom_Openingcontact_Window_Couch_State label="Wohnzimmer Couch"
+                    Text item=pGF_Guestroom_Openingcontact_Window_State label="Gästezimmer"
+                    Text item=pGF_Garage_Openingcontact_Window_Garden_State label="Garage Gartenseite"
+                }
+                Group item=gFF_Sensor_Window label="OG Fenster [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
+                    Text item=pFF_Bathroom_Openingcontact_Window_State label="Badezimmer"
+                    Text item=pFF_Dressingroom_Openingcontact_Window_State label="Ankleide"
+                    Text item=pFF_Bedroom_Openingcontact_Window_State label="Schlafzimmer"
+                    Text item=pFF_Child1_Openingcontact_Window_State label="Sportzimmer"
+                    Text item=pFF_Child2_Openingcontact_Window_State label="Schminkzimmer"
+                    Text item=pFF_Attic_Openingcontact_Window_State label="Dachboden"
+                }
             }
             Frame label="Sonstiges"
             {
@@ -764,7 +818,13 @@ sitemap haus label="Main Menu"
                 }
             }
             Frame label="Sonstiges" {
-                Group item=gOutdoor_Lights label="Lampen Garten (RAW) [MAP(group_socket.map):%d]"
+                Group item=gOutdoor_Lights label="Lampen Garten (RAW) [MAP(group_socket.map):%d]" {
+                    Slider item=pOutdoor_Garden_Terrace_Light_Brightness label="Terasse"
+                    Switch item=pOutdoor_Streedside_Frontdoor_Light_Powered label="Haustür"
+                    Switch item=pOutdoor_Carport_Light_Powered label="Carport"
+                    Switch item=pOutdoor_Streedside_Garage_Light_Powered label="Schuppentür vorne"
+                    Switch item=pOutdoor_Garden_Garage_Light_Powered label="Schuppentür hinten"
+                }
                 Group label="Schalten (RAW) [MAP(group_socket.map):%d]" icon="selfsocket" item=gAll_Sockets {
                     Frame label="Wohnen" {
                         Switch item=pGF_Livingroom_Socket_Bassbox_Powered label="Bassbox"
