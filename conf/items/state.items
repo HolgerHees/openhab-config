@@ -5,7 +5,7 @@ Switch pOther_Presence_Holger_State             "Holger anwesend" <selfinfo> (eO
 Switch pOther_Presence_Sandra_State             "Sandra anwesend" <selfinfo> (eOther_Presence,gPersistance_History) ["Status","Presence"] { channel="mqtt:topic:mosquitto:device_ping:phone_sandra" }
 
 // **** GARDEN DOOR ****
-Group  eOutdoor_Streedside_Gardendoor           "Gartentür"       <selfinfo> (lOutdoor_Streedside) ["Equipment"]
+Group  eOutdoor_Streedside_Gardendoor           "Gartentür"       <selfinfo> (lOutdoor_Streedside) ["Gate"]
 Contact pOutdoor_Streedside_Gardendoor_Bell_State                                                              (eOutdoor_Streedside_Gardendoor) ["Status"]                                                                                                  { channel="knx:device:bridge:other:switchBell" }
 DateTime pOutdoor_Streedside_Gardendoor_Bell_Last_Change "Klingel [%1$tH:%1$tM:%1$tS, %1$td.%1$tm]"    <selfbell> (eOutdoor_Streedside_Gardendoor) ["Point"]
 Switch   pOutdoor_Streedside_Gardendoor_Opener_Powered "Türöffner"                                 <selfdoor> (eOutdoor_Streedside_Gardendoor) ["Point"] { channel="knx:device:bridge:other:switchDooropener" }
@@ -16,8 +16,8 @@ Group   eGF_Livingroom_Receiver                 "Receiver"        <selfinfo> (lG
 Contact pGF_Livingroom_Receiver_State                             <selfinfo> (eGF_Livingroom_Receiver) ["Point"] { channel="knx:device:bridge:other:receiverState" }
 
 //####### SMOKE DETECTOR ########
-Group   eOther_Smoke_Detector                   "Rauchmelder"     <selfinfo> (lOther) ["Sensor"]
-Contact pOther_Smoke_Detector_State             "Rauchmelder [MAP(smoke_detector_de.map):%s]" <smoke> (eOther_Smoke_Detector) ["Point"] { channel="knx:device:bridge:other:smokeDetector" }
+Group   eOther_Smoke_Detector                   "Rauchmelder"     <selfinfo> (lOther) ["SmokeDetector"]
+Contact pOther_Smoke_Detector_State             "Rauchmelder [MAP(smoke_detector_de.map):%s]" <smoke> (eOther_Smoke_Detector) ["Smoke"] { channel="knx:device:bridge:other:smokeDetector" }
 
 //####### HELPER SWITCH STATES ######
 Group  eFF_Bedroom_Switches_Long_Pressed        "Schalter"        <selfinfo> (lFF_Bedroom) ["WallSwitch"]

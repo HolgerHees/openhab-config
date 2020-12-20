@@ -1,5 +1,5 @@
 // **** WASHINGMACHINE ****
-Group   eGF_Utilityroom_Washer                             "Waschmaschine" <selfinfo> (lGF_Utilityroom) ["WhiteGood"]
+Group   eGF_Utilityroom_Washer                             "Waschmaschine" <selfinfo> (lGF_Utilityroom) ["WashingMachine"]
 String  pGF_Utilityroom_Washer_Message                     "Status [%s]" (eGF_Utilityroom_Washer) ["Point"]
 Contact pGF_Utilityroom_Washer_DoorState                   "Tür [MAP(washer_door.map):%s]" <whitegood> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnect:washer:default:washer:door_state"}
 String  pGF_Utilityroom_Washer_OperationState              "Status [MAP(washer_mode.map):%s]" <selfautomode> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnect:washer:default:washer:operation_state"}

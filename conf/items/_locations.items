@@ -2,7 +2,7 @@ Group lIndoor           "Haus"       <group>                           ["Indoor"
 
 Group lGroundFloor      "Erdgeschoss"   <groundfloor>   (lIndoor)      ["GroundFloor"]  { synonyms="Untergeschoss" }
 Group lGF_Guesttoilet   "Gäste WC"      <bath>          (lGroundFloor) ["Room"]         { synonyms="Gäste Toilette,Gäste Bad,Gästeklo" }
-Group lGF_Utilityroom   "HWR"           <energy>        (lGroundFloor) ["Room"]         { synonyms="Hauswirtschaft" }
+Group lGF_Utilityroom   "HWR"           <energy>        (lGroundFloor) ["LaundryRoom"]  { synonyms="Hauswirtschaft" }
 Group lGF_Boxroom       "Abstellkammer" <office>        (lGroundFloor) ["Room"]         { synonyms="Kammer,Vorrat" }
 Group lGF_Kitchen       "Küche"         <kitchen>       (lGroundFloor) ["Kitchen"]
 Group lGF_Livingroom    "Wohnzimmer"    <sofa>          (lGroundFloor) ["LivingRoom"]
@@ -26,7 +26,7 @@ Group lOutdoor_Streedside_Frontdoor "Haustür" <garden>  (lOutdoor_Streedside) [
 Group lOutdoor_Carport  "Carport"       <garden>        (lOutdoor)     ["Garden"]
 Group lOutdoor_Garden   "Hintergarten"        <garden>        (lOutdoor) ["Garden"]     { synonyms="hinten" }
 Group lOutdoor_Garden_Garage  "Schuppen hinten" <garden> (lOutdoor_Garden) ["Garden"]   { synonyms="Garage" }
-Group lOutdoor_Garden_Terrace  "Terasse" <garden>       (lOutdoor_Garden) ["Garden"]
+Group lOutdoor_Garden_Terrace  "Terasse" <garden>       (lOutdoor_Garden) ["Terrace"]
 Group lOutdoor_Garden_Left "Garten Links"      <garden> (lOutdoor_Garden) ["Garden"]    { synonyms="links" }
 Group lOutdoor_Garden_Right "Garten Rechts"    <garden> (lOutdoor_Garden) ["Garden"]    { synonyms="rechts" }
 Group lOutdoor_Garden_Back "Garten Rückseite"  <garden> (lOutdoor_Garden)  ["Garden"]   { synonyms="Hinterer Nachbar"}

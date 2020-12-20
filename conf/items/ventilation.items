@@ -1,5 +1,5 @@
 // **** VENTILATION ****
-Group  eGF_Utilityroom_Ventilation                              "Lüftungsanlage"                <selfinfo> (lGF_Utilityroom) ["Equipment"]
+Group  eGF_Utilityroom_Ventilation                              "Lüftungsanlage"                <selfinfo> (lGF_Utilityroom) ["Fan"]
 Switch pGF_Utilityroom_Ventilation_Control                      "Steuerung"                     <selfsettings> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:bindingControl#activate"}
 Switch pGF_Utilityroom_Ventilation_Auto_Mode                    "Modus"                         <selfautomode> (eGF_Utilityroom_Ventilation) ["Point"]
 Number pGF_Utilityroom_Ventilation_Fan_Level                    "Stufe"                         <selfairing> (eGF_Utilityroom_Ventilation,gPersistance_History) ["Point"] {channel="comfoair:comfoair:default:ventilation#fanLevel"}

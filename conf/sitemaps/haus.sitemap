@@ -782,9 +782,6 @@ sitemap haus label="Main Menu"
                         Switch item=eMobile_Socket_1_Powered label="Steckdose 1"
                         Switch item=eMobile_Socket_2_Powered label="Steckdose 2"
                     }
-                    Frame label="Sonstiges" {
-                        Switch item=pGF_Livingroom_Television_KeyPOWER label="Wohnzimmer Fernseher"
-                    }
                 }
                 Text label="Server" icon="selfcomputer"{
                     Frame label="Daten" {

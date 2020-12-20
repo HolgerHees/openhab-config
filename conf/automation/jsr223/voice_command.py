@@ -6,12 +6,13 @@ from alexa.device_config import AlexaDevices
 
 from alexa.semantic_config import SemanticConfig
 
-from alexa.semantic_items import SemanticItems
+from alexa.semantic_model import SemanticModel
 
 from alexa.semantic_test import Cases
 
 import re
- 
+import traceback
+   
 class VoiceAction:
     def __init__(self,voice_cmd):
         self.voice_cmd_complete = voice_cmd
@@ -35,33 +36,35 @@ class ItemAction:
         self.item = item
         self.cmd_name = cmd_name
         self.cmd_argument = cmd_argument
- 
+  
 @rule("voice_command.py")
 class VoiceCommandRule:
     def __init__(self):
         self.triggers = [ ItemStateUpdateTrigger("VoiceCommand") ]
-        self.semantic_items = SemanticItems(ir,SemanticConfig)
-        self.full_phrase_map, self.full_phrase_terms = self.buildSearchMap(self.semantic_items.semantic_items[SemanticConfig["main"]["phrase_equipment"]].children)
+
+        self.semantic_model = SemanticModel(ir,SemanticConfig)
+        
+        self.full_phrase_map, self.full_phrase_terms = self.buildSearchMap(self.semantic_model.getSemanticItem(SemanticConfig["main"]["phrase_equipment"]).getChildren())
  
-    def buildSearchMap(self,items):
+    def buildSearchMap(self,semantic_items):
         search_map = {}
-        for semantic_item in items:
-            for search_term in semantic_item.search_terms:
+        for semantic_item in semantic_items:
+            for search_term in semantic_item.getSearchTerms():
                 if search_term not in search_map:
                     search_map[search_term] = []
                 search_map[search_term].append(semantic_item)
         search_terms = sorted(search_map, key=len, reverse=True)
         return search_map, search_terms
-
+   
     def getItemsByType(self,parent,type):
         result = []
-        if parent.item.getType() == "Group":
+        if parent.getItem().getType() == "Group":
             #self.log.info(u" => {} {}".format(parent.getName(),parent.getType()))
-            items = parent.item.getMembers()
+            items = parent.getItem().getMembers()
             for item in items:
-                semantic_item = self.semantic_items.semantic_items[item.getName()]
+                semantic_item = self.semantic_model.getSemanticItem(item.getName())
                 #self.log.info(u" => {}".format(item.getName()))
-                if semantic_item.type == type:
+                if semantic_item.getSemanticType() == type:
                     result.append(semantic_item)
                 else:
                     result = result + self.getItemsByType(semantic_item,type)
@@ -80,7 +83,7 @@ class VoiceCommandRule:
             if not is_sub_search and search_term in SemanticConfig["main"]["phrase_sub"]:
                 continue
     
-            regex = self.semantic_items.semantic_search_full_regex[search_term] if full_match else self.semantic_items.semantic_search_part_regex[search_term]
+            regex = self.semantic_model.getSearchFullRegex(search_term) if full_match else self.semantic_model.getSearchPartRegex(search_term)
             if regex.match(unprocessed_search):
                 matched_items =  search_map[search_term]
                 if len(items_to_skip) > 0:
@@ -98,7 +101,7 @@ class VoiceCommandRule:
             for item in missing_items:
                 members = item.item.getMembers()
                 for member in members:
-                    semantic_member = self.semantic_items.semantic_items[member.getName()]
+                    semantic_member = self.semantic_model.getSemanticItem(member.getName())
                     if member.getType() != "Group" or semantic_member.type != item.type:
                         continue
                     to_check.append(semantic_member)
@@ -112,11 +115,11 @@ class VoiceCommandRule:
                     matched_search = _matched_search
                 matched_items += _matched_items 
     
-        if matched_search != None:
+        if matched_search != None:       
             unprocessed_search = unprocessed_search.replace(search_term,"")
 
         return matched_items, matched_search, unprocessed_search
-
+ 
     def searchItems(self,items,unprocessed_search,recursive,full_match,items_to_skip=[]):
         matched_items = []
         security_counter = 0
@@ -139,9 +142,9 @@ class VoiceCommandRule:
     def detectLocations(self,actions):
         for action in actions:
             # search for locations
-            matched_locations, unprocessed_search = self.searchItems(self.semantic_items.root_locations,action.voice_cmd_unprocessed,recursive=True,full_match=True)
+            matched_locations, unprocessed_search = self.searchItems(self.semantic_model.getRootLocations(),action.voice_cmd_unprocessed,recursive=True,full_match=True)
             if len(matched_locations) == 0:
-                matched_locations, unprocessed_search = self.searchItems(self.semantic_items.root_locations,action.voice_cmd_unprocessed,recursive=True,full_match=False)
+                matched_locations, unprocessed_search = self.searchItems(self.semantic_model.getRootLocations(),action.voice_cmd_unprocessed,recursive=True,full_match=False)
             action.voice_cmd_unprocessed = unprocessed_search
             action.voice_cmd_without_location = unprocessed_search
             action.locations = matched_locations
@@ -169,7 +172,7 @@ class VoiceCommandRule:
             for action in actions:
                 if len(action.locations) != 0:
                     continue
-                action.locations = [ self.semantic_items.semantic_items[fallback_location_name] ]
+                action.locations = [ self.semantic_model.getSemanticItem(fallback_location_name) ]
    
     def checkPoints(self,action,unprocessed_search,items_to_skip):
         #self.log.info(u"checkPoints")
@@ -310,7 +313,7 @@ class VoiceCommandRule:
             if search == voice_command:
                 action = VoiceAction(search)
                 for semantic_item in self.full_phrase_map[search]:
-                    action.item_actions.append(ItemAction(semantic_item.item,"ON",None))
+                    action.item_actions.append(ItemAction(semantic_item.getItem(),"ON",None))
                 actions.append(action)
                 #self.log.info(u"{}".format(search))
                 break
@@ -360,7 +363,7 @@ class VoiceCommandRule:
         return value
 
     def getParentByType(self,semantic_item,type):
-        for parent in semantic_item.parents:
+        for parent in semantic_item.getParents():
             if parent.type == "Group":
                 continue
             if parent.type == type:
@@ -368,7 +371,7 @@ class VoiceCommandRule:
             return self.getParentByType(parent,type)
 
     def getAnswer(self,item):
-        semantic_item = self.semantic_items.semantic_items[item.getName()]
+        semantic_item = self.semantic_model.getSemanticItem(item.getName())
         semantic_equipment = self.getParentByType(semantic_item,"Equipment")
         semantic_location = self.getParentByType(semantic_equipment,"Location")
         #semantic_location = self.getParentByType(semantic_item,"Location")
@@ -380,10 +383,10 @@ class VoiceCommandRule:
                 continue
             return SemanticConfig["answers"][tag].format(room=semantic_location.item.getLabel(),state=value)
 
-        semantic_reference = semantic_equipment if len(semantic_equipment.children) == 1 else semantic_item
+        semantic_reference = semantic_equipment if len(semantic_equipment.getChildren()) == 1 else semantic_item
 
-        return SemanticConfig["answers"]["Default"].format(equipment=semantic_reference.item.getLabel(),room=semantic_location.item.getLabel(),state=value)
-        
+        return SemanticConfig["answers"]["Default"].format(equipment=semantic_reference.getItem().getLabel(),room=semantic_location.getItem().getLabel(),state=value)
+
     def applyActions(self,actions,voice_command,dry_run):
         missing_locations = []
         missing_points = []
@@ -460,7 +463,7 @@ class VoiceCommandRule:
         msg, is_valid = self.applyActions(actions,voice_command,False)
 
         postUpdate("VoiceMessage",msg)
-        
+                                 
 @rule("voice_command.py")
 class TestRule:
     def __init__(self):
@@ -470,9 +473,14 @@ class TestRule:
                 voice_command, fallback_location_name = voice_command_rule.parseData(u"{}|{}".format(case['phrase'],case['client_id']))
             else:
                 voice_command, fallback_location_name = voice_command_rule.parseData(case['phrase'])
-            actions = voice_command_rule.process(voice_command, fallback_location_name)
 
-            msg, is_valid = voice_command_rule.applyActions(actions,voice_command,True)
+            try:
+                actions = voice_command_rule.process(voice_command, fallback_location_name)
+
+                msg, is_valid = voice_command_rule.applyActions(actions,voice_command,True)
+            except:
+                self.log.info(traceback.format_exc())
+                raise Exception()
 
             item_actions_skipped = []
             for action in actions:
@@ -518,4 +526,4 @@ class TestRule:
                 raise Exception("Wrong detection")
 
     def execute(self, module, input):
-        pass
+        pass     
