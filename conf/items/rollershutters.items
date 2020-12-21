@@ -9,7 +9,7 @@ Group:Rollershutter:OR(UP, DOWN) gSouth_Shutters	"Süden" <selfrollershutter>
 Group:Rollershutter:OR(UP, DOWN) gWest_Shutters	"Westen" <selfrollershutter>
 
 // **** GF LIVINGROOM ****
-Group  eGF_Livingroom_Shutter_Terrace "Terassen-Rollladen" <selfrollershutter> (lGF_Livingroom,lOutdoor_Garden_Terrace) ["Blinds"] {synonyms="Esstisch,Terasse"}
+Group  eGF_Livingroom_Shutter_Terrace "Terassen-Rollladen" <selfrollershutter> (lGF_Livingroom) ["Blinds"] {synonyms="Esstisch,Terasse"}
 Rollershutter pGF_Livingroom_Shutter_Terrace_Control "Terassen-Rollladen" <selfrollershutter> (eGF_Livingroom_Shutter_Terrace,gShutters,gGF_Shutters,gShutters_Count,gGF_Shutters_Count,gWest_Shutters) ["Control"] { channel="knx:device:bridge:shutter_ff:livingroomTerrace" }
 
 Group  eGF_Livingroom_Shutter_Couch "Couch-Rollladen" <selfrollershutter> (lGF_Livingroom) ["Blinds"] {synonyms="Couch"}

@@ -14,12 +14,15 @@ import re
 import traceback
    
 class VoiceAction:
-    def __init__(self,voice_cmd):
-        self.voice_cmd_complete = voice_cmd
-        self.voice_cmd_unprocessed = voice_cmd
-        self.voice_cmd_without_location = voice_cmd
+    def __init__(self,cmd):
+        self.cmd_complete = cmd
+        self.unprocessed_search = cmd
+        
         self.locations = []
+        self.location_search_terms = []
+        
         self.points = []
+        self.point_search_terms = []
 
         self.cmd = None
         
@@ -36,13 +39,29 @@ class ItemAction:
         self.item = item
         self.cmd_name = cmd_name
         self.cmd_argument = cmd_argument
-  
+
+class ItemMatcher:
+    def __init__(self,semantic_item,full_match,part_match):
+        self.semantic_item = semantic_item
+        self.full_match = []
+        for match in full_match:
+            self.full_match += match.split(" ")
+        #self.part_match = part_match
+        self.part_match = []
+        for match in part_match:
+            self.part_match += match.split(" ")
+    
+    def getPriority(self):
+        return len(self.full_match) * 1.2 + len(self.part_match) * 1.1
+        #return len(" ".join(self.full_match)) * 1.2 + len(" ".join(self.part_match)) * 1.1
+ 
 @rule("voice_command.py")
 class VoiceCommandRule:
     def __init__(self):
         self.triggers = [ ItemStateUpdateTrigger("VoiceCommand") ]
 
         self.semantic_model = SemanticModel(ir,SemanticConfig)
+        self.semantic_model.test(self.log)
         
         self.full_phrase_map, self.full_phrase_terms = self.buildSearchMap(self.semantic_model.getSemanticItem(SemanticConfig["main"]["phrase_equipment"]).getChildren())
  
@@ -70,84 +89,124 @@ class VoiceCommandRule:
                     result = result + self.getItemsByType(semantic_item,type)
         return result
 
-    def _searchItems(self,items,unprocessed_search,recursive,full_match,items_to_skip,is_sub_search,security_counter = 0):
-        security_counter = security_counter + 1
-        if security_counter >= 10:
-            raise Exception("_searchItems: security counter matched. more then 10 loops.")
-        #self.log.info(u"_searchItems: {}".format(','.join([str(item.item.getName()) for item in items]) ))
-        # check for matches in items
-        matched_items = []
-        matched_search = None
-        search_map, search_terms = self.buildSearchMap(items)
-        for search_term in search_terms:
-            if not is_sub_search and search_term in SemanticConfig["main"]["phrase_sub"]:
-                continue
-    
-            regex = self.semantic_model.getSearchFullRegex(search_term) if full_match else self.semantic_model.getSearchPartRegex(search_term)
-            if regex.match(unprocessed_search):
-                matched_items =  search_map[search_term]
-                if len(items_to_skip) > 0:
-                    matched_items = list(set(matched_items) - set(items_to_skip))
-                if len(matched_items) > 0:
-                    #self.log.info(u"matched_items: {} {}".format(search_term,','.join([str(item.item.getName()) for item in matched_items])))
-                    matched_search = search_term
-                    break
- 
-        if recursive:
-            # collect items which does not match and collect their children of same type
-            missing_items = list(set(items) - set(matched_items) - set(items_to_skip))
-            #self.log.info(u"missing_items: {}".format(','.join([str(item.item.getName()) for item in missing_items]) ))
-            to_check = []
-            for item in missing_items:
-                members = item.item.getMembers()
-                for member in members:
-                    semantic_member = self.semantic_model.getSemanticItem(member.getName())
-                    if member.getType() != "Group" or semantic_member.type != item.type:
-                        continue
-                    to_check.append(semantic_member)
-        
-            # check children for matches
-            if len(to_check)>0:
-                #self.log.info(u"to_check: {}".format(','.join([str(item.item.getName()) for item in to_check])))
-                _matched_items, _matched_search, _unprocessed_search = self._searchItems(to_check,matched_search if matched_search is not None else unprocessed_search,recursive,full_match,items_to_skip,is_sub_search,security_counter)
-                if matched_search == None:
-                    unprocessed_search = _unprocessed_search
-                    matched_search = _matched_search
-                matched_items += _matched_items 
-    
-        if matched_search != None:       
+    def _searchItems(self,semantic_item,unprocessed_search,items_to_skip,_full_matched_terms,_part_matched_terms,_processed_items):
+
+        matches = []
+
+        if semantic_item in items_to_skip or semantic_item in _processed_items:
+            return matches
+
+        _processed_items.append(semantic_item)
+
+        new_matched_terms = []
+        full_matched_terms = _full_matched_terms[:]
+        part_matched_terms = _part_matched_terms[:]
+  
+        # check for matches
+        is_match = False
+        for search_term in semantic_item.getSearchTerms():
+            if self.semantic_model.getSearchFullRegex(search_term).match(unprocessed_search):
+                full_matched_terms.append(search_term)
+                new_matched_terms.append(search_term)
+                is_match = True
+            elif self.semantic_model.getSearchPartRegex(search_term).match(unprocessed_search):
+                part_matched_terms.append(search_term)
+                new_matched_terms.append(search_term)
+                is_match = True
+
+        # check if matches are just sub phrases
+        # => phrases which never works alone
+        total_matched_terms = full_matched_terms + part_matched_terms
+        if  len(total_matched_terms) == 1 and total_matched_terms[0] in SemanticConfig["main"]["phrase_sub"]:
+            full_matched_terms = part_matched_terms = total_matched_terms = new_matched_terms = []
+            is_match = False
+
+        # clean unprocessed search terms    
+        for search_term in new_matched_terms:
             unprocessed_search = unprocessed_search.replace(search_term,"")
 
-        return matched_items, matched_search, unprocessed_search
+        # check sub elements
+        if semantic_item.getItem().getType() == "Group":
+            for _item in semantic_item.getItem().getMembers():
+                _semantic_item = self.semantic_model.getSemanticItem(_item.getName())
+                if _semantic_item.getSemanticType() != semantic_item.getSemanticType():
+                    continue
+                matches += self._searchItems(_semantic_item,unprocessed_search,items_to_skip,full_matched_terms,part_matched_terms,_processed_items)
+
+        # add own match only if there are no sub matches
+        if is_match and len(matches) == 0:
+            matches.append(ItemMatcher(semantic_item,list(set(full_matched_terms)),list(set(part_matched_terms))))
+    
+        return matches
+
+    def searchItems(self,semantic_items,unprocessed_search,items_to_skip=[]):
+        matches = []
+        for semantic_item in semantic_items:
+            _matches = self._searchItems(semantic_item,unprocessed_search,items_to_skip,_full_matched_terms=[],_part_matched_terms=[],_processed_items=[])
+            matches += _matches
+
+        # get only matches with highest priority
+        final_priority = 0
+        final_matches = []
+        for match in matches:
+            priority = match.getPriority()
+            if priority == final_priority:
+                final_matches.append(match)
+            elif priority > final_priority:
+                final_priority = priority
+                final_matches = [match]
  
-    def searchItems(self,items,unprocessed_search,recursive,full_match,items_to_skip=[]):
+        # collect matched items, search terms and check if they are unique
         matched_items = []
-        security_counter = 0
-        while True:
-            security_counter = security_counter + 1
-            if security_counter >= 10:
-                raise Exception(u"searchItems: security counter matched. more then 10 loops.")
-            #self.log.info(u"search items")
-            _items, _matched_search, _unprocessed_search = self._searchItems(items,unprocessed_search,recursive,full_match,items_to_skip,len(matched_items)>0)
-            if len(_items) == 0:
-                break
-            matched_items = _items
-            items = matched_items
-            unprocessed_search = _unprocessed_search
+        matched_searches = []
+        if len(final_matches) > 0:
 
-        #self.log.info(u"found items: {}".format(','.join([str(item.item.getName()) for item in matched_items]) ))
-        #raise Exception("test")
-        return matched_items, unprocessed_search
+            final_items = set(map(lambda match: match.semantic_item.getItem().getName(), final_matches))
+            special_equipment_parent_items = self.semantic_model.getSpecialEquipmentParentNameMap()
 
+            for match in final_matches:
+
+                search_terms = match.full_match + match.part_match
+
+                # filter locations, if they match a "special" search term which is also used for an equipments
+                # and the location from this equipment is also part of the matches
+                if match.semantic_item.getSemanticType() == "Location":
+                    is_allowed = True
+                    for search_term in search_terms:
+                        # check if it is a "special" search term
+                        if search_term not in special_equipment_parent_items:
+                            continue
+                        # check if the equipment parent is also part of matches.
+                        # if yes, we can skip the current item
+                        if final_items & special_equipment_parent_items[search_term]:
+                            is_allowed = False
+                            break
+                    if not is_allowed:
+                        continue
+                
+                #    self.log.info(u"{} {}".format(search_term,map[search_term]))
+                matched_items.append(match.semantic_item)
+                matched_searches += search_terms
+            matched_items = list(set(matched_items))
+            matched_searches = list(set(matched_searches))
+            for matched_search in matched_searches:
+                unprocessed_search = unprocessed_search.replace(matched_search,"")
+ 
+        return matched_items,matched_searches,unprocessed_search
+    
     def detectLocations(self,actions):
         for action in actions:
-            # search for locations
-            matched_locations, unprocessed_search = self.searchItems(self.semantic_model.getRootLocations(),action.voice_cmd_unprocessed,recursive=True,full_match=True)
-            if len(matched_locations) == 0:
-                matched_locations, unprocessed_search = self.searchItems(self.semantic_model.getRootLocations(),action.voice_cmd_unprocessed,recursive=True,full_match=False)
-            action.voice_cmd_unprocessed = unprocessed_search
-            action.voice_cmd_without_location = unprocessed_search
+            matched_locations, matched_searches, unprocessed_search = self.searchItems(self.semantic_model.getRootLocations(),action.unprocessed_search,[])
+            action.unprocessed_search = unprocessed_search
+
+            #if len(matched_locations) > 1:
+            #    self.log.info(u"{}".format(action.unprocessed_search))
+            #    for location in matched_locations:
+            #        self.log.info(u"{}".format(location.getItem().getName()))
+
             action.locations = matched_locations
+            action.location_search_terms = matched_searches
+            
 
     def fillLocationsFallbacks(self,actions,fallback_location_name):
         # Fill missing locations forward
@@ -173,7 +232,7 @@ class VoiceCommandRule:
                 if len(action.locations) != 0:
                     continue
                 action.locations = [ self.semantic_model.getSemanticItem(fallback_location_name) ]
-   
+    
     def checkPoints(self,action,unprocessed_search,items_to_skip):
         #self.log.info(u"checkPoints")
         equipments = []
@@ -182,7 +241,7 @@ class VoiceCommandRule:
             #self.log.info(u"  location: '{}', unprocessed_search: '{}'".format(location,unprocessed_search))
             equipments += self.getItemsByType(location,"Equipment")
 
-        matched_equipments, unprocessed_search = self.searchItems(equipments,unprocessed_search,recursive=True,full_match=False,items_to_skip=items_to_skip)
+        matched_equipments, matched_equipment_searches, unprocessed_search = self.searchItems(equipments,unprocessed_search,items_to_skip)
   
         # check points of equipments 
         if len(matched_equipments) > 0:
@@ -193,10 +252,16 @@ class VoiceCommandRule:
                 #self.log.info(u"  equipment: '{}', unprocessed_search: '{}'".format(equipment.item.getName(),unprocessed_search))
                 points += self.getItemsByType(equipment,"Point")
 
-            matched_points, unprocessed_search = self.searchItems(points,unprocessed_search,recursive=False,full_match=False,items_to_skip=items_to_skip)
+            matched_points, matched_point_searches, unprocessed_search = self.searchItems(points,unprocessed_search,items_to_skip)
 
             # add matched points or all equipment points if there are no matches
-            action.points = points if len(matched_points) == 0 else matched_points
+            if len(matched_points) == 0:
+                action.points = points
+                action.point_search_terms = matched_equipment_searches
+            else:
+                action.points = matched_points
+                action.point_search_terms = matched_point_searches + matched_equipment_searches
+            
             return unprocessed_search
 
         # check points of locations
@@ -204,18 +269,18 @@ class VoiceCommandRule:
         for location in action.locations:
             points += self.getItemsByType(location,"Point")
 
-        matched_points, unprocessed_search = self.searchItems(points,unprocessed_search,recursive=False,full_match=False,items_to_skip=items_to_skip)
+        matched_points, matched_searches, unprocessed_search = self.searchItems(points,unprocessed_search,items_to_skip)
         action.points = matched_points
+        action.point_search_terms = matched_searches
 
         return unprocessed_search 
  
     def detectPoints(self,actions):
         for action in actions:
             # search for points based on voice_cmd
-            voice_cmd_unprocessed = self.checkPoints(action,action.voice_cmd_unprocessed,[])
-            if voice_cmd_unprocessed != None:
-                #self.log.info(voice_cmd_unprocessed)
-                action.voice_cmd_unprocessed = voice_cmd_unprocessed
+            unprocessed_search = self.checkPoints(action,action.unprocessed_search,[])
+            if unprocessed_search != None:
+                action.unprocessed_search = unprocessed_search
 
     def fillPointFallbacks(self,actions):
         # Fill missing points backward until command is found
@@ -223,7 +288,7 @@ class VoiceCommandRule:
         for action in reversed(actions):
             if len(action.points) == 0:
                 if last_action != None:
-                    self.checkPoints(action,u"{} {}".format(last_action.voice_cmd_without_location,action.voice_cmd_unprocessed),last_action.points)
+                    self.checkPoints(action,u"{} {}".format(" ".join(last_action.point_search_terms),action.unprocessed_search),last_action.points)
             else:
                 last_action = action
 
@@ -236,8 +301,7 @@ class VoiceCommandRule:
             # if no points where found search again based on the last cmd with points
             if len(action.points) == 0:
                 if last_action != None:
-                    #self.log.info(u"fallback {}".format(last_action.voice_cmd_without_location))
-                    self.checkPoints(action,u"{} {}".format(last_action.voice_cmd_without_location,action.voice_cmd_unprocessed),last_action.points)
+                    self.checkPoints(action,u"{} {}".format(" ".join(last_action.point_search_terms),action.unprocessed_search),last_action.points)
             else:
                 last_action = action
  
@@ -247,8 +311,8 @@ class VoiceCommandRule:
         for cmd in SemanticConfig["commands"]:
             for search in SemanticConfig["commands"][cmd]["search"]:
                 if search[0:1] == "/" and search[-1:] == "/":
-                    #self.log.info(u"{} {}".format(search[1:-1],action.voice_cmd_unprocessed))
-                    match = re.match(search[1:-1],action.voice_cmd_unprocessed)
+                    #self.log.info(u"{} {}".format(search[1:-1],action.unprocessed_search))
+                    match = re.match(search[1:-1],action.unprocessed_search)
                     if match:
                         number = match.group(1)
                         if number in SemanticConfig["main"]["number_mapping"]:
@@ -257,7 +321,7 @@ class VoiceCommandRule:
                             return cmd, SemanticConfig["commands"][cmd], number
                         return None, None, None
                 else:
-                    parts = action.voice_cmd_unprocessed.split(" ")
+                    parts = action.unprocessed_search.split(" ")
                     if search in parts:
                         return cmd, SemanticConfig["commands"][cmd], None
         return None, None, None
@@ -395,28 +459,28 @@ class VoiceCommandRule:
         for action in actions:
             if len(action.item_actions) > 0:
                 continue
- 
+
             if len(action.locations) == 0:
-                missing_locations.append(action.voice_cmd_complete)
+                missing_locations.append(action.unprocessed_search)
             elif len(action.points) == 0:
-                missing_points.append(action.voice_cmd_complete)
+                missing_points.append(action.unprocessed_search)
             elif action.cmd is None:
-                missing_cmds.append(action.voice_cmd_complete)
+                missing_cmds.append(action.unprocessed_search)
             else:
-                unsupported_cmds.append(action.voice_cmd_complete)
+                unsupported_cmds.append(action.unprocessed_search)
 
         is_valid = False
-        join_seperator = SemanticConfig["i18n"]["message_join_separator"]
+        join_separator = SemanticConfig["i18n"]["message_join_separator"]
         if len(actions) == len(missing_locations):
             msg = SemanticConfig["i18n"]["nothing_found"].format(term=voice_command)
         elif len(missing_locations) > 0:
-            msg = SemanticConfig["i18n"]["nothing_found"].format(term=join_seperator.join(missing_locations))
+            msg = SemanticConfig["i18n"]["nothing_found"].format(term=join_separator.join(missing_locations))
         elif len(missing_points) > 0:
-            msg = SemanticConfig["i18n"]["no_equipment_found_in_phrase"].format(term=join_seperator.join(missing_points))
+            msg = SemanticConfig["i18n"]["no_equipment_found_in_phrase"].format(term=join_separator.join(missing_points))
         elif len(missing_cmds) > 0:
-            msg = SemanticConfig["i18n"]["no_cmd_found_in_phrase"].format(term=join_seperator.join(missing_cmds))
+            msg = SemanticConfig["i18n"]["no_cmd_found_in_phrase"].format(term=join_separator.join(missing_cmds))
         elif len(unsupported_cmds) > 0:
-            msg = SemanticConfig["i18n"]["no_supported_cmd_in_phrase"].format(term=join_seperator.join(unsupported_cmds))
+            msg = SemanticConfig["i18n"]["no_supported_cmd_in_phrase"].format(term=join_separator.join(unsupported_cmds))
         else:
             msg = SemanticConfig["i18n"]["ok_message"]
             is_valid = True
@@ -483,7 +547,9 @@ class TestRule:
                 raise Exception()
 
             item_actions_skipped = []
+            location_names = []
             for action in actions:
+                location_names += map(lambda location: location.getItem().getName(),action.locations)
                 for item_action in action.item_actions:
                     item_actions_skipped.append(item_action)
 
@@ -504,6 +570,13 @@ class TestRule:
 
             excpected_result = case["is_valid"] == is_valid if "is_valid" in case else is_valid
     
+            location_names = list(set(location_names))
+            if len(location_names) > 0 and case.get("location_count",1) != len(location_names):
+                for action in actions:
+                    for location in action.locations:
+                        self.log.info(u"  location: {}".format(location.getItem().getName()))
+                excpected_result = False
+              
             if excpected_result \
                 and len(item_actions_skipped) == 0 and len(item_actions_applied) == len(case["items"]):
                 self.log.info(u"OK  - Input: '{}' - MSG: '{}'".format(voice_command,msg))

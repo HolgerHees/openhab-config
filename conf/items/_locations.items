@@ -21,14 +21,18 @@ Group lFF_Attic         "Dachboden"     <attic>         (lFirstFloor)  ["Attic"]
 
 Group lOutdoor          "Garten"      <garden>                       ["Outdoor"]        { synonyms="draussen,aussen" }
 Group lOutdoor_Streedside "Vorgarten"   <garden>        (lOutdoor)     ["Garden"]       { synonyms="Strassenseite, vorne" }
-Group lOutdoor_Streedside_Garage "Schuppen vorne" <garden> (lOutdoor_Streedside) ["Garden"] { synonyms="Garage" }
+Group lOutdoor_Streedside_Garage "Schuppen vorne" <garden> (lOutdoor_Streedside) ["Garden"] { synonyms="Garage,Schuppen" }
 Group lOutdoor_Streedside_Frontdoor "Haustür" <garden>  (lOutdoor_Streedside) ["Garden"]
 Group lOutdoor_Carport  "Carport"       <garden>        (lOutdoor)     ["Carport"]
 Group lOutdoor_Garden   "Hintergarten"        <garden>        (lOutdoor) ["Garden"]     { synonyms="hinten" }
-Group lOutdoor_Garden_Garage  "Schuppen hinten" <garden> (lOutdoor_Garden) ["Garden"]   { synonyms="Garage" }
+Group lOutdoor_Garden_Garage  "Schuppen hinten" <garden> (lOutdoor_Garden) ["Garden"]   { synonyms="Garage,Schuppen" }
 Group lOutdoor_Garden_Terrace  "Terasse" <garden>       (lOutdoor_Garden) ["Terrace"]
 Group lOutdoor_Garden_Left "Garten Links"      <garden> (lOutdoor_Garden) ["Garden"]    { synonyms="links" }
 Group lOutdoor_Garden_Right "Garten Rechts"    <garden> (lOutdoor_Garden) ["Garden"]    { synonyms="rechts" }
 Group lOutdoor_Garden_Back "Garten Rückseite"  <garden> (lOutdoor_Garden)  ["Garden"]   { synonyms="Hinterer Nachbar"}
 
 Group lOther            "Sonstiges"     <group>                        ["Location"]
+
+
+//Group lTestFloor1        "Erdgeschoss"   <groundfloor>   (lIndoor)      ["GroundFloor"]  { synonyms="testflur" }
+//Group lTestFloor3        "Erdgeschoss"   <groundfloor>   (lTestFloor2)      ["GroundFloor"]  { synonyms="testflur" }
