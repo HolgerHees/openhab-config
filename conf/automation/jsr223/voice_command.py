@@ -178,6 +178,7 @@ class VoiceCommandRule:
                     # check if the equipment parent is also part of matches.
                     # if yes, we can skip the current item
                     if final_items & set(possible_duplicate_search_items[search_term]):
+                        #self.log.info(u"{}".format(match.semantic_item.getRootPath()))
                         #self.log.info(u"{}".format(search_term))
                         #self.log.info(u"{}".format(final_items))
                         #self.log.info(u"{}".format(possible_duplicate_search_items[search_term]))
@@ -186,7 +187,7 @@ class VoiceCommandRule:
 
                 if not is_allowed:
                     continue 
-                
+                  
                 #    self.log.info(u"{} {}".format(search_term,map[search_term]))
                 matched_items.append(match.semantic_item)
                 matched_searches += search_terms
