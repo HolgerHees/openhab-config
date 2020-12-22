@@ -25,6 +25,7 @@ class VoiceAction:
         self.point_search_terms = []
 
         self.cmd = None
+        self.cmd_search_terms = []
         
         self.item_actions = []
 
@@ -162,27 +163,29 @@ class VoiceCommandRule:
         if len(final_matches) > 0:
 
             final_items = set(map(lambda match: match.semantic_item.getItem().getName(), final_matches))
-            special_equipment_parent_items = self.semantic_model.getSpecialEquipmentParentNameMap()
-
+            possible_duplicate_search_items = self.semantic_model.getDuplicateSearchItems(final_matches[0].semantic_item.getSemanticType())
+                     
             for match in final_matches:
 
                 search_terms = match.full_match + match.part_match
 
-                # filter locations, if they match a "special" search term which is also used for an equipments
+                # filter locations (or equipments), if they match a "special" search term which is also used for an equipments (or points)
                 # and the location from this equipment is also part of the matches
-                if match.semantic_item.getSemanticType() == "Location":
-                    is_allowed = True
-                    for search_term in search_terms:
-                        # check if it is a "special" search term
-                        if search_term not in special_equipment_parent_items:
-                            continue
-                        # check if the equipment parent is also part of matches.
-                        # if yes, we can skip the current item
-                        if final_items & special_equipment_parent_items[search_term]:
-                            is_allowed = False
-                            break
-                    if not is_allowed:
-                        continue
+                diff = set(search_terms) & set(possible_duplicate_search_items.keys())
+                is_allowed = True
+                for search_term in diff:
+                    #self.log.info(u"{}".format(diff))
+                    # check if the equipment parent is also part of matches.
+                    # if yes, we can skip the current item
+                    if final_items & set(possible_duplicate_search_items[search_term]):
+                        #self.log.info(u"{}".format(search_term))
+                        #self.log.info(u"{}".format(final_items))
+                        #self.log.info(u"{}".format(possible_duplicate_search_items[search_term]))
+                        is_allowed = False
+                        break
+
+                if not is_allowed:
+                    continue 
                 
                 #    self.log.info(u"{} {}".format(search_term,map[search_term]))
                 matched_items.append(match.semantic_item)
@@ -286,14 +289,14 @@ class VoiceCommandRule:
         # Fill missing points backward until command is found
         last_action = None
         for action in reversed(actions):
+            if action.cmd != None: # maybe not needed
+                last_action = None
+ 
             if len(action.points) == 0:
                 if last_action != None:
                     self.checkPoints(action,u"{} {}".format(" ".join(last_action.point_search_terms),action.unprocessed_search),last_action.points)
             else:
                 last_action = action
-
-            #if action.cmd != None:
-            #    last_action = None
  
         # Fill missing points forwards
         last_action = None
@@ -318,11 +321,13 @@ class VoiceCommandRule:
                         if number in SemanticConfig["main"]["number_mapping"]:
                             number = SemanticConfig["main"]["number_mapping"][number]
                         if number.isnumeric():
+                            action.cmd_search_terms.append(number)
                             return cmd, SemanticConfig["commands"][cmd], number
                         return None, None, None
                 else:
                     parts = action.unprocessed_search.split(" ")
                     if search in parts:
+                        action.cmd_search_terms.append(search)
                         return cmd, SemanticConfig["commands"][cmd], None
         return None, None, None
     
@@ -336,22 +341,23 @@ class VoiceCommandRule:
 
     def fillCommandFallbacks(self,actions):
         # Fill missing commands backward
-        last_cmd = None
+        last_action = None
         for action in reversed(actions):
             if action.cmd is None:
-                action.cmd = last_cmd
+                if last_action != None:
+                    action.cmd = last_action.cmd
             else:
-                last_cmd = action.cmd
+                last_action = action
 
         # Fill missing commands forward
-        last_cmd = None
+        last_action = None
         for action in actions:
-            #self.log.info(u"cmd {} {}".format(cmd,item_types))
             # if no cmd found use the last one
             if action.cmd is None:
-                action.cmd = last_cmd
+                if last_action != None:
+                    action.cmd = last_action.cmd
             else:
-                last_cmd = action.cmd
+                last_action = action
 
     def validateActions(self,actions):
         processed_items = {}
@@ -398,7 +404,7 @@ class VoiceCommandRule:
 
             self.detectCommand(actions)
 
-            self.fillPointFallbacks(actions)
+            self.fillPointFallbacks(actions) # depends on detected commands
 
             self.fillCommandFallbacks(actions)
 
