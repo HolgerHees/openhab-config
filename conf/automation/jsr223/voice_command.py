@@ -28,7 +28,7 @@ class VoiceAction:
         self.cmd_search_terms = []
         
         self.item_actions = []
-
+  
 class ItemCommand:
     def __init__(self,cmd_config,cmd_name,cmd_argument):
         self.cmd_config = cmd_config
@@ -51,6 +51,7 @@ class ItemMatcher:
         self.part_match = []
         for match in part_match:
             self.part_match += match.split(" ")
+        self.all_matches = set(self.full_match + self.part_match)
     
     def getPriority(self):
         return len(self.full_match) * 1.2 + len(self.part_match) * 1.1
@@ -143,8 +144,7 @@ class VoiceCommandRule:
     def searchItems(self,semantic_items,unprocessed_search,items_to_skip=[]):
         matches = []
         for semantic_item in semantic_items:
-            _matches = self._searchItems(semantic_item,unprocessed_search,items_to_skip,_full_matched_terms=[],_part_matched_terms=[],_processed_items=[])
-            matches += _matches
+            matches += self._searchItems(semantic_item,unprocessed_search,items_to_skip,_full_matched_terms=[],_part_matched_terms=[],_processed_items=[])
 
         # get only matches with highest priority
         final_priority = 0
@@ -162,35 +162,43 @@ class VoiceCommandRule:
         matched_searches = []
         if len(final_matches) > 0:
 
-            final_items = set(map(lambda match: match.semantic_item.getItem().getName(), final_matches))
-            possible_duplicate_search_items = self.semantic_model.getDuplicateSearchItems(final_matches[0].semantic_item.getSemanticType())
+            alternative_children_path_map = self.semantic_model.getAlternativeChildrenPathMap(final_matches[0].semantic_item.getSemanticType())
                      
             for match in final_matches:
 
-                search_terms = match.full_match + match.part_match
-
                 # filter locations (or equipments), if they match a "special" search term which is also used for an equipments (or points)
                 # and the location from this equipment is also part of the matches
-                diff = set(search_terms) & set(possible_duplicate_search_items.keys())
-                is_allowed = True
-                for search_term in diff:
-                    #self.log.info(u"{}".format(diff))
-                    # check if the equipment parent is also part of matches.
-                    # if yes, we can skip the current item
-                    if final_items & set(possible_duplicate_search_items[search_term]):
-                        #self.log.info(u"{}".format(match.semantic_item.getRootPath()))
-                        #self.log.info(u"{}".format(search_term))
-                        #self.log.info(u"{}".format(final_items))
-                        #self.log.info(u"{}".format(possible_duplicate_search_items[search_term]))
-                        is_allowed = False
-                        break
+                diff = match.all_matches & set(alternative_children_path_map.keys())
+                if len(diff) > 0:
+                    matched_root_path = match.semantic_item.getRootPath()
 
-                if not is_allowed:
-                    continue 
-                  
+                    # get all matches outside of this search term scope
+                    non_matched_path_items = set(map(lambda match: match.semantic_item, filter(lambda _match: not(match.all_matches & _match.all_matches), final_matches)))
+        
+                    is_allowed = True
+                    for search_term in diff:
+                        # get path items which are outside of this matched path
+                        related_path_items = alternative_children_path_map[search_term] - matched_root_path
+
+                        #if len(non_matched_path_items) > 0:
+                        #    self.log.info(u"{}".format(set(map(lambda match: match.semantic_item, final_matches))))
+                        #    self.log.info(u"{}".format(non_matched_path_items))
+                        #    self.log.info(u"{}".format(related_path_items))
+                        #    raise Exception()
+    
+                        # check if other (non matched) paths are from this alternative children path
+                        if non_matched_path_items & set(related_path_items):
+                            # if yes, means the current match is not allowed, because:
+                            # the current search term is used thru the other path tree in an alternative children path
+                            is_allowed = False
+                            break
+
+                    if not is_allowed:
+                        continue 
+                    
                 #    self.log.info(u"{} {}".format(search_term,map[search_term]))
                 matched_items.append(match.semantic_item)
-                matched_searches += search_terms
+                matched_searches += match.all_matches
             matched_items = list(set(matched_items))
             matched_searches = list(set(matched_searches))
             for matched_search in matched_searches:
