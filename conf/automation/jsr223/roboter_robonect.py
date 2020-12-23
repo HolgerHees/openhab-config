@@ -2,6 +2,7 @@ from shared.helper import rule, getItemState, postUpdate, postUpdateIfChanged, i
 from core.actions import Transformation
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
+#postUpdate("pOutdoor_Mower_WlanSignal",0)
 
 @rule("roboter_robonect.py")
 class MoverStatusRule:

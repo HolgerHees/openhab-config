@@ -195,7 +195,7 @@ class VoiceCommandRule:
 
                     if not is_allowed:
                         continue 
-                    
+                      
                 #    self.log.info(u"{} {}".format(search_term,map[search_term]))
                 matched_items.append(match.semantic_item)
                 matched_searches += match.all_matches
@@ -587,9 +587,6 @@ class TestRule:
     
             location_names = list(set(location_names))
             if len(location_names) > 0 and case.get("location_count",1) != len(location_names):
-                for action in actions:
-                    for location in action.locations:
-                        self.log.info(u"  location: {}".format(location.getItem().getName()))
                 excpected_result = False
               
             if excpected_result \
@@ -597,13 +594,16 @@ class TestRule:
                 self.log.info(u"OK  - Input: '{}' - MSG: '{}'".format(voice_command,msg))
             else:
                 self.log.info(u"ERR - Input: '{}' - MSG: '{}'".format(voice_command,msg))
+                for action in actions:
+                    for location in action.locations:
+                        self.log.info(u"       LOCATION:   => {}".format(location.getItem().getName()))
                 for case_action in case_actions_excpected:
                     self.log.info(u"       MISSING     => {} => {}".format(case_action[0],case_action[1]))
                 for item_action in item_actions_skipped:
                     self.log.info(u"       UNEXCPECTED => {} => {}".format(item_action.item.getName(),item_action.cmd_name))
                 for item_action in item_actions_applied:
                     self.log.info(u"       MATCH       => {} => {}".format(item_action.item.getName(),item_action.cmd_name))
-
+ 
                 items = []
                 for item_action in item_actions_skipped:
                     items.append(u"[\"{}\",\"{}\"]".format(item_action.item.getName(),item_action.cmd_name))
@@ -612,6 +612,6 @@ class TestRule:
 
                 self.log.info(u"\n\n[{}]\n\n".format(",".join(items)))
                 raise Exception("Wrong detection")
-
+ 
     def execute(self, module, input):
         pass      
