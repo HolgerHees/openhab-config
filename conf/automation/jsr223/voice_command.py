@@ -449,18 +449,17 @@ class VoiceCommandRule:
                 return parent
             return self.getParentByType(parent,type)
 
-    def getAnswer(self,item):
-        semantic_item = self.semantic_model.getSemanticItem(item.getName())
+    def getAnswer(self,semantic_item):
         semantic_equipment = self.getParentByType(semantic_item,"Equipment")
         semantic_location = self.getParentByType(semantic_equipment,"Location")
         #semantic_location = self.getParentByType(semantic_item,"Location")
  
-        value = self.getFormattedValue(item)
+        value = self.getFormattedValue(semantic_item.getItem())
         
-        for tag in item.getTags():
+        for tag in semantic_item.getItem().getTags():
             if tag not in SemanticConfig["answers"]:
                 continue
-            return SemanticConfig["answers"][tag].format(room=semantic_location.item.getLabel(),state=value)
+            return SemanticConfig["answers"][tag].format(room=semantic_location.getItem().getLabel(),state=value)
 
         semantic_reference = semantic_equipment if len(semantic_equipment.getChildren()) == 1 else semantic_item
 
@@ -504,15 +503,20 @@ class VoiceCommandRule:
             msg_r = []
             for action in actions:
                 for item_action in action.item_actions:
+                    semantic_item = self.semantic_model.getSemanticItem(item_action.item.getName())
                     if item_action.cmd_name == "READ":
-                        msg_r.append(self.getAnswer(item_action.item))
+                        msg_r.append(self.getAnswer(semantic_item))
                         #answer_data.append([item_action.item,value])
-                    elif not dry_run:
-                        if item_action.cmd_name == "PERCENT":
-                            sendCommandIfChanged(item_action.item,item_action.cmd_argument)
-                        else:
-                            #self.log.info(u"postUpdate {} {}".format(item_action.item.getName(),item_action.cmd_name))
-                            sendCommandIfChanged(item_action.item,item_action.cmd_name)
+                    else:
+                        if not dry_run:
+                            if item_action.cmd_name == "PERCENT":
+                                sendCommandIfChanged(item_action.item,item_action.cmd_argument)
+                            else:
+                                #self.log.info(u"postUpdate {} {}".format(item_action.item.getName(),item_action.cmd_name))
+                                sendCommandIfChanged(item_action.item,item_action.cmd_name)
+
+                        if semantic_item.getAnswer() is not None:
+                            msg_r.append(semantic_item.getAnswer()) 
             if len(msg_r) > 0:
                 if len(msg_r) > 2:
                     msg_r = [ msg_r[0], SemanticConfig["i18n"]["more_results"].format(count=len(msg_r)-1) ]
@@ -520,7 +524,7 @@ class VoiceCommandRule:
                 msg = SemanticConfig["i18n"]["message_join_separator"].join(msg_r)
  
         return msg, is_valid
- 
+    
     def parseData(self,input):
         data = input.split("|")
         if len(data) == 1:
@@ -609,9 +613,12 @@ class TestRule:
                     items.append(u"[\"{}\",\"{}\"]".format(item_action.item.getName(),item_action.cmd_name))
                 for item_action in item_actions_applied:
                     items.append(u"[\"{}\",\"{}\"]".format(item_action.item.getName(),item_action.cmd_name))
-
-                self.log.info(u"\n\n[{}]\n\n".format(",".join(items)))
-                raise Exception("Wrong detection")
+                msg = u"[{}]".format(",".join(items))
+                if len(location_names) > 1:
+                    msg = u"{}, \"location_count\": {}".format(msg,len(location_names))
  
+                self.log.info(u"\n\n{}\n\n".format(msg))
+                raise Exception("Wrong detection")
+     
     def execute(self, module, input):
         pass      
