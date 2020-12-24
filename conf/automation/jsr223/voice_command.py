@@ -316,30 +316,41 @@ class VoiceCommandRule:
                     self.checkPoints(action,u"{} {}".format(" ".join(last_action.point_search_terms),action.unprocessed_search),last_action.points)
             else:
                 last_action = action
- 
+      
     def checkCommand(self,action):
-        #self.log.info(u"{}".format(action.points))
+        # check if we have a unique property like Light or ColorTemperature
+        main_properties = []
+        for point in action.points:
+            main_properties += point.semantic_properties
+        main_property = main_properties[0] if len(set(main_properties)) == 1 else None
+
+        # if no main_property detected
+        # 1. we use the first cmd which matches search => later in validareActions, we filter out all points which are not supported by this command
+        # 2. if we have a main property, we use the first cmd where search and tags matches
+
+        #self.log.info(u">>>> {}".format(main_property))
 
         for cmd in SemanticConfig["commands"]:
-            for search in SemanticConfig["commands"][cmd]["search"]:
-                if search[0:1] == "/" and search[-1:] == "/":
-                    #self.log.info(u"{} {}".format(search[1:-1],action.unprocessed_search))
-                    match = re.match(search[1:-1],action.unprocessed_search)
-                    if match:
-                        number = match.group(1)
-                        if number in SemanticConfig["main"]["number_mapping"]:
-                            number = SemanticConfig["main"]["number_mapping"][number]
-                        if number.isnumeric():
-                            action.cmd_search_terms.append(number)
-                            return cmd, SemanticConfig["commands"][cmd], number
-                        return None, None, None
-                else:
-                    parts = action.unprocessed_search.split(" ")
-                    if search in parts:
-                        action.cmd_search_terms.append(search)
-                        return cmd, SemanticConfig["commands"][cmd], None
+            for cmd_config in SemanticConfig["commands"][cmd]:
+                for search in cmd_config["search"]:
+                    if search[0:1] == "/" and search[-1:] == "/":
+                        #self.log.info(u"{} {}".format(search[1:-1],action.unprocessed_search))
+                        match = re.match(search[1:-1],action.unprocessed_search)
+                        if match and (main_property is None or main_property in cmd_config["tags"]):
+                            number = match.group(1)
+                            if number in SemanticConfig["main"]["number_mapping"]:
+                                number = SemanticConfig["main"]["number_mapping"][number]
+                            if number.isnumeric():
+                                action.cmd_search_terms.append(number)
+                                return cmd,cmd_config, number
+                            return None, None, None
+                    else:
+                        parts = action.unprocessed_search.split(" ")
+                        if search in parts:
+                            action.cmd_search_terms.append(search)
+                            return cmd, cmd_config, None
         return None, None, None
-    
+       
     def detectCommand(self,actions):
         for action in actions:
             # search for cmd based on voice_cmd
@@ -384,7 +395,7 @@ class VoiceCommandRule:
                 processed_items[item_name] = True
                 action.item_actions.append(ItemAction(point.item,action.cmd.cmd_name,action.cmd.cmd_argument))
         #self.log.info(u"{}".format(processed_items.keys()))
-          
+            
     def process(self,voice_command, fallback_location_name):
         actions = []
         voice_command = voice_command.lower()
@@ -445,9 +456,9 @@ class VoiceCommandRule:
 
     def getParentByType(self,semantic_item,type):
         for parent in semantic_item.getParents():
-            if parent.type == "Group":
+            if parent.getSemanticType() == "Group":
                 continue
-            if parent.type == type:
+            if parent.getSemanticType() == type:
                 return parent
             return self.getParentByType(parent,type)
 
@@ -548,7 +559,7 @@ class VoiceCommandRule:
         msg, is_valid = self.applyActions(actions,voice_command,False)
 
         postUpdate("VoiceMessage",msg)
-                                 
+                                   
 @rule("voice_command.py")
 class TestRule:
     def __init__(self):
