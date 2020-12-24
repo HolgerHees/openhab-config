@@ -378,11 +378,13 @@ class VoiceCommandRule:
                     or action.cmd is None \
                     or ( "types" in action.cmd.cmd_config and point.item.getType() not in action.cmd.cmd_config["types"] ) \
                     or ( "tags" in action.cmd.cmd_config and len(filter(lambda x: x in action.cmd.cmd_config["tags"], point.item.getTags()))==0  ):
+                    # TODO debug if all cases makes sence
+                    #self.log.info(u">>>>skip {} {}".format(item_name,action.cmd))
                     continue
                 processed_items[item_name] = True
                 action.item_actions.append(ItemAction(point.item,action.cmd.cmd_name,action.cmd.cmd_argument))
         #self.log.info(u"{}".format(processed_items.keys()))
-    
+          
     def process(self,voice_command, fallback_location_name):
         actions = []
         voice_command = voice_command.lower()
