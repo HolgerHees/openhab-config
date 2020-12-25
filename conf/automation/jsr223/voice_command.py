@@ -350,7 +350,12 @@ class VoiceCommandRule:
                                     value = SemanticConfig["main"]["color_mapping"][value]
                                 else:
                                     value = None
- 
+                            elif cmd_type == "COLOR_TEMPERATURE":
+                                if value in SemanticConfig["main"]["color_temperature_mapping"]:
+                                    value = SemanticConfig["main"]["color_temperature_mapping"][value]
+                                else:
+                                    value = None
+
                             if value != None:
                                 return cmd_type,cmd_config,value
                             return None, None, None
@@ -542,7 +547,7 @@ class VoiceCommandRule:
                 msg = SemanticConfig["i18n"]["message_join_separator"].join(msg_r)
  
         return msg, is_valid
-    
+      
     def parseData(self,input):
         data = input.split("|")
         if len(data) == 1:
