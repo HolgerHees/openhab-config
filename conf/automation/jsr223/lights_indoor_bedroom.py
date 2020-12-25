@@ -21,10 +21,10 @@ class LightsIndoorBedroomLeftControlRule:
         ]
 
     def execute(self, module, input):
-        if getItemState("pFF_Bedroom_Light_Hue_Left_Brightness").intValue() == 0:
-            sendCommand("pFF_Bedroom_Light_Hue_Left_Brightness",100)
+        if getItemState("pFF_Bedroom_Light_Hue_Left_Color").intValue() == 0:
+            sendCommand("pFF_Bedroom_Light_Hue_Left_Color",100)
         else:
-            sendCommand("pFF_Bedroom_Light_Hue_Left_Brightness",0)
+            sendCommand("pFF_Bedroom_Light_Hue_Left_Color",0)
             
 @rule("lights_indoor_bedroom_right_control.py")
 class LightsIndoorBedroomRightControlRule:
@@ -34,7 +34,7 @@ class LightsIndoorBedroomRightControlRule:
         ]
 
     def execute(self, module, input):
-        if getItemState("pFF_Bedroom_Light_Hue_Right_Brightness").intValue() == 0:
-            sendCommand("pFF_Bedroom_Light_Hue_Right_Brightness",100)
+        if getItemState("pFF_Bedroom_Light_Hue_Right_Color").intValue() == 0:
+            sendCommand("pFF_Bedroom_Light_Hue_Right_Color",100)
         else:
-            sendCommand("pFF_Bedroom_Light_Hue_Right_Brightness",0)
+            sendCommand("pFF_Bedroom_Light_Hue_Right_Color",0)

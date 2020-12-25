@@ -8,23 +8,23 @@ sitemap haus label="Main Menu"
 			Frame label="Etagen" {
 				Group item=gGF_Lights label="EG Lampen [MAP(group_light.map):%d]" {
 					Frame label="Wohnzimmer & Küche" {
-						Slider item=gGF_Livingroom_Light_Hue_Brightness label="Wohnzimmer Indirekt"
-						Text label="Wohnz. Indirekt anpassen" icon="selfcontrol" visibility=[gGF_Livingroom_Light_Hue_Brightness>0] {
+						Slider item=gGF_Livingroom_Light_Hue_Color label="Wohnzimmer Indirekt"
+						Text label="Wohnz. Indirekt anpassen" icon="selfcontrol" visibility=[gGF_Livingroom_Light_Hue_Color>0] {
 							Frame label="Gruppe" {
-								Slider item=gGF_Livingroom_Light_Hue_Brightness label="Alle Lampen [%d %%]"
+								Slider item=gGF_Livingroom_Light_Hue_Color label="Alle Lampen [%d %%]"
 								Colorpicker item=gGF_Livingroom_Light_Hue_Color label="Alle Lampen"
                                 Switch item=pOther_Manual_State_Lightprogram label="Programm" mappings=[0="Aus", 1="1", 2="2"]
 							}
 							Frame label="Einzeln" {
-								Slider item=pGF_Livingroom_Light_Hue4_Brightness label="Küche Tresen [%d %%]"
+								Slider item=pGF_Livingroom_Light_Hue4_Color label="Küche Tresen [%d %%]"
 								Colorpicker item=pGF_Livingroom_Light_Hue4_Color label="Küche Tresen"
-								Slider item=pGF_Livingroom_Light_Hue5_Brightness label="Bücherregal [%d %%]"
+								Slider item=pGF_Livingroom_Light_Hue5_Color label="Bücherregal [%d %%]"
 								Colorpicker item=pGF_Livingroom_Light_Hue5_Color label="Bücherregal"
-								Slider item=pGF_Livingroom_Light_Hue3_Brightness label="Stehlampe oben [%d %%]"
+								Slider item=pGF_Livingroom_Light_Hue3_Color label="Stehlampe oben [%d %%]"
 								Colorpicker item=pGF_Livingroom_Light_Hue3_Color label="Stehlampe oben"
-								Slider item=pGF_Livingroom_Light_Hue2_Brightness label="Stehlampe unten [%d %%]"
+								Slider item=pGF_Livingroom_Light_Hue2_Color label="Stehlampe unten [%d %%]"
 								Colorpicker item=pGF_Livingroom_Light_Hue2_Color label="Stehlampe unten"
-								Slider item=pGF_Livingroom_Light_Hue1_Brightness label="Couchecke [%d %%]"
+								Slider item=pGF_Livingroom_Light_Hue1_Color label="Couchecke [%d %%]"
 								Colorpicker item=pGF_Livingroom_Light_Hue1_Color label="Couchecke"
 							}
 						}
@@ -36,8 +36,8 @@ sitemap haus label="Main Menu"
 					Frame label="Sonstiges" {
 						Switch item=pGF_Corridor_Light_Ceiling_Powered label="Flur"
 						Switch item=pGF_Corridor_Light_Mirror_Powered label="Flur Spiegel"
-						Slider item=pGF_Corridor_Light_Hue_Brightness label="Flur Indirekt"
-						Colorpicker item=pGF_Corridor_Light_Hue_Color visibility=[pGF_Corridor_Light_Hue_Brightness>0]
+						Slider item=pGF_Corridor_Light_Hue_Color label="Flur Indirekt"
+						Colorpicker item=pGF_Corridor_Light_Hue_Color visibility=[pGF_Corridor_Light_Hue_Color>0]
 						Switch item=pGF_Guestroom_Light_Ceiling_Powered label="Gästezimmer"
 						Switch item=pGF_Guesttoilet_Light_Ceiling_Powered label="Gäste WC"
 						Switch item=pGF_Guesttoilet_Light_Mirror_Powered label="Gäste WC Spiegel"
@@ -48,10 +48,10 @@ sitemap haus label="Main Menu"
 				Group item=gFF_Lights label="OG Lampen [MAP(group_light.map):%d]" {
 					Frame label="Schlafzimmer & Ankleide" {
 						Switch item=pFF_Bedroom_Light_Ceiling_Powered label="Schlafzimmer"
-						Slider item=pFF_Bedroom_Light_Hue_Left_Brightness label="Schlafzimmer Bett Fenster HUE"
-						Colorpicker item=pFF_Bedroom_Light_Hue_Left_Color label="Schlafzimmer Bett Fenster HUE Farbe" visibility=[pFF_Bedroom_Light_Hue_Left_Brightness>0]
-						Slider item=pFF_Bedroom_Light_Hue_Right_Brightness label="Schlafzimmer Bett Wand HUE"
-						Colorpicker item=pFF_Bedroom_Light_Hue_Right_Color label="Schlafzimmer Bett Wand HUE Farbe" visibility=[pFF_Bedroom_Light_Hue_Right_Brightness>0]
+						Slider item=pFF_Bedroom_Light_Hue_Left_Color label="Schlafzimmer Bett Fenster HUE"
+						Colorpicker item=pFF_Bedroom_Light_Hue_Left_Color label="Schlafzimmer Bett Fenster HUE Farbe" visibility=[pFF_Bedroom_Light_Hue_Left_Color>0]
+						Slider item=pFF_Bedroom_Light_Hue_Right_Color label="Schlafzimmer Bett Wand HUE"
+						Colorpicker item=pFF_Bedroom_Light_Hue_Right_Color label="Schlafzimmer Bett Wand HUE Farbe" visibility=[pFF_Bedroom_Light_Hue_Right_Color>0]
 						Switch item=pFF_Dressingroom_Light_Ceiling_Powered label="Ankleide"
 					}
 					Frame label="Badezimmer" {

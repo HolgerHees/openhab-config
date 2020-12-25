@@ -9,12 +9,12 @@ class pOther_Scene1Rule:
         self.triggers = [ItemCommandTrigger("pOther_Scene1",command="ON")]
 
     def execute(self, module, input):
-        sendCommand("gGF_Livingroom_Light_Hue_Brightness", 60)
+        sendCommand("gGF_Livingroom_Light_Hue_Color", 60)
 
         states = [OFF, PercentType.ZERO]
 
         for child in getItem("gGF_Lights").getAllMembers():
-            if child.getState() not in states and child.getName() != "gGF_Livingroom_Light_Hue_Brightness":
+            if child.getState() not in states and child.getName() != "gGF_Livingroom_Light_Hue_Color":
                 sendCommand(child, OFF)
 
         for child in getItem("gFF_Lights").getAllMembers():
@@ -46,7 +46,7 @@ class pOther_Scene3Rule:
         self.triggers = [ItemCommandTrigger("pOther_Scene3",command="ON")]
 
     def execute(self, module, input):
-        sendCommand("pGF_Corridor_Light_Hue_Brightness", 60)
+        sendCommand("pGF_Corridor_Light_Hue_Color", 60)
         sendCommand("pFF_Bathroom_Light_Ceiling_Powered", ON)
         sendCommand("pFF_Bathroom_Light_Mirror_Powered", ON)
         sendCommand("pFF_Bedroom_Light_Hue_Right_Switch", ON)
@@ -54,7 +54,7 @@ class pOther_Scene3Rule:
         states = [OFF, PercentType.ZERO]
 
         for child in getItem("gGF_Lights").getAllMembers():
-            if child.getState() not in states and child.getName() != "pGF_Corridor_Light_Hue_Brightness":
+            if child.getState() not in states and child.getName() != "pGF_Corridor_Light_Hue_Color":
                 sendCommand(child, OFF)
 
         #for child in getItem("gFF_Lights").getAllMembers():

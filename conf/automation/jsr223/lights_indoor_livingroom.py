@@ -5,21 +5,6 @@ from org.eclipse.smarthome.core.types import UnDefType
 ruleTimeouts = {}
 
 @rule("lights_indoor_livingroom_control.py")
-class HueBrightnessRule:
-    def __init__(self):
-        self.triggers = [
-            ItemCommandTrigger("gGF_Livingroom_Light_Hue_Brightness"),
-            ItemCommandTrigger("pGF_Livingroom_Light_Hue1_Brightness"),
-            ItemCommandTrigger("pGF_Livingroom_Light_Hue2_Brightness"),
-            ItemCommandTrigger("pGF_Livingroom_Light_Hue3_Brightness"),
-            ItemCommandTrigger("pGF_Livingroom_Light_Hue4_Brightness"),
-            ItemCommandTrigger("pGF_Livingroom_Light_Hue5_Brightness")
-        ]
-
-    def execute(self, module, input):
-        sendCommand("pOther_Manual_State_Lightprogram", 0)
-
-@rule("lights_indoor_livingroom_control.py")
 class HueColorMainRule:
     def __init__(self):
         self.triggers = [ItemCommandTrigger("gGF_Livingroom_Light_Hue_Color")]
@@ -30,12 +15,13 @@ class HueColorMainRule:
 
         command = input['event'].getItemCommand()
         
-        colors = command.toString().split(",")
-        red = round(float(colors[0]))
-        green = round(float(colors[1]))
-        blue = round(float(colors[1]))
+        #colors = command.toString().split(",")
+
+        #red = round(float(colors[0]))
+        #green = round(float(colors[1]))
+        #blue = round(float(colors[1]))
         
-        command = u"{},{},{}".format(red,green,blue)
+        #command = u"{},{},{}".format(red,green,blue)
         
         sendCommand("pGF_Livingroom_Light_Hue1_Color", command)
         sendCommand("pGF_Livingroom_Light_Hue2_Color", command)

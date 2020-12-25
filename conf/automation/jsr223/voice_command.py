@@ -30,16 +30,16 @@ class VoiceAction:
         self.item_actions = []
   
 class ItemCommand:
-    def __init__(self,cmd_config,cmd_name,cmd_argument):
+    def __init__(self,cmd_config,cmd_type,cmd_value):
         self.cmd_config = cmd_config
-        self.cmd_name = cmd_name
-        self.cmd_argument = cmd_argument
+        self.cmd_type = cmd_type
+        self.cmd_value = cmd_value
 
 class ItemAction:
-    def __init__(self,item,cmd_name,cmd_argument):
+    def __init__(self,item,cmd_type,cmd_value):
         self.item = item
-        self.cmd_name = cmd_name
-        self.cmd_argument = cmd_argument
+        self.cmd_type = cmd_type
+        self.cmd_value = cmd_value
 
 class ItemMatcher:
     def __init__(self,semantic_item,full_match,part_match):
@@ -316,7 +316,7 @@ class VoiceCommandRule:
                     self.checkPoints(action,u"{} {}".format(" ".join(last_action.point_search_terms),action.unprocessed_search),last_action.points)
             else:
                 last_action = action
-      
+       
     def checkCommand(self,action):
         # check if we have a unique property like Light or ColorTemperature
         main_properties = []
@@ -330,35 +330,44 @@ class VoiceCommandRule:
 
         #self.log.info(u">>>> {}".format(main_property))
 
-        for cmd in SemanticConfig["commands"]:
-            for cmd_config in SemanticConfig["commands"][cmd]:
+        for cmd_type in SemanticConfig["commands"]:
+            for cmd_config in SemanticConfig["commands"][cmd_type]:
                 for search in cmd_config["search"]:
-                    if search[0:1] == "/" and search[-1:] == "/":
+                    if cmd_config["value"] == "REGEX":
                         #self.log.info(u"{} {}".format(search[1:-1],action.unprocessed_search))
-                        match = re.match(search[1:-1],action.unprocessed_search)
+                        match = re.match(u"(.*[^0-9a-zA-ZäÄöÖüÜß]+|^){}(.*|$)".format(search),action.unprocessed_search)
                         if match and (main_property is None or main_property in cmd_config["tags"]):
-                            number = match.group(1)
-                            if number in SemanticConfig["main"]["number_mapping"]:
-                                number = SemanticConfig["main"]["number_mapping"][number]
-                            if number.isnumeric():
-                                action.cmd_search_terms.append(number)
-                                return cmd,cmd_config, number
+                            value = match.group(2)
+                            if cmd_type == "PERCENT":
+                                if value in SemanticConfig["main"]["number_mapping"]:
+                                    value = SemanticConfig["main"]["number_mapping"][value]
+                                if value.isnumeric():
+                                    action.cmd_search_terms.append(value)
+                                else:
+                                    value = None
+                            elif cmd_type == "COLOR":
+                                if value in SemanticConfig["main"]["color_mapping"]:
+                                    value = SemanticConfig["main"]["color_mapping"][value]
+                                else:
+                                    value = None
+ 
+                            if value != None:
+                                return cmd_type,cmd_config,value
                             return None, None, None
                     else:
                         parts = action.unprocessed_search.split(" ")
                         if search in parts:
                             action.cmd_search_terms.append(search)
-                            return cmd, cmd_config, None
+                            return cmd_type, cmd_config, cmd_config["value"]
         return None, None, None
-       
+               
     def detectCommand(self,actions):
         for action in actions:
             # search for cmd based on voice_cmd
-            cmd_name, cmd_config, cmd_argument = self.checkCommand(action)
-            if cmd_name is not None:
-                action.cmd = ItemCommand(cmd_config,cmd_name,cmd_argument)
-
-
+            cmd_type, cmd_config, cmd_value = self.checkCommand(action)
+            if cmd_type is not None:
+                action.cmd = ItemCommand(cmd_config,cmd_type,cmd_value)
+ 
     def fillCommandFallbacks(self,actions):
         # Fill missing commands backward
         last_action = None
@@ -393,7 +402,7 @@ class VoiceCommandRule:
                     #self.log.info(u">>>>skip {} {}".format(item_name,action.cmd))
                     continue
                 processed_items[item_name] = True
-                action.item_actions.append(ItemAction(point.item,action.cmd.cmd_name,action.cmd.cmd_argument))
+                action.item_actions.append(ItemAction(point.item,action.cmd.cmd_type,action.cmd.cmd_value))
         #self.log.info(u"{}".format(processed_items.keys()))
             
     def process(self,voice_command, fallback_location_name):
@@ -405,11 +414,11 @@ class VoiceCommandRule:
             if search == voice_command:
                 action = VoiceAction(search)
                 for semantic_item in self.full_phrase_map[search]:
-                    action.item_actions.append(ItemAction(semantic_item.getItem(),"ON",None))
+                    action.item_actions.append(ItemAction(semantic_item.getItem(),"SWITCH","ON"))
                 actions.append(action)
                 #self.log.info(u"{}".format(search))
                 break
-   
+    
         # check for item commands
         if len(actions)==0:
             for synonym in SemanticConfig["main"]["synonyms"]:
@@ -517,16 +526,12 @@ class VoiceCommandRule:
             for action in actions:
                 for item_action in action.item_actions:
                     semantic_item = self.semantic_model.getSemanticItem(item_action.item.getName())
-                    if item_action.cmd_name == "READ":
+                    if item_action.cmd_type == "READ":
                         msg_r.append(self.getAnswer(semantic_item))
                         #answer_data.append([item_action.item,value])
                     else:
                         if not dry_run:
-                            if item_action.cmd_name == "PERCENT":
-                                sendCommandIfChanged(item_action.item,item_action.cmd_argument)
-                            else:
-                                #self.log.info(u"postUpdate {} {}".format(item_action.item.getName(),item_action.cmd_name))
-                                sendCommandIfChanged(item_action.item,item_action.cmd_name)
+                            sendCommandIfChanged(item_action.item,item_action.cmd_value)
 
                         if semantic_item.getAnswer() is not None:
                             msg_r.append(semantic_item.getAnswer()) 
@@ -595,7 +600,7 @@ class TestRule:
                     for item_action in action.item_actions:
                         if item_action in item_actions_applied:
                             continue
-                        if item_action.item.getName() == case_item and item_action.cmd_name == case_cmd:
+                        if item_action.item.getName() == case_item and item_action.cmd_value == case_cmd:
                             item_actions_applied.append(item_action)
                             item_actions_skipped.remove(item_action)
                             case_actions_excpected.remove(case_action)
@@ -605,7 +610,7 @@ class TestRule:
             location_names = list(set(location_names))
             if len(location_names) > 0 and case.get("location_count",1) != len(location_names):
                 excpected_result = False
-              
+                 
             if excpected_result \
                 and len(item_actions_skipped) == 0 and len(item_actions_applied) == len(case["items"]):
                 self.log.info(u"OK  - Input: '{}' - MSG: '{}'".format(voice_command,msg))
@@ -617,15 +622,15 @@ class TestRule:
                 for case_action in case_actions_excpected:
                     self.log.info(u"       MISSING     => {} => {}".format(case_action[0],case_action[1]))
                 for item_action in item_actions_skipped:
-                    self.log.info(u"       UNEXCPECTED => {} => {}".format(item_action.item.getName(),item_action.cmd_name))
+                    self.log.info(u"       UNEXCPECTED => {} => {}".format(item_action.item.getName(),item_action.cmd_value))
                 for item_action in item_actions_applied:
-                    self.log.info(u"       MATCH       => {} => {}".format(item_action.item.getName(),item_action.cmd_name))
+                    self.log.info(u"       MATCH       => {} => {}".format(item_action.item.getName(),item_action.cmd_value))
  
                 items = []
                 for item_action in item_actions_skipped:
-                    items.append(u"[\"{}\",\"{}\"]".format(item_action.item.getName(),item_action.cmd_name))
+                    items.append(u"[\"{}\",\"{}\"]".format(item_action.item.getName(),item_action.cmd_value))
                 for item_action in item_actions_applied:
-                    items.append(u"[\"{}\",\"{}\"]".format(item_action.item.getName(),item_action.cmd_name))
+                    items.append(u"[\"{}\",\"{}\"]".format(item_action.item.getName(),item_action.cmd_value))
                 msg = u"[{}]".format(",".join(items))
                 if len(location_names) > 1:
                     msg = u"{}, \"location_count\": {}".format(msg,len(location_names))

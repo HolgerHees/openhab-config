@@ -11,8 +11,8 @@ Group  eGF_Corridor_Light_Mirror                "Spiegellampe"       <selflight>
 Switch pGF_Corridor_Light_Mirror_Powered        "Spiegellicht"       <selflight> (eGF_Corridor_Light_Mirror,gIndoor_Lights,gGF_Lights)  ["Switch","Light"] { channel="knx:device:bridge:lights_ff:floorMirror" }
 
 Group  eGF_Corridor_Light_Hue                   "HUE Lampe"          <selflight> (lGF_Corridor)                                         ["Lightbulb"] { synonyms="Indirekt" }
-Dimmer pGF_Corridor_Light_Hue_Brightness        "Indirektes Licht"   <selflight> (eGF_Corridor_Light_Hue,gIndoor_Lights,gGF_Lights)     ["Setpoint","Light"] { channel="hue:0210:default:lamp4:color" }
-Color  pGF_Corridor_Light_Hue_Color             "Farbe"              <colorwheel> (eGF_Corridor_Light_Hue)                              ["Control","ColorTemperature"] { channel="hue:0210:default:lamp4:color"}
+Color  pGF_Corridor_Light_Hue_Color             "Farbe"              <colorwheel> (eGF_Corridor_Light_Hue,gIndoor_Lights,gGF_Lights)    ["Control","Light"] { channel="hue:0210:default:lamp4:color"}
+Dimmer pGF_Corridor_Light_Hue_Temperature       "Farbtemperatur"     <selflight> (eGF_Corridor_Light_Hue)                               ["Setpoint","ColorTemperature"] { channel="hue:0210:default:lamp4:color_temperature"}
 
 // **** GF GUESTTOILET ****
 Group  eGF_Guesttoilet_Light_Ceiling            "Deckenlampe"        <selflight> (lGF_Guesttoilet)                                      ["Lightbulb"] { synonyms="Decke" }
@@ -45,32 +45,26 @@ Dimmer pGF_Livingroom_Light_Diningtable_Brightness "Esstischlicht"   <selflight>
 Group  eGF_Livingroom_Light_Couchtable          "Couchtischlampe"    <selflight> (lGF_Livingroom)                                       ["Lightbulb"] { synonyms="Couch,Deckenlicht,Decke" }
 Dimmer pGF_Livingroom_Light_Couchtable_Brightness "Couchtischlicht"  <selflight> (eGF_Livingroom_Light_Couchtable,gGF_Livingroom_Light_Ceiling_Brightness,gIndoor_Lights,gGF_Lightsx) ["Setpoint","Light"] { channel="knx:device:bridge:lights_ff:livingroomCouch" }
 
-Group:Dimmer:MAX gGF_Livingroom_Light_Hue_Brightness "Indirektes Licht" <selflight>    
 Color  gGF_Livingroom_Light_Hue_Color           "Farbe"              <colorwheel>
 
 Group  eGF_Livingroom_Light_Hue1                "HUE Lampe - Bassbox" <selflight> (lGF_Livingroom)                                      ["Lightbulb"] { synonyms="Bassbox,Couch,Indirekt" }
-Dimmer pGF_Livingroom_Light_Hue1_Brightness     "Indirektes Licht - Bassbox" <selflight> (eGF_Livingroom_Light_Hue1,gGF_Livingroom_Light_Hue_Brightness,gIndoor_Lights,gGF_Lights) ["Setpoint","Light"] { channel="hue:0210:default:lamp1:color"}
-Color  pGF_Livingroom_Light_Hue1_Color          "Farbe - Bassbox"     <colorwheel> (eGF_Livingroom_Light_Hue1)                          ["Control"] { channel="hue:0210:default:lamp1:color"}
+Color  pGF_Livingroom_Light_Hue1_Color          "Farbe - Bassbox"     <colorwheel> (eGF_Livingroom_Light_Hue1,gGF_Livingroom_Light_Hue_Brightness,gIndoor_Lights,gGF_Lights) ["Control","Light"] { channel="hue:0210:default:lamp1:color"}
 Dimmer pGF_Livingroom_Light_Hue1_Temperature    "Farbtemperatur - Bassbox" <selflight> (eGF_Livingroom_Light_Hue1)                      ["Setpoint","ColorTemperature"] { channel="hue:0210:default:lamp1:color_temperature"}
 
 Group  eGF_Livingroom_Light_Hue2_3              "HUE Lampe - Stehlampe" <selflight> (lGF_Livingroom)                                    ["Lightbulb"] { synonyms="Stehlampe,Couch,Indirekt" }
 Group  eGF_Livingroom_Light_Hue2                "HUE Lampe - Stehlampe unten" <selflight> (eGF_Livingroom_Light_Hue2_3)                 ["Lightbulb"] { synonyms="unten" }
-Dimmer pGF_Livingroom_Light_Hue2_Brightness     "Indirektes Licht - Stehlampe unten" <selflight> (eGF_Livingroom_Light_Hue2,gGF_Livingroom_Light_Hue_Brightness,gIndoor_Lights,gGF_Lights) ["Setpoint","Light"] { channel="hue:0210:default:lamp2:color"}
-Color  pGF_Livingroom_Light_Hue2_Color          "Farbe - Stehlampe unten" <colorwheel> (eGF_Livingroom_Light_Hue2)                      ["Control"] { channel="hue:0210:default:lamp2:color"}
+Color  pGF_Livingroom_Light_Hue2_Color          "Farbe - Stehlampe unten" <colorwheel> (eGF_Livingroom_Light_Hue2,gGF_Livingroom_Light_Hue_Brightness,gIndoor_Lights,gGF_Lights) ["Control","Light"] { channel="hue:0210:default:lamp2:color"}
 Dimmer pGF_Livingroom_Light_Hue2_Temperature    "Farbtemperatur - Stehlampe unten" <selflight> (eGF_Livingroom_Light_Hue2)              ["Setpoint","ColorTemperature"] { channel="hue:0210:default:lamp2:color_temperature"}
 Group  eGF_Livingroom_Light_Hue3                "HUE Lampe - Stehlampe oben" <selflight> (eGF_Livingroom_Light_Hue2_3)                  ["Lightbulb"] { synonyms="oben" }
-Dimmer pGF_Livingroom_Light_Hue3_Brightness     "Indirektes Licht - Stehlampe oben" <selflight> (eGF_Livingroom_Light_Hue3,gGF_Livingroom_Light_Hue_Brightness,gIndoor_Lights,gGF_Lights) ["Setpoint","Light"] { channel="hue:0210:default:lamp3:color"}
-Color  pGF_Livingroom_Light_Hue3_Color          "Farbe - Stehlampe oben" <colorwheel> (eGF_Livingroom_Light_Hue3)                       ["Control"] { channel="hue:0210:default:lamp3:color"}
+Color  pGF_Livingroom_Light_Hue3_Color          "Farbe - Stehlampe oben" <colorwheel> (eGF_Livingroom_Light_Hue3,gGF_Livingroom_Light_Hue_Brightness,gIndoor_Lights,gGF_Lights) ["Control","Light"] { channel="hue:0210:default:lamp3:color"}
 Dimmer pGF_Livingroom_Light_Hue3_Temperature    "Farbtemperatur - Stehlampe oben" <selflight> (eGF_Livingroom_Light_Hue3)               ["Setpoint","ColorTemperature"] { channel="hue:0210:default:lamp3:color_temperature"}
 
 Group  eGF_Livingroom_Light_Hue4                "HUE Lampe - Tresen" <selflight> (lGF_Livingroom)                                       ["Lightbulb"] { synonyms="Tresen,Indirekt" }
-Dimmer pGF_Livingroom_Light_Hue4_Brightness     "Indirektes Licht - Tresen" <selflight> (eGF_Livingroom_Light_Hue4,gGF_Livingroom_Light_Hue_Brightness,gIndoor_Lights,gGF_Lights) ["Setpoint","Light"] { channel="hue:0210:default:strip2:color"}
-Color  pGF_Livingroom_Light_Hue4_Color          "Farbe - Tresen"     <colorwheel> (eGF_Livingroom_Light_Hue4)                           ["Control"] { channel="hue:0210:default:strip2:color"}
+Color  pGF_Livingroom_Light_Hue4_Color          "Farbe - Tresen"     <colorwheel> (eGF_Livingroom_Light_Hue4,gGF_Livingroom_Light_Hue_Brightness,gIndoor_Lights,gGF_Lights) ["Control","Light"] { channel="hue:0210:default:strip2:color"}
 Dimmer pGF_Livingroom_Light_Hue4_Temperature    "Farbtemperatur - Tresen" <selflight> (eGF_Livingroom_Light_Hue4)                       ["Setpoint","ColorTemperature"] { channel="hue:0210:default:strip2:color_temperature"}
 
 Group  eGF_Livingroom_Light_Hue5                "HUE Lampe - Regal"  <selflight> (lGF_Livingroom)                                       ["Lightbulb"] { synonyms="Regal,Indirekt" }
-Dimmer pGF_Livingroom_Light_Hue5_Brightness     "Indirektes Licht - Regal" <selflight> (eGF_Livingroom_Light_Hue5,gGF_Livingroom_Light_Hue_Brightness,gIndoor_Lights,gGF_Lights) ["Setpoint","Light"] { channel="hue:0210:default:strip1:color"}
-Color  pGF_Livingroom_Light_Hue5_Color          "Farbe - Regal"      <colorwheel> (eGF_Livingroom_Light_Hue5)                           ["Control"] { channel="hue:0210:default:strip1:color"}
+Color  pGF_Livingroom_Light_Hue5_Color          "Farbe - Regal"      <colorwheel> (eGF_Livingroom_Light_Hue5,gGF_Livingroom_Light_Hue_Brightness,gIndoor_Lights,gGF_Lights) ["Control","Light"] { channel="hue:0210:default:strip1:color"}
 Dimmer pGF_Livingroom_Light_Hue5_Temperature    "Farbtemperatur - Regal" <selflight> (eGF_Livingroom_Light_Hue5)                        ["Setpoint","ColorTemperature"] { channel="hue:0210:default:strip1:color_temperature"}
 
 // **** GF GUESTROOM ****
@@ -97,14 +91,12 @@ Group  eFF_Bedroom_Light_Ceiling                "Deckenlampe"        <selflight>
 Switch pFF_Bedroom_Light_Ceiling_Powered        "Deckenlicht"        <selflight> (eFF_Bedroom_Light_Ceiling,gIndoor_Lights,gFF_Lights)  ["Switch","Light"] { channel="knx:device:bridge:lights_sf:bedroomCeiling" }
 
 Group  eFF_Bedroom_Light_Hue_Left               "Nachttisch links" <selflight> (lFF_Bedroom)                                            ["Lightbulb"] { synonyms="Nachttisch, Bett, links, Fenster" }
-Dimmer pFF_Bedroom_Light_Hue_Left_Brightness    "Indirektes Licht - Nachttisch links" <selflight> (eFF_Bedroom_Light_Hue_Left,gIndoor_Lights,gFF_Lights) ["Setpoint","Light"] { channel="hue:0210:default:lamp5:color"}
-Color  pFF_Bedroom_Light_Hue_Left_Color         "Farbe - Nachttisch links" <colorwheel> (eFF_Bedroom_Light_Hue_Left)                    ["Control"] { channel="hue:0210:default:lamp5:color"}
-Dimmer pFF_Bedroom_Light_Hue_Left_Temperature    "Farbtemperatur - Nachttisch links" <selflight> (eFF_Bedroom_Light_Hue_Left)           ["Setpoint","ColorTemperature"] { channel="hue:0210:default:lamp5:color_temperature"}
+Color  pFF_Bedroom_Light_Hue_Left_Color         "Farbe - Nachttisch links" <colorwheel> (eFF_Bedroom_Light_Hue_Left,gIndoor_Lights,gFF_Lights) ["Control","Light"] { channel="hue:0210:default:lamp5:color"}
+Dimmer pFF_Bedroom_Light_Hue_Left_Temperature   "Farbtemperatur - Nachttisch links" <selflight> (eFF_Bedroom_Light_Hue_Left)           ["Setpoint","ColorTemperature"] { channel="hue:0210:default:lamp5:color_temperature"}
 Switch pFF_Bedroom_Light_Hue_Left_Switch        "Taster - Nachttisch links" <selflight> (eFF_Bedroom_Light_Hue_Left)                    ["Point"] { channel="knx:device:bridge:other:bedroomLeft" }
 
 Group  eFF_Bedroom_Light_Hue_Right              "Nachttisch rechts" <selflight> (lFF_Bedroom)                                           ["Lightbulb"] { synonyms="Nachttisch, Bett, rechts, Wand" }
-Dimmer pFF_Bedroom_Light_Hue_Right_Brightness   "Indirektes Licht - Nachttisch rechts" <selflight> (eFF_Bedroom_Light_Hue_Right,gIndoor_Lights,gFF_Lights) ["Setpoint","Light"] { channel="hue:0210:default:lamp6:color"}
-Color  pFF_Bedroom_Light_Hue_Right_Color        "Farbe - Nachttisch rechts" <colorwheel> (eFF_Bedroom_Light_Hue_Right)                  ["Control"] { channel="hue:0210:default:lamp6:color"}
+Color  pFF_Bedroom_Light_Hue_Right_Color        "Farbe - Nachttisch rechts" <colorwheel> (eFF_Bedroom_Light_Hue_Right,gIndoor_Lights,gFF_Lights) ["Control","Light"] { channel="hue:0210:default:lamp6:color"}
 Dimmer pFF_Bedroom_Light_Hue_Right_Temperature  "Farbtemperatur - Nachttisch rechts" <selflight> (eFF_Bedroom_Light_Hue_Right)          ["Setpoint","ColorTemperature"] { channel="hue:0210:default:lamp6:color_temperature"}
 Switch pFF_Bedroom_Light_Hue_Right_Switch       "Taster - Nachttisch rechts" <selflight> (eFF_Bedroom_Light_Hue_Right)                  ["Point"] { channel="knx:device:bridge:other:bedroomRight" }
 
