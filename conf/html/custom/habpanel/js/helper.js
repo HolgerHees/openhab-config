@@ -742,8 +742,6 @@ var mvInitializer = function(){
 
                     function refreshValue( value, offset )
                     {
-                        console.log(value)
-    
                         if( typeof value == "string" )
                         {
                             if( value == 'ON' ) value = 100;
