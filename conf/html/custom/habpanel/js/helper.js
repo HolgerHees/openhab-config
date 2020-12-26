@@ -742,23 +742,25 @@ var mvInitializer = function(){
 
                     function refreshValue( value, offset )
                     {
-                        if( value == 'ON' ) value = 100;
-                        else if( value == 'OFF' ) value = 0;
+                        console.log(value)
     
-                        /*var parts = item.state.split(',');
-                        var value;
-                        if (parts.length == 3) {
-                            // slider received HSB value, use the 3rd (brightness)
-                            value = parseFloat(parts[2]);
-                        } else if (parts.length == 1) {
-                            value = parseFloat(parts[0]);
-                        } else {
-                            return undefined;
-                        }*/
+                        if( typeof value == "string" )
+                        {
+                            if( value == 'ON' ) value = 100;
+                            else if( value == 'OFF' ) value = 0;
+                            else if( value.indexOf(",") != -1 )
+                            {
+                                var parts = value.split(',');
+                                if (parts.length == 3) {
+                                    // slider received HSB value, use the 3rd (brightness)
+                                    value = parseFloat(parts[2]);
+                                }
+                            }
+                        }
                 
                         value = Math.round(value);
                         if( value > 100 ) value = 100;
-    
+     
                         valueElement.innerText = value;
                         
                         offset = "calc(" + value + "% - " + ( ( value * 32 / 100 ) + 5 ) + "px)";

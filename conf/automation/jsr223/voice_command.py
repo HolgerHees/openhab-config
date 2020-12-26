@@ -366,7 +366,7 @@ class VoiceCommandRule:
                             action.cmd_search_terms.append(search)
                             return cmd_type, cmd_config, cmd_config["value"]
         return None, None, None
-                       
+                            
     def detectCommand(self,actions):
         for action in actions:
             # search for cmd based on voice_cmd
