@@ -333,6 +333,7 @@ class VoiceCommandRule:
         for cmd_type in SemanticConfig["commands"]:
             for cmd_config in SemanticConfig["commands"][cmd_type]:
                 for search in cmd_config["search"]:
+                    #self.log.info(u"{} {}".format(cmd_type,search))
                     if cmd_config["value"] == "REGEX":
                         #self.log.info(u"{} {}".format(search[1:-1],action.unprocessed_search))
                         match = re.match(u"(.*[^0-9a-zA-ZäÄöÖüÜß]+|^){}(.*|$)".format(search),action.unprocessed_search)
@@ -365,7 +366,7 @@ class VoiceCommandRule:
                             action.cmd_search_terms.append(search)
                             return cmd_type, cmd_config, cmd_config["value"]
         return None, None, None
-               
+                      
     def detectCommand(self,actions):
         for action in actions:
             # search for cmd based on voice_cmd
@@ -409,7 +410,7 @@ class VoiceCommandRule:
                 processed_items[item_name] = True
                 action.item_actions.append(ItemAction(point.item,action.cmd.cmd_type,action.cmd.cmd_value))
         #self.log.info(u"{}".format(processed_items.keys()))
-            
+              
     def process(self,voice_command, fallback_location_name):
         actions = []
         voice_command = voice_command.lower()
@@ -423,7 +424,7 @@ class VoiceCommandRule:
                 actions.append(action)
                 #self.log.info(u"{}".format(search))
                 break
-    
+     
         # check for item commands
         if len(actions)==0:
             for synonym in SemanticConfig["main"]["synonyms"]:
