@@ -14,23 +14,24 @@ import traceback
 class VoiceCommandRule:
     def __init__(self):
         self.triggers = [ ItemStateUpdateTrigger("VoiceCommand") ]
-   
+        self.processor = CommandProcessor(self.log,ir)
+
     def execute(self, module, input):
         postUpdate("VoiceMessage","")
 
-        processor = CommandProcessor(self.log,ir)
-
-        voice_command, client_id = processor.parseData(input['event'].getItemState().toString())
+        voice_command, client_id = self.processor.parseData(input['event'].getItemState().toString())
         fallback_location_name = AlexaDevices[client_id] if client_id in AlexaDevices else None
 
         self.log.info(u"Process: '{}', Location: '{}'".format(voice_command, fallback_location_name))
 
-        actions = processor.process(voice_command, fallback_location_name)
+        actions = self.processor.process(voice_command, fallback_location_name)
 
-        msg, is_valid = processor.applyActions(actions,voice_command,False)
+        msg, is_valid = self.processor.applyActions(actions,voice_command,False)
 
         postUpdate("VoiceMessage",msg)
-                                        
+                                           
+#postUpdate("VoiceCommand","Flur farbe grün")
+
 @rule("voice_command.py")
 class TestRule:
     def __init__(self):
