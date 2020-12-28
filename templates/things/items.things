@@ -10,6 +10,7 @@ astro:sun:local "Astro Sonnendaten" @ "Services" [ geolocation="{{location}}", i
 ntp:ntp:local "NTP" @ "Services" [ hostname="de.pool.ntp.org", refreshInterval=60, refreshNtp=30 ]
 
 Bridge hue:bridge:default [ ipAddress="{{hue_ip}}", userName="{{vault_hue_user_id}}" ] {
+	group livingroom "HUE Gruppe" @ "Geräte" [ groupId="1" ]
 	0210 lamp1 [ lightId="1" ]
 	0210 lamp2 [ lightId="2" ]
 	0210 lamp3 [ lightId="3" ]

@@ -13,6 +13,7 @@ sitemap haus label="Main Menu"
 							Frame label="Gruppe" {
 								Slider item=gGF_Livingroom_Light_Hue_Color label="Alle Lampen [%d %%]"
 								Colorpicker item=gGF_Livingroom_Light_Hue_Color label="Alle Lampen"
+                                Selection item=pGF_Livingroom_Light_Hue_Color mappings=[""="Inaktiv","uqZTGioAD2nPsmV"="Energie tanken","OZxRAaaUaqYE1xe"="Entspannen","2vDOq8q2LxvfE2K"="Frühlingsblüten","0p4lY2RP7Cm5Izx"="Gedimmt","29E2g8ei9Fud6XS"="Hell","HCrCIci-reDTerF"="Konzentrieren","20HXUe05xWd9eZS"="Lesen","O7Z9g7dPqGIcv3C"="Nachtlicht","lqCmtPjQZC1XJs0"="Nordlichter","tZBMn3oJF3Ie-h-"="Sonnenuntergang Savanne","ek5DVzSuF3LU1P3"="Tropendämmerung"]
                                 Switch item=pOther_Manual_State_Lightprogram label="Programm" mappings=[0="Aus", 1="1", 2="2"]
 							}
 							Frame label="Einzeln" {

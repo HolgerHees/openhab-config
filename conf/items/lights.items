@@ -45,7 +45,10 @@ Dimmer pGF_Livingroom_Light_Diningtable_Brightness "Esstischlicht"   <selflight>
 Group  eGF_Livingroom_Light_Couchtable          "Couchtischlampe"    <selflight> (lGF_Livingroom)                                       ["Lightbulb"] { synonyms="Couch,Deckenlicht,Decke" }
 Dimmer pGF_Livingroom_Light_Couchtable_Brightness "Couchtischlicht"  <selflight> (eGF_Livingroom_Light_Couchtable,gGF_Livingroom_Light_Ceiling_Brightness,gIndoor_Lights,gGF_Lightsx) ["Setpoint","Light"] { channel="knx:device:bridge:lights_ff:livingroomCouch" }
 
-Color  gGF_Livingroom_Light_Hue_Color           "Farbe"              <colorwheel>
+Group:Color:MAX  gGF_Livingroom_Light_Hue_Color "Farbe"              <colorwheel>
+
+Group  eGF_Livingroom_Light_Hue_Scenes          "Farbszene"          <selflight> (lGF_Livingroom)                                       ["Equipment"]
+String pGF_Livingroom_Light_Hue_Color           "Farbszene"          <colorwheel> (eGF_Livingroom_Light_Hue_Scenes)                     ["Control"] {channel="hue:group:default:livingroom:scene"}
 
 Group  eGF_Livingroom_Light_Hue1                "Bassboxlampe" <selflight> (lGF_Livingroom)                                             ["Lightbulb"] { synonyms="Bassbox,Couch,Indirekt" }
 Color  pGF_Livingroom_Light_Hue1_Color          "Farbe"     <colorwheel> (eGF_Livingroom_Light_Hue1,gGF_Livingroom_Light_Hue_Color,gIndoor_Lights,gGF_Lights) ["Control","Light"] { channel="hue:0210:default:lamp1:color"}
