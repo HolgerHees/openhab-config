@@ -29,7 +29,7 @@ class HueColorMainRule:
         sendCommand("pGF_Livingroom_Light_Hue4_Color", command)
         sendCommand("pGF_Livingroom_Light_Hue5_Color", command)
         
-        postUpdate("pGF_Livingroom_Light_Hue_Color","")
+        postUpdate("pGF_Livingroom_Light_Hue_Scene","")
         sendCommand("pOther_Manual_State_Lightprogram", 0)
 
 @rule("lights_indoor_livingroom_control.py")
@@ -49,7 +49,7 @@ class HueColorIndividualRule:
         last = ruleTimeouts.get("Livingroom_Hue_Color_Backward",0)
         
         if now - last > 1000:
-            postUpdate("pGF_Livingroom_Light_Hue_Color","")
+            postUpdate("pGF_Livingroom_Light_Hue_Scene","")
             sendCommand("pOther_Manual_State_Lightprogram", 0)
 
 @rule("lights_indoor_livingroom_control.py")
