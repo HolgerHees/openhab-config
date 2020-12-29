@@ -74,4 +74,4 @@ String Chart_From                               "Zeitraum" <selfcalendar> (eOthe
 String HabpanelViewer_Control_Cmd               "Habpanel Command" <selfautomode> (eOther_Helper) ["Point"]
 String VoiceCommand                             "Sprachbefehl [%s]" <recorder> (eOther_Helper) ["Point"]
 String VoiceMessage                             "Sprachnachricht [%s]" <recorder> (eOther_Helper) ["Point"]
-Number ServerState                              "Serverstatus [MAP(server_status.map):%s]" <selferror> (eOther_Helper) ["Point"]
+Number State_Server                             "Serverstatus [MAP(server_status.map):%s]" <selferror> (eOther_Helper) ["Point"]
