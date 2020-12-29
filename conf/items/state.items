@@ -50,7 +50,6 @@ Switch pOther_Automatic_State_Sunprotection_Livingroom "Rollläden Wohnzimmer ge
 
 //####### STATE MESSAGES #######
 Group  eOther_State_Messages                    "Nachrichten" <selfinfo> (lOther) ["Equipment"]
-Number pOther_State_Message_Server              "Serverstatus [MAP(server_status.map):%s]" <selferror> (eOther_State_Messages) ["Point"]
 String pOther_State_Message_Main                "Status [%s]" <selferror> (eOther_State_Messages) ["Point"]
 String pOther_State_Message_Room                "Status [%s]" <selferror> (eOther_State_Messages) ["Point"]
 String pOther_State_Message_Garden              "Status [%s]" <selferror> (eOther_State_Messages) ["Point"]
@@ -71,7 +70,8 @@ Switch pOther_Scene9                            "Scene 9" <selfautomode> (eOther
 
 //####### SCENES #######
 Group  eOther_Helper                            "Helper" <selfinfo> (lOther) ["Equipment"]
-String pOther_Helper_Chart_From                 "Zeitraum" <selfcalendar> (eOther_Helper) ["Point"]
-String pOther_Helper_HabpanelViewer_Control_Cmd "Habpanel Command" <selfautomode> (eOther_Helper) ["Point"]
+String Chart_From                               "Zeitraum" <selfcalendar> (eOther_Helper) ["Point"]
+String HabpanelViewer_Control_Cmd               "Habpanel Command" <selfautomode> (eOther_Helper) ["Point"]
 String VoiceCommand                             "Sprachbefehl [%s]" <recorder> (eOther_Helper) ["Point"]
 String VoiceMessage                             "Sprachnachricht [%s]" <recorder> (eOther_Helper) ["Point"]
+Number ServerState                              "Serverstatus [MAP(server_status.map):%s]" <selferror> (eOther_Helper) ["Point"]
