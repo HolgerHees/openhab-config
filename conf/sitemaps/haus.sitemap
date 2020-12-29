@@ -304,8 +304,8 @@ sitemap haus label="Main Menu"
 						Switch item=pGF_Livingroom_Socket_Couch_Powered visibility=[pOther_Manual_State_Auto_Christmas==ON]
 						Switch item=pGF_Livingroom_Socket_Fireplace_Powered visibility=[pOther_Manual_State_Auto_Christmas==ON]
 						Switch item=pGF_Corridor_Socket_Powered visibility=[pOther_Manual_State_Auto_Christmas==ON]
-						Switch item=eMobile_Socket_1_Powered visibility=[pOther_Manual_State_Auto_Christmas==ON]
-						Switch item=eMobile_Socket_2_Powered visibility=[pOther_Manual_State_Auto_Christmas==ON]
+						Switch item=pMobile_Socket_1_Powered visibility=[pOther_Manual_State_Auto_Christmas==ON]
+						Switch item=pMobile_Socket_2_Powered visibility=[pOther_Manual_State_Auto_Christmas==ON]
 						Switch item=pOutdoor_Streeside_Socket_Powered visibility=[pOther_Manual_State_Auto_Christmas==ON]
 					}
 					Frame label="Dachboden" {
@@ -840,8 +840,10 @@ sitemap haus label="Main Menu"
                         Switch item=pOutdoor_Garden_Terrace_Socket_Powered label="Aussen hinten"
                     }
                     Frame label="Mobile" {
-                        Switch item=eMobile_Socket_1_Powered label="Steckdose 1"
-                        Switch item=eMobile_Socket_2_Powered label="Steckdose 2"
+                        Switch item=pMobile_Socket_1_Powered label="Steckdose 1"
+                        Switch item=pMobile_Socket_2_Powered label="Steckdose 2"
+                        Switch item=pMobile_Socket_3_Powered label="Steckdose 3"
+                        Switch item=pMobile_Socket_4_Powered label="Steckdose 4"
                     }
                 }
                 Text label="Server" icon="selfcomputer"{

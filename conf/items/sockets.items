@@ -39,7 +39,13 @@ Switch pOutdoor_Garden_Terrace_Socket_Powered  "Steckdosen"         <selfsocket>
 
 // **** MOBILE ****
 Group  eMobile_Socket_1                        "Mobile 1"           <selfsocket> (lIndoor) ["PowerOutlet"]
-Switch eMobile_Socket_1_Powered                "Mobile 1"           <selfsocket> (eMobile_Socket_1,gAll_Sockets) ["Switch","Power"]              { channel="hue:0010:default:socket1:switch" }
+Switch pMobile_Socket_1_Powered                "Mobile 1"           <selfsocket> (eMobile_Socket_1,gAll_Sockets) ["Switch","Power"]              { channel="hue:0010:default:socket1:switch" }
 
 Group  eMobile_Socket_2                        "Mobile 2"           <selfsocket> (lIndoor) ["PowerOutlet"]
-Switch eMobile_Socket_2_Powered                "Mobile 2"           <selfsocket> (eMobile_Socket_2,gAll_Sockets) ["Switch","Power"]              { channel="hue:0010:default:socket2:switch" }
+Switch pMobile_Socket_2_Powered                "Mobile 2"           <selfsocket> (eMobile_Socket_2,gAll_Sockets) ["Switch","Power"]              { channel="hue:0010:default:socket2:switch" }
+
+Group  eMobile_Socket_3                        "Mobile 3"           <selfsocket> (lIndoor) ["PowerOutlet"]
+Switch pMobile_Socket_3_Powered                "Mobile 3"           <selfsocket> (eMobile_Socket_3,gAll_Sockets) ["Switch","Power"]              { channel="hue:0010:default:socket3:switch" }
+
+Group  eMobile_Socket_4                        "Mobile 4"           <selfsocket> (lIndoor) ["PowerOutlet"]
+Switch pMobile_Socket_4_Powered                "Mobile 4"           <selfsocket> (eMobile_Socket_4,gAll_Sockets) ["Switch","Power"]              { channel="hue:0010:default:socket4:switch" }

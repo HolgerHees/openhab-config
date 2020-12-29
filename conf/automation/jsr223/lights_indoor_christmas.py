@@ -9,30 +9,33 @@ class LightsOnRule:
             ItemStateChangeTrigger("pOther_Presence_State")
         ]
         
-    def callback(self,state):
-        sendCommand("eMobile_Socket_2_Powered", state)
-
     def execute(self, module, input):
         if getItemState("pOther_Manual_State_Auto_Christmas") == ON:
             if input["event"].getItemState().intValue() == 1:
                 sendCommand("pGF_Corridor_Socket_Powered", ON)
                 sendCommand("pGF_Livingroom_Socket_Couch_Powered", ON)
                 sendCommand("pGF_Livingroom_Socket_Fireplace_Powered", ON)
-                sendCommand("eMobile_Socket_1_Powered", ON)
+                sendCommand("pMobile_Socket_1_Powered", ON)
+                sendCommand("pMobile_Socket_2_Powered", ON)
+                sendCommand("pMobile_Socket_3_Powered", ON)
+                sendCommand("pMobile_Socket_4_Powered", ON)
 
-                # must be a timer, otherwise sometimes it does not work. Maybe a conflict with eMobile_Socket_1_Powered action
-                timer = createTimer(self.log, 1.0,self.callback,[ON])
-                timer.start()
+                # must be a timer, otherwise sometimes it does not work. Maybe a conflict with pMobile_Socket_1_Powered action
+                #timer = createTimer(self.log, 1.0,self.callback,[ON])
+                #timer.start()
                 
             else:
                 sendCommand("pGF_Corridor_Socket_Powered", OFF)
                 sendCommand("pGF_Livingroom_Socket_Couch_Powered", OFF)
                 sendCommand("pGF_Livingroom_Socket_Fireplace_Powered", OFF)
-                sendCommand("eMobile_Socket_1_Powered", OFF)
+                sendCommand("pMobile_Socket_1_Powered", OFF)
+                sendCommand("pMobile_Socket_2_Powered", OFF)
+                sendCommand("pMobile_Socket_3_Powered", OFF)
+                sendCommand("pMobile_Socket_4_Powered", OFF)
 
-                # must be a timer, otherwise sometimes it does not work. Maybe a conflict with eMobile_Socket_1_Powered action
-                timer = createTimer(self.log, 1.0,self.callback,[OFF])
-                timer.start()
+                # must be a timer, otherwise sometimes it does not work. Maybe a conflict with pMobile_Socket_1_Powered action
+                #timer = createTimer(self.log, 1.0,self.callback,[OFF])
+                #timer.start()
 
 @rule("lights_indoor_auto_christmas.py")                
 class OutdoorLightsOnRule:
