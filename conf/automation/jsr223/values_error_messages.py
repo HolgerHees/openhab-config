@@ -11,7 +11,7 @@ class ValuesErrorMessagesRule:
             ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Error_Message"),
             ItemStateChangeTrigger("pOutdoor_WeatherStation_Is_Working"),
             ItemStateChangeTrigger("pGF_Utilityroom_Heating_Common_Fault"),
-            ItemStateChangeTrigger("ServerState")
+            ItemStateChangeTrigger("State_Server")
         ]
 
     def execute(self, module, input):
@@ -30,7 +30,7 @@ class ValuesErrorMessagesRule:
         if getItemState("pOutdoor_WeatherStation_Is_Working") == OFF:
             active.append(u"Wetterstation")
             
-        if getItemState("ServerState").intValue() > 1:
+        if getItemState("State_Server").intValue() > 1:
             active.append(u"Server")
 
         refDate = getNow().minusMinutes(1440)  # last 24 hours
