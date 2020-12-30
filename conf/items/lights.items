@@ -4,22 +4,26 @@ Group:Switch:OR(ON, OFF) gFF_Lights             "Obergeschoss"       <selflight>
 Group:Switch:OR(ON, OFF) gOutdoor_Lights        "Aussen"             <selflight>
 
 // **** GF CORRIDOR ****
+Group:Switch:OR(ON, OFF) gGF_Corridor_Lights    "Flurlicht"          <selflight>
+
 Group  eGF_Corridor_Light_Ceiling               "Deckenlampe"        <selflight> (lGF_Corridor)                                         ["Lightbulb"] { synonyms="Decke" }
-Switch pGF_Corridor_Light_Ceiling_Powered       "Deckenlicht"        <selflight> (eGF_Corridor_Light_Ceiling,gIndoor_Lights,gGF_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_ff:floorCeiling" }
+Switch pGF_Corridor_Light_Ceiling_Powered       "Deckenlicht"        <selflight> (eGF_Corridor_Light_Ceiling,gIndoor_Lights,gGF_Lights,gGF_Corridor_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_ff:floorCeiling" }
 
 Group  eGF_Corridor_Light_Mirror                "Spiegellampe"       <selflight> (lGF_Corridor)                                         ["Lightbulb"] { synonyms="Spiegel" }
-Switch pGF_Corridor_Light_Mirror_Powered        "Spiegellicht"       <selflight> (eGF_Corridor_Light_Mirror,gIndoor_Lights,gGF_Lights)  ["Switch","Light"] { channel="knx:device:bridge:lights_ff:floorMirror" }
+Switch pGF_Corridor_Light_Mirror_Powered        "Spiegellicht"       <selflight> (eGF_Corridor_Light_Mirror,gIndoor_Lights,gGF_Lights,gGF_Corridor_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_ff:floorMirror" }
 
 Group  eGF_Corridor_Light_Hue                   "HUE Lampe"          <selflight> (lGF_Corridor)                                         ["Lightbulb"] { synonyms="Indirekt" }
-Color  pGF_Corridor_Light_Hue_Color             "Farbe"              <colorwheel> (eGF_Corridor_Light_Hue,gIndoor_Lights,gGF_Lights)    ["Control","Light"] { channel="hue:0210:default:lamp4:color"}
+Color  pGF_Corridor_Light_Hue_Color             "Farbe"              <colorwheel> (eGF_Corridor_Light_Hue,gIndoor_Lights,gGF_Lights,gGF_Corridor_Lights) ["Control","Light"] { channel="hue:0210:default:lamp4:color"}
 Dimmer pGF_Corridor_Light_Hue_Temperature       "Farbtemperatur"     <selflight> (eGF_Corridor_Light_Hue)                               ["Setpoint","ColorTemperature"] { channel="hue:0210:default:lamp4:color_temperature"}
 
 // **** GF GUESTTOILET ****
+Group:Switch:OR(ON, OFF) gGF_Guesttoilet_Lights "GästeWClicht"       <selflight>
+
 Group  eGF_Guesttoilet_Light_Ceiling            "Deckenlampe"        <selflight> (lGF_Guesttoilet)                                      ["Lightbulb"] { synonyms="Decke" }
-Switch pGF_Guesttoilet_Light_Ceiling_Powered    "Deckenlicht"        <selflight> (eGF_Guesttoilet_Light_Ceiling,gIndoor_Lights,gGF_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_ff:guesttoiletCeiling" }
+Switch pGF_Guesttoilet_Light_Ceiling_Powered    "Deckenlicht"        <selflight> (eGF_Guesttoilet_Light_Ceiling,gIndoor_Lights,gGF_Lights,gGF_Guesttoilet_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_ff:guesttoiletCeiling" }
 
 Group  eGF_Guesttoilet_Light_Mirror             "Spiegellampe"       <selflight> (lGF_Guesttoilet)                                      ["Lightbulb"] { synonyms="Spiegel" }
-Switch pGF_Guesttoilet_Light_Mirror_Powered     "Spiegellicht"       <selflight> (eGF_Guesttoilet_Light_Mirror,gIndoor_Lights,gGF_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_ff:guesttoiletMirror" }
+Switch pGF_Guesttoilet_Light_Mirror_Powered     "Spiegellicht"       <selflight> (eGF_Guesttoilet_Light_Mirror,gIndoor_Lights,gGF_Lights,gGF_Guesttoilet_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_ff:guesttoiletMirror" }
 
 // **** GF UTILITYROOM ****
 Group  eGF_Utilityroom_Light_Ceiling            "Deckenlampe"        <selflight> (lGF_Utilityroom)                                      ["Lightbulb"] { synonyms="Decke" }
@@ -30,20 +34,23 @@ Group  eGF_Boxroom_Light_Ceiling                "Deckenlampe"        <selflight>
 Switch pGF_Boxroom_Light_Ceiling_Powered        "Deckenlicht"        <selflight> (eGF_Boxroom_Light_Ceiling,gIndoor_Lights,gGF_Lights)  ["Switch","Light"] { channel="knx:device:bridge:lights_ff:boxroomCeiling" }
 
 // **** GF KITCHEN ****
+Group:Switch:OR(ON, OFF) gGF_Kitchen_Lights     "Küchenlicht"        <selflight>
+
 Group  eGF_Kitchen_Light_Ceiling                "Deckenlampe"        <selflight> (lGF_Kitchen)                                          ["Lightbulb"] { synonyms="Decke" }
-Dimmer pGF_Kitchen_Light_Ceiling_Brightness     "Deckenlicht"        <selflight> (eGF_Kitchen_Light_Ceiling,gIndoor_Lights,gGF_Lights)  ["Setpoint","Light"] { channel="knx:device:bridge:lights_ff:kitchenCeiling" }
+Dimmer pGF_Kitchen_Light_Ceiling_Brightness     "Deckenlicht"        <selflight> (eGF_Kitchen_Light_Ceiling,gIndoor_Lights,gGF_Lights,gGF_Kitchen_Lights)  ["Setpoint","Light"] { channel="knx:device:bridge:lights_ff:kitchenCeiling" }
 
 Group  eGF_Kitchen_Light_Cupboard               "Schranklampe"       <selflight> (lGF_Kitchen)                                          ["Lightbulb"]
-Switch pGF_Kitchen_Light_Cupboard_Powered       "Schranklicht"       <selflight> (eGF_Kitchen_Light_Cupboard,gIndoor_Lights,gGF_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_ff:kitchenCupboard" }
+Switch pGF_Kitchen_Light_Cupboard_Powered       "Schranklicht"       <selflight> (eGF_Kitchen_Light_Cupboard,gIndoor_Lights,gGF_Lights,gGF_Kitchen_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_ff:kitchenCupboard" }
 
 // **** GF LIVINGROOM ****
+Group:Switch:OR(ON, OFF) gGF_Livingroom_Lights  "Wohnzimmerlicht"    <selflight>
 Group:Dimmer:MAX gGF_Livingroom_Light_Ceiling_Brightness "Deckenlampen" <selflight>
 
 Group  eGF_Livingroom_Light_Diningtable         "Esstischlampe"      <selflight> (lGF_Livingroom)                                       ["Lightbulb"] { synonyms="Esstisch,Deckenlicht,Decke" }
-Dimmer pGF_Livingroom_Light_Diningtable_Brightness "Esstischlicht"   <selflight> (eGF_Livingroom_Light_Diningtable,gGF_Livingroom_Light_Ceiling_Brightness,gIndoor_Lights,gGF_Lights) ["Setpoint","Light"] { channel="knx:device:bridge:lights_ff:livingroomDiningtable" }
+Dimmer pGF_Livingroom_Light_Diningtable_Brightness "Esstischlicht"   <selflight> (eGF_Livingroom_Light_Diningtable,gGF_Livingroom_Light_Ceiling_Brightness,gIndoor_Lights,gGF_Lights,gGF_Livingroom_Lights) ["Setpoint","Light"] { channel="knx:device:bridge:lights_ff:livingroomDiningtable" }
 
 Group  eGF_Livingroom_Light_Couchtable          "Couchtischlampe"    <selflight> (lGF_Livingroom)                                       ["Lightbulb"] { synonyms="Couch,Deckenlicht,Decke" }
-Dimmer pGF_Livingroom_Light_Couchtable_Brightness "Couchtischlicht"  <selflight> (eGF_Livingroom_Light_Couchtable,gGF_Livingroom_Light_Ceiling_Brightness,gIndoor_Lights,gGF_Lightsx) ["Setpoint","Light"] { channel="knx:device:bridge:lights_ff:livingroomCouch" }
+Dimmer pGF_Livingroom_Light_Couchtable_Brightness "Couchtischlicht"  <selflight> (eGF_Livingroom_Light_Couchtable,gGF_Livingroom_Light_Ceiling_Brightness,gIndoor_Lights,gGF_Lights,gGF_Livingroom_Lights) ["Setpoint","Light"] { channel="knx:device:bridge:lights_ff:livingroomCouch" }
 
 Group:Color:MAX  gGF_Livingroom_Light_Hue_Color "Farbe"              <colorwheel>
 
@@ -51,23 +58,23 @@ Group  eGF_Livingroom_Light_Hue_Scenes          "Farbszene"          <selflight>
 String pGF_Livingroom_Light_Hue_Scene           "Farbszene"          <colorwheel> (eGF_Livingroom_Light_Hue_Scenes)                     ["Control"] {channel="hue:group:default:livingroom:scene"}
 
 Group  eGF_Livingroom_Light_Hue1                "Bassboxlampe" <selflight> (lGF_Livingroom)                                             ["Lightbulb"] { synonyms="Bassbox,Couch,Indirekt" }
-Color  pGF_Livingroom_Light_Hue1_Color          "Farbe"     <colorwheel> (eGF_Livingroom_Light_Hue1,gGF_Livingroom_Light_Hue_Color,gIndoor_Lights,gGF_Lights) ["Control","Light"] { channel="hue:0210:default:lamp1:color"}
+Color  pGF_Livingroom_Light_Hue1_Color          "Farbe"     <colorwheel> (eGF_Livingroom_Light_Hue1,gGF_Livingroom_Light_Hue_Color,gIndoor_Lights,gGF_Lights,gGF_Livingroom_Lights) ["Control","Light"] { channel="hue:0210:default:lamp1:color"}
 Dimmer pGF_Livingroom_Light_Hue1_Temperature    "Farbtemperatur" <selflight> (eGF_Livingroom_Light_Hue1)                                ["Setpoint","ColorTemperature"] { channel="hue:0210:default:lamp1:color_temperature"}
  
 Group  eGF_Livingroom_Light_Hue2_3              "Stehlampe" <selflight> (lGF_Livingroom)                                                ["Lightbulb"] { synonyms="Stehlampe,Couch,Indirekt" }
 Group  eGF_Livingroom_Light_Hue2                "Stehlampe unten" <selflight> (eGF_Livingroom_Light_Hue2_3)                             ["Lightbulb"] { synonyms="unten" }
-Color  pGF_Livingroom_Light_Hue2_Color          "Farbe" <colorwheel> (eGF_Livingroom_Light_Hue2,gGF_Livingroom_Light_Hue_Color,gIndoor_Lights,gGF_Lights) ["Control","Light"] { channel="hue:0210:default:lamp2:color"}
+Color  pGF_Livingroom_Light_Hue2_Color          "Farbe" <colorwheel> (eGF_Livingroom_Light_Hue2,gGF_Livingroom_Light_Hue_Color,gIndoor_Lights,gGF_Lights,gGF_Livingroom_Lights) ["Control","Light"] { channel="hue:0210:default:lamp2:color"}
 Dimmer pGF_Livingroom_Light_Hue2_Temperature    "Farbtemperatur" <selflight> (eGF_Livingroom_Light_Hue2)                                ["Setpoint","ColorTemperature"] { channel="hue:0210:default:lamp2:color_temperature"}
 Group  eGF_Livingroom_Light_Hue3                "Stehlampe oben" <selflight> (eGF_Livingroom_Light_Hue2_3)                              ["Lightbulb"] { synonyms="oben" }
-Color  pGF_Livingroom_Light_Hue3_Color          "Farbe" <colorwheel> (eGF_Livingroom_Light_Hue3,gGF_Livingroom_Light_Hue_Color,gIndoor_Lights,gGF_Lights) ["Control","Light"] { channel="hue:0210:default:lamp3:color"}
+Color  pGF_Livingroom_Light_Hue3_Color          "Farbe" <colorwheel> (eGF_Livingroom_Light_Hue3,gGF_Livingroom_Light_Hue_Color,gIndoor_Lights,gGF_Lights,gGF_Livingroom_Lights) ["Control","Light"] { channel="hue:0210:default:lamp3:color"}
 Dimmer pGF_Livingroom_Light_Hue3_Temperature    "Farbtemperatur" <selflight> (eGF_Livingroom_Light_Hue3)                                ["Setpoint","ColorTemperature"] { channel="hue:0210:default:lamp3:color_temperature"}
 
 Group  eGF_Livingroom_Light_Hue4                "Tresen" <selflight> (lGF_Livingroom)                                                   ["Lightbulb"] { synonyms="Tresen,Indirekt" }
-Color  pGF_Livingroom_Light_Hue4_Color          "Farbe"     <colorwheel> (eGF_Livingroom_Light_Hue4,gGF_Livingroom_Light_Hue_Color,gIndoor_Lights,gGF_Lights) ["Control","Light"] { channel="hue:0210:default:strip2:color"}
+Color  pGF_Livingroom_Light_Hue4_Color          "Farbe"     <colorwheel> (eGF_Livingroom_Light_Hue4,gGF_Livingroom_Light_Hue_Color,gIndoor_Lights,gGF_Lights,gGF_Livingroom_Lights) ["Control","Light"] { channel="hue:0210:default:strip2:color"}
 Dimmer pGF_Livingroom_Light_Hue4_Temperature    "Farbtemperatur" <selflight> (eGF_Livingroom_Light_Hue4)                                ["Setpoint","ColorTemperature"] { channel="hue:0210:default:strip2:color_temperature"}
 
 Group  eGF_Livingroom_Light_Hue5                "Regal"  <selflight> (lGF_Livingroom)                                                   ["Lightbulb"] { synonyms="Regal,Indirekt" }
-Color  pGF_Livingroom_Light_Hue5_Color          "Farbe"      <colorwheel> (eGF_Livingroom_Light_Hue5,gGF_Livingroom_Light_Hue_Color,gIndoor_Lights,gGF_Lights) ["Control","Light"] { channel="hue:0210:default:strip1:color"}
+Color  pGF_Livingroom_Light_Hue5_Color          "Farbe"      <colorwheel> (eGF_Livingroom_Light_Hue5,gGF_Livingroom_Light_Hue_Color,gIndoor_Lights,gGF_Lights,gGF_Livingroom_Lights) ["Control","Light"] { channel="hue:0210:default:strip1:color"}
 Dimmer pGF_Livingroom_Light_Hue5_Temperature    "Farbtemperatur" <selflight> (eGF_Livingroom_Light_Hue5)                                ["Setpoint","ColorTemperature"] { channel="hue:0210:default:strip1:color_temperature"}
 
 // **** GF GUESTROOM ****
@@ -83,23 +90,27 @@ Group  eFF_Corridor_Light_Ceiling               "Deckenlampe"        <selflight>
 Switch pFF_Corridor_Light_Ceiling_Powered       "Deckenlicht"        <selflight> (eFF_Corridor_Light_Ceiling,gIndoor_Lights,gFF_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_sf:floorCeiling" }
 
 // **** FF BATHROOM ****
+Group:Switch:OR(ON, OFF) eFF_Bathroom_Lights    "Badezimmerlicht"    <selflight>
+
 Group  eFF_Bathroom_Light_Ceiling               "Deckenlampe"        <selflight> (lFF_Bathroom)                                         ["Lightbulb"] { synonyms="Decke" }
-Switch pFF_Bathroom_Light_Ceiling_Powered       "Deckenlicht"        <selflight> (eFF_Bathroom_Light_Ceiling,gIndoor_Lights,gFF_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_sf:bathroomCeiling" }
+Switch pFF_Bathroom_Light_Ceiling_Powered       "Deckenlicht"        <selflight> (eFF_Bathroom_Light_Ceiling,gIndoor_Lights,gFF_Lights,eFF_Bathroom_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_sf:bathroomCeiling" }
 
 Group  eFF_Bathroom_Light_Mirror                "Spiegellampe"       <selflight> (lFF_Bathroom)                                         ["Lightbulb"] { synonyms="Spiegel" }
-Switch pFF_Bathroom_Light_Mirror_Powered        "Spiegellicht"       <selflight> (eFF_Bathroom_Light_Mirror,gIndoor_Lights,gFF_Lights)  ["Switch","Light"] { channel="knx:device:bridge:lights_sf:bathroomMirror" }
+Switch pFF_Bathroom_Light_Mirror_Powered        "Spiegellicht"       <selflight> (eFF_Bathroom_Light_Mirror,gIndoor_Lights,gFF_Lights,eFF_Bathroom_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_sf:bathroomMirror" }
 
 // **** FF BEDROOM ****
+Group:Switch:OR(ON, OFF) gFF_Bedroom_Lights     "Schlafzimmerlicht"  <selflight>
+
 Group  eFF_Bedroom_Light_Ceiling                "Deckenlampe"        <selflight> (lFF_Bedroom)                                          ["Lightbulb"] { synonyms="Decke" }
-Switch pFF_Bedroom_Light_Ceiling_Powered        "Deckenlicht"        <selflight> (eFF_Bedroom_Light_Ceiling,gIndoor_Lights,gFF_Lights)  ["Switch","Light"] { channel="knx:device:bridge:lights_sf:bedroomCeiling" }
+Switch pFF_Bedroom_Light_Ceiling_Powered        "Deckenlicht"        <selflight> (eFF_Bedroom_Light_Ceiling,gIndoor_Lights,gFF_Lights,gFF_Bedroom_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_sf:bedroomCeiling" }
 
 Group  eFF_Bedroom_Light_Hue_Left               "Nachttisch links" <selflight> (lFF_Bedroom)                                            ["Lightbulb"] { synonyms="Nachttisch, Bett, links, Fenster" }
-Color  pFF_Bedroom_Light_Hue_Left_Color         "Farbe" <colorwheel> (eFF_Bedroom_Light_Hue_Left,gIndoor_Lights,gFF_Lights)             ["Control","Light"] { channel="hue:0210:default:lamp5:color"}
+Color  pFF_Bedroom_Light_Hue_Left_Color         "Farbe" <colorwheel> (eFF_Bedroom_Light_Hue_Left,gIndoor_Lights,gFF_Lights,gFF_Bedroom_Lights) ["Control","Light"] { channel="hue:0210:default:lamp5:color"}
 Dimmer pFF_Bedroom_Light_Hue_Left_Temperature   "Farbtemperatur" <selflight> (eFF_Bedroom_Light_Hue_Left)                               ["Setpoint","ColorTemperature"] { channel="hue:0210:default:lamp5:color_temperature"}
 Switch pFF_Bedroom_Light_Hue_Left_Switch        "Taster" <selflight> (eFF_Bedroom_Light_Hue_Left)                                       ["Point"] { channel="knx:device:bridge:other:bedroomLeft" }
 
 Group  eFF_Bedroom_Light_Hue_Right              "Nachttisch rechts" <selflight> (lFF_Bedroom)                                           ["Lightbulb"] { synonyms="Nachttisch, Bett, rechts, Wand" }
-Color  pFF_Bedroom_Light_Hue_Right_Color        "Farbe" <colorwheel> (eFF_Bedroom_Light_Hue_Right,gIndoor_Lights,gFF_Lights)            ["Control","Light"] { channel="hue:0210:default:lamp6:color"}
+Color  pFF_Bedroom_Light_Hue_Right_Color        "Farbe" <colorwheel> (eFF_Bedroom_Light_Hue_Right,gIndoor_Lights,gFF_Lights,gFF_Bedroom_Lights) ["Control","Light"] { channel="hue:0210:default:lamp6:color"}
 Dimmer pFF_Bedroom_Light_Hue_Right_Temperature  "Farbtemperatur" <selflight> (eFF_Bedroom_Light_Hue_Right)                              ["Setpoint","ColorTemperature"] { channel="hue:0210:default:lamp6:color_temperature"}
 Switch pFF_Bedroom_Light_Hue_Right_Switch       "Taster" <selflight> (eFF_Bedroom_Light_Hue_Right)                                      ["Point"] { channel="knx:device:bridge:other:bedroomRight" }
 
