@@ -1,4 +1,4 @@
-Group:Switch:OR(ON, OFF) gOutdoor_Watering_Circuits "Bewässerung [%d]" <selfwater>
+Group:Switch:OR(ON, OFF) gOutdoor_Watering_Circuits "Bewässerung [%d]" <selfwater> {autoupdate="false"}
 
 Group  eOutdoor_Garden_Left_Watering             "Bewässerung" <selfinfo> (lOutdoor_Garden_Left) ["Valve"]
 Switch pOutdoor_Garden_Left_Watering_Powered     "Bewässerung" <selfwater> (gOutdoor_Watering_Circuits,gPersistance_History) ["Switch"] { channel="knx:device:bridge:wattering:gardensideLawnLeft" }

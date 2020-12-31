@@ -129,7 +129,7 @@ Number pOutdoor_Weather_Forecast_Cloud_Cover_8h "Wolken (Vorhersage 8Std) [%d]" 
 Number pOutdoor_Weather_Forecast_Temperature_8h "Garten (Vorhersage 8Std) [%.1f °C]" <selftemperature> (eOutdoor_Weather_Forecast,gPersistance_Chart,gPersistance_History) ["Point"]
 
 // **** WEATHERSTATION ****
-Group gWeatherstationInputValues                     "Wetterstation Input"
+Group gWeatherstationInputValues                     "Wetterstation Input" {autoupdate="false"}
 
 Group eOutdoor_WeatherStation                        "Wetterstation" <selfinfo> (lOutdoor) ["Sensor"]
 

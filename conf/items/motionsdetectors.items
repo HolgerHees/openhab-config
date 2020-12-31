@@ -1,6 +1,6 @@
 // **** MOTION DETECTORS ****
-Group:Contact:OR(OPEN, CLOSED) gSensor_Outdoor              "Aussen [%d]" <selfmotion>
-Group:Contact:OR(OPEN, CLOSED) gSensor_Indoor               "EG [%d]" <selfmotion>
+Group:Contact:OR(OPEN, CLOSED) gSensor_Outdoor              "Aussen [%d]" <selfmotion> {autoupdate="false"}
+Group:Contact:OR(OPEN, CLOSED) gSensor_Indoor               "EG [%d]" <selfmotion> {autoupdate="false"}
 
 // **** GF CORRIDOR ****
 Group  eGF_Corridor_Motiondetector                          "Bewegungsmelder" <selfinfo> (lGF_Corridor) ["MotionDetector"]

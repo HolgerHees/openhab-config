@@ -1,8 +1,8 @@
 // **** OPENING CONTACTS ****
-Group:Contact:OR(OPEN, CLOSED) gOpeningcontacts            "Öffnungssensoren [%d]" <shield>
-Group:Contact:OR(OPEN, CLOSED) gGF_Sensor_Doors            "EG Türen [%d]" <selfdoor> (gOpeningcontacts)
-Group:Contact:OR(OPEN, CLOSED) gGF_Sensor_Window           "EG Fenster [%d]" <selfwindow> (gOpeningcontacts)
-Group:Contact:OR(OPEN, CLOSED) gFF_Sensor_Window           "OG Fenster [%d]" <selfwindow> (gOpeningcontacts)
+Group:Contact:OR(OPEN, CLOSED) gOpeningcontacts            "Öffnungssensoren [%d]" <shield> {autoupdate="false"}
+Group:Contact:OR(OPEN, CLOSED) gGF_Sensor_Doors            "EG Türen [%d]" <selfdoor> (gOpeningcontacts) {autoupdate="false"}
+Group:Contact:OR(OPEN, CLOSED) gGF_Sensor_Window           "EG Fenster [%d]" <selfwindow> (gOpeningcontacts) {autoupdate="false"}
+Group:Contact:OR(OPEN, CLOSED) gFF_Sensor_Window           "OG Fenster [%d]" <selfwindow> (gOpeningcontacts) {autoupdate="false"}
 
 // **** GF CORRIDOR ****
 Group   eGF_Corridor_Openingcontact_Door                   "Öffnungssensor" <selfinfo> (lGF_Corridor) ["FrontDoor"]

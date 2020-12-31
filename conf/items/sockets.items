@@ -1,5 +1,5 @@
-Group:Switch:OR(ON, OFF) gAll_Sockets          "Alle"               <selfsocket>
-Group:Switch:OR(ON, OFF) gOutdoor_Sockets      "Garten"             <selfsocket>
+Group:Switch:OR(ON, OFF) gAll_Sockets          "Alle"               <selfsocket> {autoupdate="false"}
+Group:Switch:OR(ON, OFF) gOutdoor_Sockets      "Garten"             <selfsocket> {autoupdate="false"}
 
 // **** GF LIVINGROOM ****
 Group  eGF_Livingroom_Socket_Bassbox           "Bassbox"            <selfsocket> (lGF_Livingroom) ["PowerOutlet"]

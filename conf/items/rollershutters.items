@@ -1,12 +1,12 @@
-Group:Switch:OR(OFF,ON)	gShutters_Count	"Alle" <selfrollershutter>
-Group:Switch:OR(OFF,ON)	gGF_Shutters_Count	"EG" 	 <selfrollershutter>
-Group:Switch:OR(OFF,ON)	gFF_Shutters_Count	"OG" 	 <selfrollershutter>
+Group:Switch:OR(OFF,ON) gShutters_Count	"Alle" <selfrollershutter> {autoupdate="false"}
+Group:Switch:OR(OFF,ON) gGF_Shutters_Count	"EG" 	 <selfrollershutter> {autoupdate="false"}
+Group:Switch:OR(OFF,ON) gFF_Shutters_Count	"OG" 	 <selfrollershutter> {autoupdate="false"}
 
-Group:Rollershutter:OR(UP, DOWN) gShutters	"Alle" <selfrollershutter>
-Group:Rollershutter:OR(UP, DOWN) gGF_Shutters	"EG" 	 <selfrollershutter>
-Group:Rollershutter:OR(UP, DOWN) gFF_Shutters	"OG" 	 <selfrollershutter>
-Group:Rollershutter:OR(UP, DOWN) gSouth_Shutters	"Süden" <selfrollershutter>
-Group:Rollershutter:OR(UP, DOWN) gWest_Shutters	"Westen" <selfrollershutter>
+Group:Rollershutter:OR(UP, DOWN) gShutters	"Alle" <selfrollershutter> {autoupdate="false"}
+Group:Rollershutter:OR(UP, DOWN) gGF_Shutters	"EG" 	 <selfrollershutter> {autoupdate="false"}
+Group:Rollershutter:OR(UP, DOWN) gFF_Shutters	"OG" 	 <selfrollershutter> {autoupdate="false"}
+Group:Rollershutter:OR(UP, DOWN) gSouth_Shutters	"Süden" <selfrollershutter> {autoupdate="false"}
+Group:Rollershutter:OR(UP, DOWN) gWest_Shutters	"Westen" <selfrollershutter> {autoupdate="false"}
 
 // **** GF LIVINGROOM ****
 Group  eGF_Livingroom_Shutter_Terrace "Terassen-Rollladen" <selfrollershutter> (lGF_Livingroom) ["Blinds"] {synonyms="Esstisch,Terasse"}
