@@ -9,7 +9,7 @@ from shared.semantic.command_processor import CommandProcessor
 from alexa_device_config import AlexaDevices
 
 import traceback
-   
+       
 @rule("voice_command.py")
 class VoiceCommandRule:
     def __init__(self):

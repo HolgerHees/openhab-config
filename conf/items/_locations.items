@@ -27,9 +27,6 @@ Group lOutdoor_Carport  "Carport"       <garden>        (lOutdoor)     ["Carport
 Group lOutdoor_Garden   "Hintergarten"        <garden>        (lOutdoor) ["Garden"]     { synonyms="hinten" }
 Group lOutdoor_Garden_Garage  "Schuppen hinten" <garden> (lOutdoor_Garden) ["Garden"]   { synonyms="Garage,Schuppen" }
 Group lOutdoor_Garden_Terrace  "Terasse" <garden>       (lOutdoor_Garden) ["Terrace"]
-Group lOutdoor_Garden_Left "Garten Links"      <garden> (lOutdoor_Garden) ["Garden"]    { synonyms="links" }
-Group lOutdoor_Garden_Right "Garten Rechts"    <garden> (lOutdoor_Garden) ["Garden"]    { synonyms="rechts" }
-Group lOutdoor_Garden_Back "Garten Rückseite"  <garden> (lOutdoor_Garden)  ["Garden"]   { synonyms="Hinterer Nachbar"}
 
 Group lOther            "Sonstiges"     <group>                        ["Location"]
 
