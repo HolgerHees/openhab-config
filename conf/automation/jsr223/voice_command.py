@@ -9,7 +9,7 @@ from shared.semantic.command_processor import CommandProcessor
 from alexa_device_config import AlexaDevices
 
 import traceback
-        
+                                                            
 @rule("voice_command.py")
 class VoiceCommandRule:
     def __init__(self):
@@ -29,9 +29,9 @@ class VoiceCommandRule:
         msg, is_valid = self.processor.applyActions(actions,voice_command,False)
 
         postUpdate("VoiceMessage",msg)
-                                           
+                                                        
 #postUpdate("VoiceCommand","Flur farbe grün")
-
+                    
 @rule("voice_command.py")
 class TestRule:
     def __init__(self):
@@ -53,9 +53,7 @@ class TestRule:
                 raise Exception()
 
             item_actions_skipped = []
-            location_names = []
             for action in actions:
-                location_names += map(lambda location: location.getItem().getName(),action.locations)
                 for item_action in action.item_actions:
                     item_actions_skipped.append(item_action)
 
@@ -75,19 +73,12 @@ class TestRule:
                             case_actions_excpected.remove(case_action)
 
             excpected_result = case["is_valid"] == is_valid if "is_valid" in case else is_valid
-    
-            location_names = list(set(location_names))
-            if len(location_names) > 0 and case.get("location_count",1) != len(location_names):
-                excpected_result = False
-                 
+      
             if excpected_result \
                 and len(item_actions_skipped) == 0 and len(item_actions_applied) == len(case["items"]):
                 self.log.info(u"OK  - Input: '{}' - MSG: '{}'".format(voice_command,msg))
             else:
                 self.log.info(u"ERR - Input: '{}' - MSG: '{}'".format(voice_command,msg))
-                for action in actions:
-                    for location in action.locations:
-                        self.log.info(u"       LOCATION:   => {}".format(location.getItem().getName()))
                 for case_action in case_actions_excpected:
                     self.log.info(u"       MISSING     => {} => {}".format(case_action[0],case_action[1]))
                 for item_action in item_actions_skipped:
@@ -101,11 +92,9 @@ class TestRule:
                 for item_action in item_actions_applied:
                     items.append(u"[\"{}\",\"{}\"]".format(item_action.item.getName(),item_action.cmd_value))
                 msg = u"[{}]".format(",".join(items))
-                if len(location_names) > 1:
-                    msg = u"{}, \"location_count\": {}".format(msg,len(location_names))
  
                 self.log.info(u"\n\n{}\n\n".format(msg))
                 raise Exception("Wrong detection")
      
     def execute(self, module, input):
-        pass      
+        pass                                                                   

@@ -133,12 +133,12 @@ Switch pFF_Attic_Light_Ceiling_Powered          "Deckenlicht"        <selflight>
 Group:Number:SUM gOutdoor_Motiondetector_Counter "Automatik [MAP(motiondetector_counter_de.map):%s]" <selflightInfo> {autoupdate="false"}
 
 // **** OUTDOOR GARAGE STREEDSIDE ****
-Group  eOutdoor_Streedside_Garage_Light         "Lampe"              <selflight> (lOutdoor_Streedside_Garage)                           ["Lightbulb"]
+Group  eOutdoor_Streedside_Garage_Light         "Lampe"              <selflight> (lOutdoor_Streedside)                                  ["Lightbulb"] {synonyms="Schuppen"}
 Switch pOutdoor_Streedside_Garage_Light_Powered "Licht"              <selflight> (eOutdoor_Streedside_Garage_Light,gOutdoor_Lights)     ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:garageStreedside" }
 Switch pOutdoor_Streedside_Garage_Automatic_Switch	"Automatik"      <selflight> (eOutdoor_Streedside_Garage_Light,gOutdoor_Motiondetector_Counter) ["Point"]
 
 // **** OUTDOOR FRONT ****
-Group  eOutdoor_Streedside_Frontdoor_Light      "Lampe"              <selflight> (lOutdoor_Streedside_Frontdoor)                        ["Lightbulb"]
+Group  eOutdoor_Streedside_Frontdoor_Light      "Lampe"              <selflight> (lOutdoor_Streedside)                                  ["Lightbulb"] {synonyms="Haustür"}
 Switch pOutdoor_Streedside_Frontdoor_Light_Powered "Licht"           <selflight> (eOutdoor_Streedside_Frontdoor_Light,gOutdoor_Lights)  ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:frontdoor" }
 Switch pOutdoor_Streedside_Frontdoor_Automatic_Switch "Automatik"    <selflight> (eOutdoor_Streedside_Frontdoor_Light,gOutdoor_Motiondetector_Counter) ["Point"]
 
@@ -148,12 +148,12 @@ Switch pOutdoor_Carport_Light_Powered           "Licht"              <selflight>
 Switch pOutdoor_Carport_Automatic_Switch        "Automatik"          <selflight> (eOutdoor_Carport_Light,gOutdoor_Motiondetector_Counter) ["Point"]
 
 // **** OUTDOOR TERRACE ****
-Group  eOutdoor_Garden_Terrace_Light            "Lampen"             <selflight> (lOutdoor_Garden_Terrace)                              ["Lightbulb"]
+Group  eOutdoor_Garden_Terrace_Light            "Lampen"             <selflight> (lOutdoor_Terrace)                                     ["Lightbulb"]
 Dimmer pOutdoor_Garden_Terrace_Light_Brightness "Licht"              <selflight> (eOutdoor_Garden_Terrace_Light,gOutdoor_Lights)        ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:outdoorTerrace"}
 Switch pOutdoor_Garden_Terrace_Automatic_Switch "Automatik"          <selflight> (eOutdoor_Garden_Terrace_Light,gOutdoor_Motiondetector_Counter) ["Point"]
 
 // **** OUTDOOR GARAGE GARDEN ****
-Group  eOutdoor_Garden_Garage_Light             "Lampe"              <selflight> (lOutdoor_Garden_Garage)                               ["Lightbulb"]
+Group  eOutdoor_Garden_Garage_Light             "Lampe"              <selflight> (lOutdoor_Garden)                                      ["Lightbulb"] {synonyms="Schuppen"}
 Switch pOutdoor_Garden_Garage_Light_Powered     "Licht"              <selflight> (eOutdoor_Garden_Garage_Light,gOutdoor_Lights)         ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:garageGardenside" }
 Switch pOutdoor_Garden_Garage_Automatic_Switch	"Automatik"          <selflight> (eOutdoor_Garden_Garage_Light,gOutdoor_Motiondetector_Counter) ["Point"]
 

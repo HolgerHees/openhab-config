@@ -34,7 +34,7 @@ Switch pFF_Attic_Socket_Powered                   "Schornstein"        <selfsock
 Group  eOutdoor_Streedside_Socket              "Steckdosen"         <selfsocket> (lOutdoor_Streedside) ["PowerOutlet"] { synonyms="aussensteckdose" }
 Switch pOutdoor_Streeside_Socket_Powered       "Steckdosen"         <selfsocket> (eOutdoor_Streedside_Socket,gAll_Sockets,gOutdoor_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_outdoor:streedside" }
 
-Group  eOutdoor_Garden_Terrace_Socket          "Steckdosen"         <selfsocket> (lOutdoor_Garden_Terrace) ["PowerOutlet"] { synonyms="aussensteckdose" }
+Group  eOutdoor_Garden_Terrace_Socket          "Steckdosen"         <selfsocket> (lOutdoor_Terrace) ["PowerOutlet"] { synonyms="aussensteckdose" }
 Switch pOutdoor_Garden_Terrace_Socket_Powered  "Steckdosen"         <selfsocket> (eOutdoor_Garden_Terrace_Socket,gAll_Sockets,gOutdoor_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_outdoor:gardenside" }
 
 // **** MOBILE ****

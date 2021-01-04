@@ -15,11 +15,11 @@ Group  eFF_Corridor_Motiondetector                          "Bewegungsmelder" <s
 Contact pFF_Corridor_Motiondetector_State                   "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eFF_Corridor_Motiondetector,gSensor_Indoor) ["Alarm"] { channel="knx:device:bridge:motion_indoor:sfFloor" }
 
 // **** OUTDOOR GARAGE STREEDSIDE ****
-Group  eOutdoor_Streedside_Garage_Motiondetector            "Bewegungsmelder" <selfinfo> (lOutdoor_Streedside_Garage) ["MotionDetector"]
+Group  eOutdoor_Streedside_Garage_Motiondetector            "Bewegungsmelder" <selfinfo> (lOutdoor_Streedside) ["MotionDetector"] {synonyms="Schuppen"}
 Contact pOutdoor_Streedside_Garage_Motiondetector_State     "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eOutdoor_Streedside_Garage_Motiondetector, gSensor_Outdoor) ["Alarm"] { channel="knx:device:bridge:motion_outdoor:garageStreetside" }
 
 // **** OUTDOOR FRONTDOOR ****
-Group  eOutdoor_Streedside_Frontdoor_Motiondetector         "Bewegungsmelder" <selfinfo> (lOutdoor_Streedside_Frontdoor) ["MotionDetector"]
+Group  eOutdoor_Streedside_Frontdoor_Motiondetector         "Bewegungsmelder" <selfinfo> (lOutdoor_Streedside) ["MotionDetector"] {synonyms="Haustür"}
 Contact pOutdoor_Streedside_Frontdoor_Motiondetector_State  "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eOutdoor_Streedside_Frontdoor_Motiondetector, gSensor_Outdoor)  ["Alarm"] { channel="knx:device:bridge:motion_outdoor:frontdoor" }
 
 // **** OUTDOOR CARPORT ****
@@ -27,12 +27,12 @@ Group  eOutdoor_Carport_Motiondetector                      "Bewegungsmelder" <s
 Contact pOutdoor_Carport_Motiondetector_State               "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eOutdoor_Carport_Motiondetector, gSensor_Outdoor)  ["Alarm"] { channel="knx:device:bridge:motion_outdoor:carport" }
 
 // **** OUTDOOR TERRACE ****
-Group  eOutdoor_Garden_Terrace_Motiondetector               "Bewegungsmelder" <selfinfo> (lOutdoor_Garden_Terrace) ["MotionDetector"]
+Group  eOutdoor_Garden_Terrace_Motiondetector               "Bewegungsmelder" <selfinfo> (lOutdoor_Terrace) ["MotionDetector"]
 Contact pOutdoor_Garden_Terrace_Motiondetector_State1       "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eOutdoor_Garden_Terrace_Motiondetector, gSensor_Outdoor) ["Alarm"] { channel="knx:device:bridge:motion_outdoor:terrace1" }
 Contact pOutdoor_Garden_Terrace_Motiondetector_State2       "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eOutdoor_Garden_Terrace_Motiondetector, gSensor_Outdoor) ["Alarm"] { channel="knx:device:bridge:motion_outdoor:terrace2" }
 
 // **** OUTDOOR GARAGE GARDENSIDE ****
-Group  eOutdoor_Garden_Garage_Motiondetector                "Bewegungsmelder" <selfinfo> (lOutdoor_Garden_Garage) ["MotionDetector"]
+Group  eOutdoor_Garden_Garage_Motiondetector                "Bewegungsmelder" <selfinfo> (lOutdoor_Garden) ["MotionDetector"] {synonyms="Schuppen"}
 Contact pOutdoor_Garden_Garage_Motiondetector_State         "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eOutdoor_Garden_Garage_Motiondetector, gSensor_Outdoor)  ["Alarm"] { channel="knx:device:bridge:motion_outdoor:garageGardenside" }
 
 
