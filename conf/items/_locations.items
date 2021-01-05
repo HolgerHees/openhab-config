@@ -21,15 +21,11 @@ Group lFF_Attic         "Dachboden"     <attic>         (lFirstFloor)  ["Attic"]
 
 Group lOutdoor          "Draussen"      <garden>                       ["Outdoor"]      { synonyms="garten,aussen" }
 Group lOutdoor_Streedside "Vorgarten"   <garden>        (lOutdoor)     ["Garden"]       { synonyms="Strassenseite, vorne" }
-//Group lOutdoor_Streedside_Garage "Schuppen vorne" <garden> (lOutdoor_Streedside) ["Garden"] { synonyms="Garage,Schuppen" }
-//Group lOutdoor_Streedside_Frontdoor "Haustür" <garden>  (lOutdoor_Streedside) ["Garden"]
 Group lOutdoor_Carport  "Carport"       <garden>        (lOutdoor)     ["Carport"]
 Group lOutdoor_Garden   "Hintergarten"  <garden>        (lOutdoor)     ["Garden"]       { synonyms="hinten" }
-//Group lOutdoor_Garden_Garage  "Schuppen hinten" <garden> (lOutdoor_Garden) ["Garden"]   { synonyms="Garage,Schuppen" }
 Group lOutdoor_Terrace  "Terasse" <garden>              (lOutdoor)     ["Terrace"]      { synonyms="hinten" }
 
 Group lOther            "Sonstiges"     <group>                        ["Location"]
-
 
 //Group lTestFloor1        "Erdgeschoss"   <groundfloor>   (lIndoor)      ["GroundFloor"]  { synonyms="testflur" }
 //Group lTestFloor3        "Erdgeschoss"   <groundfloor>   (lTestFloor2)      ["GroundFloor"]  { synonyms="testflur" }
