@@ -182,7 +182,7 @@ sitemap haus label="Main Menu"
                 }
 			}
 		}
-		Group label="Geräte [%s]" item=pOther_State_Message_Robot icon="roomba" valuecolor=[=="Alles normal"="#6bc305",!="Alles normal"="#d72a2a"] {
+		Group label="Geräte [%s]" item=pOther_State_Message_Devices icon="roomba" valuecolor=[=="Alles normal"="#6bc305",!="Alles normal"="#d72a2a"] {
             Frame label="Haus" {
                 Text label="Waschmaschine [%s]" item=pGF_Utilityroom_Washer_Message icon="whitegood" {
                     Frame label="Status" {

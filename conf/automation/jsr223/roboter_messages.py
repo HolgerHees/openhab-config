@@ -5,7 +5,7 @@ from core.triggers import CronTrigger, ItemStateChangeTrigger
 class RoboterMessagesRule:
     def __init__(self):
         self.triggers = [
-            CronTrigger("*/15 * * * * ?"),
+            #CronTrigger("0 0 * * * ?"),
             ItemStateChangeTrigger("pIndoor_Roomba_status"),
             ItemStateChangeTrigger("pIndoor_Roomba_full"),
             ItemStateChangeTrigger("pOutdoor_Mower_Status")
@@ -20,7 +20,7 @@ class RoboterMessagesRule:
             active.append("Roomba")
 
         if getItemState("pOutdoor_Mower_Status") != NULL and ( getItemState("pOutdoor_Mower_Status").intValue() == 7 or getItemState("pOutdoor_Mower_Status").intValue() == 8 ):
-            active.append("pOutdoor_Mower_")
+            active.append("Mower")
             #url = "https://smartmarvin.de/cameraAutomowerImage"
 
         if len(active) == 0:
