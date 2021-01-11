@@ -1,8 +1,6 @@
-from shared.helper import rule, getItemState, postUpdateIfChanged, sendNotification, sendNotificationToAllAdmins, startTimer
+from shared.helper import rule, getItemState, postUpdateIfChanged, sendNotification, sendNotificationToAllAdmins, startTimer, getThing
 from core.triggers import CronTrigger, ItemStateChangeTrigger, ThingStatusChangeTrigger
 from core.actions import Transformation
-
-from org.eclipse.smarthome.core.thing import ThingUID, ThingStatus
 
 #https://github.com/bruestel/org.openhab.binding.homeconnect/tree/2.5.x-next/bundles/org.openhab.binding.homeconnect#notification-on-credential-error
 @rule("homeconnect_washer.py")
@@ -14,7 +12,7 @@ class HomeConnectStateRule:
         ]
 
     def execute(self, module, input):
-        thing = things.get(ThingUID("homeconnect:api_bridge:default"))
+        thing = getThing("homeconnect:api_bridge:default")
         status = thing.getStatus()
         info = thing.getStatusInfo()
         
