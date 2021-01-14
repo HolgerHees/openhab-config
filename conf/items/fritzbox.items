@@ -17,6 +17,16 @@ Number  pGF_Corridor_Fritzbox_DslCRCErrors          "CRC Fehler [%s]"           
 Number  pGF_Corridor_Fritzbox_Uptime                "Uptime [JS(network_uptime.js):%s]"                   <line>     (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="upTime"}
 Switch  pGF_Corridor_Fritzbox_GuestWifi             "Gäste WLAN"                                          <network>  (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="wifiGuestSwitch"}
 
-Number  pGF_Corridor_Speedtest_UpstreamRate         "Upstream Gemessen [%d MBit]"                         <flowpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"] {channel="network:speedtest:local:rateUp"}
-Number  pGF_Corridor_Speedtest_DownstreamRate       "Downstream Gemessen [%d MBit]"                       <returnpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"] {channel="network:speedtest:local:rateDown"}
+String  pGF_Corridor_Fritzbox_WanAccessType         "WAN Typ [%s]"                                        <selfinfo>  (eGF_Corridor_Fritzbox) ["Point"]{fritzboxtr064="wanWANAccessType"}
+Number  pGF_Corridor_Fritzbox_WanUpstreamMaxRate    "WAN Upstream [JS(network_bit_to_mbit.js):%s]"        <flowpipe> (eGF_Corridor_Fritzbox) ["Point"]{fritzboxtr064="wanLayer1UpstreamMaxBitRate"}
+Number  pGF_Corridor_Fritzbox_WanDownstreamMaxRate  "WAN Downstream [JS(network_bit_to_mbit.js):%s]"      <returnpipe> (eGF_Corridor_Fritzbox) ["Point"]{fritzboxtr064="wanLayer1DownstreamMaxBitRate"}
+String  pGF_Corridor_Fritzbox_WanPhysicalLinkStatus "WAN Link Status [MAP(network_states.map):%s]"        <selfinfo>  (eGF_Corridor_Fritzbox) ["Point"]{fritzboxtr064="wanPhysicalLinkStatus"}
+Number pGF_Corridor_Fritzbox_WanTotalBytesSent      "WAN Gesamt gesendets [%s]" <flowpipe> (eGF_Corridor_Fritzbox) {fritzboxtr064="wanTotalBytesSent"}
+Number pGF_Corridor_Fritzbox_WanTotalBytesReceived  "WAN Gesamt empfangen [%s]" <returnpipe> (eGF_Corridor_Fritzbox) {fritzboxtr064="wanTotalBytesReceived"}
+
+Number pGF_Corridor_Fritzbox_WanUpstreamCurrRate   "Upstream Aktuell [JS(network_bit_to_mbit.js):%s]" <flowpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"]
+Number pGF_Corridor_Fritzbox_WanDownstreamCurrRate "Downstream Aktuell [JS(network_bit_to_mbit.js):%s]" <returnpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"]
+
+Number  pGF_Corridor_Speedtest_UpstreamRate         "Upstream Speedtest [%d MBit]"                        <flowpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"] {channel="network:speedtest:local:rateUp"}
+Number  pGF_Corridor_Speedtest_DownstreamRate       "Downstream Speedtest [%d MBit]"                      <returnpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"] {channel="network:speedtest:local:rateDown"}
 DateTime pGF_Corridor_Speedtest_Start               "Speedtest [%1$tH:%1$tM]"                             <time>     (eGF_Corridor_Fritzbox) ["Point"] {channel="network:speedtest:local:testStart"}

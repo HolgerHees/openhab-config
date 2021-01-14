@@ -206,6 +206,19 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Utilityroom_Washer_LocalControlActiveState
                     }
                 }
+                Text label="Kaffeemaschine [%s]" item=pGF_Kitchen_Coffeemaker_Message icon="switch" {
+                    Text item=pGF_Kitchen_Coffeemaker_Power_State
+                    Text item=pGF_Kitchen_Coffeemaker_Operation_State
+                    Text item=pGF_Kitchen_Coffeemaker_Remote_Start_Allowed
+                    Text item=pGF_Kitchen_Coffeemaker_Local_Control_State
+                    Text item=pGF_Kitchen_Coffeemaker_Active_Program_State
+                    Text item=pGF_Kitchen_Coffeemaker_Selected_Program_State
+                    Text item=pGF_Kitchen_Coffeemaker_Basic_Action_State
+                    Text item=pGF_Kitchen_Coffeemaker_Program_Progress_State
+                    Text item=pGF_Kitchen_Coffeemaker_Drip_Tray_Full_State
+                    Text item=pGF_Kitchen_Coffeemaker_Tank_Empty_State
+                    Text item=pGF_Kitchen_Coffeemaker_Bean_Container_Empty_State          
+                }
                 Text label="Roomba" item=pIndoor_Roomba_StatusFormatted icon="roomba"{
                     Frame label="Status" {
                         Text item=pIndoor_Roomba_batPct
@@ -258,10 +271,6 @@ sitemap haus label="Main Menu"
                 }
             }
             Frame label="Garten" {
-				Text label="Kamera" icon="camera"
-				{
-					Image url="https://smartmarvin.de/cameraAutomowerImage" label="Automower" refresh=5000
-				}
                 Text label="Automower" item=pOutdoor_Mower_Status icon="mower" {
                     Frame label="Status" {
                         Text item=pOutdoor_Mower_Battery
@@ -276,6 +285,10 @@ sitemap haus label="Main Menu"
                         Text item=pOutdoor_Mower_ErrorMessage
                         Text item=pOutdoor_Mower_ErrorDate
                         Text item=pOutdoor_Mower_Hours
+                    }
+                    Frame label="Kamera"
+                    {
+                        Image url="https://smartmarvin.de/cameraAutomowerImage" label="Automower" refresh=5000
                     }
                 }
             }
@@ -818,6 +831,76 @@ sitemap haus label="Main Menu"
                 
                 }
             }
+            Frame label="Server & Network" {
+                Group item=State_Server {
+                    Frame label="Daten" {
+                        Text item=State_Server
+                    }
+                    Frame label="Auswertung" {
+                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="/static/custom/grafana/server.html?fromItem=Chart_From" icon=none height=72
+                    }
+                }
+                Group item=pGF_Corridor_Fritzbox_WanPhysicalLinkStatus label="WAN Status [MAP(network_states.map):%s]" {
+                    Frame label="Status" {
+                        Text item=pGF_Corridor_Fritzbox_Uptime
+                        Switch item=pGF_Corridor_Fritzbox_GuestWifi
+                    }
+                    Frame item=pGF_Corridor_Speedtest_Start label="WAN Verbindung [%1$tH:%1$tM]" {
+                        Text item=pGF_Corridor_Fritzbox_WanAccessType
+                        Text item=pGF_Corridor_Fritzbox_WanPhysicalLinkStatus
+                        Text item=pGF_Corridor_Fritzbox_WanUpstreamCurrRate
+                        Text item=pGF_Corridor_Fritzbox_WanDownstreamCurrRate
+                        Text item=pGF_Corridor_Speedtest_UpstreamRate
+                        Text item=pGF_Corridor_Speedtest_DownstreamRate
+                        Text item=pGF_Corridor_Fritzbox_WanUpstreamMaxRate
+                        Text item=pGF_Corridor_Fritzbox_WanDownstreamMaxRate
+                    }
+                    Frame label="DSL Verbindung" {
+                        Text item=pGF_Corridor_Fritzbox_DslEnable
+                        Text item=pGF_Corridor_Fritzbox_DslStatus
+                        Text item=pGF_Corridor_Fritzbox_DslUpstreamCurrRate
+                        Text item=pGF_Corridor_Fritzbox_DslDownstreamCurrRate
+                        Text item=pGF_Corridor_Fritzbox_DslUpstreamMaxRate
+                        Text item=pGF_Corridor_Fritzbox_DslDownstreamMaxRate
+                        Text item=pGF_Corridor_Fritzbox_DslUpstreamNoiseMargin
+                        Text item=pGF_Corridor_Fritzbox_DslDownstreamNoiseMargin
+                        Text item=pGF_Corridor_Fritzbox_DslUpstreamAttenuation
+                        Text item=pGF_Corridor_Fritzbox_DslDownstreamAttenuation
+                    }
+                    Frame label="DSL Fehler" {
+                        Text item=pGF_Corridor_Fritzbox_DslFECErrors
+                        Text item=pGF_Corridor_Fritzbox_DslHECErrors
+                        Text item=pGF_Corridor_Fritzbox_DslCRCErrors
+                    }
+                    Frame label="Auswertung" {
+                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="/static/custom/grafana/internet.html?fromItem=Chart_From" icon=none height=24
+                    }
+                }
+                Group item=pGF_Guestroom_PrinterStatus label="Drucker Status [%s]" {
+                    Frame label="Status" {
+                        Text item=pGF_Guestroom_PrinterStatus
+                    }
+                    Frame label="Füllstand" {
+                        Text item=pGF_Guestroom_PrinterBlackLevel
+                        Text item=pGF_Guestroom_PrinterCyanLevel
+                        Text item=pGF_Guestroom_PrinterMagentaLevel
+                        Text item=pGF_Guestroom_PrinterYellowLevel
+                    }
+                    Frame label="Druckvolumen" {
+                        Text item=pGF_Guestroom_PrinterTotalPages
+                        Text item=pGF_Guestroom_PrinterTotalColourPages
+                        Text item=pGF_Guestroom_PrinterTotalMonochromePages
+                    }
+                }
+                Text label="Alexa" {
+                    Frame label="Status" {
+                        Text item=VoiceCommand
+                        Text item=VoiceMessage
+                    }
+                }
+            }
             Frame label="Sonstiges" {
                 Group item=gOutdoor_Lights label="Lampen Garten (RAW) [MAP(group_socket.map):%d]" {
                     Slider item=pOutdoor_Garden_Terrace_Light_Brightness label="Terasse"
@@ -844,72 +927,6 @@ sitemap haus label="Main Menu"
                         Switch item=pMobile_Socket_2_Powered label="Steckdose 2"
                         Switch item=pMobile_Socket_3_Powered label="Steckdose 3"
                         Switch item=pMobile_Socket_4_Powered label="Steckdose 4"
-                    }
-                }
-                Text label="Server" icon="selfcomputer"{
-                    Frame label="Daten" {
-                        Group item=State_Server {
-                            Frame label="Daten" {
-                                Text item=State_Server
-                            }
-                            Frame label="Auswertung" {
-                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/custom/grafana/server.html?fromItem=Chart_From" icon=none height=72
-                            }
-                        }
-                        Group item=pGF_Corridor_Fritzbox_DslStatus label="DSL Status [MAP(network_states.map):%s]" {
-                            Frame label="Status" {
-                                Text item=pGF_Corridor_Fritzbox_DslEnable
-                                Text item=pGF_Corridor_Fritzbox_DslStatus
-                                Text item=pGF_Corridor_Fritzbox_Uptime
-                                Switch item=pGF_Corridor_Fritzbox_GuestWifi
-                            }
-                            Frame item=pGF_Corridor_Speedtest_Start label="Verbindung [%1$tH:%1$tM]" {
-                                Text item=pGF_Corridor_Speedtest_UpstreamRate
-                                Text item=pGF_Corridor_Speedtest_DownstreamRate
-                            }
-                            Frame label="Verbindung" {
-                                Text item=pGF_Corridor_Fritzbox_DslUpstreamCurrRate
-                                Text item=pGF_Corridor_Fritzbox_DslDownstreamCurrRate
-                                Text item=pGF_Corridor_Fritzbox_DslUpstreamMaxRate
-                                Text item=pGF_Corridor_Fritzbox_DslDownstreamMaxRate
-                                Text item=pGF_Corridor_Fritzbox_DslUpstreamNoiseMargin
-                                Text item=pGF_Corridor_Fritzbox_DslDownstreamNoiseMargin
-                                Text item=pGF_Corridor_Fritzbox_DslUpstreamAttenuation
-                                Text item=pGF_Corridor_Fritzbox_DslDownstreamAttenuation
-                            }
-                            Frame label="Fehler" {
-                                Text item=pGF_Corridor_Fritzbox_DslFECErrors
-                                Text item=pGF_Corridor_Fritzbox_DslHECErrors
-                                Text item=pGF_Corridor_Fritzbox_DslCRCErrors
-                            }
-                            Frame label="Auswertung" {
-                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/custom/grafana/internet.html?fromItem=Chart_From" icon=none height=12
-                            }
-                        }
-                        Group item=pGF_Guestroom_PrinterStatus label="Drucker Status [%s]" {
-                            Frame label="Status" {
-                                Text item=pGF_Guestroom_PrinterStatus
-                            }
-                            Frame label="Füllstand" {
-                                Text item=pGF_Guestroom_PrinterBlackLevel
-                                Text item=pGF_Guestroom_PrinterCyanLevel
-                                Text item=pGF_Guestroom_PrinterMagentaLevel
-                                Text item=pGF_Guestroom_PrinterYellowLevel
-                            }
-                            Frame label="Druckvolumen" {
-                                Text item=pGF_Guestroom_PrinterTotalPages
-                                Text item=pGF_Guestroom_PrinterTotalColourPages
-                                Text item=pGF_Guestroom_PrinterTotalMonochromePages
-                            }
-                        }
-                        Text label="Alexa" {
-                            Frame label="Status" {
-                                Text item=VoiceCommand
-                                Text item=VoiceMessage
-                            }
-                        }
                     }
                 }
             }
