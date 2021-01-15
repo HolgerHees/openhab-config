@@ -5,19 +5,25 @@ from core.triggers import CronTrigger, ItemStateChangeTrigger
 class HomeConnectCoffeemakerMessageRule:
     def __init__(self):
         self.triggers = [
+            #CronTrigger("*/15 * * * * ?"),
+            ItemStateChangeTrigger("pGF_Kitchen_Coffeemaker_Power_State"),
             ItemStateChangeTrigger("pGF_Kitchen_Coffeemaker_Program_Progress_State"),
             ItemStateChangeTrigger("pGF_Kitchen_Coffeemaker_Operation_State")
         ]
 
     def execute(self, module, input):
       
-        mode = getItemState("pGF_Kitchen_Coffeemaker_Operation_State").toString()
-        msg = u"{}".format(mode)
-        
-        if mode != "Inactive":
-            runtime = getItemState("pGF_Kitchen_Coffeemaker_Program_Progress_State")
-            if runtime != NULL and runtime != UNDEF and runtime.intValue() > 0:
-                msg = u"{}, {} %".format(msg,runtime)
+        power_state = getItemState("pGF_Kitchen_Coffeemaker_Power_State")
+        if power_state == ON:
+            mode = getItemState("pGF_Kitchen_Coffeemaker_Operation_State").toString()
+            msg = u"{}".format(mode)
+            
+            if mode != "Inactive":
+                runtime = getItemState("pGF_Kitchen_Coffeemaker_Program_Progress_State")
+                if runtime != NULL and runtime != UNDEF and runtime.intValue() > 0:
+                    msg = u"{}, {} %".format(msg,runtime)
+        else:
+            msg = u"Aus"
             
         postUpdateIfChanged("pGF_Kitchen_Coffeemaker_Message", msg)
 
