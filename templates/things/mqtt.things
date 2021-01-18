@@ -1,3 +1,7 @@
+Bridge mqtt:broker:cloud [ host="mosquitto.cloud", secure=false ]
+{
+}
+
 Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
 {
     Thing topic device_ping "Device Ping" @ "Geräte" {

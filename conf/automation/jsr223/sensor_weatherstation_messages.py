@@ -176,7 +176,7 @@ class WeatherstationLastUpdateRule:
         postUpdateIfChanged("pOutdoor_WeatherStation_Update_Message", msg)
         postUpdateIfChanged("pOutdoor_WeatherStation_Is_Working", ON if oldestUpdateInMinutes <= 60 else OFF)
         
-        temperatureItemName = 'pOutdoor_WeatherStation_Temperature' if states['pOutdoor_WeatherStation_Temperature_Raw'][0] < 30 else 'Heating_Temperature_Outdoor'
+        temperatureItemName = 'pOutdoor_WeatherStation_Temperature' if states['pOutdoor_WeatherStation_Temperature_Raw'][0] < 30 else 'pGF_Utilityroom_Heating_Temperature_Outdoor'
         postUpdateIfChanged("pOutdoor_WeatherStation_Temperature_Item_Name", temperatureItemName )
             
         if oldestUpdateInMinutes > 10:

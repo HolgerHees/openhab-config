@@ -35,7 +35,7 @@ class ValuesNetworkOutgoingTrafficRule:
                 speed = round(diffValue / diffTime)
                 postUpdateIfChanged("pGF_Corridor_Fritzbox_WanUpstreamCurrRate",speed)
             else:
-                self.log.info(u"wan traffic overflow - prev: {}, current: {}. diff: {}".format(prevValue,currentValue,diffValue))
+                self.log.info(u"wan traffic overflow - prev: {}, current: {}".format(prevValue,currentValue))
 
             #self.log.info(u"{} {} {} {}".format(currentValue,prevValue,diffValue,diffTime))
             #else:
@@ -77,7 +77,7 @@ class ValuesNetworkIncommingTrafficRule:
                 speed = round(diffValue / diffTime)
                 postUpdateIfChanged("pGF_Corridor_Fritzbox_WanDownstreamCurrRate",speed)
             else:
-                self.log.info(u"wan traffic overflow - prev: {}, current: {}. diff: {}".format(prevValue,currentValue,diffValue))
+                self.log.info(u"wan traffic overflow - prev: {}, current: {}".format(prevValue,currentValue))
 
             #else:
             #    self.log.info(u"Incomming - currentValue: {}".format(currentValue))
