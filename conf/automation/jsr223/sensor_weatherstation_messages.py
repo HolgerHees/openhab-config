@@ -39,6 +39,14 @@ UVB_CORRECTION_FACTOR = 0.5 # behind glass
 DELAYED_UPDATE_TIMEOUT = 3
 
 fuelLevel =[
+  [ 2800, 0 ],
+  [ 3375, 7 ],
+  [ 3500, 14 ],
+  [ 3625, 50 ],
+  [ 4200, 100 ]
+];
+
+fuelLevelOld =[
   [ 3270, 0 ],
   [ 3610, 5 ],
   [ 3690, 10 ],
@@ -237,6 +245,7 @@ class WeatherstationBatteryRule:
                             # ?? => x
                             level = int(round( ( ( x * (toPercentageLevel - fromPercentageLevel) ) / 100 ) + fromPercentageLevel ))
                             break
+                          
             postUpdateIfChanged("pOutdoor_WeatherStation_Battery_Level", level)
          
         self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
