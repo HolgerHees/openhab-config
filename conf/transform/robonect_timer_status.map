@@ -2,3 +2,4 @@ STANDBY=Noch nicht aktiv
 ACTIVE=Aktiv
 INACTIVE=Inaktiv
 NULL=
+UNDEF=

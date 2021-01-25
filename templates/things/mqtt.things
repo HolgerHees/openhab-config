@@ -1,4 +1,4 @@
-Bridge mqtt:broker:cloud [ host="mosquitto.cloud", secure=false ]
+Bridge mqtt:broker:cloud [ host="cloud_mosquitto", secure=false ]
 {
 }
 

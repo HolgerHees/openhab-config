@@ -1,5 +1,3 @@
--=Unknonwn
-NULL=Unknown
 OFF=OFF
 0=OFF
 1=ON
@@ -260,3 +258,4 @@ OFF=OFF
 256=ON
 ON=ON 
 NULL=
+UNDEF=

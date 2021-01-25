@@ -1,4 +1,5 @@
 OPEN=Offen
 CLOSED=Geschlossen
 -=-
-NULL=-
+NULL=
+UNDEF=

@@ -7,4 +7,5 @@ False=ON
 true=OFF
 false=ON
 -=Unknown
-NULL=Unknown 
+NULL=
+UNDEF=
