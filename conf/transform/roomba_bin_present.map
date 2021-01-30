@@ -1,4 +1,4 @@
 ON=Eingesetzt
 OFF=Entfernt
-NULL=
-UNDEF=
+NULL=unbekannt
+UNDEF=unbekannt

@@ -10,5 +10,5 @@ SAGITTARIUS=Schütze
 CAPRICORN=Steinbock
 AQUARIUS=Wassermann
 PISCES=Fisch
-NULL=
-UNDEF=
+NULL=unbekannt
+UNDEF=unbekannt

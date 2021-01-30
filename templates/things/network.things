@@ -1,0 +1,1 @@
+network:speedtest:local "SpeedTest 50Mo" @ "Services" [refreshInterval=60, uploadSize=1000000, url="https://bouygues.testdebit.info/", fileName="10M.iso"]

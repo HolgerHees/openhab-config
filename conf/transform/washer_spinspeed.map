@@ -6,5 +6,5 @@ LaundryCare.Washer.EnumType.SpinSpeed.RPM1000=1000 Upm
 LaundryCare.Washer.EnumType.SpinSpeed.RPM1200=1200 Upm
 LaundryCare.Washer.EnumType.SpinSpeed.RPM1400=1400 Upm
 LaundryCare.Washer.EnumType.SpinSpeed.RPM1600=1600 Upm
-NULL=
-UNDEF=
+NULL=unbekannt
+UNDEF=unbekannt

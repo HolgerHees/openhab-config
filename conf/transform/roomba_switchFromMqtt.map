@@ -257,5 +257,5 @@ OFF=OFF
 255=ON
 256=ON
 ON=ON 
-NULL=
-UNDEF=
+NULL=unbekannt
+UNDEF=unbekannt

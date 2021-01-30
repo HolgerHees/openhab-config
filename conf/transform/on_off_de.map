@@ -1,5 +1,5 @@
 ON=An
 OFF=Aus
 -=Aus
-NULL=
-UNDEF=
+NULL=unbekannt
+UNDEF=unbekannt

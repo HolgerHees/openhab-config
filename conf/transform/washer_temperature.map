@@ -7,5 +7,5 @@ LaundryCare.Washer.EnumType.Temperature.GC60=60 °C
 LaundryCare.Washer.EnumType.Temperature.GC70=70 °C
 LaundryCare.Washer.EnumType.Temperature.GC80=80 °C
 LaundryCare.Washer.EnumType.Temperature.GC90=90 °C
-NULL=
-UNDEF=
+NULL=unbekannt
+UNDEF=unbekannt

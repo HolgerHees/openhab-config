@@ -1,14 +1,3 @@
-// log:set TRACE org.openhab.binding.samsungtv
-samsungtv:tv:livingroom "Fernseher" @ "Geräte" [ hostName="{{tv_livingroom_ip}}", port=55000, refreshInterval=1000 ]
-
-network:speedtest:local "SpeedTest 50Mo" @ "Services" [refreshInterval=60, uploadSize=1000000, url="https://bouygues.testdebit.info/", fileName="10M.iso"]
-
-robonect:mower:automower "Rasenmäher" @ "Geräte" [ host="{{automower_ip}}", pollInterval="15", offlineTimeout="300", user="{{vault_automower_device_username}}", password = "{{vault_automower_device_password}}"]
-
-astro:moon:local "Astro Monddaten" @ "Services" [ geolocation="{{location}}", interval=300 ]
-astro:sun:local "Astro Sonnendaten" @ "Services" [ geolocation="{{location}}", interval=300 ]
-ntp:ntp:local "NTP" @ "Services" [ hostname="de.pool.ntp.org", refreshInterval=60, refreshNtp=30 ]
-
 Bridge hue:bridge:default [ ipAddress="{{hue_ip}}", userName="{{vault_hue_user_id}}" ] {
 	group livingroom "HUE Gruppe" @ "Geräte" [ groupId="1" ] 
 	group corridor   "HUE Gruppe" @ "Geräte" [ groupId="2" ]
