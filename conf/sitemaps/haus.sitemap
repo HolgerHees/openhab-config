@@ -371,7 +371,7 @@ sitemap haus label="Main Menu"
 			Frame label="Info"
 			{
 				Text label="Wetterbericht" icon="selfrain" {
-                    Webview url="/toolbox/web/weatherDetailOverview.php" icon=none height=20
+                    Webview url="/weather/weatherDetailOverview.php" icon=none height=20
                 }
 				Text label="Sonnenauf & Untergang" icon="selfsun" {
                     Frame label="Tageszeiten"

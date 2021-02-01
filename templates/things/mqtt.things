@@ -1,5 +1,13 @@
 Bridge mqtt:broker:cloud [ host="cloud_mosquitto", secure=false ]
 {
+    Thing topic weatherforecast "Wettervorhersage" @ "Geräte" {
+        Type number : temperature0 "Temperatur" [ stateTopic="hhees/weather/items/airTemperatureInCelsius/0" ]
+        Type number : cloudcover0 "Luftfeuchtigkeit" [ stateTopic="hhees/weather/items/effectiveCloudCoverInOcta/0" ]
+        Type number : temperature4 "Temperatur 4 Stunden" [ stateTopic="hhees/weather/items/airTemperatureInCelsius/4" ]
+        Type number : cloudcover4 "Luftfeuchtigkeit 4 Stunden" [ stateTopic="hhees/weather/items/effectiveCloudCoverInOcta/4" ]
+        Type number : temperature8 "Temperatur 8 Stunden" [ stateTopic="hhees/weather/items/airTemperatureInCelsius/8" ]
+        Type number : cloudcover8 "Luftfeuchtigkeit 8 Stunden" [ stateTopic="hhees/weather/items/effectiveCloudCoverInOcta/8" ]
+    }
 }
 
 Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
