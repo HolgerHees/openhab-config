@@ -1,25 +1,10 @@
 // **** FRITZBOX ****
 Group   eGF_Corridor_Fritzbox                       "Fritzbox"                                            <selfinfo> (lGF_Corridor) ["NetworkAppliance"] {synonyms="Internet"}
 
-Contact pGF_Corridor_Fritzbox_DslEnable             "Aktiviert [MAP(network_states.map):%s]"              <selfinfo> (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="dslEnable"}
-String  pGF_Corridor_Fritzbox_DslStatus             "Status [MAP(network_states.map):%s]"                 <selfinfo> (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="dslStatus"}
-Number  pGF_Corridor_Fritzbox_DslUpstreamCurrRate   "Upstream Aktuell [JS(network_kbit_to_mbit.js):%s]"   <flowpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"] {fritzboxtr064="dslUpstreamCurrRate"}
-Number  pGF_Corridor_Fritzbox_DslDownstreamCurrRate "Downstream Aktuell [JS(network_kbit_to_mbit.js):%s]" <returnpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"] {fritzboxtr064="dslDownstreamCurrRate"}
-Number  pGF_Corridor_Fritzbox_DslUpstreamMaxRate    "Upstream Max [JS(network_kbit_to_mbit.js):%s]"       <flowpipe> (eGF_Corridor_Fritzbox) {fritzboxtr064="dslUpstreamMaxRate"}
-Number  pGF_Corridor_Fritzbox_DslDownstreamMaxRate  "Downstream Max [JS(network_kbit_to_mbit.js):%s]"     <returnpipe> (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="dslDownstreamMaxRate"}
-Number  pGF_Corridor_Fritzbox_DslUpstreamNoiseMargin "Upstream Rauschabstand [%s dB*10]"                  <selfinfo> (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="dslUpstreamNoiseMargin"}
-Number  pGF_Corridor_Fritzbox_DslDownstreamNoiseMargin "Downstream Rauschabstand [%s dB*10]"              <selfinfo> (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="dslDownstreamNoiseMargin"}
-Number  pGF_Corridor_Fritzbox_DslUpstreamAttenuation "Upstream Dämpfung [%s dB*10]"                       <selfinfo> (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="dslUpstreamAttenuation"}
-Number  pGF_Corridor_Fritzbox_DslDownstreamAttenuation "Downstream Dämpfung [%s dB*10]"                   <selfinfo> (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="dslDownstreamAttenuation"}
-Number  pGF_Corridor_Fritzbox_DslFECErrors          "FEC Fehler [%s]"                                     <error>    (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="dslFECErrors"}
-Number  pGF_Corridor_Fritzbox_DslHECErrors          "HEC Fehler [%s]"                                     <error>    (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="dslHECErrors"}
-Number  pGF_Corridor_Fritzbox_DslCRCErrors          "CRC Fehler [%s]"                                     <error>    (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="dslCRCErrors"} 
 Number  pGF_Corridor_Fritzbox_Uptime                "Uptime [JS(network_uptime.js):%s]"                   <line>     (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="upTime"}
 Switch  pGF_Corridor_Fritzbox_GuestWifi             "Gäste WLAN"                                          <network>  (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="wifiGuestSwitch"}
 
 String  pGF_Corridor_Fritzbox_WanAccessType         "WAN Typ [%s]"                                        <selfinfo>  (eGF_Corridor_Fritzbox) ["Point"]{fritzboxtr064="wanWANAccessType"}
-Number  pGF_Corridor_Fritzbox_WanUpstreamMaxRate    "WAN Upstream [JS(network_bit_to_mbit.js):%s]"        <flowpipe> (eGF_Corridor_Fritzbox) ["Point"]{fritzboxtr064="wanLayer1UpstreamMaxBitRate"}
-Number  pGF_Corridor_Fritzbox_WanDownstreamMaxRate  "WAN Downstream [JS(network_bit_to_mbit.js):%s]"      <returnpipe> (eGF_Corridor_Fritzbox) ["Point"]{fritzboxtr064="wanLayer1DownstreamMaxBitRate"}
 String  pGF_Corridor_Fritzbox_WanPhysicalLinkStatus "WAN Link Status [MAP(network_states.map):%s]"        <selfinfo>  (eGF_Corridor_Fritzbox) ["Point"]{fritzboxtr064="wanPhysicalLinkStatus"}
 Number pGF_Corridor_Fritzbox_WanTotalBytesSent      "WAN Gesamt gesendets [%s]" <flowpipe> (eGF_Corridor_Fritzbox) {fritzboxtr064="wanTotalBytesSent"}
 Number pGF_Corridor_Fritzbox_WanTotalBytesReceived  "WAN Gesamt empfangen [%s]" <returnpipe> (eGF_Corridor_Fritzbox) {fritzboxtr064="wanTotalBytesReceived"}

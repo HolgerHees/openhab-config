@@ -1,5 +1,8 @@
 // **** GAS METER ****
 Group  eGF_Garage_Solar_Inverter                     "Wechselrichter"             <selfinfo> (lGF_Garage) ["Sensor"]
+
+Switch pGF_Garage_Solar_Inverter_Is_Working          "Aktiv [%s]"                 <selfclock> (eGF_Garage_Solar_Inverter)
+
 Number pGF_Garage_Solar_Inverter_Daily_Consumption   "Tagesverbrauch [%.2f KWh]"  <selfenergy_solar> (eGF_Garage_Solar_Inverter,gPersistance_Chart,gPersistance_History) ["Point"]
 Number pGF_Garage_Solar_Inverter_Annual_Consumption  "Jahresverbrauch [%.2f KWh]" <selfenergy_solar> (eGF_Garage_Solar_Inverter) ["Point"]
 Number pGF_Garage_Solar_Inverter_Daily_Yield         "Tagesertrag [%.3f kWh]"     <selfenergy_solar> (eGF_Garage_Solar_Inverter,gPersistance_Chart,gPersistance_History) ["Point"]

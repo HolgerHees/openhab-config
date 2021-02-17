@@ -9,8 +9,9 @@ class ValuesErrorMessagesRule:
             CronTrigger("0 */5 * * * ?"),
             ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Filter_Error"),
             ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Error_Message"),
-            ItemStateChangeTrigger("pOutdoor_WeatherStation_Is_Working"),
             ItemStateChangeTrigger("pGF_Utilityroom_Heating_Common_Fault"),
+            ItemStateChangeTrigger("pGF_Garage_Solar_Inverter_Is_Working"),
+            ItemStateChangeTrigger("pOutdoor_WeatherStation_Is_Working"),
             ItemStateChangeTrigger("State_Server")
         ]
 
@@ -25,10 +26,13 @@ class ValuesErrorMessagesRule:
             active.append(u"Heizung Fehler")
 
         if itemLastUpdateOlderThen("pGF_Utilityroom_Heating_Common_Fault", getNow().minusMinutes(10)):
-            active.append(u"Heizung Update")
+            active.append(u"Heizung ⟳")
             
+        if getItemState("pGF_Garage_Solar_Inverter_Is_Working") == OFF:
+            active.append(u"Solar ⟳")
+
         if getItemState("pOutdoor_WeatherStation_Is_Working") == OFF:
-            active.append(u"Wetterstation")
+            active.append(u"Wetter ⟳")
             
         if getItemState("State_Server").intValue() > 1:
             active.append(u"Server")
@@ -49,7 +53,7 @@ class ValuesErrorMessagesRule:
                 or itemLastUpdateOlderThen("pFF_Bathroom_Air_Sensor_Temperature_Value", refDate) \
                 or itemLastUpdateOlderThen("pFF_Corridor_Air_Sensor_Temperature_Value", refDate) \
                 or itemLastUpdateOlderThen("pFF_Attic_Air_Sensor_Temperature_Value", refDate):
-            active.append("Sensors")
+            active.append("Sensors ⟳")
 
         if len(active) == 0:
             active.append(u"Alles normal")

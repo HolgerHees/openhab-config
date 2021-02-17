@@ -760,7 +760,7 @@ sitemap haus label="Main Menu"
                             Frame label="Daten" {
                                 Text item=pGF_Utilityroom_Electricity_Current_Daily_Supply label="Heute [%.2f kWh]"
                                 Text item=pGF_Utilityroom_Electricity_Current_Annual_Supply label="Periode [%.2f kWh]"
-                                Text item=Electricity_Meter_Supply label="Zählerstand [%.2f kWh]"
+                                Text item=pGF_Utilityroom_Electricity_Meter_Supply label="Zählerstand [%.2f kWh]"
                                 Text item=pGF_Utilityroom_Electricity_Current_Annual_Supply_Forecast label="Hochrechnung [%s]"
                             }
                             Frame label="Raw" {
@@ -853,25 +853,6 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Corridor_Fritzbox_WanDownstreamCurrRate
                         Text item=pGF_Corridor_Speedtest_UpstreamRate
                         Text item=pGF_Corridor_Speedtest_DownstreamRate
-                        Text item=pGF_Corridor_Fritzbox_WanUpstreamMaxRate
-                        Text item=pGF_Corridor_Fritzbox_WanDownstreamMaxRate
-                    }
-                    Frame label="DSL Verbindung" {
-                        Text item=pGF_Corridor_Fritzbox_DslEnable
-                        Text item=pGF_Corridor_Fritzbox_DslStatus
-                        Text item=pGF_Corridor_Fritzbox_DslUpstreamCurrRate
-                        Text item=pGF_Corridor_Fritzbox_DslDownstreamCurrRate
-                        Text item=pGF_Corridor_Fritzbox_DslUpstreamMaxRate
-                        Text item=pGF_Corridor_Fritzbox_DslDownstreamMaxRate
-                        Text item=pGF_Corridor_Fritzbox_DslUpstreamNoiseMargin
-                        Text item=pGF_Corridor_Fritzbox_DslDownstreamNoiseMargin
-                        Text item=pGF_Corridor_Fritzbox_DslUpstreamAttenuation
-                        Text item=pGF_Corridor_Fritzbox_DslDownstreamAttenuation
-                    }
-                    Frame label="DSL Fehler" {
-                        Text item=pGF_Corridor_Fritzbox_DslFECErrors
-                        Text item=pGF_Corridor_Fritzbox_DslHECErrors
-                        Text item=pGF_Corridor_Fritzbox_DslCRCErrors
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
