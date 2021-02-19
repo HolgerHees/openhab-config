@@ -206,6 +206,29 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Utilityroom_Washer_LocalControlActiveState
                     }
                 }
+                Text label="Geschirrspüler [%s]" item=pGF_Kitchen_Dishwasher_Message icon="whitegood" {
+                    Frame label="Status" {
+                        Text item=pGF_Kitchen_Dishwasher_ProgramProgressState
+                        Text item=pGF_Kitchen_Dishwasher_RemainingProgramTimeState
+                        Text item=pGF_Kitchen_Dishwasher_OperationState
+                        Text item=pGF_Kitchen_Dishwasher_DoorState
+                    }
+                    Frame label="Programm" {
+                        Text item=pGF_Kitchen_Dishwasher_ActiveProgramState
+                        Text item=pGF_Kitchen_Dishwasher_SelectedProgramState
+                        Text item=pGF_Kitchen_Dishwasher_ProgramActionState
+                    }
+                    Frame label="Ambient Light" {
+                        Text item=pGF_Kitchen_Dishwasher_AmbientLightState
+                        Text item=pGF_Kitchen_Dishwasher_AmbientLightBrightness
+                        Colorpicker item=pGF_Kitchen_Dishwasher_AmbientLightColor
+                        Text item=pGF_Kitchen_Dishwasher_AmbientLightCurrent
+                    }
+                    Frame label="Sonstiges" {
+                        Text item=pGF_Kitchen_Dishwasher_RemoteStartAllowanceState
+                        Text item=pGF_Kitchen_Dishwasher_RemoteControlActiveState
+                    }
+                }
                 Text label="Kaffeemaschine [%s]" item=pGF_Kitchen_Coffeemaker_Message icon="switch" {
                     Text item=pGF_Kitchen_Coffeemaker_Power_State
                     Text item=pGF_Kitchen_Coffeemaker_Operation_State

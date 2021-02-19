@@ -2,22 +2,22 @@ from shared.helper import rule, getItemState, postUpdateIfChanged, sendNotificat
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 from core.actions import Transformation
 
-@rule("homeconnect_washer.py")
-class HomeConnectWasherMessageRule:
+@rule("homeconnect_dishwasher.py")
+class HomeConnectDishwasherMessageRule:
     def __init__(self):
         self.triggers = [
             #CronTrigger("0/5 * * * * ?"),
-            ItemStateChangeTrigger("pGF_Utilityroom_Washer_RemainingProgramTimeState"),
-            ItemStateChangeTrigger("pGF_Utilityroom_Washer_OperationState")
+            ItemStateChangeTrigger("pGF_Kitchen_Dishwasher_RemainingProgramTimeState"),
+            ItemStateChangeTrigger("pGF_Kitchen_Dishwasher_OperationState")
         ]
 
     def execute(self, module, input):
-        operation = getItemState("pGF_Utilityroom_Washer_OperationState")
+        operation = getItemState("pGF_Kitchen_Dishwasher_OperationState")
         if operation != NULL and operation != UNDEF:
-            mode = Transformation.transform("MAP", "washer_mode.map", operation.toString() )
+            mode = Transformation.transform("MAP", "dishwasher_mode.map", operation.toString() )
             msg = u"{}".format(mode)
             
-            runtime = getItemState("pGF_Utilityroom_Washer_RemainingProgramTimeState")
+            runtime = getItemState("pGF_Kitchen_Dishwasher_RemainingProgramTimeState")
             
             #self.log.info(u"{}".format(runtime))
             
@@ -25,24 +25,24 @@ class HomeConnectWasherMessageRule:
                 runtime = Transformation.transform("JS", "homeconnect_runtime.js", u"{}".format(runtime.intValue()) )
                 msg = u"{}, {}".format(msg,runtime)
                 
-            postUpdateIfChanged("pGF_Utilityroom_Washer_Message", msg)
+            postUpdateIfChanged("pGF_Kitchen_Dishwasher_Message", msg)
 
-@rule("homeconnect_washer.py")
-class HomeConnectWasherNotificationRule:
+@rule("homeconnect_dishwasher.py")
+class HomeConnectDishwasherNotificationRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("pGF_Utilityroom_Washer_RemainingProgramTimeState"),
-            ItemStateChangeTrigger("pGF_Utilityroom_Washer_OperationState")
+            ItemStateChangeTrigger("pGF_Kitchen_Dishwasher_RemainingProgramTimeState"),
+            ItemStateChangeTrigger("pGF_Kitchen_Dishwasher_OperationState")
         ]
 
         self.checkTimer = None
 
     def notify(self,state):
         self.checkTimer = None
-        sendNotification("Waschmaschine", u"Wäsche ist fertig" if state else u"Wäsche ist wahrscheinlich fertig" )
+        sendNotification("Geschirrspüler", u"Geschirr ist fertig" if state else u"Geschirr ist wahrscheinlich fertig" )
   
     def execute(self, module, input):
-        if input['event'].getItemName() == "pGF_Utilityroom_Washer_RemainingProgramTimeState":
+        if input['event'].getItemName() == "pGF_Kitchen_Dishwasher_RemainingProgramTimeState":
             runtime = input['event'].getItemState()
             if runtime != NULL and runtime != UNDEF and runtime.intValue() > 0 and self.checkTimer != None:
                 # refresh timer with additional 10 min delay as a fallback
