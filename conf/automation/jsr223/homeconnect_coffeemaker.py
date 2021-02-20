@@ -35,7 +35,7 @@ class HomeConnectCoffeemakerDripTrayNotificationRule:
         ]
 
     def execute(self, module, input):
-        sendNotification("Kaffeemaschine", u"Auffangschale leeren" )
+        sendNotification(u"Kaffeemaschine", u"Auffangschale leeren" )
 
 @rule("homeconnect_coffeemaker.py")
 class HomeConnectCoffeemakerTankEmptyNotificationRule:
@@ -45,7 +45,7 @@ class HomeConnectCoffeemakerTankEmptyNotificationRule:
         ]
 
     def execute(self, module, input):
-        sendNotification("Kaffeemaschine", u"Wasser nachfüllen" )
+        sendNotification(u"Kaffeemaschine", u"Wasser nachfüllen" )
 
 @rule("homeconnect_coffeemaker.py")
 class HomeConnectCoffeemakerBeansEmptyNotificationRule:
@@ -55,4 +55,4 @@ class HomeConnectCoffeemakerBeansEmptyNotificationRule:
         ]
 
     def execute(self, module, input):
-        sendNotification("Kaffeemaschine", u"Bohnen nachfüllen" )
+        sendNotification(u"Kaffeemaschine", u"Bohnen nachfüllen" )

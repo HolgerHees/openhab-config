@@ -184,7 +184,7 @@ sitemap haus label="Main Menu"
 		}
 		Group label="Geräte [%s]" item=pOther_State_Message_Devices icon="roomba" valuecolor=[=="Alles normal"="#6bc305",!="Alles normal"="#d72a2a"] {
             Frame label="Haus" {
-                Text label="Waschmaschine [%s]" item=pGF_Utilityroom_Washer_Message icon="whitegood" {
+                Text label="Waschmaschine [%s]" item=pGF_Utilityroom_Washer_Message icon="whitegood_washer.png" {
                     Frame label="Status" {
                         Text item=pGF_Utilityroom_Washer_ProgramProgressState
                         Text item=pGF_Utilityroom_Washer_RemainingProgramTimeState
@@ -206,7 +206,7 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Utilityroom_Washer_LocalControlActiveState
                     }
                 }
-                Text label="Geschirrspüler [%s]" item=pGF_Kitchen_Dishwasher_Message icon="whitegood" {
+                Text label="Geschirrspüler [%s]" item=pGF_Kitchen_Dishwasher_Message icon="whitegood_dishwasher.png" {
                     Frame label="Status" {
                         Text item=pGF_Kitchen_Dishwasher_ProgramProgressState
                         Text item=pGF_Kitchen_Dishwasher_RemainingProgramTimeState
@@ -229,7 +229,7 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Kitchen_Dishwasher_RemoteControlActiveState
                     }
                 }
-                Text label="Kaffeemaschine [%s]" item=pGF_Kitchen_Coffeemaker_Message icon="switch" {
+                Text label="Kaffeemaschine [%s]" item=pGF_Kitchen_Coffeemaker_Message icon="whitegood_coffeemaschine.png" {
                     Text item=pGF_Kitchen_Coffeemaker_Power_State
                     Text item=pGF_Kitchen_Coffeemaker_Operation_State
                     Text item=pGF_Kitchen_Coffeemaker_Remote_Start_Allowed

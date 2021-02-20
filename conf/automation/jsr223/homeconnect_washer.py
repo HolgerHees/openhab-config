@@ -39,7 +39,7 @@ class HomeConnectWasherNotificationRule:
 
     def notify(self,state):
         self.checkTimer = None
-        sendNotification("Waschmaschine", u"Wäsche ist fertig" if state else u"Wäsche ist wahrscheinlich fertig" )
+        sendNotification(u"Waschmaschine", u"Wäsche ist fertig" if state else u"Wäsche ist wahrscheinlich fertig" )
   
     def execute(self, module, input):
         if input['event'].getItemName() == "pGF_Utilityroom_Washer_RemainingProgramTimeState":
