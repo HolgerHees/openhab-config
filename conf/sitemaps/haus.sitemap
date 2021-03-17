@@ -863,7 +863,7 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Corridor_Fritzbox_Uptime
                         Switch item=pGF_Corridor_Fritzbox_GuestWifi
                     }
-                    Frame item=pGF_Corridor_Speedtest_Start label="WAN Verbindung [%1$tH:%1$tM]" {
+                    Frame item=pGF_Corridor_Speedtest_Status label="WAN Verbindung [%s]" {
                         Text item=pGF_Corridor_Fritzbox_WanAccessType
                         Text item=pGF_Corridor_Fritzbox_WanPhysicalLinkStatus
                         Text item=pGF_Corridor_Fritzbox_WanUpstreamCurrRate
@@ -871,7 +871,7 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Corridor_Speedtest_UpstreamRate
                         Text item=pGF_Corridor_Speedtest_DownstreamRate
                         Text item=pGF_Corridor_Speedtest_Ping
-                        Text item=pGF_Corridor_Speedtest_Server
+                        Switch item=pGF_Corridor_Speedtest_Rerun
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]

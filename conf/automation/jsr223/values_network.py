@@ -2,6 +2,8 @@ from shared.helper import rule, getNow, postUpdateIfChanged
 from core.triggers import ItemStateChangeTrigger, CronTrigger
 from core.actions import Transformation, Exec
 
+from threading import Thread 
+
 #wget "http://influxdb:8086/query?u=openhab&p=default123&chunked=true&db=openhab_db&epoch=ns&q=DROP+SERIES+FROM+%22pGF_Corridor_Fritzbox_WanUpstreamCurrRate%22"
 #wget "http://influxdb:8086/query?u=openhab&p=default123&chunked=true&db=openhab_db&epoch=ns&q=DROP+SERIES+FROM+%22pGF_Corridor_Fritzbox_WanDownstreamCurrRate%22"
 
@@ -13,12 +15,20 @@ from core.actions import Transformation, Exec
 class ValuesNetworkSpeedRule:
     def __init__(self):
         self.triggers = [
-            CronTrigger("0 0 * * * ?")
+            CronTrigger("0 0 * * * ?"),
+            ItemStateChangeTrigger("pGF_Corridor_Speedtest_Rerun")
         ]
+        
+        self.messureThread = None
+        
+    def messure(self):        
+        now = getNow()
+        postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - aktiv".format(now.getHourOfDay(),now.getMinuteOfHour()))
 
-    def execute(self, module, input):
         result = Exec.executeCommandLine("/usr/bin/speedtest -f json --accept-gdpr --accept-license --server-id 40048",100000)
         
+        now = getNow()
+            
         data = result.split("{\"type\"")
         if len(data) == 2:
             json = "{\"type\"" + data[1]
@@ -39,8 +49,7 @@ class ValuesNetworkSpeedRule:
             postUpdateIfChanged("pGF_Corridor_Speedtest_UpstreamRate",resultUp)
             postUpdateIfChanged("pGF_Corridor_Speedtest_DownstreamRate",resultDown)
             postUpdateIfChanged("pGF_Corridor_Speedtest_Ping",resultPing)
-            postUpdateIfChanged("pGF_Corridor_Speedtest_Server","{} ({}, {})".format(serverName,serverLocation,serverCountry))
-            postUpdateIfChanged("pGF_Corridor_Speedtest_Start",DateTimeType())
+            postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - {} ({}, {})".format(now.getHourOfDay(),now.getMinuteOfHour(),serverName,serverLocation,serverCountry))
             
             #125000
             #"download":{
@@ -64,10 +73,21 @@ class ValuesNetworkSpeedRule:
             #postUpdateIfChanged("pGF_Corridor_Speedtest_DownstreamRate",0)
             #postUpdateIfChanged("pGF_Corridor_Speedtest_Ping",0)
             
-            postUpdateIfChanged("pGF_Corridor_Speedtest_Server","ERR")
-            postUpdateIfChanged("pGF_Corridor_Speedtest_Start",DateTimeType())
+            postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - ERR".format(now.getHourOfDay(),now.getMinuteOfHour()))
 
-            self.log.err(u"speedtest data error: {}".format(result))
+            self.log.error(u"speedtest data error: {}".format(result))
+            
+        self.messureThread = None
+        postUpdateIfChanged("pGF_Corridor_Speedtest_Rerun",OFF)
+
+    def execute(self, module, input):
+        if 'event' in input and input['event'].getItemName() == "pGF_Corridor_Speedtest_Rerun":
+            if input['event'].getItemState() == OFF:
+                return
+            
+        if self.messureThread == None:
+            self.messureThread = Thread(target = self.messure) 
+            self.messureThread.start()
       
 @rule("values_network.py")
 class ValuesNetworkOutgoingTrafficRule:

@@ -15,6 +15,6 @@ Number pGF_Corridor_Fritzbox_WanDownstreamCurrRate  "Downstream Aktuell [JS(netw
 Number  pGF_Corridor_Speedtest_UpstreamRate         "Upstream Speedtest [%d MBit]"                        <flowpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"]
 Number  pGF_Corridor_Speedtest_DownstreamRate       "Downstream Speedtest [%d MBit]"                      <returnpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"] 
 Number  pGF_Corridor_Speedtest_Ping                 "Ping Speedtest [%d ms]"                              <time> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"]
-String  pGF_Corridor_Speedtest_Server               "Server Speedtest [%s]"                               <selfinfo> (eGF_Corridor_Fritzbox) ["Point"]
+String  pGF_Corridor_Speedtest_Status               "Status Speedtest [%s]"                               <selfinfo> (eGF_Corridor_Fritzbox) ["Point"]
 
-DateTime pGF_Corridor_Speedtest_Start               "Speedtest [%1$tH:%1$tM]"                             <time>     (eGF_Corridor_Fritzbox) ["Point"]
+Switch  pGF_Corridor_Speedtest_Rerun                "Messung starten"                                     <selfautomode> (eGF_Corridor_Fritzbox) ["Point"]
