@@ -218,12 +218,6 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Kitchen_Dishwasher_SelectedProgramState
                         Text item=pGF_Kitchen_Dishwasher_ProgramActionState
                     }
-                    Frame label="Ambient Light" {
-                        Text item=pGF_Kitchen_Dishwasher_AmbientLightState
-                        Text item=pGF_Kitchen_Dishwasher_AmbientLightBrightness
-                        Colorpicker item=pGF_Kitchen_Dishwasher_AmbientLightColor
-                        Text item=pGF_Kitchen_Dishwasher_AmbientLightCurrent
-                    }
                     Frame label="Sonstiges" {
                         Text item=pGF_Kitchen_Dishwasher_RemoteStartAllowanceState
                         Text item=pGF_Kitchen_Dishwasher_RemoteControlActiveState
@@ -876,6 +870,8 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Corridor_Fritzbox_WanDownstreamCurrRate
                         Text item=pGF_Corridor_Speedtest_UpstreamRate
                         Text item=pGF_Corridor_Speedtest_DownstreamRate
+                        Text item=pGF_Corridor_Speedtest_Ping
+                        Text item=pGF_Corridor_Speedtest_Server
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]

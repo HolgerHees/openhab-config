@@ -9,9 +9,12 @@ String  pGF_Corridor_Fritzbox_WanPhysicalLinkStatus "WAN Link Status [MAP(networ
 Number pGF_Corridor_Fritzbox_WanTotalBytesSent      "WAN Gesamt gesendets [%s]" <flowpipe> (eGF_Corridor_Fritzbox) {fritzboxtr064="wanTotalBytesSent"}
 Number pGF_Corridor_Fritzbox_WanTotalBytesReceived  "WAN Gesamt empfangen [%s]" <returnpipe> (eGF_Corridor_Fritzbox) {fritzboxtr064="wanTotalBytesReceived"}
 
-Number pGF_Corridor_Fritzbox_WanUpstreamCurrRate   "Upstream Aktuell [JS(network_bit_to_mbit.js):%s]" <flowpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"]
-Number pGF_Corridor_Fritzbox_WanDownstreamCurrRate "Downstream Aktuell [JS(network_bit_to_mbit.js):%s]" <returnpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"]
+Number pGF_Corridor_Fritzbox_WanUpstreamCurrRate    "Upstream Aktuell [JS(network_bit_to_mbit.js):%s]" <flowpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"]
+Number pGF_Corridor_Fritzbox_WanDownstreamCurrRate  "Downstream Aktuell [JS(network_bit_to_mbit.js):%s]" <returnpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"]
 
-Number  pGF_Corridor_Speedtest_UpstreamRate         "Upstream Speedtest [%d MBit]"                        <flowpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"] {channel="network:speedtest:local:rateUp"}
-Number  pGF_Corridor_Speedtest_DownstreamRate       "Downstream Speedtest [%d MBit]"                      <returnpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"] {channel="network:speedtest:local:rateDown"}
-DateTime pGF_Corridor_Speedtest_Start               "Speedtest [%1$tH:%1$tM]"                             <time>     (eGF_Corridor_Fritzbox) ["Point"] {channel="network:speedtest:local:testStart"}
+Number  pGF_Corridor_Speedtest_UpstreamRate         "Upstream Speedtest [%d MBit]"                        <flowpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"]
+Number  pGF_Corridor_Speedtest_DownstreamRate       "Downstream Speedtest [%d MBit]"                      <returnpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"] 
+Number  pGF_Corridor_Speedtest_Ping                 "Ping Speedtest [%d ms]"                              <time> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"]
+String  pGF_Corridor_Speedtest_Server               "Server Speedtest [%s]"                               <selfinfo> (eGF_Corridor_Fritzbox) ["Point"]
+
+DateTime pGF_Corridor_Speedtest_Start               "Speedtest [%1$tH:%1$tM]"                             <time>     (eGF_Corridor_Fritzbox) ["Point"]

@@ -1,5 +1,6 @@
 from shared.helper import rule, getNow, postUpdateIfChanged
-from core.triggers import ItemStateChangeTrigger
+from core.triggers import ItemStateChangeTrigger, CronTrigger
+from core.actions import Transformation, Exec
 
 #wget "http://influxdb:8086/query?u=openhab&p=default123&chunked=true&db=openhab_db&epoch=ns&q=DROP+SERIES+FROM+%22pGF_Corridor_Fritzbox_WanUpstreamCurrRate%22"
 #wget "http://influxdb:8086/query?u=openhab&p=default123&chunked=true&db=openhab_db&epoch=ns&q=DROP+SERIES+FROM+%22pGF_Corridor_Fritzbox_WanDownstreamCurrRate%22"
@@ -8,7 +9,66 @@ from core.triggers import ItemStateChangeTrigger
 #wget "http://influxdb:8086/query?u=openhab&p=default123&chunked=true&db=openhab_db&epoch=ns&q=DROP+SERIES+FROM+%22FritzboxWanDownstreamCurrRate%22"
 
 #tail -f /dataDisk/var/log/openhab/events.log | grep -P "pGF_Corridor_Fritzbox_WanTotalBytesReceived|pGF_Corridor_Fritzbox_WanDownstreamCurrRate"
+@rule("values_network.py")
+class ValuesNetworkSpeedRule:
+    def __init__(self):
+        self.triggers = [
+            CronTrigger("0 0 * * * ?")
+        ]
 
+    def execute(self, module, input):
+        result = Exec.executeCommandLine("/usr/bin/speedtest -f json --accept-gdpr --accept-license --server-id 40048",100000)
+        
+        data = result.split("{\"type\"")
+        if len(data) == 2:
+            json = "{\"type\"" + data[1]
+
+            resultPing = Transformation.transform("JSONPATH", "$.ping.latency", json )
+            resultDownBytes = Transformation.transform("JSONPATH", "$.download.bytes", json )
+            resultDownTime = Transformation.transform("JSONPATH", "$.download.elapsed", json )
+            resultDown = float(resultDownBytes) * 8 / 1024 / 1024 / ( float(resultDownTime) / 1000 )
+            #resultDown = Transformation.transform("JSONPATH", "$.download.bandwidth", json )
+            resultUpBytes = Transformation.transform("JSONPATH", "$.upload.bytes", json )
+            resultUpTime = Transformation.transform("JSONPATH", "$.upload.elapsed", json )
+            resultUp = float(resultUpBytes) * 8 / 1024 / 1024 / ( float(resultUpTime) / 1000 )
+            #resultUp = Transformation.transform("JSONPATH", "$.upload.bandwidth", json )
+            serverName = Transformation.transform("JSONPATH", "$.server.name", json )
+            serverLocation = Transformation.transform("JSONPATH", "$.server.location", json )
+            serverCountry = Transformation.transform("JSONPATH", "$.server.country", json )
+            
+            postUpdateIfChanged("pGF_Corridor_Speedtest_UpstreamRate",resultUp)
+            postUpdateIfChanged("pGF_Corridor_Speedtest_DownstreamRate",resultDown)
+            postUpdateIfChanged("pGF_Corridor_Speedtest_Ping",resultPing)
+            postUpdateIfChanged("pGF_Corridor_Speedtest_Server","{} ({}, {})".format(serverName,serverLocation,serverCountry))
+            postUpdateIfChanged("pGF_Corridor_Speedtest_Start",DateTimeType())
+            
+            #125000
+            #"download":{
+            #    "bandwidth":31775198,
+            #    "bytes":409025600,
+            #    "elapsed":11700
+            #},
+            #"upload":{
+            #    "bandwidth":31125193,
+            #    "bytes":344309374,
+            #    "elapsed":10607
+            #},
+            
+            #247,654572929
+
+            #self.log.info("json: {}".format(json)) 
+            #self.log.info("ping: {}, down: {}, up: {}".format(resultPing,round(resultDown / 1024 / 1024,2),round(resultUp / 1024 / 1024,2))) 
+            #self.log.info("server: {} ({}, {})".format(serverName,serverLocation,serverCountry)) 
+        else:
+            #postUpdateIfChanged("pGF_Corridor_Speedtest_UpstreamRate",0)
+            #postUpdateIfChanged("pGF_Corridor_Speedtest_DownstreamRate",0)
+            #postUpdateIfChanged("pGF_Corridor_Speedtest_Ping",0)
+            
+            postUpdateIfChanged("pGF_Corridor_Speedtest_Server","ERR")
+            postUpdateIfChanged("pGF_Corridor_Speedtest_Start",DateTimeType())
+
+            self.log.err(u"speedtest data error: {}".format(result))
+      
 @rule("values_network.py")
 class ValuesNetworkOutgoingTrafficRule:
     def __init__(self):
