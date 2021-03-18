@@ -22,60 +22,67 @@ class ValuesNetworkSpeedRule:
         self.messureThread = None
         
     def messure(self):        
-        now = getNow()
-        postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - aktiv".format(now.getHourOfDay(),now.getMinuteOfHour()))
+        try:
+            self.log.info(u"speedtest started")
+      
+            now = getNow()
+            postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - aktiv".format(now.getHourOfDay(),now.getMinuteOfHour()))
 
-        result = Exec.executeCommandLine("/usr/bin/speedtest -f json --accept-gdpr --accept-license --server-id 40048",100000)
-        
-        now = getNow()
+            result = Exec.executeCommandLine("/usr/bin/speedtest -f json --accept-gdpr --accept-license --server-id 40048",100000)
             
-        data = result.split("{\"type\"")
-        if len(data) == 2:
-            json = "{\"type\"" + data[1]
+            self.log.info(u"speedtest done")
 
-            resultPing = Transformation.transform("JSONPATH", "$.ping.latency", json )
-            resultDownBytes = Transformation.transform("JSONPATH", "$.download.bytes", json )
-            resultDownTime = Transformation.transform("JSONPATH", "$.download.elapsed", json )
-            resultDown = float(resultDownBytes) * 8 / 1024 / 1024 / ( float(resultDownTime) / 1000 )
-            #resultDown = Transformation.transform("JSONPATH", "$.download.bandwidth", json )
-            resultUpBytes = Transformation.transform("JSONPATH", "$.upload.bytes", json )
-            resultUpTime = Transformation.transform("JSONPATH", "$.upload.elapsed", json )
-            resultUp = float(resultUpBytes) * 8 / 1024 / 1024 / ( float(resultUpTime) / 1000 )
-            #resultUp = Transformation.transform("JSONPATH", "$.upload.bandwidth", json )
-            serverName = Transformation.transform("JSONPATH", "$.server.name", json )
-            serverLocation = Transformation.transform("JSONPATH", "$.server.location", json )
-            serverCountry = Transformation.transform("JSONPATH", "$.server.country", json )
-            
-            postUpdateIfChanged("pGF_Corridor_Speedtest_UpstreamRate",resultUp)
-            postUpdateIfChanged("pGF_Corridor_Speedtest_DownstreamRate",resultDown)
-            postUpdateIfChanged("pGF_Corridor_Speedtest_Ping",resultPing)
-            postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - {} ({}, {})".format(now.getHourOfDay(),now.getMinuteOfHour(),serverName,serverLocation,serverCountry))
-            
-            #125000
-            #"download":{
-            #    "bandwidth":31775198,
-            #    "bytes":409025600,
-            #    "elapsed":11700
-            #},
-            #"upload":{
-            #    "bandwidth":31125193,
-            #    "bytes":344309374,
-            #    "elapsed":10607
-            #},
-            
-            #247,654572929
+            now = getNow()
+                
+            data = result.split("{\"type\"")
+            if len(data) == 2:
+                json = "{\"type\"" + data[1]
 
-            #self.log.info("json: {}".format(json)) 
-            #self.log.info("ping: {}, down: {}, up: {}".format(resultPing,round(resultDown / 1024 / 1024,2),round(resultUp / 1024 / 1024,2))) 
-            #self.log.info("server: {} ({}, {})".format(serverName,serverLocation,serverCountry)) 
-        else:
-            #postUpdateIfChanged("pGF_Corridor_Speedtest_UpstreamRate",0)
-            #postUpdateIfChanged("pGF_Corridor_Speedtest_DownstreamRate",0)
-            #postUpdateIfChanged("pGF_Corridor_Speedtest_Ping",0)
-            
-            postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - ERR".format(now.getHourOfDay(),now.getMinuteOfHour()))
+                resultPing = Transformation.transform("JSONPATH", "$.ping.latency", json )
+                resultDownBytes = Transformation.transform("JSONPATH", "$.download.bytes", json )
+                resultDownTime = Transformation.transform("JSONPATH", "$.download.elapsed", json )
+                resultDown = float(resultDownBytes) * 8 / 1024 / 1024 / ( float(resultDownTime) / 1000 )
+                #resultDown = Transformation.transform("JSONPATH", "$.download.bandwidth", json )
+                resultUpBytes = Transformation.transform("JSONPATH", "$.upload.bytes", json )
+                resultUpTime = Transformation.transform("JSONPATH", "$.upload.elapsed", json )
+                resultUp = float(resultUpBytes) * 8 / 1024 / 1024 / ( float(resultUpTime) / 1000 )
+                #resultUp = Transformation.transform("JSONPATH", "$.upload.bandwidth", json )
+                serverName = Transformation.transform("JSONPATH", "$.server.name", json )
+                serverLocation = Transformation.transform("JSONPATH", "$.server.location", json )
+                serverCountry = Transformation.transform("JSONPATH", "$.server.country", json )
+                
+                postUpdateIfChanged("pGF_Corridor_Speedtest_UpstreamRate",resultUp)
+                postUpdateIfChanged("pGF_Corridor_Speedtest_DownstreamRate",resultDown)
+                postUpdateIfChanged("pGF_Corridor_Speedtest_Ping",resultPing)
+                postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - {} ({}, {})".format(now.getHourOfDay(),now.getMinuteOfHour(),serverName,serverLocation,serverCountry))
+                
+                #125000
+                #"download":{
+                #    "bandwidth":31775198,
+                #    "bytes":409025600,
+                #    "elapsed":11700
+                #},
+                #"upload":{
+                #    "bandwidth":31125193,
+                #    "bytes":344309374,
+                #    "elapsed":10607
+                #},
+                
+                #247,654572929
 
-            self.log.error(u"speedtest data error: {}".format(result))
+                #self.log.info("json: {}".format(json)) 
+                #self.log.info("ping: {}, down: {}, up: {}".format(resultPing,round(resultDown / 1024 / 1024,2),round(resultUp / 1024 / 1024,2))) 
+                #self.log.info("server: {} ({}, {})".format(serverName,serverLocation,serverCountry)) 
+            else:
+                #postUpdateIfChanged("pGF_Corridor_Speedtest_UpstreamRate",0)
+                #postUpdateIfChanged("pGF_Corridor_Speedtest_DownstreamRate",0)
+                #postUpdateIfChanged("pGF_Corridor_Speedtest_Ping",0)
+                
+                postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - ERR".format(now.getHourOfDay(),now.getMinuteOfHour()))
+
+                self.log.error(u"speedtest data error: {}".format(result))
+        except Exception, e:
+            self.log.error(u"speedtest data exception: {}".format(e))
             
         self.messureThread = None
         postUpdateIfChanged("pGF_Corridor_Speedtest_Rerun",OFF)
@@ -85,7 +92,7 @@ class ValuesNetworkSpeedRule:
             if input['event'].getItemState() == OFF:
                 return
             
-        if self.messureThread == None:
+        if self.messureThread == None or not self.messureThread.isAlive():
             self.messureThread = Thread(target = self.messure) 
             self.messureThread.start()
       

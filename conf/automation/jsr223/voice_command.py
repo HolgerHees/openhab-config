@@ -2,12 +2,12 @@ from core.triggers import ItemStateUpdateTrigger
 
 from shared.helper import rule, postUpdate
 
-from shared.semantic.model.semantic_test import Cases
-
 from shared.semantic.command_processor import CommandProcessor
 
 from alexa_device_config import AlexaDevices
  
+from custom.semantic_test import Cases
+
 import traceback
                                                             
 @rule("voice_command.py")
@@ -31,7 +31,7 @@ class VoiceCommandRule:
         postUpdate("VoiceMessage",msg)
                                                         
 #postUpdate("VoiceCommand","Flur farbe grün")
-                    
+                  
 @rule("voice_command.py")
 class TestRule:
     def __init__(self):

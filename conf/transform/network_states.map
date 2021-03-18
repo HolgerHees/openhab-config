@@ -3,5 +3,6 @@ CLOSED=Inaktiv
 Up=Verbunden
 NoSignal=Kein Signal
 Down=Nicht verbunden
+ERR=Fehler
 NULL=unbekannt
 UNDEF=unbekannt
