@@ -21,7 +21,7 @@ startElectricityMeterDemandValue = 21911.164
 startElectricityMeterSupplyValue = 0
 
 # offset values for gas meter (total value at the time when knx based impulse counter was resettet)
-startGasMeterValue = 8573.39
+startGasMeterValue = 10113.01
 startGasImpulseCounter = 0
 
 dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS")

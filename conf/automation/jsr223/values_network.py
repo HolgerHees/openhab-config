@@ -28,7 +28,8 @@ class ValuesNetworkSpeedRule:
             now = getNow()
             postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - aktiv".format(now.getHourOfDay(),now.getMinuteOfHour()))
 
-            result = Exec.executeCommandLine("/usr/bin/speedtest -f json --accept-gdpr --accept-license --server-id 40048",100000)
+            #result = Exec.executeCommandLine("/usr/bin/speedtest -f json --accept-gdpr --accept-license --server-id 40048",100000)
+            result = Exec.executeCommandLine("/usr/bin/speedtest -f json --accept-gdpr --accept-license",100000)
             
             self.log.info(u"speedtest done")
 
