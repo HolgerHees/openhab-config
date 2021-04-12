@@ -1,6 +1,5 @@
 from shared.helper import rule, getNow, getItemState, getStableItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged, getItemLastUpdate, getItem, startTimer, createTimer, itemLastChangeOlderThen
 from core.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
-#from core.actions import Mqtt
 from custom.sun import SunRadiation
 
 from org.joda.time import DateTime
