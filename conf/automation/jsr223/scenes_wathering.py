@@ -8,27 +8,27 @@ circuits = [
       2.0 / 3.0,
       u"Strasse",
       [
-        'pOutdoor_Streetside_Lawn_Watering_Powered'
+        'pOutdoor_Streetside_Lawn_Watering'
       ]
     ],[
       1.0,
       u"Beete",
       [
-        'pOutdoor_Streetside_Beds_Watering_Powered',
-        'pOutdoor_Garden_Terrace_Watering_Powered',
-        'pOutdoor_Garden_Back_Watering_Powered'
+        'pOutdoor_Streetside_Beds_Watering',
+        'pOutdoor_Garden_Terrace_Watering',
+        'pOutdoor_Garden_Back_Watering'
       ]
     ],[
       1.0,
       u"Garten rechts",
       [
-        'pOutdoor_Garden_Right_Watering_Powered'
+        'pOutdoor_Garden_Right_Watering'
       ]
     ],[
       1.0,
       u"Garten links",
       [
-        'pOutdoor_Garden_Left_Watering_Powered'
+        'pOutdoor_Garden_Left_Watering'
       ]
     ]
 ]
@@ -127,9 +127,9 @@ class ScenesWatheringRule(WatheringHelperOld):
         activeIndex = -1
         for i in range(len(circuits)):
             group = circuits[i]
-            if getItemState(group[2][0]) == ON:
+            if getItemState(group[2][0] + "_Powered") == ON:
                 activeIndex = i
-                runtime = getNow().getMillis() - getItemLastChange(group[2][0]).getMillis()
+                runtime = getNow().getMillis() - getItemLastChange(group[2][0] + "_Powered").getMillis()
                 remaining = ( duration * group[0] ) - runtime
                 break
 
@@ -154,7 +154,7 @@ class ScenesWatheringRule(WatheringHelperOld):
             else:
                 for circuit in circuits[nextIndex][2]:
                     if getItemState(circuit + "_Auto") == ON:
-                        sendCommand(circuit, ON)
+                        sendCommand(circuit + "_Powered", ON)
                 
                 nextGroup = circuits[nextIndex]
 
@@ -164,7 +164,7 @@ class ScenesWatheringRule(WatheringHelperOld):
                 # deactivate current index
                 if activeIndex != -1:
                     for circuit in circuits[activeIndex][2]:
-                        sendCommand(circuit, OFF)
+                        sendCommand(circuit + "_Powered", OFF)
         else:
             info = circuits[activeIndex][1]
         
