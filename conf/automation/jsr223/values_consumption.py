@@ -298,7 +298,6 @@ class EnergyCurrentDemandAndConsumptionRule:
     def execute(self, module, input):
         if input["event"].getItemName() == "pGF_Garage_Solar_Inverter_AC_Power":
             self.updateConsumption(input['event'].getItemState().intValue())
-            postUpdateIfChanged("pGF_Garage_Solar_Inverter_Is_Working",ON)
         else:
             if input["event"].getItemName() == "pGF_Utilityroom_Power_Demand_Active":
                 self.powerDemand = input["event"].getItemState().intValue()
@@ -316,24 +315,25 @@ class EnergyCurrentDemandAndConsumptionRule:
             self.currentDemand = self.powerDemand - self.powerSupply
             
             if getItemState("pOther_Automatic_State_Solar") == ON:
-                # solar value update was not successful for a while
-                #solarActive = getItemState("pOther_Automatic_State_Solar") == ON
-                #if itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_Total_Yield", getNow().minusHours(5) if solarActive else getNow().minusHours(14)):
-                if itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_Total_Yield", getNow().minusMinutes(15)) and itemLastUpdateOlderThen("pOther_Automatic_State_Solar", getNow().minusMinutes(60)):
-                    postUpdate("pGF_Garage_Solar_Inverter_AC_Power",0)
-                    postUpdateIfChanged("pGF_Garage_Solar_Inverter_DC_Power",0)
-                    postUpdateIfChanged("pGF_Garage_Solar_Inverter_DC_Current",0)
-                    postUpdateIfChanged("pGF_Garage_Solar_Inverter_DC_Voltage",0)
-                    postUpdateIfChanged("pGF_Garage_Solar_Inverter_Daily_Yield",0)
-
-                    postUpdateIfChanged("pGF_Garage_Solar_Inverter_Is_Working",OFF)
+                if itemLastUpdateOlderThen("pOther_Automatic_State_Solar", getNow().minusMinutes(60)):
+                    # solar value update was not successful for a while
+                    #solarActive = getItemState("pOther_Automatic_State_Solar") == ON
+                    #if itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_Total_Yield", getNow().minusHours(5) if solarActive else getNow().minusHours(14)):
+                    if itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_Total_Yield", getNow().minusMinutes(15)):
+                        if postUpdateIfChanged("pGF_Garage_Solar_Inverter_Is_Working",OFF):
+                            postUpdate("pGF_Garage_Solar_Inverter_AC_Power",0)
+                            postUpdateIfChanged("pGF_Garage_Solar_Inverter_DC_Power",0)
+                            postUpdateIfChanged("pGF_Garage_Solar_Inverter_DC_Current",0)
+                            postUpdateIfChanged("pGF_Garage_Solar_Inverter_DC_Voltage",0)
+                            postUpdateIfChanged("pGF_Garage_Solar_Inverter_Daily_Yield",0)
+                    else:
+                        postUpdateIfChanged("pGF_Garage_Solar_Inverter_Is_Working",ON)
 
                 # triggers solar value update
                 sendCommand("pGF_Garage_Solar_Inverter_AC_Power",REFRESH)
             else:
                 self.updateConsumption(0)
                 postUpdateIfChanged("pGF_Garage_Solar_Inverter_Is_Working",ON)
-
             postUpdateIfChanged("pGF_Utilityroom_Electricity_Current_Demand",self.currentDemand)
 
 

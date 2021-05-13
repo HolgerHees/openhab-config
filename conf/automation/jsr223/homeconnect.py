@@ -22,4 +22,5 @@ class HomeConnectStateRule:
                     sendNotificationToAllAdmins("Homeconnect", "Offline")
                 postUpdateIfChanged("pOther_State_Message_Homeconnect",info.toString())
             else:
-                postUpdateIfChanged("pOther_State_Message_Homeconnect","Alles normal")
+                if postUpdateIfChanged("pOther_State_Message_Homeconnect","Alles normal"):
+                    sendNotificationToAllAdmins("Homeconnect", "Online")
