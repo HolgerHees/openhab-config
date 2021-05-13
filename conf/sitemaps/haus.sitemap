@@ -80,28 +80,33 @@ sitemap haus label="Main Menu"
 		}
 		Group item=gShutters_Count label="Rollläden [MAP(group_rollershutter.map):%d]" {
 			Frame label="Alle" {
-				Switch item=gShutters label="Alle Rollläden" mappings=[UP="Hoch",DOWN="Runter"]
+				Switch item=gShutters label="Alle Rollläden" mappings=[UP="▲",STOP="✖",DOWN="▼"]
 			}
 			Frame label="Etagen" {
 				Group item=gGF_Shutters_Count label="EG Rollläden [MAP(group_rollershutter_ff.map):%d]" {
-                    Switch item=pGF_Livingroom_Shutter_Terrace_Control label="Wohnzimmer Terasse" mappings=[UP="Hoch",DOWN="Runter"]
-                    Switch item=pGF_Livingroom_Shutter_Couch_Control label="Wohnzimmer Couch" mappings=[UP="Hoch",DOWN="Runter"]
-                    Switch item=pGF_Kitchen_Shutter_Control label="Küche" mappings=[UP="Hoch",DOWN="Runter"]
-                    Switch item=pGF_Guestroom_Shutter_Control label="Gästezimmer" mappings=[UP="Hoch",DOWN="Runter"]
-                    Switch item=pGF_Guesttoilet_Shutter_Control label="Gäste WV" mappings=[UP="Hoch",DOWN="Runter"]
+                    Switch item=pGF_Livingroom_Shutter_Terrace_Control label="Wohnzimmer Terasse" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+                    Switch item=pGF_Livingroom_Shutter_Couch_Control label="Wohnzimmer Couch" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+                    Switch item=pGF_Kitchen_Shutter_Control label="Küche" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+                    Switch item=pGF_Guestroom_Shutter_Control label="Gästezimmer" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+                    Switch item=pGF_Guesttoilet_Shutter_Control label="Gäste WV" mappings=[UP="▲",STOP="✖",DOWN="▼"]
                 }
 				Group item=gFF_Shutters_Count label="OG Rollläden [MAP(group_rollershutter_sf.map):%d]" {
-                    Switch item=eFF_Bedroom_Shutter label="Schlafzimmer" mappings=[UP="Hoch",DOWN="Runter"]
-                    Switch item=pFF_Dressingroom_Shutter_Control label="Ankleide" mappings=[UP="Hoch",DOWN="Runter"]
-                    Switch item=pFF_Child1_Shutter_Control label="Sportzimmer" mappings=[UP="Hoch",DOWN="Runter"]
-                    Switch item=pFF_Child2_Shutter_Control label="Schminkzimmer" mappings=[UP="Hoch",DOWN="Runter"]
-                    Switch item=pFF_Bathroom_Shutter_Control label="Badezimmer" mappings=[UP="Hoch",DOWN="Runter"]
-                    Switch item=pFF_Attic_Shutter_Control label="Dachboden" mappings=[UP="Hoch",DOWN="Runter"]
+                    Switch item=eFF_Bedroom_Shutter label="Schlafzimmer" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+                    Switch item=pFF_Dressingroom_Shutter_Control label="Ankleide" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+                    Switch item=pFF_Child1_Shutter_Control label="Sportzimmer" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+                    Switch item=pFF_Child2_Shutter_Control label="Schminkzimmer" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+                    Switch item=pFF_Bathroom_Shutter_Control label="Badezimmer" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+                    Switch item=pFF_Attic_Shutter_Control label="Dachboden" mappings=[UP="▲",STOP="✖",DOWN="▼"]
                 }
 			}
-			Frame label="Beschattung" {
-				Switch item=gSouth_Shutters label="Südseite" mappings=[UP="Hoch",DOWN="Runter"]
-				Switch item=gWest_Shutters label="Westseite" mappings=[UP="Hoch",DOWN="Runter"]
+			Frame label="Beschattung (Fenster)" {
+				Switch item=gSouth_Shutters label="Südseite" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+				Switch item=gWest_Shutters label="Westseite" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+			}
+			Frame label="Beschattung (Garten)" {
+				Switch item=gOutdoor_Shading_Terrace label="Terasse Komplett" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+				Switch item=pOutdoor_Garden_Terrace_Shading_Left_Control label="Terasse Links" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+				Switch item=pOutdoor_Garden_Terrace_Shading_Left_Control label="Terasse Rechts" mappings=[UP="▲",STOP="✖",DOWN="▼"]
 			}
 		}
 	}

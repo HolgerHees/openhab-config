@@ -1,0 +1,8 @@
+Group:Switch:OR(OFF,ON) gOutdoor_Shading_Count	"Alle" <selfrollershutter> {autoupdate="false"}
+
+Group:Rollershutter:OR(UP, DOWN) gOutdoor_Shading	"Alle" <selfrollershutter> {autoupdate="false"}
+Group:Rollershutter:OR(UP, DOWN) gOutdoor_Shading_Terrace "Terasse Komplett" <selfrollershutter> {autoupdate="false"}
+
+Group eOutdoor_Garden_Terrace_Shading "Beschattung" <selfrollershutter> (lOutdoor_Terrace) ["Blinds"]
+Rollershutter pOutdoor_Garden_Terrace_Shading_Left_Control "Beschattung links" <selfrollershutter> (eOutdoor_Garden_Terrace_Shading,gOutdoor_Shading,gOutdoor_Shading_Count,gOutdoor_Shading_Terrace) ["Control"] { channel="knx:device:bridge:shading:terraceLeft" }
+Rollershutter pOutdoor_Garden_Terrace_Shading_Right_Control "Beschattung rechts" <selfrollershutter> (eOutdoor_Garden_Terrace_Shading,gOutdoor_Shading,gOutdoor_Shading_Count,gOutdoor_Shading_Terrace) ["Control"] { channel="knx:device:bridge:shading:terraceRight" }
