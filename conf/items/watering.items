@@ -10,10 +10,10 @@ Switch pOutdoor_Garden_Right_Watering_Powered    "Bewässerung" <selfwater> (eOu
 Switch pOutdoor_Garden_Right_Watering_Auto       "Automatik"   <selfwater> (eOutdoor_Garden_Right_Watering) ["Point"]
 String pOutdoor_Garden_Right_Watering_Info       "Info [%s]"   <selfwater> (eOutdoor_Garden_Right_Watering) ["Status"]
 
-Group  eOutdoor_Garden_Terrace_Watering          "Bewässerung" <selfinfo> (lOutdoor_Terrace) ["Valve"]
-Switch pOutdoor_Garden_Terrace_Watering_Powered  "Bewässerung" <selfwater> (eOutdoor_Garden_Terrace_Watering,gOutdoor_Watering_Circuits,gPersistance_History) ["Switch"] { channel="knx:device:bridge:wattering:gardensideBedsFront" }
-Switch pOutdoor_Garden_Terrace_Watering_Auto     "Automatik"   <selfwater> (eOutdoor_Garden_Terrace_Watering) ["Point"]
-String pOutdoor_Garden_Terrace_Watering_Info     "Info [%s]"   <selfwater> (eOutdoor_Garden_Terrace_Watering) ["Status"]
+Group  eOutdoor_Terrace_Watering          "Bewässerung" <selfinfo> (lOutdoor_Terrace) ["Valve"]
+Switch pOutdoor_Terrace_Watering_Powered  "Bewässerung" <selfwater> (eOutdoor_Terrace_Watering,gOutdoor_Watering_Circuits,gPersistance_History) ["Switch"] { channel="knx:device:bridge:wattering:gardensideBedsFront" }
+Switch pOutdoor_Terrace_Watering_Auto     "Automatik"   <selfwater> (eOutdoor_Terrace_Watering) ["Point"]
+String pOutdoor_Terrace_Watering_Info     "Info [%s]"   <selfwater> (eOutdoor_Terrace_Watering) ["Status"]
 
 Group  eOutdoor_Garden_Back_Watering             "Bewässerung" <selfinfo> (lOutdoor_Garden) ["Valve"] {synonyms="hinten"}
 Switch pOutdoor_Garden_Back_Watering_Powered     "Bewässerung" <selfwater> (eOutdoor_Garden_Back_Watering,gOutdoor_Watering_Circuits,gPersistance_History) ["Switch"] { channel="knx:device:bridge:wattering:gardensideBedsBack" }

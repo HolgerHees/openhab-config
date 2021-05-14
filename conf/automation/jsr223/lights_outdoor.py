@@ -6,7 +6,7 @@ from core.triggers import ItemCommandTrigger, ItemStateChangeTrigger
 manualMappings = [
     ["pOutdoor_Streedside_Frontdoor_Light_Powered", "pOutdoor_Streedside_Frontdoor_Automatic_Switch","pOutdoor_Streedside_Frontdoor_Motiondetector_State"],
     ["pOutdoor_Carport_Light_Powered", "pOutdoor_Carport_Automatic_Switch","pOutdoor_Carport_Motiondetector_State"],
-    ["pOutdoor_Garden_Terrace_Light_Brightness", "pOutdoor_Garden_Terrace_Automatic_Switch",None],
+    ["pOutdoor_Terrace_Light_Brightness", "pOutdoor_Terrace_Automatic_Switch",None],
     ["pOutdoor_Streedside_Garage_Light_Powered", "pOutdoor_Streedside_Garage_Automatic_Switch","pOutdoor_Streedside_Garage_Motiondetector_State"],
     ["pOutdoor_Garden_Garage_Light_Powered", "pOutdoor_Garden_Garage_Automatic_Switch","pOutdoor_Garden_Garage_Motiondetector_State"]
 ]
@@ -36,14 +36,14 @@ class MotiondetectorOutdoorSwitchRule:
                 sendCommandIfChanged("pOutdoor_Streedside_Garage_Light_Powered",OFF)
                 sendCommandIfChanged("pOutdoor_Streedside_Frontdoor_Light_Powered",OFF)
                 sendCommandIfChanged("pOutdoor_Carport_Light_Powered",OFF)
-                sendCommandIfChanged("pOutdoor_Garden_Terrace_Light_Brightness",0)
+                sendCommandIfChanged("pOutdoor_Terrace_Light_Brightness",0)
                 sendCommandIfChanged("pOutdoor_Garden_Garage_Light_Powered",OFF)
 
             #ruleTimeouts["Motiondetector_Outdoor_Individual_Switches"] = now
             postUpdateIfChanged("pOutdoor_Streedside_Garage_Automatic_Switch",itemState)
             postUpdateIfChanged("pOutdoor_Streedside_Frontdoor_Automatic_Switch",itemState)
             postUpdateIfChanged("pOutdoor_Carport_Automatic_Switch",itemState)
-            postUpdateIfChanged("pOutdoor_Garden_Terrace_Automatic_Switch",itemState)
+            postUpdateIfChanged("pOutdoor_Terrace_Automatic_Switch",itemState)
             postUpdateIfChanged("pOutdoor_Garden_Garage_Automatic_Switch",itemState)
 
 
@@ -55,7 +55,7 @@ class MotiondetectorOutdoorIndividualSwitchRule:
             ItemCommandTrigger("pOutdoor_Streedside_Garage_Automatic_Switch"),
             ItemCommandTrigger("pOutdoor_Streedside_Frontdoor_Automatic_Switch"),
             ItemCommandTrigger("pOutdoor_Carport_Automatic_Switch"),
-            ItemCommandTrigger("pOutdoor_Garden_Terrace_Automatic_Switch"),
+            ItemCommandTrigger("pOutdoor_Terrace_Automatic_Switch"),
             ItemCommandTrigger("pOutdoor_Garden_Garage_Automatic_Switch")
         ]
 
@@ -94,7 +94,7 @@ class LightOutdoorControlRule:
             ItemStateChangeTrigger("pOutdoor_Streedside_Garage_Light_Powered"),
             ItemStateChangeTrigger("pOutdoor_Streedside_Frontdoor_Light_Powered"),
             ItemStateChangeTrigger("pOutdoor_Carport_Light_Powered"),
-            ItemStateChangeTrigger("pOutdoor_Garden_Terrace_Light_Brightness"),
+            ItemStateChangeTrigger("pOutdoor_Terrace_Light_Brightness"),
             ItemStateChangeTrigger("pOutdoor_Garden_Garage_Light_Powered")
         ]
 
@@ -172,35 +172,35 @@ class MotionDetectorRule:
 class TerasseMotionDetectorRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("pOutdoor_Garden_Terrace_Motiondetector_State1",state="OPEN"),
-            ItemStateChangeTrigger("pOutdoor_Garden_Terrace_Motiondetector_State2",state="OPEN")
+            ItemStateChangeTrigger("pOutdoor_Terrace_Motiondetector_State1",state="OPEN"),
+            ItemStateChangeTrigger("pOutdoor_Terrace_Motiondetector_State2",state="OPEN")
         ]
 
     def callback(self):
         global timerMappings
-        if getItemState("pOutdoor_Garden_Terrace_Automatic_Switch") == ON:
-            if getItemState("pOutdoor_Garden_Terrace_Motiondetector_State1") == OPEN or getItemState("pOutdoor_Garden_Terrace_Motiondetector_State2") == OPEN:
-                timerMappings["pOutdoor_Garden_Terrace_Light_Brightness"] = createTimer(self.log, timerDuration, self.callback)
-                timerMappings["pOutdoor_Garden_Terrace_Light_Brightness"].start()
+        if getItemState("pOutdoor_Terrace_Automatic_Switch") == ON:
+            if getItemState("pOutdoor_Terrace_Motiondetector_State1") == OPEN or getItemState("pOutdoor_Terrace_Motiondetector_State2") == OPEN:
+                timerMappings["pOutdoor_Terrace_Light_Brightness"] = createTimer(self.log, timerDuration, self.callback)
+                timerMappings["pOutdoor_Terrace_Light_Brightness"].start()
             else:
                 global ruleTimeouts
                 ruleTimeouts["Light_Outdoor"] = getNow().getMillis()
 
-                sendCommand("pOutdoor_Garden_Terrace_Light_Brightness",0)
-                timerMappings["pOutdoor_Garden_Terrace_Light_Brightness"] = None
+                sendCommand("pOutdoor_Terrace_Light_Brightness",0)
+                timerMappings["pOutdoor_Terrace_Light_Brightness"] = None
         else:
-            timerMappings["pOutdoor_Garden_Terrace_Light_Brightness"] = None
+            timerMappings["pOutdoor_Terrace_Light_Brightness"] = None
 
     def execute(self, module, input):
-        if getItemState("pOther_Automatic_State_Outdoorlights") == ON and getItemState("pOutdoor_Garden_Terrace_Automatic_Switch") == ON:
+        if getItemState("pOther_Automatic_State_Outdoorlights") == ON and getItemState("pOutdoor_Terrace_Automatic_Switch") == ON:
             global timerMappings
-            if timerMappings.get("pOutdoor_Garden_Terrace_Light_Brightness") is not None:
-                timerMappings["pOutdoor_Garden_Terrace_Light_Brightness"].cancel()
-            timerMappings["pOutdoor_Garden_Terrace_Light_Brightness"] = createTimer(self.log, timerDuration, self.callback )
-            timerMappings["pOutdoor_Garden_Terrace_Light_Brightness"].start()
+            if timerMappings.get("pOutdoor_Terrace_Light_Brightness") is not None:
+                timerMappings["pOutdoor_Terrace_Light_Brightness"].cancel()
+            timerMappings["pOutdoor_Terrace_Light_Brightness"] = createTimer(self.log, timerDuration, self.callback )
+            timerMappings["pOutdoor_Terrace_Light_Brightness"].start()
 
             global ruleTimeouts
             ruleTimeouts["Light_Outdoor"] = getNow().getMillis()
 
-            sendCommand("pOutdoor_Garden_Terrace_Light_Brightness",100)
+            sendCommand("pOutdoor_Terrace_Light_Brightness",100)
         

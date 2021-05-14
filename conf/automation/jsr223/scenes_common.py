@@ -76,7 +76,7 @@ class pOther_Scene5Rule:
     def execute(self, module, input):
         sendCommand("pOutdoor_Carport_Automatic_Switch", OFF)
         sendCommand("pOutdoor_Streedside_Frontdoor_Automatic_Switch", OFF)
-        sendCommand("pOutdoor_Garden_Terrace_Automatic_Switch", OFF)
+        sendCommand("pOutdoor_Terrace_Automatic_Switch", OFF)
         sendCommand("pOutdoor_Streedside_Garage_Automatic_Switch", OFF)
         sendCommand("pOutdoor_Garden_Garage_Automatic_Switch", ON)
 

@@ -53,7 +53,7 @@ class ValuesErrorMessagesRule:
                 or itemLastUpdateOlderThen("pFF_Bathroom_Air_Sensor_Temperature_Value", refDate) \
                 or itemLastUpdateOlderThen("pFF_Corridor_Air_Sensor_Temperature_Value", refDate) \
                 or itemLastUpdateOlderThen("pFF_Attic_Air_Sensor_Temperature_Value", refDate):
-            active.append("Sensors ⟳")
+            active.append(u"Sensors ⟳")
 
         if len(active) == 0:
             active.append(u"Alles normal")

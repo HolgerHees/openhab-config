@@ -70,7 +70,7 @@ sitemap haus label="Main Menu"
             Frame label="Garten" {
 				Switch item=pGF_Garage_Light_Ceiling_Powered label="Schuppen"
 				Group item=gOutdoor_Lights label="Aussen Lampen [MAP(group_light.map):%d]" {
-                    Slider item=pOutdoor_Garden_Terrace_Light_Brightness label="Terasse"
+                    Slider item=pOutdoor_Terrace_Light_Brightness label="Terasse"
                     Switch item=pOutdoor_Streedside_Frontdoor_Light_Powered label="Haustür"
                     Switch item=pOutdoor_Carport_Light_Powered label="Carport"
                     Switch item=pOutdoor_Streedside_Garage_Light_Powered label="Schuppentür vorne"
@@ -104,9 +104,9 @@ sitemap haus label="Main Menu"
 				Switch item=gWest_Shutters label="Westseite" mappings=[UP="▲",STOP="✖",DOWN="▼"]
 			}
 			Frame label="Beschattung (Garten)" {
-				Switch item=gOutdoor_Shading_Terrace label="Terasse Komplett" mappings=[UP="▲",STOP="✖",DOWN="▼"]
-				Switch item=pOutdoor_Garden_Terrace_Shading_Left_Control label="Terasse Links" mappings=[UP="▲",STOP="✖",DOWN="▼"]
-				Switch item=pOutdoor_Garden_Terrace_Shading_Left_Control label="Terasse Rechts" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+				Switch item=gOutdoor_Terrace_Shading label="Terasse Komplett" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+				Switch item=pOutdoor_Terrace_Shading_Left_Control label="Terasse Links" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+				Switch item=pOutdoor_Terrace_Shading_Left_Control label="Terasse Rechts" mappings=[UP="▲",STOP="✖",DOWN="▼"]
 			}
 		}
 	}
@@ -126,13 +126,13 @@ sitemap haus label="Main Menu"
                     Switch item=pOutdoor_Streedside_Garage_Automatic_Switch label="Garage Strassenseite"
                     Switch item=pOutdoor_Streedside_Frontdoor_Automatic_Switch label="Haustür"
                     Switch item=pOutdoor_Carport_Automatic_Switch label="Carport"
-                    Switch item=pOutdoor_Garden_Terrace_Automatic_Switch label="Terasse"
+                    Switch item=pOutdoor_Terrace_Automatic_Switch label="Terasse"
                     Switch item=pOutdoor_Garden_Garage_Automatic_Switch label="Garage Gartenseite"
                 }
 			}
 			Frame label="Licht & Steckdosen" {
                 Group item=gOutdoor_Lights label="Lampen [MAP(group_light.map):%d]" {
-                    Slider item=pOutdoor_Garden_Terrace_Light_Brightness label="Terasse"
+                    Slider item=pOutdoor_Terrace_Light_Brightness label="Terasse"
                     Switch item=pOutdoor_Streedside_Frontdoor_Light_Powered label="Haustür"
                     Switch item=pOutdoor_Carport_Light_Powered label="Carport"
                     Switch item=pOutdoor_Streedside_Garage_Light_Powered label="Schuppentür vorne"
@@ -140,7 +140,7 @@ sitemap haus label="Main Menu"
                 }
 				Group item=gOutdoor_Sockets label="Steckdosen [MAP(group_socket.map):%d]" {
 					Switch item=pOutdoor_Streeside_Socket_Powered label="Strassenseite"
-					Switch item=pOutdoor_Garden_Terrace_Socket_Powered label="Gartenseite"
+					Switch item=pOutdoor_Terrace_Socket_Powered label="Gartenseite"
 				}
                 Group label="Bewässerung [MAP(group_watering.map):%d]" item=gOutdoor_Watering_Circuits {
                     Frame label="Programm" {
@@ -160,8 +160,8 @@ sitemap haus label="Main Menu"
                         }
                     }
                     Frame label="Beete & Hecken" {
-                        Text item=pOutdoor_Garden_Terrace_Watering_Info label="Terasse [%s]" {
-                            Switch item=pOutdoor_Garden_Terrace_Watering_Auto label="Terasse"
+                        Text item=pOutdoor_Terrace_Watering_Info label="Terasse [%s]" {
+                            Switch item=pOutdoor_Terrace_Watering_Auto label="Terasse"
                         }
                         Text item=pOutdoor_Streetside_Beds_Watering_Info label="Strasse [%s]" {
                             Switch item=pOutdoor_Streetside_Beds_Watering_Auto label="Strasse "
@@ -175,7 +175,7 @@ sitemap haus label="Main Menu"
                             Frame label="Garten" {
                                 Switch item=pOutdoor_Garden_Left_Watering_Powered label="Rasen links"
                                 Switch item=pOutdoor_Garden_Right_Watering_Powered label="Rasen rechts"
-                                Switch item=pOutdoor_Garden_Terrace_Watering_Powered label="Beete Terasse & Hecke"
+                                Switch item=pOutdoor_Terrace_Watering_Powered label="Beete Terasse & Hecke"
                                 Switch item=pOutdoor_Garden_Back_Watering_Powered label="Beete hinten"
                             }
                             Frame label="Strasse" {
@@ -631,8 +631,8 @@ sitemap haus label="Main Menu"
                     Text item=pOutdoor_Streedside_Garage_Motiondetector_State label="Garage Strassenseite"
                     Text item=pOutdoor_Streedside_Frontdoor_Motiondetector_State label="Haustür"
                     Text item=pOutdoor_Carport_Motiondetector_State label="Carport"
-                    Text item=pOutdoor_Garden_Terrace_Motiondetector_State1 label="Terasse rechts"
-                    Text item=pOutdoor_Garden_Terrace_Motiondetector_State2 label="Terasse links"
+                    Text item=pOutdoor_Terrace_Motiondetector_State1 label="Terasse rechts"
+                    Text item=pOutdoor_Terrace_Motiondetector_State2 label="Terasse links"
                     Text item=pOutdoor_Garden_Garage_Motiondetector_State label="Garage Gartenseite"
                 }
                 Text label="Kameras" icon="camera"
@@ -908,7 +908,7 @@ sitemap haus label="Main Menu"
             }
             Frame label="Sonstiges" {
                 Group item=gOutdoor_Lights label="Lampen Garten (RAW) [MAP(group_socket.map):%d]" {
-                    Slider item=pOutdoor_Garden_Terrace_Light_Brightness label="Terasse"
+                    Slider item=pOutdoor_Terrace_Light_Brightness label="Terasse"
                     Switch item=pOutdoor_Streedside_Frontdoor_Light_Powered label="Haustür"
                     Switch item=pOutdoor_Carport_Light_Powered label="Carport"
                     Switch item=pOutdoor_Streedside_Garage_Light_Powered label="Schuppentür vorne"
@@ -925,7 +925,7 @@ sitemap haus label="Main Menu"
                     }
                     Frame label="Garten" {
                         Switch item=pOutdoor_Streeside_Socket_Powered label="Aussen vorne"
-                        Switch item=pOutdoor_Garden_Terrace_Socket_Powered label="Aussen hinten"
+                        Switch item=pOutdoor_Terrace_Socket_Powered label="Aussen hinten"
                     }
                     Frame label="Mobile" {
                         Switch item=pMobile_Socket_1_Powered label="Steckdose 1"

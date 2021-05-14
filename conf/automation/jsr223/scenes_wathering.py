@@ -15,7 +15,7 @@ circuits = [
       u"Beete",
       [
         'pOutdoor_Streetside_Beds_Watering',
-        'pOutdoor_Garden_Terrace_Watering',
+        'pOutdoor_Terrace_Watering',
         'pOutdoor_Garden_Back_Watering'
       ]
     ],[
@@ -41,7 +41,7 @@ circuits = [
 #    ], [
 #        ['pOutdoor_Streetside_Beds_Watering_Powered', u"Beete", 1.0 ]
 #    ], [
-#        ['pOutdoor_Garden_Terrace_Watering_Powered', u"Beete", 1.0 ]
+#        ['pOutdoor_Terrace_Watering_Powered', u"Beete", 1.0 ]
 #    ], [
 #        ['pOutdoor_Garden_Back_Watering_Powered', u"Beete", 1.0 ]
 #    ]
