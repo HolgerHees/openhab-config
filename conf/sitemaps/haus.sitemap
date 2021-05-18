@@ -106,7 +106,7 @@ sitemap haus label="Main Menu"
 			Frame label="Beschattung (Garten)" {
 				Switch item=gOutdoor_Terrace_Shading label="Terasse Komplett" mappings=[UP="▲",STOP="✖",DOWN="▼"]
 				Switch item=pOutdoor_Terrace_Shading_Left_Control label="Terasse Links" mappings=[UP="▲",STOP="✖",DOWN="▼"]
-				Switch item=pOutdoor_Terrace_Shading_Left_Control label="Terasse Rechts" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+				Switch item=pOutdoor_Terrace_Shading_Right_Control label="Terasse Rechts" mappings=[UP="▲",STOP="✖",DOWN="▼"]
 			}
 		}
 	}
