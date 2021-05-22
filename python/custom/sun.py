@@ -2,8 +2,14 @@
 
 import time
 import math
-from org.joda.time import DateTimeZone
-
+try:
+    from org.joda.time import DateTimeZone
+    class ZoneOffset(object):
+        def ofHours(offset):
+            return DateTimeZone.forOffsetHours(1)
+except:
+    from java.time import ZoneOffset
+    
 class SunRadiation(object): 
     @staticmethod
     def _getSunData( time ):
@@ -15,7 +21,7 @@ class SunRadiation(object):
         longitude = 13.621287
 
         # allways +1 Berlin winter time
-        local = time.toDateTime(DateTimeZone.forOffsetHours(1))
+        local = time.toDateTime(ZoneOffset.ofHours(1))
 
         day = local.getDayOfYear()
         hour = local.getHourOfDay() + (local.getMinuteOfHour()/60.0)

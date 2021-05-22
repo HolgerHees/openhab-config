@@ -4,12 +4,19 @@ import math
 from shared.helper import getNow, getItemState, itemLastUpdateOlderThen, itemLastChangeOlderThen, getItemLastUpdate, getItemLastChange, getStableItemState
 from custom.sun import SunRadiation
 
-from org.eclipse.smarthome.core.library.types import OnOffType
-from org.eclipse.smarthome.core.library.types import OpenClosedType
-from org.eclipse.smarthome.core.library.types import PercentType
-from org.eclipse.smarthome.core.library.types import DecimalType
-from org.eclipse.smarthome.core.types import UnDefType
-
+try:
+    from org.eclipse.smarthome.core.library.types import OnOffType
+    from org.eclipse.smarthome.core.library.types import OpenClosedType
+    from org.eclipse.smarthome.core.library.types import PercentType
+    from org.eclipse.smarthome.core.library.types import DecimalType
+    from org.eclipse.smarthome.core.types import UnDefType
+except:
+    from org.openhab.core.library.types import OnOffType
+    from org.openhab.core.library.types import OpenClosedType
+    from org.openhab.core.library.types import PercentType
+    from org.openhab.core.library.types import DecimalType
+    from org.openhab.core.types import UnDefType
+    
 from custom.house import Window
 from custom.state import RoomState, HouseState, RoomHeatingState, HouseHeatingState
 

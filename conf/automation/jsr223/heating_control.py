@@ -1,15 +1,14 @@
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 from shared.helper import rule, getNow, getHistoricItemEntry, getItemState, getItemLastChange, getItemLastUpdate, sendCommand, sendCommandIfChanged, postUpdate, postUpdateIfChanged, itemLastChangeOlderThen, itemLastUpdateOlderThen, getStableItemState
+from shared.helper import ZonedDateTime, DateTimeFormatter
 from custom.heating import Heating
 from custom.house import ThermalStorageType, ThermalBridgeType, Wall, Door, Window, Room
 from custom.sun import SunRadiation
 
-from org.joda.time import DateTime
-from org.joda.time.format import DateTimeFormat
 from core.actions import Transformation
 import math
- 
-OFFSET_FORMATTER = DateTimeFormat.forPattern("HH:mm")
+  
+OFFSET_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")
 
 #postUpdate("pGF_Utilityroom_Heating_Demand",OFF)
 #postUpdate("pGF_Guesttoilet_Heating_Demand",OFF)
