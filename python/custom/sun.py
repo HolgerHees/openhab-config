@@ -5,6 +5,7 @@ import math
 try:
     from org.joda.time import DateTimeZone
     class ZoneOffset(object):
+        @staticmethod
         def ofHours(offset):
             return DateTimeZone.forOffsetHours(1)
 except:

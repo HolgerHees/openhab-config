@@ -6,8 +6,8 @@ from custom.house import ThermalStorageType, ThermalBridgeType, Wall, Door, Wind
 from custom.sun import SunRadiation
 
 from core.actions import Transformation
-import math
-  
+import math 
+
 OFFSET_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")
 
 #postUpdate("pGF_Utilityroom_Heating_Demand",OFF)
