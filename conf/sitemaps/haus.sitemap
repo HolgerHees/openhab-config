@@ -117,7 +117,6 @@ sitemap haus label="Main Menu"
 				Text label="Kameras" icon="camera"
 				{
 					Image url="https://smartmarvin.de/cameraStrasseImage" label="Strasse" refresh=2000
-					Image url="https://smartmarvin.de/cameraAutomowerImage" label="Automower" refresh=5000
 				}
 			}
 			Frame label="Licht Bewegungsmelder" {
@@ -307,10 +306,6 @@ sitemap haus label="Main Menu"
                         Text item=pOutdoor_Mower_ErrorMessage
                         Text item=pOutdoor_Mower_ErrorDate
                         Text item=pOutdoor_Mower_Hours
-                    }
-                    Frame label="Kamera"
-                    {
-                        Image url="https://smartmarvin.de/cameraAutomowerImage" label="Automower" refresh=5000
                     }
                 }
             }

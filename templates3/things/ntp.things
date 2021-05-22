@@ -1,0 +1,1 @@
+ntp:ntp:local "NTP" @ "Services" [ hostname="de.pool.ntp.org", refreshInterval=60, refreshNtp=30 ]
