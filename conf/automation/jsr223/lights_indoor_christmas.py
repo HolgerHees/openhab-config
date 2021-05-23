@@ -1,4 +1,4 @@
-from shared.helper import rule, getNow, getItemState, sendCommand, createTimer
+from shared.helper import rule, getItemState, sendCommand, createTimer
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 

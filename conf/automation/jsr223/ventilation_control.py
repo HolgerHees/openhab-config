@@ -1,6 +1,6 @@
 import math
 
-from shared.helper import rule, getNow, itemLastChangeOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand, startTimer
+from shared.helper import rule, DateTimeHelper, itemLastChangeOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand, startTimer
 from core.triggers import CronTrigger, ItemCommandTrigger, ItemStateChangeTrigger
 
 autoChangeInProgress = False
@@ -196,7 +196,7 @@ class FilterFanLevelRule:
             defaultLevel = 2    # Level 1
             coolingLevel = 2    # Level 1
         # Away since 30 minutes
-        elif presenceSate == 0 and itemLastChangeOlderThen("pOther_Presence_State", getNow().minusMinutes(60)):
+        elif presenceSate == 0 and itemLastChangeOlderThen("pOther_Presence_State", DateTimeHelper.getNow().minusMinutes(60)):
             reducedLevel = 1    # Level A
             defaultLevel = 2    # Level 1
             coolingLevel = 3    # Level 2
@@ -220,7 +220,7 @@ class FilterFanLevelRule:
 
             isModeUpdate = 'event' in input.keys() and input['event'].getItemName() == "pGF_Utilityroom_Ventilation_Auto_Mode"
             
-            if isModeUpdate or itemLastChangeOlderThen("pGF_Utilityroom_Ventilation_Fan_Level", getNow().minusMinutes(waitBeforeChange)):
+            if isModeUpdate or itemLastChangeOlderThen("pGF_Utilityroom_Ventilation_Fan_Level", DateTimeHelper.getNow().minusMinutes(waitBeforeChange)):
                 global autoChangeInProgress
                 autoChangeInProgress = True
 

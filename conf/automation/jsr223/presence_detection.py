@@ -1,4 +1,4 @@
-from shared.helper import log, rule, itemLastChangeOlderThen, getNow, getItemState, postUpdate, sendNotification, sendNotificationToAllAdmins, startTimer, getGroupMember
+from shared.helper import log, rule, itemLastChangeOlderThen, DateTimeHelper, getItemState, postUpdate, sendNotification, sendNotificationToAllAdmins, startTimer, getGroupMember
 from core.triggers import ItemStateChangeTrigger
 
 @rule("presence_detection.py")
@@ -17,7 +17,7 @@ class PresenceCheckRule:
 
         # sometimes, phones are losing wifi connections because of their sleep mode
         if itemState == OFF:
-            if itemLastChangeOlderThen("pGF_Corridor_Openingcontact_Door_State",getNow().minusMinutes(30)):
+            if itemLastChangeOlderThen("pGF_Corridor_Openingcontact_Door_State",DateTimeHelper.getNow().minusMinutes(30)):
                 self.skippedStates[itemName] = True
                 sendNotification(u"Phone", u"Skipped state {} for {}".format(itemState,itemName), recipients = ['bot_holger'])
                 return
@@ -91,7 +91,7 @@ class WakeupRule:
         # only possible if we are sleeping
         if getItemState("pOther_Presence_State").intValue() == 2:
             # sometimes the "gGF_Lights" state switches back and forth for a couple of milliseconds when set "gGF_Lights" state to OFF
-            #if itemLastChangeOlderThen("pOther_Presence_State",getNow().minusSeconds(5)):
+            #if itemLastChangeOlderThen("pOther_Presence_State",DateTimeHelper.getNow().minusSeconds(5)):
             if input['event'].getItemName() == "gGF_Shutters":
                 if self.checkTimer != None:
                     self.checkTimer.cancel()

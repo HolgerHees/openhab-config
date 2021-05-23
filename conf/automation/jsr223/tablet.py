@@ -1,6 +1,6 @@
 import urllib2
 
-from shared.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastChangeOlderThen, getNow, sendCommand
+from shared.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastChangeOlderThen, DateTimeHelper, sendCommand
 from core.triggers import ItemStateChangeTrigger, ItemCommandTrigger
 
 @rule("tablet.py")
@@ -18,7 +18,7 @@ class WakeupRule:
             else:
                 urllib2.urlopen("http://192.168.0.40:5000/wakeup").read()
         # check for itemLastChangeOlderThen to avoid flapping, because gGF_Lights is affected by pOther_Presence_State
-        elif getItemState('pOther_Presence_State').intValue() == 2 and itemLastChangeOlderThen("pOther_Presence_State",getNow().minusSeconds(5)):
+        elif getItemState('pOther_Presence_State').intValue() == 2 and itemLastChangeOlderThen("pOther_Presence_State",DateTimeHelper.getNow().minusSeconds(5)):
             if input["event"].getItemState() == OFF:
                 urllib2.urlopen("http://192.168.0.40:5000/sleep").read()
             else:

@@ -1,6 +1,6 @@
 import math
 
-from shared.helper import rule, createTimer, getNow, getGroupMember, getItemState, postUpdate, sendCommand, getItemLastChange
+from shared.helper import rule, createTimer, DateTimeHelper, getGroupMember, getItemState, postUpdate, sendCommand, getItemLastChange
 from core.triggers import ItemCommandTrigger, ItemStateChangeTrigger
 
 circuits = [
@@ -129,7 +129,7 @@ class ScenesWatheringRule(WatheringHelperOld):
             group = circuits[i]
             if getItemState(group[2][0] + "_Powered") == ON:
                 activeIndex = i
-                runtime = getNow().getMillis() - getItemLastChange(group[2][0] + "_Powered").getMillis()
+                runtime = DateTimeHelper.getMillis(DateTimeHelper.getNow()) - DateTimeHelper.getMillis(getItemLastChange(group[2][0] + "_Powered"))
                 remaining = ( duration * group[0] ) - runtime
                 break
 

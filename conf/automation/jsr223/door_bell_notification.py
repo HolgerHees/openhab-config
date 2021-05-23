@@ -1,4 +1,4 @@
-from shared.helper import rule, getNow, itemStateOlderThen, sendNotification, postUpdate
+from shared.helper import rule, DateTimeHelper, itemStateOlderThen, sendNotification, postUpdate
 from core.triggers import ItemStateChangeTrigger
 
 
@@ -8,7 +8,7 @@ class DoorBellNotificationRule:
         self.triggers = [ItemStateChangeTrigger("pOutdoor_Streedside_Gardendoor_Bell_State", state="OPEN")]
 
     def execute(self, module, input):
-        if itemStateOlderThen("pOutdoor_Streedside_Gardendoor_Bell_Last_Change", getNow().minusSeconds(30)):
+        if itemStateOlderThen("pOutdoor_Streedside_Gardendoor_Bell_Last_Change", DateTimeHelper.getNow().minusSeconds(30)):
             sendNotification("Klingel", "Es klingelt", "https://smartmarvin.de/cameraStrasseImage" )
 
         postUpdate("pOutdoor_Streedside_Gardendoor_Bell_Last_Change", DateTimeType())

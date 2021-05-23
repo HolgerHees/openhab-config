@@ -1,4 +1,4 @@
-from shared.helper import rule, getNow, postUpdateIfChanged
+from shared.helper import rule, DateTimeHelper, postUpdateIfChanged
 from core.triggers import ItemStateChangeTrigger, CronTrigger
 from core.actions import Transformation, Exec
 
@@ -25,16 +25,14 @@ class ValuesNetworkSpeedRule:
         try:
             self.log.info(u"speedtest started")
       
-            now = getNow()
-            postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - aktiv".format(now.getHourOfDay(),now.getMinuteOfHour()))
+            now = DateTimeHelper.getNow()
+            postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - aktiv".format(DateTimeHelper.getHour(now),DateTimeHelper.getMinute(now)))
 
             #result = Exec.executeCommandLine("/usr/bin/speedtest -f json --accept-gdpr --accept-license --server-id 40048",100000)
             result = Exec.executeCommandLine("/usr/bin/speedtest -f json --accept-gdpr --accept-license",100000)
             
             self.log.info(u"speedtest done")
 
-            now = getNow()
-                
             data = result.split("{\"type\"")
             if len(data) == 2:
                 json = "{\"type\"" + data[1]
@@ -55,7 +53,7 @@ class ValuesNetworkSpeedRule:
                 postUpdateIfChanged("pGF_Corridor_Speedtest_UpstreamRate",resultUp)
                 postUpdateIfChanged("pGF_Corridor_Speedtest_DownstreamRate",resultDown)
                 postUpdateIfChanged("pGF_Corridor_Speedtest_Ping",resultPing)
-                postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - {} ({}, {})".format(now.getHourOfDay(),now.getMinuteOfHour(),serverName,serverLocation,serverCountry))
+                postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - {} ({}, {})".format(DateTimeHelper.getHour(now),DateTimeHelper.getMinute(now),serverName,serverLocation,serverCountry))
                 
                 #125000
                 #"download":{
@@ -79,7 +77,7 @@ class ValuesNetworkSpeedRule:
                 #postUpdateIfChanged("pGF_Corridor_Speedtest_DownstreamRate",0)
                 #postUpdateIfChanged("pGF_Corridor_Speedtest_Ping",0)
                 
-                postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - ERR".format(now.getHourOfDay(),now.getMinuteOfHour()))
+                postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - ERR".format(DateTimeHelper.getHour(now),DateTimeHelper.getMinute(now)))
 
                 self.log.error(u"speedtest data error: {}".format(result))
         except Exception, e:
@@ -108,7 +106,7 @@ class ValuesNetworkOutgoingTrafficRule:
     def execute(self, module, input):
         #self.log.info(u"{}".format(input))
 
-        now = getNow().getMillis()
+        now = DateTimeHelper.getMillis(DateTimeHelper.getNow())
 
         if self.lastUpdate != -1:
             currentValue = input['event'].getItemState().longValue()
@@ -150,7 +148,7 @@ class ValuesNetworkIncommingTrafficRule:
     def execute(self, module, input):
         #self.log.info(u"{}".format(input))
 
-        now = getNow().getMillis()
+        now = DateTimeHelper.getMillis(DateTimeHelper.getNow())
 
         if self.lastUpdate != -1:
             currentValue = input['event'].getItemState().longValue()

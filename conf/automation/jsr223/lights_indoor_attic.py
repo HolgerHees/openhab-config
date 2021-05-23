@@ -1,4 +1,4 @@
-from shared.helper import rule, getNow, getItemState, sendCommand
+from shared.helper import rule, DateTimeHelper, getItemState, sendCommand
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 
@@ -11,7 +11,7 @@ class LightsIndoorAutoAtticRule:
         ]
 
     def execute(self, module, input):
-        hour = getNow().getHourOfDay()
+        hour = DateTimeHelper.getHour(DateTimeHelper.getNow())
 
         state = getItemState("pOther_Manual_State_Auto_Attic_Light").intValue();
         

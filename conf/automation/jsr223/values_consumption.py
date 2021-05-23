@@ -1,11 +1,11 @@
-from org.joda.time import DateTime
-from org.joda.time.format import DateTimeFormat
-
-from shared.helper import rule, getNow, getHistoricItemEntry, getHistoricItemState, getItemLastChange, itemLastUpdateOlderThen, itemLastChangeOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand
+from shared.helper import rule, DateTimeHelper, getHistoricItemEntry, getHistoricItemState, getItemLastChange, itemLastUpdateOlderThen, itemLastChangeOlderThen, getItemState, getItemStateWithFallback, postUpdate, postUpdateIfChanged, sendCommand
 from core.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
 
-from org.eclipse.smarthome.core.types.RefreshType import REFRESH
-
+try:
+    from org.eclipse.smarthome.core.types.RefreshType import REFRESH
+except:
+    from org.openhab.core.types.RefreshType import REFRESH
+  
 totalSupply = 3600 # total possible photovoltaic power in watt
 maxTimeSlot = 300000 # value timeslot to messure average power consumption => 5 min
 
@@ -24,22 +24,22 @@ startElectricityMeterSupplyValue = 0
 startGasMeterValue = 10113.01
 startGasImpulseCounter = 0
 
-dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS")
+dateTimeFormatter = DateTimeHelper.getFormat("yyyy-MM-dd HH:mm:ss.SSS")
 
-#value = getHistoricItemState("pGF_Utilityroom_Electricity_Current_Daily_Demand",getNow()).doubleValue()
+#value = getHistoricItemState("pGF_Utilityroom_Electricity_Current_Daily_Demand",DateTimeHelper.getNow()).doubleValue()
 #postUpdate("pGF_Utilityroom_Electricity_Current_Daily_Demand",value)
-#value = getHistoricItemState("pGF_Utilityroom_Electricity_Current_Daily_Supply",getNow()).doubleValue()
+#value = getHistoricItemState("pGF_Utilityroom_Electricity_Current_Daily_Supply",DateTimeHelper.getNow()).doubleValue()
 #postUpdate("pGF_Utilityroom_Electricity_Current_Daily_Supply",value)
-#value = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Supply",getNow()).doubleValue()
+#value = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Supply",DateTimeHelper.getNow()).doubleValue()
 #postUpdate("pGF_Utilityroom_Electricity_Total_Supply",value)
-#value = getHistoricItemState("pGF_Garage_Solar_Inverter_Power_Limitation",getNow()).intValue()
+#value = getHistoricItemState("pGF_Garage_Solar_Inverter_Power_Limitation",DateTimeHelper.getNow()).intValue()
 #postUpdate("pGF_Garage_Solar_Inverter_Power_Limitation",value)
 
 def getHistoricReference(log, itemName, valueTime, outdatetTime, messureTime, intervalTime):
     endTime = getItemLastChange(itemName)
-    endTimestampInMillis = endTime.getMillis()
+    endTimestampInMillis = DateTimeHelper.getMillis(endTime)
 
-    nowInMillis = getNow().getMillis()
+    nowInMillis = DateTimeHelper.getMillis(DateTimeHelper.getNow())
  
     if endTimestampInMillis < nowInMillis - ( outdatetTime * 1000 ):
         log.info( u"No consumption. Last value is too old." )
@@ -52,7 +52,7 @@ def getHistoricReference(log, itemName, valueTime, outdatetTime, messureTime, in
     startTimestampInMillis = endTimestampInMillis
     startValue = 0
 
-    currentTime = DateTime( startTimestampInMillis - 1 )
+    currentTime = DateTimeHelper.createFromMillis( startTimestampInMillis - 1 )
 
     itemCount = 0
 
@@ -63,7 +63,7 @@ def getHistoricReference(log, itemName, valueTime, outdatetTime, messureTime, in
 
         startValue = historicEntry.getState().doubleValue()
 
-        _millis = historicEntry.getTimestamp().getTime()
+        _millis = DateTimeHelper.getMillisFromHistoricItem(historicEntry)
 
         # current item is older then the allowed timeRange
         if _millis < minMessuredTimestampInMillis:
@@ -79,15 +79,15 @@ def getHistoricReference(log, itemName, valueTime, outdatetTime, messureTime, in
             break
         else:
             startTimestampInMillis = _millis
-            currentTime = DateTime( startTimestampInMillis - 1 )
+            currentTime = DateTimeHelper.createFromMillis( startTimestampInMillis - 1 )
 
     durationInSeconds = round(float(endTimestampInMillis - startTimestampInMillis) / 1000.0)
     value = ( (endValue - startValue) / durationInSeconds) * valueTime
     if value < 0:
         value = 0
 
-    startTime = DateTime(startTimestampInMillis)
-    log.info( u"Consumption {} messured from {} ({}) to {} ({})".format(value,startValue,dateTimeFormatter.print(startTime),endValue,dateTimeFormatter.print(endTime)))
+    startTime = DateTimeHelper.createFromMillis(startTimestampInMillis)
+    log.info( u"Consumption {} messured from {} ({}) to {} ({})".format(value,startValue,DateTimeHelper.printFormatted(startTime,dateTimeFormatter),endValue,DateTimeHelper.printFormatted(endTime,dateTimeFormatter)))
 
     return value
 
@@ -110,7 +110,7 @@ class EnergyCounterDemandRule:
         ]
 
     def execute(self, module, input):
-        now = getNow()
+        now = DateTimeHelper.getNow()
         
         demandCurrent = getItemState("pGF_Utilityroom_Energy_Demand_Active").intValue() / 1000.0
         zaehlerStandCurrent = ( startEnergyTotalDemandValue + demandCurrent )
@@ -119,13 +119,13 @@ class EnergyCounterDemandRule:
         postUpdateIfChanged("pGF_Utilityroom_Electricity_Meter_Demand",(zaehlerStandCurrent-startElectricityMeterDemandValue) * energyTotalDemandCorrectureFactor)
 
         # *** Tagesbezug ***
-        zaehlerStandOld = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Demand", now.withTimeAtStartOfDay() ).doubleValue()
+        zaehlerStandOld = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Demand", DateTimeHelper.createAtStartOfDay(now) ).doubleValue()
         currentDemand = zaehlerStandCurrent - zaehlerStandOld
         
         postUpdateIfChanged("pGF_Utilityroom_Electricity_Current_Daily_Demand",currentDemand)
 
         # *** Jahresbezug ***
-        zaehlerStandOld = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Demand", now.withDate(now.getYear(), 1, 1 ).withTimeAtStartOfDay()).doubleValue()
+        zaehlerStandOld = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Demand", DateTimeHelper.createAtStartOfDay(DateTimeHelper.createWithDate(now,now.getYear(), 1, 1 ))).doubleValue()
         currentDemand = zaehlerStandCurrent - zaehlerStandOld
 
         if postUpdateIfChanged("pGF_Utilityroom_Electricity_Current_Annual_Demand", currentDemand ):
@@ -133,7 +133,7 @@ class EnergyCounterDemandRule:
             zaehlerStandCurrentOneYearBefore = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Demand", now.minusYears(1) ).doubleValue()
             forecastDemand = zaehlerStandOld - zaehlerStandCurrentOneYearBefore
 
-            zaehlerStandOldOneYearBefore = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Demand", now.withDate(now.getYear()-1, 1, 1 ).withTimeAtStartOfDay()).doubleValue()
+            zaehlerStandOldOneYearBefore = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Demand", DateTimeHelper.createAtStartOfDay(DateTimeHelper.createWithDate(now,now.getYear()-1, 1, 1 ))).doubleValue()
 
             hochrechnungDemand = int( round( currentDemand + forecastDemand ) )
             vorjahresDemand = int( round( zaehlerStandOld - zaehlerStandOldOneYearBefore ) )
@@ -150,7 +150,7 @@ class EnergyCounterSupplyRule:
         ]
 
     def execute(self, module, input):
-        now = getNow()
+        now = DateTimeHelper.getNow()
         
         supplyCurrent = getItemState("pGF_Utilityroom_Energy_Supply_Active").intValue() / 1000.0
         zaehlerStandCurrent = ( startEnergyTotalSupplyValue + supplyCurrent )
@@ -159,13 +159,13 @@ class EnergyCounterSupplyRule:
         postUpdateIfChanged("pGF_Utilityroom_Electricity_Meter_Supply",(zaehlerStandCurrent-startElectricityMeterSupplyValue) * energyTotalSupplyCorrectureFactor)
 
         # *** Tageslieferung ***
-        zaehlerStandOld = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Supply", now.withTimeAtStartOfDay() ).doubleValue()
+        zaehlerStandOld = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Supply", DateTimeHelper.createAtStartOfDay(now) ).doubleValue()
         currentSupply = zaehlerStandCurrent - zaehlerStandOld
 
         postUpdateIfChanged("pGF_Utilityroom_Electricity_Current_Daily_Supply",currentSupply)
         # *** Jahreslieferung ***
 
-        zaehlerStandOld = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Supply", now.withDate(now.getYear(), 1, 1 ).withTimeAtStartOfDay()).doubleValue()
+        zaehlerStandOld = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Supply", DateTimeHelper.createAtStartOfDay(DateTimeHelper.createWithDate(now,now.getYear(), 1, 1 ))).doubleValue()
         currentSupply = zaehlerStandCurrent - zaehlerStandOld
 
         if postUpdateIfChanged("pGF_Utilityroom_Electricity_Current_Annual_Supply", currentSupply ):
@@ -173,7 +173,7 @@ class EnergyCounterSupplyRule:
             zaehlerStandCurrentOneYearBefore = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Supply", now.minusYears(1) ).doubleValue()
             forecastSupply = zaehlerStandOld - zaehlerStandCurrentOneYearBefore
 
-            zaehlerStandOldOneYearBefore = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Supply", now.withDate(now.getYear()-1, 1, 1 ).withTimeAtStartOfDay()).doubleValue()
+            zaehlerStandOldOneYearBefore = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Supply", DateTimeHelper.createAtStartOfDay(DateTimeHelper.createWithDate(now,now.getYear()-1, 1, 1 ))).doubleValue()
 
             hochrechnungSupply = int( round( currentSupply + forecastSupply ) )
             vorjahresSupply = int( round( zaehlerStandOld - zaehlerStandOldOneYearBefore ) )
@@ -199,7 +199,7 @@ class EnergySupplyRule:
             currentTimeSlot = 0
                   
             for index, x in enumerate( reversed(self.stack) ):           
-                #self.log.info(u"{}".format(DateTime(currentTime)))
+                #self.log.info(u"{}".format(DateTimeHelper.createFromMillis(currentTime)))
                 
                 # remove values older then 5 minutes
                 if currentTimeSlot >= maxTimeSlot and len(self.stack) > index:
@@ -231,12 +231,12 @@ class EnergySupplyRule:
 
     def execute(self, module, input):
       
-        now = getNow().getMillis()
+        now = DateTimeHelper.getMillis(DateTimeHelper.getNow())
         
         currentACPower = getItemState("pGF_Garage_Solar_Inverter_AC_Power").intValue()
 
-        currentPowerLimitation = getItemState("pGF_Garage_Solar_Inverter_Power_Limitation").intValue()
-
+        currentPowerLimitation = getItemStateWithFallback("pGF_Garage_Solar_Inverter_Power_Limitation",0).intValue()
+            
         currentConsumptionValue = getItemState("pGF_Utilityroom_Electricity_Current_Consumption").intValue()
         # must be called to fill history stack
         avgConsumptionValue = self.getAvgConsumption(now,currentConsumptionValue)
@@ -259,7 +259,7 @@ class EnergySupplyRule:
                     self.log.info(u"Decrease power limitation from {}% to {}%".format( currentPowerLimitation, possibleAvgPowerLimitation ))
                     return
                 
-            if len(input) == 0 and itemLastChangeOlderThen("pGF_Garage_Solar_Inverter_Power_Limitation",getNow().minusMinutes(4)):
+            if len(input) == 0 and itemLastChangeOlderThen("pGF_Garage_Solar_Inverter_Power_Limitation",DateTimeHelper.getNow().minusMinutes(4)):
                 sendCommand("pGF_Garage_Solar_Inverter_Power_Limitation",currentPowerLimitation)
                 self.log.info(u"Refresh power limitation of {}%".format( currentPowerLimitation ))
         elif currentPowerLimitation != 100:
@@ -314,16 +314,16 @@ class EnergyCurrentDemandAndConsumptionRule:
 
             self.currentDemand = self.powerDemand - self.powerSupply
             
-            #self.log.info(u"{}".format(itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_Total_Yield", getNow().minusMinutes(15))))
+            #self.log.info(u"{}".format(itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_Total_Yield", DateTimeHelper.getNow().minusMinutes(15))))
             
             if getItemState("pOther_Automatic_State_Solar") == ON:
-                if itemLastUpdateOlderThen("pOther_Automatic_State_Solar", getNow().minusMinutes(60)):
+                if itemLastUpdateOlderThen("pOther_Automatic_State_Solar", DateTimeHelper.getNow().minusMinutes(60)):
                     # solar value update was not successful for a while
                     #solarActive = getItemState("pOther_Automatic_State_Solar") == ON
-                    #if itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_Total_Yield", getNow().minusHours(5) if solarActive else getNow().minusHours(14)):
-                    if itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_Total_Yield", getNow().minusMinutes(15)):
+                    #if itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_Total_Yield", DateTimeHelper.getNow().minusHours(5) if solarActive else DateTimeHelper.getNow().minusHours(14)):
+                    if itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_Total_Yield", DateTimeHelper.getNow().minusMinutes(15)):
                         #  and 
-                        #(itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_AC_Power", getNow().minusMinutes(15)) or getItemState("pGF_Garage_Solar_Inverter_AC_Power").intValue() == 0)):
+                        #(itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_AC_Power", DateTimeHelper.getNow().minusMinutes(15)) or getItemState("pGF_Garage_Solar_Inverter_AC_Power").intValue() == 0)):
                         if postUpdateIfChanged("pGF_Garage_Solar_Inverter_Is_Working",OFF):
                             postUpdate("pGF_Garage_Solar_Inverter_AC_Power",0)
                             postUpdateIfChanged("pGF_Garage_Solar_Inverter_DC_Power",0)
@@ -370,14 +370,14 @@ class SolarConsumptionRule:
         ]
 
     def execute(self, module, input):
-        now = getNow()
+        now = DateTimeHelper.getNow()
       
         currentSupply = getItemState("pGF_Utilityroom_Electricity_Total_Supply").doubleValue()
         currentYield = getItemState("pGF_Garage_Solar_Inverter_Total_Yield").doubleValue()
         
         # Tagesverbrauch
-        startSupply = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Supply", now.withTimeAtStartOfDay() ).doubleValue()
-        startYield = getHistoricItemState("pGF_Garage_Solar_Inverter_Total_Yield", now.withTimeAtStartOfDay() ).doubleValue()
+        startSupply = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Supply", DateTimeHelper.createAtStartOfDay(now) ).doubleValue()
+        startYield = getHistoricItemState("pGF_Garage_Solar_Inverter_Total_Yield", DateTimeHelper.createAtStartOfDay(now) ).doubleValue()
 
         # sometimes solar converter is providing wrong value. Mostly if he is inactive in the night
         if currentYield > 1000000000 or startYield > 1000000000:
@@ -398,8 +398,9 @@ class SolarConsumptionRule:
         postUpdateIfChanged("pGF_Garage_Solar_Inverter_Daily_Consumption",dailyConsumption)
         
         # Jahresverbrauch
-        startSupply = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Supply", now.withDate(now.getYear(), 1, 1 ).withTimeAtStartOfDay() ).doubleValue()
-        startYield = getHistoricItemState("pGF_Garage_Solar_Inverter_Total_Yield", now.withDate(now.getYear(), 1, 1 ).withTimeAtStartOfDay() ).doubleValue()
+        refDate = DateTimeHelper.createAtStartOfDay(DateTimeHelper.createWithDate(now,now.getYear(), 1, 1 ))
+        startSupply = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Supply", refDate ).doubleValue()
+        startYield = getHistoricItemState("pGF_Garage_Solar_Inverter_Total_Yield", refDate ).doubleValue()
 
         totalSupply = currentSupply - startSupply
         totalYield = currentYield - startYield
@@ -426,13 +427,13 @@ class GasConsumptionRule:
         self.triggers = [ItemStateChangeTrigger("pGF_Utilityroom_Gas_Meter_Pulse_Counter")]
 
     def execute(self, module, input):
-        now = getNow()
+        now = DateTimeHelper.getNow()
         Aktuell_End = getItemState("pGF_Utilityroom_Gas_Meter_Pulse_Counter").doubleValue()
 
         # Aktueller Zählerstand
         zaehlerStandCurrent = startGasMeterValue + ((Aktuell_End - startGasImpulseCounter) * 0.01)
 
-        zaehlerStandSaved = getItemState("pGF_Utilityroom_Gas_Meter_Current_Count").doubleValue()
+        zaehlerStandSaved = getItemStateWithFallback("pGF_Utilityroom_Gas_Meter_Current_Count",0.0).doubleValue()
         
         #self.log.info("{}".format(zaehlerStandCurrent))
         
@@ -445,7 +446,7 @@ class GasConsumptionRule:
             postUpdate("pGF_Utilityroom_Gas_Meter_Current_Count", zaehlerStandCurrent )
 
         # *** Aktueller Tagesverbrauch ***
-        zaehlerStandOld = getHistoricItemState("pGF_Utilityroom_Gas_Meter_Current_Count", now.withTimeAtStartOfDay() ).doubleValue()
+        zaehlerStandOld = getHistoricItemState("pGF_Utilityroom_Gas_Meter_Current_Count", DateTimeHelper.createAtStartOfDay(now) ).doubleValue()
         currentConsumption = zaehlerStandCurrent - zaehlerStandOld
         if currentConsumption < 0:
             currentConsumption = 0
@@ -453,7 +454,7 @@ class GasConsumptionRule:
         postUpdateIfChanged("pGF_Utilityroom_Gas_Current_Daily_Consumption",currentConsumption)
 
         # *** Jahresverbrauch ***
-        zaehlerStandOld = getHistoricItemState("pGF_Utilityroom_Gas_Meter_Current_Count", now.withDate(now.getYear(), 1, 1 ).withTimeAtStartOfDay()).doubleValue()
+        zaehlerStandOld = getHistoricItemState("pGF_Utilityroom_Gas_Meter_Current_Count", DateTimeHelper.createAtStartOfDay(DateTimeHelper.createWithDate(now,now.getYear(), 1, 1 )) ).doubleValue()
         currentConsumption = zaehlerStandCurrent - zaehlerStandOld
         if currentConsumption < 0:
             currentConsumption = 0
@@ -463,7 +464,7 @@ class GasConsumptionRule:
             zaehlerStandCurrentOneYearBefore = getHistoricItemState("pGF_Utilityroom_Gas_Meter_Current_Count", now.minusYears(1) ).doubleValue()
             forecastConsumtion = zaehlerStandOld - zaehlerStandCurrentOneYearBefore
 
-            zaehlerStandOldOneYearBefore = getHistoricItemState("pGF_Utilityroom_Gas_Meter_Current_Count", now.withDate(now.getYear()-1, 1, 1 ).withTimeAtStartOfDay()).doubleValue()
+            zaehlerStandOldOneYearBefore = getHistoricItemState("pGF_Utilityroom_Gas_Meter_Current_Count", DateTimeHelper.createAtStartOfDay(DateTimeHelper.createWithDate(now,now.getYear()-1, 1, 1 )) ).doubleValue()
 
             hochrechnungVerbrauch = round( currentConsumption + forecastConsumtion )
 

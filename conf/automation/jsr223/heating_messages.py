@@ -1,4 +1,4 @@
-from shared.helper import rule, getNow, getItemState, getHistoricItemState, postUpdate, postUpdateIfChanged, startTimer
+from shared.helper import rule, DateTimeHelper, getItemState, getHistoricItemState, postUpdate, postUpdateIfChanged, startTimer
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 DELAYED_UPDATE_TIMEOUT = 3
@@ -88,7 +88,7 @@ class BurnerStartsRule:
         ]
 
     def execute(self, module, input):
-        start = getHistoricItemState("pGF_Utilityroom_Heating_Burner_Starts", getNow().withTimeAtStartOfDay()).intValue()
+        start = getHistoricItemState("pGF_Utilityroom_Heating_Burner_Starts", DateTimeHelper.createAtStartOfDay(DateTimeHelper.getNow())).intValue()
         aktuell = getItemState("pGF_Utilityroom_Heating_Burner_Starts").intValue()
         if start > 0 and aktuell > 0:
             differenz = aktuell - start
@@ -106,7 +106,7 @@ class BurnerHoursRule:
         ]
 
     def execute(self, module, input):
-        start = getHistoricItemState("pGF_Utilityroom_Heating_Burner_Hours", getNow().withTimeAtStartOfDay()).intValue()
+        start = getHistoricItemState("pGF_Utilityroom_Heating_Burner_Hours", DateTimeHelper.createAtStartOfDay(DateTimeHelper.getNow())).intValue()
         aktuell = getItemState("pGF_Utilityroom_Heating_Burner_Hours").intValue()
         if start > 0 and aktuell > 0:
             differenz = aktuell - start
@@ -173,7 +173,7 @@ class SolarHoursRule:
         ]
 
     def execute(self, module, input):
-        start = getHistoricItemState("pGF_Utilityroom_Heating_Solar_Hours", getNow().withTimeAtStartOfDay()).intValue()
+        start = getHistoricItemState("pGF_Utilityroom_Heating_Solar_Hours", DateTimeHelper.createAtStartOfDay(DateTimeHelper.getNow())).intValue()
         aktuell = getItemState("pGF_Utilityroom_Heating_Solar_Hours").intValue()
         if start > 0 and aktuell > 0:
             differenz = aktuell - start
@@ -190,7 +190,7 @@ class SolarPowerRule:
         ]
 
     def execute(self, module, input):
-        start = getHistoricItemState("pGF_Utilityroom_Heating_Solar_Power", getNow().withTimeAtStartOfDay()).intValue()
+        start = getHistoricItemState("pGF_Utilityroom_Heating_Solar_Power", DateTimeHelper.createAtStartOfDay(DateTimeHelper.getNow())).intValue()
         aktuell = getItemState("pGF_Utilityroom_Heating_Solar_Power").intValue()
         if start > 0 and aktuell > 0:
             differenz = aktuell - start

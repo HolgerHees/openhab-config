@@ -1,4 +1,4 @@
-from shared.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen, itemStateNewerThen, getNow
+from shared.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen, itemStateNewerThen, DateTimeHelper
 from core.actions import Transformation
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
@@ -17,7 +17,7 @@ class MoverStatusRule:
     def execute(self, module, input):
         moverStatus = getItemState("pOutdoor_Mower_Status").toString()
 
-        if itemLastUpdateOlderThen("pOutdoor_Mower_WlanSignal", getNow().minusMinutes(60)):
+        if itemLastUpdateOlderThen("pOutdoor_Mower_WlanSignal", DateTimeHelper.getNow().minusMinutes(60)):
             if moverStatus != "98":
                 postUpdate("pOutdoor_Mower_Status", 98)
                 postUpdate("pOutdoor_Mower_StatusFormatted", Transformation.transform("MAP", "robonect_status.map", "98"))
@@ -52,7 +52,7 @@ class MoverTimerRule:
         if timerStatus != "STANDBY":
             msg = u"{}{}".format( msg, Transformation.transform("MAP", "robonect_timer_status.map", timerStatus) )
         else:
-            if itemStateNewerThen("pOutdoor_Mower_NextTimer", getNow().plusHours(24 * 4)):
+            if itemStateNewerThen("pOutdoor_Mower_NextTimer", DateTimeHelper.getNow().plusHours(24 * 4)):
                 msg = u"{}Starte am {}".format(msg,getItemState("pOutdoor_Mower_NextTimer").format("%1$td.%1$tm %1$tH:%1$tM"))
             else:
                 msg = u"{}Starte {}".format(msg,getItemState("pOutdoor_Mower_NextTimer").format("%1$tA %1$tH:%1$tM"))

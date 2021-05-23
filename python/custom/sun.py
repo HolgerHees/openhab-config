@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from shared.helper import DateTimeHelper
 
 import time
 import math
@@ -22,10 +23,10 @@ class SunRadiation(object):
         longitude = 13.621287
 
         # allways +1 Berlin winter time
-        local = time.toDateTime(ZoneOffset.ofHours(1))
+        local = DateTimeHelper.createWithZone(time,ZoneOffset.ofHours(1))
 
         day = local.getDayOfYear()
-        hour = local.getHourOfDay() + (local.getMinuteOfHour()/60.0)
+        hour = DateTimeHelper.getHour(local) + (DateTimeHelper.getMinute(local)/60.0)
 
         # Source: http://www.jgiesen.de/SME/tk/index.htm
         deklination = -23.45 * math.cos( K * 360 * (day + 10) / 365 )
