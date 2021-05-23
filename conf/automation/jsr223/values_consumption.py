@@ -235,7 +235,7 @@ class EnergySupplyRule:
         
         currentACPower = getItemState("pGF_Garage_Solar_Inverter_AC_Power").intValue()
 
-        currentPowerLimitation = getItemStateWithFallback("pGF_Garage_Solar_Inverter_Power_Limitation",0).intValue()
+        currentPowerLimitation = getItemStateWithFallback("pGF_Garage_Solar_Inverter_Power_Limitation",DecimalType(0)).intValue()
             
         currentConsumptionValue = getItemState("pGF_Utilityroom_Electricity_Current_Consumption").intValue()
         # must be called to fill history stack
@@ -433,7 +433,7 @@ class GasConsumptionRule:
         # Aktueller Zählerstand
         zaehlerStandCurrent = startGasMeterValue + ((Aktuell_End - startGasImpulseCounter) * 0.01)
 
-        zaehlerStandSaved = getItemStateWithFallback("pGF_Utilityroom_Gas_Meter_Current_Count",0.0).doubleValue()
+        zaehlerStandSaved = getItemStateWithFallback("pGF_Utilityroom_Gas_Meter_Current_Count",DecimalType(0.0)).doubleValue()
         
         #self.log.info("{}".format(zaehlerStandCurrent))
         

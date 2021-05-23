@@ -290,7 +290,7 @@ class WeatherstationRainRule:
         self.updateTimer = None
 
     def delayUpdate(self):
-        todayRain = getItemStateWithFallback("pOutdoor_WeatherStation_Rain_Daily",double(0.0)).doubleValue()
+        todayRain = getItemStateWithFallback("pOutdoor_WeatherStation_Rain_Daily",DecimalType(0.0)).doubleValue()
         rainLevel = getItemState("pOutdoor_WeatherStation_Rain_State").intValue()
 
         if rainLevel < 0:
