@@ -330,7 +330,7 @@ class WeatherstationRainRule:
                 if impulseCount == 0:
                     return
                   
-                zaehlerNeu = getItemState("pOutdoor_WeatherStation_Rain_Counter").intValue()
+                zaehlerNeu = getItemStateWithFallback("pOutdoor_WeatherStation_Rain_Counter",DecimalType(0)).intValue()
                 zaehlerNeu += impulseCount
                 postUpdateIfChanged("pOutdoor_WeatherStation_Rain_Counter", zaehlerNeu)
                 
@@ -388,7 +388,7 @@ class WeatherstationRainLastHourRule:
         self.triggers = [CronTrigger("0 */15 * * * ?")]
 
     def execute(self, module, input):
-        zaehlerNeu = getItemState("pOutdoor_WeatherStation_Rain_Counter").intValue()
+        zaehlerNeu = getItemStateWithFallback("pOutdoor_WeatherStation_Rain_Counter",DecimalType(0)).intValue()
         zaehlerAlt = getHistoricItemState("pOutdoor_WeatherStation_Rain_Counter", DateTimeHelper.getNow().minusHours(1)).intValue()
         lastHourRain = 0
 

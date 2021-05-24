@@ -1,7 +1,6 @@
 from shared.helper import rule, DateTimeHelper, itemLastUpdateOlderThen, sendNotificationToAllAdmins, getItemState, postUpdateIfChanged
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
-
 @rule("values_error_messages.py")
 class ValuesErrorMessagesRule:
     def __init__(self):
