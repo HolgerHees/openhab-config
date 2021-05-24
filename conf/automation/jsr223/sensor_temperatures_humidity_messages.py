@@ -98,12 +98,12 @@ class InfoValueRule:
         
         msg = u"";
         if temperatureTargetItem is not None:
-            msg = u"{}({}) ".format(msg,str(getItemState(temperatureTargetItem)).format("%.1f"))
+            msg = u"{}({}) ".format(msg,getItemState(temperatureTargetItem).format("%.1f"))
 
         #self.log.info(temperatureItem)
-        msg = u"{}{} °C, ".format(msg,str(getItemState(temperatureItem)).format("%.1f"))
+        msg = u"{}{} °C, ".format(msg,getItemState(temperatureItem).format("%.1f"))
         #self.log.info(humidityItem)
-        msg = u"{}{} %".format(msg,str(getItemState(humidityItem)).format("%.1f"))
+        msg = u"{}{} %".format(msg,getItemState(humidityItem).format("%.1f"))
 
         postUpdateIfChanged(infoItem, msg)
         
