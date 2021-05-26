@@ -3,6 +3,7 @@ from core.triggers import ItemStateChangeTrigger, CronTrigger
 from core.actions import Transformation, Exec
 
 from threading import Thread 
+from java.time import Duration
 
 #wget "http://influxdb:8086/query?u=openhab&p=default123&chunked=true&db=openhab_db&epoch=ns&q=DROP+SERIES+FROM+%22pGF_Corridor_Fritzbox_WanUpstreamCurrRate%22"
 #wget "http://influxdb:8086/query?u=openhab&p=default123&chunked=true&db=openhab_db&epoch=ns&q=DROP+SERIES+FROM+%22pGF_Corridor_Fritzbox_WanDownstreamCurrRate%22"
@@ -29,7 +30,7 @@ class ValuesNetworkSpeedRule:
             postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - aktiv".format(DateTimeHelper.getHour(now),DateTimeHelper.getMinute(now)))
 
             #result = Exec.executeCommandLine("/usr/bin/speedtest -f json --accept-gdpr --accept-license --server-id 40048",100000)
-            result = Exec.executeCommandLine("/usr/bin/speedtest -f json --accept-gdpr --accept-license",100000)
+            result = Exec.executeCommandLine(Duration.ofSeconds(100),"/usr/bin/speedtest","-f", "json", "--accept-gdpr", "--accept-license")
             
             self.log.info(u"speedtest done")
 

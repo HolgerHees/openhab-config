@@ -1,13 +1,13 @@
 // **** FRITZBOX ****
 Group   eGF_Corridor_Fritzbox                       "Fritzbox"                                            <selfinfo> (lGF_Corridor) ["NetworkAppliance"] {synonyms="Internet"}
 
-Number  pGF_Corridor_Fritzbox_Uptime                "Uptime [JS(network_uptime.js):%s]"                   <line>     (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="upTime"}
-Switch  pGF_Corridor_Fritzbox_GuestWifi             "Gäste WLAN"                                          <network>  (eGF_Corridor_Fritzbox) ["Point"] {fritzboxtr064="wifiGuestSwitch"}
+Number  pGF_Corridor_Fritzbox_Uptime                "Uptime [JS(network_uptime.js):%s]"                   <line>     (eGF_Corridor_Fritzbox) ["Point"] {channel="tr064:fritzbox:fritzbox:uptime"}
+Switch  pGF_Corridor_Fritzbox_GuestWifi             "Gäste WLAN"                                          <network>  (eGF_Corridor_Fritzbox) ["Point"] {channel="tr064:subdeviceLan:fritzbox:lan:wifiGuestEnable"}
 
-String  pGF_Corridor_Fritzbox_WanAccessType         "WAN Typ [%s]"                                        <selfinfo>  (eGF_Corridor_Fritzbox) ["Point"]{fritzboxtr064="wanWANAccessType"}
-String  pGF_Corridor_Fritzbox_WanPhysicalLinkStatus "WAN Link Status [MAP(network_states.map):%s]"        <selfinfo>  (eGF_Corridor_Fritzbox) ["Point"]{fritzboxtr064="wanPhysicalLinkStatus"}
-Number pGF_Corridor_Fritzbox_WanTotalBytesSent      "WAN Gesamt gesendets [%s]" <flowpipe> (eGF_Corridor_Fritzbox) {fritzboxtr064="wanTotalBytesSent"}
-Number pGF_Corridor_Fritzbox_WanTotalBytesReceived  "WAN Gesamt empfangen [%s]" <returnpipe> (eGF_Corridor_Fritzbox) {fritzboxtr064="wanTotalBytesReceived"}
+String  pGF_Corridor_Fritzbox_WanAccessType         "WAN Typ [%s]"                                        <selfinfo>  (eGF_Corridor_Fritzbox) ["Point"]{channel="tr064:subdevice:fritzbox:wan:wanAccessType"}
+String  pGF_Corridor_Fritzbox_WanPhysicalLinkStatus "WAN Link Status [MAP(network_states.map):%s]"        <selfinfo>  (eGF_Corridor_Fritzbox) ["Point"]{channel="tr064:subdevice:fritzbox:wan:wanPhysicalLinkStatus"}
+Number pGF_Corridor_Fritzbox_WanTotalBytesSent      "WAN Gesamt gesendets [%s]" <flowpipe> (eGF_Corridor_Fritzbox) {channel="tr064:subdevice:fritzbox:wan:wanTotalBytesSent"}
+Number pGF_Corridor_Fritzbox_WanTotalBytesReceived  "WAN Gesamt empfangen [%s]" <returnpipe> (eGF_Corridor_Fritzbox) {channel="tr064:subdevice:fritzbox:wan:wanTotalBytesReceived"}
 
 Number pGF_Corridor_Fritzbox_WanUpstreamCurrRate    "Upstream Aktuell [JS(network_bit_to_mbit.js):%s]" <flowpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"]
 Number pGF_Corridor_Fritzbox_WanDownstreamCurrRate  "Downstream Aktuell [JS(network_bit_to_mbit.js):%s]" <returnpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"]

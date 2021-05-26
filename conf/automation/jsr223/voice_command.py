@@ -9,7 +9,7 @@ from alexa_device_config import AlexaDevices
 from custom.semantic_test import Cases
 
 import traceback
-                                                            
+
 @rule("voice_command.py")
 class VoiceCommandRule:
     def __init__(self):
