@@ -61,6 +61,7 @@ class WakeupRule:
             #ItemStateChangeTrigger("pGF_Livingroom_Motiondetector_State",state="OPEN"),
             #ItemStateChangeTrigger("pFF_Corridor_Motiondetector_State",state="OPEN"),
             ItemStateChangeTrigger("gGF_Lights",state="ON"),
+            ItemStateChangeTrigger("gGF_Shutters",state="UP"),
             ItemStateChangeTrigger("gGF_Shutters",state="0")
         ]
         self.checkTimer = None

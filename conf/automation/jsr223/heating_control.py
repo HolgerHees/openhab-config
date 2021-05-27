@@ -849,7 +849,7 @@ class HeatingControlRule():
                 
     def getBurnerStarts( self, now ):
         # max 5 min.
-        minTimestamp = getHistoricItemEntry("pGF_Utilityroom_Heating_Operating_Mode",now).getTimestamp().getTime()
+        minTimestamp = DateTimeHelper.getMillis( getHistoricItemEntry("pGF_Utilityroom_Heating_Operating_Mode",now).getTimestamp() )
         _minTimestamp = DateTimeHelper.getMillis(now.minusMinutes(5))
         if minTimestamp < _minTimestamp:
             minTimestamp = _minTimestamp
@@ -869,7 +869,7 @@ class HeatingControlRule():
                 if currentHeating != lastHeating:
                     burnerStarts = burnerStarts + 1
             
-            currentTime = DateTimeHelper.createFromMillis( currentItemEntry.getTimestamp().getTime() - 1 )
+            currentTime = DateTimeHelper.createFromMillis( DateTimeHelper.getMillis( currentItemEntry.getTimestamp() ) - 1 )
             lastItemEntry = currentItemEntry
             
         return burnerStarts
@@ -880,7 +880,7 @@ class HeatingControlRule():
         
         # last mode was "Heizen mit WW"
         if lastOperatingMode.getState().intValue() == 2:
-            lastOperatingModeUpdate = DateTimeHelper.createFromMillis( lastOperatingMode.getTimestamp().getTime() )
+            lastOperatingModeUpdate = DateTimeHelper.createFromMillis( DateTimeHelper.getMillis( lastOperatingMode.getTimestamp() ) )
             lastHeatingTime = DateTimeHelper.getMillis(currentOperatingModeUpdate) - DateTimeHelper.getMillis(lastOperatingModeUpdate)
             #self.log.info(u"B {}".format(lastHeatingTime))
 
@@ -892,7 +892,7 @@ class HeatingControlRule():
 
                 if previousOperatingMode.getState().intValue() == 3:
                     # letzt calculate last "reduziert" runtime and increase it by 2
-                    previousOperatingModeUpdate = DateTimeHelper.createFromMillis( previousOperatingMode.getTimestamp().getTime() ) 
+                    previousOperatingModeUpdate = DateTimeHelper.createFromMillis( DateTimeHelper.getMillis( previousOperatingMode.getTimestamp() ) ) 
                     lastReducedRuntime = DateTimeHelper.getMillis(lastOperatingModeUpdate) - DateTimeHelper.getMillis(previousOperatingModeUpdate)
                     
                     return lastReducedRuntime
