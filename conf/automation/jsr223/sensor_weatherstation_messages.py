@@ -335,7 +335,7 @@ class WeatherstationRainRule:
                 postUpdateIfChanged("pOutdoor_WeatherStation_Rain_Counter", zaehlerNeu)
                 
                 todayRain = 0
-                zaehlerAlt = getHistoricItemState("pOutdoor_WeatherStation_Rain_Counter", DateTimeHelper.getNow().withTimeAtStartOfDay()).intValue()
+                zaehlerAlt = getHistoricItemState("pOutdoor_WeatherStation_Rain_Counter", DateTimeHelper.createAtStartOfDay(DateTimeHelper.getNow())).intValue()
                 if zaehlerAlt != zaehlerNeu:
                     differenz = zaehlerNeu - zaehlerAlt
                     if differenz < 0:
