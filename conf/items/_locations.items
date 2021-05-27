@@ -1,4 +1,4 @@
-Group lIndoor           "Drinnen"       <group>                        ["Indoor"]       { synonyms="haus,innen,überall,komplett,alle" }
+Group lIndoor           "Haus"       <group>                        ["Indoor"]          { synonyms="drinnen,innen,überall,komplett,alle" }
 
 Group lGroundFloor      "Erdgeschoss"   <groundfloor>   (lIndoor)      ["GroundFloor"]  { synonyms="Untergeschoss" }
 Group lGF_Guesttoilet   "Gäste WC"      <bath>          (lGroundFloor) ["Room"]         { synonyms="Gäste Toilette,Gäste Bad,Gästeklo" }
@@ -19,7 +19,7 @@ Group lFF_Child2        "Schminkzimmer" <boy1>          (lFirstFloor)  ["Room"] 
 Group lFF_Corridor      "Flur"          <corridor>      (lFirstFloor)  ["Corridor"]     { synonyms="oben" }
 Group lFF_Attic         "Dachboden"     <attic>         (lFirstFloor)  ["Attic"]
 
-Group lOutdoor          "Draussen"      <garden>                       ["Outdoor"]      { synonyms="garten,aussen" }
+Group lOutdoor          "Garten"      <garden>                         ["Outdoor"]      { synonyms="draussen,aussen" }
 Group lOutdoor_Streedside "Vorgarten"   <garden>        (lOutdoor)     ["Garden"]       { synonyms="Strassenseite, vorne" }
 Group lOutdoor_Carport  "Carport"       <garden>        (lOutdoor)     ["Carport"]
 Group lOutdoor_Garden   "Hintergarten"  <garden>        (lOutdoor)     ["Garden"]       { synonyms="hinten" }

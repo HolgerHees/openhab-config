@@ -98,3 +98,4 @@ class TestRule:
      
     def execute(self, module, input):
         pass                                                                   
+ 
