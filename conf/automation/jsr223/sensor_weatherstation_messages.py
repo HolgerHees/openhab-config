@@ -1,11 +1,12 @@
-from shared.helper import rule, DateTimeHelper, getItemState, getItemStateWithFallback, getStableItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged, getItemLastUpdate, getItem, startTimer, createTimer, itemLastChangeOlderThen
+from shared.helper import rule, getItemState, getItemStateWithFallback, getStableItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged, getItemLastUpdate, getItem, startTimer, createTimer, itemLastChangeOlderThen
 from core.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
 from custom.sun import SunRadiation
 import math
 import json
 import traceback
+from java.time import ZonedDateTime
 
-#value = getHistoricItemState("pOutdoor_WeatherStation_Rain_Counter",DateTimeHelper.getNow()).intValue()
+#value = getHistoricItemState("pOutdoor_WeatherStation_Rain_Counter",ZonedDateTime.now()).intValue()
 #postUpdate("pOutdoor_WeatherStation_Rain_Counter",value)
 
 # base offset measured at 25°C
@@ -78,9 +79,9 @@ def addToStack(self,stackName,itemValue):
         # avoid adding None twice
         if stack[len(stack)-1][1] == None:
             return
-        stack = [ [ DateTimeHelper.getMillis(DateTimeHelper.getNow()), itemValue ] ]
+        stack = [ [ ZonedDateTime.now().toInstant().toEpochMilli(), itemValue ] ]
     else:
-        stack.append([DateTimeHelper.getMillis(DateTimeHelper.getNow()),itemValue])
+        stack.append([ZonedDateTime.now().toInstant().toEpochMilli(),itemValue])
         if len(stack) > 5:
             stack = stack[-5:]
         
@@ -96,7 +97,7 @@ def getAvgStackValue(self,stackName,itemName):
     else:
         stack = json.loads(value)
         
-    maxTimestamp = DateTimeHelper.getMillis(DateTimeHelper.getNow()) + 60000
+    maxTimestamp = ZonedDateTime.now().toInstant().toEpochMilli() + 60000
     minTimestamp = maxTimestamp - 5 * 60 * 1000
     currentTimestamp = maxTimestamp
     
@@ -135,7 +136,7 @@ class WeatherstationLastUpdateRule:
         #solar3 = getAvgStackValue(self,"pOutdoor_WeatherStation_Solar_Power_Stack","pOutdoor_WeatherStation_Solar_Power_Raw")
 
     def execute(self, module, input):
-        now = DateTimeHelper.getMillis(DateTimeHelper.getNow())
+        now = ZonedDateTime.now().toInstant().toEpochMilli()
         
         newestUpdate = 0
         oldestUpdate = now
@@ -143,7 +144,7 @@ class WeatherstationLastUpdateRule:
         states = {}
         
         for item in items:
-            _update = DateTimeHelper.getMillis(getItemLastUpdate(item))
+            _update = getItemLastUpdate(item).toInstant().toEpochMilli()
             if _update > newestUpdate:
                 newestUpdate = _update
             if _update < oldestUpdate:
@@ -151,14 +152,14 @@ class WeatherstationLastUpdateRule:
                 #self.log.info("{} {}".format(item.getName(),getItemLastUpdate(item)))
                 
             lastUpdate = getItemLastUpdate(item)
-            minutes = round( (now - DateTimeHelper.getMillis(lastUpdate) ) / 1000.0 / 60.0 )
+            minutes = round( (now - lastUpdate.toInstant().toEpochMilli() ) / 1000.0 / 60.0 )
             states[item.getName()] = [minutes,"{:.0f} min: {} ({})".format(minutes,item.getName(),getItemLastUpdate(item))]
         
         # Special handling for heating updates
         # Either the pOutdoor_WeatherStation_Rain_Heater_Request is updated every 15 minutes (heating inactive) or every minute (heating is active)
         # Or the pOutdoor_WeatherStation_Rain_Heater is updated every 5 minutes
-        #_heaterValueUpdate = DateTimeHelper.getMillis(getItemLastUpdate("pOutdoor_WeatherStation_Rain_Heater"))
-        #_heaterRequestUpdate = DateTimeHelper.getMillis(getItemLastUpdate("pOutdoor_WeatherStation_Rain_Heater_Request"))
+        #_heaterValueUpdate = getItemLastUpdate("pOutdoor_WeatherStation_Rain_Heater").toInstant().toEpochMilli()
+        #_heaterRequestUpdate = getItemLastUpdate("pOutdoor_WeatherStation_Rain_Heater_Request").toInstant().toEpochMilli()
         #_update = _heaterValueUpdate if _heaterValueUpdate > _heaterRequestUpdate else _heaterRequestUpdate
         #if _update > newestUpdate:
         #    newestUpdate = _update
@@ -335,7 +336,8 @@ class WeatherstationRainRule:
                 postUpdateIfChanged("pOutdoor_WeatherStation_Rain_Counter", zaehlerNeu)
                 
                 todayRain = 0
-                zaehlerAlt = getHistoricItemState("pOutdoor_WeatherStation_Rain_Counter", DateTimeHelper.createAtStartOfDay(DateTimeHelper.getNow())).intValue()
+                refDay = ZonedDateTime.now()
+                zaehlerAlt = getHistoricItemState("pOutdoor_WeatherStation_Rain_Counter", refDay.toLocalDate().atStartOfDay(refDay.getZone())).intValue()
                 if zaehlerAlt != zaehlerNeu:
                     differenz = zaehlerNeu - zaehlerAlt
                     if differenz < 0:
@@ -372,7 +374,7 @@ class WeatherstationRainRule:
  
                 if rainLevel > 0:
                     timeOffice = (11 - rainLevel) * 15
-                    if itemLastChangeOlderThen("pOutdoor_WeatherStation_Rain_Counter", DateTimeHelper.getNow().minusMinutes(timeOffice)):
+                    if itemLastChangeOlderThen("pOutdoor_WeatherStation_Rain_Counter", ZonedDateTime.now().minusMinutes(timeOffice)):
                         temperature = getItemState("pOutdoor_WeatherStation_Temperature").doubleValue()
                         dewpoint = getItemState("pOutdoor_WeatherStation_Dewpoint").doubleValue()
                         if temperature - dewpoint <= 3:
@@ -389,7 +391,7 @@ class WeatherstationRainLastHourRule:
 
     def execute(self, module, input):
         zaehlerNeu = getItemStateWithFallback("pOutdoor_WeatherStation_Rain_Counter",DecimalType(0)).intValue()
-        zaehlerAlt = getHistoricItemState("pOutdoor_WeatherStation_Rain_Counter", DateTimeHelper.getNow().minusHours(1)).intValue()
+        zaehlerAlt = getHistoricItemState("pOutdoor_WeatherStation_Rain_Counter", ZonedDateTime.now().minusHours(1)).intValue()
         lastHourRain = 0
 
         if zaehlerAlt != zaehlerNeu:
@@ -454,7 +456,7 @@ class WeatherstationWindRule:
             postUpdate("pOutdoor_WeatherStation_Wind_Direction",direction)            
           
         self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
-  
+
 @rule("sensor_weatherstation.py")
 class UpdateWindLast15MinutesRule:
     def __init__(self):
@@ -463,7 +465,7 @@ class UpdateWindLast15MinutesRule:
         ]
 
     def execute(self, module, input):
-        value = getMaxItemState("pOutdoor_WeatherStation_Wind_Speed", DateTimeHelper.getNow().minusMinutes(15)).doubleValue()
+        value = getMaxItemState("pOutdoor_WeatherStation_Wind_Speed", ZonedDateTime.now().minusMinutes(15)).doubleValue()
         
         postUpdateIfChanged("pOutdoor_WeatherStation_Wind_Current", value)
         

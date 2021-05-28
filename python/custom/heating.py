@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import math
+from java.time import ZonedDateTime
 
-from shared.helper import DateTimeHelper, getItemState, itemLastUpdateOlderThen, itemLastChangeOlderThen, getItemLastUpdate, getItemLastChange, getStableItemState
+from shared.helper import getItemState, itemLastUpdateOlderThen, itemLastChangeOlderThen, getItemLastUpdate, getItemLastChange, getStableItemState
 from custom.sun import SunRadiation
 
 try:
@@ -141,7 +142,7 @@ class Heating(object):
         Heating.temperatureGardenItem = outdoorTemperatureItem
          
         self.cache = {}
-        self.now = DateTimeHelper.getNow()
+        self.now = ZonedDateTime.now()
 
     def getCachedStableItemKey(self,itemName,stableSince=10):
         return u"stable-{}-{}".format(itemName,stableSince)
@@ -375,8 +376,8 @@ class Heating(object):
         reference = self.now.plusMinutes( offset ) if offset != None else self.now
       
         day    = reference.getDayOfWeek()
-        hour   = DateTimeHelper.getHour(reference)
-        minute = DateTimeHelper.getMinute(reference)
+        hour   = reference.getHour()
+        minute = reference.getMinute()
 
         _nightModeActive = False
         
@@ -411,20 +412,20 @@ class Heating(object):
         return _nightModeActive
       
     def isNightMode(self,isHeatingActive):
-        if DateTimeHelper.getHour(self.now) > 19:
+        if self.now.getHour() > 19:
             offset = self.LAZY_OFFSET
             if not isHeatingActive: 
                 offset = offset + self.MIN_HEATING_TIME
             return self.isNightModeTime( offset )
         
-        if DateTimeHelper.getHour(self.now) < 10:
+        if self.now.getHour() < 10:
             return self.isNightModeTime()
           
         return False
       
     def possibleColdFloorHeating(self,nightModeActive,lastHeatingChange):      
         day = self.now.getDayOfWeek()
-        hour = DateTimeHelper.getHour(self.now)
+        hour = self.now.getHour()
         
         hadTodayHeating = lastHeatingChange.getDayOfWeek() == day
 
@@ -434,7 +435,7 @@ class Heating(object):
         holidaysInactive = self.getCachedItemState(Heating.holidayStatusItem) == OnOffType.OFF
         eveningStartHour = 17 if holidaysInactive and day <= 5 else 16
         isEvening = ( hour == eveningStartHour )
-        hadEveningHeating = hadTodayHeating and DateTimeHelper.getHour(lastHeatingChange) >= eveningStartHour
+        hadEveningHeating = hadTodayHeating and lastHeatingChange.getHour() >= eveningStartHour
         
         #self.log.info(u"{} {} {} {}".format(isMorning,hadMorningHeating,isEvening,hadEveningHeating))
         
@@ -442,9 +443,9 @@ class Heating(object):
       
     def getColdFloorHeatingTime(self, lastUpdate ):
         # when was the last heating job
-        lastUpdateBeforeInMinutes = ( DateTimeHelper.getMillis(self.now) - DateTimeHelper.getMillis(lastUpdate) ) / 1000.0 / 60.0
+        lastUpdateBeforeInMinutes = ( self.now.toInstant().toEpochMilli() - lastUpdate.toInstant().toEpochMilli() ) / 1000.0 / 60.0
        
-        maxMinutes = 90.0 if DateTimeHelper.getHour(self.now) < 12 else 45.0
+        maxMinutes = 90.0 if self.now.getHour() < 12 else 45.0
         
         # 0 => 0
         # 10 => 1
@@ -631,19 +632,19 @@ class Heating(object):
                     # *** register open window if it is open long enough
                     if transition.getContactItem() not in Heating._openWindowContacts:
                         openSince = getItemLastChange(transition.getContactItem())
-                        openDuration = DateTimeHelper.getMillis(self.now) - DateTimeHelper.getMillis(openSince)
+                        openDuration = self.now.toInstant().toEpochMilli() - openSince.toInstant().toEpochMilli()
                         if openDuration > Heating.OPEN_WINDOW_START_DURATION * 60 * 1000:
                             Heating._openWindowContacts[transition.getContactItem()] = openSince
                         else:
                             continue
                     else:
-                        openDuration = DateTimeHelper.getMillis(self.now) - DateTimeHelper.getMillis(Heating._openWindowContacts[transition.getContactItem()])
+                        openDuration = self.now.toInstant().toEpochMilli() - Heating._openWindowContacts[transition.getContactItem()].toInstant().toEpochMilli()
                 # *** if the window was open
                 elif transition.getContactItem() in Heating._openWindowContacts:
                     # *** check if it is closed long enough to unregister it
                     closedSince = getItemLastChange(transition.getContactItem())
-                    closedDuration = DateTimeHelper.getMillis(self.now) - DateTimeHelper.getMillis(closedSince)
-                    openDuration = DateTimeHelper.getMillis(closedSince) - DateTimeHelper.getMillis(Heating._openWindowContacts[transition.getContactItem()])
+                    closedDuration = self.now.toInstant().toEpochMilli() - closedSince.toInstant().toEpochMilli()
+                    openDuration = closedSince.toInstant().toEpochMilli() - Heating._openWindowContacts[transition.getContactItem()].toInstant().toEpochMilli()
                     endingTreshold = openDuration * 2.0
                     # 1 hour
                     if endingTreshold > 60 * 60 * 1000:
@@ -775,7 +776,7 @@ class Heating(object):
 
         # detech last runtime and change calculated values to that timespan
         # all calculations are normally per minute
-        timespan = 30.0 if Heating.lastRuntime is None else ( DateTimeHelper.getMillis(self.now) - DateTimeHelper.getMillis(Heating.lastRuntime) ) / 1000.0
+        timespan = 30.0 if Heating.lastRuntime is None else ( self.now.toInstant().toEpochMilli() - Heating.lastRuntime.toInstant().toEpochMilli() ) / 1000.0
         devider = 60.0 / timespan
         #self.log.info(u"{} {}".format(room.getName(),devider))
 
@@ -974,7 +975,7 @@ class Heating(object):
                     neededTime = self.calculateHeatingDemandTime(neededEnergy,rs.getActivePossibleSaldo()) if neededEnergy > 0 else -1
                 else:
                     neededEnergy = None
-                    currentTime = ( DateTimeHelper.getMillis(self.now) - DateTimeHelper.getMillis(lastHeatingChange) ) / 1000.0 / 60.0 / 60.0 # convert milliseconds to hours
+                    currentTime = ( self.now.toInstant().toEpochMilli() - lastHeatingChange.toInstant().toEpochMilli() ) / 1000.0 / 60.0 / 60.0 # convert milliseconds to hours
                     neededTime = ( fh['time'] - currentTime )
 
                 if neededTime < 0:
@@ -1006,7 +1007,7 @@ class Heating(object):
                     fh_info_type_r = {'not needed':[], 'wrong time': [], 'other': []}
                     
                     # *** CHECK FOR PRE HEATING IN THE MORNING ***
-                    if nightModeActive and DateTimeHelper.getHour(self.now) < 12:
+                    if nightModeActive and self.now.getHour() < 12:
                         day_rhs = self.getHeatingDemand(room,rs,outdoorReduction,0,False)
                         if day_rhs.getHeatingDemandTime() > 0:
                             if not self.isNightModeTime( int(round(self.limitHeatingDemandTime( room.getName(), day_rhs.getHeatingDemandTime() ) * 60, 0)) ):
@@ -1020,7 +1021,7 @@ class Heating(object):
                         fh_info_type_r["wrong time"].append('PRE')
                     
                     # *** CHECK FOR COLD FLOOR HEATING ***
-                    if DateTimeHelper.getMillis(self.now.minusMinutes(180)) < DateTimeHelper.getMillis(lastHeatingChange):
+                    if self.now.minusMinutes(180).toInstant().toEpochMilli() < lastHeatingChange.toInstant().toEpochMilli():
                         fh_info_type_r["not needed"].append('CF')
                     elif self.possibleColdFloorHeating(nightModeActive,lastHeatingChange):
                         neededTime = self.getColdFloorHeatingTime(lastHeatingChange)

@@ -1,5 +1,6 @@
-from shared.helper import rule, DateTimeHelper, itemLastUpdateOlderThen, sendNotificationToAllAdmins, getItemState, postUpdateIfChanged
+from shared.helper import rule, itemLastUpdateOlderThen, sendNotificationToAllAdmins, getItemState, postUpdateIfChanged
 from core.triggers import CronTrigger, ItemStateChangeTrigger
+from java.time import ZonedDateTime
 
 @rule("values_error_messages.py")
 class ValuesErrorMessagesRule:
@@ -24,7 +25,7 @@ class ValuesErrorMessagesRule:
         if getItemState("pGF_Utilityroom_Heating_Common_Fault").intValue() > 0:
             active.append(u"Heizung Fehler")
 
-        if itemLastUpdateOlderThen("pGF_Utilityroom_Heating_Common_Fault", DateTimeHelper.getNow().minusMinutes(10)):
+        if itemLastUpdateOlderThen("pGF_Utilityroom_Heating_Common_Fault", ZonedDateTime.now().minusMinutes(10)):
             active.append(u"Heizung ⟳")
             
         if getItemState("pGF_Garage_Solar_Inverter_Is_Working") == OFF:
@@ -36,7 +37,7 @@ class ValuesErrorMessagesRule:
         if getItemState("State_Server").intValue() > 1:
             active.append(u"Server")
 
-        refDate = DateTimeHelper.getNow().minusMinutes(1440)  # last 24 hours
+        refDate = ZonedDateTime.now().minusMinutes(1440)  # last 24 hours
 
         if itemLastUpdateOlderThen("pGF_Livingroom_Air_Sensor_Temperature_Value", refDate) \
                 or itemLastUpdateOlderThen("pGF_Boxroom_Air_Sensor_Temperature_Value", refDate) \

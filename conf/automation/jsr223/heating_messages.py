@@ -1,5 +1,6 @@
-from shared.helper import rule, DateTimeHelper, getItemState, getHistoricItemState, postUpdate, postUpdateIfChanged, startTimer
+from shared.helper import rule, getItemState, getHistoricItemState, postUpdate, postUpdateIfChanged, startTimer
 from core.triggers import CronTrigger, ItemStateChangeTrigger
+from java.time import ZonedDateTime
 
 DELAYED_UPDATE_TIMEOUT = 3
 
@@ -88,7 +89,8 @@ class BurnerStartsRule:
         ]
 
     def execute(self, module, input):
-        start = getHistoricItemState("pGF_Utilityroom_Heating_Burner_Starts", DateTimeHelper.createAtStartOfDay(DateTimeHelper.getNow())).intValue()
+        refDay = ZonedDateTime.now()
+        start = getHistoricItemState("pGF_Utilityroom_Heating_Burner_Starts", refDay.toLocalDate().atStartOfDay(refDay.getZone())).intValue()
         aktuell = getItemState("pGF_Utilityroom_Heating_Burner_Starts").intValue()
         if start > 0 and aktuell > 0:
             differenz = aktuell - start
@@ -106,7 +108,8 @@ class BurnerHoursRule:
         ]
 
     def execute(self, module, input):
-        start = getHistoricItemState("pGF_Utilityroom_Heating_Burner_Hours", DateTimeHelper.createAtStartOfDay(DateTimeHelper.getNow())).intValue()
+        refDay = ZonedDateTime.now()
+        start = getHistoricItemState("pGF_Utilityroom_Heating_Burner_Hours", refDay.toLocalDate().atStartOfDay(refDay.getZone())).intValue()
         aktuell = getItemState("pGF_Utilityroom_Heating_Burner_Hours").intValue()
         if start > 0 and aktuell > 0:
             differenz = aktuell - start
@@ -173,7 +176,8 @@ class SolarHoursRule:
         ]
 
     def execute(self, module, input):
-        start = getHistoricItemState("pGF_Utilityroom_Heating_Solar_Hours", DateTimeHelper.createAtStartOfDay(DateTimeHelper.getNow())).intValue()
+        refDay = ZonedDateTime.now()
+        start = getHistoricItemState("pGF_Utilityroom_Heating_Solar_Hours", refDay.toLocalDate().atStartOfDay(refDay.getZone())).intValue()
         aktuell = getItemState("pGF_Utilityroom_Heating_Solar_Hours").intValue()
         if start > 0 and aktuell > 0:
             differenz = aktuell - start
@@ -190,7 +194,8 @@ class SolarPowerRule:
         ]
 
     def execute(self, module, input):
-        start = getHistoricItemState("pGF_Utilityroom_Heating_Solar_Power", DateTimeHelper.createAtStartOfDay(DateTimeHelper.getNow())).intValue()
+        refDay = ZonedDateTime.now()
+        start = getHistoricItemState("pGF_Utilityroom_Heating_Solar_Power", refDay.toLocalDate().atStartOfDay(refDay.getZone())).intValue()
         aktuell = getItemState("pGF_Utilityroom_Heating_Solar_Power").intValue()
         if start > 0 and aktuell > 0:
             differenz = aktuell - start

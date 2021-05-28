@@ -1,5 +1,6 @@
-from shared.helper import rule, getItemState, sendCommand, postUpdate, postUpdateIfChanged, DateTimeHelper, createTimer
+from shared.helper import rule, getItemState, sendCommand, postUpdate, postUpdateIfChanged, createTimer
 from core.triggers import ItemCommandTrigger, ItemStateChangeTrigger
+from java.time import ZonedDateTime
 
 ruleTimeouts = {}
 
@@ -10,7 +11,7 @@ class HueColorMainRule:
 
     def execute(self, module, input):
         global ruleTimeouts
-        ruleTimeouts["Livingroom_Hue_Color_Backward"] = DateTimeHelper.getMillis(DateTimeHelper.getNow())
+        ruleTimeouts["Livingroom_Hue_Color_Backward"] = ZonedDateTime.now().toInstant().toEpochMilli()
 
         command = input['event'].getItemCommand()
         
@@ -44,7 +45,7 @@ class HueColorIndividualRule:
 
     def execute(self, module, input):
         global ruleTimeouts
-        now = DateTimeHelper.getMillis(DateTimeHelper.getNow())
+        now = ZonedDateTime.now().toInstant().toEpochMilli()
         last = ruleTimeouts.get("Livingroom_Hue_Color_Backward",0)
         
         if now - last > 1000:
@@ -79,7 +80,7 @@ class HueColorProgramRule:
     
     def _setCurrentColors(self,data):
         global ruleTimeouts
-        ruleTimeouts["Livingroom_Hue_Color_Backward"] = DateTimeHelper.getMillis(DateTimeHelper.getNow())
+        ruleTimeouts["Livingroom_Hue_Color_Backward"] = ZonedDateTime.now().toInstant().toEpochMilli()
         
         sendCommand("pGF_Livingroom_Light_Hue1_Color",u"{},{},{}".format(data[0][0],data[0][1],data[0][2]))
         sendCommand("pGF_Livingroom_Light_Hue2_Color",u"{},{},{}".format(data[1][0],data[1][1],data[1][2]))
@@ -149,7 +150,7 @@ class HueColorProgramRule:
         color5 = getItemState("pGF_Livingroom_Light_Hue5_Color")
             
         global ruleTimeouts
-        ruleTimeouts["Livingroom_Hue_Color_Backward"] = DateTimeHelper.getMillis(DateTimeHelper.getNow())
+        ruleTimeouts["Livingroom_Hue_Color_Backward"] = ZonedDateTime.now().toInstant().toEpochMilli()
     
         sendCommand("pGF_Livingroom_Light_Hue1_Color",color2)
         sendCommand("pGF_Livingroom_Light_Hue2_Color",color3)

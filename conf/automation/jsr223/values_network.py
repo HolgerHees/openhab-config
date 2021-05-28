@@ -1,9 +1,9 @@
-from shared.helper import rule, DateTimeHelper, postUpdateIfChanged
+from shared.helper import rule, postUpdateIfChanged
 from core.triggers import ItemStateChangeTrigger, CronTrigger
 from core.actions import Transformation, Exec
 
 from threading import Thread 
-from java.time import Duration
+from java.time import ZonedDateTime, Duration
 
 #wget "http://influxdb:8086/query?u=openhab&p=default123&chunked=true&db=openhab_db&epoch=ns&q=DROP+SERIES+FROM+%22pGF_Corridor_Fritzbox_WanUpstreamCurrRate%22"
 #wget "http://influxdb:8086/query?u=openhab&p=default123&chunked=true&db=openhab_db&epoch=ns&q=DROP+SERIES+FROM+%22pGF_Corridor_Fritzbox_WanDownstreamCurrRate%22"
@@ -26,8 +26,8 @@ class ValuesNetworkSpeedRule:
         try:
             self.log.info(u"speedtest started")
       
-            now = DateTimeHelper.getNow()
-            postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - aktiv".format(DateTimeHelper.getHour(now),DateTimeHelper.getMinute(now)))
+            now = ZonedDateTime.now()
+            postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - aktiv".format(now.getHour(),now.getMinute()))
 
             #result = Exec.executeCommandLine("/usr/bin/speedtest -f json --accept-gdpr --accept-license --server-id 40048",100000)
             result = Exec.executeCommandLine(Duration.ofSeconds(100),"/usr/bin/speedtest","-f", "json", "--accept-gdpr", "--accept-license")
@@ -54,7 +54,7 @@ class ValuesNetworkSpeedRule:
                 postUpdateIfChanged("pGF_Corridor_Speedtest_UpstreamRate",resultUp)
                 postUpdateIfChanged("pGF_Corridor_Speedtest_DownstreamRate",resultDown)
                 postUpdateIfChanged("pGF_Corridor_Speedtest_Ping",resultPing)
-                postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - {} ({}, {})".format(DateTimeHelper.getHour(now),DateTimeHelper.getMinute(now),serverName,serverLocation,serverCountry))
+                postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - {} ({}, {})".format(now.getHour(),now.getMinute(),serverName,serverLocation,serverCountry))
                 
                 #125000
                 #"download":{
@@ -78,7 +78,7 @@ class ValuesNetworkSpeedRule:
                 #postUpdateIfChanged("pGF_Corridor_Speedtest_DownstreamRate",0)
                 #postUpdateIfChanged("pGF_Corridor_Speedtest_Ping",0)
                 
-                postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - ERR".format(DateTimeHelper.getHour(now),DateTimeHelper.getMinute(now)))
+                postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - ERR".format(now.getHour(),now.getMinute()))
 
                 self.log.error(u"speedtest data error: {}".format(result))
         except Exception, e:
@@ -107,7 +107,7 @@ class ValuesNetworkOutgoingTrafficRule:
     def execute(self, module, input):
         #self.log.info(u"{}".format(input))
 
-        now = DateTimeHelper.getMillis(DateTimeHelper.getNow())
+        now = ZonedDateTime.now().toInstant().toEpochMilli()
 
         if self.lastUpdate != -1:
             currentValue = input['event'].getItemState().longValue()
@@ -149,7 +149,7 @@ class ValuesNetworkIncommingTrafficRule:
     def execute(self, module, input):
         #self.log.info(u"{}".format(input))
 
-        now = DateTimeHelper.getMillis(DateTimeHelper.getNow())
+        now = ZonedDateTime.now().toInstant().toEpochMilli()
 
         if self.lastUpdate != -1:
             currentValue = input['event'].getItemState().longValue()

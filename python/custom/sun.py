@@ -1,16 +1,7 @@
 # -*- coding: utf-8 -*-
-from shared.helper import DateTimeHelper
-
 import time
 import math
-try:
-    from org.joda.time import DateTimeZone
-    class ZoneOffset(object):
-        @staticmethod
-        def ofHours(offset):
-            return DateTimeZone.forOffsetHours(1)
-except:
-    from java.time import ZoneOffset
+from java.time import ZoneOffset
     
 class SunRadiation(object): 
     @staticmethod
@@ -23,10 +14,10 @@ class SunRadiation(object):
         longitude = 13.621287
 
         # allways +1 Berlin winter time
-        local = DateTimeHelper.createWithZone(time,ZoneOffset.ofHours(1))
+        local = time.withZoneSameInstant(ZoneOffset.ofHours(1))
 
         day = local.getDayOfYear()
-        hour = DateTimeHelper.getHour(local) + (DateTimeHelper.getMinute(local)/60.0)
+        hour = local.getHour() + (local.getMinute()/60.0)
 
         # Source: http://www.jgiesen.de/SME/tk/index.htm
         deklination = -23.45 * math.cos( K * 360 * (day + 10) / 365 )
