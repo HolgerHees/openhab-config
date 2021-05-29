@@ -3,10 +3,7 @@ from core.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdateTr
 from java.time import ZonedDateTime, Instant, ZoneId
 from java.time.format import DateTimeFormatter
 
-try:
-    from org.eclipse.smarthome.core.types.RefreshType import REFRESH
-except:
-    from org.openhab.core.types.RefreshType import REFRESH
+from org.openhab.core.types.RefreshType import REFRESH
   
 totalSupply = 3600 # total possible photovoltaic power in watt
 maxTimeSlot = 300000 # value timeslot to messure average power consumption => 5 min

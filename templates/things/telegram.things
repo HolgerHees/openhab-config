@@ -1,0 +1,3 @@
+{% for bot_name in vault_telegram_bots %}
+Thing telegram:telegramBot:{{bot_name}} [ chatIds="{{vault_telegram_bots[bot_name].chat_id}}", botToken="{{vault_telegram_bots[bot_name].chat_token}}", parseMode ="Markdown" ]
+{% endfor %}
