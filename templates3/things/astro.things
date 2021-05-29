@@ -1,2 +1,0 @@
-astro:moon:local "Astro Monddaten" @ "Services" [ geolocation="{{location}}", interval=300 ]
-astro:sun:local "Astro Sonnendaten" @ "Services" [ geolocation="{{location}}", interval=300 ]

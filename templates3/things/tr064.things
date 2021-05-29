@@ -1,6 +1,0 @@
-Bridge tr064:fritzbox:fritzbox "FritzBox" [ host="{{server_gateway}}", user="{{vault_fritzbox_username}}", password="{{vault_fritzbox_password}}" ] 
-{
-    Thing subdevice wan "Fritzbox Wan" [ uuid="uuid:{{vault_fritzbox_wan_uuid}}" ]    
-    Thing subdeviceLan lan "Fritzbox Lan" [ uuid="uuid:{{vault_fritzbox_lan_uuid}}" ]   
-}
-

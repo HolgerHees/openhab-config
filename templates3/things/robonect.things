@@ -1,1 +1,0 @@
-robonect:mower:automower "Rasenmäher" @ "Geräte" [ host="{{automower_ip}}", pollInterval="15", offlineTimeout="300", user="{{vault_automower_device_username}}", password = "{{vault_automower_device_password}}"]

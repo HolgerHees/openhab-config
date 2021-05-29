@@ -1,1 +1,0 @@
-Thing comfoair:comfoair:default "ComfoAir" @ "Geräte" [serialPort="/dev/ttyOpenHabLueftung", refreshInterval="60"] 
