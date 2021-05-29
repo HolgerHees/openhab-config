@@ -1,0 +1,11 @@
+// **** FRITZBOX ****
+Group   eGF_Corridor_Garbage_Appointments           "Entsorgungstermine"  <selfinfo> (lGF_Corridor)
+
+DateTime pGF_Corridor_Garbage_Appointments_Begin_0  "Termin 0 [%s]"       <selfinfo> (eGF_Corridor_Garbage_Appointments) ["Point"] {channel="icalendar:eventfilter:muellabfuhr:entsorgungstermine:result_0#begin"}
+String  pGF_Corridor_Garbage_Appointments_Info_0    "Termin 0 [%s]"       <selfinfo> (eGF_Corridor_Garbage_Appointments) ["Point"] {channel="icalendar:eventfilter:muellabfuhr:entsorgungstermine:result_0#title"}
+
+DateTime pGF_Corridor_Garbage_Appointments_Begin_1  "Termin 1 [%s]"       <selfinfo> (eGF_Corridor_Garbage_Appointments) ["Point"] {channel="icalendar:eventfilter:muellabfuhr:entsorgungstermine:result_1#begin"}
+String  pGF_Corridor_Garbage_Appointments_Info_1    "Termin 1 [%s]"       <selfinfo> (eGF_Corridor_Garbage_Appointments) ["Point"] {channel="icalendar:eventfilter:muellabfuhr:entsorgungstermine:result_1#title"}
+
+DateTime pGF_Corridor_Garbage_Appointments_Begin_2  "Termin 2 [%s]"       <selfinfo> (eGF_Corridor_Garbage_Appointments) ["Point"] {channel="icalendar:eventfilter:muellabfuhr:entsorgungstermine:result_2#begin"}
+String  pGF_Corridor_Garbage_Appointments_Info_2    "Termin 2 [%s]"       <selfinfo> (eGF_Corridor_Garbage_Appointments) ["Point"] {channel="icalendar:eventfilter:muellabfuhr:entsorgungstermine:result_2#title"}
