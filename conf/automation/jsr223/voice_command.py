@@ -1,4 +1,4 @@
-from core.triggers import ItemStateUpdateTrigger
+from core.triggers import ItemStateUpdateTrigger, CronTrigger
 
 from shared.helper import rule, postUpdate
 
@@ -10,46 +10,23 @@ from custom.semantic_test import Cases
 
 import traceback
 
-@rule("voice_command.py")
-class VoiceCommandRule:
-    def __init__(self):
-        self.triggers = [ ItemStateUpdateTrigger("VoiceCommand") ]
-        self.processor = CommandProcessor(self.log,ir)
-
-    def execute(self, module, input):
-        postUpdate("VoiceMessage","")
-
-        voice_command, client_id = self.processor.parseData(input['event'].getItemState().toString())
-        fallback_location_name = AlexaDevices[client_id] if client_id in AlexaDevices else None
-
-        self.log.info(u"Process: '{}', Location: '{}'".format(voice_command, fallback_location_name))
-
-        actions = self.processor.process(voice_command, fallback_location_name)
-
-        msg, is_valid = self.processor.applyActions(actions,voice_command,False)
-
-        postUpdate("VoiceMessage",msg)
-                                                        
-#postUpdate("VoiceCommand","Flur farbe grün")
-                  
-@rule("voice_command.py")
-class TestRule:
-    def __init__(self):
-        voice_command_rule = CommandProcessor(self.log,ir)
+class Tests:
+    @staticmethod
+    def process(processor,log,ir):
         for case in Cases['enabled']:
             if "client_id" in case:
-                voice_command, client_id = voice_command_rule.parseData(u"{}|{}".format(case['phrase'],case['client_id']))
+                voice_command, client_id = processor.parseData(u"{}|{}".format(case['phrase'],case['client_id']))
             else:
-                voice_command, client_id = voice_command_rule.parseData(case['phrase'])
+                voice_command, client_id = processor.parseData(case['phrase'])
 
             fallback_location_name = AlexaDevices[client_id] if client_id in AlexaDevices else None
 
             try:
-                actions = voice_command_rule.process(voice_command, fallback_location_name)
+                actions = processor.process(voice_command, fallback_location_name)
 
-                msg, is_valid = voice_command_rule.applyActions(actions,voice_command,True)
+                msg, is_valid = processor.applyActions(actions,voice_command,True)
             except:
-                self.log.info(traceback.format_exc())
+                log.info(traceback.format_exc())
                 raise Exception()
 
             item_actions_skipped = []
@@ -76,15 +53,15 @@ class TestRule:
       
             if excpected_result \
                 and len(item_actions_skipped) == 0 and len(item_actions_applied) == len(case["items"]):
-                self.log.info(u"OK  - Input: '{}' - MSG: '{}'".format(voice_command,msg))
+                log.info(u"OK  - Input: '{}' - MSG: '{}'".format(voice_command,msg))
             else:
-                self.log.info(u"ERR - Input: '{}' - MSG: '{}'".format(voice_command,msg))
+                log.info(u"ERR - Input: '{}' - MSG: '{}'".format(voice_command,msg))
                 for case_action in case_actions_excpected:
-                    self.log.info(u"       MISSING     => {} => {}".format(case_action[0],case_action[1]))
+                    log.info(u"       MISSING     => {} => {}".format(case_action[0],case_action[1]))
                 for item_action in item_actions_skipped:
-                    self.log.info(u"       UNEXCPECTED => {} => {}".format(item_action.item.getName(),item_action.cmd_value))
+                    log.info(u"       UNEXCPECTED => {} => {}".format(item_action.item.getName(),item_action.cmd_value))
                 for item_action in item_actions_applied:
-                    self.log.info(u"       MATCH       => {} => {}".format(item_action.item.getName(),item_action.cmd_value))
+                    log.info(u"       MATCH       => {} => {}".format(item_action.item.getName(),item_action.cmd_value))
  
                 items = []
                 for item_action in item_actions_skipped:
@@ -93,9 +70,39 @@ class TestRule:
                     items.append(u"[\"{}\",\"{}\"]".format(item_action.item.getName(),item_action.cmd_value))
                 msg = u"[{}]".format(",".join(items))
  
-                self.log.info(u"\n\n{}\n\n".format(msg))
+                log.info(u"\n\n{}\n\n".format(msg))
                 raise Exception("Wrong detection")
-     
-    def execute(self, module, input):
-        pass                                                                   
+
+@rule("voice_command.py")
+class VoiceCommandRule:
+    def __init__(self):
+        self.triggers = [ 
+            ItemStateUpdateTrigger("VoiceCommand"),
+            CronTrigger("0 0 0 * * ?")
+            #ItemEventTrigger(["ItemAddedEvent","ItemRemovedEvent","ItemUpdatedEvent"])
+        ]
+        self.processor = CommandProcessor(self.log,ir)
+        Tests.process(self.processor,self.log,ir)
+
+    def execute(self, module, input):       
+        if 'event' not in input:
+            self.processor = CommandProcessor(self.log,ir)
+            Tests.process(self.processor,self.log,ir)
+            #self.log.info(u"{}".format(input))
+        else:
+            postUpdate("VoiceMessage","")
+
+            voice_command, client_id = self.processor.parseData(input['event'].getItemState().toString())
+            fallback_location_name = AlexaDevices[client_id] if client_id in AlexaDevices else None
+
+            self.log.info(u"Process: '{}', Location: '{}'".format(voice_command, fallback_location_name))
+
+            actions = self.processor.process(voice_command, fallback_location_name)
+
+            msg, is_valid = self.processor.applyActions(actions,voice_command,False)
+
+            postUpdate("VoiceMessage",msg)
+                                                         
+#postUpdate("VoiceCommand","Flur farbe grün")
+
  
