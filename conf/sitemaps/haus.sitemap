@@ -863,11 +863,15 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Corridor_Fritzbox_Uptime
                         Switch item=pGF_Corridor_Fritzbox_GuestWifi
                     }
-                    Frame item=pGF_Corridor_Speedtest_Status label="WAN Verbindung [%s]" {
+                    Frame label="WAN Verbindung" {
                         Text item=pGF_Corridor_Fritzbox_WanAccessType
                         Text item=pGF_Corridor_Fritzbox_WanPhysicalLinkStatus
                         Text item=pGF_Corridor_Fritzbox_WanUpstreamCurrRate
                         Text item=pGF_Corridor_Fritzbox_WanDownstreamCurrRate
+                    }
+                    Frame label="WAN Speedtest" {
+                        Text item=pGF_Corridor_Speedtest_Time
+                        Text item=pGF_Corridor_Speedtest_Location
                         Text item=pGF_Corridor_Speedtest_UpstreamRate
                         Text item=pGF_Corridor_Speedtest_DownstreamRate
                         Text item=pGF_Corridor_Speedtest_Ping

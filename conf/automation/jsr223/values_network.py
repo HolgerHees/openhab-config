@@ -27,7 +27,8 @@ class ValuesNetworkSpeedRule:
             self.log.info(u"speedtest started")
       
             now = ZonedDateTime.now()
-            postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - aktiv".format(now.getHour(),now.getMinute()))
+            postUpdateIfChanged("pGF_Corridor_Speedtest_Time","{:02d}:{:02d}".format(now.getHour(),now.getMinute()))
+            postUpdateIfChanged("pGF_Corridor_Speedtest_Location","Aktiv")
 
             #result = Exec.executeCommandLine("/usr/bin/speedtest -f json --accept-gdpr --accept-license --server-id 40048",100000)
             result = Exec.executeCommandLine(Duration.ofSeconds(100),"/usr/bin/speedtest","-f", "json", "--accept-gdpr", "--accept-license")
@@ -54,7 +55,8 @@ class ValuesNetworkSpeedRule:
                 postUpdateIfChanged("pGF_Corridor_Speedtest_UpstreamRate",resultUp)
                 postUpdateIfChanged("pGF_Corridor_Speedtest_DownstreamRate",resultDown)
                 postUpdateIfChanged("pGF_Corridor_Speedtest_Ping",resultPing)
-                postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - {} ({}, {})".format(now.getHour(),now.getMinute(),serverName,serverLocation,serverCountry))
+                postUpdateIfChanged("pGF_Corridor_Speedtest_Time","{:02d}:{:02d}".format(now.getHour(),now.getMinute()))
+                postUpdateIfChanged("pGF_Corridor_Speedtest_Location","{} ({})".format(serverName,serverLocation))
                 
                 #125000
                 #"download":{
@@ -78,7 +80,8 @@ class ValuesNetworkSpeedRule:
                 #postUpdateIfChanged("pGF_Corridor_Speedtest_DownstreamRate",0)
                 #postUpdateIfChanged("pGF_Corridor_Speedtest_Ping",0)
                 
-                postUpdateIfChanged("pGF_Corridor_Speedtest_Status","{:02d}:{:02d} - ERR".format(now.getHour(),now.getMinute()))
+                postUpdateIfChanged("pGF_Corridor_Speedtest_Time","{:02d}:{:02d}".format(now.getHour(),now.getMinute()))
+                postUpdateIfChanged("pGF_Corridor_Speedtest_Location","Fehler")
 
                 self.log.error(u"speedtest data error: {}".format(result))
         except Exception, e:

@@ -12,9 +12,10 @@ Number pGF_Corridor_Fritzbox_WanTotalBytesReceived  "WAN Gesamt empfangen [%s]" 
 Number pGF_Corridor_Fritzbox_WanUpstreamCurrRate    "Upstream Aktuell [JS(network_bit_to_mbit.js):%s]" <flowpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"]
 Number pGF_Corridor_Fritzbox_WanDownstreamCurrRate  "Downstream Aktuell [JS(network_bit_to_mbit.js):%s]" <returnpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"]
 
-Number  pGF_Corridor_Speedtest_UpstreamRate         "Upstream Speedtest [%d MBit]"                        <flowpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"]
-Number  pGF_Corridor_Speedtest_DownstreamRate       "Downstream Speedtest [%d MBit]"                      <returnpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"] 
-Number  pGF_Corridor_Speedtest_Ping                 "Ping Speedtest [%d ms]"                              <time> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"]
-String  pGF_Corridor_Speedtest_Status               "Status Speedtest [%s]"                               <selfinfo> (eGF_Corridor_Fritzbox) ["Point"]
+Number  pGF_Corridor_Speedtest_UpstreamRate         "Upstream [%.0f MBit]"                        <flowpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"]
+Number  pGF_Corridor_Speedtest_DownstreamRate       "Downstream [%.0f MBit]"                      <returnpipe> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"] 
+Number  pGF_Corridor_Speedtest_Ping                 "Ping [%.1f ms]"                              <time> (eGF_Corridor_Fritzbox,gPersistance_Chart,gPersistance_History) ["Point"]
+String  pGF_Corridor_Speedtest_Time                 "Zeit [%s]"                                   <selfinfo> (eGF_Corridor_Fritzbox) ["Point"]
+String  pGF_Corridor_Speedtest_Location             "Location [%s]"                               <selfinfo> (eGF_Corridor_Fritzbox) ["Point"]
 
 Switch  pGF_Corridor_Speedtest_Rerun                "Messung starten"                                     <selfautomode> (eGF_Corridor_Fritzbox) ["Point"]

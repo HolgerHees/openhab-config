@@ -1,5 +1,5 @@
 // **** ASTRO ****
-Group    eOutdoor_Astro                   "Astronomische Daten"               <selfinfo>     (lOutdoor) ["Equipment"]
+Group    eOutdoor_Astro                   "Astronomische Daten"               <selfinfo>     (lOther) ["Equipment"]
 
 DateTime pOutdoor_Astro_Dawn_Time         "Morgendämmerung [%1$tH:%1$tM]"     <selfsun>      (eOutdoor_Astro) ["Point"] { channel="astro:sun:local:civilDawn#start"}
 DateTime pOutdoor_Astro_Dusk_Time         "Abenddämmerung [%1$tH:%1$tM]"      <selfsun>      (eOutdoor_Astro) ["Point"] { channel="astro:sun:local:civilDusk#end"}

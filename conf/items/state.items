@@ -1,5 +1,5 @@
 // **** PRESENCE ****
-Group  eOther_Presence                          "Präsenz"         <selfinfo> (lOther) ["Sensor"]
+Group  eOther_Presence                          "Präsenz"         <selfinfo> (lIndoor) ["Sensor"]
 Number pOther_Presence_State                    "Präsenz"         <selfinfo> (eOther_Presence,gPersistance_History) ["Status"]
 Switch pOther_Presence_Holger_State             "Holger anwesend" <selfinfo> (eOther_Presence,gPersistance_History) ["Status","Presence"] { channel="mqtt:topic:mosquitto:device_ping:phone_hhees" }                                                       
 Switch pOther_Presence_Sandra_State             "Sandra anwesend" <selfinfo> (eOther_Presence,gPersistance_History) ["Status","Presence"] { channel="mqtt:topic:mosquitto:device_ping:phone_sandra" }
@@ -16,7 +16,7 @@ Group   eGF_Livingroom_Receiver                 "Receiver"        <selfinfo> (lG
 Contact pGF_Livingroom_Receiver_State                             <selfinfo> (eGF_Livingroom_Receiver) ["Point"] { channel="knx:device:bridge:other:receiverState" }
 
 //####### SMOKE DETECTOR ########
-Group   eOther_Smoke_Detector                   "Rauchmelder"     <selfinfo> (lOther) ["SmokeDetector"]
+Group   eOther_Smoke_Detector                   "Rauchmelder"     <selfinfo> (lIndoor) ["SmokeDetector"]
 Contact pOther_Smoke_Detector_State             "Rauchmelder [MAP(smoke_detector_de.map):%s]" <smoke> (eOther_Smoke_Detector) ["Smoke"] { channel="knx:device:bridge:other:smokeDetector" }
 
 //####### HELPER SWITCH STATES ######

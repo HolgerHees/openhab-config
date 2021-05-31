@@ -1,5 +1,5 @@
 // **** FRITZBOX ****
-Group   eGF_Corridor_Garbage_Appointments           "Entsorgungstermine"  <selfinfo> (lGF_Corridor)
+Group   eGF_Corridor_Garbage_Appointments           "Entsorgungstermine"  <selfinfo> (lOther) ["Equipment"]
 
 DateTime pGF_Corridor_Garbage_Appointments_Begin_0  "Termin 0 [%s]"       <selfinfo> (eGF_Corridor_Garbage_Appointments) ["Point"] {channel="icalendar:eventfilter:muellabfuhr:entsorgungstermine:result_0#begin"}
 String  pGF_Corridor_Garbage_Appointments_Info_0    "Termin 0 [%s]"       <selfinfo> (eGF_Corridor_Garbage_Appointments) ["Point"] {channel="icalendar:eventfilter:muellabfuhr:entsorgungstermine:result_0#title"}
