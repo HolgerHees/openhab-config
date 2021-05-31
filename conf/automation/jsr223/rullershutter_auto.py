@@ -92,13 +92,33 @@ class LivingroomSunprotectionRule:
         self.triggers = [ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Livingroom")]
 
     def execute(self, module, input):
-        if getItemState("pOther_Manual_State_Auto_Sunprotection") == ON and getItemState("pOther_Presence_State").intValue() == 0:
-            if getItemState("pOther_Automatic_State_Sunprotection_Livingroom") == ON:
-                sendCommand("pGF_Kitchen_Shutter_Control", DOWN)
-                sendCommand("pGF_Livingroom_Shutter_Couch_Control", DOWN)
-                if getItemState("pGF_Livingroom_Openingcontact_Window_Terrace_State") == CLOSED:
-                    sendCommand("pGF_Livingroom_Shutter_Terrace_Control", DOWN)
-            else:
-                sendCommand("pGF_Kitchen_Shutter_Control", UP)
-                sendCommand("pGF_Livingroom_Shutter_Couch_Control", UP)
-                sendCommand("pGF_Livingroom_Shutter_Terrace_Control", UP)
+        if getItemState("pOther_Manual_State_Auto_Sunprotection") == ON:
+            if getItemState("pOther_Presence_State").intValue() == 0:
+                if getItemState("pOther_Automatic_State_Sunprotection_Livingroom") == ON:
+                    sendCommand("pGF_Kitchen_Shutter_Control", DOWN)
+                    sendCommand("pGF_Livingroom_Shutter_Couch_Control", DOWN)
+                    if getItemState("pGF_Livingroom_Openingcontact_Window_Terrace_State") == CLOSED:
+                        sendCommand("pGF_Livingroom_Shutter_Terrace_Control", DOWN)
+                else:
+                    sendCommand("pGF_Kitchen_Shutter_Control", UP)
+                    sendCommand("pGF_Livingroom_Shutter_Couch_Control", UP)
+                    sendCommand("pGF_Livingroom_Shutter_Terrace_Control", UP)
+            elif getItemState("pOther_Presence_State").intValue() == 1:
+                if getItemState("pOther_Automatic_State_Sunprotection_Livingroom") == ON:
+                    sendCommand("pOutdoor_Terrace_Shading_Left_Control", DOWN)
+                    sendCommand("pOutdoor_Terrace_Shading_Right_Control", DOWN)
+                else:
+                    pass
+
+@rule("rollershutter_auto.py")
+class TerraceSunprotectionRule:
+    def __init__(self):
+        self.triggers = [
+            ItemStateChangeTrigger("pOther_Automatic_State_Rollershutter",state="OFF")
+            #CronTrigger("0 */10 * * * ?")
+        ]
+
+    def execute(self, module, input):
+        #pOutdoor_WeatherStation_Wind_Speed
+        sendCommand("pOutdoor_Terrace_Shading_Left_Control", UP)
+        sendCommand("pOutdoor_Terrace_Shading_Right_Control", UP)

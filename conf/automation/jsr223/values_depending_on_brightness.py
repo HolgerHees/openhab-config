@@ -18,9 +18,6 @@ class ValuesDependingOnBrightnessRule:
         cloudCover = getItemState("pOutdoor_Weather_Current_Cloud_Cover").intValue()
         
         if getItemState("pOther_Automatic_State_Rollershutter") == ON:
-            
-          
-          
             _upTime = getItemState("pOutdoor_Astro_Sunrise_Time").getZonedDateTime().toInstant().toEpochMilli()
             _upTime = int(_upTime + ( cloudCover * 30.0 / 9.0 ) * 60 * 1000)
 
