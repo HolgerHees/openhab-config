@@ -1,5 +1,5 @@
 from core.triggers import CronTrigger, ItemStateChangeTrigger
-from shared.helper import rule, getHistoricItemEntry, getItemState, getItemLastChange, getItemLastUpdate, sendCommand, sendCommandIfChanged, postUpdate, postUpdateIfChanged, itemLastChangeOlderThen, itemLastUpdateOlderThen, getStableItemState
+from shared.helper import rule, getHistoricItemEntry, getItemState, getItemLastChange, getItemLastUpdate, sendCommand, sendCommandIfChanged, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen, itemLastChangeOlderThen, getStableItemState
 from custom.heating import Heating
 from custom.house import ThermalStorageType, ThermalBridgeType, Wall, Door, Window, Room
 from custom.sun import SunRadiation
@@ -10,7 +10,7 @@ from java.time import ZonedDateTime, Instant, ZoneId
 from java.time.format import DateTimeFormatter
  
 OFFSET_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")
- 
+         
 #postUpdate("pGF_Utilityroom_Heating_Demand",OFF)
 #postUpdate("pGF_Guesttoilet_Heating_Demand",OFF)
 #postUpdate("pGF_Livingroom_Heating_Demand",OFF)
@@ -601,6 +601,7 @@ class HeatingControlRule():
         cloudCover = cr.getCloudCover()
 
         azimut = getItemState("pOutdoor_Astro_Sun_Azimuth").doubleValue()
+        elevation = getItemState("pOutdoor_Astro_Sun_Elevation").doubleValue()
 
         # 225 => 15:32:30.781
         # 245 => 16:57:30.784
@@ -615,8 +616,8 @@ class HeatingControlRule():
         else:
             offset = now
             
-        _messuredRadiation = getStableItemState(offset,"pOutdoor_WeatherStation_Solar_Power",10)
-        _sunSouthRadiation, _sunWestRadiation, _sunDebugInfo = SunRadiation.getSunPowerPerHour(offset,cloudCover,_messuredRadiation)
+        messuredRadiationShortTerm = getStableItemState(offset,"pOutdoor_WeatherStation_Solar_Power",10)
+        _sunSouthRadiation, _sunWestRadiation, _sunDebugInfo = SunRadiation.getSunPowerPerHour(offset,cloudCover,messuredRadiationShortTerm)
         effectiveSouthRadiationShortTerm = _sunSouthRadiation / 60.0
         effectiveWestRadiationShortTerm = _sunWestRadiation / 60.0
         #self.log.info(u"Gemessen Avg 10 min until {}: {} {}".format(offset,effectiveSouthRadiationShortTerm, effectiveWestRadiationShortTerm))
@@ -624,8 +625,8 @@ class HeatingControlRule():
         #azimut = getItemState("pOutdoor_Astro_Sun_Azimuth").doubleValue()
         #longTermTimeWindow = 120 if azimut > 225 and azimut < 245 else 30 # in this direction a tree is hiding the sun
         #longTermTimeWindow = 120 if azimut > 228 and azimut < 242 else 30 # in this direction a tree is hiding the sun
-        _messuredRadiation = getStableItemState(offset,"pOutdoor_WeatherStation_Solar_Power",30)
-        _sunSouthRadiation, _sunWestRadiation, _sunDebugInfo = SunRadiation.getSunPowerPerHour(offset,cloudCover,_messuredRadiation)
+        messuredRadiationLongTerm = getStableItemState(offset,"pOutdoor_WeatherStation_Solar_Power",30)
+        _sunSouthRadiation, _sunWestRadiation, _sunDebugInfo = SunRadiation.getSunPowerPerHour(offset,cloudCover,messuredRadiationLongTerm)
         effectiveSouthRadiationLongTerm = _sunSouthRadiation / 60.0
         effectiveWestRadiationLongTerm = _sunWestRadiation / 60.0
         #self.log.info(u"Gemessen Avg 30 min until {}: {} {}".format(offset,effectiveSouthRadiationLongTerm, effectiveWestRadiationLongTerm))
@@ -638,6 +639,25 @@ class HeatingControlRule():
         currentOutdoorTemperature4 = cr4.getReferenceTemperature()
 
         fallbackTargetTemperature = hhs.getHeatingState("lGF_Livingroom").getHeatingTargetTemperature()
+        
+        #self.log.info(u"{} {}".format(messuredRadiationShortTerm,messuredRadiationLongTerm))
+        
+        # terrace radiation
+        effectiveRadiationShortTerm = messuredRadiationShortTerm / 60.0
+        effectiveRadiationLongTerm = messuredRadiationLongTerm / 60.0
+        
+        if azimut >= 150 and azimut <= 285 and elevation > SunRadiation.getMinElevation(azimut):
+            #self.log.info(u"Sun     : {:.1f} W/min ({:.1f} W/min)".format(effectiveRadiationShortTerm,effectiveRadiationLongTerm))
+            if effectiveRadiationLongTerm > 8.0:
+                if postUpdateIfChanged("pOther_Automatic_State_Sunprotection_Terrace", 2 ):
+                    self.log.info(u"DEBUG: SP switching 2 • {} {} {}".format("Terrace",effectiveRadiationShortTerm,effectiveRadiationLongTerm))
+            elif getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == 0:
+                postUpdate("pOther_Automatic_State_Sunprotection_Terrace", 1 )
+                self.log.info(u"DEBUG: SP switching 1 • {} {} {}".format("Terrace",effectiveRadiationShortTerm,effectiveRadiationLongTerm))
+        else:
+            #if getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == 2:
+            if postUpdateIfChanged("pOther_Automatic_State_Sunprotection_Terrace", 0 ):
+                self.log.info(u"DEBUG: SP switching 0 • {}".format("Terrace"))
       
         for room in Heating.getRooms():
             rs = cr.getRoomState(room.getName())
@@ -671,9 +691,9 @@ class HeatingControlRule():
                     if radiationTooLow or roomTemperatureTooCold or itsGettingColderAndRoomIsNotWarmEnoughForIt:
                         if itemLastUpdateOlderThen(transition.getSunProtectionItem(), ZonedDateTime.now().minusMinutes(60)):
                             postUpdate(transition.getSunProtectionItem(), OFF )
-                            self.log.info(u"DEBUG: SP switching off {} {} {} {}".format(room.getName(),effectiveRadiationShortTerm,effectiveRadiationLongTerm,effectiveRadiationMax))
+                            self.log.info(u"DEBUG: SP switching OFF • {} {} {} {}".format(room.getName(),effectiveRadiationShortTerm,effectiveRadiationLongTerm,effectiveRadiationMax))
                         else:
-                            self.log.warn(u"DEBUG: SP skipped off {} {} {} {}".format(room.getName(),effectiveRadiationShortTerm,effectiveRadiationLongTerm,effectiveRadiationMax))
+                            self.log.warn(u"DEBUG: SP skipped OFF • {} {} {} {}".format(room.getName(),effectiveRadiationShortTerm,effectiveRadiationLongTerm,effectiveRadiationMax))
                 else:
                     radiationTooHigh = effectiveRadiationShortTerm > 5.0
                     
@@ -696,46 +716,9 @@ class HeatingControlRule():
                     if radiationTooHigh and roomTemperatureTooWarm and itsGettingWarmerOrRoomIsWayTooWarm:
                         if itemLastUpdateOlderThen(transition.getSunProtectionItem(), ZonedDateTime.now().minusMinutes(30)):
                             postUpdate(transition.getSunProtectionItem(), ON )
-                            self.log.info(u"DEBUG: SP switching on {} {} {} {}".format(room.getName(),effectiveRadiationShortTerm,effectiveRadiationLongTerm,effectiveRadiationMax))
+                            self.log.info(u"DEBUG: SP switching ON • {} {} {} {}".format(room.getName(),effectiveRadiationShortTerm,effectiveRadiationLongTerm,effectiveRadiationMax))
                         else:
-                            self.log.warn(u"DEBUG: SP skipped on {} {} {} {}".format(room.getName(),effectiveRadiationShortTerm,effectiveRadiationLongTerm,effectiveRadiationMax))
-
-        #effectiveSouthRadiation = cr.getSunSouthRadiation() / 60.0
-        #effectiveWestRadiation = cr.getSunWestRadiation() / 60.0
-
-        #currentOutdoorTemperature = cr.getReferenceTemperature()
-
-        #fallbackTargetTemperature = hhs.getHeatingState("lGF_Livingroom").getHeatingTargetTemperature()
-      
-        #for room in Heating.getRooms():
-        #    rs = cr.getRoomState(room.getName())
-            
-        #    targetRoomTemperature = fallbackTargetTemperature if room.getHeatingVolume() == None else hhs.getHeatingState(room.getName()).getHeatingTargetTemperature()
-            
-        #    for transition in room.transitions:
-        #        if not isinstance(transition,Window) or transition.getRadiationArea() == None or transition.getSunProtectionItem() == None:
-        #            continue
-                  
-        #        currentRoomTemperature = rs.getCurrentTemperature()
-
-        #        effectiveRadiation = effectiveSouthRadiation if transition.getDirection() == 'south' else effectiveWestRadiation
-
-        #        if getItemState(transition.getSunProtectionItem()) == ON:
-        #            targetRoomTemperature = targetRoomTemperature - 0.6
-                   
-        #            if effectiveRadiation < 3.7 or currentRoomTemperature < targetRoomTemperature or currentOutdoorTemperature < targetRoomTemperature:
-        #                #postUpdate(transition.getSunProtectionItem(), OFF )
-        #                self.log.info(u"DEBUG: SP switching off {} {} {} {} {}".format(room.getName(),effectiveRadiation,currentRoomTemperature,currentOutdoorTemperature,targetRoomTemperature))
-        #            #else: 
-        #            #    self.log.info(u"SP still needed")
-        #        else:
-        #            targetRoomTemperature = targetRoomTemperature - 0.5
-
-        #            if effectiveRadiation > 3.8 and currentRoomTemperature > targetRoomTemperature and currentOutdoorTemperature > targetRoomTemperature:
-        #                #postUpdate(transition.getSunProtectionItem(), ON )
-        #                self.log.info(u"DEBUG: SP switching on {} {} {} {} {}".format(room.getName(),effectiveRadiation,currentRoomTemperature,currentOutdoorTemperature,targetRoomTemperature))
-        #        #else:
-        #        #   self.log.info(u"SP not needed")
+                            self.log.warn(u"DEBUG: SP skipped ON • {} {} {} {}".format(room.getName(),effectiveRadiationShortTerm,effectiveRadiationLongTerm,effectiveRadiationMax))
 
     def controlHeating( self, now, currentOperatingMode, currentOperatingModeChange, isHeatingRequested ):
 

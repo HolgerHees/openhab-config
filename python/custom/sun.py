@@ -34,68 +34,67 @@ class SunRadiation(object):
         return elevation, azimut
 
     @staticmethod
+    def getMinElevation( azimut ):
+        minElevation = 10.0
+        #10 -> 20
+        if azimut >= 220 and azimut <= 285:
+            minElevation = ( ( azimut - 220 ) * 10.0 / 65.0 ) + 10.0
+        return minElevation
+
+    @staticmethod
     def getSunPowerPerHour( referenceTime, cloudCover, currentRadiation = None ):
 
         elevation, azimut = SunRadiation._getSunData( referenceTime )
 
-        # 125° 1/2 der Hauswand	
+        minElevation = SunRadiation.getMinElevation(azimut)
+        
         southMultiplier = 0
-        if azimut >= 120 and azimut <= 260 and ( currentRadiation != None or elevation >= 10.0 ):
-            # 100° (0) => -1 (0)
-            # 260° (160) => 1 (2)
-            southX = ( ( azimut - 100.0 ) * 2.0 / 160.0 ) - 1.0
-            southMultiplier = ( math.pow( southX, 10.0 ) * -1.0 ) + 1.0
-
         westMultiplier = 0
-        minElevation = 0
-        if azimut >= 220 and azimut <= 285:
-            #10 -> 20
-            minElevation = ( ( azimut - 220 ) * 10.0 / 65.0 ) + 10.0
-            if currentRadiation != None or elevation >= minElevation:
-                # https://rechneronline.de/funktionsgraphen/
+        
+        if currentRadiation != None or elevation >= minElevation:
+            # https://rechneronline.de/funktionsgraphen/
+            # x^2 * -1 + 1
+            # x^4 * -1 + 1
+            
+            # 125° 1/2 der Hauswand	
+            if azimut >= 120 and azimut <= 260:
+                # 100° (0) => -1 (0)
+                # 260° (160) => 1 (2)
+                southX = ( ( azimut - 100.0 ) * 2.0 / 160.0 ) - 1.0
+                southMultiplier = ( math.pow( southX, 10.0 ) * -1.0 ) + 1.0
+
+            if azimut >= 220 and azimut <= 285:
                 # 190° (0) => -1 (0)
                 # 350° (160) => 1 (2)           
                 westX = ( ( azimut - 190.0 ) * 2.0 / 160.0 ) - 1.0
                 westMultiplier = ( math.pow( westX, 10.0 ) * -1.0 ) + 1.0
 
-        southActive = southMultiplier > 0.0
-        westActive  = westMultiplier > 0.0
-        
-        # in the morning the sun must be above 20°
-        # and in the evening the sun must be above 10°
-        if southActive or westActive:
-            if currentRadiation is None:
-                _usedRadians = math.radians(elevation)
-                if _usedRadians < 0.0: _usedRadians = 0.0
-                
-                # Cloud Cover is between 0 and 9 - but converting to 0 and 8
-                # https://en.wikipedia.org/wiki/Okta
-                _cloudCover = cloudCover
-                if _cloudCover > 8.0: _cloudCover = 8.0
-                _cloudCoverFactor = _cloudCover / 8.0
-                
-                # http://www.shodor.org/os411/courses/_master/tools/calculators/solarrad/
-                # http://scool.larc.nasa.gov/lesson_plans/CloudCoverSolarRadiation.pdf
-                _maxRadiation = 990.0 * math.sin( _usedRadians ) - 30.0
-                if _maxRadiation < 0.0: _maxRadiation = 0.0
-                _currentRadiation = _maxRadiation * ( 1.0 - 0.75 * math.pow( _cloudCoverFactor, 3.4 ) )
-            else:
-                _currentRadiation = currentRadiation
-
-            _effectiveSouthRadiation = _currentRadiation * southMultiplier
-            _effectiveWestRadiation = _currentRadiation * westMultiplier
+        if currentRadiation is None:
+            _usedRadians = math.radians(elevation)
+            if _usedRadians < 0.0: _usedRadians = 0.0
             
-            activeDirections = []
-            if southActive: activeDirections.append("S")
-            if westActive: activeDirections.append("W")
-            activeMsg = u" • {}".format("+".join(activeDirections))
+            # Cloud Cover is between 0 and 9 - but converting to 0 and 8
+            # https://en.wikipedia.org/wiki/Okta
+            _cloudCover = cloudCover
+            if _cloudCover > 8.0: _cloudCover = 8.0
+            _cloudCoverFactor = _cloudCover / 8.0
+            
+            # http://www.shodor.org/os411/courses/_master/tools/calculators/solarrad/
+            # http://scool.larc.nasa.gov/lesson_plans/CloudCoverSolarRadiation.pdf
+            _maxRadiation = 990.0 * math.sin( _usedRadians ) - 30.0
+            if _maxRadiation < 0.0: _maxRadiation = 0.0
+            _currentRadiation = _maxRadiation * ( 1.0 - 0.75 * math.pow( _cloudCoverFactor, 3.4 ) )
         else:
-            _activeRadiation = 0.0
-            _effectiveSouthRadiation = 0.0
-            _effectiveWestRadiation = 0.0
+            _currentRadiation = currentRadiation
 
-            activeMsg = u""
-            
+        _effectiveSouthRadiation = _currentRadiation * southMultiplier
+        _effectiveWestRadiation = _currentRadiation * westMultiplier
+        
+        activeDirections = []
+        if southMultiplier > 0.0: activeDirections.append("S")
+        if westMultiplier > 0.0: activeDirections.append("W")
+        activeMsg = u" • {}".format("+".join(activeDirections)) if len(activeDirections) > 0 else u""
+        
         sunElevationMsg = int( round( elevation, 0 ) )
         sunAzimutMsg = int( round( azimut, 0 ) )
       

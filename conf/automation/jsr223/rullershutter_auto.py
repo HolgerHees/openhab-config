@@ -1,5 +1,6 @@
-from shared.helper import rule, getItemState, postUpdate, sendCommand
+from shared.helper import rule, getItemState, postUpdate, sendCommand, itemLastChangeNewerThen
 from core.triggers import ItemStateChangeTrigger
+from java.time import ZonedDateTime
 
 @rule("rollershutter_auto.py")
 class RollershutterCleanupRule:
@@ -103,22 +104,29 @@ class LivingroomSunprotectionRule:
                     sendCommand("pGF_Kitchen_Shutter_Control", UP)
                     sendCommand("pGF_Livingroom_Shutter_Couch_Control", UP)
                     sendCommand("pGF_Livingroom_Shutter_Terrace_Control", UP)
-            elif getItemState("pOther_Presence_State").intValue() == 1:
-                if getItemState("pOther_Automatic_State_Sunprotection_Livingroom") == ON:
-                    sendCommand("pOutdoor_Terrace_Shading_Left_Control", DOWN)
-                    sendCommand("pOutdoor_Terrace_Shading_Right_Control", DOWN)
-                else:
-                    pass
 
 @rule("rollershutter_auto.py")
 class TerraceSunprotectionRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("pOther_Automatic_State_Rollershutter",state="OFF")
-            #CronTrigger("0 */10 * * * ?")
+            ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Terrace")
         ]
 
     def execute(self, module, input):
-        #pOutdoor_WeatherStation_Wind_Speed
-        sendCommand("pOutdoor_Terrace_Shading_Left_Control", UP)
-        sendCommand("pOutdoor_Terrace_Shading_Right_Control", UP)
+        if getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == 1:
+            pass
+        elif getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == 2:
+            # DOWN only if automatic is enabled and (people are present or where present quite recently or terrace door is open)
+            if (getItemState("pOther_Manual_State_Auto_Sunprotection") == ON
+                  and ( getItemState("pOther_Presence_State").intValue() != 0 or itemLastChangeNewerThen("pOther_Presence_State", ZonedDateTime.now().minusMinutes(120)) or getItemState("pGF_Livingroom_Openingcontact_Window_Terrace_State") == OPEN )
+               ):
+                #self.log.info(u"down")
+                sendCommand("pOutdoor_Terrace_Shading_Left_Control", DOWN)
+                sendCommand("pOutdoor_Terrace_Shading_Right_Control", DOWN)
+        else:
+            #self.log.info(u"up")
+            # UP always when sun protection time is over
+            sendCommand("pOutdoor_Terrace_Shading_Left_Control", UP)
+            sendCommand("pOutdoor_Terrace_Shading_Right_Control", UP)
+
+#sendCommand("pOther_Automatic_State_Sunprotection_Terrace", 0)

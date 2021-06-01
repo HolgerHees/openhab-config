@@ -189,7 +189,7 @@ Cases = {
         #{ "phrase": u"wohnzimmer fernseher kanal drei", "items": [[ "SAT_KEY_RTL", "DEFAULT_ON" ]] },
         #{ "phrase": u"wohnzimmer licht und fernseher an", "items": [[ "Light_FF_Livingroom_Couch", "ACTION_ON" ],[ "Light_FF_Livingroom_Diningtable", "ACTION_ON" ],[ "Scene6", "ACTION_ON" ]] },
         
-        { "phrase": u"wie ist das internet im flur", "items": [["pGF_Corridor_Speedtest_Status","READ"],["pGF_Corridor_Speedtest_Rerun","READ"],["pGF_Corridor_Speedtest_Ping","READ"],["pGF_Corridor_Fritzbox_WanAccessType","READ"],["pGF_Corridor_Fritzbox_WanPhysicalLinkStatus","READ"],["pGF_Corridor_Fritzbox_WanUpstreamCurrRate","READ"],["pGF_Corridor_Fritzbox_WanDownstreamCurrRate","READ"],["pGF_Corridor_Fritzbox_GuestWifi","READ"],["pGF_Corridor_Speedtest_UpstreamRate","READ"],["pGF_Corridor_Fritzbox_Uptime","READ"],["pGF_Corridor_Speedtest_DownstreamRate","READ"]] },
+        { "phrase": u"wie ist das internet im flur", "items": [["pGF_Corridor_Speedtest_Time","READ"],["pGF_Corridor_Speedtest_Location","READ"],["pGF_Corridor_Speedtest_Rerun","READ"],["pGF_Corridor_Speedtest_Ping","READ"],["pGF_Corridor_Fritzbox_WanAccessType","READ"],["pGF_Corridor_Fritzbox_WanPhysicalLinkStatus","READ"],["pGF_Corridor_Fritzbox_WanUpstreamCurrRate","READ"],["pGF_Corridor_Fritzbox_WanDownstreamCurrRate","READ"],["pGF_Corridor_Fritzbox_GuestWifi","READ"],["pGF_Corridor_Speedtest_UpstreamRate","READ"],["pGF_Corridor_Fritzbox_Uptime","READ"],["pGF_Corridor_Speedtest_DownstreamRate","READ"]] },
 
         # **** FALSE POSITIVES ****
         

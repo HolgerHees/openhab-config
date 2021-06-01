@@ -105,4 +105,3 @@ class VoiceCommandRule:
                                                          
 #postUpdate("VoiceCommand","Flur farbe grün")
 
- 

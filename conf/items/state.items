@@ -47,6 +47,7 @@ Switch pOther_Automatic_State_Sunprotection_Bathroom "Rollladen Badezimmer gesch
 Switch pOther_Automatic_State_Sunprotection_Dressingroom "Rollladen Ankleide geschlossen" <selfrollershutter> (eOther_Automatic_States) ["Point"]
 Switch pOther_Automatic_State_Sunprotection_Bedroom "Rollladen Schlafzimmer geschlossen" <selfrollershutter> (eOther_Automatic_States) ["Point"]
 Switch pOther_Automatic_State_Sunprotection_Livingroom "Rollläden Wohnzimmer geschlossen" <selfrollershutter> (eOther_Automatic_States) ["Point"]
+Number pOther_Automatic_State_Sunprotection_Terrace "Terasse geschlossen" <selfrollershutter> (eOther_Automatic_States) ["Point"]
 
 //####### STATE MESSAGES #######
 Group  eOther_State_Messages                    "Nachrichten" <selfinfo> (lOther) ["Equipment"]

@@ -382,6 +382,7 @@ sitemap haus label="Main Menu"
                         Text item=pOther_Automatic_State_Sunprotection_Dressingroom label="Beschattung Ankleide [%s]"
                         Text item=pOther_Automatic_State_Sunprotection_Bedroom label="Beschattung Schlafzimmer [%s]"
                         Text item=pOther_Automatic_State_Sunprotection_Livingroom label="Beschattung Wohnzimmer [%s]"
+                        Text item=pOther_Automatic_State_Sunprotection_Terrace label="Beschattung Terasse [%s]"
                     }
 				}
 			}
