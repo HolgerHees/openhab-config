@@ -14,8 +14,8 @@ Group lFirstFloor       "Obergeschoss"  <firstfloor>    (lIndoor)      ["FirstFl
 Group lFF_Bathroom      "Badezimmer"    <bath>          (lFirstFloor)  ["Bathroom"]     { synonyms="Bad" }
 Group lFF_Dressingroom  "Ankleide"      <wardrobe>      (lFirstFloor)  ["Room"]
 Group lFF_Bedroom       "Schlafzimmer"  <bedroom>       (lFirstFloor)  ["Bedroom"]
-Group lFF_Child1        "Sportzimmer"   <boy1>          (lFirstFloor)  ["Room"]         { synonyms="Sportraum,Sport" }
-Group lFF_Child2        "Schminkzimmer" <boy1>          (lFirstFloor)  ["Room"]         { synonyms="Trocken,Schmink" }
+Group lFF_Child1        "Sportzimmer"   <boy_2>         (lFirstFloor)  ["Room"]         { synonyms="Sportraum,Sport" }
+Group lFF_Child2        "Schminkzimmer" <girl_3>        (lFirstFloor)  ["Room"]         { synonyms="Trocken,Schmink" }
 Group lFF_Corridor      "Flur"          <corridor>      (lFirstFloor)  ["Corridor"]     { synonyms="oben" }
 Group lFF_Attic         "Dachboden"     <attic>         (lFirstFloor)  ["Attic"]
 
