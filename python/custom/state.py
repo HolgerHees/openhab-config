@@ -159,23 +159,41 @@ class HouseState(State):
     def getCloudCover(self):
         return self.cloudCover
 
+    def setSunRadiation(self,value):
+        self.sunRadiation = value
+        
+    def getSunRadiation(self):
+        return self.sunRadiation
+
+    def setSunRadiationLazy(self,value):
+        self.sunRadiationLazy = value
+        
+    def getSunRadiationLazy(self):
+        return self.sunRadiationLazy
+
+    def setSunRadiationMax(self,value):
+        self.sunRadiationMax = value
+        
+    def getSunRadiationMax(self):
+        return self.sunRadiationMax
+
     def setSunSouthRadiation(self,value):
         self.sunSouthRadiation = value
         
     def getSunSouthRadiation(self):
         return self.sunSouthRadiation
 
-    def setSunWestRadiation(self,value):
-        self.sunWestRadiation = value
-
-    def getSunWestRadiation(self):
-        return self.sunWestRadiation
-
     def setSunSouthRadiationMax(self,value):
         self.sunSouthRadiationMax = value
         
     def getSunSouthRadiationMax(self):
         return self.sunSouthRadiationMax
+
+    def setSunWestRadiation(self,value):
+        self.sunWestRadiation = value
+
+    def getSunWestRadiation(self):
+        return self.sunWestRadiation
 
     def setSunWestRadiationMax(self,value):
         self.sunWestRadiationMax = value

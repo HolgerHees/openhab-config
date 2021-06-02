@@ -450,7 +450,7 @@ class HeatingVentileRule():
                     del maintenanceMode[room]
                 elif not maintainanceModeActive:
                     maintenanceMode[room] = True
-                
+                    
 @rule("heating_control.py")
 class HeatingControlRule():
     def __init__(self):
@@ -460,6 +460,8 @@ class HeatingControlRule():
 #            CronTrigger("*/15 * * * * ?")
         ]
         self.activeHeatingOperatingMode = -1
+        self.messuredRadiationShortTerm = None
+        self.messuredRadiationLongTerm = None
 
     def execute(self, module, input):
         self.log.info(u"--------: >>>" )
@@ -475,8 +477,20 @@ class HeatingControlRule():
         outdoorTemperatureItemName = getItemState("pOutdoor_WeatherStation_Temperature_Item_Name").toString()
         heating = Heating(self.log,outdoorTemperatureItemName)
 
-        cr, cr4, cr8, hhs = heating.calculate(currentHeatingDemand == ON)    
+        azimut = getItemState("pOutdoor_Astro_Sun_Azimuth").doubleValue()
+
+        if getItemState("pOutdoor_WeatherStation_Is_Working") == ON:
+            # 225 => 15:32:30.781
+            # 245 => 16:57:30.784
+            # => ignore radiation in this timewindow because of a tree which is hiding the sun
+            if azimut < 225 or azimut > 245 or self.messuredRadiationShortTerm == None:
+                self.messuredRadiationShortTerm = getStableItemState(now,"pOutdoor_WeatherStation_Solar_Power",10)
+                self.messuredRadiationLongTerm = getStableItemState(now,"pOutdoor_WeatherStation_Solar_Power",30)
+        else:
+            self.messuredRadiationShortTerm = self.messuredRadiationLongTerm = None
         
+        cr, cr4, cr8, hhs = heating.calculate(currentHeatingDemand == ON,self.messuredRadiationShortTerm,self.messuredRadiationLongTerm)    
+
         if autoModeEnabled:
             heatingRequested = hhs.isHeatingRequested()
             
@@ -593,40 +607,22 @@ class HeatingControlRule():
         else:
             self.log.info(u"Demand  : SKIPPED • MANUAL MODE ACTIVE")
 
-        self.setSunStates(now,cr,cr4,hhs)
+        self.setSunStates(now,cr,cr4,hhs, azimut)
         
         self.log.info(u"--------: <<<" )
-
-    def setSunStates(self, now, cr, cr4, hhs ):
+ 
+    def setSunStates(self, now, cr, cr4, hhs, azimut):
         cloudCover = cr.getCloudCover()
+        
+        messuredRadiationShortTerm = cr.getSunRadiation()
+        messuredRadiationLongTerm = cr.getSunRadiationLazy()
 
-        azimut = getItemState("pOutdoor_Astro_Sun_Azimuth").doubleValue()
-        elevation = getItemState("pOutdoor_Astro_Sun_Elevation").doubleValue()
-
-        # 225 => 15:32:30.781
-        # 245 => 16:57:30.784
-        # 80 min diff. ( ( ( 24h * 60min ) / 360° ) * 20° )
-        # => ignore radiation in this timewindow because of a tree which is hiding the sun
-        if azimut > 225 and azimut < 245:
-            offset = ( azimut - 225 ) * 80 / 20
-            #self.log.info(u"{}".format(offset))
-            millis = int(now.toInstant().toEpochMilli()-offset*60*1000)
-            offset = ZonedDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneId.systemDefault())
-            #self.log.info(u"{}".format(offset))
-        else:
-            offset = now
-            
-        messuredRadiationShortTerm = getStableItemState(offset,"pOutdoor_WeatherStation_Solar_Power",10)
-        _sunSouthRadiation, _sunWestRadiation, _sunDebugInfo = SunRadiation.getSunPowerPerHour(offset,cloudCover,messuredRadiationShortTerm)
+        _sunSouthRadiation, _sunWestRadiation, _sunRadiation, _sunDebugInfo = SunRadiation.getSunPowerPerHour(now,cloudCover,messuredRadiationShortTerm)
         effectiveSouthRadiationShortTerm = _sunSouthRadiation / 60.0
         effectiveWestRadiationShortTerm = _sunWestRadiation / 60.0
         #self.log.info(u"Gemessen Avg 10 min until {}: {} {}".format(offset,effectiveSouthRadiationShortTerm, effectiveWestRadiationShortTerm))
 
-        #azimut = getItemState("pOutdoor_Astro_Sun_Azimuth").doubleValue()
-        #longTermTimeWindow = 120 if azimut > 225 and azimut < 245 else 30 # in this direction a tree is hiding the sun
-        #longTermTimeWindow = 120 if azimut > 228 and azimut < 242 else 30 # in this direction a tree is hiding the sun
-        messuredRadiationLongTerm = getStableItemState(offset,"pOutdoor_WeatherStation_Solar_Power",30)
-        _sunSouthRadiation, _sunWestRadiation, _sunDebugInfo = SunRadiation.getSunPowerPerHour(offset,cloudCover,messuredRadiationLongTerm)
+        _sunSouthRadiation, _sunWestRadiation, _sunRadiation, _sunDebugInfo = SunRadiation.getSunPowerPerHour(now,cloudCover,messuredRadiationLongTerm)
         effectiveSouthRadiationLongTerm = _sunSouthRadiation / 60.0
         effectiveWestRadiationLongTerm = _sunWestRadiation / 60.0
         #self.log.info(u"Gemessen Avg 30 min until {}: {} {}".format(offset,effectiveSouthRadiationLongTerm, effectiveWestRadiationLongTerm))
@@ -646,7 +642,10 @@ class HeatingControlRule():
         effectiveRadiationShortTerm = messuredRadiationShortTerm / 60.0
         effectiveRadiationLongTerm = messuredRadiationLongTerm / 60.0
         
-        if azimut >= 150 and azimut <= 285 and elevation > SunRadiation.getMinElevation(azimut):
+        #azimut = getItemState("pOutdoor_Astro_Sun_Azimuth").doubleValue()
+        elevation = getItemState("pOutdoor_Astro_Sun_Elevation").doubleValue()
+
+        if azimut >= 120 and azimut <= 285 and elevation > SunRadiation.getMinElevation(azimut):
             #self.log.info(u"Sun     : {:.1f} W/min ({:.1f} W/min)".format(effectiveRadiationShortTerm,effectiveRadiationLongTerm))
             if effectiveRadiationLongTerm > 8.0:
                 if postUpdateIfChanged("pOther_Automatic_State_Sunprotection_Terrace", 2 ):

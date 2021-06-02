@@ -458,7 +458,7 @@ class Heating(object):
     
         return ( maxMinutes * multiplier ) / 60.0
 
-    def getCoolingAndRadiations(self,hours):
+    def getCoolingAndRadiations(self,hours,sunRadiation=None,sunRadiationLazy=None):
         isForecast = hours != 0
         
         time = self.now
@@ -490,9 +490,9 @@ class Heating(object):
         cloudCover = round(self.getCachedItemFloat(self.cloudCoverItem),1)
         
         currentTotalVentilationEnergy = self.getVentilationEnergy(tempDiffOffset) / 3.6 # converting kj into watt
-        sunSouthRadiation, sunWestRadiation, sunDebugInfo = SunRadiation.getSunPowerPerHour(time,cloudCover)
-        sunSouthRadiationMax, sunWestRadiationMax, sunMaxDebugInfo = SunRadiation.getSunPowerPerHour(time,0)
-
+        sunSouthRadiation, sunWestRadiation, sunRadiation, sunDebugInfo = SunRadiation.getSunPowerPerHour(time,cloudCover,sunRadiation,sunRadiationLazy)
+        sunSouthRadiationMax, sunWestRadiationMax, sunRadiationMax, sunMaxDebugInfo = SunRadiation.getSunPowerPerHour(time,0)
+        
         totalOpenWindowCount = 0
         
         totalIndoorWallEnergy = 0
@@ -609,6 +609,9 @@ class Heating(object):
         houseState.setHeatingDebugInfo(heatingDebugInfo)
 
         houseState.setCloudCover(cloudCover)
+        houseState.setSunRadiation(sunRadiation)
+        houseState.setSunRadiationLazy(sunRadiation if sunRadiationLazy == None else sunRadiationLazy)
+        houseState.setSunRadiationMax(sunRadiationMax)
         houseState.setSunSouthRadiation(sunSouthRadiation)
         houseState.setSunSouthRadiationMax(sunSouthRadiationMax)
         houseState.setSunWestRadiation(sunWestRadiation)
@@ -900,7 +903,7 @@ class Heating(object):
             self.log.info(u"        : {}".format(infoMsg))
 
                 
-    def calculate(self,isHeatingActive):
+    def calculate(self,isHeatingActive,sunRadiation,sunRadiationLazy):
         # handle outdated ventilation values
         if itemLastUpdateOlderThen(self.ventilationFilterRuntimeItem, self.now.minusMinutes(120)):
             self.cache[self.ventilationLevelItem] = DecimalType(1)
@@ -927,7 +930,7 @@ class Heating(object):
         self.logCoolingAndRadiations("FC4     ",cr4)
 
         # *** CURRENT ***
-        cr = self.getCoolingAndRadiations(0)
+        cr = self.getCoolingAndRadiations(0,sunRadiation,sunRadiationLazy)
         self.logCoolingAndRadiations("Current ",cr)
 
         if cr.getHeatingVolume() > 0:

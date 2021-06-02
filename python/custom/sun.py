@@ -37,12 +37,15 @@ class SunRadiation(object):
     def getMinElevation( azimut ):
         minElevation = 10.0
         #10 -> 20
-        if azimut >= 220 and azimut <= 285:
-            minElevation = ( ( azimut - 220 ) * 10.0 / 65.0 ) + 10.0
+        if azimut >= 220:
+            if azimut <= 285:
+                minElevation = ( ( azimut - 220 ) * 10.0 / 65.0 ) + 10.0
+            elif azimut <= 365:
+                minElevation = 20.0
         return minElevation
 
     @staticmethod
-    def getSunPowerPerHour( referenceTime, cloudCover, currentRadiation = None ):
+    def getSunPowerPerHour( referenceTime, cloudCover, sunRadiation = None, sunRadiationLazy = None ):
 
         elevation, azimut = SunRadiation._getSunData( referenceTime )
 
@@ -51,7 +54,7 @@ class SunRadiation(object):
         southMultiplier = 0
         westMultiplier = 0
         
-        if currentRadiation != None or elevation >= minElevation:
+        if sunRadiation != None or elevation >= minElevation:
             # https://rechneronline.de/funktionsgraphen/
             # x^2 * -1 + 1
             # x^4 * -1 + 1
@@ -69,7 +72,7 @@ class SunRadiation(object):
                 westX = ( ( azimut - 190.0 ) * 2.0 / 160.0 ) - 1.0
                 westMultiplier = ( math.pow( westX, 10.0 ) * -1.0 ) + 1.0
 
-        if currentRadiation is None:
+        if sunRadiation is None:
             _usedRadians = math.radians(elevation)
             if _usedRadians < 0.0: _usedRadians = 0.0
             
@@ -83,12 +86,12 @@ class SunRadiation(object):
             # http://scool.larc.nasa.gov/lesson_plans/CloudCoverSolarRadiation.pdf
             _maxRadiation = 990.0 * math.sin( _usedRadians ) - 30.0
             if _maxRadiation < 0.0: _maxRadiation = 0.0
-            _currentRadiation = _maxRadiation * ( 1.0 - 0.75 * math.pow( _cloudCoverFactor, 3.4 ) )
+            _effectiveRadiation = _maxRadiation * ( 1.0 - 0.75 * math.pow( _cloudCoverFactor, 3.4 ) )
         else:
-            _currentRadiation = currentRadiation
+            _effectiveRadiation = sunRadiation
 
-        _effectiveSouthRadiation = _currentRadiation * southMultiplier
-        _effectiveWestRadiation = _currentRadiation * westMultiplier
+        _effectiveSouthRadiation = _effectiveRadiation * southMultiplier
+        _effectiveWestRadiation = _effectiveRadiation * westMultiplier
         
         activeDirections = []
         if southMultiplier > 0.0: activeDirections.append("S")
@@ -98,10 +101,11 @@ class SunRadiation(object):
         sunElevationMsg = int( round( elevation, 0 ) )
         sunAzimutMsg = int( round( azimut, 0 ) )
       
-        minElevationMsg = u" ({})".format( int( round( minElevation)) ) if minElevation > 0 else ""
-        debugInfo = u"Azimut {}° • Elevation {}°{}• Clouds {} octas{}".format(sunAzimutMsg, sunElevationMsg, minElevationMsg, cloudCover, activeMsg)
+        minElevationMsg = u" (min {})".format( int( round( minElevation)) ) if minElevation > 0 else ""
+        lazyRadiationMsg = u" (∾ {})".format( round(sunRadiationLazy / 60.0, 1) ) if sunRadiationLazy != None else ""
+        debugInfo = u"Azimut {}° • Elevation {}{}° • Clouds {} octas • Sun {}{} W/min{}".format(sunAzimutMsg, sunElevationMsg, minElevationMsg, cloudCover, round(_effectiveRadiation / 60.0, 1), lazyRadiationMsg, activeMsg)
 
-        return _effectiveSouthRadiation, _effectiveWestRadiation, debugInfo
+        return _effectiveSouthRadiation, _effectiveWestRadiation, _effectiveRadiation, debugInfo
 
     @staticmethod
     def getWindowSunPowerPerHour( area, radiation ):
