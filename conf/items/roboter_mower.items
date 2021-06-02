@@ -2,7 +2,7 @@
 Group    eOutdoor_Mower                      "Rasenmäher"                                        <selfinfo>     (lOutdoor) ["LawnMower"]
 String   pOutdoor_Mower_Name                 "Name [%s]"                                                        (eOutdoor_Mower) ["Point"] {channel="robonect:mower:automower:name"}
 Number   pOutdoor_Mower_Battery              "Batterie [%d %%]"                                  <selfbattery>  (eOutdoor_Mower) ["Point"] {channel="robonect:mower:automower:battery"}
-Number   pOutdoor_Mower_Hours                "Betriebsstunden [%d h]"                            <selfclock>    (eOutdoor_Mower) ["Point"] {channel="robonect:mower:automower:moving-hours"}
+Number   pOutdoor_Mower_Hours                "Betriebsstunden [%d h]"                            <selfclock>    (eOutdoor_Mower) ["Point"] {channel="robonect:mower:automower:mowing-hours"}
 Number   pOutdoor_Mower_Duration             "Aktueller Modus [%s Sekunden]"                     <selfclock>    (eOutdoor_Mower) ["Point"] {channel="robonect:mower:automower:status-duration"}
 String   pOutdoor_Mower_Mode                 "Modus"                                             <selfautomode> (eOutdoor_Mower) ["Point"] {channel="robonect:mower:automower:mode"}
 Number   pOutdoor_Mower_Status               "Status [MAP(robonect_status.map):%s]"              <selfinfo>     (eOutdoor_Mower) ["Point"] {channel="robonect:mower:automower:status"}
