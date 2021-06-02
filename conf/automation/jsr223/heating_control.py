@@ -483,9 +483,15 @@ class HeatingControlRule():
             # 225 => 15:32:30.781
             # 245 => 16:57:30.784
             # => ignore radiation in this timewindow because of a tree which is hiding the sun
-            if azimut < 225 or azimut > 245 or self.messuredRadiationShortTerm == None:
-                self.messuredRadiationShortTerm = getStableItemState(now,"pOutdoor_WeatherStation_Solar_Power",10)
-                self.messuredRadiationLongTerm = getStableItemState(now,"pOutdoor_WeatherStation_Solar_Power",30)
+            sunIsNotHiddenBehindTree = azimut < 225 or azimut > 245
+            
+            _messuredRadiationShortTerm = getStableItemState(now,"pOutdoor_WeatherStation_Solar_Power",10)
+            if sunIsNotHiddenBehindTree or self.messuredRadiationShortTerm == None or _messuredRadiationShortTerm > self.messuredRadiationShortTerm:
+                self.messuredRadiationShortTerm = _messuredRadiationShortTerm
+
+            _messuredRadiationLongTerm = getStableItemState(now,"pOutdoor_WeatherStation_Solar_Power",30)
+            if sunIsNotHiddenBehindTree or self.messuredRadiationLongTerm == None or _messuredRadiationLongTerm > self.messuredRadiationLongTerm:
+                self.messuredRadiationLongTerm = _messuredRadiationLongTerm
         else:
             self.messuredRadiationShortTerm = self.messuredRadiationLongTerm = None
         
