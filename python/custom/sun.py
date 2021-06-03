@@ -35,13 +35,13 @@ class SunRadiation(object):
 
     @staticmethod
     def getMinElevation( azimut ):
-        minElevation = 10.0
+        minElevation = 9.0
         #10 -> 20
         if azimut >= 220:
-            if azimut <= 285:
-                minElevation = ( ( azimut - 220 ) * 10.0 / 65.0 ) + 10.0
+            if azimut <= 290:
+                minElevation = ( ( azimut - 220 ) * 5.0 / 70.0 ) + 9.0
             elif azimut <= 365:
-                minElevation = 20.0
+                minElevation = 14.0
         return minElevation
 
     @staticmethod
@@ -59,17 +59,16 @@ class SunRadiation(object):
             # x^2 * -1 + 1
             # x^4 * -1 + 1
             
-            # 125° 1/2 der Hauswand	
-            if azimut >= 120 and azimut <= 260:
-                # 100° (0) => -1 (0)
-                # 260° (160) => 1 (2)
-                southX = ( ( azimut - 100.0 ) * 2.0 / 160.0 ) - 1.0
+            if azimut >= 110 and azimut <= 250:
+                # 110° (0) => -1 (0)
+                # 250° (140) => 1 (2)
+                southX = ( ( azimut - 110.0 ) * 2.0 / 140.0 ) - 1.0
                 southMultiplier = ( math.pow( southX, 10.0 ) * -1.0 ) + 1.0
 
-            if azimut >= 220 and azimut <= 285:
-                # 190° (0) => -1 (0)
-                # 350° (160) => 1 (2)           
-                westX = ( ( azimut - 190.0 ) * 2.0 / 160.0 ) - 1.0
+            if azimut >= 210 and azimut <= 290:
+                # 210° (0) => -1 (0)
+                # 330° (140) => 1 (2)           
+                westX = ( ( azimut - 210.0 ) * 2.0 / 140.0 ) - 1.0
                 westMultiplier = ( math.pow( westX, 10.0 ) * -1.0 ) + 1.0
 
         if sunRadiation is None:

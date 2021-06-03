@@ -478,12 +478,14 @@ class HeatingControlRule():
         heating = Heating(self.log,outdoorTemperatureItemName)
 
         azimut = getItemState("pOutdoor_Astro_Sun_Azimuth").doubleValue()
+        elevation = getItemState("pOutdoor_Astro_Sun_Elevation").doubleValue()
 
         if getItemState("pOutdoor_WeatherStation_Is_Working") == ON:
-            # 225 => 15:32:30.781
-            # 245 => 16:57:30.784
             # => ignore radiation in this timewindow because of a tree which is hiding the sun
-            sunIsNotHiddenBehindTree = azimut < 225 or azimut > 245
+            #sunIsNotHiddenBehindTree = azimut < 225 or azimut > 245 or elevation > 45
+            sunIsNotHiddenBehindTree = azimut < 215 or azimut > 245 or elevation > 45
+            #start 38.18128191727511° => 218
+            #end 58.598025707480694° => 238,6
             
             _messuredRadiationShortTerm = getStableItemState(now,"pOutdoor_WeatherStation_Solar_Power",10)
             if sunIsNotHiddenBehindTree or self.messuredRadiationShortTerm == None or _messuredRadiationShortTerm > self.messuredRadiationShortTerm:
@@ -613,11 +615,11 @@ class HeatingControlRule():
         else:
             self.log.info(u"Demand  : SKIPPED • MANUAL MODE ACTIVE")
 
-        self.setSunStates(now,cr,cr4,hhs, azimut)
+        self.setSunStates(now,cr,cr4,hhs, azimut, elevation)
         
         self.log.info(u"--------: <<<" )
  
-    def setSunStates(self, now, cr, cr4, hhs, azimut):
+    def setSunStates(self, now, cr, cr4, hhs, azimut, elevation):
         cloudCover = cr.getCloudCover()
         
         messuredRadiationShortTerm = cr.getSunRadiation()
@@ -648,10 +650,9 @@ class HeatingControlRule():
         effectiveRadiationShortTerm = messuredRadiationShortTerm / 60.0
         effectiveRadiationLongTerm = messuredRadiationLongTerm / 60.0
         
-        #azimut = getItemState("pOutdoor_Astro_Sun_Azimuth").doubleValue()
-        elevation = getItemState("pOutdoor_Astro_Sun_Elevation").doubleValue()
+        #self.log.info(u"{} {} {}".format(azimut,elevation,SunRadiation.getMinElevation(azimut)))
 
-        if azimut >= 120 and azimut <= 285 and elevation > SunRadiation.getMinElevation(azimut):
+        if azimut >= 120 and azimut <= 290 and elevation >= SunRadiation.getMinElevation(azimut):
             #self.log.info(u"Sun     : {:.1f} W/min ({:.1f} W/min)".format(effectiveRadiationShortTerm,effectiveRadiationLongTerm))
             if effectiveRadiationLongTerm > 8.0:
                 if postUpdateIfChanged("pOther_Automatic_State_Sunprotection_Terrace", 2 ):
@@ -663,7 +664,7 @@ class HeatingControlRule():
             #if getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == 2:
             if postUpdateIfChanged("pOther_Automatic_State_Sunprotection_Terrace", 0 ):
                 self.log.info(u"DEBUG: SP switching 0 • {}".format("Terrace"))
-      
+       
         for room in Heating.getRooms():
             rs = cr.getRoomState(room.getName())
             
