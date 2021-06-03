@@ -20,7 +20,7 @@ except:
     
 from custom.house import Window
 from custom.state import RoomState, HouseState, RoomHeatingState, HouseHeatingState
-
+ 
 class Heating(object):
     INFINITE_HEATING_TIME = 999.0 # const value for an invifinte heating time
     

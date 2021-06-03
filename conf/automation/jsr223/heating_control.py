@@ -652,7 +652,7 @@ class HeatingControlRule():
         
         #self.log.info(u"{} {} {}".format(azimut,elevation,SunRadiation.getMinElevation(azimut)))
 
-        if azimut >= 120 and azimut <= 290 and elevation >= SunRadiation.getMinElevation(azimut):
+        if azimut >= 120 and azimut <= SunRadiation.AZIMUT_NW_LIMIT and elevation >= SunRadiation.getMinElevation(azimut):
             #self.log.info(u"Sun     : {:.1f} W/min ({:.1f} W/min)".format(effectiveRadiationShortTerm,effectiveRadiationLongTerm))
             if effectiveRadiationLongTerm > 8.0:
                 if postUpdateIfChanged("pOther_Automatic_State_Sunprotection_Terrace", 2 ):

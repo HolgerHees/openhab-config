@@ -3,7 +3,12 @@ import time
 import math
 from java.time import ZoneOffset
     
-class SunRadiation(object): 
+class SunRadiation(object):
+    # haus um 3.2 grad gedreht
+    # 3.2492105921044496
+    AZIMUT_GARDEN_DEVIATION  = 3.3
+    AZIMUT_NW_LIMIT = 290.0
+
     @staticmethod
     def _getSunData( time ):
         # Constants                                                                                                                                                                                                                                 
@@ -37,9 +42,9 @@ class SunRadiation(object):
     def getMinElevation( azimut ):
         minElevation = 9.0
         #10 -> 20
-        if azimut >= 220:
-            if azimut <= 290:
-                minElevation = ( ( azimut - 220 ) * 5.0 / 70.0 ) + 9.0
+        if azimut >= 220.0:
+            if azimut <= SunRadiation.AZIMUT_NW_LIMIT:
+                minElevation = ( ( azimut - 220.0 ) * 5.0 / ( SunRadiation.AZIMUT_NW_LIMIT - 220.0 ) ) + 9.0
             elif azimut <= 365:
                 minElevation = 14.0
         return minElevation
@@ -59,16 +64,21 @@ class SunRadiation(object):
             # x^2 * -1 + 1
             # x^4 * -1 + 1
             
-            if azimut >= 110 and azimut <= 250:
+            
+            _start = 110.0 + SunRadiation.AZIMUT_GARDEN_DEVIATION
+            _end = 250.0 + SunRadiation.AZIMUT_GARDEN_DEVIATION
+            if azimut >= _start and azimut <= _end:
                 # 110° (0) => -1 (0)
                 # 250° (140) => 1 (2)
-                southX = ( ( azimut - 110.0 ) * 2.0 / 140.0 ) - 1.0
+                southX = ( ( azimut - _start ) * 2.0 / ( _end - _start ) ) - 1.0
                 southMultiplier = ( math.pow( southX, 10.0 ) * -1.0 ) + 1.0
 
-            if azimut >= 210 and azimut <= 290:
-                # 210° (0) => -1 (0)
-                # 330° (140) => 1 (2)           
-                westX = ( ( azimut - 210.0 ) * 2.0 / 140.0 ) - 1.0
+            _start = 200.0 + SunRadiation.AZIMUT_GARDEN_DEVIATION
+            _end = 340.0 + SunRadiation.AZIMUT_GARDEN_DEVIATION
+            if azimut >= _start and azimut <= SunRadiation.AZIMUT_NW_LIMIT:
+                # 200° (0) => -1 (0)
+                # 340° (140) => 1 (2)           
+                westX = ( ( azimut - _start ) * 2.0 / ( _end - _start ) ) - 1.0
                 westMultiplier = ( math.pow( westX, 10.0 ) * -1.0 ) + 1.0
 
         if sunRadiation is None:
