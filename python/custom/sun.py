@@ -112,7 +112,7 @@ class SunRadiation(object):
       
         minElevationMsg = u" (min {})".format( round( minElevation,1) ) if minElevation > 0 else ""
         lazyRadiationMsg = u" (∾ {})".format( round(sunRadiationLazy / 60.0, 1) ) if sunRadiationLazy != None else ""
-        debugInfo = u"Az {}° • El {}{}° • Clouds {} ☔︎ • Sun {}{} W/min{}".format(sunAzimutMsg, sunElevationMsg, minElevationMsg, cloudCover, round(_effectiveRadiation / 60.0, 1), lazyRadiationMsg, activeMsg)
+        debugInfo = u"Az {}° • El {}{}° • Clouds {} ⊗ • Sun {}{} W/min{}".format(sunAzimutMsg, sunElevationMsg, minElevationMsg, cloudCover, round(_effectiveRadiation / 60.0, 1), lazyRadiationMsg, activeMsg)
 
         return _effectiveSouthRadiation, _effectiveWestRadiation, _effectiveRadiation, debugInfo
 

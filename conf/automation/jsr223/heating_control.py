@@ -10,7 +10,7 @@ from java.time import ZonedDateTime, Instant, ZoneId
 from java.time.format import DateTimeFormatter
  
 OFFSET_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")
-         
+           
 #postUpdate("pGF_Utilityroom_Heating_Demand",OFF)
 #postUpdate("pGF_Guesttoilet_Heating_Demand",OFF)
 #postUpdate("pGF_Livingroom_Heating_Demand",OFF)
