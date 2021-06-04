@@ -828,7 +828,7 @@ class Heating(object):
             self.formatEnergy(cr.getWindowRadiation())
         ))
         msg = u"{} W/min".format(self.formatEnergy(cr.getHeatingRadiation())) if cr.getHeatingRadiation() > 0 else u"{} W/min (FC)".format(self.formatEnergy(cr.getPossibleHeatingRadiation()))
-        self.log.info(u"        : ES {} W/min ({}°C) • HU {}".format(self.formatEnergy(cr.getPassiveSaldo()),round(cr.getReferenceTemperature(),1), msg ))
+        self.log.info(u"        : ↑↓ {} W/min ({}°C) • HU {}".format(self.formatEnergy(cr.getPassiveSaldo()),round(cr.getReferenceTemperature(),1), msg ))
         self.log.info(u"        : ---")
                   
     def logHeatingState(self,room, cr, hhs ):
@@ -855,7 +855,7 @@ class Heating(object):
             details.append(u"{:3.1f}☀".format(self.formatEnergy(rs.getWallRadiation()+rs.getWindowRadiation())))
                            
         detailsMsg = u" ({})".format(u", ".join(details)) if len(details) > 0 else u""
-        infoMsg = u"{} • ES {:4.1f}{} W/min".format(infoMsg, self.formatEnergy(rs.getPassiveSaldo()), detailsMsg)
+        infoMsg = u"{} • ↑↓ {:4.1f}{} W/min".format(infoMsg, self.formatEnergy(rs.getPassiveSaldo()), detailsMsg)
 
         # **** DEBUG ****
         #infoMsg = u"{} • DEBUG {} {}".format(infoMsg, rs.getPossibleHeatingRadiation(), rs.getPossibleHeatingVolume())

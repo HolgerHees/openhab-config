@@ -107,12 +107,12 @@ class SunRadiation(object):
         if westMultiplier > 0.0: activeDirections.append("W")
         activeMsg = u" • {}".format("+".join(activeDirections)) if len(activeDirections) > 0 else u""
         
-        sunElevationMsg = int( round( elevation, 0 ) )
-        sunAzimutMsg = int( round( azimut, 0 ) )
+        sunElevationMsg = round( elevation, 1 )
+        sunAzimutMsg = round( azimut, 1 )
       
-        minElevationMsg = u" (min {})".format( int( round( minElevation)) ) if minElevation > 0 else ""
+        minElevationMsg = u" (min {})".format( round( minElevation,1) ) if minElevation > 0 else ""
         lazyRadiationMsg = u" (∾ {})".format( round(sunRadiationLazy / 60.0, 1) ) if sunRadiationLazy != None else ""
-        debugInfo = u"Azimut {}° • Elevation {}{}° • Clouds {} octas • Sun {}{} W/min{}".format(sunAzimutMsg, sunElevationMsg, minElevationMsg, cloudCover, round(_effectiveRadiation / 60.0, 1), lazyRadiationMsg, activeMsg)
+        debugInfo = u"Az {}° • El {}{}° • Clouds {} ☔︎ • Sun {}{} W/min{}".format(sunAzimutMsg, sunElevationMsg, minElevationMsg, cloudCover, round(_effectiveRadiation / 60.0, 1), lazyRadiationMsg, activeMsg)
 
         return _effectiveSouthRadiation, _effectiveWestRadiation, _effectiveRadiation, debugInfo
 

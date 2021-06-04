@@ -477,9 +477,11 @@ class HeatingControlRule():
         outdoorTemperatureItemName = getItemState("pOutdoor_WeatherStation_Temperature_Item_Name").toString()
         heating = Heating(self.log,outdoorTemperatureItemName)
 
-        azimut = getItemState("pOutdoor_Astro_Sun_Azimuth").doubleValue()
-        elevation = getItemState("pOutdoor_Astro_Sun_Elevation").doubleValue()
-
+        # use same azimut and elevation as heating calculation
+        elevation, azimut = SunRadiation._getSunData( now )
+        #azimut = getItemState("pOutdoor_Astro_Sun_Azimuth").doubleValue()
+        #elevation = getItemState("pOutdoor_Astro_Sun_Elevation").doubleValue()
+  
         if getItemState("pOutdoor_WeatherStation_Is_Working") == ON:
             # => ignore radiation in this timewindow because of a tree which is hiding the sun
             #sunIsNotHiddenBehindTree = azimut < 225 or azimut > 245 or elevation > 45
@@ -498,7 +500,7 @@ class HeatingControlRule():
             self.messuredRadiationShortTerm = self.messuredRadiationLongTerm = None
         
         cr, cr4, cr8, hhs = heating.calculate(currentHeatingDemand == ON,self.messuredRadiationShortTerm,self.messuredRadiationLongTerm)    
-
+ 
         if autoModeEnabled:
             heatingRequested = hhs.isHeatingRequested()
             
