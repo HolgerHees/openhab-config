@@ -7,7 +7,7 @@ from java.time import ZonedDateTime
 class TemperatureConditionCheckRule:
     def __init__(self):
         self.triggers = [
-            CronTrigger("0 */5 * * * ?"),
+            CronTrigger("0 */1 * * * ?"),
             ItemStateChangeTrigger("pOther_Presence_Holger_State",state="ON"),
             ItemStateChangeTrigger("pOther_Presence_Sandra_State",state="ON")
         ]
@@ -43,12 +43,17 @@ class TemperatureConditionCheckRule:
         if getItemState("pOther_Manual_State_Air_Thoroughly_Notify") != ON:
             return
           
-        # we are maybe away or sleeping
-        if getItemState("pOther_Presence_State").intValue() != 1:
-            return
+        # no device presence state change
+        if 'event' not in input:
+            # we are away
+            if getItemState("pOther_Presence_State").intValue() == 0:
+                return
+              
+            # recipients will be selected only if there are state changes
+            recipients = None
+        else:
+            recipients = [ PresenceHelper.getRecipientByStateItem( ['event'].getItemName() ) ]
           
-        recipients = [ PresenceHelper.getRecipientByStateItem( ['event'].getItemName() ) ] if 'event' in input else None
-            
         now = ZonedDateTime.now()
 
         gardenTempNow = getItemState("pOutdoor_WeatherStation_Temperature").doubleValue()
@@ -70,9 +75,11 @@ class TemperatureConditionCheckRule:
             recipients = PresenceHelper.getPresentRecipients()
             
         if recipients is not None:
-            if state == 1:
-                sendNotification(u"Lüften", u"{} Fenster auf. Es wird kühler.".format(prefix), recipients = recipients )
-            elif state == -1:
-                sendNotification(u"Lüften", u"{} Fenster zu. Es wird zu warm.".format(prefix), recipients = recipients )
+            # we are not sleeping
+            if getItemState("pOther_Presence_State").intValue() != 2:
+                if state == 1:
+                    sendNotification(u"Lüften", u"{} Fenster auf. Es ist kühl genug.".format(prefix), recipients = recipients )
+                elif state == -1:
+                    sendNotification(u"Lüften", u"{} Fenster zu. Es ist zu warm.".format(prefix), recipients = recipients )
             self.lastState = state
             self.lastPrefix = prefix
