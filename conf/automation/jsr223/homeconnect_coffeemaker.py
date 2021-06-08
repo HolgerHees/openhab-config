@@ -1,4 +1,5 @@
 from shared.helper import rule, getItemState, postUpdateIfChanged, sendNotification
+from custom.presence import PresenceHelper
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 @rule("homeconnect_coffeemaker.py")
@@ -35,7 +36,7 @@ class HomeConnectCoffeemakerDripTrayNotificationRule:
         ]
 
     def execute(self, module, input):
-        sendNotification(u"Kaffeemaschine", u"Auffangschale leeren" )
+        sendNotification(u"Kaffeemaschine", u"Auffangschale leeren", recipients = PresenceHelper.getPresentRecipients() )
 
 @rule("homeconnect_coffeemaker.py")
 class HomeConnectCoffeemakerTankEmptyNotificationRule:
@@ -45,7 +46,7 @@ class HomeConnectCoffeemakerTankEmptyNotificationRule:
         ]
 
     def execute(self, module, input):
-        sendNotification(u"Kaffeemaschine", u"Wasser nachfüllen" )
+        sendNotification(u"Kaffeemaschine", u"Wasser nachfüllen", recipients = PresenceHelper.getPresentRecipients() )
 
 @rule("homeconnect_coffeemaker.py")
 class HomeConnectCoffeemakerBeansEmptyNotificationRule:
@@ -55,4 +56,5 @@ class HomeConnectCoffeemakerBeansEmptyNotificationRule:
         ]
 
     def execute(self, module, input):
-        sendNotification(u"Kaffeemaschine", u"Bohnen nachfüllen" )
+        sendNotification(u"Kaffeemaschine", u"Bohnen nachfüllen", recipients = PresenceHelper.getPresentRecipients() )
+ 

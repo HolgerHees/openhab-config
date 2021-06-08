@@ -320,8 +320,9 @@ sitemap haus label="Main Menu"
 				Switch item=pOther_Manual_State_Notify label="Benachrichtigung"
                 Switch item=pOther_Manual_State_Holiday label="Urlaub aktiv"
 				Group label="Programme [%s]" icon="selfcontrol" item=pOther_State_Message_Auto valuecolor=[pOther_State_Message_Auto=="Inaktiv"="#d72a2a"]{
-					Frame label="Rollläden" {
-						Switch item=pOther_Manual_State_Auto_Rollershutter
+					Frame label="Klima und Beschattung" {
+                        Switch item=pOther_Manual_State_Air_Thoroughly_Notify
+                        Switch item=pOther_Manual_State_Auto_Rollershutter
 						Switch item=pOther_Manual_State_Auto_Sunprotection visibility=[pOther_Manual_State_Auto_Rollershutter==ON]
 						Group item=gShutters visibility=[pOther_Manual_State_Auto_Rollershutter==ON]
 					}

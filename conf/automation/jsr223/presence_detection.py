@@ -1,4 +1,5 @@
 from shared.helper import log, rule, itemLastChangeOlderThen, getItemState, postUpdate, sendNotification, sendNotificationToAllAdmins, startTimer, getGroupMember
+from custom.presence import PresenceHelper
 from core.triggers import ItemStateChangeTrigger
 from java.time import ZonedDateTime
 
@@ -33,7 +34,7 @@ class PresenceCheckRule:
         holgerPhone = itemState if itemName == "pOther_Presence_Holger_State" else getItemState("pOther_Presence_Holger_State")
         sandraPhone = itemState if itemName == "pOther_Presence_Sandra_State" else getItemState("pOther_Presence_Sandra_State")
         
-        bot = 'bot_holger' if itemName == "pOther_Presence_Holger_State" else 'bot_sandra'
+        bot = PresenceHelper.getRecipientByStateItem(itemName)
         
         if holgerPhone == ON or sandraPhone == ON:
             # only possible if we are away

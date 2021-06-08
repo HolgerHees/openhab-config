@@ -1,4 +1,5 @@
 from shared.helper import rule, getItemState, postUpdateIfChanged, sendNotification, startTimer
+from custom.presence import PresenceHelper
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 from core.actions import Transformation
 
@@ -39,7 +40,7 @@ class HomeConnectDishwasherNotificationRule:
 
     def notify(self,state):
         self.checkTimer = None
-        sendNotification(u"Geschirrspüler", u"Geschirr ist fertig" if state else u"Geschirr ist wahrscheinlich fertig" )
+        sendNotification(u"Geschirrspüler", u"Geschirr ist fertig" if state else u"Geschirr ist wahrscheinlich fertig", recipients = PresenceHelper.getPresentRecipients() )
   
     def execute(self, module, input):
         if input['event'].getItemName() == "pGF_Kitchen_Dishwasher_RemainingProgramTimeState":
@@ -57,3 +58,4 @@ class HomeConnectDishwasherNotificationRule:
                 elif currentMode == "Finished"and self.checkTimer != None:
                     self.checkTimer.cancel()
                     self.notify( True )
+ 
