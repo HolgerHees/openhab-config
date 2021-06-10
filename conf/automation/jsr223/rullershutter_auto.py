@@ -1,4 +1,4 @@
-from shared.helper import rule, getItemState, postUpdate, sendCommand, itemLastChangeNewerThen
+from shared.helper import rule, getItemState, postUpdate, sendCommand, itemLastChangeNewerThen, getGroupMemberChangeTrigger
 from core.triggers import ItemStateChangeTrigger
 from java.time import ZonedDateTime
 
@@ -34,6 +34,34 @@ class RollershutterAutoRule:
             elif getItemState("pOther_Presence_State").intValue() == 0:
                 sendCommand("gShutters", UP)
 
+@rule("rollershutter_auto.py")
+class RollershutterAutoContactRule:
+    def __init__(self):
+        self.triggers = []
+        self.triggers += getGroupMemberChangeTrigger("gGF_Sensor_Window",state="CLOSED")
+        self.triggers += getGroupMemberChangeTrigger("gFF_Sensor_Window",state="CLOSED")
+        
+    def execute(self, module, input):
+        if getItemState("pOther_Manual_State_Auto_Rollershutter") != ON:
+            return
+          
+        if getItemState("pOther_Automatic_State_Rollershutter") != ON:
+            return
+    
+        contactItemName = input['event'].getItemName()
+    
+        if contactItemName == "pGF_Livingroom_Openingcontact_Window_Terrace_State": sendCommand("pGF_Livingroom_Shutter_Terrace_Control", DOWN)
+        if contactItemName == "pGF_Livingroom_Openingcontact_Window_Couch_State": sendCommand("pGF_Livingroom_Shutter_Couch_Control", DOWN)
+        if contactItemName == "pGF_Kitchen_Openingcontact_Window_State": sendCommand("pGF_Kitchen_Shutter_Control", DOWN)
+        if contactItemName == "pGF_Guestroom_Openingcontact_Window_State": sendCommand("pGF_Guestroom_Shutter_Control", DOWN)
+        if contactItemName == "pGF_Guesttoilet_Openingcontact_Window_State": sendCommand("pGF_Guesttoilet_Shutter_Control", DOWN)
+
+        if contactItemName == "pFF_Bedroom_Openingcontact_Window_State": sendCommand("pFF_Bedroom_Shutter_Control", DOWN)
+        if contactItemName == "pFF_Dressingroom_Openingcontact_Window_State": sendCommand("pFF_Dressingroom_Shutter_Control", DOWN)
+        if contactItemName == "pFF_Child1_Openingcontact_Window_State": sendCommand("pFF_Child1_Shutter_Control", DOWN)
+        if contactItemName == "pFF_Child2_Openingcontact_Window_State": sendCommand("pFF_Child2_Shutter_Control", DOWN)
+        if contactItemName == "pFF_Bathroom_Openingcontact_Window_State": sendCommand("pFF_Bathroom_Shutter_Control", DOWN)
+        if contactItemName == "pFF_Attic_Openingcontact_Window_State": sendCommand("pFF_Attic_Shutter_Control", DOWN)
 
 @rule("rollershutter_auto.py")
 class AtticSunprotectionRule:
