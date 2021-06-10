@@ -11,6 +11,7 @@ class TemperatureConditionCheckRule:
             ItemStateChangeTrigger("pOther_Presence_Holger_State",state="ON"),
             ItemStateChangeTrigger("pOther_Presence_Sandra_State",state="ON")
         ]
+        self.lastDirection = None
         self.lastGFShouldOpen = None
         self.lastFFShouldOpen = None
         
@@ -33,15 +34,15 @@ class TemperatureConditionCheckRule:
               
         # outside is getting warmer
         if direction > 0:
-            # outside is more then 0.2° (0.1°) colder
-            if refTemp - gardenTemp > ( 0.2 if not lastState else 0.1 ):
+            # outside is more then 1.0° (0.1°) colder
+            if refTemp - gardenTemp > ( 1.0 if not lastState else 0.1 ):
                 return True
             else:
                 return False
         # outside is getting colder
         elif direction < 0:
-            # outside is at least 0.2° (0.1°) colder
-            if refTemp - gardenTemp >= ( 0.2 if not lastState else 0.1 ):
+            # outside is at least 0.3° (0.1°) colder
+            if refTemp - gardenTemp >= ( 0.3 if not lastState else 0.1 ):
                 return True
             else:
                 return False
@@ -83,8 +84,17 @@ class TemperatureConditionCheckRule:
         elif gardenTemp0 < gardenTemp15 < gardenTemp45:
             direction = -1
         else:
-            direction = 0
-        
+            if self.lastDirection is not None:
+                direction = self.lastDirection
+                if direction == 1:
+                    if not (gardenTemp0 >= gardenTemp15 >= gardenTemp45):
+                        direction = 0
+                elif direction == -1:
+                    if not (gardenTemp0 <= gardenTemp15 <= gardenTemp45):
+                        direction = 0
+            else:
+                direction = 0
+                  
         self.log.info(u"GARDEN - Temp0: {}, Temp0Max: {}, Temp15: {}, Temp45: {}".format(gardenTemp0,gardenTemp0Max,gardenTemp15,gardenTemp45))
 
         gfShouldOpen = self.getOpenRequest(now,gardenTemp0,gardenTemp0Max,direction,"pGF_Livingroom_Air_Sensor_Temperature_Value",self.lastGFShouldOpen)
@@ -93,7 +103,7 @@ class TemperatureConditionCheckRule:
         ffShouldOpen = self.getOpenRequest(now,gardenTemp0,gardenTemp0Max,direction,"pFF_Bedroom_Air_Sensor_Temperature_Value",self.lastFFShouldOpen)
         ffIsOpen = self.getOpenState("gFF_Sensor_Window")
         
-        if self.lastGFShouldOpen != gfShouldOpen or self.lastFFShouldOpen != ffShouldOpen:
+        if (self.lastGFShouldOpen!=gfShouldOpen and gfShouldOpen!=gfIsOpen) or (self.lastFFShouldOpen!=ffShouldOpen and ffShouldOpen!=ffIsOpen):
             recipients = PresenceHelper.getPresentRecipients()
             
         self.log.info(u"STATE - gfShouldOpen: {}, gfIsOpen: {}, ffShouldOpen: {}, ffIsOpen: {}, direction: {}".format(gfShouldOpen,gfIsOpen,ffShouldOpen,ffIsOpen,direction))
@@ -129,7 +139,11 @@ class TemperatureConditionCheckRule:
                 
                 # we are not sleeping
                 if getItemState("pOther_Presence_State").intValue() != 2:
+                    # initial debug
+                    if self.lastDirection is None:
+                        recipients = ["bot_holger"]
                     sendNotification(u"Lüften", msg, recipients = recipients )
 
+        self.lastDirection = direction
         self.lastGFShouldOpen = gfShouldOpen
         self.lastFFShouldOpen = ffShouldOpen
