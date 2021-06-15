@@ -2,6 +2,7 @@ Run=Läuft
 Finished=Fertig
 Ready=Bereit
 Pause=Pausiert
+Delayed Start=Verzögerter Start
 -=Aus
 NULL=unbekannt
 UNDEF=unbekannt
