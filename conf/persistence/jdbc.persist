@@ -13,8 +13,4 @@ Items {
 	gPersistance_History* : strategy = everyChange
 	gGF_Sensor_Window* : strategy = everyChange
 	gFF_Sensor_Window* : strategy = everyChange
-	pGF_Corridor_Motiondetector_State : strategy = everyChange
-	pGF_Livingroom_Motiondetector_State : strategy = everyChange
-	pFF_Corridor_Motiondetector_State : strategy = everyChange
-	pGF_Corridor_Openingcontact_Door_State : strategy = everyChange
 }

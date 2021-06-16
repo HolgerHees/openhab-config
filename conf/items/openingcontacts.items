@@ -24,8 +24,8 @@ Group   eGF_Kitchen_Openingcontact_Window                  "Öffnungssensor" <se
 Contact pGF_Kitchen_Openingcontact_Window_State            "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eGF_Kitchen_Openingcontact_Window,gPersistance_History,gGF_Sensor_Window)    ["OpenState"] { channel="knx:device:bridge:contacts_window_ff:kitchen" }
 
 // **** GF GUESTROOM ****
-Group   eGF_Guestroom_Openingcontact_Window                "Öffnungssensor" <selfinfo> (lGF_Kitchen) ["Window"]
-Contact pGF_Guestroom_Openingcontact_Window_State          "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eGF_Guestroom_Openingcontact_Window,lGF_Guestroom,gGF_Sensor_Window) ["OpenState"] { channel="knx:device:bridge:contacts_window_ff:guestroom" }
+Group   eGF_Guestroom_Openingcontact_Window                "Öffnungssensor" <selfinfo> (lGF_Guestroom) ["Window"]
+Contact pGF_Guestroom_Openingcontact_Window_State          "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eGF_Guestroom_Openingcontact_Window,gPersistance_History,gGF_Sensor_Window) ["OpenState"] { channel="knx:device:bridge:contacts_window_ff:guestroom" }
 
 // **** GF GARAGE ****
 Group   eGF_Garage_Openingcontact_Door_Streedside          "Strassen-Öffnungssensor" <selfinfo> (lGF_Garage) ["GarageDoor"]
