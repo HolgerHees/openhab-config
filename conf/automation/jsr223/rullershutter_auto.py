@@ -2,6 +2,35 @@ from shared.helper import rule, getItemState, postUpdate, sendCommand, itemLastC
 from core.triggers import ItemStateChangeTrigger
 from java.time import ZonedDateTime
 
+configs = [
+    { "contact": "pGF_Livingroom_Openingcontact_Window_Terrace_State", "shutter": "pGF_Livingroom_Shutter_Terrace_Control", "sunprotection": "pOther_Automatic_State_Sunprotection_Livingroom", "sunprotectionOnlyIfClosed": True },
+    { "contact": "pGF_Livingroom_Openingcontact_Window_Couch_State", "shutter": "pGF_Livingroom_Shutter_Couch_Control", "sunprotection": "pOther_Automatic_State_Sunprotection_Livingroom" },
+    { "contact": "pGF_Kitchen_Openingcontact_Window_State", "shutter": "pGF_Kitchen_Shutter_Control", "sunprotection": "pOther_Automatic_State_Sunprotection_Livingroom" },
+    { "contact": "pGF_Guestroom_Openingcontact_Window_State", "shutter": "pGF_Guestroom_Shutter_Control" },
+    { "contact": "pGF_Guesttoilet_Openingcontact_Window_State", "shutter": "pGF_Guesttoilet_Shutter_Control" },
+    { "contact": "pFF_Bedroom_Openingcontact_Window_State", "shutter": "pFF_Bedroom_Shutter_Control", "sunprotection": "pOther_Automatic_State_Sunprotection_Bedroom" },
+    { "contact": "pFF_Dressingroom_Openingcontact_Window_State", "shutter": "pFF_Dressingroom_Shutter_Control", "sunprotection": "pOther_Automatic_State_Sunprotection_Dressingroom" },
+    { "contact": "pFF_Child1_Openingcontact_Window_State", "shutter": "pFF_Child1_Shutter_Control" },
+    { "contact": "pFF_Child2_Openingcontact_Window_State", "shutter": "pFF_Child2_Shutter_Control" },
+    { "contact": "pFF_Bathroom_Openingcontact_Window_State", "shutter": "pFF_Bathroom_Shutter_Control", "sunprotection": "pOther_Automatic_State_Sunprotection_Bathroom" },
+    { "contact": "pFF_Attic_Openingcontact_Window_State", "shutter": "pFF_Attic_Shutter_Control", "sunprotection": "pOther_Automatic_State_Sunprotection_Attic" },
+]
+
+contact_map = {}
+shutter_map = {}
+sunprotection_map = {}
+for config in configs:
+    contact_map[config["contact"]] = config
+    shutter_map[config["shutter"]] = config
+    
+    if "sunprotection" not in config:
+        continue
+      
+    if config["sunprotection"] not in sunprotection_map:
+        sunprotection_map[config["sunprotection"]] = []
+  
+    sunprotection_map[config["sunprotection"]].append(config)
+
 @rule("rollershutter_auto.py")
 class RollershutterCleanupRule:
     def __init__(self):
@@ -17,121 +46,63 @@ class RollershutterAutoRule:
         self.triggers = [ItemStateChangeTrigger("pOther_Automatic_State_Rollershutter")]
 
     def execute(self, module, input):
-        if getItemState("pOther_Manual_State_Auto_Rollershutter") == ON:
-            if getItemState("pOther_Automatic_State_Rollershutter") == ON:
-                if getItemState("pGF_Livingroom_Openingcontact_Window_Terrace_State") == CLOSED: sendCommand("pGF_Livingroom_Shutter_Terrace_Control", DOWN)
-                if getItemState("pGF_Livingroom_Openingcontact_Window_Couch_State") == CLOSED: sendCommand("pGF_Livingroom_Shutter_Couch_Control", DOWN)
-                if getItemState("pGF_Kitchen_Openingcontact_Window_State") == CLOSED: sendCommand("pGF_Kitchen_Shutter_Control", DOWN)
-                if getItemState("pGF_Guestroom_Openingcontact_Window_State") == CLOSED: sendCommand("pGF_Guestroom_Shutter_Control", DOWN)
-                if getItemState("pGF_Guesttoilet_Openingcontact_Window_State") == CLOSED: sendCommand("pGF_Guesttoilet_Shutter_Control", DOWN)
-
-                if getItemState("pFF_Bedroom_Openingcontact_Window_State") == CLOSED: sendCommand("pFF_Bedroom_Shutter_Control", DOWN)
-                if getItemState("pFF_Dressingroom_Openingcontact_Window_State") == CLOSED: sendCommand("pFF_Dressingroom_Shutter_Control", DOWN)
-                if getItemState("pFF_Child1_Openingcontact_Window_State") == CLOSED: sendCommand("pFF_Child1_Shutter_Control", DOWN)
-                if getItemState("pFF_Child2_Openingcontact_Window_State") == CLOSED: sendCommand("pFF_Child2_Shutter_Control", DOWN)
-                if getItemState("pFF_Bathroom_Openingcontact_Window_State") == CLOSED: sendCommand("pFF_Bathroom_Shutter_Control", DOWN)
-                if getItemState("pFF_Attic_Openingcontact_Window_State") == CLOSED: sendCommand("pFF_Attic_Shutter_Control", DOWN)
-            elif getItemState("pOther_Presence_State").intValue() == 0:
-                sendCommand("gShutters", UP)
+        if getItemState("pOther_Manual_State_Auto_Rollershutter") != ON:
+            return
+      
+        if getItemState("pOther_Automatic_State_Rollershutter") == ON:
+            for config in configs:
+                if getItemState(config["contact"]) == CLOSED: sendCommand(config["shutter"], DOWN)
+        elif getItemState("pOther_Presence_State").intValue() == 0:
+            sendCommand("gShutters", UP)
 
 @rule("rollershutter_auto.py")
 class RollershutterAutoContactRule:
     def __init__(self):
         self.triggers = []
-        self.triggers += getGroupMemberChangeTrigger("gGF_Sensor_Window",state="CLOSED")
-        self.triggers += getGroupMemberChangeTrigger("gFF_Sensor_Window",state="CLOSED")
+        self.triggers += getGroupMemberChangeTrigger("gGF_Sensor_Window")
+        self.triggers += getGroupMemberChangeTrigger("gFF_Sensor_Window")
         
     def execute(self, module, input):
         if getItemState("pOther_Manual_State_Auto_Rollershutter") != ON:
             return
           
-        if getItemState("pOther_Automatic_State_Rollershutter") != ON:
-            return
-    
         contactItemName = input['event'].getItemName()
-    
-        if contactItemName == "pGF_Livingroom_Openingcontact_Window_Terrace_State": sendCommand("pGF_Livingroom_Shutter_Terrace_Control", DOWN)
-        if contactItemName == "pGF_Livingroom_Openingcontact_Window_Couch_State": sendCommand("pGF_Livingroom_Shutter_Couch_Control", DOWN)
-        if contactItemName == "pGF_Kitchen_Openingcontact_Window_State": sendCommand("pGF_Kitchen_Shutter_Control", DOWN)
-        if contactItemName == "pGF_Guestroom_Openingcontact_Window_State": sendCommand("pGF_Guestroom_Shutter_Control", DOWN)
-        if contactItemName == "pGF_Guesttoilet_Openingcontact_Window_State": sendCommand("pGF_Guesttoilet_Shutter_Control", DOWN)
+        config = contact_map[contactItemName]
 
-        if contactItemName == "pFF_Bedroom_Openingcontact_Window_State": sendCommand("pFF_Bedroom_Shutter_Control", DOWN)
-        if contactItemName == "pFF_Dressingroom_Openingcontact_Window_State": sendCommand("pFF_Dressingroom_Shutter_Control", DOWN)
-        if contactItemName == "pFF_Child1_Openingcontact_Window_State": sendCommand("pFF_Child1_Shutter_Control", DOWN)
-        if contactItemName == "pFF_Child2_Openingcontact_Window_State": sendCommand("pFF_Child2_Shutter_Control", DOWN)
-        if contactItemName == "pFF_Bathroom_Openingcontact_Window_State": sendCommand("pFF_Bathroom_Shutter_Control", DOWN)
-        if contactItemName == "pFF_Attic_Openingcontact_Window_State": sendCommand("pFF_Attic_Shutter_Control", DOWN)
-
-@rule("rollershutter_auto.py")
-class AtticSunprotectionRule:
-    def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Attic")]
-
-    def execute(self, module, input):
-        if getItemState("pOther_Manual_State_Auto_Sunprotection") == ON:
-            if getItemState("pOther_Automatic_State_Sunprotection_Attic") == ON:
-                sendCommand("pFF_Attic_Shutter_Control", DOWN)
-            else:
-                sendCommand("pFF_Attic_Shutter_Control", UP)
-
+        state = None
+        if input['event'].getItemState() == OPEN:
+            state = UP
+        elif getItemState("pOther_Automatic_State_Rollershutter") == ON or ("sunprotection" in config and getItemState(config["sunprotection"]) == ON):
+            state = DOWN
+            
+        if state is None:
+            return
+        
+        sendCommand(config["shutter"], state)
 
 @rule("rollershutter_auto.py")
-class BathroomSunprotectionRule:
+class SunprotectionRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Bathroom")]
+        self.triggers = [
+            ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Attic"),
+            ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Bathroom"),
+            ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Dressingroom"),
+            ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Livingroom")
+        ]
 
     def execute(self, module, input):
-        if getItemState("pOther_Manual_State_Auto_Sunprotection") == ON:
-            if getItemState("pOther_Automatic_State_Sunprotection_Bathroom") == ON:
-                sendCommand("pFF_Bathroom_Shutter_Control", DOWN)
-            else:
-                sendCommand("pFF_Bathroom_Shutter_Control", UP)
-
-
-@rule("rollershutter_auto.py")
-class DressingroomSunprotectionRule:
-    def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Dressingroom")]
-
-    def execute(self, module, input):
-        if getItemState("pOther_Manual_State_Auto_Sunprotection") == ON:
-            if getItemState("pOther_Automatic_State_Sunprotection_Dressingroom") == ON:
-                sendCommand("pFF_Dressingroom_Shutter_Control", DOWN)
-            else:
-                sendCommand("pFF_Dressingroom_Shutter_Control", UP)
-
-
-@rule("rollershutter_auto.py")
-class BedroomSunprotectionRule:
-    def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Bedroom")]
-
-    def execute(self, module, input):
-        if getItemState("pOther_Manual_State_Auto_Sunprotection") == ON:
-            if getItemState("pOther_Automatic_State_Sunprotection_Bedroom") == ON:
-                sendCommand("pFF_Bedroom_Shutter_Control", DOWN)
-            else:
-                sendCommand("pFF_Bedroom_Shutter_Control", UP)
-
-
-@rule("rollershutter_auto.py")
-class LivingroomSunprotectionRule:
-    def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Livingroom")]
-
-    def execute(self, module, input):
-        if getItemState("pOther_Manual_State_Auto_Sunprotection") == ON:
-            if getItemState("pOther_Presence_State").intValue() == 0:
-                if getItemState("pOther_Automatic_State_Sunprotection_Livingroom") == ON:
-                    sendCommand("pGF_Kitchen_Shutter_Control", DOWN)
-                    sendCommand("pGF_Livingroom_Shutter_Couch_Control", DOWN)
-                    if getItemState("pGF_Livingroom_Openingcontact_Window_Terrace_State") == CLOSED:
-                        sendCommand("pGF_Livingroom_Shutter_Terrace_Control", DOWN)
-                else:
-                    sendCommand("pGF_Kitchen_Shutter_Control", UP)
-                    sendCommand("pGF_Livingroom_Shutter_Couch_Control", UP)
-                    sendCommand("pGF_Livingroom_Shutter_Terrace_Control", UP)
+        if getItemState("pOther_Manual_State_Auto_Rollershutter") != ON:
+            return
+          
+        sunprotectionItemName = input['event'].getItemName()
+        configs = sunprotection_map[sunprotectionItemName]
+        state = DOWN if input['event'].getItemState() == ON else UP
+        
+        for config in configs:
+            if state == DOWN and "sunprotectionOnlyIfClosed" in config and getItemState(config["contact"]) == OPEN:
+                continue
+              
+            sendCommand(config["shutter"], state)
 
 @rule("rollershutter_auto.py")
 class TerraceSunprotectionRule:
