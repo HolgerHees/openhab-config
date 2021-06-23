@@ -15,10 +15,6 @@ class SensorContactNotificationRule:
             itemName = input['event'].getItemName()
             item = getItem(itemName)
 
-            group = itemName
-            if group.startswith("Door"):
-                group = u"Tür"
-            else:
-                group = u"Fenster"
+            group = u"Tür" if "Door" in itemName else u"Fenster"
 
             sendNotification(group, u"{} {}".format(item.getLabel(),input['event'].getItemState().toString()))
