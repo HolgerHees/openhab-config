@@ -3,7 +3,7 @@ from core.triggers import ItemStateChangeTrigger
 from java.time import ZonedDateTime
 
 configs = [
-    { "contact": "pGF_Livingroom_Openingcontact_Window_Terrace_State", "shutter": "pGF_Livingroom_Shutter_Terrace_Control", "sunprotection": "pOther_Automatic_State_Sunprotection_Livingroom", "sunprotectionOnlyIfClosed": True },
+    { "contact": "pGF_Livingroom_Openingcontact_Window_Terrace_State", "shutter": "pGF_Livingroom_Shutter_Terrace_Control", "sunprotection": "pOther_Automatic_State_Sunprotection_Livingroom", "sunprotectionOnlyIfClosed": True, "sunprotectionOnlyIfAway": True },
     { "contact": "pGF_Livingroom_Openingcontact_Window_Couch_State", "shutter": "pGF_Livingroom_Shutter_Couch_Control", "sunprotection": "pOther_Automatic_State_Sunprotection_Livingroom" },
     { "contact": "pGF_Kitchen_Openingcontact_Window_State", "shutter": "pGF_Kitchen_Shutter_Control", "sunprotection": "pOther_Automatic_State_Sunprotection_Livingroom" },
     { "contact": "pGF_Guestroom_Openingcontact_Window_State", "shutter": "pGF_Guestroom_Shutter_Control" },
@@ -99,7 +99,7 @@ class SunprotectionRule:
         state = DOWN if input['event'].getItemState() == ON else UP
         
         for config in configs:
-            if state == DOWN and "sunprotectionOnlyIfClosed" in config and getItemState(config["contact"]) == OPEN:
+            if state == DOWN and ( ( "sunprotectionOnlyIfClosed" in config and getItemState(config["contact"]) != CLOSED ) or ( "sunprotectionOnlyIfAway" in config and getItemState("pOther_Presence_State").intValue() != 0) ):
                 continue
               
             sendCommand(config["shutter"], state)

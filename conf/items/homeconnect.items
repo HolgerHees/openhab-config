@@ -20,7 +20,7 @@ Group   eGF_Kitchen_Dishwasher                             "Geschirrspühler"   
 String  pGF_Kitchen_Dishwasher_Message                     "Status [%s]"        <selfinfo> (eGF_Kitchen_Dishwasher) ["Point"]
 Switch  pGF_Kitchen_Dishwasher_Power_State                 "Eingeschaltet [MAP(on_off_de.map):%s]" <selfautomode> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnect:dishwasher:default:dishwasher:power_state"}
 Contact pGF_Kitchen_Dishwasher_DoorState                   "Tür [MAP(homeconnect_door.map):%s]" <whitegood> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnect:dishwasher:default:dishwasher:door_state"}
-String  pGF_Kitchen_Dishwasher_OperationState              "Status [MAP(homeconnect_operation:_mode.map):%s]" <selfautomode> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnect:dishwasher:default:dishwasher:operation_state"}
+String  pGF_Kitchen_Dishwasher_OperationState              "Status [MAP(homeconnect_operation.map):%s]" <selfautomode> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnect:dishwasher:default:dishwasher:operation_state"}
 Switch  pGF_Kitchen_Dishwasher_RemoteStartAllowanceState   "Fernstart erlaubt [MAP(on_off_de.map):%s]" <selfinfo> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnect:dishwasher:default:dishwasher:remote_start_allowance_state"}
 Switch  pGF_Kitchen_Dishwasher_RemoteControlActiveState    "Fernstart Status [MAP(on_off_de.map):%s]" <selfinfo> (eGF_Kitchen_Dishwasher) ["Point"] 
 {channel="homeconnect:dishwasher:default:dishwasher:remote_control_active_state"}
