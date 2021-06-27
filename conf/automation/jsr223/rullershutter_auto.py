@@ -16,6 +16,8 @@ configs = [
     { "contact": "pFF_Attic_Openingcontact_Window_State", "shutter": "pFF_Attic_Shutter_Control", "sunprotection": "pOther_Automatic_State_Sunprotection_Attic" },
 ]
 
+presenceTimer = None
+
 contact_map = {}
 shutter_map = {}
 sunprotection_map = {}
@@ -38,7 +40,6 @@ class RollershutterAutoCleanupRule:
 
     def execute(self, module, input):
         postUpdate("pOther_Manual_State_Auto_Sunprotection", OFF)
-
 
 @rule("rollershutter_auto.py")
 class RollershutterAutoMorningEveningRule:
@@ -86,16 +87,9 @@ class RollershutterAutoWindowContactRule:
         sendCommand(config["shutter"], state)
 
 @rule("rollershutter_auto.py")
-class RollershutterAutoSunprotectionRule:
+class RollershutterAutoPresenceRule:
     def __init__(self):
-        self.triggers = [
-            ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Attic"),
-            ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Bathroom"),
-            ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Dressingroom"),
-            ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Livingroom"),
-            ItemStateChangeTrigger("pOther_Presence_State")
-        ]
-        self.presenceTimer = None
+        self.triggers = [ItemStateChangeTrigger("pOther_Presence_State")]
 
     def updateCallback(self,state):
         for config in configs:
@@ -111,37 +105,49 @@ class RollershutterAutoSunprotectionRule:
                     continue
 
             sendCommandIfChanged(config["shutter"],state)
-        self.presenceTimer = None
+        presenceTimer = None
 
     def execute(self, module, input):
         if getItemState("pOther_Manual_State_Auto_Rollershutter") != ON:
             return
           
-        if input['event'].getItemName() == "pOther_Presence_State":
-            if self.presenceTimer != None:
-                self.presenceTimer.cancel()
-                self.presenceTimer = None
-        
-            if input['event'].getItemState().intValue() != 0:
-                self.updateCallback(UP)
-            else:
-                self.presenceTimer = startTimer(self.log, 1800, self.updateCallback, args = [ DOWN ])
+        if presenceTimer != None:
+            presenceTimer.cancel()
+    
+        if input['event'].getItemState().intValue() != 0:
+            self.updateCallback(UP)
         else:
-            sunprotectionItemName = input['event'].getItemName()
-            configs = sunprotection_map[sunprotectionItemName]
-            state = DOWN if input['event'].getItemState() == ON else UP
-            
-            for config in configs:
-                if state == DOWN:
-                    # shutdown shutters only if the window is closed
-                    if getItemState(config["contact"]) != CLOSED:
-                        continue
-                    
-                    # skip closing shutters if we must be away but we are still present or not long enough away
-                    if "sunprotectionOnlyIfAway" in config and (getItemState("pOther_Presence_State").intValue() != 0 or self.presenceTimer is not None):
-                        continue
-              
-                sendCommand(config["shutter"], state)
+            presenceTimer = startTimer(self.log, 1800, self.updateCallback, args = [ DOWN ])
+
+@rule("rollershutter_auto.py")
+class RollershutterAutoSunprotectionRule:
+    def __init__(self):
+        self.triggers = [
+            ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Attic"),
+            ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Bathroom"),
+            ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Dressingroom"),
+            ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Livingroom")
+        ]
+
+    def execute(self, module, input):
+        if getItemState("pOther_Manual_State_Auto_Rollershutter") != ON:
+            return
+          
+        sunprotectionItemName = input['event'].getItemName()
+        configs = sunprotection_map[sunprotectionItemName]
+        state = DOWN if input['event'].getItemState() == ON else UP
+        
+        for config in configs:
+            if state == DOWN:
+                # shutdown shutters only if the window is closed
+                if getItemState(config["contact"]) != CLOSED:
+                    continue
+                
+                # skip closing shutters if we must be away but we are still present or not long enough away
+                if "sunprotectionOnlyIfAway" in config and (getItemState("pOther_Presence_State").intValue() != 0 or presenceTimer is not None):
+                    continue
+          
+            sendCommand(config["shutter"], state)
 
           
 @rule("rollershutter_auto.py")
