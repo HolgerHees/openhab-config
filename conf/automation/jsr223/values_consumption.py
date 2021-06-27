@@ -324,7 +324,8 @@ class EnergyCurrentDemandAndConsumptionRule:
                     # solar value update was not successful for a while
                     #solarActive = getItemState("pOther_Automatic_State_Solar") == ON
                     #if itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_Total_Yield", ZonedDateTime.now().minusHours(5) if solarActive else ZonedDateTime.now().minusHours(14)):
-                    if itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_Total_Yield", ZonedDateTime.now().minusMinutes(15)):
+                    if (itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_Total_Yield", ZonedDateTime.now().minusMinutes(15)) 
+                       or (itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_AC_Power", ZonedDateTime.now().minusMinutes(60)) and getItemState("pGF_Garage_Solar_Inverter_AC_Power").intValue() > 0)):
                         #  and 
                         #(itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_AC_Power", ZonedDateTime.now().minusMinutes(15)) or getItemState("pGF_Garage_Solar_Inverter_AC_Power").intValue() == 0)):
                         if postUpdateIfChanged("pGF_Garage_Solar_Inverter_Is_Working",OFF):
