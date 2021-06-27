@@ -3,9 +3,9 @@ from core.triggers import ItemStateChangeTrigger
 from java.time import ZonedDateTime
 
 configs = [
-    { "contact": "pGF_Livingroom_Openingcontact_Window_Terrace_State", "shutter": "pGF_Livingroom_Shutter_Terrace_Control", "sunprotection": "pOther_Automatic_State_Sunprotection_Livingroom", "sunprotectionOnlyIfClosed": True, "sunprotectionOnlyIfAway": True },
-    { "contact": "pGF_Livingroom_Openingcontact_Window_Couch_State", "shutter": "pGF_Livingroom_Shutter_Couch_Control", "sunprotection": "pOther_Automatic_State_Sunprotection_Livingroom" },
-    { "contact": "pGF_Kitchen_Openingcontact_Window_State", "shutter": "pGF_Kitchen_Shutter_Control", "sunprotection": "pOther_Automatic_State_Sunprotection_Livingroom" },
+    { "contact": "pGF_Livingroom_Openingcontact_Window_Terrace_State", "shutter": "pGF_Livingroom_Shutter_Terrace_Control", "sunprotection": "pOther_Automatic_State_Sunprotection_Livingroom", "sunprotectionOnlyIfAway": True },
+    { "contact": "pGF_Livingroom_Openingcontact_Window_Couch_State", "shutter": "pGF_Livingroom_Shutter_Couch_Control", "sunprotection": "pOther_Automatic_State_Sunprotection_Livingroom", "sunprotectionOnlyIfAway": True },
+    { "contact": "pGF_Kitchen_Openingcontact_Window_State", "shutter": "pGF_Kitchen_Shutter_Control", "sunprotection": "pOther_Automatic_State_Sunprotection_Livingroom", "sunprotectionOnlyIfAway": True },
     { "contact": "pGF_Guestroom_Openingcontact_Window_State", "shutter": "pGF_Guestroom_Shutter_Control" },
     { "contact": "pGF_Guesttoilet_Openingcontact_Window_State", "shutter": "pGF_Guesttoilet_Shutter_Control" },
     { "contact": "pFF_Bedroom_Openingcontact_Window_State", "shutter": "pFF_Bedroom_Shutter_Control", "sunprotection": "pOther_Automatic_State_Sunprotection_Bedroom" },
@@ -32,7 +32,7 @@ for config in configs:
     sunprotection_map[config["sunprotection"]].append(config)
 
 @rule("rollershutter_auto.py")
-class RollershutterCleanupRule:
+class RollershutterAutoCleanupRule:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pOther_Manual_State_Auto_Rollershutter", state="OFF")]
 
@@ -41,7 +41,7 @@ class RollershutterCleanupRule:
 
 
 @rule("rollershutter_auto.py")
-class RollershutterAutoRule:
+class RollershutterAutoMorningEveningRule:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pOther_Automatic_State_Rollershutter")]
 
@@ -51,12 +51,14 @@ class RollershutterAutoRule:
       
         if getItemState("pOther_Automatic_State_Rollershutter") == ON:
             for config in configs:
-                if getItemState(config["contact"]) == CLOSED: sendCommand(config["shutter"], DOWN)
+                if getItemState(config["contact"]) != CLOSED: 
+                    continue
+                sendCommand(config["shutter"], DOWN)
         elif getItemState("pOther_Presence_State").intValue() == 0:
             sendCommand("gShutters", UP)
 
 @rule("rollershutter_auto.py")
-class RollershutterAutoContactRule:
+class RollershutterAutoWindowContactRule:
     def __init__(self):
         self.triggers = []
         self.triggers += getGroupMemberChangeTrigger("gGF_Sensor_Window")
@@ -72,7 +74,7 @@ class RollershutterAutoContactRule:
         state = None
         if input['event'].getItemState() == OPEN:
             state = UP
-        elif getItemState("pOther_Automatic_State_Rollershutter") == ON or ("sunprotection" in config and getItemState(config["sunprotection"]) == ON):
+        elif getItemState("pOther_Automatic_State_Rollershutter") == ON or ("sunprotection" in config and "sunprotectionOnlyIfAway" not in config and getItemState(config["sunprotection"]) == ON):
             state = DOWN
             
         if state is None:
@@ -81,7 +83,7 @@ class RollershutterAutoContactRule:
         sendCommand(config["shutter"], state)
 
 @rule("rollershutter_auto.py")
-class SunprotectionRule:
+class RollershutterAutoSunprotectionRule:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Attic"),
@@ -99,13 +101,13 @@ class SunprotectionRule:
         state = DOWN if input['event'].getItemState() == ON else UP
         
         for config in configs:
-            if state == DOWN and ( ( "sunprotectionOnlyIfClosed" in config and getItemState(config["contact"]) != CLOSED ) or ( "sunprotectionOnlyIfAway" in config and getItemState("pOther_Presence_State").intValue() != 0) ):
+            if state == DOWN and (getItemState(config["contact"]) != CLOSED or ("sunprotectionOnlyIfAway" in config and getItemState("pOther_Presence_State").intValue() != 0)):
                 continue
               
             sendCommand(config["shutter"], state)
 
 @rule("rollershutter_auto.py")
-class TerraceSunprotectionRule:
+class TerraceAutoSunprotectionRule:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Terrace")
