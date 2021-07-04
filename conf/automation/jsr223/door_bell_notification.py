@@ -12,3 +12,4 @@ class DoorBellNotificationRule:
             sendNotification("Klingel", "Es klingelt", "https://smartmarvin.de/cameraStrasseImage" )
 
         postUpdate("pOutdoor_Streedside_Gardendoor_Bell_Last_Change", DateTimeType())
+ 

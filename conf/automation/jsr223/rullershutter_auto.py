@@ -16,8 +16,6 @@ configs = [
     { "contact": "pFF_Attic_Openingcontact_Window_State", "shutter": "pFF_Attic_Shutter_Control", "sunprotection": "pOther_Automatic_State_Sunprotection_Attic" },
 ]
 
-presenceTimer = None
-
 contact_map = {}
 shutter_map = {}
 sunprotection_map = {}
@@ -90,6 +88,7 @@ class RollershutterAutoWindowContactRule:
 class RollershutterAutoPresenceRule:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pOther_Presence_State")]
+        self.presenceTimer = None
 
     def updateCallback(self,state):
         for config in configs:
@@ -105,19 +104,21 @@ class RollershutterAutoPresenceRule:
                     continue
 
             sendCommandIfChanged(config["shutter"],state)
-        presenceTimer = None
+
+        self.presenceTimer = None
 
     def execute(self, module, input):
         if getItemState("pOther_Manual_State_Auto_Rollershutter") != ON:
             return
           
-        if presenceTimer != None:
-            presenceTimer.cancel()
+        if self.presenceTimer != None:
+            self.presenceTimer.cancel()
+            self.presenceTimer = None
     
-        if input['event'].getItemState().intValue() != 0:
+        if input['event'].getOldItemState().intValue() == 0:
             self.updateCallback(UP)
-        else:
-            presenceTimer = startTimer(self.log, 1800, self.updateCallback, args = [ DOWN ])
+        elif input['event'].getItemState().intValue() == 0:
+            self.presenceTimer = startTimer(self.log, 1800, self.updateCallback, args = [ DOWN ])
 
 @rule("rollershutter_auto.py")
 class RollershutterAutoSunprotectionRule:
@@ -144,7 +145,7 @@ class RollershutterAutoSunprotectionRule:
                     continue
                 
                 # skip closing shutters if we must be away but we are still present or not long enough away
-                if "sunprotectionOnlyIfAway" in config and (getItemState("pOther_Presence_State").intValue() != 0 or presenceTimer is not None):
+                if "sunprotectionOnlyIfAway" in config and (getItemState("pOther_Presence_State").intValue() != 0 or itemLastChangeNewerThen("pOther_Presence_State", ZonedDateTime.now().minusSeconds(1800))):
                     continue
           
             sendCommand(config["shutter"], state)
