@@ -25,4 +25,3 @@ class RoboterMessagesRule:
         msg = ", ".join(active)
 
         postUpdateIfChanged("pOther_State_Message_Devices", msg)
- 
