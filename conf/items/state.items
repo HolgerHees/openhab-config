@@ -52,14 +52,16 @@ Number pOther_Automatic_State_Sunprotection_Terrace "Terasse geschlossen" <selfr
 
 //####### STATE MESSAGES #######
 Group  eOther_State_Messages                    "Nachrichten" <selfinfo> (lOther) ["Equipment"]
-String pOther_State_Message_Main                "Status [%s]" <selferror> (eOther_State_Messages) ["Point"] // main state
-String pOther_State_Message_Room                "Status [%s]" <selferror> (eOther_State_Messages) ["Point"] // room state
-String pOther_State_Message_Garden              "Status [%s]" <selferror> (eOther_State_Messages) ["Point"] // garden state
-String pOther_State_Message_Auto                "Status [%s]" <selferror> (eOther_State_Messages) ["Point"] // auto programs
+String pOther_State_Message_Room                "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // room state
+String pOther_State_Message_Garden              "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // garden state
+String pOther_State_Message_Auto                "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // auto programs
  
-String pOther_State_Message_Robot               "Status [%s]" <selferror> (eOther_State_Messages) ["Point"] // roomba and automower state
-String pOther_State_Message_Homeconnect         "Status [%s]" <selferror> (eOther_State_Messages) ["Point"] // homeconnect state
-String pOther_State_Message_Devices             "Status [%s]" <selferror> (eOther_State_Messages) ["Point"] // summerized device state
+String pOther_State_Message_Robot               "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // roomba and automower state
+String pOther_State_Message_Homeconnect         "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // homeconnect state
+String pOther_State_Message_Devices             "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // summerized device state
+
+String pOther_State_Message_Sensors             "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // sensors state
+String pOther_State_Message_Main                "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // main (utilityroom) state
 
 //####### SCENES #######
 Group  eOther_Scenes                            "Szenen" <selfinfo> (lOther) ["Equipment"]

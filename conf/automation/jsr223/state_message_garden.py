@@ -2,8 +2,8 @@ from shared.helper import rule, getItemState, postUpdateIfChanged
 from core.triggers import ItemStateChangeTrigger
 
 
-@rule("scenes_wathering_messages.py")
-class ScenesWatheringMessagesRule:
+@rule("state_message_garden.py")
+class StateMessageGardenRule:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pOutdoor_Watering_Logic_Program_State"),
@@ -21,7 +21,7 @@ class ScenesWatheringMessagesRule:
             active.append(u"Beleuchtung")
 
         if len(active) == 0:
-            active.append(u"Alles normal")
+            active.append(u"Alles ok")
 
         msg = ", ".join(active)
 

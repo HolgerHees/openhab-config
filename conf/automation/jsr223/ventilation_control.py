@@ -1,12 +1,68 @@
 import math
 from java.time import ZonedDateTime
 
-from shared.helper import rule, itemLastChangeOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand, startTimer
-from core.triggers import CronTrigger, ItemCommandTrigger, ItemStateChangeTrigger
+from shared.helper import rule, itemLastChangeOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand, startTimer, getThing, sendNotificationToAllAdmins
+from core.triggers import CronTrigger, ItemCommandTrigger, ItemStateChangeTrigger, ThingStatusChangeTrigger
 
 autoChangeInProgress = False
 
 DELAYED_UPDATE_TIMEOUT = 3
+
+@rule("ventilation_control.py")
+class VentilationStateMessageRule:
+    def __init__(self):
+        self.triggers = [
+            #CronTrigger("*/15 * * * * ?"),
+            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Error_Message"),
+            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Filter_Error"),
+            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Thing_State")
+        ]
+        self.updateTimer = None
+
+    def delayUpdate(self):
+        active = []
+
+        if getItemState("pGF_Utilityroom_Ventilation_Filter_Error") == ON:
+            active.append(u"Filter")
+
+        if getItemState("pGF_Utilityroom_Ventilation_Error_Message").toString() != "No Errors":
+            active.append(u"Error: {}".format( getItemState("pGF_Utilityroom_Ventilation_Error_Message").toString() ))
+
+        if getItemState("pGF_Utilityroom_Ventilation_Thing_State").toString() != "Alles ok":
+            active.append(u"Error: {}".format( getItemState("pGF_Utilityroom_Ventilation_Thing_State").toString() ))
+
+        if len(active) == 0:
+            active.append(u"Alles ok")
+
+        msg = ", ".join(active)
+
+        postUpdateIfChanged("pGF_Utilityroom_Ventilation_State_Message", msg)
+        
+        self.updateTimer = None
+
+    def execute(self, module, input):
+        self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
+
+@rule("ventilation_state.py")
+class VentilationStateRule:
+    def __init__(self):
+        self.triggers = [
+            #CronTrigger("*/15 * * * * ?"),
+            ThingStatusChangeTrigger("comfoair:comfoair:default")
+        ]
+
+    def execute(self, module, input):
+        thing = getThing("comfoair:comfoair:default")
+        status = thing.getStatus()
+        info = thing.getStatusInfo()
+        
+        #self.log.info(u"{}".format(status))
+
+        if status is not None and info is not None:
+            if status.toString() == 'OFFLINE':
+                postUpdateIfChanged("pGF_Utilityroom_Ventilation_Thing_State",info.toString())
+            else:
+                postUpdateIfChanged("pGF_Utilityroom_Ventilation_Thing_State","Alles ok")
 
 @rule("ventilation_efficiency.py")
 class VentilationEfficiencyRule:
@@ -70,36 +126,6 @@ class FilterRuntimeRule:
         postUpdateIfChanged("pGF_Utilityroom_Ventilation_Filter_Runtime_Message", msg)
  
 @rule("ventilation_control.py")
-class FilterStateMessageRule:
-    def __init__(self):
-        self.triggers = [
-            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Error_Message"),
-            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Filter_Error")
-        ]
-        self.updateTimer = None
-
-    def delayUpdate(self):
-        active = []
-
-        if getItemState("pGF_Utilityroom_Ventilation_Filter_Error") == ON:
-            active.append(u"Filter")
-
-        if getItemState("pGF_Utilityroom_Ventilation_Error_Message").toString() != "No Errors":
-            active.append(u"Error: {}".format( getItemState("pGF_Utilityroom_Ventilation_Error_Message").toString() ))
-
-        if len(active) == 0:
-            active.append(u"Alles in Ordnung")
-
-        msg = ", ".join(active)
-
-        postUpdateIfChanged("pGF_Utilityroom_Ventilation_State_Message", msg)
-        
-        self.updateTimer = None
-
-    def execute(self, module, input):
-        self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
-
-@rule("ventilation_control.py")
 class FilterOutdoorTemperatureMessageRule:
     def __init__(self):
         self.triggers = [
@@ -139,6 +165,7 @@ class FilterIndoorTemperatureMessageRule:
 class FilterVentilationMessageRule:
     def __init__(self):
         self.triggers = [
+            #CronTrigger("*/15 * * * * ?"),
             ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Incoming"),
             ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Outgoing")
         ]

@@ -15,14 +15,14 @@ class HomeConnectDishwasherMessageRule:
     def execute(self, module, input):
         operation = getItemState("pGF_Kitchen_Dishwasher_OperationState")
         if operation != NULL and operation != UNDEF:
-            mode = Transformation.transform("MAP", "dishwasher_mode.map", operation.toString() )
+            mode = Transformation.transform("MAP", "homeconnect_operation.map", operation.toString() )
             msg = u"{}".format(mode)
             
             runtime = getItemState("pGF_Kitchen_Dishwasher_RemainingProgramTimeState")
             
             #self.log.info(u"{}".format(runtime))
             
-            if runtime != NULL and runtime != UNDEF and runtime.intValue() > 0:
+            if runtime != NULL and runtime != UNDEF and runtime.intValue() > 0 and operation.toString() in ['Paused','Delayed','Run']:
                 runtime = Transformation.transform("JS", "homeconnect_runtime.js", u"{}".format(runtime.intValue()) )
                 msg = u"{}, {}".format(msg,runtime)
                 

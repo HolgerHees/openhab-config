@@ -1,4 +1,4 @@
-from shared.helper import rule, postUpdateIfChanged, sendNotificationToAllAdmins, getItemState, getThing
+from shared.helper import rule, postUpdateIfChanged, getItemState, getThing
 from core.triggers import CronTrigger, ThingStatusChangeTrigger
 
 #https://github.com/bruestel/org.openhab.binding.homeconnect/tree/2.5.x-next/bundles/org.openhab.binding.homeconnect#notification-on-credential-error
@@ -6,7 +6,7 @@ from core.triggers import CronTrigger, ThingStatusChangeTrigger
 class HomeConnectStateRule:
     def __init__(self):
         self.triggers = [
-            #CronTrigger("0 0 * * * ?"),
+            #CronTrigger("*/15 * * * * ?"),
             ThingStatusChangeTrigger("homeconnect:api_bridge:default")
         ]
 
@@ -18,9 +18,6 @@ class HomeConnectStateRule:
         if status is not None and info is not None:
             #self.log.info(u"Home Connect bridge status: '{}',  detail: '{}'".format(status.toString(),info.toString()))
             if status.toString() == 'OFFLINE':
-                if getItemState("pOther_State_Message_Homeconnect").toString() == "Alles normal":
-                    sendNotificationToAllAdmins("Homeconnect", "Offline")
                 postUpdateIfChanged("pOther_State_Message_Homeconnect",info.toString())
             else:
-                if postUpdateIfChanged("pOther_State_Message_Homeconnect","Alles normal"):
-                    sendNotificationToAllAdmins("Homeconnect", "Online")
+                postUpdateIfChanged("pOther_State_Message_Homeconnect","Alles ok")

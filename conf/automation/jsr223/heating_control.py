@@ -418,6 +418,30 @@ maintenanceMode = {}
 #        pass
 
 @rule("heating_control.py")
+class HeatingStateRule:
+    def __init__(self):
+        self.triggers = [
+            #CronTrigger("0 */15 * * * ?"),
+            ItemStateChangeTrigger("pGF_Utilityroom_Heating_Common_Fault")
+        ]
+
+    def execute(self, module, input):
+      active = []
+      
+      if getItemState("pGF_Utilityroom_Heating_Common_Fault").intValue() > 0:
+          active.append(u"Gerätefehler")
+
+      if itemLastUpdateOlderThen("pGF_Utilityroom_Heating_Common_Fault", ZonedDateTime.now().minusMinutes(10)):
+          active.append(u"Verbindungsfehler")
+          
+      if len(active) == 0:
+            active.append(u"Alles ok")
+
+      msg = ", ".join(active)
+
+      postUpdateIfChanged("pGF_Utilityroom_Heating_State_Message", msg)
+ 
+@rule("heating_control.py")
 class HeatingVentileRule():
     def __init__(self):
         self.triggers = [
@@ -457,7 +481,6 @@ class HeatingControlRule():
         self.triggers = [
             ItemStateChangeTrigger("pGF_Utilityroom_Heating_Auto_Mode"),
             CronTrigger("15 * * * * ?")
-#            CronTrigger("*/15 * * * * ?")
         ]
         self.activeHeatingOperatingMode = -1
         self.messuredRadiationShortTerm = None

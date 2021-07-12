@@ -110,7 +110,9 @@ String pGF_Utilityroom_Heating_Solar_Power_Message                  "Solar Leist
 Number pGF_Utilityroom_Heating_Solar_Pump_State                     "Solar Pumpe [MAP(heating_pump_de.map):%s]" <selfruntime> (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) {channel="mqtt:topic:mosquitto:vcontrol:pumpState" }
 Number pGF_Utilityroom_Heating_Solar_Reheating_State                "Nachladeunterdrückung [MAP(heating_state_de.map):%s]" <selfruntime> (eGF_Utilityroom_Heating_Boiler) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:solarReheatingState" }
 String pGF_Utilityroom_Heating_Solar_State_Message                  "Pumpe, Nachladeunterdr. [%s]"      <selfsettings>    (eGF_Utilityroom_Heating_Boiler) ["Point"] 
-Number pGF_Utilityroom_Heating_Common_Fault                         "Status [MAP(heating_state_de.map):%s]" <selfinfo>    (eGF_Utilityroom_Heating_Boiler) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:commonFault" }
+Number pGF_Utilityroom_Heating_Common_Fault                         "Fehler [MAP(heating_state_de.map):%s]" <selfinfo>    (eGF_Utilityroom_Heating_Boiler) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:commonFault" }
+
+String pGF_Utilityroom_Heating_State_Message                        "Status [%s]"                       <selfinfo> (eGF_Utilityroom_Heating_Boiler) ["Point"]
 
 Number pGF_Utilityroom_Heating_Temperature_Pipe_Out                 "Gem. Vorlauf (Ist) [%.1f °C]"      <selftemperature>    (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"]
 Number pGF_Utilityroom_Heating_Temperature_Pipe_In                  "Gem. Rücklauf (Ist) [%.1f °C]"     <selftemperature>    (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"]

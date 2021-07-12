@@ -2,40 +2,24 @@ from shared.helper import rule, itemLastUpdateOlderThen, sendNotificationToAllAd
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 from java.time import ZonedDateTime
 
-@rule("values_error_messages.py")
-class ValuesErrorMessagesRule:
+@rule("state_message_sensors.py")
+class StateMessageSensorsRule:
     def __init__(self):
         self.triggers = [
             CronTrigger("0 */5 * * * ?"),
-            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Filter_Error"),
-            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Error_Message"),
-            ItemStateChangeTrigger("pGF_Utilityroom_Heating_Common_Fault"),
-            ItemStateChangeTrigger("pGF_Garage_Solar_Inverter_Is_Working"),
             ItemStateChangeTrigger("pOutdoor_WeatherStation_Is_Working"),
-            ItemStateChangeTrigger("State_Server")
+            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Main_Info")
         ]
 
     def execute(self, module, input):
-        group = u"Fehler"
         active = []
-
-        if getItemState("pGF_Utilityroom_Ventilation_Filter_Error") == ON or getItemState("pGF_Utilityroom_Ventilation_Error_Message").toString() != "No Errors":
-            active.append(u"Lüftung")
-
-        if getItemState("pGF_Utilityroom_Heating_Common_Fault").intValue() > 0:
-            active.append(u"Heizung Fehler")
-
-        if itemLastUpdateOlderThen("pGF_Utilityroom_Heating_Common_Fault", ZonedDateTime.now().minusMinutes(10)):
-            active.append(u"Heizung ⟳")
-            
-        if getItemState("pGF_Garage_Solar_Inverter_Is_Working") == OFF:
-            active.append(u"Solar ⟳")
+        group = "Fehler"
 
         if getItemState("pOutdoor_WeatherStation_Is_Working") == OFF:
-            active.append(u"Wetter ⟳")
+            active.append(u"Wetter")
             
-        if getItemState("State_Server").intValue() > 1:
-            active.append(u"Server")
+        if getItemState("pIndoor_Plant_Sensor_Main_Info").toString() != 'Alles ok':
+            active.append(getItemState("pIndoor_Plant_Sensor_Main_Info").toString())
 
         refDate = ZonedDateTime.now().minusMinutes(1440)  # last 24 hours
 
@@ -53,13 +37,14 @@ class ValuesErrorMessagesRule:
                 or itemLastUpdateOlderThen("pFF_Bathroom_Air_Sensor_Temperature_Value", refDate) \
                 or itemLastUpdateOlderThen("pFF_Corridor_Air_Sensor_Temperature_Value", refDate) \
                 or itemLastUpdateOlderThen("pFF_Attic_Air_Sensor_Temperature_Value", refDate):
-            active.append(u"Sensors ⟳")
+            active.append(u"Sensors")
 
         if len(active) == 0:
-            active.append(u"Alles normal")
-            group = u"Info"
-
+            active.append(u"Alles ok")
+            group = "Info" 
+            
         msg = u", ".join(active)
 
-        if postUpdateIfChanged("pOther_State_Message_Main", msg):
-            sendNotificationToAllAdmins(group, msg)
+        if postUpdateIfChanged("pOther_State_Message_Sensors", msg):
+            sendNotificationToAllAdmins("Sensoren " + group, msg)
+ 

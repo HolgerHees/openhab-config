@@ -1,11 +1,14 @@
 from shared.helper import rule, getItemState, postUpdateIfChanged
-from core.triggers import ItemStateChangeTrigger
+from core.triggers import ItemStateChangeTrigger, CronTrigger
 
 
 @rule("scene_plant_messages.py")
 class SummeryRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("pIndoor_Plant_Sensor_Watering_Info")]
+        self.triggers = [
+            #CronTrigger("*/15 * * * * ?"),
+            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Watering_Info")
+        ]
 
     def execute(self, module, input):
         state = getItemState("pIndoor_Plant_Sensor_Watering_Info").toString()
@@ -13,7 +16,7 @@ class SummeryRule:
         if state != "Feucht genug" and state != "Nicht aktiv":
             msg = state
         else:
-            msg = u"Alles normal"
+            msg = u"Alles ok"
 
         postUpdateIfChanged("pIndoor_Plant_Sensor_Main_Info", msg)
 

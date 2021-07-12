@@ -111,7 +111,7 @@ sitemap haus label="Main Menu"
 		}
 	}
 	Frame label="Steuern" {
-		Group label="Garten [%s]" icon="selfgarden" item=pOther_State_Message_Garden valuecolor=[=="Alles normal"="#6bc305",!="Alles normal"="#d72a2a"] {
+		Group label="Garten [%s]" icon="selfgarden" item=pOther_State_Message_Garden valuecolor=[=="Alles ok"="#6bc305",!="Alles ok"="#d72a2a"] {
 			Frame label="Allgemein • Letztes klingeln [%1$tH:%1$tM:%1$tS, %1$td.%1$tm]" item=pOutdoor_Streedside_Gardendoor_Bell_Last_Change{
 				Switch item=pOutdoor_Streedside_Gardendoor_Opener_Timer
 				Text label="Kameras" icon="camera"
@@ -186,7 +186,7 @@ sitemap haus label="Main Menu"
                 }
 			}
 		}
-		Group label="Geräte [%s]" item=pOther_State_Message_Devices icon="roomba" valuecolor=[=="Alles normal"="#6bc305",!="Alles normal"="#d72a2a"] {
+		Group label="Geräte [%s]" item=pOther_State_Message_Devices icon="roomba" valuecolor=[=="Alles ok"="#6bc305",!="Alles ok"="#d72a2a"] {
             Frame label="Haus" {
                 Text label="Waschmaschine [%s]" item=pGF_Utilityroom_Washer_Message icon="whitegood_washer.png" {
                     Frame label="Status" {
@@ -426,7 +426,7 @@ sitemap haus label="Main Menu"
 				}
             }
 		}
-        Group item=pIndoor_Plant_Sensor_Main_Info label="Sensoren [%s]" valuecolor=[=="Alles normal"="#6bc305",=="Giessen"="#cbcb00",!="Alles normal"="#d72a2a"]{
+        Group item=pOther_State_Message_Sensors icon="selfsensor" label="Sensoren [%s]" valuecolor=[=="Alles ok"="#6bc305",=="Giessen"="#cbcb00",!="Alles ok"="#d72a2a"]{
             Frame label="Temperatur & Feuchtigkeit"
             {
                 Group item=pGF_Livingroom_Air_Sensor_Message label="EG [%s]"{
@@ -667,7 +667,7 @@ sitemap haus label="Main Menu"
                 Text item=pOther_Smoke_Detector_State valuecolor=[!=CLOSED="#d72a2a"]
             }
         }
-		Group label="Technik [%s]" icon="selfhouse" item=pOther_State_Message_Main valuecolor=[=="Alles normal"="#6bc305",=="Lüftung"="#cbcb00",!="Alles normal"="#d72a2a"]
+		Group label="Technik [%s]" icon="selfhouse" item=pOther_State_Message_Main valuecolor=[=="Alles ok"="#6bc305",=="Lüftung"="#cbcb00",!="Alles ok"="#d72a2a"]
 		{
             Frame label="Technik" {
                 Group item=pGF_Utilityroom_Ventilation_Fan_Level label="Lüftung [MAP(level_de.map):%d]" icon="selfairing" {
@@ -684,12 +684,13 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Utilityroom_Ventilation_Bypass
                         Text item=pGF_Utilityroom_Ventilation_Bypass_Efficiency
                         Text item=pGF_Utilityroom_Ventilation_Filter_Runtime_Message
-                        Text item=pGF_Utilityroom_Ventilation_State_Message visibility=[pGF_Utilityroom_Ventilation_State_Message=="Alles in Ordnung"] 
-                        Text item=pGF_Utilityroom_Ventilation_State_Message visibility=[pGF_Utilityroom_Ventilation_State_Message!="Alles in Ordnung"] {
+                        Text item=pGF_Utilityroom_Ventilation_State_Message visibility=[pGF_Utilityroom_Ventilation_State_Message=="Alles ok"] valuecolor=[=="Alles ok"="#6bc305"]
+                        Text item=pGF_Utilityroom_Ventilation_State_Message visibility=[pGF_Utilityroom_Ventilation_State_Message!="Alles ok"] valuecolor=[=="Filter"="#cbcb00",!="Alles ok"="#d72a2a"] {
                             Text item=pGF_Utilityroom_Ventilation_Filter_Error
                             Switch item=pGF_Utilityroom_Ventilation_Filter_Reset
                             Text item=pGF_Utilityroom_Ventilation_Error_Message
                             Switch item=pGF_Utilityroom_Ventilation_Error_Reset
+                            Text item=pGF_Utilityroom_Ventilation_Thing_State
                         }
                     }
                 }			
@@ -743,7 +744,11 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Utilityroom_Heating_Temperature_Pipe_In
                         Text item=pGF_Utilityroom_Heating_Burner_Starts_Message
                         Text item=pGF_Utilityroom_Heating_Burner_Hours_Message
-                        Text item=pGF_Utilityroom_Heating_Common_Fault
+                        Text item=pGF_Utilityroom_Heating_State_Message visibility=[pGF_Utilityroom_Heating_State_Message=="Alles ok"] valuecolor=[=="Alles ok"="#6bc305"]
+                        Text item=pGF_Utilityroom_Heating_State_Message visibility=[pGF_Utilityroom_Heating_State_Message!="Alles ok"] valuecolor=[=="Filter"="#cbcb00",!="Alles ok"="#d72a2a"] {
+                            Text item=pGF_Utilityroom_Heating_State_Message
+                            Text item=pGF_Utilityroom_Heating_Common_Fault
+                        }
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]

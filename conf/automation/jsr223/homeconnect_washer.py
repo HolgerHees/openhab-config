@@ -6,7 +6,7 @@ from core.actions import Transformation
 class HomeConnectWasherMessageRule:
     def __init__(self):
         self.triggers = [
-            #CronTrigger("0/5 * * * * ?"),
+            CronTrigger("0/5 * * * * ?"),
             ItemStateChangeTrigger("pGF_Utilityroom_Washer_RemainingProgramTimeState"),
             ItemStateChangeTrigger("pGF_Utilityroom_Washer_OperationState")
         ]
@@ -14,14 +14,11 @@ class HomeConnectWasherMessageRule:
     def execute(self, module, input):
         operation = getItemState("pGF_Utilityroom_Washer_OperationState")
         if operation != NULL and operation != UNDEF:
-            mode = Transformation.transform("MAP", "washer_mode.map", operation.toString() )
+            mode = Transformation.transform("MAP", "homeconnect_operation.map", operation.toString() )
             msg = u"{}".format(mode)
             
             runtime = getItemState("pGF_Utilityroom_Washer_RemainingProgramTimeState")
-            
-            #self.log.info(u"{}".format(runtime))
-            
-            if runtime != NULL and runtime != UNDEF and runtime.intValue() > 0:
+            if runtime != NULL and runtime != UNDEF and runtime.intValue() > 0 and operation.toString() in ['Paused','Delayed','Run']:
                 runtime = Transformation.transform("JS", "homeconnect_runtime.js", u"{}".format(runtime.intValue()) )
                 msg = u"{}, {}".format(msg,runtime)
                 
