@@ -1,7 +1,7 @@
 <?php
 class Environment
 {
-    public static getInfluxDBIntervalConfigs()
+    public static function getInfluxDBIntervalConfigs()
     {
         return array(
             "pGF_Utilityroom_Gas_Current_Daily_Consumption" => new IntervalConfig( "pGF_Utilityroom_Gas_Meter_Current_Count", "daily", "0 */5 * * * ?", 20 ),
@@ -27,12 +27,12 @@ class Environment
         );
     }
     
-    public static getInfluxPersistanceGroups()
+    public static function getInfluxPersistanceGroups()
     {
         return array( 'gPersistance_Chart' );
     }
 
-    public static getMySQLIntervalConfigs()
+    public static function getMySQLIntervalConfigs()
     {
         return array(
             "Electricity_Current_Daily_Consumption" => new IntervalConfig("Electricity_Meter_Demand", "daily", "15 */5 * * * ?", 50 ),
@@ -41,7 +41,7 @@ class Environment
         );
     }
     
-    public static getMySQLPersistanceGroups()
+    public static function getMySQLPersistanceGroups()
     {
         return array(
             "gPersistance_History",

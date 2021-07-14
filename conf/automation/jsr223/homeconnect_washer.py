@@ -6,7 +6,7 @@ from core.actions import Transformation
 class HomeConnectWasherMessageRule:
     def __init__(self):
         self.triggers = [
-            CronTrigger("0/5 * * * * ?"),
+            #CronTrigger("0/5 * * * * ?"),
             ItemStateChangeTrigger("pGF_Utilityroom_Washer_RemainingProgramTimeState"),
             ItemStateChangeTrigger("pGF_Utilityroom_Washer_OperationState")
         ]

@@ -1,4 +1,4 @@
-from shared.helper import rule, sendNotification, getItemState, postUpdateIfChanged
+from shared.helper import rule, sendNotification, getItemState, postUpdateIfChanged, sendNotificationToAllAdmins
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 
 @rule("state_message_devices.py")
@@ -24,7 +24,7 @@ class StateMessageDevicesRule:
 
         msg = ", ".join(active)
         
-        oldMsg = getItemState("pOther_State_Message_Devices")
+        oldMsg = getItemState("pOther_State_Message_Devices").toString()
 
         if postUpdateIfChanged("pOther_State_Message_Devices", msg):
             # don't notify robots, because they are already notified seperatly
