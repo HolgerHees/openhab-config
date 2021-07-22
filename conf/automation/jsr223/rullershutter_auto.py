@@ -115,6 +115,9 @@ class RollershutterAutoPresenceRule:
             self.presenceTimer.cancel()
             self.presenceTimer = None
     
+        if getItemState("pOther_Automatic_State_Rollershutter") == ON:
+            return
+          
         if input['event'].getOldItemState().intValue() == 0:
             self.updateCallback(UP)
         elif input['event'].getItemState().intValue() == 0:
