@@ -29,5 +29,5 @@ class StateMessageDevicesRule:
         if postUpdateIfChanged("pOther_State_Message_Devices", msg):
             # don't notify robots, because they are already notified seperatly
             if msg not in ["Roboter","Alles ok"] or oldMsg not in ["Roboter","Alles ok"]:
-                sendNotificationToAllAdmins("Geräte", msg)
+                sendNotificationToAllAdmins(u"Geräte", msg)
 
