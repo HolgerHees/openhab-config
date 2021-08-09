@@ -6,6 +6,7 @@ from java.time import ZonedDateTime, Instant, ZoneId
 class ValuesDependingOnBrightnessRule:
     def __init__(self):
         self.triggers = [CronTrigger("0 * * * * ?")]
+#        self.triggers = [CronTrigger("*/15 * * * * ?")]
 
     def execute(self, module, input):
         now = ZonedDateTime.now()
@@ -17,21 +18,28 @@ class ValuesDependingOnBrightnessRule:
         
         cloudCover = getItemState("pOutdoor_Weather_Current_Cloud_Cover").intValue()
         
+        lightLevel = getItemState("pOutdoor_WeatherStation_Light_Level").intValue() if getItemState("pOutdoor_WeatherStation_Is_Working") == ON else 1000
+        
+        #self.log.info(str(cloudCover))
+        
         if getItemState("pOther_Automatic_State_Rollershutter") == ON:
             _upTime = getItemState("pOutdoor_Astro_Sunrise_Time").getZonedDateTime().toInstant().toEpochMilli()
             _upTime = int(_upTime + ( cloudCover * 30.0 / 9.0 ) * 60 * 1000)
 
             _lastDownTime = getItemState("pOther_Automatic_State_Rollershutter_Down").getZonedDateTime().toInstant().toEpochMilli()
 
-            if now.toInstant().toEpochMilli() > _upTime and _upTime > _lastDownTime:
+            if now.toInstant().toEpochMilli() >= _upTime and _upTime > _lastDownTime:
                 postUpdate("pOther_Automatic_State_Rollershutter", OFF)
 
             postUpdateIfChanged("pOther_Automatic_State_Rollershutter_Up", ZonedDateTime.ofInstant(Instant.ofEpochMilli(_upTime), ZoneId.systemDefault()).toLocalDateTime().toString() )
         else:
             _downTime = getItemState("pOutdoor_Astro_Dusk_Time").getZonedDateTime().toInstant().toEpochMilli()
-            _downTime = int(_downTime - ( cloudCover * 30.0 / 9.0 ) * 60 * 1000)
+            if lightLevel <= 50 and now.toInstant().toEpochMilli() > (_downTime - 90 * 60 * 1000):
+                _downTime = now.toInstant().toEpochMilli()
+            else:
+                _downTime = int(_downTime - ( cloudCover * 30.0 / 9.0 ) * 60 * 1000)
             
-            if now.toInstant().toEpochMilli() > _downTime:
+            if now.toInstant().toEpochMilli() >= _downTime:
                 postUpdate("pOther_Automatic_State_Rollershutter", ON)
  
             postUpdateIfChanged("pOther_Automatic_State_Rollershutter_Down", ZonedDateTime.ofInstant(Instant.ofEpochMilli(_downTime), ZoneId.systemDefault()).toLocalDateTime().toString() )
