@@ -9,8 +9,9 @@ class HomeConnectStateRule:
             #CronTrigger("*/15 * * * * ?"),
             ThingStatusChangeTrigger("homeconnect:api_bridge:default")
         ]
-
-    def execute(self, module, input):
+        self.check()
+        
+    def check(self):
         thing = getThing("homeconnect:api_bridge:default")
         status = thing.getStatus()
         info = thing.getStatusInfo()
@@ -21,3 +22,6 @@ class HomeConnectStateRule:
                 postUpdateIfChanged("pOther_State_Message_Homeconnect",info.toString())
             else:
                 postUpdateIfChanged("pOther_State_Message_Homeconnect","Alles ok")
+
+    def execute(self, module, input):
+        self.check()

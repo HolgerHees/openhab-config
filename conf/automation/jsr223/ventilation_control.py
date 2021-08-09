@@ -50,8 +50,9 @@ class VentilationStateRule:
             #CronTrigger("*/15 * * * * ?"),
             ThingStatusChangeTrigger("comfoair:comfoair:default")
         ]
-
-    def execute(self, module, input):
+        self.check()
+        
+    def check(self):
         thing = getThing("comfoair:comfoair:default")
         status = thing.getStatus()
         info = thing.getStatusInfo()
@@ -63,6 +64,9 @@ class VentilationStateRule:
                 postUpdateIfChanged("pGF_Utilityroom_Ventilation_Thing_State",info.toString())
             else:
                 postUpdateIfChanged("pGF_Utilityroom_Ventilation_Thing_State","Alles ok")
+
+    def execute(self, module, input):
+        self.check()
 
 @rule("ventilation_efficiency.py")
 class VentilationEfficiencyRule:
