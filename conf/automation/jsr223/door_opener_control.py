@@ -1,5 +1,5 @@
 from shared.helper import rule, createTimer, getItemState, postUpdate, postUpdateIfChanged
-from core.triggers import ItemStateChangeTrigger
+from shared.triggers import ItemStateChangeTrigger
 
 
 @rule("door_opener_control.py")

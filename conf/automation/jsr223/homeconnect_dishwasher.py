@@ -1,7 +1,8 @@
 from shared.helper import rule, getItemState, postUpdateIfChanged, sendNotification, startTimer
 from shared.actions import Transformation
 from custom.presence import PresenceHelper
-from core.triggers import CronTrigger, ItemStateChangeTrigger
+from shared.triggers import CronTrigger, ItemStateChangeTrigger
+
 
 @rule("homeconnect_dishwasher.py")
 class HomeConnectDishwasherMessageRule:

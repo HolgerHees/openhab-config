@@ -1,4 +1,4 @@
-from core.triggers import ItemStateUpdateTrigger, CronTrigger
+from shared.triggers import ItemStateUpdateTrigger, CronTrigger
 
 from shared.helper import rule, postUpdate
 
@@ -9,6 +9,7 @@ from alexa_device_config import AlexaDevices
 from custom.semantic_test import Cases
 
 import traceback
+
 
 class Tests:
     @staticmethod

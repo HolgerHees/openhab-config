@@ -1,5 +1,6 @@
 from shared.helper import rule, sendNotification, getItemState, postUpdateIfChanged, sendNotificationToAllAdmins
-from core.triggers import CronTrigger, ItemStateChangeTrigger
+from shared.triggers import CronTrigger, ItemStateChangeTrigger
+
 
 @rule("state_message_devices.py")
 class StateMessageDevicesRule:

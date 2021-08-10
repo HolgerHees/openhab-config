@@ -1,5 +1,5 @@
 from shared.helper import rule, getItem, getItemState, sendCommand, postUpdate
-from core.triggers import ItemCommandTrigger
+from shared.triggers import ItemCommandTrigger
 
 
 @rule("scenes_common.py")

@@ -1,4 +1,4 @@
-from core.triggers import CronTrigger, ItemStateChangeTrigger
+from shared.triggers import CronTrigger, ItemStateChangeTrigger
 from shared.helper import rule, getHistoricItemEntry, getItemState, getItemLastChange, getItemLastUpdate, sendCommand, sendCommandIfChanged, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen, itemLastChangeOlderThen, getStableItemState
 from shared.actions import Transformation
 from custom.heating import Heating
@@ -8,7 +8,8 @@ from custom.sun import SunRadiation
 import math 
 from java.time import ZonedDateTime, Instant, ZoneId
 from java.time.format import DateTimeFormatter
- 
+
+
 OFFSET_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")
            
 #postUpdate("pGF_Utilityroom_Heating_Demand",OFF)

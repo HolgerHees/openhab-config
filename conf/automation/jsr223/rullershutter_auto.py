@@ -1,6 +1,7 @@
 from shared.helper import rule, getItemState, postUpdate, sendCommand, sendCommandIfChanged, itemLastChangeNewerThen, getGroupMemberChangeTrigger, startTimer
-from core.triggers import ItemStateChangeTrigger
+from shared.triggers import ItemStateChangeTrigger
 from java.time import ZonedDateTime
+
 
 configs = [
     { "contact": "pGF_Livingroom_Openingcontact_Window_Terrace_State", "shutter": "pGF_Livingroom_Shutter_Terrace_Control", "sunprotection": "pOther_Automatic_State_Sunprotection_Livingroom", "sunprotectionOnlyIfAway": True },

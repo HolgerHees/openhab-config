@@ -1,5 +1,5 @@
 from shared.helper import rule, getItemState, itemStateNewerThen, itemStateOlderThen, sendNotification
-from core.triggers import CronTrigger
+from shared.triggers import CronTrigger
 
 from java.time import ZonedDateTime
 

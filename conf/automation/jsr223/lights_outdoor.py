@@ -2,7 +2,8 @@ import time
 from java.time import ZonedDateTime
 
 from shared.helper import rule, createTimer, getItemState, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged
-from core.triggers import ItemCommandTrigger, ItemStateChangeTrigger
+from shared.triggers import ItemCommandTrigger, ItemStateChangeTrigger
+
 
 manualMappings = [
     ["pOutdoor_Streedside_Frontdoor_Light_Powered", "pOutdoor_Streedside_Frontdoor_Automatic_Switch","pOutdoor_Streedside_Frontdoor_Motiondetector_State"],

@@ -1,5 +1,5 @@
 from shared.helper import rule, getItemState, sendCommand, createTimer
-from core.triggers import CronTrigger, ItemStateChangeTrigger
+from shared.triggers import CronTrigger, ItemStateChangeTrigger
 
 
 @rule("lights_indoor_auto_christmas.py")

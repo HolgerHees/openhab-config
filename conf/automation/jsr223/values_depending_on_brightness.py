@@ -1,6 +1,7 @@
 from shared.helper import rule, getItemState, itemStateNewerThen, itemStateOlderThen, postUpdateIfChanged, postUpdate
-from core.triggers import CronTrigger
+from shared.triggers import CronTrigger
 from java.time import ZonedDateTime, Instant, ZoneId
+ 
  
 @rule("values_depending_on_brightness.py")
 class ValuesDependingOnBrightnessRule:

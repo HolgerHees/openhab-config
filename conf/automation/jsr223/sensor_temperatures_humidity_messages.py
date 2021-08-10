@@ -1,5 +1,6 @@
 from shared.helper import rule, getItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged, startTimer
-from core.triggers import CronTrigger, ItemStateChangeTrigger
+from shared.triggers import CronTrigger, ItemStateChangeTrigger
+
 
 infoConfig = [
     ["pGF_Livingroom_Air_Sensor_Message", "pGF_Livingroom_Air_Sensor_Temperature_Value", "pGF_Livingroom_Air_Sensor_Humidity_Value", "pGF_Livingroom_Heating_Temperature_Desired"],

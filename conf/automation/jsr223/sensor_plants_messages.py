@@ -1,5 +1,5 @@
 from shared.helper import rule, getItemState, postUpdateIfChanged
-from core.triggers import ItemStateChangeTrigger, CronTrigger
+from shared.triggers import ItemStateChangeTrigger, CronTrigger
 
 
 @rule("scene_plant_messages.py")

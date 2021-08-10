@@ -1,7 +1,8 @@
 from shared.helper import log, rule, itemLastChangeOlderThen, getItemState, postUpdate, sendNotification, sendNotificationToAllAdmins, startTimer, getGroupMember
+from shared.triggers import ItemStateChangeTrigger
 from custom.presence import PresenceHelper
-from core.triggers import ItemStateChangeTrigger
 from java.time import ZonedDateTime
+
 
 @rule("presence_detection.py")
 class PresenceCheckRule:

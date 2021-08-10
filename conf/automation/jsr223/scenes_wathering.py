@@ -2,7 +2,8 @@ import math
 from java.time import ZonedDateTime
 
 from shared.helper import rule, createTimer, getGroupMember, getItemState, postUpdate, sendCommand, getItemLastChange
-from core.triggers import ItemCommandTrigger, ItemStateChangeTrigger
+from shared.triggers import ItemCommandTrigger, ItemStateChangeTrigger
+
 
 circuits = [
     [

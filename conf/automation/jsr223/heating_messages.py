@@ -1,5 +1,5 @@
 from shared.helper import rule, getItemState, getHistoricItemState, postUpdate, postUpdateIfChanged, startTimer
-from core.triggers import CronTrigger, ItemStateChangeTrigger
+from shared.triggers import CronTrigger, ItemStateChangeTrigger
 from java.time import ZonedDateTime
 
 DELAYED_UPDATE_TIMEOUT = 3

@@ -1,5 +1,5 @@
 from shared.helper import rule, getItemState, postUpdateIfChanged
-from core.triggers import ItemStateChangeTrigger
+from shared.triggers import ItemStateChangeTrigger
 
 
 @rule("state_message_garden.py")

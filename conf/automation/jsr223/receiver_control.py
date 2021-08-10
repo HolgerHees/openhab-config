@@ -1,5 +1,6 @@
 from shared.helper import rule, sendCommand
-from core.triggers import ItemStateChangeTrigger
+from shared.triggers import ItemStateChangeTrigger
+
 
 @rule("receiver_control.py")
 class ReceiverControlRule:

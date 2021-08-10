@@ -1,6 +1,7 @@
 from shared.helper import rule, itemLastUpdateOlderThen, sendNotificationToAllAdmins, getItemState, postUpdateIfChanged
-from core.triggers import CronTrigger, ItemStateChangeTrigger
+from shared.triggers import CronTrigger, ItemStateChangeTrigger
 from java.time import ZonedDateTime
+
 
 @rule("state_message_main.py")
 class StateMessageMainRule:

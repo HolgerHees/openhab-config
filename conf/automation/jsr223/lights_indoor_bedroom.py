@@ -1,5 +1,5 @@
 from shared.helper import rule, sendCommand, getItemState
-from core.triggers import ItemStateChangeTrigger, ItemStateUpdateTrigger
+from shared.triggers import ItemStateChangeTrigger, ItemStateUpdateTrigger
 
 
 @rule("lights_indoor_bedroom_control.py")

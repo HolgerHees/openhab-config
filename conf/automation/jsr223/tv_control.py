@@ -1,5 +1,6 @@
 from shared.helper import rule, getItemState, sendCommand, postUpdate, postUpdateIfChanged
-from core.triggers import ItemStateChangeTrigger, ItemCommandTrigger, ThingEventTrigger
+from shared.triggers import ItemStateChangeTrigger, ItemCommandTrigger, ThingEventTrigger
+
 
 @rule("tv_control.py")
 class TvLivingroomStatusRule:

@@ -1,7 +1,8 @@
 from shared.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen, itemStateNewerThen
 from shared.actions import Transformation
-from core.triggers import CronTrigger, ItemStateChangeTrigger
+from shared.triggers import CronTrigger, ItemStateChangeTrigger
 from java.time import ZonedDateTime
+
 
 #postUpdate("pOutdoor_Mower_WlanSignal",0)
 #postUpdate("pOutdoor_Mower_Duration",0)

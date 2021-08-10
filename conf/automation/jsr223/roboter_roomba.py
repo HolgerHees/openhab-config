@@ -1,8 +1,9 @@
 import time
 
 from shared.helper import rule, itemLastChangeOlderThen, getItemState, sendNotification, postUpdate, postUpdateIfChanged, sendCommand
-from core.triggers import CronTrigger, ItemStateChangeTrigger
+from shared.triggers import CronTrigger, ItemStateChangeTrigger
 from java.time import ZonedDateTime
+
 
 @rule("roboter_roomba.py")
 class RoombaBoostControlRule:

@@ -1,6 +1,7 @@
 from shared.helper import rule, getItemState, postUpdateIfChanged, sendNotification, startTimer
 from shared.actions import Transformation
-from core.triggers import CronTrigger, ItemStateChangeTrigger
+from shared.triggers import CronTrigger, ItemStateChangeTrigger
+
 
 @rule("homeconnect_washer.py")
 class HomeConnectWasherMessageRule:

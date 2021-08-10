@@ -1,5 +1,5 @@
 from shared.helper import rule, getItemState, sendCommand, postUpdate, postUpdateIfChanged, createTimer
-from core.triggers import ItemCommandTrigger, ItemStateChangeTrigger
+from shared.triggers import ItemCommandTrigger, ItemStateChangeTrigger
 from java.time import ZonedDateTime
 
 ruleTimeouts = {}

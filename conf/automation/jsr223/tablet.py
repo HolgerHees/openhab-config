@@ -2,7 +2,8 @@ import urllib2
 from java.time import ZonedDateTime
 
 from shared.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastChangeOlderThen, sendCommand
-from core.triggers import ItemStateChangeTrigger, ItemCommandTrigger
+from shared.triggers import ItemStateChangeTrigger, ItemCommandTrigger
+
 
 @rule("tablet.py")
 class WakeupRule:

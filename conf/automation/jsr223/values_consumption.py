@@ -1,9 +1,10 @@
 from shared.helper import rule, getHistoricItemEntry, getHistoricItemState, getItemLastChange, itemLastUpdateOlderThen, itemLastChangeOlderThen, getItemState, getItemStateWithFallback, postUpdate, postUpdateIfChanged, sendCommand
-from core.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
+from shared.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
 from java.time import ZonedDateTime, Instant, ZoneId
 from java.time.format import DateTimeFormatter
 
 from org.openhab.core.types.RefreshType import REFRESH
+  
   
 totalSupply = 3600 # total possible photovoltaic power in watt
 maxTimeSlot = 300000 # value timeslot to messure average power consumption => 5 min

@@ -1,5 +1,6 @@
 from shared.helper import rule, sendNotification, getItemState, postUpdateIfChanged
-from core.triggers import CronTrigger, ItemStateChangeTrigger
+from shared.triggers import CronTrigger, ItemStateChangeTrigger
+
 
 @rule("roboter_messages.py")
 class RoboterMessagesRule:

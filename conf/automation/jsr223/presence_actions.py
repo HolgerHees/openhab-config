@@ -2,7 +2,7 @@ import urllib2
 from java.time import ZonedDateTime
 
 from shared.helper import rule, getItemState, itemLastChangeOlderThen, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged, createTimer, getGroupMember
-from core.triggers import ItemStateChangeTrigger
+from shared.triggers import ItemStateChangeTrigger
 
 
 @rule("presence_actions.py")
