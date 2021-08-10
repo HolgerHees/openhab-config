@@ -1,7 +1,7 @@
 from shared.helper import rule, getItemState, postUpdateIfChanged, sendNotification, startTimer
+from shared.actions import Transformation
 from custom.presence import PresenceHelper
 from core.triggers import CronTrigger, ItemStateChangeTrigger
-from core.actions import Transformation
 
 @rule("homeconnect_dishwasher.py")
 class HomeConnectDishwasherMessageRule:
@@ -58,4 +58,3 @@ class HomeConnectDishwasherNotificationRule:
                 elif currentMode == "Finished"and self.checkTimer != None:
                     self.checkTimer.cancel()
                     self.notify( True )
- 

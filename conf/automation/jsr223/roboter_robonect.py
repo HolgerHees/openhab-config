@@ -1,5 +1,5 @@
 from shared.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen, itemStateNewerThen
-from core.actions import Transformation
+from shared.actions import Transformation
 from core.triggers import CronTrigger, ItemStateChangeTrigger
 from java.time import ZonedDateTime
 
