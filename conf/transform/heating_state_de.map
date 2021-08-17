@@ -4,5 +4,7 @@
 0.0=Ok
 1.0=Gerätefehler
 999.0=Lesefehler
+-1=Lesefehler
+-=undefiniert
 NULL=unbekannt
 UNDEF=unbekannt

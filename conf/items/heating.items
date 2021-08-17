@@ -108,7 +108,7 @@ Number pGF_Utilityroom_Heating_Solar_Power_Current_Daily            "Solar Leist
 Number pGF_Utilityroom_Heating_Solar_Power_Current5Min              "Solar Leistung [%.1f KW]"          <selfsun>         (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart) ["Point"]
 String pGF_Utilityroom_Heating_Solar_Power_Message                  "Solar Leistung [%s]"               <selfsun>         (eGF_Utilityroom_Heating_Boiler) ["Point"] 
 Number pGF_Utilityroom_Heating_Solar_Pump_State                     "Solar Pumpe [MAP(heating_pump_de.map):%s]" <selfruntime> (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) {channel="mqtt:topic:mosquitto:vcontrol:pumpState" }
-Number pGF_Utilityroom_Heating_Solar_Reheating_State                "Nachladeunterdrückung [MAP(heating_state_de.map):%s]" <selfruntime> (eGF_Utilityroom_Heating_Boiler) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:solarReheatingState" }
+Number pGF_Utilityroom_Heating_Solar_Reheating_State                "Nachladeunterdrückung [MAP(heating_reheating_de.map):%s]" <selfruntime> (eGF_Utilityroom_Heating_Boiler) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:solarReheatingState" }
 String pGF_Utilityroom_Heating_Solar_State_Message                  "Pumpe, Nachladeunterdr. [%s]"      <selfsettings>    (eGF_Utilityroom_Heating_Boiler) ["Point"] 
 Number pGF_Utilityroom_Heating_Common_Fault                         "Fehler [MAP(heating_state_de.map):%s]" <selfinfo>    (eGF_Utilityroom_Heating_Boiler) ["Point"] {channel="mqtt:topic:mosquitto:vcontrol:commonFault" }
 

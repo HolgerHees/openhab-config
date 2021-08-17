@@ -847,6 +847,7 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Utilityroom_Heating_Temperature_Wather_Storage
                         Text item=pGF_Utilityroom_Heating_Solar_Hours_Message
                         Text item=pGF_Utilityroom_Heating_Solar_Power_Message
+                        Text item=pGF_Utilityroom_Heating_Solar_Reheating_State
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]

@@ -35,7 +35,7 @@ class ValuesDependingOnBrightnessRule:
             postUpdateIfChanged("pOther_Automatic_State_Rollershutter_Up", ZonedDateTime.ofInstant(Instant.ofEpochMilli(_upTime), ZoneId.systemDefault()).toLocalDateTime().toString() )
         else:
             _downTime = getItemState("pOutdoor_Astro_Dusk_Time").getZonedDateTime().toInstant().toEpochMilli()
-            if lightLevel <= 50 and now.toInstant().toEpochMilli() > (_downTime - 90 * 60 * 1000):
+            if lightLevel <= 0 and now.toInstant().toEpochMilli() > (_downTime - 90 * 60 * 1000):
                 _downTime = now.toInstant().toEpochMilli()
             else:
                 _downTime = int(_downTime - ( cloudCover * 30.0 / 9.0 ) * 60 * 1000)
@@ -45,7 +45,7 @@ class ValuesDependingOnBrightnessRule:
  
             postUpdateIfChanged("pOther_Automatic_State_Rollershutter_Down", ZonedDateTime.ofInstant(Instant.ofEpochMilli(_downTime), ZoneId.systemDefault()).toLocalDateTime().toString() )
 
-        if lightLevel == 0 or itemStateOlderThen("pOutdoor_Astro_Sunset_Time", now) or itemStateNewerThen("pOutdoor_Astro_Sunrise_Time", now):
+        if lightLevel <= 0 or itemStateOlderThen("pOutdoor_Astro_Sunset_Time", now) or itemStateNewerThen("pOutdoor_Astro_Sunrise_Time", now):
             postUpdateIfChanged("pOther_Automatic_State_Outdoorlights", ON)
         else:
             postUpdateIfChanged("pOther_Automatic_State_Outdoorlights", OFF)

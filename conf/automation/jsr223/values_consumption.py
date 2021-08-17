@@ -9,19 +9,16 @@ from org.openhab.core.types.RefreshType import REFRESH
 totalSupply = 3600 # total possible photovoltaic power in watt
 maxTimeSlot = 300000 # value timeslot to messure average power consumption => 5 min
 
-energyTotalDemandCorrectureFactor = 1.045
-energyTotalSupplyCorrectureFactor = 1.00
-
 # offset values for total energy demand and supply (total values at the time when knx based energy meter was installed)
 startEnergyTotalDemandValue = 21158.037
 startEnergyTotalSupplyValue = -90.636
 
 # offset values for electricity meter demand and supply (total values at the time when new electricity meter was changed)
-startElectricityMeterDemandValue = 21911.164
-startElectricityMeterSupplyValue = 0
+startElectricityMeterDemandValue = 21830.135
+startElectricityMeterSupplyValue = 52.75
 
 # offset values for gas meter (total value at the time when knx based impulse counter was resettet)
-startGasMeterValue = 10113.01
+startGasMeterValue = 10354.05
 startGasImpulseCounter = 0
 
 dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
@@ -116,7 +113,7 @@ class EnergyCounterDemandRule:
         zaehlerStandCurrent = ( startEnergyTotalDemandValue + demandCurrent )
         postUpdateIfChanged("pGF_Utilityroom_Electricity_Total_Demand",zaehlerStandCurrent)
         
-        postUpdateIfChanged("pGF_Utilityroom_Electricity_Meter_Demand",(zaehlerStandCurrent-startElectricityMeterDemandValue) * energyTotalDemandCorrectureFactor)
+        postUpdateIfChanged("pGF_Utilityroom_Electricity_Meter_Demand",zaehlerStandCurrent-startElectricityMeterDemandValue)
 
         # *** Tagesbezug ***
         zaehlerStandOld = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Demand", now.toLocalDate().atStartOfDay(now.getZone()) ).doubleValue()
@@ -158,7 +155,7 @@ class EnergyCounterSupplyRule:
         zaehlerStandCurrent = ( startEnergyTotalSupplyValue + supplyCurrent )
         postUpdateIfChanged("pGF_Utilityroom_Electricity_Total_Supply",zaehlerStandCurrent)
 
-        postUpdateIfChanged("pGF_Utilityroom_Electricity_Meter_Supply",(zaehlerStandCurrent-startElectricityMeterSupplyValue) * energyTotalSupplyCorrectureFactor)
+        postUpdateIfChanged("pGF_Utilityroom_Electricity_Meter_Supply",zaehlerStandCurrent-startElectricityMeterSupplyValue)
 
         # *** Tageslieferung ***
         zaehlerStandOld = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Supply", now.toLocalDate().atStartOfDay(now.getZone()) ).doubleValue()
