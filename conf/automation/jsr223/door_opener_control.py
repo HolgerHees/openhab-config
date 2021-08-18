@@ -1,4 +1,4 @@
-from shared.helper import rule, createTimer, getItemState, postUpdate, postUpdateIfChanged
+from shared.helper import rule, createTimer, getItemState, postUpdate, sendCommand, sendCommandIfChanged
 from shared.triggers import ItemStateChangeTrigger
 
 
@@ -11,16 +11,19 @@ class DoorOpenerControlRule:
     def callback(self):
         self.timer = None
         postUpdate("pOutdoor_Streedside_Gardendoor_Opener_Timer", OFF)
+        sendCommandIfChanged("pOutdoor_Streedside_Gardendoor_Opener_Powered", OFF)
 
     def execute(self, module, input):
         if self.timer is not None:
             self.timer.cancel()
             self.timer = None
+            
+        self.log.info("{}".format(input["newState"]))
 
-        if input["newState"] == OPEN:
-            postUpdate("pOutdoor_Streedside_Gardendoor_Opener_Powered", ON)
+        if input["newState"] == ON:
+            sendCommand("pOutdoor_Streedside_Gardendoor_Opener_Powered", ON)
             self.timer = createTimer(self.log, 3.0, self.callback)
             self.timer.start()
 
         else:
-            postUpdateIfChanged("pOutdoor_Streedside_Gardendoor_Opener_Powered", OFF)
+            sendCommandIfChanged("pOutdoor_Streedside_Gardendoor_Opener_Powered", OFF)
