@@ -313,13 +313,14 @@ sitemap haus label="Main Menu"
 	}
 	Frame label="Sonstiges"
 	{
-		Group label="Status [%s]" icon="selfstate" item=pOther_State_Message_Room valuecolor=[=="Alles geschlossen"="#6bc305",!="Alles geschlossen"="#d72a2a"]
+		Text label="Status [%s]" icon="selfstate" item=pOther_State_Message_Auto valuecolor=[pOther_State_Message_Auto=="Inaktiv"="#d72a2a"]
         {
 			Frame label="Steuerung"
 			{
 				Switch item=pOther_Manual_State_Notify label="Benachrichtigung"
                 Switch item=pOther_Manual_State_Holiday label="Urlaub aktiv"
-				Group label="Programme [%s]" icon="selfcontrol" item=pOther_State_Message_Auto valuecolor=[pOther_State_Message_Auto=="Inaktiv"="#d72a2a"]{
+				Group label="Programme [%s]" icon="selfcontrol" item=pOther_State_Message_Auto valuecolor=[pOther_State_Message_Auto=="Inaktiv"="#d72a2a"]
+				{
 					Frame label="Klima und Beschattung" {
                         Switch item=pOther_Manual_State_Air_Thoroughly_Notify
                         Switch item=pOther_Manual_State_Auto_Rollershutter
@@ -426,6 +427,64 @@ sitemap haus label="Main Menu"
 				}
             }
 		}
+		Group label="Sicherheit [%s]" icon="selfsecurity" item=pOther_State_Message_Room valuecolor=[=="Alles geschlossen"="#6bc305",!="Alles geschlossen"="#d72a2a"]
+        {
+            Frame label="Sonstiges"
+            {
+                Text label="Alarm" icon="selfalarm"
+                {
+                    Switch item=pOther_Alarm_Siren_Powered
+                    Switch item=gIndoor_Lights label="Alle Lampen" mappings=[OFF="Aus",ON="An"]
+                    Switch item=gShutters label="Alle Rollläden" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+                }
+                Text item=pOther_Smoke_Detector_State valuecolor=[!=CLOSED="#d72a2a"]
+            }
+            Frame label="Bewegung"
+            {
+                Group item=gSensor_Indoor label="Innen [MAP(group_motion.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
+                    Text item=pGF_Corridor_Motiondetector_State label="Flur unten"
+                    Text item=pGF_Livingroom_Motiondetector_State label="Wohnzimmer"
+                    Text item=pFF_Corridor_Motiondetector_State label="Flur oben"
+                }
+                Group item=gSensor_Outdoor label="Aussen [MAP(group_motion.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
+                    Text item=pOutdoor_Streedside_Garage_Motiondetector_State label="Garage Strassenseite"
+                    Text item=pOutdoor_Streedside_Frontdoor_Motiondetector_State label="Haustür"
+                    Text item=pOutdoor_Carport_Motiondetector_State label="Carport"
+                    Text item=pOutdoor_Terrace_Motiondetector_State1 label="Terasse rechts"
+                    Text item=pOutdoor_Terrace_Motiondetector_State2 label="Terasse links"
+                    Text item=pOutdoor_Garden_Garage_Motiondetector_State label="Garage Gartenseite"
+                }
+                Text label="Kameras" icon="camera"
+                {
+                    Image url="https://smartmarvin.de/cameraStrasseImage" label="Strasse Video" refresh=2000
+                    Image url="https://smartmarvin.de/cameraAutomowerImage" label="Automower" refresh=5000
+                }
+            }
+            Frame label="Fenster & Türen"
+            {
+                Group item=gGF_Sensor_Doors label="EG Türen [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
+                    Text item=pGF_Corridor_Openingcontact_Door_State label="Haustür"
+                    Text item=pGF_Garage_Openingcontact_Door_Streedside_State label="Garage Strassenseite"
+                    Text item=pGF_Garage_Openingcontact_Door_Garden_State label="Garage Gartenseite"
+                }
+                Group item=gGF_Sensor_Window label="EG Fenster [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
+                    Text item=pGF_Guesttoilet_Openingcontact_Window_State label="Gäste WC"
+                    Text item=pGF_Kitchen_Openingcontact_Window_State label="Küche"
+                    Text item=pGF_Livingroom_Openingcontact_Window_Terrace_State label="Wohnzimmer Terasse"
+                    Text item=pGF_Livingroom_Openingcontact_Window_Couch_State label="Wohnzimmer Couch"
+                    Text item=pGF_Guestroom_Openingcontact_Window_State label="Gästezimmer"
+                    Text item=pGF_Garage_Openingcontact_Window_Garden_State label="Garage Gartenseite"
+                }
+                Group item=gFF_Sensor_Window label="OG Fenster [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
+                    Text item=pFF_Bathroom_Openingcontact_Window_State label="Badezimmer"
+                    Text item=pFF_Dressingroom_Openingcontact_Window_State label="Ankleide"
+                    Text item=pFF_Bedroom_Openingcontact_Window_State label="Schlafzimmer"
+                    Text item=pFF_Child1_Openingcontact_Window_State label="Sportzimmer"
+                    Text item=pFF_Child2_Openingcontact_Window_State label="Schminkzimmer"
+                    Text item=pFF_Attic_Openingcontact_Window_State label="Dachboden"
+                }
+            }
+        }
         Group item=pOther_State_Message_Sensors icon="selfsensor" label="Sensoren [%s]" valuecolor=[=="Alles ok"="#6bc305",=="Giessen"="#cbcb00",!="Alles ok"="#d72a2a"]{
             Frame label="Temperatur & Feuchtigkeit"
             {
@@ -616,55 +675,6 @@ sitemap haus label="Main Menu"
                         Webview url="/static/custom/grafana/pflanzen.html?fromItem=Chart_From" icon="none" height=18
                     }
                 }
-            }
-            Frame label="Bewegung"
-            {
-                Group item=gSensor_Indoor label="Innen [MAP(group_motion.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
-                    Text item=pGF_Corridor_Motiondetector_State label="Flur unten"
-                    Text item=pGF_Livingroom_Motiondetector_State label="Wohnzimmer"
-                    Text item=pFF_Corridor_Motiondetector_State label="Flur oben"
-                }
-                Group item=gSensor_Outdoor label="Aussen [MAP(group_motion.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
-                    Text item=pOutdoor_Streedside_Garage_Motiondetector_State label="Garage Strassenseite"
-                    Text item=pOutdoor_Streedside_Frontdoor_Motiondetector_State label="Haustür"
-                    Text item=pOutdoor_Carport_Motiondetector_State label="Carport"
-                    Text item=pOutdoor_Terrace_Motiondetector_State1 label="Terasse rechts"
-                    Text item=pOutdoor_Terrace_Motiondetector_State2 label="Terasse links"
-                    Text item=pOutdoor_Garden_Garage_Motiondetector_State label="Garage Gartenseite"
-                }
-                Text label="Kameras" icon="camera"
-                {
-                    Image url="https://smartmarvin.de/cameraStrasseImage" label="Strasse Video" refresh=2000
-                    Image url="https://smartmarvin.de/cameraAutomowerImage" label="Automower" refresh=5000
-                }
-            }
-            Frame label="Fenster & Türen"
-            {
-                Group item=gGF_Sensor_Doors label="EG Türen [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
-                    Text item=pGF_Corridor_Openingcontact_Door_State label="Haustür"
-                    Text item=pGF_Garage_Openingcontact_Door_Streedside_State label="Garage Strassenseite"
-                    Text item=pGF_Garage_Openingcontact_Door_Garden_State label="Garage Gartenseite"
-                }
-                Group item=gGF_Sensor_Window label="EG Fenster [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
-                    Text item=pGF_Guesttoilet_Openingcontact_Window_State label="Gäste WC"
-                    Text item=pGF_Kitchen_Openingcontact_Window_State label="Küche"
-                    Text item=pGF_Livingroom_Openingcontact_Window_Terrace_State label="Wohnzimmer Terasse"
-                    Text item=pGF_Livingroom_Openingcontact_Window_Couch_State label="Wohnzimmer Couch"
-                    Text item=pGF_Guestroom_Openingcontact_Window_State label="Gästezimmer"
-                    Text item=pGF_Garage_Openingcontact_Window_Garden_State label="Garage Gartenseite"
-                }
-                Group item=gFF_Sensor_Window label="OG Fenster [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
-                    Text item=pFF_Bathroom_Openingcontact_Window_State label="Badezimmer"
-                    Text item=pFF_Dressingroom_Openingcontact_Window_State label="Ankleide"
-                    Text item=pFF_Bedroom_Openingcontact_Window_State label="Schlafzimmer"
-                    Text item=pFF_Child1_Openingcontact_Window_State label="Sportzimmer"
-                    Text item=pFF_Child2_Openingcontact_Window_State label="Schminkzimmer"
-                    Text item=pFF_Attic_Openingcontact_Window_State label="Dachboden"
-                }
-            }
-            Frame label="Sonstiges"
-            {
-                Text item=pOther_Smoke_Detector_State valuecolor=[!=CLOSED="#d72a2a"]
             }
         }
 		Group label="Technik [%s]" icon="selfhouse" item=pOther_State_Message_Main valuecolor=[=="Alles ok"="#6bc305",=="Lüftung"="#cbcb00",!="Alles ok"="#d72a2a"]

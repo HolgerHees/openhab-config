@@ -23,6 +23,7 @@ Bridge	knx:ip:bridge [
         Type    contact :       switchBell              "Klingeltaster"              [ ga="<0/4/7" ]
         Type    switch  :       stateHoliday            "Urlaubsmodus"               [ ga="<0/4/8" ]
         Type    contact :       receiverState           "Receiverstatus"             [ ga="<0/4/9" ]
+        Type    switch  :       alarmSiren              "Alarmsirene"                [ ga="<0/4/14" ]
 
         Type    switch  :       bedroomLeft             "Schlafz. Bett Fenster"      [ ga="1/4/1" ]
         Type    switch  :       bedroomLeftLongPressed  "Schlafz. Bett Fenster (lang)" [ ga="1/4/2" ]
@@ -48,6 +49,9 @@ Bridge	knx:ip:bridge [
     }
     Thing device sensors_ff "KNX Sensoren" @ "Erdgeschoss"
     {
+        Type    number  :       heatingPipeOut          "Heizung Vorlauf"            [ ga="<0/7/50" ]
+        Type    number  :       heatingPipeIn           "Heizung Rücklauf"           [ ga="<0/7/51" ]
+
         Type    number  :       temperatureLivingroom   "Wohnzimmer Temperatur"      [ ga="0/7/1" ]
         Type    number  :       humidityLivingroom      "Wohnzimmer Feuchtigkeit"    [ ga="0/7/2" ]
         Type    number  :       temperatureBoxroom      "Abstellkammer Temperatur"   [ ga="0/7/3" ]

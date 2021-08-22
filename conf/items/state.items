@@ -19,6 +19,10 @@ Contact pGF_Livingroom_Receiver_State                             <selfinfo> (eG
 Group   eOther_Smoke_Detector                   "Rauchmelder"     <selfinfo> (lIndoor) ["SmokeDetector"]
 Contact pOther_Smoke_Detector_State             "Rauchmelder [MAP(smoke_detector_de.map):%s]" <smoke> (eOther_Smoke_Detector) ["Smoke"] { channel="knx:device:bridge:other:smokeDetector" }
 
+//####### SMOKE DETECTOR ########
+Group   eOther_Alarm_Siren                      "Alarmsirene"     <selfalarm> (lIndoor) ["Siren"]
+Switch  pOther_Alarm_Siren_Powered              "Alarmsirene"     <selfalarm> (eOther_Alarm_System) ["Point"] { channel="knx:device:bridge:other:alarmSiren" }
+
 //####### HELPER SWITCH STATES ######
 Group  eFF_Bedroom_Switches_Long_Pressed        "Schalter"        <selfinfo> (lFF_Bedroom) ["WallSwitch"]
 Switch pFF_Bedroom_Switches_Long_Pressed_Left_State "Schlafz. Bett Fenster (lang)" (eFF_Bedroom_Switches_Long_Pressed) ["Switch"] { channel="knx:device:bridge:other:bedroomLeftLongPressed" }
