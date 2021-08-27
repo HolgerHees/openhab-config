@@ -1,22 +1,65 @@
 from java.time import ZonedDateTime
 
-from shared.helper import log, rule, itemLastChangeOlderThen, getItemState, postUpdate, sendNotification, sendNotificationToAllAdmins, startTimer, getGroupMember
+from shared.helper import log, rule, itemLastChangeOlderThen, getItemState, getItemLastUpdate, postUpdate, sendNotification, sendNotificationToAllAdmins, startTimer, getGroupMember, getGroupMemberChangeTrigger
 from shared.triggers import ItemStateChangeTrigger
 from custom.presence import PresenceHelper
 
 
-'''
-0 - away
-1 - maybe present
-2 - present / wakeuped
-3 - maybe wakeuped
-4 - sleeping
-'''
+@rule("presence_detection.py")
+class PresenceMovingCheckRule:
+    def __init__(self):
+        self.triggers = [ ItemStateChangeTrigger("pOther_Presence_State") ]
+        self.triggers += getGroupMemberChangeTrigger("gSensor_Indoor")
+        self.stateTimer = None
+        self.checkTimer = None
+        
+    def setState(self,state):
+        postUpdateIfChanged("pOther_Presence_State",state)
+        if state == PresenceHelper.STATE_AWAY:
+            sendNotification(u"Tür", u"Unbekannter Gast gegangen")
+        
+    def checkGuest(self):
+        newestUpdate = 0
+        items = getItem("gSensor_Indoor").getAllMembers()
+        for item in items:
+            _update = getItemLastUpdate(item).toInstant().toEpochMilli()
+            if _update > newestUpdate:
+                newestUpdate = _update
+                
+        if newestUpdate < ZonedDateTime.now().minusSeconds(20).toInstant().toEpochMilli():
+            self.setState( PresenceHelper.STATE_AWAY )
+        else:
+            self.stateTimer = startTimer(self.log, 3600, self.setState, args = [ PresenceHelper.STATE_AWAY ]) # 1 hour
+            self.checkTimer = None
+        
+    def execute(self, module, input):
+        if self.stateTimer != None:
+            self.stateTimer.cancel()
+            self.stateTimer = None 
+            
+        presenceState = getItemState("pOther_Presence_State").intValue()
+            
+        if input['event'].getItemName() == "pOther_Presence_State":
+            if self.checkTimer != None:
+                self.checkTimer.cancel()
+                self.checkTimer = None 
+                
+            if presenceState == PresenceHelper.STATE_MAYBE_PRESENT:
+                self.checkTimer = startTimer(self.log, 30, self.checkGuest)
+            
+        if presenceState == PresenceHelper.STATE_MAYBE_PRESENT:
+            if self.checkTimer == None:
+                self.stateTimer = startTimer(self.log, 3600, self.setState, args = [ PresenceHelper.STATE_AWAY ]) # 1 hour
+        elif presenceState == PresenceHelper.STATE_MAYBE_SLEEPING:
+            self.stateTimer = startTimer(self.log, 600, self.setState, args = [ PresenceHelper.STATE_SLEEPING ]) # 10 min
+        elif presenceState == PresenceHelper.STATE_SLEEPING and input['event'].getItemName() != "pOther_Presence_State":
+            postUpdate("pOther_Presence_State",PresenceHelper.STATE_MAYBE_SLEEPING)
 
 @rule("presence_detection.py")
 class PresenceCheckRule:
     def __init__(self):
         self.triggers = [
+            ItemStateChangeTrigger("pGF_Corridor_Openingcontact_Door_State",state="OPEN"),
             ItemStateChangeTrigger("pOther_Presence_Holger_State"),
             ItemStateChangeTrigger("pOther_Presence_Sandra_State")
         ]
@@ -26,44 +69,51 @@ class PresenceCheckRule:
     def execute(self, module, input):
         itemName = input['event'].getItemName()
         itemState = input['event'].getItemState()
-
-        # sometimes, phones are losing wifi connections because of their sleep mode
-        if itemState == OFF:
-            if itemLastChangeOlderThen("pGF_Corridor_Openingcontact_Door_State",ZonedDateTime.now().minusMinutes(30)):
-                self.skippedStates[itemName] = True
-                sendNotification(u"Phone", u"Skipped state {} for {}".format(itemState,itemName), recipients = ['bot_holger'])
-                return
-        else:
-            if itemName in self.skippedStates:
-                del self.skippedStates[itemName]
-                sendNotification(u"Phone", u"Skipped state {} for {}".format(itemState,itemName), recipients = ['bot_holger'])
-                return
-          
-        #sendNotificationToAllAdmins(u"{}".format(itemName), u"{}".format(itemState))
         
-        holgerPhone = itemState if itemName == "pOther_Presence_Holger_State" else getItemState("pOther_Presence_Holger_State")
-        sandraPhone = itemState if itemName == "pOther_Presence_Sandra_State" else getItemState("pOther_Presence_Sandra_State")
+        presenceState = getItemState("pOther_Presence_State").intValue()
         
-        bot = PresenceHelper.getRecipientByStateItem(itemName)
-        
-        if holgerPhone == ON or sandraPhone == ON:
-            # only possible if we are away
-            if getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
-                postUpdate("pOther_Presence_State",PresenceHelper.STATE_PRESENT)
+        if itemName == "pGF_Corridor_Openingcontact_Door_State":
+            if presenceState == PresenceHelper.STATE_AWAY:
+                postUpdate("pOther_Presence_State",PresenceHelper.STATE_MAYBE_PRESENT)
+                sendNotification(u"Tür", u"Unbekannter Gast gekommen")
         else:
-            # only possible if we are present and not sleeping
-            if getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_MAYBE_PRESENT,PresenceHelper.STATE_PRESENT]:
-                postUpdate("pOther_Presence_State",PresenceHelper.STATE_AWAY)
-
-        if itemState == ON:
-            sendNotification(u"Tür", u"Willkommen", recipients = [bot])
-        else:
-            if holgerPhone == OFF and sandraPhone == OFF:
-                lightMsg = u" - LICHT an" if getItemState("gIndoor_Lights") != OFF else u""
-                windowMsg = u" - FENSTER offen" if getItemState("gOpeningcontacts") != CLOSED else u""
-                sendNotification(u"Tür", u"Auf Wiedersehen{}{}".format(lightMsg,windowMsg), recipients = [bot])
+            # sometimes, phones are losing wifi connections because of their sleep mode
+            if itemState == OFF:
+                if itemLastChangeOlderThen("pGF_Corridor_Openingcontact_Door_State",ZonedDateTime.now().minusMinutes(30)):
+                    self.skippedStates[itemName] = True
+                    sendNotification(u"Phone", u"Skipped state {} for {}".format(itemState,itemName), recipients = ['bot_holger'])
+                    return
             else:
-                sendNotification(u"Tür", u"Auf Wiedersehen", recipients = [bot])
+                if itemName in self.skippedStates:
+                    del self.skippedStates[itemName]
+                    sendNotification(u"Phone", u"Skipped state {} for {}".format(itemState,itemName), recipients = ['bot_holger'])
+                    return
+              
+            #sendNotificationToAllAdmins(u"{}".format(itemName), u"{}".format(itemState))
+            
+            holgerPhone = itemState if itemName == "pOther_Presence_Holger_State" else getItemState("pOther_Presence_Holger_State")
+            sandraPhone = itemState if itemName == "pOther_Presence_Sandra_State" else getItemState("pOther_Presence_Sandra_State")
+            
+            bot = PresenceHelper.getRecipientByStateItem(itemName)
+            
+            if holgerPhone == ON or sandraPhone == ON:
+                # only possible if we are away
+                if presenceState in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
+                    postUpdate("pOther_Presence_State",PresenceHelper.STATE_PRESENT)
+            else:
+                # only possible if we are present and not sleeping
+                if presenceState in [PresenceHelper.STATE_MAYBE_PRESENT,PresenceHelper.STATE_PRESENT]:
+                    postUpdate("pOther_Presence_State",PresenceHelper.STATE_AWAY)
+
+            if itemState == ON:
+                sendNotification(u"Tür", u"Willkommen", recipients = [bot])
+            else:
+                if holgerPhone == OFF and sandraPhone == OFF:
+                    lightMsg = u" - LICHT an" if getItemState("gIndoor_Lights") != OFF else u""
+                    windowMsg = u" - FENSTER offen" if getItemState("gOpeningcontacts") != CLOSED else u""
+                    sendNotification(u"Tür", u"Auf Wiedersehen{}{}".format(lightMsg,windowMsg), recipients = [bot])
+                else:
+                    sendNotification(u"Tür", u"Auf Wiedersehen", recipients = [bot])
       
 @rule("presence_detection.py")
 class WakeupRule:
