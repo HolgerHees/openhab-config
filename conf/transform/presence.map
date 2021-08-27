@@ -1,6 +1,8 @@
 0=Abwesend
-1=Anwesend
-2=Schlafen
+1=Ankommend
+2=Anwesend
+3=Aufstehen
+4=Schlafen
 -=undefiniert
 NULL=unbekannt
 UNDEF=unbekannt

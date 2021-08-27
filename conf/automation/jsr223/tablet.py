@@ -4,28 +4,48 @@ from java.time import ZonedDateTime
 from shared.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastChangeOlderThen, sendCommand
 from shared.triggers import ItemStateChangeTrigger, ItemCommandTrigger
 
+from custom.presence import PresenceHelper
+
 
 @rule("tablet.py")
 class WakeupRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("pOther_Presence_State"),
-            ItemStateChangeTrigger("gGF_Lights")
+            ItemStateChangeTrigger("pOther_Presence_State",state=PresenceHelper.STATE_AWAY),
+            ItemStateChangeTrigger("pOther_Presence_State",state=PresenceHelper.STATE_SLEEPING),
+            ItemStateChangeTrigger("pGF_Livingroom_Motiondetector_State",state="OPEN")
         ]
-
+        self.isSleeping = False
+        self.timer = None
+        
+    def sleep(self):
+        if !self.isSleeping:
+            urllib2.urlopen("http://192.168.0.40:5000/sleep").read()
+            self.isSleeping = True
+            
+    def delayedSleep(self):
+        if getItemState("pOther_Presence_State").intValue() != PresenceHelper.STATE_PRESENT:
+            self.sleep()
+            
+    def wakeup(self):
+        if self.isSleeping:
+            urllib2.urlopen("http://192.168.0.40:5000/wakeup").read()
+            self.isSleeping = False
+                
     def execute(self, module, input):
+        if self.timer != None:
+            self.timer.cancel()
+            self.timer = None
+            
         if input['event'].getItemName() == "pOther_Presence_State":
-            if input["event"].getItemState().intValue() != 1:
-                urllib2.urlopen("http://192.168.0.40:5000/sleep").read()
-            else:
-                urllib2.urlopen("http://192.168.0.40:5000/wakeup").read()
-        # check for itemLastChangeOlderThen to avoid flapping, because gGF_Lights is affected by pOther_Presence_State
-        elif getItemState('pOther_Presence_State').intValue() == 2 and itemLastChangeOlderThen("pOther_Presence_State",ZonedDateTime.now().minusSeconds(5)):
-            if input["event"].getItemState() == OFF:
-                urllib2.urlopen("http://192.168.0.40:5000/sleep").read()
-            else:
-                urllib2.urlopen("http://192.168.0.40:5000/wakeup").read()
-
+            self.sleep()
+        else:
+            self.wakeup()
+            
+            if getItemState("pOther_Presence_State").intValue() != PresenceHelper.STATE_PRESENT:
+                self.timer = createTimer(self.log, 600,self.delayedSleep) # 10 min
+                self.timer.start()
+            
 
 @rule("tablet.py")
 class ManualReloadRule:

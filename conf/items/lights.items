@@ -83,7 +83,7 @@ Switch pGF_Guestroom_Light_Ceiling_Powered      "Deckenlicht"        <selflight>
 
 // **** GF GARAGE ****
 Group  eGF_Garage_Light_Ceiling                 "Deckenlampe"        <selflight> (lGF_Garage)                                           ["Lightbulb"] { synonyms="Decke" }
-Switch pGF_Garage_Light_Ceiling_Powered         "Deckenlicht"        <selflight> (eGF_Garage_Light_Ceiling,gOutdoor_Lights)             ["Switch","Light"] { channel="knx:device:bridge:lights_ff:garage" }
+Switch pGF_Garage_Light_Ceiling_Powered         "Deckenlicht"        <selflight> (eGF_Garage_Light_Ceiling,gIndoor_Lights)             ["Switch","Light"] { channel="knx:device:bridge:lights_ff:garage" }
 
 // **** FF CORRIDOR ****
 Group  eFF_Corridor_Light_Ceiling               "Deckenlampe"        <selflight> (lFF_Corridor)                                         ["Lightbulb"] { synonyms="Decke" }

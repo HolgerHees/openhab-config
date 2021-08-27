@@ -1,7 +1,9 @@
+from java.time import ZonedDateTime
+
 from shared.helper import rule, getItemState, getHistoricItemState, getStableItemState, getStableMinMaxItemState, getGroupMember, sendNotification
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
+
 from custom.presence import PresenceHelper
-from java.time import ZonedDateTime
 
 
 @rule("ventilation_notification.py")
@@ -62,7 +64,7 @@ class TemperatureConditionCheckRule:
         # no device presence state change
         if 'event' not in input:
             # we are away
-            if getItemState("pOther_Presence_State").intValue() == 0:
+            if getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
                 return
               
             # recipients will be selected only if there are state changes
@@ -139,7 +141,7 @@ class TemperatureConditionCheckRule:
                 self.log.info(u"MSG: {}".format(msg))
                 
                 # we are not sleeping
-                if getItemState("pOther_Presence_State").intValue() != 2:
+                if getItemState("pOther_Presence_State").intValue() not in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
                     # initial debug
                     if self.lastDirection is None:
                         recipients = ["bot_holger"]

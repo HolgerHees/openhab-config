@@ -360,7 +360,7 @@ sitemap haus label="Main Menu"
 			{ 
 				Text label="Präsenz & Schlafen" icon="selfsettings"
                 {
-                    Switch item=pOther_Presence_State label="Präsenz" mappings=[0="Abwesend", 1="Anwesend", 2="Schlafend"]
+                    Selection item=pOther_Presence_State label="Präsenz" mappings=[0="Abwesend", 1="Ankommend", 2="Anwesend",3="Aufstehen", 4="Schlafend"]
                     Text item=pOther_Presence_Holger_State label="Holger anwesend [%s]"
                     Text item=pOther_Presence_Sandra_State label="Sandra anwesend [%s]"
                     Switch item=pOther_Scene7 label="Tablet Reload [%s]"
@@ -433,9 +433,19 @@ sitemap haus label="Main Menu"
             {
                 Text label="Alarm" icon="selfalarm"
                 {
-                    Switch item=pOther_Alarm_Siren_Powered
-                    Switch item=gIndoor_Lights label="Alle Lampen" mappings=[OFF="Aus",ON="An"]
-                    Switch item=gShutters label="Alle Rollläden" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+                    Frame label="Alarm"
+                    {
+                        Switch item=pOther_Alarm_Siren_Powered
+                    }
+                    Frame label="Licht"
+                    {
+                        Switch item=gIndoor_Lights label="Alle Lampen (innen)" mappings=[OFF="Aus",ON="An"]
+                        Switch item=gOutdoor_Lights label="Alle Lampen (aussen)" mappings=[OFF="Aus",ON="An"]
+                    }
+                    Frame label="Rollläden"
+                    {
+                        Switch item=gShutters label="Alle Rollläden" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+                    }
                 }
                 Text item=pOther_Smoke_Detector_State valuecolor=[!=CLOSED="#d72a2a"]
             }
@@ -486,7 +496,7 @@ sitemap haus label="Main Menu"
             }
         }
         Group item=pOther_State_Message_Sensors icon="selfsensor" label="Sensoren [%s]" valuecolor=[=="Alles ok"="#6bc305",=="Giessen"="#cbcb00",!="Alles ok"="#d72a2a"]{
-            Frame label="Temperatur & Feuchtigkeit"
+            Frame label="Haus"
             {
                 Group item=pGF_Livingroom_Air_Sensor_Message label="EG [%s]"{
                     Frame label="Daten" {
@@ -536,7 +546,30 @@ sitemap haus label="Main Menu"
                         Webview url="/static/custom/grafana/temperatures_og.html?fromItem=Chart_From" icon="none" height=18
                     }
                 }
-                Group item=pOutdoor_WeatherStation_Air_Message label="Wetter [%s]" {
+                Group item=pIndoor_Plant_Sensor_Watering_Info label="Pflanzen [%s]" valuecolor=[=="Feucht genug"="#6bc305",=="Giessen"="#cbcb00",=="Jetzt Giessen"="#d72a2a"]{
+                    Frame label="Daten" {
+                        Text item=pIndoor_Plant_Sensor_Device_State1
+                        Text item=pIndoor_Plant_Sensor_Device_State2
+                        Text item=pIndoor_Plant_Sensor_Device_State3
+                        Text item=pIndoor_Plant_Sensor_Device_State4
+                        Text item=pIndoor_Plant_Sensor_Activation_Info label="Überwachen [%s]"{
+                            Switch item=pIndoor_Plant_Sensor_Device_Enabled1
+                            Switch item=pIndoor_Plant_Sensor_Device_Enabled2
+                            Switch item=pIndoor_Plant_Sensor_Device_Enabled3
+                            Switch item=pIndoor_Plant_Sensor_Device_Enabled4
+                            Switch item=pIndoor_Plant_Sensor_Device_Enabled5
+                            Switch item=pIndoor_Plant_Sensor_Device_Enabled6 
+                        }
+                    }
+                    Frame label="Auswertung" {
+                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="/static/custom/grafana/pflanzen.html?fromItem=Chart_From" icon="none" height=18
+                    }
+                }
+            }
+            Frame label="Garten"
+            {
+                Group item=pOutdoor_WeatherStation_Air_Message label="Aktuelles Wetter [%s]" {
                     Frame label="Wetter" {
                         Group item=pOutdoor_WeatherStation_Air_Message {
                             Frame label="Details" {
@@ -655,25 +688,8 @@ sitemap haus label="Main Menu"
                         Text item=pOutdoor_WeatherStation_Update_Message visibility=[pOutdoor_WeatherStation_Is_Working==OFF] valuecolor=[!=""="#d72a2a"]
                     }
                 }
-                Group item=pIndoor_Plant_Sensor_Watering_Info label="Pflanzen [%s]" valuecolor=[=="Feucht genug"="#6bc305",=="Giessen"="#cbcb00",=="Jetzt Giessen"="#d72a2a"]{
-                    Frame label="Daten" {
-                        Text item=pIndoor_Plant_Sensor_Device_State1
-                        Text item=pIndoor_Plant_Sensor_Device_State2
-                        Text item=pIndoor_Plant_Sensor_Device_State3
-                        Text item=pIndoor_Plant_Sensor_Device_State4
-                        Text item=pIndoor_Plant_Sensor_Activation_Info label="Überwachen [%s]"{
-                            Switch item=pIndoor_Plant_Sensor_Device_Enabled1
-                            Switch item=pIndoor_Plant_Sensor_Device_Enabled2
-                            Switch item=pIndoor_Plant_Sensor_Device_Enabled3
-                            Switch item=pIndoor_Plant_Sensor_Device_Enabled4
-                            Switch item=pIndoor_Plant_Sensor_Device_Enabled5
-                            Switch item=pIndoor_Plant_Sensor_Device_Enabled6 
-                        }
-                    }
-                    Frame label="Auswertung" {
-                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/custom/grafana/pflanzen.html?fromItem=Chart_From" icon="none" height=18
-                    }
+                Text label="Wetterbericht" icon="selfrain" {
+                    Webview url="/weather/weatherDetailOverview.php" icon="none" height=20
                 }
             }
         }

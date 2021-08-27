@@ -1,8 +1,10 @@
 import time
+from java.time import ZonedDateTime
 
 from shared.helper import rule, itemLastChangeOlderThen, getItemState, sendNotification, postUpdate, postUpdateIfChanged, sendCommand
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
-from java.time import ZonedDateTime
+
+from custom.presence import PresenceHelper
 
 
 @rule("roboter_roomba.py")
@@ -161,12 +163,11 @@ class RoombaAutomaticRule:
         self.triggers = [CronTrigger("0 2,17,32,47 8-15 ? * MON-FRI")]
 
     def execute(self, module, input):
-        if getItemState("pOther_Presence_State").intValue() == 0 \
+        if getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_AWAY and itemLastChangeOlderThen("pOther_Presence_State", ZonedDateTime.now().minusMinutes(60)) \
                 and getItemState("pIndoor_Roomba_auto") == ON \
                 and getItemState("pIndoor_Roomba_status").toString() == "Charging" \
                 and getItemState("pIndoor_Roomba_batPct").intValue() >= 100 \
                 and getItemState("pIndoor_Roomba_error") == OFF \
-                and getItemState("pIndoor_Roomba_full") == OFF:
-            if itemLastChangeOlderThen("pIndoor_Roomba_cleaning_state", ZonedDateTime.now().minusMinutes(360)) \
-                    and itemLastChangeOlderThen("pOther_Presence_State", ZonedDateTime.now().minusMinutes(60)):
-                sendCommand("pIndoor_Roomba_command", "start")
+                and getItemState("pIndoor_Roomba_full") == OFF \
+                and itemLastChangeOlderThen("pIndoor_Roomba_cleaning_state", ZonedDateTime.now().minusMinutes(360)):
+            sendCommand("pIndoor_Roomba_command", "start")

@@ -2,6 +2,8 @@ from shared.helper import rule, getItemState, postUpdate, sendCommand, sendComma
 from shared.triggers import ItemStateChangeTrigger
 from java.time import ZonedDateTime
 
+from custom.presence import PresenceHelper
+
 
 configs = [
     { "contact": "pGF_Livingroom_Openingcontact_Window_Terrace_State", "shutter": "pGF_Livingroom_Shutter_Terrace_Control", "sunprotection": "pOther_Automatic_State_Sunprotection_Livingroom", "sunprotectionOnlyIfAway": True },
@@ -54,7 +56,7 @@ class RollershutterAutoMorningEveningRule:
                 if getItemState(config["contact"]) != CLOSED: 
                     continue
                 sendCommand(config["shutter"], DOWN)
-        elif getItemState("pOther_Presence_State").intValue() == 0:
+        elif getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_AWAY:
             sendCommand("gShutters", UP)
 
 @rule("rollershutter_auto.py")
@@ -89,7 +91,7 @@ class RollershutterAutoWindowContactRule:
 class RollershutterAutoPresenceRule:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pOther_Presence_State")]
-        self.presenceTimer = None
+        self.awayTimer = None
 
     def updateCallback(self,state):
         for config in configs:
@@ -106,23 +108,23 @@ class RollershutterAutoPresenceRule:
 
             sendCommandIfChanged(config["shutter"],state)
 
-        self.presenceTimer = None
+        self.awayTimer = None
 
     def execute(self, module, input):
         if getItemState("pOther_Manual_State_Auto_Rollershutter") != ON:
             return
           
-        if self.presenceTimer != None:
-            self.presenceTimer.cancel()
-            self.presenceTimer = None
-    
+        if self.awayTimer != None:
+            self.awayTimer.cancel()
+            self.awayTimer = None
+            
         if getItemState("pOther_Automatic_State_Rollershutter") == ON:
             return
-          
-        if input['event'].getOldItemState().intValue() == 0:
-            self.updateCallback(UP)
-        elif input['event'].getItemState().intValue() == 0:
+    
+        if input['event'].getItemState().intValue() == PresenceHelper.STATE_AWAY:
             self.presenceTimer = startTimer(self.log, 1800, self.updateCallback, args = [ DOWN ])
+        elif input['event'].getItemState().intValue() == PresenceHelper.STATE_PRESENT:
+            self.updateCallback(UP)
 
 @rule("rollershutter_auto.py")
 class RollershutterAutoSunprotectionRule:
@@ -149,7 +151,7 @@ class RollershutterAutoSunprotectionRule:
                     continue
                 
                 # skip closing shutters if we must be away but we are still present or not long enough away
-                if "sunprotectionOnlyIfAway" in config and (getItemState("pOther_Presence_State").intValue() != 0 or itemLastChangeNewerThen("pOther_Presence_State", ZonedDateTime.now().minusSeconds(1800))):
+                if "sunprotectionOnlyIfAway" in config and (getItemState("pOther_Presence_State").intValue() != PresenceHelper.STATE_AWAY or itemLastChangeNewerThen("pOther_Presence_State", ZonedDateTime.now().minusSeconds(1800))):
                     continue
           
             sendCommand(config["shutter"], state)
@@ -166,9 +168,15 @@ class TerraceAutoSunprotectionRule:
         if getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == 1:
             pass
         elif getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == 2:
-            # DOWN only if automatic is enabled and (people are present or where present quite recently or terrace door is open)
+            # DOWN only if automatic is enabled and (people are present or where present changed recently or terrace door is open)
             if (getItemState("pOther_Manual_State_Auto_Sunprotection") == ON
-                  and ( getItemState("pOther_Presence_State").intValue() != 0 or itemLastChangeNewerThen("pOther_Presence_State", ZonedDateTime.now().minusMinutes(120)) or getItemState("pGF_Livingroom_Openingcontact_Window_Terrace_State") == OPEN )
+                  and ( 
+                    getItemState("pOther_Presence_State").intValue() not in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]
+                    or
+                    itemLastChangeNewerThen("pOther_Presence_State", ZonedDateTime.now().minusMinutes(120)) 
+                    or
+                    getItemState("pGF_Livingroom_Openingcontact_Window_Terrace_State") == OPEN 
+                  )
                ):
                 #self.log.info(u"down")
                 sendCommand("pOutdoor_Terrace_Shading_Left_Control", DOWN)

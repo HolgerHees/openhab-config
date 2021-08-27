@@ -4,6 +4,8 @@ from java.time import ZonedDateTime
 from shared.helper import rule, itemLastChangeOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand, startTimer, getThing, sendNotificationToAllAdmins
 from shared.triggers import CronTrigger, ItemCommandTrigger, ItemStateChangeTrigger, ThingStatusChangeTrigger
 
+from custom.presence import PresenceHelper
+
 
 autoChangeInProgress = False
 
@@ -216,7 +218,7 @@ class FilterFanLevelRule:
         raumTemperatur = getItemState("pGF_Livingroom_Air_Sensor_Temperature_Value").doubleValue()
         zielTemperatur = getItemState("pGF_Utilityroom_Ventilation_Comfort_Temperature").doubleValue
         
-        presenceSate = getItemState("pOther_Presence_State").intValue()
+        presenceState = getItemState("pOther_Presence_State").intValue()
         
         isTooWarm = raumTemperatur >= zielTemperatur
         
@@ -224,12 +226,12 @@ class FilterFanLevelRule:
         coolingPossible = getItemState(outdoorTemperatureItemName).doubleValue() < raumTemperatur
 
         # Sleep
-        if presenceSate == 2:
+        if presenceState in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
             reducedLevel = 2    # Level 1
             defaultLevel = 2    # Level 1
             coolingLevel = 2    # Level 1
         # Away since 30 minutes
-        elif presenceSate == 0 and itemLastChangeOlderThen("pOther_Presence_State", ZonedDateTime.now().minusMinutes(60)):
+        elif presenceState == [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT] and itemLastChangeOlderThen("pOther_Presence_State", ZonedDateTime.now().minusMinutes(60)):
             reducedLevel = 1    # Level A
             defaultLevel = 2    # Level 1
             coolingLevel = 3    # Level 2

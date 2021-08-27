@@ -4,19 +4,8 @@ from java.time import ZonedDateTime
 from shared.helper import rule, getItemState, itemLastChangeOlderThen, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged, createTimer, getGroupMember
 from shared.triggers import ItemStateChangeTrigger
 
+from custom.presence import PresenceHelper
 
-@rule("presence_actions.py")
-class LeavingActionRule:
-    def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("pOther_Presence_State")]
-
-    def execute(self, module, input):
-        #self.log.info("test")
-        #self.log.info("{}".format(input["event"].getItemState()))
-        if input["event"].getItemState().intValue() == 1:
-            postUpdateIfChanged("pOther_Manual_State_Notify", OFF)
-        else:
-            postUpdateIfChanged("pOther_Manual_State_Notify", ON)
 
 @rule("lights_indoor.py")
 class ArrivingActionRule:
@@ -25,30 +14,21 @@ class ArrivingActionRule:
             ItemStateChangeTrigger("pOther_Presence_State"),
             ItemStateChangeTrigger("pGF_Corridor_Openingcontact_Door_State",state="OPEN")
         ]
-        self.isArriving = False
-        self.arrivingTimer = None
-
-    def arrivingCallback(self):
-        self.isArriving = False
-    
+        
     def execute(self, module, input):
+        if getItemState("pOther_Automatic_State_Outdoorlights") != ON:
+            return
+          
         if input["event"].getItemName() == "pGF_Corridor_Openingcontact_Door_State":
-            if self.isArriving:
-                if getItemState("pOther_Automatic_State_Outdoorlights") == ON:
-                    sendCommand("pGF_Corridor_Light_Ceiling_Powered",ON)
-                self.isArriving = False
-        # 10 minutes matches the max time ranges used by presence detection to ping phones => see pingdevice thing configuration
-        # it can happen that pOther_Presence_State changes after pGF_Corridor_Openingcontact_Door_State was opened
-        elif itemLastChangeOlderThen("pGF_Corridor_Openingcontact_Door_State", ZonedDateTime.now().minusMinutes(10)):
-            self.isArriving = input["event"].getItemState().intValue() == 1 and input["oldState"].intValue() == 0
-            if self.isArriving:
-                self.arrivingTimer = createTimer(self.log, 60, self.arrivingCallback )
-                self.arrivingTimer.start()
+            if itemLastChangeOlderThen("pGF_Corridor_Motiondetector_State", ZonedDateTime.now().minusMinutes(10)):
+                sendCommandIfChanged("pGF_Corridor_Light_Ceiling_Powered",ON)
+        elif input["event"].getItemState().intValue() == PresenceHelper.STATE_AWAY and input["oldState"].intValue() == PresenceHelper.STATE_MAYBE_PRESENT:
+            sendCommandIfChanged("pGF_Corridor_Light_Ceiling_Powered",OFF)
 
 @rule("presence_detection.py") 
 class SleepingActionRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("pOther_Presence_State",state="2")]
+        self.triggers = [ItemStateChangeTrigger("pOther_Presence_State",state=PresenceHelper.STATE_SLEEPING)]
             
     def execute(self, module, input):
         sendCommandIfChanged("gIndoor_Lights", OFF)

@@ -1,8 +1,17 @@
+from java.time import ZonedDateTime
+
 from shared.helper import log, rule, itemLastChangeOlderThen, getItemState, postUpdate, sendNotification, sendNotificationToAllAdmins, startTimer, getGroupMember
 from shared.triggers import ItemStateChangeTrigger
 from custom.presence import PresenceHelper
-from java.time import ZonedDateTime
 
+
+'''
+0 - away
+1 - maybe present
+2 - present / wakeuped
+3 - maybe wakeuped
+4 - sleeping
+'''
 
 @rule("presence_detection.py")
 class PresenceCheckRule:
@@ -39,12 +48,12 @@ class PresenceCheckRule:
         
         if holgerPhone == ON or sandraPhone == ON:
             # only possible if we are away
-            if getItemState("pOther_Presence_State").intValue() == 0:
-                postUpdate("pOther_Presence_State",1)
+            if getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
+                postUpdate("pOther_Presence_State",PresenceHelper.STATE_PRESENT)
         else:
             # only possible if we are present and not sleeping
-            if getItemState("pOther_Presence_State").intValue() == 1:
-                postUpdate("pOther_Presence_State",0)
+            if getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_MAYBE_PRESENT,PresenceHelper.STATE_PRESENT]:
+                postUpdate("pOther_Presence_State",PresenceHelper.STATE_AWAY)
 
         if itemState == ON:
             sendNotification(u"Tür", u"Willkommen", recipients = [bot])
@@ -55,7 +64,7 @@ class PresenceCheckRule:
                 sendNotification(u"Tür", u"Auf Wiedersehen{}{}".format(lightMsg,windowMsg), recipients = [bot])
             else:
                 sendNotification(u"Tür", u"Auf Wiedersehen", recipients = [bot])
-        
+      
 @rule("presence_detection.py")
 class WakeupRule:
     def __init__(self):
@@ -70,8 +79,8 @@ class WakeupRule:
         self.checkTimer = None
         
     def wakeup(self):
-        if getItemState("pOther_Presence_State").intValue() == 2:
-            postUpdate("pOther_Presence_State", 1)
+        if getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
+            postUpdate("pOther_Presence_State", PresenceHelper.STATE_PRESENT)
             sendNotification(u"System", u"Guten Morgen")
 
     def delayedWakeup(self, checkCounter ):
@@ -93,7 +102,7 @@ class WakeupRule:
         
     def execute(self, module, input):        
         # only possible if we are sleeping
-        if getItemState("pOther_Presence_State").intValue() == 2:
+        if getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
             # sometimes the "gGF_Lights" state switches back and forth for a couple of milliseconds when set "gGF_Lights" state to OFF
             #if itemLastChangeOlderThen("pOther_Presence_State",ZonedDateTime.now().minusSeconds(5)):
             if input['event'].getItemName() == "gGF_Shutters":
@@ -111,7 +120,7 @@ class SleepingRule:
 
     def execute(self, module, input):
         # only possible if we are present
-        if getItemState("pOther_Presence_State").intValue() == 1:
-            postUpdate("pOther_Presence_State", 2)
+        if getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_MAYBE_PRESENT,PresenceHelper.STATE_PRESENT,PresenceHelper.STATE_MAYBE_SLEEPING]:
+            postUpdate("pOther_Presence_State", PresenceHelper.STATE_SLEEPING)
             
         postUpdate("pOther_Scene4", OFF)
