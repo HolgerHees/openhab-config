@@ -13,11 +13,17 @@ class WakeupRule:
         self.triggers = [
             ItemStateChangeTrigger("pOther_Presence_State",state=PresenceHelper.STATE_AWAY),
             ItemStateChangeTrigger("pOther_Presence_State",state=PresenceHelper.STATE_SLEEPING),
+            ItemStateChangeTrigger("pGF_Corridor_Motiondetector_State",state="OPEN"),
             ItemStateChangeTrigger("pGF_Livingroom_Motiondetector_State",state="OPEN")
         ]
         self.isSleeping = False
         self.timer = None
         
+    def wakeup(self):
+        if self.isSleeping:
+            urllib2.urlopen("http://192.168.0.40:5000/wakeup").read()
+            self.isSleeping = False
+                
     def sleep(self):
         if !self.isSleeping:
             urllib2.urlopen("http://192.168.0.40:5000/sleep").read()
@@ -27,11 +33,6 @@ class WakeupRule:
         if getItemState("pOther_Presence_State").intValue() != PresenceHelper.STATE_PRESENT:
             self.sleep()
             
-    def wakeup(self):
-        if self.isSleeping:
-            urllib2.urlopen("http://192.168.0.40:5000/wakeup").read()
-            self.isSleeping = False
-                
     def execute(self, module, input):
         if self.timer != None:
             self.timer.cancel()
