@@ -20,7 +20,7 @@ class WakeupRule:
             self.isSleeping = False
                 
     def sleep(self):
-        if !self.isSleeping:
+        if not self.isSleeping:
             urllib2.urlopen("http://192.168.0.40:5000/sleep").read()
             self.isSleeping = True
             
