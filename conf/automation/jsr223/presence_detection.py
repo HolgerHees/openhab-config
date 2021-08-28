@@ -1,61 +1,71 @@
 from java.time import ZonedDateTime
 
-from shared.helper import log, rule, itemLastChangeOlderThen, getItemState, getItemLastUpdate, postUpdate, sendNotification, sendNotificationToAllAdmins, startTimer, getGroupMember, getGroupMemberChangeTrigger
+from shared.helper import log, rule, itemLastChangeOlderThen, getItem, getItemState, getItemLastUpdate, postUpdate, postUpdateIfChanged, sendNotification, sendNotificationToAllAdmins, startTimer, getGroupMember, getGroupMemberChangeTrigger
 from shared.triggers import ItemStateChangeTrigger
 from custom.presence import PresenceHelper
 
-
+ 
 @rule("presence_detection.py")
 class PresenceMovingCheckRule:
     def __init__(self):
         self.triggers = [ ItemStateChangeTrigger("pGF_Corridor_Openingcontact_Door_State") ]
         self.triggers += getGroupMemberChangeTrigger("gSensor_Indoor",state="OPEN")
-        self.stateTimer = None
-        self.checkTimer = None
+
+        self.isConfirmed = False
+        self.confirmTimer = None
         
-    def setState(self,state):
+        self.fallbackTimer = None
+
+    def setState(self,state,isFallback):
         postUpdateIfChanged("pOther_Presence_State",state)
         if state == PresenceHelper.STATE_AWAY:
-            sendNotification(u"Tür", u"Unbekannter Gast gegangen")
+            sendNotification(u"Tür", u"Unbekannter Gast {}".format( u"verschwunden" if isFallback else u"gegangen" ))
         
     def checkState(self, presenceState):
         if presenceState == PresenceHelper.STATE_MAYBE_PRESENT:
-            # delayed away check only if there is no initial guest check
-            if self.checkTimer == None:
-                self.stateTimer = startTimer(self.log, 3600, self.setState, args = [ PresenceHelper.STATE_AWAY ]) # 1 hour
+            if self.isConfirmed:
+                self.fallbackTimer = startTimer(self.log, 7200, self.setState, args = [ PresenceHelper.STATE_AWAY, True ]) # 1 hour
         elif presenceState == PresenceHelper.STATE_MAYBE_SLEEPING:
-            self.stateTimer = startTimer(self.log, 600, self.setState, args = [ PresenceHelper.STATE_SLEEPING ]) # 10 min
+            self.fallbackTimer = startTimer(self.log, 600, self.setState, args = [ PresenceHelper.STATE_SLEEPING, True ]) # 10 min
         
-    def checkGuest(self):
-        if getItemState("pOther_Presence_State").intValue() != PresenceHelper.STATE_MAYBE_PRESENT:
+    def confirmPresence(self):
+        presenceState = getItemState("pOther_Presence_State").intValue()
+      
+        if presenceState != PresenceHelper.STATE_MAYBE_PRESENT:
             return
           
         newestUpdate = 0
-        items = getItem("gSensor_Indoor").getAllMembers()
-        for item in items:
+        for item in getItem("gSensor_Indoor").getAllMembers():
+            if getItemState(item) == OPEN:
+                newestUpdate = ZonedDateTime.now().toInstant().toEpochMilli()
+                break
+              
             _update = getItemLastUpdate(item).toInstant().toEpochMilli()
             if _update > newestUpdate:
                 newestUpdate = _update
-                
-        # no move events, so go away again
-        if newestUpdate < ZonedDateTime.now().minusSeconds(7).toInstant().toEpochMilli():
-            self.setState( PresenceHelper.STATE_AWAY )
-        # otherwise delayed away check
-        else:
-            self.checkTimer = None
-            self.checkState(PresenceHelper.STATE_MAYBE_PRESENT)
             
+        self.isConfirmed = newestUpdate >= ZonedDateTime.now().minusSeconds(7).toInstant().toEpochMilli()
+        
+        if self.isConfirmed:
+            self.checkState(presenceState)
+        else:
+            self.setState( PresenceHelper.STATE_AWAY, False )
+            
+        self.confirmTimer = None
+
     def execute(self, module, input):
-        if self.stateTimer != None:
-            self.stateTimer.cancel()
-            self.stateTimer = None 
+        if self.fallbackTimer != None:
+            self.fallbackTimer.cancel()
+            self.fallbackTimer = None 
             
         presenceState = getItemState("pOther_Presence_State").intValue()
             
         if input['event'].getItemName() == "pGF_Corridor_Openingcontact_Door_State":
-            if self.checkTimer != None:
-                self.checkTimer.cancel()
-                self.checkTimer = None 
+            if self.confirmTimer != None:
+                self.confirmTimer.cancel()
+                self.confirmTimer = None 
+                
+            self.isConfirmed = False
              
             if input['event'].getItemState() == OPEN:
                 if presenceState == PresenceHelper.STATE_AWAY:
@@ -64,7 +74,7 @@ class PresenceMovingCheckRule:
             else:
                 if presenceState == PresenceHelper.STATE_MAYBE_PRESENT:
                     # check in 15 seconds again if there was any move events
-                    self.checkTimer = startTimer(self.log, 15, self.checkGuest)
+                    self.confirmTimer = startTimer(self.log, 15, self.confirmPresence)
         else:
             # move events during sleep, check function will be called during presence state update cycle
             if presenceState == PresenceHelper.STATE_SLEEPING:
