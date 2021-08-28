@@ -1,7 +1,7 @@
 import urllib2
 from java.time import ZonedDateTime
 
-from shared.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastChangeOlderThen, sendCommand
+from shared.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastChangeOlderThen, sendCommand, startTimer
 from shared.triggers import ItemStateChangeTrigger, ItemCommandTrigger
 
 from custom.presence import PresenceHelper
@@ -10,12 +10,7 @@ from custom.presence import PresenceHelper
 @rule("tablet.py")
 class WakeupRule:
     def __init__(self):
-        self.triggers = [
-            ItemStateChangeTrigger("pOther_Presence_State",state=PresenceHelper.STATE_AWAY),
-            ItemStateChangeTrigger("pOther_Presence_State",state=PresenceHelper.STATE_SLEEPING),
-            ItemStateChangeTrigger("pGF_Corridor_Motiondetector_State",state="OPEN"),
-            ItemStateChangeTrigger("pGF_Livingroom_Motiondetector_State",state="OPEN")
-        ]
+        self.triggers = [ ItemStateChangeTrigger("pOther_Presence_State") ]
         self.isSleeping = False
         self.timer = None
         
@@ -38,14 +33,13 @@ class WakeupRule:
             self.timer.cancel()
             self.timer = None
             
-        if input['event'].getItemName() == "pOther_Presence_State":
+        if input['event'].getItemState().intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_SLEEPING]:
             self.sleep()
         else:
             self.wakeup()
             
-            if getItemState("pOther_Presence_State").intValue() != PresenceHelper.STATE_PRESENT:
-                self.timer = createTimer(self.log, 600,self.delayedSleep) # 10 min
-                self.timer.start()
+            if input['event'].getItemState().intValue() != PresenceHelper.STATE_PRESENT:
+                self.timer = startTimer(self.log, 600,self.delayedSleep) # 10 min
             
 
 @rule("tablet.py")

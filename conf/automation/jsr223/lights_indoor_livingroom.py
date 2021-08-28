@@ -1,4 +1,4 @@
-from shared.helper import rule, getItemState, sendCommand, postUpdate, postUpdateIfChanged, createTimer
+from shared.helper import rule, getItemState, sendCommand, postUpdate, postUpdateIfChanged, startTimer
 from shared.triggers import ItemCommandTrigger, ItemStateChangeTrigger
 from java.time import ZonedDateTime
 
@@ -133,11 +133,9 @@ class HueColorProgramRule:
         self._setCurrentColors([newColor1,newColor2,newColor3,newColor4,newColor5])
         
         if step < self.fadingSteps:
-            self.timer = createTimer(self.log, self.timeout, self.callbackFaded, [step + 1, data] )
-            self.timer.start()
+            self.timer = startTimer(self.log, self.timeout, self.callbackFaded, [step + 1, data] )
         else:
-            self.timer = createTimer(self.log, self.timeout, self.callbackFaded, [1, self._getCurrentColors() ] )
-            self.timer.start()
+            self.timer = startTimer(self.log, self.timeout, self.callbackFaded, [1, self._getCurrentColors() ] )
     
     def callback(self):
         if getItemState("pOther_Manual_State_Lightprogram").intValue() == 0:
@@ -158,8 +156,7 @@ class HueColorProgramRule:
         sendCommand("pGF_Livingroom_Light_Hue4_Color",color5)
         sendCommand("pGF_Livingroom_Light_Hue5_Color",color1)
                     
-        self.timer = createTimer(self.log, self.timeout, self.callback )
-        self.timer.start()
+        self.timer = startTimer(self.log, self.timeout, self.callback )
             
     def execute(self, module, input):
         if self.timer != None:
@@ -177,10 +174,8 @@ class HueColorProgramRule:
 
             if itemState == 1:
 
-                self.timer = createTimer(self.log, 1, self.callback)
-                self.timer.start()
+                self.timer = startTimer(self.log, 1, self.callback)
 
             elif itemState == 2:
         
-                self.timer = createTimer(self.log, 1, self.callbackFaded, [1, self.orgColors])
-                self.timer.start()
+                self.timer = startTimer(self.log, 1, self.callbackFaded, [1, self.orgColors])

@@ -1,7 +1,7 @@
 import math
 from java.time import ZonedDateTime
 
-from shared.helper import rule, createTimer, getGroupMember, getItemState, postUpdate, sendCommand, getItemLastChange
+from shared.helper import rule, startTimer, getGroupMember, getItemState, postUpdate, sendCommand, getItemLastChange
 from shared.triggers import ItemCommandTrigger, ItemStateChangeTrigger
 
 
@@ -194,8 +194,7 @@ class ScenesWatheringRule(WatheringHelperOld):
         self.currentProgressMsg = msg
         postUpdate("pOutdoor_Watering_Logic_Program_State", self.currentProgressMsg)
 
-        self.progressTimer = createTimer(self.log, 60.0, self.callbackProgress)
-        self.progressTimer.start()
+        self.progressTimer = startTimer(self.log, 60.0, self.callbackProgress)
 
     def execute(self, module, input):
         self.cancelProgressTimer()

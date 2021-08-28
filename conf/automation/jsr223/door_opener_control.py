@@ -1,4 +1,4 @@
-from shared.helper import rule, createTimer, getItemState, postUpdate, sendCommand, sendCommandIfChanged
+from shared.helper import rule, startTimer, getItemState, postUpdate, sendCommand, sendCommandIfChanged
 from shared.triggers import ItemStateChangeTrigger
 
 
@@ -18,12 +18,10 @@ class DoorOpenerControlRule:
             self.timer.cancel()
             self.timer = None
             
-        self.log.info("{}".format(input["newState"]))
+        #self.log.info("{}".format(input["newState"]))
 
         if input["newState"] == ON:
             sendCommand("pOutdoor_Streedside_Gardendoor_Opener_Powered", ON)
-            self.timer = createTimer(self.log, 3.0, self.callback)
-            self.timer.start()
-
+            self.timer = startTimer(self.log, 3.0, self.callback)
         else:
             sendCommandIfChanged("pOutdoor_Streedside_Gardendoor_Opener_Powered", OFF)

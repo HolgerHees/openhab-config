@@ -1,4 +1,4 @@
-from shared.helper import rule, getItemState, getItemStateWithFallback, getStableItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged, getItemLastUpdate, getItem, startTimer, createTimer, itemLastChangeOlderThen
+from shared.helper import rule, getItemState, getItemStateWithFallback, getStableItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged, getItemLastUpdate, getItem, startTimer, itemLastChangeOlderThen
 from shared.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
 from custom.sun import SunRadiation
 import math
@@ -271,8 +271,7 @@ class WeatherstationRainHeaterRule:
                     self.timer = None
         else:
             if getItemState("pOutdoor_WeatherStation_Rain_Heater") == ON and self.timer == None:
-                self.timer = createTimer(self.log, 300,self.disable) # max 5 min
-                self.timer.start()
+                self.timer = startTimer(self.log, 300,self.disable) # max 5 min
 
             # heating requests are not handled like normal mqtt topics with a stateTopic and a commandTopic. Instead:
             # 1. the weather station is sending a pOutdoor_WeatherStation_Rain_Heater_Request

@@ -1,7 +1,7 @@
 import urllib2
 from java.time import ZonedDateTime
 
-from shared.helper import rule, getItemState, itemLastChangeOlderThen, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged, createTimer, getGroupMember
+from shared.helper import rule, getItemState, itemLastChangeOlderThen, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged, getGroupMember
 from shared.triggers import ItemStateChangeTrigger
 
 from custom.presence import PresenceHelper
