@@ -1,11 +1,16 @@
-from shared.helper import rule, getGroupMemberChangeTrigger, sendNotification, getItem, getItemState
+from shared.helper import rule, getGroupMemberChangeTrigger, ItemStateChangeTrigger, sendNotification, getItem, getItemState, itemLastChangeNewerThen
 from custom.presence import PresenceHelper
 
 @rule("sensor_security_notification.py")
 class SensorSecurityNotificationRule:
     def __init__(self):
-        self.triggers = []
-        self.triggers += getGroupMemberChangeTrigger("gGF_Sensor_Doors")
+        self.triggers = [ 
+            # Ignore main door events. Is used for presence detection.
+            #ItemStateChangeTrigger("pGF_Corridor_Openingcontact_Door_State"), 
+            ItemStateChangeTrigger("pGF_Garage_Openingcontact_Door_Streedside_State"), 
+            ItemStateChangeTrigger("pGF_Garage_Openingcontact_Door_Garden_State") 
+        ]
+        #self.triggers += getGroupMemberChangeTrigger("gGF_Sensor_Doors")
         self.triggers += getGroupMemberChangeTrigger("gGF_Sensor_Window")
         self.triggers += getGroupMemberChangeTrigger("gFF_Sensor_Window")
         self.triggers += getGroupMemberChangeTrigger("gSensor_Indoor")
@@ -34,11 +39,13 @@ class SensorSecurityNotificationRule:
             elif "Window" in itemName:
                 msg = u"Fenster im {} {}".format( location.getLabel(), u"offen" if input['event'].getItemState() == OPEN else u"geschlossen" )
             elif "Motiondetector" in itemName:
+                if input['event'].getItemState() == CLOSED:
+                    return
+
                 # during sleep, ignore moving detection
                 if getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_SLEEPING:
                     return
-                if input['event'].getItemState() == CLOSED:
-                    return
+
                 msg = u"Bewegung im {} erkannt".format(location.getLabel())
                 
             #self.log.info(u"{} {} {} {}".format(group,itemName,item.getLabel(),location.getLabel()))
