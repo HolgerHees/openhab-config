@@ -11,18 +11,13 @@ from custom.presence import PresenceHelper
 class WakeupRule:
     def __init__(self):
         self.triggers = [ ItemStateChangeTrigger("pOther_Presence_State") ]
-        self.isSleeping = False
         self.timer = None
         
     def wakeup(self):
-        if self.isSleeping:
-            urllib2.urlopen("http://192.168.0.40:5000/wakeup").read()
-            self.isSleeping = False
+        urllib2.urlopen("http://192.168.0.40:5000/wakeup").read()
                 
     def sleep(self):
-        if not self.isSleeping:
-            urllib2.urlopen("http://192.168.0.40:5000/sleep").read()
-            self.isSleeping = True
+        urllib2.urlopen("http://192.168.0.40:5000/sleep").read()
             
     def delayedSleep(self):
         if getItemState("pOther_Presence_State").intValue() != PresenceHelper.STATE_PRESENT:

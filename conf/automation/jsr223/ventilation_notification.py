@@ -1,6 +1,6 @@
 from java.time import ZonedDateTime
 
-from shared.helper import rule, getItemState, getHistoricItemState, getStableItemState, getStableMinMaxItemState, getGroupMember, sendNotification
+from shared.helper import rule, getItemState, getHistoricItemState, getStableItemState, getStableMinMaxItemState, getGroupMember, sendNotification, startTimer
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
 
 from custom.presence import PresenceHelper
@@ -11,12 +11,13 @@ class TemperatureConditionCheckRule:
     def __init__(self):
         self.triggers = [
             CronTrigger("0 */1 * * * ?"),
-            ItemStateChangeTrigger("pOther_Presence_Holger_State",state="ON"),
-            ItemStateChangeTrigger("pOther_Presence_Sandra_State",state="ON")
+            ItemStateChangeTrigger("pOther_Presence_State"),
         ]
         self.lastDirection = None
         self.lastGFShouldOpen = None
         self.lastFFShouldOpen = None
+        
+        self.timer = None
         
     def getOpenState(self,windowGroupItemName,excludedItems=[]):
         isOpen = False
@@ -55,23 +56,8 @@ class TemperatureConditionCheckRule:
             return True
         else:
             return False
-
-    def execute(self, module, input):
-        # we don't want do be notified
-        if getItemState("pOther_Manual_State_Air_Thoroughly_Notify") != ON:
-            return
           
-        # no device presence state change
-        if 'event' not in input:
-            # we are away
-            if getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
-                return
-              
-            # recipients will be selected only if there are state changes
-            recipients = None
-        else:
-            recipients = [ PresenceHelper.getRecipientByStateItem( input['event'].getItemName() ) ]
-          
+    def process(self,recipients):
         now = ZonedDateTime.now()
 
         gardenTemp0, gardenTemp0Min, gardenTemp0Max = getStableMinMaxItemState(now,"pOutdoor_WeatherStation_Temperature",15)
@@ -150,3 +136,27 @@ class TemperatureConditionCheckRule:
         self.lastDirection = direction
         self.lastGFShouldOpen = gfShouldOpen
         self.lastFFShouldOpen = ffShouldOpen
+        
+    def execute(self, module, input):
+        # we don't want do be notified
+        if getItemState("pOther_Manual_State_Air_Thoroughly_Notify") != ON:
+            return
+          
+        if 'event' in input:
+            if self.timer != None:
+                self.timer.cancel()
+                self.timer = None
+                
+            if input['event'].getItemState().intValue() == PresenceHelper.STATE_PRESENT and input['event'].getOldItemState().intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
+                # delayed notification to give all devices the chance to be detected as present
+                self.timer = startTimer(self.log, 60, self.process, args = [ PresenceHelper.getPresentRecipients() ]) # 1 min
+        else:
+            # we are away
+            if getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
+                return
+              
+            # recipients will be selected only if there are state changes
+            recipients = None
+            
+            self.process(recipients)
+
