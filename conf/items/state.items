@@ -44,7 +44,7 @@ Switch pOther_Manual_State_Auto_Sunprotection   "Beschattung Automatik" <selfaut
 Group  eOther_Automatic_States                  "Auto Features"   <selfinfo> (lOther) ["Equipment"]
 Switch pOther_Automatic_State_Solar             "Solar Aktiv"     <selfsun> (eOther_Automatic_States) ["Point"]
 Switch pOther_Automatic_State_Outdoorlights     "Aussenbeleuchtung Aktiv" <selflight> (eOther_Automatic_States) ["Point"]
-Switch pOther_Automatic_State_Rollershutter     "Rollläden geschlossen" <selfrollershutter> (eOther_Automatic_States) ["Point"]
+Number pOther_Automatic_State_Rollershutter     "Rollläden geschlossen" <selfrollershutter> (eOther_Automatic_States) ["Point"]
 DateTime pOther_Automatic_State_Rollershutter_Up "Rollläden hoch [%1$tH:%1$tM]" <selfrollershutter> (eOther_Automatic_States) ["Point"]
 DateTime pOther_Automatic_State_Rollershutter_Down "Rollläden runter [%1$tH:%1$tM]" <selfrollershutter> (eOther_Automatic_States) ["Point"]
 Switch pOther_Automatic_State_Sunprotection_Attic "Rollladen Dachboden geschlossen" <selfrollershutter> (eOther_Automatic_States) ["Point"]

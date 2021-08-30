@@ -51,12 +51,12 @@ class RollershutterAutoMorningEveningRule:
         if getItemState("pOther_Manual_State_Auto_Rollershutter") != ON:
             return
       
-        if getItemState("pOther_Automatic_State_Rollershutter") == ON:
+        if getItemState("pOther_Automatic_State_Rollershutter").intValue() == 0:
             for config in configs:
                 if getItemState(config["contact"]) != CLOSED: 
                     continue
                 sendCommand(config["shutter"], DOWN)
-        elif getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_AWAY:
+        elif getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_AWAY and getItemState("pOther_Automatic_State_Rollershutter").intValue() == 3:
             sendCommand("gShutters", UP)
 
 @rule("rollershutter_auto.py")
@@ -77,7 +77,7 @@ class RollershutterAutoWindowContactRule:
         if input['event'].getItemState() == OPEN:
             state = UP
         else:
-            if getItemState("pOther_Automatic_State_Rollershutter") == ON:
+            if getItemState("pOther_Automatic_State_Rollershutter").intValue() == 0:
                 state = DOWN
             elif ("sunprotection" in config and getItemState(config["sunprotection"]) == ON and "sunprotectionOnlyIfAway" not in config):
                 state = DOWN
