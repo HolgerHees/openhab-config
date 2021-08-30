@@ -56,7 +56,7 @@ class RollershutterAutoMorningEveningRule:
                 if getItemState(config["contact"]) != CLOSED: 
                     continue
                 sendCommand(config["shutter"], DOWN)
-        elif getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_AWAY and getItemState("pOther_Automatic_State_Rollershutter").intValue() == 3:
+        elif getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_AWAY and getItemState("pOther_Automatic_State_Rollershutter").intValue() == 2:
             sendCommand("gShutters", UP)
 
 @rule("rollershutter_auto.py")

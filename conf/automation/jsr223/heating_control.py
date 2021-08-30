@@ -696,11 +696,17 @@ class HeatingControlRule():
             
             targetRoomTemperature = fallbackTargetTemperature if room.getHeatingVolume() == None else hhs.getHeatingState(room.getName()).getHeatingTargetTemperature()
             
+            weatherAvgTemperature = getItemState("pOutdoor_Weather_Current_Temperature_Avg").floatValue()
+            
             for transition in room.transitions:
                 if not isinstance(transition,Window) or transition.getRadiationArea() == None or transition.getSunProtectionItem() == None:
                     continue
                   
                 currentRoomTemperature = rs.getCurrentTemperature()
+                
+                if weatherAvgTemperature <= currentRoomTemperature:
+                    postUpdateIfChanged(transition.getSunProtectionItem(), OFF )
+                    continue
 
                 effectiveRadiationShortTerm = effectiveSouthRadiationShortTerm if transition.getDirection() == 'south' else effectiveWestRadiationShortTerm
                 effectiveRadiationLongTerm = effectiveSouthRadiationLongTerm if transition.getDirection() == 'south' else effectiveWestRadiationLongTerm
