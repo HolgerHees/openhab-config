@@ -7,6 +7,12 @@ Bridge mqtt:broker:cloud [ host="cloud_mosquitto", secure=false ]
         Type number : cloudcover4 "Bewölkung 4 Stunden" [ stateTopic="hhees/weather/items/effectiveCloudCoverInOcta/4" ]
         Type number : temperature8 "Temperatur 8 Stunden" [ stateTopic="hhees/weather/items/airTemperatureInCelsius/8" ]
         Type number : cloudcover8 "Bewölkung 8 Stunden" [ stateTopic="hhees/weather/items/effectiveCloudCoverInOcta/8" ]
+        Type number : temperatureMin "Temperatur Min 24 Stunden" [ stateTopic="hhees/weather/items/airTemperatureInCelsius/min" ]
+        Type number : cloudcoverMin "Bewölkung Min 24 Stunden" [ stateTopic="hhees/weather/items/effectiveCloudCoverInOcta/min" ]
+        Type number : temperatureMax "Temperatur Max 24 Stunden" [ stateTopic="hhees/weather/items/airTemperatureInCelsius/max" ]
+        Type number : cloudcoverMax "Bewölkung Max 24 Stunden" [ stateTopic="hhees/weather/items/effectiveCloudCoverInOcta/max" ]
+        Type number : temperatureAvg "Temperatur Avg 24 Stunden" [ stateTopic="hhees/weather/items/airTemperatureInCelsius/avg" ]
+        Type number : cloudcoverAvg "Bewölkung Avg 24 Stunden" [ stateTopic="hhees/weather/items/effectiveCloudCoverInOcta/avg" ]
     }
 }
 

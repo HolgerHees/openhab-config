@@ -59,6 +59,16 @@ class TemperatureConditionCheckRule:
           
     def process(self,recipients):
         now = ZonedDateTime.now()
+        
+        weather = getItemState("pOutdoor_Weather_Current_Temperature_Avg").floatValue()
+
+        room1 = getItemState("pGF_Livingroom_Air_Sensor_Temperature_Value").floatValue()
+        room2 = getItemState("pFF_Bedroom_Air_Sensor_Temperature_Value").floatValue()
+        
+        # if temperature difference
+        if weather < room1 or weather < room2:
+            self.log.info(u"PRECONDITION not fit ({} {} {})".format(weather,room1,room2))
+            return
 
         gardenTemp0, gardenTemp0Min, gardenTemp0Max = getStableMinMaxItemState(now,"pOutdoor_WeatherStation_Temperature",15)
         gardenTemp15, gardenTemp15Min, gardenTemp15Max  = getStableMinMaxItemState(now.minusMinutes(15),"pOutdoor_WeatherStation_Temperature",30)
