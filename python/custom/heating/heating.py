@@ -3,7 +3,7 @@ import math
 from java.time import ZonedDateTime
 
 from shared.helper import getItemState, itemLastUpdateOlderThen, itemLastChangeOlderThen, getItemLastUpdate, getItemLastChange, getStableItemState
-from custom.sun import SunRadiation
+from custom.suncalculation import SunRadiation
 
 try:
     from org.eclipse.smarthome.core.library.types import OnOffType
@@ -18,8 +18,8 @@ except:
     from org.openhab.core.library.types import DecimalType
     from org.openhab.core.types import UnDefType
     
-from custom.house import Window
-from custom.state import RoomState, HouseState, RoomHeatingState, HouseHeatingState
+from custom.heating.house import Window
+from custom.heating.state import RoomState, HouseState, RoomHeatingState, HouseHeatingState
  
 class Heating(object):
     INFINITE_HEATING_TIME = 999.0 # const value for an invifinte heating time

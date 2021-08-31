@@ -358,7 +358,7 @@ sitemap haus label="Main Menu"
 			}
 			Frame label="Status"
 			{ 
-				Group label="Präsenz & Schlafen [MAP(presence.map):%d]" icon="selfsettings" item=pOther_Presence_State
+				Group label="Präsenz & Schlafen [MAP(state_presence.map):%d]" icon="selfsettings" item=pOther_Presence_State
                 {
                     Selection item=pOther_Presence_State label="Präsenz" mappings=[0="Abwesend", 1="(Anwesend)", 2="Anwesend",3="(Schlafen)", 4="Schlafen"]
                     Text item=pOther_Presence_Holger_State label="Holger anwesend [%s]"
@@ -373,7 +373,7 @@ sitemap haus label="Main Menu"
 					{
                         Text item=pOther_Automatic_State_Outdoorlights label="Aussenbeleuchtung aktiv [%s]"
                         Text item=pOther_Automatic_State_Solar label="Solaranlage wird abgefragt [%s]"
-                        Text item=pOther_Automatic_State_Rollershutter label="Rollläden sollten unten sein [%s]"
+                        Text item=pOther_Automatic_State_Rollershutter label="Rollläden [MAP(state_auto_rollershutter.map):%d]"
                         Text item=pOther_Automatic_State_Rollershutter_Up
                         Text item=pOther_Automatic_State_Rollershutter_Down
                     }
@@ -384,7 +384,7 @@ sitemap haus label="Main Menu"
                         Text item=pOther_Automatic_State_Sunprotection_Dressingroom label="Beschattung Ankleide [%s]"
                         Text item=pOther_Automatic_State_Sunprotection_Bedroom label="Beschattung Schlafzimmer [%s]"
                         Text item=pOther_Automatic_State_Sunprotection_Livingroom label="Beschattung Wohnzimmer [%s]"
-                        Text item=pOther_Automatic_State_Sunprotection_Terrace label="Beschattung Terasse [%s]"
+                        Text item=pOther_Automatic_State_Sunprotection_Terrace label="Beschattung Terasse [MAP(state_auto_terrace.map):%d]"
                     }
 				}
 			}

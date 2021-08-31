@@ -1,9 +1,10 @@
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
 from shared.helper import rule, getHistoricItemEntry, getItemState, getItemLastChange, getItemLastUpdate, sendCommand, sendCommandIfChanged, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen, itemLastChangeOlderThen, getStableItemState
 from shared.actions import Transformation
-from custom.heating import Heating
-from custom.house import ThermalStorageType, ThermalBridgeType, Wall, Door, Window, Room
-from custom.sun import SunRadiation
+from custom.heating.heating import Heating
+from custom.heating.house import ThermalStorageType, ThermalBridgeType, Wall, Door, Window, Room
+from custom.suncalculation import SunRadiation
+from custom.sunprotection import SunProtectionHelper
  
 import math 
 from java.time import ZonedDateTime, Instant, ZoneId
@@ -417,7 +418,7 @@ maintenanceMode = {}
 
 #    def execute(self, module, input):
 #        pass
-
+ 
 @rule("heating_control.py")
 class HeatingStateRule:
     def __init__(self):
@@ -681,14 +682,14 @@ class HeatingControlRule():
         if azimut >= 120 and azimut <= SunRadiation.AZIMUT_NW_LIMIT and elevation >= SunRadiation.getMinElevation(azimut):
             #self.log.info(u"Sun     : {:.1f} W/min ({:.1f} W/min)".format(effectiveRadiationShortTerm,effectiveRadiationLongTerm))
             if effectiveRadiationLongTerm > 8.0:
-                if postUpdateIfChanged("pOther_Automatic_State_Sunprotection_Terrace", 2 ):
+                if postUpdateIfChanged("pOther_Automatic_State_Sunprotection_Terrace", SunProtectionHelper.STATE_TERRACE_CLOSED ):
                     self.log.info(u"DEBUG: SP switching 2 • {} {} {}".format("Terrace",effectiveRadiationShortTerm,effectiveRadiationLongTerm))
             elif getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == 0:
-                postUpdate("pOther_Automatic_State_Sunprotection_Terrace", 1 )
+                postUpdate("pOther_Automatic_State_Sunprotection_Terrace", SunProtectionHelper.STATE_TERRACE_MAYBE_CLOSED )
                 self.log.info(u"DEBUG: SP switching 1 • {} {} {}".format("Terrace",effectiveRadiationShortTerm,effectiveRadiationLongTerm))
         else:
             #if getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == 2:
-            if postUpdateIfChanged("pOther_Automatic_State_Sunprotection_Terrace", 0 ):
+            if postUpdateIfChanged("pOther_Automatic_State_Sunprotection_Terrace", SunProtectionHelper.STATE_TERRACE_OPEN ):
                 self.log.info(u"DEBUG: SP switching 0 • {}".format("Terrace"))
        
         for room in Heating.getRooms():
