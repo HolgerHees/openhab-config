@@ -45,7 +45,7 @@
   if( isPhone ) document.getElementsByTagName("body")[0].className="phone";
       
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", "/loki/loki/api/v1/query_range?limit=100&query=" + encodeURI( '{group=~\"openhab\"} |~ \".*HeatingControl.*\"' ) );
+  xhr.open("GET", "/loki/loki/api/v1/query_range?limit=500&query=" + encodeURI( '{group=~\"openhab_events\"} |~ \".*Motiondetector_State.*CLOSED to OPEN|.*_Openingcontact.*CLOSED to OPEN|.*_Openingcontact.*OPEN to CLOSED|pOther_Presence.*\"' ) );
   xhr.onload = function() 
   {  
       var tableElement = document.getElementById("result");
@@ -64,29 +64,11 @@
               _row = row.split("message=");
               message = _row[1].slice(1,-1);
               
-              //console.log(timestamp + " " + message);
-              
-              var parts = message.split(":");
-              
+              var dt = new Date( timestamp / 1000000 );
+
               tableContent += "<div class=\"row\">";
-              
-              if( parts[1] == " >>>" )
-              {
-                  tableContent += "<div class=\"column separator\"></div>";
-                  tableContent += "<div class=\"column separator\"></div>";
-              }
-              else if( parts[1] == " <<<" )
-              {
-                  var dt = new Date( timestamp / 1000000 );
-                  
-                  tableContent += "<div class=\"column\"></div>";
-                  tableContent += "<div class=\"column time\">" + ( dt.getHours() < 10 ? "0" : "" ) + dt.getHours() + ":" + ( dt.getMinutes() < 10 ? "0" : "" ) + dt.getMinutes() + ":" + ( dt.getSeconds() < 10 ? "0" : "" ) + dt.getSeconds() + "</div>";
-              }
-              else
-              {
-                  tableContent += "<div class=\"column\">" + parts[0] + "</div>";
-                  tableContent += "<div class=\"column\">" + parts.slice(1).join(":") + "</div>";
-              }
+              tableContent += "<div class=\"column time\">" + ( dt.getHours() < 10 ? "0" : "" ) + dt.getHours() + ":" + ( dt.getMinutes() < 10 ? "0" : "" ) + dt.getMinutes() + ":" + ( dt.getSeconds() < 10 ? "0" : "" ) + dt.getSeconds() + "</div>";
+              tableContent += "<div class=\"column\">" + message + "</div>";
               
               tableContent += "</div>";
           }
@@ -94,6 +76,7 @@
 
       tableElement.innerHTML = tableContent;
   };
+
   xhr.send();
 </script>
 </body>

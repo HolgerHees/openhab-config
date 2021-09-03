@@ -467,7 +467,10 @@ sitemap haus label="Main Menu"
                 Text label="Kameras" icon="camera"
                 {
                     Image url="https://smartmarvin.de/cameraStrasseImage" label="Strasse Video" refresh=2000
-                    Image url="https://smartmarvin.de/cameraAutomowerImage" label="Automower" refresh=5000
+                }
+                Text label="Ereignisse" icon="selfstate"
+                {
+                    Webview url="/static/custom/logs/security.html" icon="none" height=36
                 }
             }
             Frame label="Fenster & Türen"
@@ -492,6 +495,10 @@ sitemap haus label="Main Menu"
                     Text item=pFF_Child1_Openingcontact_Window_State label="Sportzimmer"
                     Text item=pFF_Child2_Openingcontact_Window_State label="Schminkzimmer"
                     Text item=pFF_Attic_Openingcontact_Window_State label="Dachboden"
+                }
+                Text label="Ereignisse" icon="selfstate"
+                {
+                    Webview url="/static/custom/logs/security.html" icon="none" height=36
                 }
             }
         }
