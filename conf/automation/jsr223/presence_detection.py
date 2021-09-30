@@ -39,14 +39,7 @@ class PresenceMovingCheckRule:
             else:
                 self.fallbackTimer = startTimer(self.log, 600 - lastUpdateDiff, self.confirmSleeping, args = [ False ]) # 10 min
         
-    def checkState(self, presenceState):
-        if presenceState == PresenceHelper.STATE_MAYBE_PRESENT:
-            if self.isConfirmed:
-                self.fallbackTimer = startTimer(self.log, 7200, self.setState, args = [ PresenceHelper.STATE_AWAY, True ]) # 1 hour
-        elif presenceState == PresenceHelper.STATE_MAYBE_SLEEPING:
-            self.confirmSleeping(True)
-        
-    def confirmPresence(self):
+    def confirmArriving(self):
         presenceState = getItemState("pOther_Presence_State").intValue()
       
         if presenceState != PresenceHelper.STATE_MAYBE_PRESENT:
@@ -65,7 +58,7 @@ class PresenceMovingCheckRule:
         self.isConfirmed = newestUpdate >= ZonedDateTime.now().minusSeconds(7).toInstant().toEpochMilli()
         
         if self.isConfirmed:
-            self.checkState(presenceState)
+            self.fallbackTimer = startTimer(self.log, 7200, self.setState, args = [ PresenceHelper.STATE_AWAY, True ]) # 1 hour
         else:
             self.setState( PresenceHelper.STATE_AWAY, False )
             
@@ -92,14 +85,15 @@ class PresenceMovingCheckRule:
             else:
                 if presenceState == PresenceHelper.STATE_MAYBE_PRESENT:
                     # check in 15 seconds again if there was any move events
-                    self.confirmTimer = startTimer(self.log, 15, self.confirmPresence)
+                    self.confirmTimer = startTimer(self.log, 15, self.confirmArriving)
         else:
             # move events during sleep, check function will be called during presence state update cycle
             if presenceState == PresenceHelper.STATE_SLEEPING:
                 postUpdate("pOther_Presence_State",PresenceHelper.STATE_MAYBE_SLEEPING)
-                return
-            
-            self.checkState(presenceState)
+            elif presenceState == PresenceHelper.STATE_MAYBE_SLEEPING:
+                self.confirmSleeping(True)
+            elif presenceState == PresenceHelper.STATE_MAYBE_PRESENT and self.isConfirmed:
+                self.fallbackTimer = startTimer(self.log, 7200, self.setState, args = [ PresenceHelper.STATE_AWAY, True ]) # 1 hour
 
 @rule("presence_detection.py")
 class PresenceCheckRule:
@@ -207,6 +201,7 @@ class WakeupRule:
                 self.wakeup()
             else:
                 self.checkTimer = startTimer(self.log, 30, self.delayedWakeup, args = [ 0 ], oldTimer = self.checkTimer)
+
 
 @rule("presence_detection.py") 
 class SleepingRule:
