@@ -15,18 +15,31 @@ class PresenceMovingCheckRule:
         self.confirmTimer = None
         
         self.fallbackTimer = None
-
+        
+        #lastUpdateDiff = ( ZonedDateTime.now().toInstant().toEpochMilli() - getItemLastUpdate("gIndoor_Lights").toInstant().toEpochMilli() ) / 1000
+        #self.log.info(u"{} {} {}".format(lastUpdateDiff,ZonedDateTime.now().toInstant().toEpochMilli(),getItemLastUpdate("gIndoor_Lights").toInstant().toEpochMilli()))
+ 
     def setState(self,state,isFallback):
         postUpdateIfChanged("pOther_Presence_State",state)
         if state == PresenceHelper.STATE_AWAY:
             sendNotification(u"System", u"Unbekannter Gast {}".format( u"verschwunden" if isFallback else u"gegangen" ))
+            
+    def checkSleepingState(self,forceTimer):
+        if forceTimer or getItemState("gIndoor_Lights") == ON:
+            self.fallbackTimer = startTimer(self.log, 600, self.checkSleepingState, args = [ False ]) # 10 min
+        else:
+            lastUpdateDiff = ( ZonedDateTime.now().toInstant().toEpochMilli() - getItemLastUpdate("gIndoor_Lights").toInstant().toEpochMilli() ) / 1000
+            if lastUpdateDiff >= 600:
+                self.setState(PresenceHelper.STATE_SLEEPING,True)
+            else:
+                self.fallbackTimer = startTimer(self.log, 600 - lastUpdateDiff, self.checkSleepingState, args = [ False ]) # 10 min
         
     def checkState(self, presenceState):
         if presenceState == PresenceHelper.STATE_MAYBE_PRESENT:
             if self.isConfirmed:
                 self.fallbackTimer = startTimer(self.log, 7200, self.setState, args = [ PresenceHelper.STATE_AWAY, True ]) # 1 hour
         elif presenceState == PresenceHelper.STATE_MAYBE_SLEEPING:
-            self.fallbackTimer = startTimer(self.log, 600, self.setState, args = [ PresenceHelper.STATE_SLEEPING, True ]) # 10 min
+            self.checkSleepingState(True)
         
     def confirmPresence(self):
         presenceState = getItemState("pOther_Presence_State").intValue()

@@ -44,7 +44,7 @@ Switch pOther_Manual_State_Auto_Sunprotection   "Beschattung Automatik" <selfaut
 Group  eOther_Automatic_States                  "Auto Features"   <selfinfo> (lOther) ["Equipment"]
 Switch pOther_Automatic_State_Solar             "Solar Aktiv"     <selfsun> (eOther_Automatic_States) ["Point"]
 Switch pOther_Automatic_State_Outdoorlights     "Aussenbeleuchtung Aktiv" <selflight> (eOther_Automatic_States) ["Point"]
-Number pOther_Automatic_State_Rollershutter     "Rollläden geschlossen [MAP(state_auto_rollershutter.map):%d]" <selfrollershutter> (eOther_Automatic_States) ["Point"]
+Number pOther_Automatic_State_Rollershutter     "Rollläden geschlossen [MAP(state_auto_rollershutter.map):%s]" <selfrollershutter> (eOther_Automatic_States) ["Point"]
 DateTime pOther_Automatic_State_Rollershutter_Up "Rollläden hoch [%1$tH:%1$tM]" <selfrollershutter> (eOther_Automatic_States) ["Point"]
 DateTime pOther_Automatic_State_Rollershutter_Down "Rollläden runter [%1$tH:%1$tM]" <selfrollershutter> (eOther_Automatic_States) ["Point"]
 Switch pOther_Automatic_State_Sunprotection_Attic "Rollladen Dachboden geschlossen" <selfrollershutter> (eOther_Automatic_States) ["Point"]
@@ -52,7 +52,7 @@ Switch pOther_Automatic_State_Sunprotection_Bathroom "Rollladen Badezimmer gesch
 Switch pOther_Automatic_State_Sunprotection_Dressingroom "Rollladen Ankleide geschlossen" <selfrollershutter> (eOther_Automatic_States) ["Point"]
 Switch pOther_Automatic_State_Sunprotection_Bedroom "Rollladen Schlafzimmer geschlossen" <selfrollershutter> (eOther_Automatic_States) ["Point"]
 Switch pOther_Automatic_State_Sunprotection_Livingroom "Rollläden Wohnzimmer geschlossen" <selfrollershutter> (eOther_Automatic_States) ["Point"]
-Number pOther_Automatic_State_Sunprotection_Terrace "Terasse geschlossen [MAP(state_terrace.map):%d]" <selfrollershutter> (eOther_Automatic_States) ["Point"]
+Number pOther_Automatic_State_Sunprotection_Terrace "Terasse geschlossen [MAP(state_auto_terrace.map):%s]" <selfrollershutter> (eOther_Automatic_States) ["Point"]
 
 //####### STATE MESSAGES #######
 Group  eOther_State_Messages                    "Nachrichten" <selfinfo> (lOther) ["Equipment"]

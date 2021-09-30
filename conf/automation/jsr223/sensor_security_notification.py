@@ -28,7 +28,12 @@ class SensorSecurityNotificationRule:
         return None
 
     def execute(self, module, input):
-        if getItemState("pOther_Manual_State_Notify") == ON and getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_SLEEPING]:
+        if getItemState("pOther_Manual_State_Notify") != ON:
+            return
+          
+        state = getItemState("pOther_Presence_State").intValue()
+        
+        if state in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_SLEEPING]:
             itemName = input['event'].getItemName()
             item = getItem(itemName)
             
@@ -43,7 +48,7 @@ class SensorSecurityNotificationRule:
                     return
 
                 # during sleep, ignore moving detection
-                if getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_SLEEPING:
+                if state == PresenceHelper.STATE_SLEEPING:
                     return
 
                 msg = u"Bewegung im {} erkannt".format(location.getLabel())
