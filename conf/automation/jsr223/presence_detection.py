@@ -19,26 +19,31 @@ class PresenceMovingCheckRule:
         #lastUpdateDiff = ( ZonedDateTime.now().toInstant().toEpochMilli() - getItemLastUpdate("gIndoor_Lights").toInstant().toEpochMilli() ) / 1000
         #self.log.info(u"{} {} {}".format(lastUpdateDiff,ZonedDateTime.now().toInstant().toEpochMilli(),getItemLastUpdate("gIndoor_Lights").toInstant().toEpochMilli()))
  
-    def setState(self,state,isFallback):
-        postUpdateIfChanged("pOther_Presence_State",state)
-        if state == PresenceHelper.STATE_AWAY:
-            sendNotification(u"System", u"Unbekannter Gast {}".format( u"verschwunden" if isFallback else u"gegangen" ))
-            
-    def confirmSleeping(self,forceTimer):
+    def setAway(self,isFallback):
+        postUpdateIfChanged("pOther_Presence_State",PresenceHelper.STATE_AWAY)
+        sendNotification(u"System", u"Unbekannter Gast {}".format( u"verschwunden" if isFallback else u"gegangen" ))
+
+    def setSleeping(self):
+        postUpdateIfChanged("pOther_Presence_State",PresenceHelper.STATE_SLEEPING)
+
+    def delayedSleepingCheck(self):
         presenceState = getItemState("pOther_Presence_State").intValue()
       
         if presenceState != PresenceHelper.STATE_MAYBE_SLEEPING:
             return
           
-        if forceTimer or getItemState("gIndoor_Lights") == ON:
-            self.fallbackTimer = startTimer(self.log, 600, self.confirmSleeping, args = [ False ]) # 10 min
+        if self.fallbackTimer == None or getItemState("gIndoor_Lights") == ON:
+            self.fallbackTimer = startTimer(self.log, 600, self.delayedSleepingCheck, args = [ False ]) # 10 min
         else:
             lastUpdateDiff = ( ZonedDateTime.now().toInstant().toEpochMilli() - getItemLastUpdate("gIndoor_Lights").toInstant().toEpochMilli() ) / 1000
             if lastUpdateDiff >= 600:
-                self.setState(PresenceHelper.STATE_SLEEPING,True)
+                self.setSleeping()
             else:
-                self.fallbackTimer = startTimer(self.log, 600 - lastUpdateDiff, self.confirmSleeping, args = [ False ]) # 10 min
+                self.fallbackTimer = startTimer(self.log, 600 - lastUpdateDiff, self.delayedSleepingCheck, args = [ False ]) # 10 min
         
+    def delayedAwayCheck(self):
+        self.fallbackTimer = startTimer(self.log, 7200, self.setAway, args = [ True ]) # 1 hour
+      
     def confirmArriving(self):
         presenceState = getItemState("pOther_Presence_State").intValue()
       
@@ -58,9 +63,9 @@ class PresenceMovingCheckRule:
         self.isConfirmed = newestUpdate >= ZonedDateTime.now().minusSeconds(7).toInstant().toEpochMilli()
         
         if self.isConfirmed:
-            self.fallbackTimer = startTimer(self.log, 7200, self.setState, args = [ PresenceHelper.STATE_AWAY, True ]) # 1 hour
+            self.delayedAwayCheck()
         else:
-            self.setState( PresenceHelper.STATE_AWAY, False )
+            self.setAway( False )
             
         self.confirmTimer = None
 
@@ -91,9 +96,9 @@ class PresenceMovingCheckRule:
             if presenceState == PresenceHelper.STATE_SLEEPING:
                 postUpdate("pOther_Presence_State",PresenceHelper.STATE_MAYBE_SLEEPING)
             elif presenceState == PresenceHelper.STATE_MAYBE_SLEEPING:
-                self.confirmSleeping(True)
+                self.delayedSleepingCheck()
             elif presenceState == PresenceHelper.STATE_MAYBE_PRESENT and self.isConfirmed:
-                self.fallbackTimer = startTimer(self.log, 7200, self.setState, args = [ PresenceHelper.STATE_AWAY, True ]) # 1 hour
+                self.delayedAwayCheck()
 
 @rule("presence_detection.py")
 class PresenceCheckRule:
@@ -168,24 +173,24 @@ class WakeupRule:
         self.checkTimer = None
         
     def wakeup(self):
-        if getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
-            postUpdate("pOther_Presence_State", PresenceHelper.STATE_PRESENT)
-            sendNotification(u"System", u"Guten Morgen")
+        postUpdate("pOther_Presence_State", PresenceHelper.STATE_PRESENT)
+        sendNotification(u"System", u"Guten Morgen")
 
     def delayedWakeup(self, checkCounter ):
         if getItemState("gGF_Lights") == ON:
-            lightCount = 0
-            for child in getGroupMember("gGF_Lights"):
-                if getItemState(child) == ON:
-                    lightCount = lightCount + 1
-            # Signs (in first floor) for wake up are 
-            # - a light is ON for more then 10 minutes 
-            # - or more then 2 lights in total are ON
-            if checkCounter == 20 or lightCount > 2:
-                self.checkTimer = None                    
-                self.wakeup()
-            else:
-                self.checkTimer = startTimer(self.log, 30, self.delayedWakeup, args = [ checkCounter + 1 ], oldTimer = self.checkTimer)
+            if getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
+                lightCount = 0
+                for child in getGroupMember("gGF_Lights"):
+                    if getItemState(child) == ON:
+                        lightCount = lightCount + 1
+                # Signs (in first floor) for wake up are 
+                # - a light is ON for more then 10 minutes 
+                # - or more then 2 lights in total are ON
+                if checkCounter == 20 or lightCount > 2:
+                    self.checkTimer = None                    
+                    self.wakeup()
+                else:
+                    self.checkTimer = startTimer(self.log, 30, self.delayedWakeup, args = [ checkCounter + 1 ], oldTimer = self.checkTimer)
         else:
             self.checkTimer = None                    
         
