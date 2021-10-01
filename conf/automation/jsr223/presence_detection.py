@@ -33,13 +33,13 @@ class PresenceMovingCheckRule:
             return
           
         if self.fallbackTimer == None or getItemState("gIndoor_Lights") == ON:
-            self.fallbackTimer = startTimer(self.log, 600, self.delayedSleepingCheck, args = [ False ]) # 10 min
+            self.fallbackTimer = startTimer(self.log, 600, self.delayedSleepingCheck) # 10 min
         else:
             lastUpdateDiff = ( ZonedDateTime.now().toInstant().toEpochMilli() - getItemLastUpdate("gIndoor_Lights").toInstant().toEpochMilli() ) / 1000
             if lastUpdateDiff >= 600:
                 self.setSleeping()
             else:
-                self.fallbackTimer = startTimer(self.log, 600 - lastUpdateDiff, self.delayedSleepingCheck, args = [ False ]) # 10 min
+                self.fallbackTimer = startTimer(self.log, 600 - lastUpdateDiff, self.delayedSleepingCheck) # 10 min
         
     def delayedAwayCheck(self):
         self.fallbackTimer = startTimer(self.log, 7200, self.setAway, args = [ True ]) # 1 hour
