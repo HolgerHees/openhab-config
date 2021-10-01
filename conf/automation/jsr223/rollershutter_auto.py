@@ -72,6 +72,10 @@ class RollershutterAutoWindowContactRule:
             return
           
         contactItemName = input['event'].getItemName()
+        
+        if contactItemName not in contact_map:
+            return
+          
         config = contact_map[contactItemName]
 
         state = None
