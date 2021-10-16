@@ -1,6 +1,7 @@
 from shared.helper import rule, getItemState, sendCommand, postUpdate, postUpdateIfChanged, startTimer
 from shared.triggers import ItemCommandTrigger, ItemStateChangeTrigger
 from java.time import ZonedDateTime
+from java.time.temporal import ChronoUnit
 
 ruleTimeouts = {}
 
@@ -11,7 +12,7 @@ class HueColorMainRule:
 
     def execute(self, module, input):
         global ruleTimeouts
-        ruleTimeouts["Livingroom_Hue_Color_Backward"] = ZonedDateTime.now().toInstant().toEpochMilli()
+        ruleTimeouts["Livingroom_Hue_Color_Backward"] = ZonedDateTime.now()
 
         command = input['event'].getItemCommand()
         
@@ -45,10 +46,10 @@ class HueColorIndividualRule:
 
     def execute(self, module, input):
         global ruleTimeouts
-        now = ZonedDateTime.now().toInstant().toEpochMilli()
-        last = ruleTimeouts.get("Livingroom_Hue_Color_Backward",0)
+        now = ZonedDateTime.now()
+        last = ruleTimeouts.get("Livingroom_Hue_Color_Backward",now)
         
-        if now - last > 1000:
+        if ChronoUnit.SECONDS.between(last,now) > 1:
             postUpdate("pGF_Livingroom_Light_Hue_Scene","")
             sendCommand("pOther_Manual_State_Lightprogram", 0)
 
@@ -80,7 +81,7 @@ class HueColorProgramRule:
     
     def _setCurrentColors(self,data):
         global ruleTimeouts
-        ruleTimeouts["Livingroom_Hue_Color_Backward"] = ZonedDateTime.now().toInstant().toEpochMilli()
+        ruleTimeouts["Livingroom_Hue_Color_Backward"] = ZonedDateTime.now()
         
         sendCommand("pGF_Livingroom_Light_Hue1_Color",u"{},{},{}".format(data[0][0],data[0][1],data[0][2]))
         sendCommand("pGF_Livingroom_Light_Hue2_Color",u"{},{},{}".format(data[1][0],data[1][1],data[1][2]))
@@ -148,7 +149,7 @@ class HueColorProgramRule:
         color5 = getItemState("pGF_Livingroom_Light_Hue5_Color")
             
         global ruleTimeouts
-        ruleTimeouts["Livingroom_Hue_Color_Backward"] = ZonedDateTime.now().toInstant().toEpochMilli()
+        ruleTimeouts["Livingroom_Hue_Color_Backward"] = ZonedDateTime.now()
     
         sendCommand("pGF_Livingroom_Light_Hue1_Color",color2)
         sendCommand("pGF_Livingroom_Light_Hue2_Color",color3)

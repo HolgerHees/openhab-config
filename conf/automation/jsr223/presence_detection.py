@@ -1,4 +1,5 @@
 from java.time import ZonedDateTime
+from java.time.temporal import ChronoUnit
 
 from shared.helper import log, rule, itemLastChangeOlderThen, getItem, getItemState, getItemLastUpdate, postUpdate, postUpdateIfChanged, sendNotification, sendNotificationToAllAdmins, startTimer, getGroupMember, getGroupMemberChangeTrigger
 from shared.triggers import ItemStateChangeTrigger
@@ -16,8 +17,8 @@ class PresenceMovingCheckRule:
         
         self.fallbackTimer = None
         
-        #lastUpdateDiff = ( ZonedDateTime.now().toInstant().toEpochMilli() - getItemLastUpdate("gIndoor_Lights").toInstant().toEpochMilli() ) / 1000
-        #self.log.info(u"{} {} {}".format(lastUpdateDiff,ZonedDateTime.now().toInstant().toEpochMilli(),getItemLastUpdate("gIndoor_Lights").toInstant().toEpochMilli()))
+        #seconds = ChronoUnit.SECONDS.between(getItemLastUpdate("gIndoor_Lights"),ZonedDateTime.now())
+        #self.log.info(u"{}".format(seconds))
  
     def setAway(self,isFallback):
         postUpdateIfChanged("pOther_Presence_State",PresenceHelper.STATE_AWAY)
@@ -35,7 +36,7 @@ class PresenceMovingCheckRule:
         if self.fallbackTimer == None or getItemState("gIndoor_Lights") == ON:
             self.fallbackTimer = startTimer(self.log, 600, self.delayedSleepingCheck) # 10 min
         else:
-            lastUpdateDiff = ( ZonedDateTime.now().toInstant().toEpochMilli() - getItemLastUpdate("gIndoor_Lights").toInstant().toEpochMilli() ) / 1000
+            lastUpdateDiff = ChronoUnit.SECONDS.between(getItemLastUpdate("gIndoor_Lights"),ZonedDateTime.now())
             if lastUpdateDiff >= 600:
                 self.setSleeping()
             else:
@@ -50,17 +51,18 @@ class PresenceMovingCheckRule:
         if presenceState != PresenceHelper.STATE_MAYBE_PRESENT:
             return
           
-        newestUpdate = 0
+        newestUpdate = None
         for item in getItem("gSensor_Indoor").getAllMembers():
             if getItemState(item) == OPEN:
-                newestUpdate = ZonedDateTime.now().toInstant().toEpochMilli()
+                newestUpdate = ZonedDateTime.now()
                 break
               
-            _update = getItemLastUpdate(item).toInstant().toEpochMilli()
-            if _update > newestUpdate:
+            _update = getItemLastUpdate(item)
+            if newestUpdate == None or _update.isAfter(newestUpdate):
                 newestUpdate = _update
-            
-        self.isConfirmed = newestUpdate >= ZonedDateTime.now().minusSeconds(7).toInstant().toEpochMilli()
+        
+        ref = ZonedDateTime.now().minusSeconds(7)
+        self.isConfirmed = newestUpdate.isAfter(ref) or newestUpdate.isEqual(ref)
         
         if self.isConfirmed:
             self.delayedAwayCheck()

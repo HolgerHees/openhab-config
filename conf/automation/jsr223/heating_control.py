@@ -9,10 +9,10 @@ from custom.sunprotection import SunProtectionHelper
 import math 
 from java.time import ZonedDateTime, Instant, ZoneId
 from java.time.format import DateTimeFormatter
-
+from java.time.temporal import ChronoUnit
 
 OFFSET_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")
-           
+       
 #postUpdate("pGF_Utilityroom_Heating_Demand",OFF)
 #postUpdate("pGF_Guesttoilet_Heating_Demand",OFF)
 #postUpdate("pGF_Livingroom_Heating_Demand",OFF)
@@ -569,7 +569,7 @@ class HeatingControlRule():
                                          or 
                                          # Heizen mit WW
                                          # Forced circuits should stay open until burner is active for 5 min.
-                                         (currentOperatingMode == 2 and now.minusMinutes(5).toInstant().toEpochMilli() < currentOperatingModeChange.toInstant().toEpochMilli() )
+                                         (currentOperatingMode == 2 and now.minusMinutes(5).isBefore(currentOperatingModeChange))
                                        )
             longestRuntime = 0
             lastCircuitOpenedAt = None
@@ -604,7 +604,7 @@ class HeatingControlRule():
                         else:
                             circuitLastChange = getItemLastChange(circuitItem)
                             
-                        if lastCircuitOpenedAt == None or lastCircuitOpenedAt.toInstant().toEpochMilli() < circuitLastChange.toInstant().toEpochMilli():
+                        if lastCircuitOpenedAt == None or lastCircuitOpenedAt.isBefore(circuitLastChange):
                             lastCircuitOpenedAt = circuitLastChange                            
                     else:
                         #self.log.info("OFF")
@@ -623,9 +623,9 @@ class HeatingControlRule():
             
             # a heating ciruit was opened less then 5 minutes ago.
             # delay heating request to give circuit some time to open
-            if currentHeatingDemand == OFF and lastCircuitOpenedAt != None and now.minusMinutes(5).toInstant().toEpochMilli() < lastCircuitOpenedAt.toInstant().toEpochMilli():
+            if currentHeatingDemand == OFF and lastCircuitOpenedAt != None and now.minusMinutes(5).isBefore(lastCircuitOpenedAt):
                 #self.log.info(u"{}".format(lastCircuitOpenedAt))
-                openedBeforeInMinutes = int( round( ( now.toInstant().toEpochMilli() - lastCircuitOpenedAt.toInstant().toEpochMilli() ) / 1000.0 / 60.0 ) )
+                openedBeforeInMinutes = ChronoUnit.MINUTES.between(lastCircuitOpenedAt,now)
                 self.log.info(u"Demand  : DELAYED • circuit was opened {} min. ago".format(openedBeforeInMinutes))
             else:
                 heatingDemand = ON if heatingRequested else OFF
@@ -633,7 +633,7 @@ class HeatingControlRule():
             
                 endMsg = u" • {} min. to go".format(Heating.visualizeHeatingDemandTime(longestRuntime)) if longestRuntime > 0 else u""
                 lastHeatingDemandChange = getItemLastUpdate("pGF_Utilityroom_Heating_Demand") # can be "getItemLastUpdate" datetime, because it is changed only from heating rule
-                lastChangeBeforeInMinutes = int( round( ( now.toInstant().toEpochMilli() - lastHeatingDemandChange.toInstant().toEpochMilli() ) / 1000.0 / 60.0 ) )
+                lastChangeBeforeInMinutes = ChronoUnit.MINUTES.between(lastHeatingDemandChange,now)
                 lastHeatingChangeFormatted = OFFSET_FORMATTER.format(lastHeatingDemandChange)
                 lastChangeBeforeFormatted = lastChangeBeforeInMinutes if lastChangeBeforeInMinutes < 60 else '{:02d}:{:02d}'.format(*divmod(lastChangeBeforeInMinutes, 60));
                 self.log.info(u"Demand  : {} since {} • {} min. ago{}".format(heatingDemand, lastHeatingChangeFormatted, lastChangeBeforeFormatted,endMsg) )
@@ -774,7 +774,7 @@ class HeatingControlRule():
         forceRetryMsg = u" • RETRY {} {}".format(self.activeHeatingOperatingMode,currentOperatingMode) if forceRetry else u""
         delayedMsg = u""
         
-        lastChangeBeforeInMinutes = int( math.floor( ( now.toInstant().toEpochMilli() - currentOperatingModeChange.toInstant().toEpochMilli() ) / 1000.0 / 60.0 ) )
+        lastChangeBeforeInMinutes = ChronoUnit.MINUTES.between(currentOperatingModeChange,now)
         lastHeatingChangeFormatted = OFFSET_FORMATTER.format(currentOperatingModeChange)
         lastChangeBeforeFormatted = lastChangeBeforeInMinutes if lastChangeBeforeInMinutes < 60 else '{:02d}:{:02d}'.format(*divmod(lastChangeBeforeInMinutes, 60));
         
@@ -790,7 +790,7 @@ class HeatingControlRule():
                     self.activeHeatingOperatingMode = 2
                     sendCommand("pGF_Utilityroom_Heating_Operating_Mode", self.activeHeatingOperatingMode)
                 else:
-                    runtimeToGo = Heating.MIN_ONLY_WW_TIME - int( round( ( now.toInstant().toEpochMilli() - currentOperatingModeChange.toInstant().toEpochMilli() ) / 1000.0 / 60.0 ) )
+                    runtimeToGo = Heating.MIN_ONLY_WW_TIME - lastChangeBeforeInMinutes
                     delayedMsg = u" in {} min.".format(runtimeToGo)
 
                 self.log.info(u"Switch  : Heizen mit WW{}{}".format(delayedMsg,forceRetryMsg))
@@ -813,7 +813,7 @@ class HeatingControlRule():
                     self.activeHeatingOperatingMode = 1
                     sendCommand("pGF_Utilityroom_Heating_Operating_Mode",self.activeHeatingOperatingMode)
                 else:
-                    runtimeToGo = Heating.MIN_HEATING_TIME - int( round( ( now.toInstant().toEpochMilli() - currentOperatingModeChange.toInstant().toEpochMilli() ) / 1000.0 / 60.0 ) )
+                    runtimeToGo = Heating.MIN_HEATING_TIME - lastChangeBeforeInMinutes
                     delayedMsg = u" in {} min.".format(runtimeToGo)
 
                 self.log.info(u"Switch  : Nur WW{}{}".format(delayedMsg,forceRetryMsg))
@@ -848,9 +848,9 @@ class HeatingControlRule():
                 sendCommand("pGF_Utilityroom_Heating_Operating_Mode",self.activeHeatingOperatingMode)
                 self.log.info(u"Switch  : Nur WW because heating is not needed anymore{}".format(forceRetryMsg))
             else:
-                lastReducedRuntime = self.getLastReductionTime( currentOperatingModeChange )
-                if lastReducedRuntime > 0:
-                    targetReducedTime = int( round(lastReducedRuntime * 2.0 / 1000.0 / 60.0, 0) )
+                lastReducedRuntimeSeconds = self.getLastReductionTimeInSeconds( currentOperatingModeChange )
+                if lastReducedRuntimeSeconds > 0:
+                    targetReducedTime = int( round(lastReducedRuntimeSeconds * 2.0 / 60.0, 0) )
                     if targetReducedTime > Heating.MAX_REDUCTION_TIME:
                         targetReducedTime = Heating.MAX_REDUCTION_TIME
                     elif targetReducedTime < Heating.MIN_REDUCED_TIME:
@@ -867,17 +867,17 @@ class HeatingControlRule():
                     self.activeHeatingOperatingMode = 2
                     sendCommand("pGF_Utilityroom_Heating_Operating_Mode",self.activeHeatingOperatingMode)
                 elif not forceRetry:
-                    runtimeToGo = targetReducedTime - int( round( ( now.toInstant().toEpochMilli() - currentOperatingModeChange.toInstant().toEpochMilli() ) / 1000.0 / 60.0 ) )
+                    runtimeToGo = targetReducedTime - lastChangeBeforeInMinutes
                     delayedMsg = u" in {} min.".format(runtimeToGo)
                     
                 self.log.info(u"Switch  : Heizen mit WW{}{}".format(delayedMsg,forceRetryMsg))
                 
     def getBurnerStarts( self, now ):
         # max 5 min.
-        minTimestamp = getHistoricItemEntry("pGF_Utilityroom_Heating_Operating_Mode",now).getTimestamp().toInstant().toEpochMilli()
-        _minTimestamp = now.minusMinutes(5).toInstant().toEpochMilli()
-        if minTimestamp < _minTimestamp:
-            minTimestamp = _minTimestamp
+        minTime = getHistoricItemEntry("pGF_Utilityroom_Heating_Operating_Mode",now).getTimestamp()
+        _minTime = now.minusMinutes(5)
+        if minTime.isBefore(_minTime):
+            minTime = _minTime
 
         currentTime = now
         lastItemEntry = None
@@ -885,7 +885,7 @@ class HeatingControlRule():
         
         # check for new burner starts during this time periode
         # "pGF_Utilityroom_Heating_Burner_Starts" is not useable because of wather heating
-        while currentTime.toInstant().toEpochMilli() > minTimestamp:
+        while currentTime.isAfter(minTime):
             currentItemEntry = getHistoricItemEntry("pGF_Utilityroom_Heating_Power", currentTime)
             if lastItemEntry is not None:
                 currentHeating = ( currentItemEntry.getState().doubleValue() != 0.0 )
@@ -894,36 +894,34 @@ class HeatingControlRule():
                 if currentHeating != lastHeating:
                     burnerStarts = burnerStarts + 1
             
-            millis = currentItemEntry.getTimestamp().toInstant().toEpochMilli() - 1
-            currentTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneId.systemDefault())
+            currentTime = currentItemEntry.getTimestamp().minusNanos(1)
             lastItemEntry = currentItemEntry
             
         return burnerStarts
 
-    def getLastReductionTime( self, currentOperatingModeUpdate ):
+    def getLastReductionTimeInSeconds( self, currentOperatingModeUpdate ):
         lastOperatingMode = getHistoricItemEntry("pGF_Utilityroom_Heating_Operating_Mode",currentOperatingModeUpdate.minusSeconds(1))
         #self.log.info(u"A {}".format(lastOperatingMode.getState().intValue()))
         
         # last mode was "Heizen mit WW"
         if lastOperatingMode.getState().intValue() == 2:
-            millis = lastOperatingMode.getTimestamp().toInstant().toEpochMilli()
-            lastOperatingModeUpdate = ZonedDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneId.systemDefault())
-            lastHeatingTime = currentOperatingModeUpdate.toInstant().toEpochMilli() - lastOperatingModeUpdate.toInstant().toEpochMilli()
+            lastOperatingModeUpdate = lastOperatingMode.getTimestamp()
+            lastHeatingTimeInSeconds = ChronoUnit.SECONDS.between(lastOperatingModeUpdate,currentOperatingModeUpdate)
+            
             #self.log.info(u"B {}".format(lastHeatingTime))
 
             # last mode was running less then MIN_HEATING_TIME
-            if lastHeatingTime < Heating.MIN_HEATING_TIME * 60 * 1000:
+            if lastHeatingTimeInSeconds < Heating.MIN_HEATING_TIME * 60:
                 # mode before was "Reduziert"
                 previousOperatingMode = getHistoricItemEntry("pGF_Utilityroom_Heating_Operating_Mode",lastOperatingModeUpdate.minusSeconds(1))
                 #self.log.info(u"C {}".format(previousOperatingMode.getState().intValue()))
 
                 if previousOperatingMode.getState().intValue() == 3:
                     # letzt calculate last "reduziert" runtime and increase it by 2
-                    millis = previousOperatingMode.getTimestamp().toInstant().toEpochMilli()
-                    previousOperatingModeUpdate = ZonedDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneId.systemDefault())
-                    lastReducedRuntime = lastOperatingModeUpdate.toInstant().toEpochMilli() - previousOperatingModeUpdate.toInstant().toEpochMilli()
+                    previousOperatingModeUpdate = previousOperatingMode.getTimestamp()
+                    lastReducedRuntimeInSeconds = ChronoUnit.SECONDS.between(previousOperatingModeUpdate,lastOperatingModeUpdate)
                     
-                    return lastReducedRuntime
+                    return lastReducedRuntimeInSeconds
         return 0  
                                                 
              

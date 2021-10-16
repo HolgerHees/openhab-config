@@ -26,35 +26,33 @@ class ValuesDependingOnBrightnessRule:
         
         #self.log.info(str(cloudCover))
         
-        nowInMillies = now.toInstant().toEpochMilli()
-        
         automaticRollershutterState = getItemState("pOther_Automatic_State_Rollershutter").intValue()
         
         if automaticRollershutterState != SunProtectionHelper.STATE_ROLLERSHUTTER_UP:
-            _upTime = getItemState("pOutdoor_Astro_Sunrise_Time").getZonedDateTime().toInstant().toEpochMilli()
-            _upTime = int(_upTime + ( cloudCover * 30.0 / 9.0 ) * 60 * 1000)
+            _upTime = getItemState("pOutdoor_Astro_Sunrise_Time").getZonedDateTime()
+            _upTime = _upTime.plusSeconds( int( ( cloudCover * 30.0 / 9.0 ) * 60 ) )
 
-            if now.getHour() < 12:               
-                if nowInMillies >= _upTime:
+            if now.getHour() < 12 and now.toLocalDate().isEqual(_upTime.toLocalDate()):               
+                if now.isAfter(_upTime) or now.isEqual(_upTime):
                     postUpdate("pOther_Automatic_State_Rollershutter", SunProtectionHelper.STATE_ROLLERSHUTTER_UP)
                 elif lightLevel > 0 and automaticRollershutterState != SunProtectionHelper.STATE_ROLLERSHUTTER_MAYBE_UP:
-                    _upTime = getItemState("pOutdoor_Astro_Dawn_Time").getZonedDateTime().toInstant().toEpochMilli()
-                    if nowInMillies > _upTime:
+                    _upTime = getItemState("pOutdoor_Astro_Dawn_Time").getZonedDateTime()
+                    if now.isAfter(_upTime) or now.isEqual(_upTime):
                         postUpdate("pOther_Automatic_State_Rollershutter", SunProtectionHelper.STATE_ROLLERSHUTTER_MAYBE_UP)
-
-            postUpdateIfChanged("pOther_Automatic_State_Rollershutter_Up", ZonedDateTime.ofInstant(Instant.ofEpochMilli(_upTime), ZoneId.systemDefault()).toLocalDateTime().toString() )
+                        
+            postUpdateIfChanged("pOther_Automatic_State_Rollershutter_Up", _upTime.toString() )
         else:
-            _downTime = getItemState("pOutdoor_Astro_Dusk_Time").getZonedDateTime().toInstant().toEpochMilli()
-            _downTime = int(_downTime - ( cloudCover * 30.0 / 9.0 ) * 60 * 1000)
+            _downTime = getItemState("pOutdoor_Astro_Dusk_Time").getZonedDateTime()
+            _downTime = _downTime.minusSeconds( int( ( cloudCover * 30.0 / 9.0 ) * 60 ) )
             
-            if nowInMillies >= _downTime:
+            if now.isAfter(_downTime) or now.isEqual(_downTime):
                 postUpdate("pOther_Automatic_State_Rollershutter", SunProtectionHelper.STATE_ROLLERSHUTTER_DOWN)
             elif lightLevel <= 0:
-                _downTime = getItemState("pOutdoor_Astro_Sunset_Time").getZonedDateTime().toInstant().toEpochMilli()
-                if nowInMillies >= _downTime:
+                _downTime = getItemState("pOutdoor_Astro_Sunset_Time").getZonedDateTime()
+                if now.isAfter(_downTime) or now.isEqual(_downTime):
                     postUpdate("pOther_Automatic_State_Rollershutter", SunProtectionHelper.STATE_ROLLERSHUTTER_DOWN)
  
-            postUpdateIfChanged("pOther_Automatic_State_Rollershutter_Down", ZonedDateTime.ofInstant(Instant.ofEpochMilli(_downTime), ZoneId.systemDefault()).toLocalDateTime().toString() )
+            postUpdateIfChanged("pOther_Automatic_State_Rollershutter_Down", _downTime.toString() )
 
         if lightLevel <= 0 or itemStateOlderThen("pOutdoor_Astro_Sunset_Time", now) or itemStateNewerThen("pOutdoor_Astro_Sunrise_Time", now):
             postUpdateIfChanged("pOther_Automatic_State_Outdoorlights", ON)

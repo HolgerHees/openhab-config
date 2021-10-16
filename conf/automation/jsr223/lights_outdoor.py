@@ -1,5 +1,6 @@
 import time
 from java.time import ZonedDateTime
+from java.time.temporal import ChronoUnit
 
 from shared.helper import rule, startTimer, getItemState, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged
 from shared.triggers import ItemCommandTrigger, ItemStateChangeTrigger
@@ -26,10 +27,10 @@ class MotiondetectorOutdoorSwitchRule:
 
     def execute(self, module, input):
         global ruleTimeouts
-        now = ZonedDateTime.now().toInstant().toEpochMilli()
+        now = ZonedDateTime.now()
         last = ruleTimeouts.get("Motiondetector_Outdoor_Main_Switch",0)
         
-        if now - last > 1000:
+        if ChronoUnit.SECONDS.between(last,now) > 1:
             itemState = input["event"].getItemState()
             
             if itemState == ON:
@@ -63,7 +64,7 @@ class MotiondetectorOutdoorIndividualSwitchRule:
 
     def execute(self, module, input):
         global ruleTimeouts
-        now = ZonedDateTime.now().toInstant().toEpochMilli()
+        now = ZonedDateTime.now()
         
         #last = ruleTimeouts.get("Motiondetector_Outdoor_Individual_Switches",0)
         #if now - last > 1000:
@@ -104,11 +105,11 @@ class LightOutdoorControlRule:
         #self.log.info(u"{}".format(input))
         
         global ruleTimeouts
-        now = ZonedDateTime.now().toInstant().toEpochMilli()
+        now = ZonedDateTime.now()
         last = ruleTimeouts.get("Light_Outdoor",0)
         
         # No Motion Detector related events
-        if now - last > 1000:
+        if ChronoUnit.SECONDS.between(last,now) > 1:
             itemName = input['event'].getItemName()
         
             global timerMappings
@@ -145,7 +146,7 @@ class MotionDetectorRule:
                 timerMappings[entry[0]] = startTimer(self.log, timerDuration, self.callback,[entry])
             else:
                 global ruleTimeouts
-                ruleTimeouts["Light_Outdoor"] = ZonedDateTime.now().toInstant().toEpochMilli()
+                ruleTimeouts["Light_Outdoor"] = ZonedDateTime.now()
 
                 sendCommand(entry[0],OFF)
                 timerMappings[entry[0]] = None
@@ -160,7 +161,7 @@ class MotionDetectorRule:
             timerMappings[entry[0]] = startTimer(self.log, timerDuration, self.callback, [entry], oldTimer = timerMappings.get(entry[0]) )
 
             global ruleTimeouts
-            ruleTimeouts["Light_Outdoor"] = ZonedDateTime.now().toInstant().toEpochMilli()
+            ruleTimeouts["Light_Outdoor"] = ZonedDateTime.now()
 
             sendCommand(entry[0],ON)
 
@@ -181,7 +182,7 @@ class TerasseMotionDetectorRule:
                 timerMappings["pOutdoor_Terrace_Light_Brightness"] = startTimer(self.log, timerDuration, self.callback)
             else:
                 global ruleTimeouts
-                ruleTimeouts["Light_Outdoor"] = ZonedDateTime.now().toInstant().toEpochMilli()
+                ruleTimeouts["Light_Outdoor"] = ZonedDateTime.now()
 
                 sendCommand("pOutdoor_Terrace_Light_Brightness",0)
                 timerMappings["pOutdoor_Terrace_Light_Brightness"] = None
@@ -194,7 +195,7 @@ class TerasseMotionDetectorRule:
             timerMappings["pOutdoor_Terrace_Light_Brightness"] = startTimer(self.log, timerDuration, self.callback, oldTimer = timerMappings.get("pOutdoor_Terrace_Light_Brightness") )
 
             global ruleTimeouts
-            ruleTimeouts["Light_Outdoor"] = ZonedDateTime.now().toInstant().toEpochMilli()
+            ruleTimeouts["Light_Outdoor"] = ZonedDateTime.now()
 
             sendCommand("pOutdoor_Terrace_Light_Brightness",100)
         

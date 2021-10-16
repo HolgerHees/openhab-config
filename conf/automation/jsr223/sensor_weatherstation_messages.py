@@ -1,7 +1,9 @@
 import math
 import json
 import traceback
+
 from java.time import ZonedDateTime
+from java.time.temporal import ChronoUnit
 
 from shared.helper import rule, getItemState, getItemStateWithFallback, getStableItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged, getItemLastUpdate, getItem, startTimer, itemLastChangeOlderThen
 from shared.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
@@ -138,42 +140,40 @@ class WeatherstationLastUpdateRule:
         #solar3 = getAvgStackValue(self,"pOutdoor_WeatherStation_Solar_Power_Stack","pOutdoor_WeatherStation_Solar_Power_Raw")
 
     def execute(self, module, input):
-        now = ZonedDateTime.now().toInstant().toEpochMilli()
+        now = ZonedDateTime.now()
         
-        newestUpdate = 0
+        newestUpdate = None
         oldestUpdate = now
         items = getItem("gWeatherstationInputValues").getAllMembers()
         states = {}
         
         for item in items:
-            _update = getItemLastUpdate(item).toInstant().toEpochMilli()
-            if _update > newestUpdate:
+            _update = getItemLastUpdate(item)
+            if newestUpdate == None or _update.isAfter(newestUpdate):
                 newestUpdate = _update
-            if _update < oldestUpdate:
+            if _update.isBefore(oldestUpdate):
                 oldestUpdate = _update
                 #self.log.info("{} {}".format(item.getName(),getItemLastUpdate(item)))
                 
             lastUpdate = getItemLastUpdate(item)
-            minutes = round( (now - lastUpdate.toInstant().toEpochMilli() ) / 1000.0 / 60.0 )
+            minutes = ChronoUnit.MINUTES.between(lastUpdate,now)
             states[item.getName()] = [minutes,"{:.0f} min: {} ({})".format(minutes,item.getName(),getItemLastUpdate(item))]
         
         # Special handling for heating updates
         # Either the pOutdoor_WeatherStation_Rain_Heater_Request is updated every 15 minutes (heating inactive) or every minute (heating is active)
         # Or the pOutdoor_WeatherStation_Rain_Heater is updated every 5 minutes
-        #_heaterValueUpdate = getItemLastUpdate("pOutdoor_WeatherStation_Rain_Heater").toInstant().toEpochMilli()
-        #_heaterRequestUpdate = getItemLastUpdate("pOutdoor_WeatherStation_Rain_Heater_Request").toInstant().toEpochMilli()
-        #_update = _heaterValueUpdate if _heaterValueUpdate > _heaterRequestUpdate else _heaterRequestUpdate
-        #if _update > newestUpdate:
+        #_heaterValueUpdate = getItemLastUpdate("pOutdoor_WeatherStation_Rain_Heater")
+        #_heaterRequestUpdate = getItemLastUpdate("pOutdoor_WeatherStation_Rain_Heater_Request")
+        #_update = _heaterValueUpdate if _heaterValueUpdate.isAfter(_heaterRequestUpdate) else _heaterRequestUpdate
+        #if _update.isAfter(newestUpdate):
         #    newestUpdate = _update
-        #if _update < oldestUpdate:
+        #if _update.isBefore(oldestUpdate):
         #    oldestUpdate = _update
                 
-        newestUpdateInMinutes = (now - newestUpdate) / 1000.0 / 60.0
-        newestUpdateInMinutes = round(newestUpdateInMinutes)
+        newestUpdateInMinutes = ChronoUnit.MINUTES.between(newestUpdate,now)
         newestUpdateInMinutesMsg = u"{:.0f}".format(newestUpdateInMinutes) if newestUpdateInMinutes >= 1 else u"<1"
         
-        oldestUpdateInMinutes = (now - oldestUpdate) / 1000.0 / 60.0
-        oldestUpdateInMinutes = round(oldestUpdateInMinutes)
+        oldestUpdateInMinutes = ChronoUnit.MINUTES.between(oldestUpdate,now)
         oldestUpdateInMinutesMsg = u"{:.0f}".format(oldestUpdateInMinutes) if oldestUpdateInMinutes >= 1 else u"<1"
         
         if newestUpdateInMinutesMsg != oldestUpdateInMinutesMsg:

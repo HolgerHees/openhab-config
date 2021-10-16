@@ -1,5 +1,6 @@
 import math
 from java.time import ZonedDateTime
+from java.time.temporal import ChronoUnit
 
 from shared.helper import rule, startTimer, getGroupMember, getItemState, postUpdate, sendCommand, getItemLastChange
 from shared.triggers import ItemCommandTrigger, ItemStateChangeTrigger
@@ -120,7 +121,7 @@ class ScenesWatheringRule(WatheringHelperOld):
         self.currentProgressMsg = ""
         
     def findStep(self):
-        duration = getItemState("pOutdoor_Watering_Logic_Program_Duration").intValue() * 60.0 * 1000.0
+        duration = getItemState("pOutdoor_Watering_Logic_Program_Duration").intValue() * 60.0
         
         remaining = 0
         info = u""
@@ -131,7 +132,7 @@ class ScenesWatheringRule(WatheringHelperOld):
             group = circuits[i]
             if getItemState(group[2][0] + "_Powered") == ON:
                 activeIndex = i
-                runtime = ZonedDateTime.now().toInstant().toEpochMilli() - getItemLastChange(group[2][0] + "_Powered").toInstant().toEpochMilli()
+                runtime = ChronoUnit.SECONDS.between(getItemLastChange(group[2][0] + "_Powered"),ZonedDateTime.now())
                 remaining = ( duration * group[0] ) - runtime
                 break
 
@@ -184,7 +185,7 @@ class ScenesWatheringRule(WatheringHelperOld):
             self.cleanProgressTimer()
             return
         
-        remainingInMinutes = int( math.floor( round( remaining / 1000.0 ) / 60.0 ) )
+        remainingInMinutes = int( math.floor( remaining / 60.0 ) )
 
         if remainingInMinutes > 0:
             msg = u"{} noch {} min".format(msg, remainingInMinutes )

@@ -1,7 +1,9 @@
 from shared.helper import rule, getHistoricItemEntry, getHistoricItemState, getItemLastChange, itemLastUpdateOlderThen, itemLastChangeOlderThen, getItemState, getItemStateWithFallback, postUpdate, postUpdateIfChanged, sendCommand
 from shared.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
+
 from java.time import ZonedDateTime, Instant, ZoneId
 from java.time.format import DateTimeFormatter
+from java.time.temporal import ChronoUnit
 
 from org.openhab.core.types.RefreshType import REFRESH
   
@@ -32,7 +34,7 @@ dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
 #value = getHistoricItemState("pGF_Garage_Solar_Inverter_Power_Limitation",ZonedDateTime.now()).intValue()
 #postUpdate("pGF_Garage_Solar_Inverter_Power_Limitation",value)
 
-def getHistoricReference(log, itemName, valueTime, outdatetTime, messureTime, intervalTime):
+def getHistoricReferenceOld(log, itemName, valueTime, outdatetTime, messureTime, intervalTime):
     endTime = getItemLastChange(itemName)
     endTimestampInMillis = endTime.toInstant().toEpochMilli()
 
@@ -84,6 +86,61 @@ def getHistoricReference(log, itemName, valueTime, outdatetTime, messureTime, in
         value = 0
 
     startTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(startTimestampInMillis), ZoneId.systemDefault())
+    log.info( u"Consumption {} messured from {} ({}) to {} ({})".format(value,startValue,dateTimeFormatter.format(startTime),endValue,dateTimeFormatter.format(endTime)))
+
+    return value
+
+def getHistoricReference(log, itemName, valueTime, outdatetTime, messureTime, intervalTime):
+    endTime = getItemLastChange(itemName)
+
+    now = ZonedDateTime.now()
+    nowInMillis = ZonedDateTime.now().toInstant().toEpochMilli()
+ 
+    if endTime.isBefore( now.minusSeconds(outdatetTime) ):
+        log.info( u"No consumption. Last value is too old." )
+        return 0
+
+    minMessuredTime = now.minusSeconds( messureTime )
+
+    endValue = getItemState(itemName).doubleValue()
+
+    startTime = endTime
+    startValue = 0
+
+    currentTime = startTime.minusNanos(1)
+
+    itemCount = 0
+
+    while True:
+        itemCount = itemCount + 1
+
+        historicEntry = getHistoricItemEntry(itemName, currentTime )
+
+        startValue = historicEntry.getState().doubleValue()
+
+        _time = historicEntry.getTimestamp()
+
+        # current item is older then the allowed timeRange
+        if _time.isBefore(minMessuredTime):
+            log.info( u"Consumption time limit exceeded" )
+            startTime = startTime.minusSeconds(intervalTime)
+            if _time.isAfter(startTime):
+                 startTime = _time
+            break
+        # 2 items are enough to calculate with
+        elif itemCount >= 2:
+            log.info( u"Consumption max item count exceeded" )
+            startTime = _time
+            break
+        else:
+            startTime = _time
+            currentTime = startTime.minusNanos(1)
+            
+    durationInSeconds = ChronoUnit.SECONDS.between(startTime,endTime)
+    value = ( (endValue - startValue) / durationInSeconds) * valueTime
+    if value < 0:
+        value = 0
+
     log.info( u"Consumption {} messured from {} ({}) to {} ({})".format(value,startValue,dateTimeFormatter.format(startTime),endValue,dateTimeFormatter.format(endTime)))
 
     return value

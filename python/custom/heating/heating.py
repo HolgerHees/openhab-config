@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import math
 from java.time import ZonedDateTime
+from java.time.temporal import ChronoUnit
 
 from shared.helper import getItemState, itemLastUpdateOlderThen, itemLastChangeOlderThen, getItemLastUpdate, getItemLastChange, getStableItemState
 from custom.suncalculation import SunRadiation
@@ -443,7 +444,7 @@ class Heating(object):
       
     def getColdFloorHeatingTime(self, lastUpdate ):
         # when was the last heating job
-        lastUpdateBeforeInMinutes = ( self.now.toInstant().toEpochMilli() - lastUpdate.toInstant().toEpochMilli() ) / 1000.0 / 60.0
+        lastUpdateBeforeInMinutes = ChronoUnit.MINUTES.between(lastUpdate,now)
        
         maxMinutes = 90.0 if self.now.getHour() < 12 else 45.0
         
@@ -628,46 +629,46 @@ class Heating(object):
         # check for open windows (long and short)
         for transition in room.getTransitions():
             if transition.getContactItem() != None:
-                openDuration = None
-                closedDuration = None
+                openDurationInSeconds = None
+                closedDurationInSeconds = None
                 # *** check open state
                 if self.getCachedItemState(transition.getContactItem()) == OpenClosedType.OPEN:
                     # *** register open window if it is open long enough
                     if transition.getContactItem() not in Heating._openWindowContacts:
                         openSince = getItemLastChange(transition.getContactItem())
-                        openDuration = self.now.toInstant().toEpochMilli() - openSince.toInstant().toEpochMilli()
-                        if openDuration > Heating.OPEN_WINDOW_START_DURATION * 60 * 1000:
+                        openDurationInSeconds = ChronoUnit.SECONDS.between(openSince,self.now)    
+                        if openDurationInSeconds > Heating.OPEN_WINDOW_START_DURATION * 60:
                             Heating._openWindowContacts[transition.getContactItem()] = openSince
                         else:
                             continue
                     else:
-                        openDuration = self.now.toInstant().toEpochMilli() - Heating._openWindowContacts[transition.getContactItem()].toInstant().toEpochMilli()
+                        openDurationInSeconds = ChronoUnit.SECONDS.between(Heating._openWindowContacts[transition.getContactItem()],now)    
                 # *** if the window was open
                 elif transition.getContactItem() in Heating._openWindowContacts:
                     # *** check if it is closed long enough to unregister it
                     closedSince = getItemLastChange(transition.getContactItem())
-                    closedDuration = self.now.toInstant().toEpochMilli() - closedSince.toInstant().toEpochMilli()
-                    openDuration = closedSince.toInstant().toEpochMilli() - Heating._openWindowContacts[transition.getContactItem()].toInstant().toEpochMilli()
-                    endingTreshold = openDuration * 2.0
+                    closedDurationInSeconds = ChronoUnit.SECONDS.between(closedSince,self.now)
+                    openDurationInSeconds = ChronoUnit.SECONDS.between(Heating._openWindowContacts[transition.getContactItem()],closedSince)
+                    endingTreshold = openDurationInSeconds * 2.0
                     # 1 hour
                     if endingTreshold > 60 * 60 * 1000:
                         endingTreshold = 60 * 60 * 1000
-                    if closedDuration > endingTreshold:
+                    if closedDurationInSeconds > endingTreshold:
                         del Heating._openWindowContacts[transition.getContactItem()]
                         continue
                 else:
                     continue
                 
                 # *** window is open or is closed not long enough
-                debugInfo = u"OPEN {} min.".format(int(round(openDuration / 1000.0 / 60.0)))
-                if closedDuration != None:
-                    debugInfo = u"{} & CLOSED {} min.".format(debugInfo, int(round(closedDuration / 1000.0 / 60.0)))
+                debugInfo = u"OPEN {} min.".format(int(round(openDurationInSeconds / 60.0)))
+                if closedDurationInSeconds != None:
+                    debugInfo = u"{} & CLOSED {} min.".format(debugInfo, int(round(closedDurationInSeconds / 60.0)))
                 debugInfo = u"{} ago".format(debugInfo)
                 hs.setDebugInfo( debugInfo )
 
                 hs.setHeatingDemandEnergy(None)
                 hs.setHeatingDemandTime(None)
-                if openDuration > Heating.LONG_OPEN_WINDOW_START_DURATION * 60 * 1000:
+                if openDurationInSeconds > Heating.LONG_OPEN_WINDOW_START_DURATION * 60:
                     hs.setOpenWindowState(2)
                     break
                 else:
@@ -777,10 +778,10 @@ class Heating(object):
                     debugInfo = u"Cleanup : {:10s} • Reference from {} to {} °C increased".format(name,lastTemp,currentTemp)
         Heating._stableTemperatureReferences[room.getName()]=currentTemp
 
-        # detech last runtime and change calculated values to that timespan
+        # detech last runtime and change calculated values to that timespanInSeconds
         # all calculations are normally per minute
-        timespan = 30.0 if Heating.lastRuntime is None else ( self.now.toInstant().toEpochMilli() - Heating.lastRuntime.toInstant().toEpochMilli() ) / 1000.0
-        devider = 60.0 / timespan
+        timespanInSeconds = 30.0 if Heating.lastRuntime is None else ChronoUnit.SECONDS.between(Heating.lastRuntime,self.now)
+        devider = 60.0 / timespanInSeconds
         #self.log.info(u"{} {}".format(room.getName(),devider))
 
         totalChargeLevel = totalChargeLevel + ( rs.getActiveSaldo() / 60.0 / devider )
@@ -978,7 +979,7 @@ class Heating(object):
                     neededTime = self.calculateHeatingDemandTime(neededEnergy,rs.getActivePossibleSaldo()) if neededEnergy > 0 else -1
                 else:
                     neededEnergy = None
-                    currentTime = ( self.now.toInstant().toEpochMilli() - lastHeatingChange.toInstant().toEpochMilli() ) / 1000.0 / 60.0 / 60.0 # convert milliseconds to hours
+                    currentTime = ChronoUnit.SECONDS.between( lastHeatingChange, self.now ) / 60.0 / 60.0 # convert seconds to hours
                     neededTime = ( fh['time'] - currentTime )
 
                 if neededTime < 0:
@@ -1024,7 +1025,7 @@ class Heating(object):
                         fh_info_type_r["wrong time"].append('PRE')
                     
                     # *** CHECK FOR COLD FLOOR HEATING ***
-                    if self.now.minusMinutes(180).toInstant().toEpochMilli() < lastHeatingChange.toInstant().toEpochMilli():
+                    if self.now.minusMinutes(180).isBefore(lastHeatingChange):
                         fh_info_type_r["not needed"].append('CF')
                     elif self.possibleColdFloorHeating(nightModeActive,lastHeatingChange):
                         neededTime = self.getColdFloorHeatingTime(lastHeatingChange)

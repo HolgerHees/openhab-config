@@ -4,7 +4,7 @@ from shared.triggers import ItemStateChangeTrigger, CronTrigger
 
 from threading import Thread 
 from java.time import ZonedDateTime, Duration
-
+from java.time.temporal import ChronoUnit
 
 #wget "http://influxdb:8086/query?u=openhab&p=default123&chunked=true&db=openhab_db&epoch=ns&q=DROP+SERIES+FROM+%22pGF_Corridor_Fritzbox_WanUpstreamCurrRate%22"
 #wget "http://influxdb:8086/query?u=openhab&p=default123&chunked=true&db=openhab_db&epoch=ns&q=DROP+SERIES+FROM+%22pGF_Corridor_Fritzbox_WanDownstreamCurrRate%22"
@@ -111,7 +111,7 @@ class ValuesNetworkOutgoingTrafficRule:
     def execute(self, module, input):
         #self.log.info(u"{}".format(input))
 
-        now = ZonedDateTime.now().toInstant().toEpochMilli()
+        now = ZonedDateTime.now()
 
         if self.lastUpdate != -1:
             currentValue = input['event'].getItemState().longValue()
@@ -122,7 +122,7 @@ class ValuesNetworkOutgoingTrafficRule:
             # => is also reseted on dsl reconnection
             if currentValue > prevValue:
                 diffValue = ( currentValue - prevValue ) * 8
-                diffTime = ( now - self.lastUpdate ) / 1000.0
+                diffTime = ChronoUnit.SECONDS.between(self.lastUpdate,now)
                 speed = round(diffValue / diffTime)
                 postUpdateIfChanged("pGF_Corridor_Fritzbox_WanUpstreamCurrRate",speed)
             else:
@@ -153,7 +153,7 @@ class ValuesNetworkIncommingTrafficRule:
     def execute(self, module, input):
         #self.log.info(u"{}".format(input))
 
-        now = ZonedDateTime.now().toInstant().toEpochMilli()
+        now = ZonedDateTime.now()
 
         if self.lastUpdate != -1:
             currentValue = input['event'].getItemState().longValue()
@@ -164,7 +164,7 @@ class ValuesNetworkIncommingTrafficRule:
             # => is also reseted on dsl reconnection
             if currentValue > prevValue:
                 diffValue = ( currentValue - prevValue ) * 8
-                diffTime = ( now - self.lastUpdate ) / 1000.0
+                diffTime = ChronoUnit.SECONDS.between(self.lastUpdate,now)
                 speed = round(diffValue / diffTime)
                 postUpdateIfChanged("pGF_Corridor_Fritzbox_WanDownstreamCurrRate",speed)
             else:
