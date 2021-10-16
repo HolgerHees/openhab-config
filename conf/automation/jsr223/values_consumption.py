@@ -34,67 +34,10 @@ dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
 #value = getHistoricItemState("pGF_Garage_Solar_Inverter_Power_Limitation",ZonedDateTime.now()).intValue()
 #postUpdate("pGF_Garage_Solar_Inverter_Power_Limitation",value)
 
-def getHistoricReferenceOld(log, itemName, valueTime, outdatetTime, messureTime, intervalTime):
-    endTime = getItemLastChange(itemName)
-    endTimestampInMillis = endTime.toInstant().toEpochMilli()
-
-    nowInMillis = ZonedDateTime.now().toInstant().toEpochMilli()
- 
-    if endTimestampInMillis < nowInMillis - ( outdatetTime * 1000 ):
-        log.info( u"No consumption. Last value is too old." )
-        return 0
-
-    minMessuredTimestampInMillis = nowInMillis - ( messureTime * 1000 )
-
-    endValue = getItemState(itemName).doubleValue()
-
-    startTimestampInMillis = endTimestampInMillis
-    startValue = 0
-
-    currentTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(startTimestampInMillis - 1), ZoneId.systemDefault())
-
-    itemCount = 0
-
-    while True:
-        itemCount = itemCount + 1
-
-        historicEntry = getHistoricItemEntry(itemName, currentTime )
-
-        startValue = historicEntry.getState().doubleValue()
-
-        _millis = historicEntry.getTimestamp().toInstant().toEpochMilli()
-
-        # current item is older then the allowed timeRange
-        if _millis < minMessuredTimestampInMillis:
-            log.info( u"Consumption time limit exceeded" )
-            startTimestampInMillis = startTimestampInMillis - (intervalTime * 1000)
-            if _millis > startTimestampInMillis:
-                 startTimestampInMillis = _millis
-            break
-        # 2 items are enough to calculate with
-        elif itemCount >= 2:
-            log.info( u"Consumption max item count exceeded" )
-            startTimestampInMillis = _millis
-            break
-        else:
-            startTimestampInMillis = _millis
-            currentTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(startTimestampInMillis - 1), ZoneId.systemDefault())
-
-    durationInSeconds = round(float(endTimestampInMillis - startTimestampInMillis) / 1000.0)
-    value = ( (endValue - startValue) / durationInSeconds) * valueTime
-    if value < 0:
-        value = 0
-
-    startTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(startTimestampInMillis), ZoneId.systemDefault())
-    log.info( u"Consumption {} messured from {} ({}) to {} ({})".format(value,startValue,dateTimeFormatter.format(startTime),endValue,dateTimeFormatter.format(endTime)))
-
-    return value
-
 def getHistoricReference(log, itemName, valueTime, outdatetTime, messureTime, intervalTime):
     endTime = getItemLastChange(itemName)
 
     now = ZonedDateTime.now()
-    nowInMillis = ZonedDateTime.now().toInstant().toEpochMilli()
  
     if endTime.isBefore( now.minusSeconds(outdatetTime) ):
         log.info( u"No consumption. Last value is too old." )
@@ -248,7 +191,7 @@ class EnergySupplyRule:
         ]
 
         self.stack = []
-        self.lastLimitationIncrease = 0
+        self.lastLimitationIncrease = ZonedDateTime.now()
         
     def getAvgConsumption(self,now,value):        
         if len(self.stack) > 0:
@@ -257,7 +200,6 @@ class EnergySupplyRule:
             currentTimeSlot = 0
                   
             for index, x in enumerate( reversed(self.stack) ):           
-                #self.log.info(u"{}".format(ZonedDateTime.ofInstant(Instant.ofEpochMilli(currentTime), ZoneId.systemDefault())))
                 
                 # remove values older then 5 minutes
                 if currentTimeSlot >= maxTimeSlot and len(self.stack) > index:
@@ -265,11 +207,11 @@ class EnergySupplyRule:
                     self.stack = self.stack[len(self.stack)-index:]
                     break;
 
-                avgValue += x[0] * ( currentTime - x[1] )
+                avgValue += x[0] * ChronoUnit.MILLIS.between(x[1],currentTime)
                 currentTime = x[1]
-                currentTimeSlot = now - currentTime
+                currentTimeSlot = ChronoUnit.MILLIS.between(currentTime,now)
                   
-            avgValue = avgValue / ( now - currentTime )
+            avgValue = avgValue / ChronoUnit.MILLIS.between(currentTime,now)
         else:
             avgValue = value
 
@@ -289,7 +231,7 @@ class EnergySupplyRule:
 
     def execute(self, module, input):
       
-        now = ZonedDateTime.now().toInstant().toEpochMilli()
+        now = ZonedDateTime.now()
         
         currentACPower = getItemState("pGF_Garage_Solar_Inverter_AC_Power").intValue()
 
@@ -303,7 +245,7 @@ class EnergySupplyRule:
             possiblePowerLimitation = self.getPossibleLimitation(currentConsumptionValue)
             possibleAvgPowerLimitation = self.getPossibleLimitation(avgConsumptionValue)
             
-            self.log.info(u"currentLimit: {}%, currentConsumption: {}W, avgConsumption: {}W, possibleLimit: {}%, possibleAvgLimit: {}%, stack: {}, li: {}".format(currentPowerLimitation,currentConsumptionValue,avgConsumptionValue,possiblePowerLimitation,possibleAvgPowerLimitation,len(self.stack),(now - self.lastLimitationIncrease)))
+            self.log.info(u"currentLimit: {}%, currentConsumption: {}W, avgConsumption: {}W, possibleLimit: {}%, possibleAvgLimit: {}%, stack: {}, li: {}".format(currentPowerLimitation,currentConsumptionValue,avgConsumptionValue,possiblePowerLimitation,possibleAvgPowerLimitation,len(self.stack),ChronoUnit.MILLIS.between(self.lastLimitationIncrease,now)))
 
             if possiblePowerLimitation >= currentPowerLimitation:
                 self.lastLimitationIncrease = now
@@ -311,7 +253,7 @@ class EnergySupplyRule:
                     sendCommand("pGF_Garage_Solar_Inverter_Power_Limitation",possiblePowerLimitation)
                     self.log.info(u"Increase power limitation from {}% to {}%".format( currentPowerLimitation, possiblePowerLimitation ))
                     return
-            elif now - self.lastLimitationIncrease > maxTimeSlot:
+            elif ChronoUnit.MILLIS.between(self.lastLimitationIncrease,now) > maxTimeSlot:
                 if possibleAvgPowerLimitation < currentPowerLimitation:
                     sendCommand("pGF_Garage_Solar_Inverter_Power_Limitation",possibleAvgPowerLimitation)
                     self.log.info(u"Decrease power limitation from {}% to {}%".format( currentPowerLimitation, possibleAvgPowerLimitation ))
