@@ -444,7 +444,7 @@ class Heating(object):
       
     def getColdFloorHeatingTime(self, lastUpdate ):
         # when was the last heating job
-        lastUpdateBeforeInMinutes = ChronoUnit.MINUTES.between(lastUpdate,now)
+        lastUpdateBeforeInMinutes = ChronoUnit.MINUTES.between(lastUpdate,self.now)
        
         maxMinutes = 90.0 if self.now.getHour() < 12 else 45.0
         
@@ -642,7 +642,7 @@ class Heating(object):
                         else:
                             continue
                     else:
-                        openDurationInSeconds = ChronoUnit.SECONDS.between(Heating._openWindowContacts[transition.getContactItem()],now)    
+                        openDurationInSeconds = ChronoUnit.SECONDS.between(Heating._openWindowContacts[transition.getContactItem()],self.now)    
                 # *** if the window was open
                 elif transition.getContactItem() in Heating._openWindowContacts:
                     # *** check if it is closed long enough to unregister it

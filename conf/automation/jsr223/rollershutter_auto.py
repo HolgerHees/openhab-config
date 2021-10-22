@@ -1,6 +1,8 @@
+import math
+from java.time import ZonedDateTime
+
 from shared.helper import rule, getItemState, postUpdate, sendCommand, sendCommandIfChanged, itemLastChangeNewerThen, getGroupMemberChangeTrigger, startTimer
 from shared.triggers import ItemStateChangeTrigger
-from java.time import ZonedDateTime
 
 from custom.presence import PresenceHelper
 from custom.sunprotection import SunProtectionHelper
@@ -83,7 +85,13 @@ class RollershutterAutoWindowContactRule:
             state = UP
         else:
             if getItemState("pOther_Automatic_State_Rollershutter").intValue() == SunProtectionHelper.STATE_ROLLERSHUTTER_DOWN:
-                state = DOWN
+                # check that more windows are DOWN than UP.
+                closedShutters = 0
+                for config in configs:
+                    if getItemState(config["shutter"]) == DOWN:
+                        closedShutters += 1
+                if closedShutters >= math.floor( len(configs) / 2 ):
+                    state = DOWN
             elif ("sunprotection" in config and getItemState(config["sunprotection"]) == ON and "sunprotectionOnlyIfAway" not in config):
                 state = DOWN
             
