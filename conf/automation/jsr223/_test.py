@@ -4,9 +4,9 @@ from shared.helper import rule, sendNotification, sendCommand, getItem
 @rule("_test.py")
 class TestRule:
     def __init__(self):
-        #self.triggers = [
-        #    CronTrigger("*/15 * * * * ?")
-        #]
+        self.triggers = [
+            CronTrigger("*/15 * * * * ?")
+        ]
         pass
 
     def execute(self, module, input):     

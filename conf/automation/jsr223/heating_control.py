@@ -5,9 +5,9 @@ from custom.heating.heating import Heating
 from custom.heating.house import ThermalStorageType, ThermalBridgeType, Wall, Door, Window, Room
 from custom.suncalculation import SunRadiation
 from custom.sunprotection import SunProtectionHelper
- 
+
 import math 
-from java.time import ZonedDateTime, Instant, ZoneId
+from java.time import ZonedDateTime  
 from java.time.format import DateTimeFormatter
 from java.time.temporal import ChronoUnit
 
@@ -43,6 +43,8 @@ Heating.heatingTemperaturePipeOutItem = "pGF_Utilityroom_Heating_Temperature_Pip
 Heating.heatingTemperaturePipeInItem = "pGF_Utilityroom_Heating_Temperature_Pipe_In"
 
 Heating.holidayStatusItem = "pOther_Manual_State_Holiday"
+
+Heating.forcedStatesItem = "pGF_Utilityroom_Heating_Force_States"
  
 _groundFloor = ThermalStorageType( capacity=164.0, uValue=0.320, uOffset=0.08, factor=0.60 )
 _groundCeiling = ThermalStorageType( capacity=308.0, uValue=0.610, uOffset=0.1, factor=1.0 )

@@ -1,24 +1,17 @@
 # -*- coding: utf-8 -*-
 import math
-from java.time import ZonedDateTime
+import json
+from java.time import ZonedDateTime, Instant, ZoneId
 from java.time.temporal import ChronoUnit
 
-from shared.helper import getItemState, itemLastUpdateOlderThen, itemLastChangeOlderThen, getItemLastUpdate, getItemLastChange, getStableItemState
-from custom.suncalculation import SunRadiation
-
-try:
-    from org.eclipse.smarthome.core.library.types import OnOffType
-    from org.eclipse.smarthome.core.library.types import OpenClosedType
-    from org.eclipse.smarthome.core.library.types import PercentType
-    from org.eclipse.smarthome.core.library.types import DecimalType
-    from org.eclipse.smarthome.core.types import UnDefType
-except:
-    from org.openhab.core.library.types import OnOffType
-    from org.openhab.core.library.types import OpenClosedType
-    from org.openhab.core.library.types import PercentType
-    from org.openhab.core.library.types import DecimalType
-    from org.openhab.core.types import UnDefType
+from org.openhab.core.library.types import OnOffType
+from org.openhab.core.library.types import OpenClosedType
+from org.openhab.core.library.types import PercentType
+from org.openhab.core.library.types import DecimalType
+from org.openhab.core.types import UnDefType
     
+from shared.helper import getItemState, itemLastUpdateOlderThen, itemLastChangeOlderThen, getItemLastUpdate, getItemLastChange, getStableItemState, postUpdateIfChanged
+from custom.suncalculation import SunRadiation
 from custom.heating.house import Window
 from custom.heating.state import RoomState, HouseState, RoomHeatingState, HouseHeatingState
  
@@ -67,6 +60,8 @@ class Heating(object):
     
     holidayStatusItem = None
     
+    forcedStatesItem = None
+    
     totalVolume = 0
     totalHeatingVolume = None
     
@@ -88,8 +83,6 @@ class Heating(object):
     _stableTemperatureReferences = {}
 
     # static status variables
-    _forcedHeatings = {}
-    
     _openWindowContacts= {}
     
     @staticmethod
@@ -946,6 +939,9 @@ class Heating(object):
         heatingRequested = False
         hasChargeLevelDebugInfos = False
         
+        _forcedHeatings = getItemState(Heating.forcedStatesItem).toString()
+        _forcedHeatings = {} if _forcedHeatings == "NULL" else json.loads(_forcedHeatings)
+        
         for room in filter( lambda room: room.getHeatingVolume() != None,Heating.rooms):
             
             # CLEAN CHARGE LEVEL
@@ -970,31 +966,48 @@ class Heating(object):
 
             rhs = None
             # *** CLEAN OR RESTORE FORCED HEATING ***
-            if room.getName() in Heating._forcedHeatings:
-                fh = Heating._forcedHeatings[room.getName()]
+            if room.getName() in _forcedHeatings:
+                fh = _forcedHeatings[room.getName()]
                 rhs = fh['rhs']
 
                 if fh['energy'] != None:
-                    neededEnergy = fh['energy'] - rs.getChargedBuffer()
-                    neededTime = self.calculateHeatingDemandTime(neededEnergy,rs.getActivePossibleSaldo()) if neededEnergy > 0 else -1
+                    # PRE heating should only be active during NightMode
+                    # Check is needed
+                    # - because maybe there is not enough demand to start heating. So we will never reach needed energy level
+                    # - or operation mode can flip between "Heizen mit WWW" and "Reduziert". So we will never reach needed charge level
+                    if not nightModeActive:
+                        neededTime = -1
+                    else:
+                        neededEnergy = fh['energy'] - rs.getChargedBuffer()
+                        neededTime = self.calculateHeatingDemandTime(neededEnergy,rs.getActivePossibleSaldo()) if neededEnergy > 0 else -1                    
                 else:
-                    neededEnergy = None
-                    currentTime = ChronoUnit.SECONDS.between( lastHeatingChange, self.now ) / 60.0 / 60.0 # convert seconds to hours
-                    neededTime = ( fh['time'] - currentTime )
+                    demandStarted = ZonedDateTime.ofInstant(Instant.ofEpochMilli(fh['since']),ZoneId.systemDefault())
+                    # CF heating should not take longer than two time more then expected
+                    # Check is needed
+                    # - because the operation mode can flip between "Heizen mit WWW" and "Reduziert". So we will never reach needed runtime
+                    if ChronoUnit.SECONDS.between( demandStarted, self.now ) > fh['time'] * 60.0 * 60.0 * 2:
+                        neededTime = -1
+                    else:
+                        neededEnergy = None
+                        currentTime = self.now
+                        runTime = 0 
+                        while  currentTime.isAfter( demandStarted ):
+                            currentItemEntry = getHistoricItemEntry("pGF_Utilityroom_Heating_Operating_Mode", currentTime)
+                            # mode is "Heizen mit WW"
+                            if currentItemEntry.getState().getState().intValue() == 2:
+                                runTime += ChronoUnit.SECONDS.between( currentItemEntry.getTimestamp(), currentTime )
+                            currentTime = currentItemEntry.getTimestamp().minusNanos(1)
+                            
+                        runTime = runTime / 60.0 / 60.0 # convert seconds to hours
+                        neededTime = ( fh['time'] - runTime )
 
                 if neededTime < 0:
-                    del Heating._forcedHeatings[room.getName()]
+                    del _forcedHeatings[room.getName()]
                     rhs = None
                 else:
-                    # PRE check is needed, because it is energy depending and maybe there is not enough demand to start heating. So we will never reach needed energy level
-                    # CF is not needed, because it is timebased
-                    if rhs.getForcedInfo() == "PRE" and not nightModeActive:
-                        del Heating._forcedHeatings[room.getName()]
-                        rhs = None
-                    else:
-                        rhs.setHeatingDemandEnergy(neededEnergy)
-                        rhs.setHeatingDemandTime(neededTime)
-                        hhs.setHeatingState(room.getName(),rhs)
+                    rhs.setHeatingDemandEnergy(neededEnergy)
+                    rhs.setHeatingDemandTime(neededTime)
+                    hhs.setHeatingState(room.getName(),rhs)
                 
             if rhs == None:
                 # *** OUTDOOR REDUCTION ***
@@ -1071,12 +1084,14 @@ class Heating(object):
         if heatingRequested:
             for room in filter( lambda room: room.getHeatingVolume() != None,Heating.rooms):
                 rhs = hhs.getHeatingState(room.getName())
-                if rhs.getForcedInfo() != None and room.getName() not in Heating._forcedHeatings:
-                    #Heating._forcedHeatings[room.getName()] = [ rhs, rs.getChargedBuffer() + rhs.getHeatingDemandEnergy() ]
-                    Heating._forcedHeatings[room.getName()] = { 'rhs': rhs, 'energy': rhs.getHeatingDemandEnergy(), 'time': rhs.getHeatingDemandTime() }
+                if rhs.getForcedInfo() != None and room.getName() not in _forcedHeatings:
+                    #_forcedHeatings[room.getName()] = [ rhs, rs.getChargedBuffer() + rhs.getHeatingDemandEnergy() ]
+                    _forcedHeatings[room.getName()] = { 'rhs': rhs, 'energy': rhs.getHeatingDemandEnergy(), 'time': rhs.getHeatingDemandTime(), 'since': self.now.toInstant().toEpochMilli() }
 
         hhs.setHeatingRequested(heatingRequested)
 
         Heating.lastRuntime = self.now
+            
+        postUpdateIfChanged(Heating.forcedStatesItem,json.dumps(_forcedHeatings))
 
         return cr, cr4, cr8, hhs

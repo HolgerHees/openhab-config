@@ -69,6 +69,10 @@ class RollershutterAutoWindowContactRule:
         self.triggers += getGroupMemberChangeTrigger("gGF_Sensor_Window")
         self.triggers += getGroupMemberChangeTrigger("gFF_Sensor_Window")
         
+        #self.log.info(u"{}".format(math.floor( len(configs) / 2 )))
+        #for config in configs:
+        #    self.log.info(u"{} {}".format(getItemState(config["shutter"]),getItemState(config["shutter"]).intValue() == 0))
+         
     def execute(self, module, input):
         if getItemState("pOther_Manual_State_Auto_Rollershutter") != ON:
             return
@@ -87,8 +91,8 @@ class RollershutterAutoWindowContactRule:
             if getItemState("pOther_Automatic_State_Rollershutter").intValue() == SunProtectionHelper.STATE_ROLLERSHUTTER_DOWN:
                 # check that more windows are DOWN than UP.
                 closedShutters = 0
-                for config in configs:
-                    if getItemState(config["shutter"]) == DOWN:
+                for _config in configs:
+                    if getItemState(_config["shutter"]).intValue() == 100:
                         closedShutters += 1
                 if closedShutters >= math.floor( len(configs) / 2 ):
                     state = DOWN
