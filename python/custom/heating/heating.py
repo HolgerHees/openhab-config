@@ -10,7 +10,7 @@ from org.openhab.core.library.types import PercentType
 from org.openhab.core.library.types import DecimalType
 from org.openhab.core.types import UnDefType
     
-from shared.helper import getItemState, itemLastUpdateOlderThen, itemLastChangeOlderThen, getItemLastUpdate, getItemLastChange, getStableItemState, postUpdateIfChanged
+from shared.helper import getItemState, itemLastUpdateOlderThen, itemLastChangeOlderThen, getItemLastUpdate, getItemLastChange, getStableItemState, getHistoricItemEntry
 from custom.suncalculation import SunRadiation
 from custom.heating.house import Window
 from custom.heating.state import RoomState, HouseState, RoomHeatingState, HouseHeatingState
@@ -77,6 +77,8 @@ class Heating(object):
     lastRuntime = None
     
     rooms = []
+
+    _forcedHeatings = {}
 
     _roomsByName = {}
             
@@ -152,7 +154,7 @@ class Heating(object):
 
     def getCachedItemFloat(self,itemName):
         state = self.getCachedItemState(itemName)
-        return 0 if state == UnDefType.NULL or state == UnDefType.UNDEF else state.floatValue()
+        return 0 if isinstance(state, UnDefType) else state.floatValue()
 
     def getCachedItemState(self,itemName):
         if itemName not in self.cache:
@@ -900,9 +902,14 @@ class Heating(object):
     def calculate(self,isHeatingActive,sunRadiation,sunRadiationLazy):
         # handle outdated ventilation values
         if itemLastUpdateOlderThen(self.ventilationFilterRuntimeItem, self.now.minusMinutes(120)):
-            self.cache[self.ventilationLevelItem] = DecimalType(1)
+            self.cache[self.ventilationLevelItem] = DecimalType(3)
             self.cache[self.ventilationOutgoingTemperatureItem] = DecimalType(0.0)
             self.cache[self.ventilationIncommingTemperatureItem] = DecimalType(0.0)
+        else:
+            # init ventilation level and check if it is undefined (communication problem)
+            self.getCachedItemState(self.ventilationLevelItem)
+            if isinstance(self.cache[self.ventilationLevelItem], UnDefType):
+                self.cache[self.ventilationLevelItem] = DecimalType(3)      
 
         # handle outdated forecast values
         if itemLastUpdateOlderThen(self.temperatureGardenFC4Item, self.now.minusMinutes(360) ):
@@ -939,9 +946,6 @@ class Heating(object):
         heatingRequested = False
         hasChargeLevelDebugInfos = False
         
-        _forcedHeatings = getItemState(Heating.forcedStatesItem).toString()
-        _forcedHeatings = {} if _forcedHeatings == "NULL" else json.loads(_forcedHeatings)
-        
         for room in filter( lambda room: room.getHeatingVolume() != None,Heating.rooms):
             
             # CLEAN CHARGE LEVEL
@@ -966,8 +970,8 @@ class Heating(object):
 
             rhs = None
             # *** CLEAN OR RESTORE FORCED HEATING ***
-            if room.getName() in _forcedHeatings:
-                fh = _forcedHeatings[room.getName()]
+            if room.getName() in Heating._forcedHeatings:
+                fh = Heating._forcedHeatings[room.getName()]
                 rhs = fh['rhs']
 
                 if fh['energy'] != None:
@@ -981,7 +985,7 @@ class Heating(object):
                         neededEnergy = fh['energy'] - rs.getChargedBuffer()
                         neededTime = self.calculateHeatingDemandTime(neededEnergy,rs.getActivePossibleSaldo()) if neededEnergy > 0 else -1                    
                 else:
-                    demandStarted = ZonedDateTime.ofInstant(Instant.ofEpochMilli(fh['since']),ZoneId.systemDefault())
+                    demandStarted = fh['since']
                     # CF heating should not take longer than two time more then expected
                     # Check is needed
                     # - because the operation mode can flip between "Heizen mit WWW" and "Reduziert". So we will never reach needed runtime
@@ -994,7 +998,7 @@ class Heating(object):
                         while  currentTime.isAfter( demandStarted ):
                             currentItemEntry = getHistoricItemEntry("pGF_Utilityroom_Heating_Operating_Mode", currentTime)
                             # mode is "Heizen mit WW"
-                            if currentItemEntry.getState().getState().intValue() == 2:
+                            if currentItemEntry.getState().intValue() == 2:
                                 runTime += ChronoUnit.SECONDS.between( currentItemEntry.getTimestamp(), currentTime )
                             currentTime = currentItemEntry.getTimestamp().minusNanos(1)
                             
@@ -1002,7 +1006,7 @@ class Heating(object):
                         neededTime = ( fh['time'] - runTime )
 
                 if neededTime < 0:
-                    del _forcedHeatings[room.getName()]
+                    del Heating._forcedHeatings[room.getName()]
                     rhs = None
                 else:
                     rhs.setHeatingDemandEnergy(neededEnergy)
@@ -1084,14 +1088,12 @@ class Heating(object):
         if heatingRequested:
             for room in filter( lambda room: room.getHeatingVolume() != None,Heating.rooms):
                 rhs = hhs.getHeatingState(room.getName())
-                if rhs.getForcedInfo() != None and room.getName() not in _forcedHeatings:
-                    #_forcedHeatings[room.getName()] = [ rhs, rs.getChargedBuffer() + rhs.getHeatingDemandEnergy() ]
-                    _forcedHeatings[room.getName()] = { 'rhs': rhs, 'energy': rhs.getHeatingDemandEnergy(), 'time': rhs.getHeatingDemandTime(), 'since': self.now.toInstant().toEpochMilli() }
+                if rhs.getForcedInfo() != None and room.getName() not in Heating._forcedHeatings:
+                    #Heating._forcedHeatings[room.getName()] = [ rhs, rs.getChargedBuffer() + rhs.getHeatingDemandEnergy() ]
+                    Heating._forcedHeatings[room.getName()] = { 'rhs': rhs, 'energy': rhs.getHeatingDemandEnergy(), 'time': rhs.getHeatingDemandTime(), 'since': self.now }
 
         hhs.setHeatingRequested(heatingRequested)
 
         Heating.lastRuntime = self.now
-            
-        postUpdateIfChanged(Heating.forcedStatesItem,json.dumps(_forcedHeatings))
 
         return cr, cr4, cr8, hhs

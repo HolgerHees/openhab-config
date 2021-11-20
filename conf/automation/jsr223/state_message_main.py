@@ -7,7 +7,8 @@ from java.time import ZonedDateTime
 class StateMessageMainRule:
     def __init__(self):
         self.triggers = [
-            CronTrigger("0 */5 * * * ?"),
+            #CronTrigger("0 */5 * * * ?"),
+            CronTrigger("*/15 * * * * ?"),
             ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_State_Message"),
             ItemStateChangeTrigger("pGF_Utilityroom_Heating_State_Message"),
             ItemStateChangeTrigger("pGF_Garage_Solar_Inverter_Is_Working"),
@@ -19,8 +20,11 @@ class StateMessageMainRule:
         active = []
         group = "Fehler"
 
-        if getItemState("pGF_Utilityroom_Ventilation_State_Message").toString() != "Alles ok":
-            if getItemState("pGF_Utilityroom_Ventilation_State_Message") == "Filter:":
+        self.log.info(getItemState("pGF_Utilityroom_Ventilation_State_Message").toString())
+        
+        ventilation_state = getItemState("pGF_Utilityroom_Ventilation_State_Message").toString()
+        if ventilation_state != "Alles ok":
+            if ventilation_state == "Filter":
                 active.append(u"Filter")
             else:
                 active.append(u"Lüftung")

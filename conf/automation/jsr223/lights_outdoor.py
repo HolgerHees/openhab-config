@@ -28,7 +28,7 @@ class MotiondetectorOutdoorSwitchRule:
     def execute(self, module, input):
         global ruleTimeouts
         now = ZonedDateTime.now()
-        last = ruleTimeouts.get("Motiondetector_Outdoor_Main_Switch",0)
+        last = ruleTimeouts.get("Motiondetector_Outdoor_Main_Switch",ZonedDateTime.now().minusHours(1))
         
         if ChronoUnit.SECONDS.between(last,now) > 1:
             itemState = input["event"].getItemState()
@@ -106,7 +106,7 @@ class LightOutdoorControlRule:
         
         global ruleTimeouts
         now = ZonedDateTime.now()
-        last = ruleTimeouts.get("Light_Outdoor",0)
+        last = ruleTimeouts.get("Light_Outdoor",ZonedDateTime.now().minusHours(1))
         
         # No Motion Detector related events
         if ChronoUnit.SECONDS.between(last,now) > 1:

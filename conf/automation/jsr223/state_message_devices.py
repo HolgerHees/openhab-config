@@ -10,8 +10,9 @@ class StateMessageDevicesRule:
             ItemStateChangeTrigger("pOther_State_Message_Robot"),
             ItemStateChangeTrigger("pOther_State_Message_Homeconnect")
         ]
-
-    def execute(self, module, input):
+        self.check()
+        
+    def check(self):
         active = []
         
         if getItemState("pOther_State_Message_Robot").toString() != "Alles ok":
@@ -31,4 +32,7 @@ class StateMessageDevicesRule:
             # don't notify robots, because they are already notified seperatly
             if msg not in ["Roboter","Alles ok"] or oldMsg not in ["Roboter","Alles ok"]:
                 sendNotificationToAllAdmins(u"Geräte", msg)
+
+    def execute(self, module, input):
+        self.check()
 

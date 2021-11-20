@@ -6,6 +6,8 @@ from shared.triggers import CronTrigger, ItemCommandTrigger, ItemStateChangeTrig
 
 from custom.presence import PresenceHelper
 
+from org.openhab.core.types import UnDefType
+
 
 autoChangeInProgress = False
 
@@ -24,6 +26,10 @@ class VentilationStateMessageRule:
 
     def delayUpdate(self):
         active = []
+        
+        if isinstance(getItemState("pGF_Utilityroom_Ventilation_Filter_Error"), UnDefType) \
+            or isinstance(getItemState("pGF_Utilityroom_Ventilation_Error_Message"), UnDefType):
+                return
 
         if getItemState("pGF_Utilityroom_Ventilation_Filter_Error") == ON:
             active.append(u"Filter")
@@ -85,6 +91,11 @@ class VentilationEfficiencyRule:
         efficiency = 0
 
         if getItemState("pGF_Utilityroom_Ventilation_Bypass") == OFF:
+            if isinstance(getItemState("pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature"), UnDefType) \
+              or isinstance(getItemState("pGF_Utilityroom_Ventilation_Indoor_Outgoing_Temperature"), UnDefType) \
+              or isinstance(getItemState("pGF_Utilityroom_Ventilation_Indoor_Incoming_Temperature"), UnDefType):
+                  return
+                
             tempOutIn = getItemState("pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature").doubleValue()
             tempInOut = getItemState("pGF_Utilityroom_Ventilation_Indoor_Outgoing_Temperature").doubleValue()
             tempInIn = getItemState("pGF_Utilityroom_Ventilation_Indoor_Incoming_Temperature").doubleValue()
@@ -110,7 +121,10 @@ class FilterRuntimeRule:
         self.triggers = [ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Filter_Runtime")]
 
     def execute(self, module, input):
-        laufzeit = getItemState("pGF_Utilityroom_Ventilation_Filter_Runtime").doubleValue()
+        if isinstance(input['event'].getItemState(), UnDefType):
+            return
+      
+        laufzeit = input['event'].getItemState().doubleValue()
 
         weeks = int(math.floor(laufzeit / 168.0))
         days = int(math.floor((laufzeit - (weeks * 168.0)) / 24))
@@ -142,6 +156,10 @@ class FilterOutdoorTemperatureMessageRule:
         self.updateTimer = None
 
     def delayUpdate(self):
+        if isinstance(getItemState("pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature"), UnDefType) \
+            or isinstance(getItemState("pGF_Utilityroom_Ventilation_Outdoor_Outgoing_Temperature"), UnDefType):
+                return
+
         msg = u"→ {}°C, ← {}°C".format(getItemState("pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature").format("%.1f"),getItemState("pGF_Utilityroom_Ventilation_Outdoor_Outgoing_Temperature").format("%.1f"))
         postUpdateIfChanged("pGF_Utilityroom_Ventilation_Outdoor_Temperature_Message", msg)
         
@@ -160,6 +178,10 @@ class FilterIndoorTemperatureMessageRule:
         self.updateTimer = None
 
     def delayUpdate(self):
+        if isinstance(getItemState("pGF_Utilityroom_Ventilation_Indoor_Incoming_Temperature"), UnDefType) \
+            or isinstance(getItemState("pGF_Utilityroom_Ventilation_Indoor_Outgoing_Temperature"), UnDefType):
+                return
+
         msg = u"→ {}°C, ← {}°C".format(getItemState("pGF_Utilityroom_Ventilation_Indoor_Incoming_Temperature").format("%.1f"),getItemState("pGF_Utilityroom_Ventilation_Indoor_Outgoing_Temperature").format("%.1f"))
         postUpdateIfChanged("pGF_Utilityroom_Ventilation_Indoor_Temperature_Message", msg)
         
@@ -179,6 +201,10 @@ class FilterVentilationMessageRule:
         self.updateTimer = None
 
     def delayUpdate(self):
+        if isinstance(getItemState("pGF_Utilityroom_Ventilation_Incoming"), UnDefType) \
+            or isinstance(getItemState("pGF_Utilityroom_Ventilation_Outgoing"), UnDefType):
+                return
+
         msg = u"→ {}%, ← {}%".format(getItemState("pGF_Utilityroom_Ventilation_Incoming").toString(),getItemState("pGF_Utilityroom_Ventilation_Outgoing").toString())
         postUpdateIfChanged("pGF_Utilityroom_Ventilation_Fan_Message", msg)
         
@@ -213,8 +239,12 @@ class FilterFanLevelRule:
         if getItemState("pGF_Utilityroom_Ventilation_Auto_Mode") == OFF:
             return
 
-        currentLevel = getItemState("pGF_Utilityroom_Ventilation_Fan_Level").intValue()
+        if isinstance(getItemState("pGF_Utilityroom_Ventilation_Fan_Level"), UnDefType) \
+          or isinstance(getItemState("pGF_Utilityroom_Ventilation_Comfort_Temperature"), UnDefType):
+            return
 
+        currentLevel = getItemState("pGF_Utilityroom_Ventilation_Fan_Level").intValue()
+        
         raumTemperatur = getItemState("pGF_Livingroom_Air_Sensor_Temperature_Value").doubleValue()
         zielTemperatur = getItemState("pGF_Utilityroom_Ventilation_Comfort_Temperature").doubleValue
         

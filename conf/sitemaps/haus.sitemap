@@ -700,7 +700,7 @@ sitemap haus label="Main Menu"
                 }
             }
         }
-		Group label="Technik [%s]" icon="selfhouse" item=pOther_State_Message_Main valuecolor=[=="Alles ok"="#6bc305",=="Lüftung"="#cbcb00",!="Alles ok"="#d72a2a"]
+		Group label="Technik [%s]" icon="selfhouse" item=pOther_State_Message_Main valuecolor=[=="Alles ok"="#6bc305",=="Filter"="#cbcb00",!="Alles ok"="#d72a2a"]
 		{
             Frame label="Technik" {
                 Group item=pGF_Utilityroom_Ventilation_Fan_Level label="Lüftung [MAP(level_de.map):%d]" icon="selfairing" {
