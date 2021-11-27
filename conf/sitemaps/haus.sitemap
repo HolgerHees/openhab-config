@@ -972,6 +972,8 @@ sitemap haus label="Main Menu"
                         Switch item=pMobile_Socket_2_Powered label="Steckdose 2"
                         Switch item=pMobile_Socket_3_Powered label="Steckdose 3"
                         Switch item=pMobile_Socket_4_Powered label="Steckdose 4"
+                        Switch item=pMobile_Socket_5_Powered label="Steckdose 5"
+                        Text item=pMobile_Socket_5_Consumption label="Steckdose 5"
                     }
                 }
             }

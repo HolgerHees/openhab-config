@@ -12,7 +12,7 @@ from org.openhab.core.types import UnDefType
 autoChangeInProgress = False
 
 DELAYED_UPDATE_TIMEOUT = 3
-
+ 
 @rule("ventilation_control.py")
 class VentilationStateMessageRule:
     def __init__(self):
@@ -23,6 +23,8 @@ class VentilationStateMessageRule:
             ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Thing_State")
         ]
         self.updateTimer = None
+        
+        self.delayUpdate()
 
     def delayUpdate(self):
         active = []

@@ -73,7 +73,7 @@ class Tests:
  
                 log.info(u"\n\n{}\n\n".format(msg))
                 raise Exception("Wrong detection")
-
+ 
 @rule("voice_command.py")
 class VoiceCommandRule:
     def __init__(self):
@@ -96,7 +96,7 @@ class VoiceCommandRule:
             voice_command, client_id = self.processor.parseData(input['event'].getItemState().toString())
             fallback_location_name = AlexaDevices[client_id] if client_id in AlexaDevices else None
 
-            self.log.info(u"Process: '{}', Location: '{}'".format(voice_command, fallback_location_name))
+            self.log.info(u"Process: '{}', Location: '{}'".format(voice_command, client_id if fallback_location_name is None else fallback_location_name))
 
             actions = self.processor.process(voice_command, fallback_location_name)
 

@@ -49,3 +49,7 @@ Switch pMobile_Socket_3_Powered                "Mobile 3"           <selfsocket>
 
 Group  eMobile_Socket_4                        "Mobile 4"           <selfsocket> (lIndoor) ["PowerOutlet"]
 Switch pMobile_Socket_4_Powered                "Mobile 4"           <selfsocket> (eMobile_Socket_4,gAll_Sockets) ["Switch","Power"]              { channel="hue:0010:default:socket4:switch" }
+
+Group  eMobile_Socket_5                        "Mobile 5"           <selfsocket> (lIndoor) ["PowerOutlet"]
+Switch pMobile_Socket_5_Powered                "Mobile 5"           <selfsocket> (eMobile_Socket_5,gAll_Sockets) ["Switch","Power"]              { channel="shelly:shellyplug:socket1:relay#output" }
+Number pMobile_Socket_5_Consumption	           "Mobile 5 Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_5,gAll_Sockets) ["Messurement","Power"]  { channel="shelly:shellyplug:socket1:meter#currentWatts" }
