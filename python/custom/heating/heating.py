@@ -384,7 +384,7 @@ class Heating(object):
         # Wakeup
         if _isMorning:
             # Monday - Friday
-            if not _holidaysActive and day <= 5:
+            if not _holidaysActive and day.getValue() <= 5:
                 if hour < 5:
                 #if hour < 5 or ( hour == 5 and minute <= 30 ):
                     _nightModeActive = True
@@ -396,7 +396,7 @@ class Heating(object):
         # Evening
         else:
             # Monday - Thursday and Sunday
-            if not _holidaysActive and day <= 4 or day == 7:
+            if not _holidaysActive and day.getValue() <= 4 or day.getValue() == 7:
                 if hour >= 22:
                 #if hour >= 23 or ( hour == 22 and minute >= 30 ):
                     _nightModeActive = True
@@ -1012,7 +1012,7 @@ class Heating(object):
                     rhs.setHeatingDemandEnergy(neededEnergy)
                     rhs.setHeatingDemandTime(neededTime)
                     hhs.setHeatingState(room.getName(),rhs)
-                
+                                
             if rhs == None:
                 # *** OUTDOOR REDUCTION ***
                 outdoorReduction = self.calculateOutdoorReduction(rs.getPassiveSaldo(),rs4.getPassiveSaldo(),rs8.getPassiveSaldo())
