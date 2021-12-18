@@ -525,7 +525,7 @@ sitemap haus label="Main Menu"
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/custom/grafana/temperatures_eg.html?fromItem=Chart_From" icon="none" height=18
+                        Webview url="/static/custom/grafana/temperatures_eg.html?fromItem=Chart_From" icon="none" height=27
                     }
                 }
                 Group item=pFF_Bedroom_Air_Sensor_Message label="OG [%s]"{
