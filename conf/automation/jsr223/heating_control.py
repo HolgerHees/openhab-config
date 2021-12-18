@@ -16,11 +16,11 @@ OFFSET_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")
 #postUpdate("pGF_Utilityroom_Heating_Demand",OFF)
 #postUpdate("pGF_Guesttoilet_Heating_Demand",OFF)
 #postUpdate("pGF_Livingroom_Heating_Demand",OFF)
-#postUpdate("pGF_Guestroom_Heating_Demand",OFF)
+#postUpdate("pGF_Workroom_Heating_Demand",OFF)
 #postUpdate("pGF_Corridor_Heating_Demand",OFF)
 #postUpdate("pFF_Corridor_Heating_Demand",OFF)
-#postUpdate("pFF_Child1_Heating_Demand",OFF)
-#postUpdate("pFF_Child2_Heating_Demand",OFF)
+#postUpdate("pFF_Fitnessroom_Heating_Demand",OFF)
+#postUpdate("pFF_Makeuproom_Heating_Demand",OFF)
 #postUpdate("pFF_Bedroom_Heating_Demand",OFF)
 #postUpdate("pFF_Bathroom_Heating_Demand",OFF)
 
@@ -161,13 +161,13 @@ rooms = [
             # Livingroom
             Wall(direction='floor', area=42.4732875, type=_groundFloor),
             Wall(direction='ceiling', area=16.3125, type=_groundCeiling, bound="lFF_Bedroom"),
-            Wall(direction='ceiling', area=17.07625, type=_groundCeiling, bound="lFF_Child2"),
+            Wall(direction='ceiling', area=17.07625, type=_groundCeiling, bound="lFF_Makeuproom"),
             Wall(direction='ceiling', area=9.0845375, type=_groundCeiling, bound="lFF_Corridor"),
             Wall(direction='south', area=3.393775, type=_outer36Wall),
             Wall(direction='west', area=9.292675, type=_outer36Wall),
             Wall(direction='north', area=18.92765, type=_outer36Wall),
             Wall(direction='east', area=7.34725, type=_inner17Wall, bound="lGF_Corridor"),
-            Wall(direction='east', area=10.339175, type=_inner17Wall, bound="lGF_Guestroom"),
+            Wall(direction='east', area=10.339175, type=_inner17Wall, bound="lGF_Workroom"),
             Wall(direction='south', area=6.177675, type=_inner17Wall, bound="lGF_Boxroom")
         ],
         transitions=[
@@ -177,19 +177,19 @@ rooms = [
         ]
     ),
     Room(
-        name='lGF_Guestroom',
+        name='lGF_Workroom',
         heatingVolume=60.19,
         volume=11.53445 * _firstFloorHeight,
         walls=[
             Wall(direction='floor', area=13.5891, type=_groundFloor),
-            Wall(direction='ceiling', area=13.5891, type=_groundCeiling, bound="lFF_Child1"),
+            Wall(direction='ceiling', area=13.5891, type=_groundCeiling, bound="lFF_Fitnessroom"),
             Wall(direction='west', area=10.31765, type=_inner17Wall, bound="lGF_Livingroom"),
             Wall(direction='north', area=10.8486, type=_outer36Wall),
             Wall(direction='east', area=7.9847, type=_outer36Wall),
             Wall(direction='south', area=9.06975, type=_inner17Wall, bound="lGF_Corridor")
         ],
         transitions=[
-            Window(direction='east', area=2.07625, type=_outerWindow, contactItem='pGF_Guestroom_Openingcontact_Window_State', shutterItem='pGF_Guestroom_Shutter_Control', shutterArea=0.2567)
+            Window(direction='east', area=2.07625, type=_outerWindow, contactItem='pGF_Workroom_Openingcontact_Window_State', shutterItem='pGF_Workroom_Shutter_Control', shutterArea=0.2567)
         ]
     ),
     Room(
@@ -200,7 +200,7 @@ rooms = [
             Wall(direction='floor', area=12.9843, type=_groundFloor),
             Wall(direction='ceiling', area=2.0524125, type=_groundCeiling, bound="lFF_Corridor"),
             Wall(direction='west', area=7.0746, type=_inner17Wall, bound="lGF_Livingroom"),
-            Wall(direction='north', area=9.06975, type=_inner17Wall, bound="lGF_Guestroom"),
+            Wall(direction='north', area=9.06975, type=_inner17Wall, bound="lGF_Workroom"),
             # east wall is shared between lower and upper floor
             Wall(direction='east', area=(5.19525+3.435)/2.0, type=_outer36Wall),
             Wall(direction='south', area=3.4949, type=_inner17Wall, bound="lGF_Guesttoilet"),
@@ -222,8 +222,8 @@ rooms = [
             Wall(direction='floor', area=4.61578125, type=_firstFloor, bound="lGF_Corridor"),
             Wall(direction='ceiling', area=14.1436125, type=_firstCeiling, bound="lFF_Attic"),
             Wall(direction='west', area=7.77045, type=_inner11Wall, bound="lFF_Bedroom"),
-            Wall(direction='north', area=8.51865, type=_inner17Wall, bound="lFF_Child1"),
-            Wall(direction='north', area=1.69615, type=_inner17Wall, bound="lFF_Child2"),
+            Wall(direction='north', area=8.51865, type=_inner17Wall, bound="lFF_Fitnessroom"),
+            Wall(direction='north', area=1.69615, type=_inner17Wall, bound="lFF_Makeuproom"),
             # east wall is shared between lower and upper floor
             Wall(direction='east', area=(5.19525+3.435)/2.0, type=_outer36Wall),
             Wall(direction='east', area=8.026, type=_firstSlopingCeiling),
@@ -238,25 +238,25 @@ rooms = [
         ]
     ),
     Room(
-        name='lFF_Child1',
+        name='lFF_Fitnessroom',
         heatingVolume=39.61,
         volume=13.036325 * _secondFloorHeight - 4.6016,
         walls=[
             Wall(direction='floor', area=4.0, type=_firstFloor, bound="lGF_Livingroom"),
-            Wall(direction='floor', area=12.626875, type=_firstFloor, bound="lGF_Guestroom"),
+            Wall(direction='floor', area=12.626875, type=_firstFloor, bound="lGF_Workroom"),
             Wall(direction='ceiling', area=10.3266375, type=_firstCeiling, bound="lFF_Attic"),
-            Wall(direction='west', area=9.9941, type=_inner11Wall, bound="lFF_Child2"),
+            Wall(direction='west', area=9.9941, type=_inner11Wall, bound="lFF_Makeuproom"),
             Wall(direction='north', area=8.1533, type=_outer36Wall),
             Wall(direction='east', area=3.595, type=_outer36Wall),
             Wall(direction='east', area=9.2032, type=_firstSlopingCeiling),
             Wall(direction='south', area=8.51865, type=_inner17Wall, bound="lFF_Corridor")
         ],
         transitions=[
-            Window(direction='north', area=1.8875, type=_outerWindow, contactItem='pFF_Child1_Openingcontact_Window_State', shutterItem='pFF_Child1_Shutter_Control', shutterArea=0.2567)
+            Window(direction='north', area=1.8875, type=_outerWindow, contactItem='pFF_Fitnessroom_Openingcontact_Window_State', shutterItem='pFF_Fitnessroom_Shutter_Control', shutterArea=0.2567)
         ]
     ),
     Room(
-        name='lFF_Child2',
+        name='lFF_Makeuproom',
         heatingVolume=41.32,
         volume=14.99575 * _secondFloorHeight - 4.6016,
         walls=[
@@ -265,12 +265,12 @@ rooms = [
             Wall(direction='west', area=3.595, type=_outer36Wall),
             Wall(direction='west', area=9.2032, type=_firstSlopingCeiling),
             Wall(direction='north', area=8.5008, type=_outer36Wall),
-            Wall(direction='east', area=9.9941, type=_inner11Wall, bound="lFF_Child1"),
+            Wall(direction='east', area=9.9941, type=_inner11Wall, bound="lFF_Fitnessroom"),
             Wall(direction='south', area=7.17, type=_inner17Wall, bound="lFF_Bedroom"),
             Wall(direction='south', area=1.69615, type=_inner17Wall, bound="lFF_Corridor")
         ],
         transitions=[
-            Window(direction='north', area=1.8875, type=_outerWindow, contactItem='pFF_Child2_Openingcontact_Window_State', shutterItem='pFF_Child2_Shutter_Control', shutterArea=0.2567)
+            Window(direction='north', area=1.8875, type=_outerWindow, contactItem='pFF_Makeuproom_Openingcontact_Window_State', shutterItem='pFF_Makeuproom_Shutter_Control', shutterArea=0.2567)
         ]
     ),
     Room(
@@ -282,7 +282,7 @@ rooms = [
             Wall(direction='floor', area=16.3125, type=_firstFloor, bound="lGF_Livingroom"),
             Wall(direction='ceiling', area=16.3125, type=_firstCeiling, bound="lFF_Attic"),
             Wall(direction='west', area=5.9851, type=_outer36Wall),
-            Wall(direction='north', area=12.51, type=_inner17Wall, bound="lFF_Child2"),
+            Wall(direction='north', area=12.51, type=_inner17Wall, bound="lFF_Makeuproom"),
             Wall(direction='east', area=8.03455, type=_inner11Wall, bound="lFF_Corridor"),
             Wall(direction='south', area=3.28735, type=_outer36Wall),
             Wall(direction='south', area=0.5, type=_firstSlopingCeiling),
@@ -361,11 +361,11 @@ Heating.init(rooms)
 controllableRooms = {
   'lGF_Livingroom': True,
   'lGF_Corridor': True,
-  'lGF_Guestroom': True,
+  'lGF_Workroom': True,
   'lGF_Guesttoilet': True,
   'lFF_Corridor': True,
-  'lFF_Child1': True,
-  'lFF_Child2': True,
+  'lFF_Fitnessroom': True,
+  'lFF_Makeuproom': True,
   'lFF_Bedroom': True,
   'lFF_Bathroom': True
 }

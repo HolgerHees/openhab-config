@@ -78,8 +78,8 @@ Color  pGF_Livingroom_Light_Hue5_Color          "Farbe"      <colorwheel> (eGF_L
 Dimmer pGF_Livingroom_Light_Hue5_Temperature    "Farbtemperatur" <selflight> (eGF_Livingroom_Light_Hue5)                                ["Setpoint","ColorTemperature"] { channel="hue:0210:default:strip1:color_temperature"}
 
 // **** GF GUESTROOM ****
-Group  eGF_Guestroom_Light_Ceiling              "Deckenlampe"        <selflight> (lGF_Guestroom)                                        ["Lightbulb"] { synonyms="Decke" }
-Switch pGF_Guestroom_Light_Ceiling_Powered      "Deckenlicht"        <selflight> (eGF_Guestroom_Light_Ceiling,gIndoor_Lights,gGF_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_ff:guestroomCeiling" }
+Group  eGF_Workroom_Light_Ceiling              "Deckenlampe"        <selflight> (lGF_Workroom)                                        ["Lightbulb"] { synonyms="Decke" }
+Switch pGF_Workroom_Light_Ceiling_Powered      "Deckenlicht"        <selflight> (eGF_Workroom_Light_Ceiling,gIndoor_Lights,gGF_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_ff:guestroomCeiling" }
 
 // **** GF GARAGE ****
 Group  eGF_Garage_Light_Ceiling                 "Deckenlampe"        <selflight> (lGF_Garage)                                           ["Lightbulb"] { synonyms="Decke" }
@@ -119,12 +119,12 @@ Group  eFF_Dressingroom_Light_Ceiling           "Deckenlampe"        <selflight>
 Switch pFF_Dressingroom_Light_Ceiling_Powered   "Deckenlicht"        <selflight> (eFF_Dressingroom_Light_Ceiling,gIndoor_Lights,gFF_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_sf:dressingroomCeiling" }
 
 // **** FF CHILD 1 ****
-Group  eFF_Child1_Light_Ceiling                 "Deckenlampe"        <selflight> (lFF_Child1)                                           ["Lightbulb"] { synonyms="Decke" }
-Switch pFF_Child1_Light_Ceiling_Powered         "Deckenlicht"        <selflight> (eFF_Child1_Light_Ceiling,gIndoor_Lights,gFF_Lights)   ["Switch","Light"] { channel="knx:device:bridge:lights_sf:child1Ceiling" }
+Group  eFF_Fitnessroom_Light_Ceiling                 "Deckenlampe"        <selflight> (lFF_Fitnessroom)                                           ["Lightbulb"] { synonyms="Decke" }
+Switch pFF_Fitnessroom_Light_Ceiling_Powered         "Deckenlicht"        <selflight> (eFF_Fitnessroom_Light_Ceiling,gIndoor_Lights,gFF_Lights)   ["Switch","Light"] { channel="knx:device:bridge:lights_sf:child1Ceiling" }
 
 // **** FF CHILD 2 ****
-Group  eFF_Child2_Light_Ceiling                 "Deckenlampe"        <selflight> (lFF_Child2)                                           ["Lightbulb"] { synonyms="Decke" }
-Switch pFF_Child2_Light_Ceiling_Powered         "Deckenlicht"        <selflight> (eFF_Child2_Light_Ceiling,gIndoor_Lights,gFF_Lights)   ["Switch","Light"] { channel="knx:device:bridge:lights_sf:child2Ceiling" }
+Group  eFF_Makeuproom_Light_Ceiling                 "Deckenlampe"        <selflight> (lFF_Makeuproom)                                           ["Lightbulb"] { synonyms="Decke" }
+Switch pFF_Makeuproom_Light_Ceiling_Powered         "Deckenlicht"        <selflight> (eFF_Makeuproom_Light_Ceiling,gIndoor_Lights,gFF_Lights)   ["Switch","Light"] { channel="knx:device:bridge:lights_sf:child2Ceiling" }
 
 // **** FF ATTIC ****
 Group  eFF_Attic_Light_Ceiling                  "Deckenlampe"        <selflight> (lFF_Attic)                                               ["Lightbulb"] { synonyms="Decke" }

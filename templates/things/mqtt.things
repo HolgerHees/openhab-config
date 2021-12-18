@@ -66,6 +66,9 @@ Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
         Type number : uvA "UV A" [ stateTopic="mysensors-pub-1/1/13/#" ]
         Type number : uvB "UV B" [ stateTopic="mysensors-pub-1/1/14/#" ]
     }
+    Thing topic co2sensor "CO2 Sensor" @ "Geräte" {
+        Type number : boxroom "Kammer" [ stateTopic="co2sensor/kammer" ]
+    }
     Thing topic roomba "Roomba" @ "Geräte" {
         //Type string : command "Command" [ commandTopic="/roomba/command:command:*:${command}" ]
         Type switch : carpetBoost "Auto carpet Boost" [ stateTopic="/roomba/setting:command:ON:carpetBoost", transformationPattern="MAP:roomba_switch.map" ]

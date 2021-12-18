@@ -5,15 +5,15 @@ from java.time import ZonedDateTime
 sensorItems = [
     "pGF_Livingroom_Air_Sensor_Temperature_Value",
     "pGF_Boxroom_Air_Sensor_Temperature_Value",
-    "pGF_Guestroom_Air_Sensor_Temperature_Value",
+    "pGF_Workroom_Air_Sensor_Temperature_Value",
     "pGF_Guesttoilet_Air_Sensor_Temperature_Value",
     "pGF_Corridor_Air_Sensor_Temperature_Value",
     "pGF_Utilityroom_Air_Sensor_Temperature_Value",
     "pGF_Garage_Air_Sensor_Temperature_Value",
     "pFF_Bedroom_Air_Sensor_Temperature_Value",
     "pFF_Dressingroom_Air_Sensor_Temperature_Value",
-    "pFF_Child1_Air_Sensor_Temperature_Value",
-    "pFF_Child2_Air_Sensor_Temperature_Value",
+    "pFF_Fitnessroom_Air_Sensor_Temperature_Value",
+    "pFF_Makeuproom_Air_Sensor_Temperature_Value",
     "pFF_Bathroom_Air_Sensor_Temperature_Value",
     "pFF_Corridor_Air_Sensor_Temperature_Value",
     "pFF_Attic_Air_Sensor_Temperature_Value"
@@ -37,6 +37,13 @@ class StateMessageSensorsRule:
         if getItemState("pOutdoor_WeatherStation_Is_Working") == OFF:
             active.append(u"Wetter")
             
+        if getItemState("pGF_Boxroom_Air_Sensor_CO2_Value").intValue() > 1500:
+            active.append(u"CO2 Wert")
+
+        refDate = ZonedDateTime.now().minusMinutes(15)
+        if itemLastUpdateOlderThen("pGF_Boxroom_Air_Sensor_CO2_Value", refDate):
+            active.append(u"CO2 Sensor")
+
         if getItemState("pIndoor_Plant_Sensor_Main_Info").toString() != 'Alles ok':
             active.append(getItemState("pIndoor_Plant_Sensor_Main_Info").toString())
 

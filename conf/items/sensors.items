@@ -19,6 +19,7 @@ Number pGF_Boxroom_Air_Sensor_Temperature_Value     "Temperatur [%.1f °C]"  <se
 Number pGF_Boxroom_Air_Sensor_Humidity_Raw                                                    (eGF_Boxroom_Air_Sensor) { channel="knx:device:bridge:sensors_ff:humidityBoxroom" }
 Number pGF_Boxroom_Air_Sensor_Humidity_Value        "Luftfeuchtigkeit [%.1f %%]" <chart>      (eGF_Boxroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
 String pGF_Boxroom_Air_Sensor_Message               "Luft [%s]"             <selftemperature> (eGF_Boxroom_Air_Sensor)
+Number pGF_Boxroom_Air_Sensor_CO2_Value             "CO2 [%d ppm]"          <chart>           (eGF_Boxroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"] {channel="mqtt:topic:mosquitto:co2sensor:boxroom" }
 
 Group  eGF_Livingroom_Air_Sensor                    "Luftsensor"            <selfinfo>        (lGF_Livingroom) ["Sensor"]
 Number pGF_Livingroom_Air_Sensor_Temperature_Raw                                              (eGF_Livingroom_Air_Sensor) { channel="knx:device:bridge:sensors_ff:temperatureLivingroom" }
@@ -27,12 +28,12 @@ Number pGF_Livingroom_Air_Sensor_Humidity_Raw                                   
 Number pGF_Livingroom_Air_Sensor_Humidity_Value     "Luftfeuchtigkeit [%.1f %%]" <chart>      (eGF_Livingroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
 String pGF_Livingroom_Air_Sensor_Message            "Luft [%s]"             <selftemperature> (eGF_Livingroom_Air_Sensor)
 
-Group  eGF_Guestroom_Air_Sensor                     "Luftsensor"            <selfinfo>        (lGF_Guestroom) ["Sensor"]
-Number pGF_Guestroom_Air_Sensor_Temperature_Raw                                               (eGF_Guestroom_Air_Sensor) { channel="knx:device:bridge:sensors_ff:temperatureGuestroom" }
-Number pGF_Guestroom_Air_Sensor_Temperature_Value   "Temperatur [%.1f °C]"  <selftemperature> (eGF_Guestroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Temperature"]
-Number pGF_Guestroom_Air_Sensor_Humidity_Raw                                                  (eGF_Guestroom_Air_Sensor) { channel="knx:device:bridge:sensors_ff:humidityGuestroom" }
-Number pGF_Guestroom_Air_Sensor_Humidity_Value      "Luftfeuchtigkeit [%.1f %%]" <chart>      (eGF_Guestroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
-String pGF_Guestroom_Air_Sensor_Message             "Luft [%s]"             <selftemperature> (eGF_Guestroom_Air_Sensor)
+Group  eGF_Workroom_Air_Sensor                     "Luftsensor"            <selfinfo>        (lGF_Workroom) ["Sensor"]
+Number pGF_Workroom_Air_Sensor_Temperature_Raw                                               (eGF_Workroom_Air_Sensor) { channel="knx:device:bridge:sensors_ff:temperatureGuestroom" }
+Number pGF_Workroom_Air_Sensor_Temperature_Value   "Temperatur [%.1f °C]"  <selftemperature> (eGF_Workroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Temperature"]
+Number pGF_Workroom_Air_Sensor_Humidity_Raw                                                  (eGF_Workroom_Air_Sensor) { channel="knx:device:bridge:sensors_ff:humidityGuestroom" }
+Number pGF_Workroom_Air_Sensor_Humidity_Value      "Luftfeuchtigkeit [%.1f %%]" <chart>      (eGF_Workroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
+String pGF_Workroom_Air_Sensor_Message             "Luft [%s]"             <selftemperature> (eGF_Workroom_Air_Sensor)
 
 Group  eGF_Corridor_Air_Sensor                      "Luftsensor"            <selfinfo>        (lGF_Corridor) ["Sensor"]
 Number pGF_Corridor_Air_Sensor_Temperature_Raw                                                (eGF_Corridor_Air_Sensor) { channel="knx:device:bridge:sensors_ff:temperatureFloor" }
@@ -69,19 +70,19 @@ Number pFF_Bedroom_Air_Sensor_Humidity_Raw                                      
 Number pFF_Bedroom_Air_Sensor_Humidity_Value        "Luftfeuchtigkeit [%.1f %%]" <chart>      (eFF_Bedroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
 String pFF_Bedroom_Air_Sensor_Message               "Luft [%s]"             <selftemperature> (eFF_Bedroom_Air_Sensor)
 
-Group  eFF_Child1_Air_Sensor                        "Luftsensor"            <selfinfo>        (lFF_Child1) ["Sensor"]
-Number pFF_Child1_Air_Sensor_Temperature_Raw                                                  (eFF_Child1_Air_Sensor) { channel="knx:device:bridge:sensors_sf:temperatureChild1" }
-Number pFF_Child1_Air_Sensor_Temperature_Value      "Temperatur [%.1f °C]"  <selftemperature> (eFF_Child1_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Temperature"]
-Number pFF_Child1_Air_Sensor_Humidity_Raw                                                     (eFF_Child1_Air_Sensor) { channel="knx:device:bridge:sensors_sf:humidityChild1" }
-Number pFF_Child1_Air_Sensor_Humidity_Value         "Luftfeuchtigkeit [%.1f %%]" <chart>      (eFF_Child1_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
-String pFF_Child1_Air_Sensor_Message                "Luft [%s]"             <selftemperature> (eFF_Child1_Air_Sensor)
+Group  eFF_Fitnessroom_Air_Sensor                        "Luftsensor"            <selfinfo>        (lFF_Fitnessroom) ["Sensor"]
+Number pFF_Fitnessroom_Air_Sensor_Temperature_Raw                                                  (eFF_Fitnessroom_Air_Sensor) { channel="knx:device:bridge:sensors_sf:temperatureChild1" }
+Number pFF_Fitnessroom_Air_Sensor_Temperature_Value      "Temperatur [%.1f °C]"  <selftemperature> (eFF_Fitnessroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Temperature"]
+Number pFF_Fitnessroom_Air_Sensor_Humidity_Raw                                                     (eFF_Fitnessroom_Air_Sensor) { channel="knx:device:bridge:sensors_sf:humidityChild1" }
+Number pFF_Fitnessroom_Air_Sensor_Humidity_Value         "Luftfeuchtigkeit [%.1f %%]" <chart>      (eFF_Fitnessroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
+String pFF_Fitnessroom_Air_Sensor_Message                "Luft [%s]"             <selftemperature> (eFF_Fitnessroom_Air_Sensor)
 
-Group  eFF_Child2_Air_Sensor                        "Luftsensor"            <selfinfo>        (lFF_Child2) ["Sensor"]
-Number pFF_Child2_Air_Sensor_Temperature_Raw                                                  (eFF_Child2_Air_Sensor) { channel="knx:device:bridge:sensors_sf:temperatureChild2" }
-Number pFF_Child2_Air_Sensor_Temperature_Value      "Temperatur [%.1f °C]"  <selftemperature> (eFF_Child2_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Temperature"]
-Number pFF_Child2_Air_Sensor_Humidity_Raw                                                     (eFF_Child2_Air_Sensor) { channel="knx:device:bridge:sensors_sf:humidityChild2" }
-Number pFF_Child2_Air_Sensor_Humidity_Value         "Luftfeuchtigkeit [%.1f %%]" <chart>      (eFF_Child2_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
-String pFF_Child2_Air_Sensor_Message                "Luft [%s]"             <selftemperature> (eFF_Child2_Air_Sensor)
+Group  eFF_Makeuproom_Air_Sensor                        "Luftsensor"            <selfinfo>        (lFF_Makeuproom) ["Sensor"]
+Number pFF_Makeuproom_Air_Sensor_Temperature_Raw                                                  (eFF_Makeuproom_Air_Sensor) { channel="knx:device:bridge:sensors_sf:temperatureChild2" }
+Number pFF_Makeuproom_Air_Sensor_Temperature_Value      "Temperatur [%.1f °C]"  <selftemperature> (eFF_Makeuproom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Temperature"]
+Number pFF_Makeuproom_Air_Sensor_Humidity_Raw                                                     (eFF_Makeuproom_Air_Sensor) { channel="knx:device:bridge:sensors_sf:humidityChild2" }
+Number pFF_Makeuproom_Air_Sensor_Humidity_Value         "Luftfeuchtigkeit [%.1f %%]" <chart>      (eFF_Makeuproom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
+String pFF_Makeuproom_Air_Sensor_Message                "Luft [%s]"             <selftemperature> (eFF_Makeuproom_Air_Sensor)
 
 Group  eFF_Corridor_Air_Sensor                      "Luftsensor"            <selfinfo>        (lFF_Corridor) ["Sensor"]
 Number pFF_Corridor_Air_Sensor_Temperature_Raw                                                (eFF_Corridor_Air_Sensor) { channel="knx:device:bridge:sensors_sf:temperatureFloor" }

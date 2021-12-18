@@ -39,7 +39,7 @@ sitemap haus label="Main Menu"
 						Switch item=pGF_Corridor_Light_Mirror_Powered label="Flur Spiegel"
 						Slider item=pGF_Corridor_Light_Hue_Color label="Flur Indirekt"
 						Colorpicker item=pGF_Corridor_Light_Hue_Color visibility=[pGF_Corridor_Light_Hue_Color>0]
-						Switch item=pGF_Guestroom_Light_Ceiling_Powered label="Gästezimmer"
+						Switch item=pGF_Workroom_Light_Ceiling_Powered label="Büro"
 						Switch item=pGF_Guesttoilet_Light_Ceiling_Powered label="Gäste WC"
 						Switch item=pGF_Guesttoilet_Light_Mirror_Powered label="Gäste WC Spiegel"
 						Switch item=pGF_Boxroom_Light_Ceiling_Powered label="Abstellkammer"
@@ -61,8 +61,8 @@ sitemap haus label="Main Menu"
 					}
 					Frame label="Sonstiges" {
 						Switch item=pFF_Corridor_Light_Ceiling_Powered label="Flur oben"
-						Switch item=pFF_Child1_Light_Ceiling_Powered label="Kind 1"
-						Switch item=pFF_Child2_Light_Ceiling_Powered label="Kind 2"
+						Switch item=pFF_Fitnessroom_Light_Ceiling_Powered label="Sportzimmer"
+						Switch item=pFF_Makeuproom_Light_Ceiling_Powered label="Schminkzimmer"
 					}
 				}
 				Switch item=pFF_Attic_Light_Ceiling_Powered label="Dachboden"
@@ -87,14 +87,14 @@ sitemap haus label="Main Menu"
                     Switch item=pGF_Livingroom_Shutter_Terrace_Control label="Wohnzimmer Terasse" mappings=[UP="▲",STOP="✖",DOWN="▼"]
                     Switch item=pGF_Livingroom_Shutter_Couch_Control label="Wohnzimmer Couch" mappings=[UP="▲",STOP="✖",DOWN="▼"]
                     Switch item=pGF_Kitchen_Shutter_Control label="Küche" mappings=[UP="▲",STOP="✖",DOWN="▼"]
-                    Switch item=pGF_Guestroom_Shutter_Control label="Gästezimmer" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+                    Switch item=pGF_Workroom_Shutter_Control label="Büro" mappings=[UP="▲",STOP="✖",DOWN="▼"]
                     Switch item=pGF_Guesttoilet_Shutter_Control label="Gäste WV" mappings=[UP="▲",STOP="✖",DOWN="▼"]
                 }
 				Group item=gFF_Shutters_Count label="OG Rollläden [MAP(group_rollershutter_sf.map):%d]" {
                     Switch item=eFF_Bedroom_Shutter label="Schlafzimmer" mappings=[UP="▲",STOP="✖",DOWN="▼"]
                     Switch item=pFF_Dressingroom_Shutter_Control label="Ankleide" mappings=[UP="▲",STOP="✖",DOWN="▼"]
-                    Switch item=pFF_Child1_Shutter_Control label="Sportzimmer" mappings=[UP="▲",STOP="✖",DOWN="▼"]
-                    Switch item=pFF_Child2_Shutter_Control label="Schminkzimmer" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+                    Switch item=pFF_Fitnessroom_Shutter_Control label="Sportzimmer" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+                    Switch item=pFF_Makeuproom_Shutter_Control label="Schminkzimmer" mappings=[UP="▲",STOP="✖",DOWN="▼"]
                     Switch item=pFF_Bathroom_Shutter_Control label="Badezimmer" mappings=[UP="▲",STOP="✖",DOWN="▼"]
                     Switch item=pFF_Attic_Shutter_Control label="Dachboden" mappings=[UP="▲",STOP="✖",DOWN="▼"]
                 }
@@ -485,15 +485,15 @@ sitemap haus label="Main Menu"
                     Text item=pGF_Kitchen_Openingcontact_Window_State label="Küche"
                     Text item=pGF_Livingroom_Openingcontact_Window_Terrace_State label="Wohnzimmer Terasse"
                     Text item=pGF_Livingroom_Openingcontact_Window_Couch_State label="Wohnzimmer Couch"
-                    Text item=pGF_Guestroom_Openingcontact_Window_State label="Gästezimmer"
+                    Text item=pGF_Workroom_Openingcontact_Window_State label="Büro"
                     Text item=pGF_Garage_Openingcontact_Window_Garden_State label="Garage Gartenseite"
                 }
                 Group item=gFF_Sensor_Window label="OG Fenster [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
                     Text item=pFF_Bathroom_Openingcontact_Window_State label="Badezimmer"
                     Text item=pFF_Dressingroom_Openingcontact_Window_State label="Ankleide"
                     Text item=pFF_Bedroom_Openingcontact_Window_State label="Schlafzimmer"
-                    Text item=pFF_Child1_Openingcontact_Window_State label="Sportzimmer"
-                    Text item=pFF_Child2_Openingcontact_Window_State label="Schminkzimmer"
+                    Text item=pFF_Fitnessroom_Openingcontact_Window_State label="Sportzimmer"
+                    Text item=pFF_Makeuproom_Openingcontact_Window_State label="Schminkzimmer"
                     Text item=pFF_Attic_Openingcontact_Window_State label="Dachboden"
                 }
                 Text label="Ereignisse" icon="selfstate"
@@ -511,8 +511,8 @@ sitemap haus label="Main Menu"
                             Setpoint item=pGF_Livingroom_Heating_Temperature_Desired label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=pGF_Boxroom_Air_Sensor_Message label="Kammer"
-                        Text item=pGF_Guestroom_Air_Sensor_Message label="Gästezimmer" {
-                            Setpoint item=pGF_Guestroom_Heating_Temperature_Desired label="Gästezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        Text item=pGF_Workroom_Air_Sensor_Message label="Büro" {
+                            Setpoint item=pGF_Workroom_Heating_Temperature_Desired label="Büro [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=pGF_Guesttoilet_Air_Sensor_Message label="Gäste WC" {
                             Setpoint item=pGF_Guesttoilet_Heating_Temperature_Desired label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
@@ -534,11 +534,11 @@ sitemap haus label="Main Menu"
                             Setpoint item=pFF_Bedroom_Heating_Temperature_Desired label="Schlafzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=pFF_Dressingroom_Air_Sensor_Message label="Ankleide"
-                        Text item=pFF_Child1_Air_Sensor_Message label="Sportzimmer"  {
-                            Setpoint item=pFF_Child1_Heating_Temperature_Desired label="Kind 1 [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        Text item=pFF_Fitnessroom_Air_Sensor_Message label="Sportzimmer"  {
+                            Setpoint item=pFF_Fitnessroom_Heating_Temperature_Desired label="Sportzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=pFF_Child2_Air_Sensor_Message label="Schminkzimmer" {
-                            Setpoint item=pFF_Child2_Heating_Temperature_Desired label="Kind 2 [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        Text item=pFF_Makeuproom_Air_Sensor_Message label="Schminkzimmer" {
+                            Setpoint item=pFF_Makeuproom_Heating_Temperature_Desired label="Schminkzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=pFF_Bathroom_Air_Sensor_Message label="Badezimmer" {
                             Setpoint item=pFF_Bathroom_Heating_Temperature_Desired label="Badezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
@@ -733,25 +733,25 @@ sitemap haus label="Main Menu"
                         Switch item=pGF_Utilityroom_Heating_Operating_Mode label="Betrieb" mappings=[1.0="WW", 2.0="HZ", 3.0="RD"]  visibility=[pGF_Utilityroom_Heating_Auto_Mode==0]
                         Text item=pGF_Utilityroom_Heating_Operating_Mode visibility=[pGF_Utilityroom_Heating_Auto_Mode==1]
                         Text label="Komforttemperaturen" icon="selfheating"{
-                            Setpoint item=pGF_Guesttoilet_Heating_Temperature_Target label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=pGF_Livingroom_Heating_Temperature_Target label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=pGF_Guestroom_Heating_Temperature_Target label="Gästezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=pGF_Corridor_Heating_Temperature_Target label="Flur unten [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=pFF_Corridor_Heating_Temperature_Target label="Flur oben [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=pFF_Child1_Heating_Temperature_Target label="Kind 1 [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=pFF_Child2_Heating_Temperature_Target label="Kind 2 [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=pFF_Bedroom_Heating_Temperature_Target label="Schlafzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=pFF_Bathroom_Heating_Temperature_Target label="Badezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pGF_Guesttoilet_Heating_Temperature_Desired label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pGF_Livingroom_Heating_Temperature_Desired label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pGF_Workroom_Heating_Temperature_Desired label="Büro [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pGF_Corridor_Heating_Temperature_Desired label="Flur unten [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pFF_Corridor_Heating_Temperature_Desired label="Flur oben [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pFF_Fitnessroom_Heating_Temperature_Desired label="Sportzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pFF_Makeuproom_Heating_Temperature_Desired label="Schminkzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pFF_Bedroom_Heating_Temperature_Desired label="Schlafzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pFF_Bathroom_Heating_Temperature_Desired label="Badezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text label="Heizkreise" icon="selfheating"{
                             Switch item=pGF_Livingroom_Heating_Circuit label="WZ Kreis"
                             Switch item=pGF_Corridor_Heating_Circuit label="Flur unten Kreis"
-                            Switch item=pGF_Guestroom_Heating_Circuit label="Gästezimmer Kreis"
+                            Switch item=pGF_Workroom_Heating_Circuit label="Büro Kreis"
                             Switch item=pGF_Guesttoilet_Heating_Circuit label="Gäste WC Kreis"
                             Switch item=pGF_Guesttoilet_Heating_HK label="Gäste WC HK"
                             Switch item=pFF_Corridor_Heating_Circuit label="Flur oben Kreis"
-                            Switch item=pFF_Child1_Heating_Circuit label="Kind 1 Kreis"
-                            Switch item=pFF_Child2_Heating_Circuit label="Kind 2 Kreis"
+                            Switch item=pFF_Fitnessroom_Heating_Circuit label="Sportzimmer Kreis"
+                            Switch item=pFF_Makeuproom_Heating_Circuit label="Schminkzimmer Kreis"
                             Switch item=pFF_Bedroom_Heating_Circuit label="Schlafzimmer Kreis"
                             Switch item=pFF_Bathroom_Heating_Circuit label="Badezimmer Kreis"
                             Switch item=pFF_Bathroom_Heating_HK label="Badezimmer HK"
@@ -923,20 +923,20 @@ sitemap haus label="Main Menu"
                         Webview url="/static/custom/grafana/internet.html?fromItem=Chart_From" icon="none" height=36
                     }
                 }
-                Group item=pGF_Guestroom_PrinterStatus label="Drucker Status [%s]" {
+                Group item=pGF_Workroom_PrinterStatus label="Drucker Status [%s]" {
                     Frame label="Status" {
-                        Text item=pGF_Guestroom_PrinterStatus
+                        Text item=pGF_Workroom_PrinterStatus
                     }
                     Frame label="Füllstand" {
-                        Text item=pGF_Guestroom_PrinterBlackLevel
-                        Text item=pGF_Guestroom_PrinterCyanLevel
-                        Text item=pGF_Guestroom_PrinterMagentaLevel
-                        Text item=pGF_Guestroom_PrinterYellowLevel
+                        Text item=pGF_Workroom_PrinterBlackLevel
+                        Text item=pGF_Workroom_PrinterCyanLevel
+                        Text item=pGF_Workroom_PrinterMagentaLevel
+                        Text item=pGF_Workroom_PrinterYellowLevel
                     }
                     Frame label="Druckvolumen" {
-                        Text item=pGF_Guestroom_PrinterTotalPages
-                        Text item=pGF_Guestroom_PrinterTotalColourPages
-                        Text item=pGF_Guestroom_PrinterTotalMonochromePages
+                        Text item=pGF_Workroom_PrinterTotalPages
+                        Text item=pGF_Workroom_PrinterTotalColourPages
+                        Text item=pGF_Workroom_PrinterTotalMonochromePages
                     }
                 }
                 Text label="Alexa" {

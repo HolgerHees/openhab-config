@@ -24,12 +24,12 @@ Number pGF_Livingroom_Heating_Temperature_Target    "Ziel - aktiv"         <self
 Number pGF_Livingroom_Heating_Temperature_Desired   "Ziel [%.1f °C]"       <selftemperature> (eGF_Livingroom_Heating) ["Setpoint"]
 
 // **** GF GUESTROOM ****
-Group  eGF_Guestroom_Heating                        "Heizung"              <selfinfo>     (lGF_Guestroom) ["RadiatorControl"]
-Switch pGF_Guestroom_Heating_Circuit                "Gästezimmer Kreis"    <selfsettings> (eGF_Guestroom_Heating,gPersistance_History) ["Point"] { channel="knx:device:bridge:heating_ff:guestroomCircuit" }
-Switch pGF_Guestroom_Heating_Demand                 "Bedarf [%d]"          <selfsettings> (eGF_Guestroom_Heating) ["Point"]
-Number pGF_Guestroom_Heating_Charged                "Gästezimmer Geladen"  <selfsettings> (eGF_Guestroom_Heating) ["Point"]
-Number pGF_Guestroom_Heating_Temperature_Target     "Ziel - aktiv"         <selfsettings> (eGF_Guestroom_Heating) ["Point"]
-Number pGF_Guestroom_Heating_Temperature_Desired    "Ziel [%.1f °C]"       <selftemperature> (eGF_Guestroom_Heating) ["Setpoint"]
+Group  eGF_Workroom_Heating                        "Heizung"              <selfinfo>     (lGF_Workroom) ["RadiatorControl"]
+Switch pGF_Workroom_Heating_Circuit                "Gästezimmer Kreis"    <selfsettings> (eGF_Workroom_Heating,gPersistance_History) ["Point"] { channel="knx:device:bridge:heating_ff:guestroomCircuit" }
+Switch pGF_Workroom_Heating_Demand                 "Bedarf [%d]"          <selfsettings> (eGF_Workroom_Heating) ["Point"]
+Number pGF_Workroom_Heating_Charged                "Gästezimmer Geladen"  <selfsettings> (eGF_Workroom_Heating) ["Point"]
+Number pGF_Workroom_Heating_Temperature_Target     "Ziel - aktiv"         <selfsettings> (eGF_Workroom_Heating) ["Point"]
+Number pGF_Workroom_Heating_Temperature_Desired    "Ziel [%.1f °C]"       <selftemperature> (eGF_Workroom_Heating) ["Setpoint"]
 
 // **** FF CORRIDOR ****
 Group  eFF_Corridor_Heating                         "Heizung"              <selfinfo>     (lFF_Corridor) ["RadiatorControl"]
@@ -57,20 +57,20 @@ Number pFF_Bedroom_Heating_Temperature_Target       "Ziel - aktiv"         <self
 Number pFF_Bedroom_Heating_Temperature_Desired      "Ziel [%.1f °C]"       <selftemperature> (eFF_Bedroom_Heating) ["Setpoint"]
 
 // **** FF CHILD 1 ****
-Group  eFF_Child1_Heating                           "Heizung"              <selfinfo>     (lFF_Child1) ["RadiatorControl"]
-Switch pFF_Child1_Heating_Circuit                   "Kreis"                <selfsettings> (eFF_Child1_Heating,gPersistance_History) { channel="knx:device:bridge:heating_sf:child1Circuit" }
-Switch pFF_Child1_Heating_Demand                    "Bedarf [%d]"          <selfsettings> (eFF_Child1_Heating) ["Point"]
-Number pFF_Child1_Heating_Charged                   "Geladen"              <selfsettings> (eFF_Child1_Heating) ["Point"]
-Number pFF_Child1_Heating_Temperature_Target        "Ziel - aktiv"         <selfsettings> (eFF_Child1_Heating) ["Point"]
-Number pFF_Child1_Heating_Temperature_Desired       "Ziel [%.1f °C]"       <selftemperature> (eFF_Child1_Heating) ["Setpoint"]
+Group  eFF_Fitnessroom_Heating                           "Heizung"              <selfinfo>     (lFF_Fitnessroom) ["RadiatorControl"]
+Switch pFF_Fitnessroom_Heating_Circuit                   "Kreis"                <selfsettings> (eFF_Fitnessroom_Heating,gPersistance_History) { channel="knx:device:bridge:heating_sf:child1Circuit" }
+Switch pFF_Fitnessroom_Heating_Demand                    "Bedarf [%d]"          <selfsettings> (eFF_Fitnessroom_Heating) ["Point"]
+Number pFF_Fitnessroom_Heating_Charged                   "Geladen"              <selfsettings> (eFF_Fitnessroom_Heating) ["Point"]
+Number pFF_Fitnessroom_Heating_Temperature_Target        "Ziel - aktiv"         <selfsettings> (eFF_Fitnessroom_Heating) ["Point"]
+Number pFF_Fitnessroom_Heating_Temperature_Desired       "Ziel [%.1f °C]"       <selftemperature> (eFF_Fitnessroom_Heating) ["Setpoint"]
 
 // **** FF CHILD 2 ****
-Group  eFF_Child2_Heating                           "Heizung"              <selfinfo>     (lFF_Child2) ["RadiatorControl"]
-Switch pFF_Child2_Heating_Circuit                   "Kreis"                <selfsettings> (eFF_Child2_Heating,gPersistance_History) { channel="knx:device:bridge:heating_sf:child2Circuit" }
-Switch pFF_Child2_Heating_Demand                    "Bedarf [%d]"          <selfsettings> (eFF_Child2_Heating) ["Point"]
-Number pFF_Child2_Heating_Charged                   "Geladen"              <selfsettings> (eFF_Child2_Heating) ["Point"]
-Number pFF_Child2_Heating_Temperature_Target        "Ziel - aktiv"         <selfsettings> (eFF_Child2_Heating) ["Point"]
-Number pFF_Child2_Heating_Temperature_Desired       "Ziel [%.1f °C]"       <selftemperature> (eFF_Child2_Heating)["Setpoint"]
+Group  eFF_Makeuproom_Heating                           "Heizung"              <selfinfo>     (lFF_Makeuproom) ["RadiatorControl"]
+Switch pFF_Makeuproom_Heating_Circuit                   "Kreis"                <selfsettings> (eFF_Makeuproom_Heating,gPersistance_History) { channel="knx:device:bridge:heating_sf:child2Circuit" }
+Switch pFF_Makeuproom_Heating_Demand                    "Bedarf [%d]"          <selfsettings> (eFF_Makeuproom_Heating) ["Point"]
+Number pFF_Makeuproom_Heating_Charged                   "Geladen"              <selfsettings> (eFF_Makeuproom_Heating) ["Point"]
+Number pFF_Makeuproom_Heating_Temperature_Target        "Ziel - aktiv"         <selfsettings> (eFF_Makeuproom_Heating) ["Point"]
+Number pFF_Makeuproom_Heating_Temperature_Desired       "Ziel [%.1f °C]"       <selftemperature> (eFF_Makeuproom_Heating)["Setpoint"]
 
 // **** HEATING DEVICE ****
 Group  eGF_Utilityroom_Heating_Boiler                               "Heizterme"                         <selfinfo> (lGF_Utilityroom) ["HVAC"]
