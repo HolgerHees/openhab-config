@@ -19,7 +19,7 @@ Number pGF_Boxroom_Air_Sensor_Temperature_Value     "Temperatur [%.1f °C]"  <se
 Number pGF_Boxroom_Air_Sensor_Humidity_Raw                                                    (eGF_Boxroom_Air_Sensor) { channel="knx:device:bridge:sensors_ff:humidityBoxroom" }
 Number pGF_Boxroom_Air_Sensor_Humidity_Value        "Luftfeuchtigkeit [%.1f %%]" <chart>      (eGF_Boxroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
 String pGF_Boxroom_Air_Sensor_Message               "Luft [%s]"             <selftemperature> (eGF_Boxroom_Air_Sensor)
-Number pGF_Boxroom_Air_Sensor_CO2_Value             "CO2 [%d ppm]"          <chart>           (eGF_Boxroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"] {channel="mqtt:topic:mosquitto:co2sensor:boxroom" }
+Number pGF_Boxroom_Air_Sensor_CO2_Value             "CO2 [%d ppm]"          <chart>           (eGF_Boxroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","CO2"] {channel="mqtt:topic:mosquitto:co2sensor:boxroom" }
 
 Group  eGF_Livingroom_Air_Sensor                    "Luftsensor"            <selfinfo>        (lGF_Livingroom) ["Sensor"]
 Number pGF_Livingroom_Air_Sensor_Temperature_Raw                                              (eGF_Livingroom_Air_Sensor) { channel="knx:device:bridge:sensors_ff:temperatureLivingroom" }
