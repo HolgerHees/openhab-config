@@ -62,6 +62,7 @@ Number pFF_Dressingroom_Air_Sensor_Temperature_Value "Temperatur [%.1f °C]"  <s
 Number pFF_Dressingroom_Air_Sensor_Humidity_Raw                                               (eFF_Dressingroom_Air_Sensor) { channel="knx:device:bridge:sensors_sf:humidityDressingroom" }
 Number pFF_Dressingroom_Air_Sensor_Humidity_Value   "Luftfeuchtigkeit [%.1f %%]" <chart>      (eFF_Dressingroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
 String pFF_Dressingroom_Air_Sensor_Message          "Luft [%s]"             <selftemperature> (eFF_Dressingroom_Air_Sensor)
+Number pGF_Dressingroom_Air_Sensor_CO2_Value        "CO2 [%d ppm]"          <chart>           (eFF_Dressingroom_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","CO2"] {channel="mqtt:topic:mosquitto:co2sensor:dressingroom" }
 
 Group  eFF_Bedroom_Air_Sensor                       "Luftsensor"            <selfinfo>        (lFF_Bedroom) ["Sensor"]
 Number pFF_Bedroom_Air_Sensor_Temperature_Raw                                                 (eFF_Bedroom_Air_Sensor) { channel="knx:device:bridge:sensors_sf:temperatureBedroom" }

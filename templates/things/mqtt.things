@@ -68,6 +68,7 @@ Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
     }
     Thing topic co2sensor "CO2 Sensor" @ "Geräte" {
         Type number : boxroom "Kammer" [ stateTopic="co2sensor/kammer" ]
+        Type number : dressingroom "Ankleide" [ stateTopic="co2sensor/ankleide" ]
     }
     Thing topic roomba "Roomba" @ "Geräte" {
         //Type string : command "Command" [ commandTopic="/roomba/command:command:*:${command}" ]

@@ -11,7 +11,7 @@ infoConfig = [
     ["pGF_Utilityroom_Air_Sensor_Message", "pGF_Utilityroom_Air_Sensor_Temperature_Value", "pGF_Utilityroom_Air_Sensor_Humidity_Value", None, None],
     ["pGF_Garage_Air_Sensor_Message", "pGF_Garage_Air_Sensor_Temperature_Value", "pGF_Garage_Air_Sensor_Humidity_Value", None, None],
     ["pFF_Bedroom_Air_Sensor_Message", "pFF_Bedroom_Air_Sensor_Temperature_Value", "pFF_Bedroom_Air_Sensor_Humidity_Value", None, "pFF_Bedroom_Heating_Temperature_Desired"],
-    ["pFF_Dressingroom_Air_Sensor_Message", "pFF_Dressingroom_Air_Sensor_Temperature_Value", "pFF_Dressingroom_Air_Sensor_Humidity_Value", None, None],
+    ["pFF_Dressingroom_Air_Sensor_Message", "pFF_Dressingroom_Air_Sensor_Temperature_Value", "pFF_Dressingroom_Air_Sensor_Humidity_Value", "pGF_Dressingroom_Air_Sensor_CO2_Value", None],
     ["pFF_Fitnessroom_Air_Sensor_Message", "pFF_Fitnessroom_Air_Sensor_Temperature_Value", "pFF_Fitnessroom_Air_Sensor_Humidity_Value", None, "pFF_Fitnessroom_Heating_Temperature_Desired"],
     ["pFF_Makeuproom_Air_Sensor_Message", "pFF_Makeuproom_Air_Sensor_Temperature_Value", "pFF_Makeuproom_Air_Sensor_Humidity_Value", None, "pFF_Makeuproom_Heating_Temperature_Desired"],
     ["pFF_Bathroom_Air_Sensor_Message", "pFF_Bathroom_Air_Sensor_Temperature_Value", "pFF_Bathroom_Air_Sensor_Humidity_Value", None, "pFF_Bathroom_Heating_Temperature_Desired"],

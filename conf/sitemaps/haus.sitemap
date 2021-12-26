@@ -550,7 +550,7 @@ sitemap haus label="Main Menu"
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/custom/grafana/temperatures_og.html?fromItem=Chart_From" icon="none" height=18
+                        Webview url="/static/custom/grafana/temperatures_og.html?fromItem=Chart_From" icon="none" height=27
                     }
                 }
                 Group item=pIndoor_Plant_Sensor_Watering_Info label="Pflanzen [%s]" valuecolor=[=="Feucht genug"="#6bc305",=="Giessen"="#cbcb00",=="Jetzt Giessen"="#d72a2a"]{

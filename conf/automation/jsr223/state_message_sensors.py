@@ -37,11 +37,11 @@ class StateMessageSensorsRule:
         if getItemState("pOutdoor_WeatherStation_Is_Working") == OFF:
             active.append(u"Wetter")
             
-        if getItemState("pGF_Boxroom_Air_Sensor_CO2_Value").intValue() > 1500:
+        if getItemState("pGF_Boxroom_Air_Sensor_CO2_Value").intValue() > 1500 || getItemState("pGF_Dressingroom_Air_Sensor_CO2_Value").intValue() > 1500:
             active.append(u"CO2 Wert")
 
         refDate = ZonedDateTime.now().minusMinutes(15)
-        if itemLastUpdateOlderThen("pGF_Boxroom_Air_Sensor_CO2_Value", refDate):
+        if itemLastUpdateOlderThen("pGF_Boxroom_Air_Sensor_CO2_Value", refDate) || itemLastUpdateOlderThen("pGF_Dressingroom_Air_Sensor_CO2_Value", refDate):
             active.append(u"CO2 Sensor")
 
         if getItemState("pIndoor_Plant_Sensor_Main_Info").toString() != 'Alles ok':
