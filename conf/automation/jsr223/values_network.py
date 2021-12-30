@@ -6,6 +6,8 @@ from threading import Thread
 from java.time import ZonedDateTime, Duration
 from java.time.temporal import ChronoUnit
 
+from org.openhab.core.types import UnDefType
+
 #wget "http://influxdb:8086/query?u=openhab&p=default123&chunked=true&db=openhab_db&epoch=ns&q=DROP+SERIES+FROM+%22pGF_Corridor_Fritzbox_WanUpstreamCurrRate%22"
 #wget "http://influxdb:8086/query?u=openhab&p=default123&chunked=true&db=openhab_db&epoch=ns&q=DROP+SERIES+FROM+%22pGF_Corridor_Fritzbox_WanDownstreamCurrRate%22"
 
