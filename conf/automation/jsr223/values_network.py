@@ -113,7 +113,7 @@ class ValuesNetworkOutgoingTrafficRule:
 
         now = ZonedDateTime.now()
 
-        if self.lastUpdate != -1:
+        if self.lastUpdate != -1 and not isinstance(input['event'].getItemState(), UnDefType) and not isinstance(input['event'].getOldItemState(), UnDefType):
             currentValue = input['event'].getItemState().longValue()
             prevValue = input['event'].getOldItemState().longValue()
 
@@ -155,7 +155,7 @@ class ValuesNetworkIncommingTrafficRule:
 
         now = ZonedDateTime.now()
 
-        if self.lastUpdate != -1:
+        if self.lastUpdate != -1 and not isinstance(input['event'].getItemState(), UnDefType) and not isinstance(input['event'].getOldItemState(), UnDefType):
             currentValue = input['event'].getItemState().longValue()
             prevValue = input['event'].getOldItemState().longValue()
 
