@@ -49,8 +49,6 @@ Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
         Type number : commonFault "Status" [ stateTopic="vcontrol/getSammelstoerung" ]
     }    
     Thing topic weatherstation "Wetterstation" @ "Geräte" {
-        Type number : batteryVoltage "Betriebsart" [ stateTopic="mysensors-pub-1/1/0/#" ]
-        Type number : batteryCurrent "Betriebsart" [ stateTopic="mysensors-pub-1/1/1/#" ]
         Type number : rainImpulse "Counter (current)" [ stateTopic="mysensors-pub-1/1/2/#" ]
         Type number : rainRate "Rate Sensor" [ stateTopic="mysensors-pub-1/1/3/#" ]
         Type number : rainHeater "Heizung" [ stateTopic="mysensors-pub-1/1/4/1/0/2", transformationPattern="MAP:weatherstation_heating.map" ]

@@ -680,17 +680,6 @@ sitemap haus label="Main Menu"
                         }
                     }
                     Frame label="Sonstiges" {
-                        Group item=pOutdoor_WeatherStation_Battery_Message valuecolor=[pOutdoor_WeatherStation_Battery_Current>=0="#6bc305"] {
-                            Frame label="Details" {
-                                Text item=pOutdoor_WeatherStation_Battery_Level
-                                Text item=pOutdoor_WeatherStation_Battery_Voltage
-                                Text item=pOutdoor_WeatherStation_Battery_Current
-                            }
-                            Frame label="Auswertung" {
-                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/custom/grafana/weatherstation_battery.html?fromItem=Chart_From" icon="none" height=14
-                            }
-                        }
                         Text item=pOutdoor_WeatherStation_Update_Message visibility=[pOutdoor_WeatherStation_Is_Working!=OFF] valuecolor=[!=""="#6bc305"]
                         Text item=pOutdoor_WeatherStation_Update_Message visibility=[pOutdoor_WeatherStation_Is_Working==OFF] valuecolor=[!=""="#d72a2a"]
                     }

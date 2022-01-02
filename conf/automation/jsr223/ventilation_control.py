@@ -9,8 +9,6 @@ from custom.presence import PresenceHelper
 from org.openhab.core.types import UnDefType
 
 
-autoChangeInProgress = False
-
 DELAYED_UPDATE_TIMEOUT = 3
  
 @rule("ventilation_control.py")
@@ -216,36 +214,35 @@ class FilterVentilationMessageRule:
         self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
 
 @rule("ventilation_control.py")
-class FilterManualActionRule:
-    def __init__(self):
-        self.triggers = [ItemCommandTrigger("pGF_Utilityroom_Ventilation_Fan_Level")]
-
-    def execute(self, module, input):
-        global autoChangeInProgress
-        if autoChangeInProgress:
-            autoChangeInProgress = False
-        else:
-            postUpdate("pGF_Utilityroom_Ventilation_Auto_Mode", OFF)
-
-
-@rule("ventilation_control.py")
 class FilterFanLevelRule:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Auto_Mode"),
+            ItemCommandTrigger("pGF_Utilityroom_Ventilation_Fan_Level"),
+            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Auto_Mode", state="ON"),
             ItemStateChangeTrigger("pOther_Presence_State"),
             CronTrigger("0 */1 * * * ?"),
         ]
+        
+        self.autoChangeInProgress = False
+        self.activeLevel = -1
 
     def execute(self, module, input):
+        if 'event' in input.keys() and input['event'].getItemName() == "pGF_Utilityroom_Ventilation_Fan_Level":
+            if self.autoChangeInProgress:
+                self.autoChangeInProgress = False
+            else:
+                postUpdate("pGF_Utilityroom_Ventilation_Auto_Mode", OFF)
+            return
+
         if getItemState("pGF_Utilityroom_Ventilation_Auto_Mode") == OFF:
             return
 
-        if isinstance(getItemState("pGF_Utilityroom_Ventilation_Fan_Level"), UnDefType) \
-          or isinstance(getItemState("pGF_Utilityroom_Ventilation_Comfort_Temperature"), UnDefType):
+        if isinstance(getItemState("pGF_Utilityroom_Ventilation_Fan_Level"), UnDefType) or isinstance(getItemState("pGF_Utilityroom_Ventilation_Comfort_Temperature"), UnDefType):
             return
 
         currentLevel = getItemState("pGF_Utilityroom_Ventilation_Fan_Level").intValue()
+        if self.activeLevel == -1:
+            self.activeLevel = currentLevel
         
         raumTemperatur = getItemState("pGF_Livingroom_Air_Sensor_Temperature_Value").doubleValue()
         zielTemperatur = getItemState("pGF_Utilityroom_Ventilation_Comfort_Temperature").doubleValue
@@ -262,7 +259,7 @@ class FilterFanLevelRule:
             reducedLevel = 2    # Level 1
             defaultLevel = 2    # Level 1
             coolingLevel = 2    # Level 1
-        # Away since 30 minutes
+        # Away since 60 minutes
         elif presenceState == [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT] and itemLastChangeOlderThen("pOther_Presence_State", ZonedDateTime.now().minusMinutes(60)):
             reducedLevel = 1    # Level A
             defaultLevel = 2    # Level 1
@@ -282,13 +279,14 @@ class FilterFanLevelRule:
             if currentLevel == 1:
                 waitBeforeChange = 15
             else:
-                # must be > 1. Otherwise cangedSince dows not work propperly
+                # must be > 1. Otherwise changedSince does not work properly
                 waitBeforeChange = 2
 
-            isModeUpdate = 'event' in input.keys() and input['event'].getItemName() == "pGF_Utilityroom_Ventilation_Auto_Mode"
-            
-            if isModeUpdate or itemLastChangeOlderThen("pGF_Utilityroom_Ventilation_Fan_Level", ZonedDateTime.now().minusMinutes(waitBeforeChange)):
-                global autoChangeInProgress
-                autoChangeInProgress = True
+            # 1. self.activeLevel != currentLevel means last try was not successful
+            # 2. 'event' in input.keys() is an presence or auto mode change
+            # 3. is cron triggered event
+            if self.activeLevel != currentLevel or 'event' in input.keys() or itemLastChangeOlderThen("pGF_Utilityroom_Ventilation_Fan_Level", ZonedDateTime.now().minusMinutes(waitBeforeChange)):
+                self.autoChangeInProgress = True
 
                 sendCommand("pGF_Utilityroom_Ventilation_Fan_Level", newLevel)
+                self.activeLevel = newLevel
