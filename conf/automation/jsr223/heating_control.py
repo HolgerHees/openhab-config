@@ -636,7 +636,7 @@ class HeatingControlRule():
         self.setSunStates(now,cr,cr4,hhs)
         
         self.log.info(u"--------: <<<" )
- 
+   
     def setSunStates(self, now, cr, cr4, hhs):
         cloudCover = cr.getCloudCover()
         

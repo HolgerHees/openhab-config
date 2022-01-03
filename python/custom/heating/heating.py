@@ -646,8 +646,8 @@ class Heating(object):
                     openDurationInSeconds = ChronoUnit.SECONDS.between(Heating._openWindowContacts[transition.getContactItem()],closedSince)
                     endingTreshold = openDurationInSeconds * 2.0
                     # 1 hour
-                    if endingTreshold > 60 * 60 * 1000:
-                        endingTreshold = 60 * 60 * 1000
+                    if endingTreshold > 60 * 60:
+                        endingTreshold = 60 * 60
                     if closedDurationInSeconds > endingTreshold:
                         del Heating._openWindowContacts[transition.getContactItem()]
                         continue
