@@ -51,7 +51,7 @@ Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
     Thing topic weatherstation "Wetterstation" @ "Geräte" {
         Type number : rainImpulse "Counter (current)" [ stateTopic="mysensors-pub-1/1/2/#" ]
         Type number : rainRate "Rate Sensor" [ stateTopic="mysensors-pub-1/1/3/#" ]
-        Type number : rainHeater "Heizung" [ stateTopic="mysensors-pub-1/1/4/1/0/2", transformationPattern="MAP:weatherstation_heating.map" ]
+        Type switch : rainHeater "Heizung" [ stateTopic="mysensors-pub-1/1/4/1/0/2", transformationPattern="MAP:weatherstation_heating.map" ]
         Type string : rainHeaterRequest "Heizung" [ stateTopic="mysensors-pub-1/1/4/2/0/2" ]
         Type number : windSpeed "Geschwindigkeit" [ stateTopic="mysensors-pub-1/1/5/#", transformationPattern="JS:weatherstation_wind.js" ]
         Type number : windGust "Böe" [ stateTopic="mysensors-pub-1/1/6/#", transformationPattern="JS:weatherstation_wind.js" ]

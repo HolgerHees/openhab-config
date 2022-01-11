@@ -183,7 +183,7 @@ class WakeupRule:
             if getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
                 lightCount = 0
                 for child in getGroupMember("gGF_Lights"):
-                    if getItemState(child) == ON:
+                    if child.getStateAs(OnOffType) == ON:
                         lightCount = lightCount + 1
                 # Signs (in first floor) for wake up are 
                 # - a light is ON for more then 10 minutes 
