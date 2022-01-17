@@ -69,7 +69,7 @@ class VentilationStateRule:
         #self.log.info(u"{}".format(status))
 
         if status is not None and info is not None:
-            if status.toString() == 'OFFLINE':
+            if status.toString() != 'ONLINE':
                 postUpdateIfChanged("pGF_Utilityroom_Ventilation_Thing_State",info.toString())
             else:
                 postUpdateIfChanged("pGF_Utilityroom_Ventilation_Thing_State","Alles ok")

@@ -18,7 +18,7 @@ class HomeConnectStateRule:
         
         if status is not None and info is not None:
             #self.log.info(u"Home Connect bridge status: '{}',  detail: '{}'".format(status.toString(),info.toString()))
-            if status.toString() == 'OFFLINE':
+            if status.toString() != "ONLINE":
                 postUpdateIfChanged("pOther_State_Message_Homeconnect",info.toString())
             else:
                 postUpdateIfChanged("pOther_State_Message_Homeconnect","Alles ok")

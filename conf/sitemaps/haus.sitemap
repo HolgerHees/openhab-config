@@ -909,7 +909,7 @@ sitemap haus label="Main Menu"
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/custom/grafana/internet.html?fromItem=Chart_From" icon="none" height=36
+                        Webview url="/static/custom/grafana/internet.html?fromItem=Chart_From" icon="none" height=39
                     }
                 }
                 Group item=pGF_Workroom_PrinterStatus label="Drucker Status [%s]" {
