@@ -111,6 +111,8 @@ class LightOutdoorControlRule:
         # No Motion Detector related events
         if ChronoUnit.SECONDS.between(last,now) > 1:
             itemName = input['event'].getItemName()
+            
+            self.log.info("LightOutdoorControlRule => Automatic_Switches => OFF, last: {}, now: {}".format(last,now))
         
             global timerMappings
             timer = timerMappings.get(itemName)
@@ -120,6 +122,8 @@ class LightOutdoorControlRule:
             for i, entry in enumerate(manualMappings):
                 if entry[0] == itemName:
                     #ruleTimeouts["Motiondetector_Outdoor_Individual_Switches"] = now
+
+                    # just an update to avoid triggering => MotiondetectorOutdoorIndividualSwitchRule
                     if postUpdateIfChanged(entry[1],OFF):
                         ruleTimeouts["Motiondetector_Outdoor_Main_Switch"] = now
                         
@@ -147,6 +151,8 @@ class MotionDetectorRule:
             else:
                 global ruleTimeouts
                 ruleTimeouts["Light_Outdoor"] = ZonedDateTime.now()
+
+                self.log.info(u"MotionDetectorRule: callback for {} => {}".format(entry[0], ruleTimeouts["Light_Outdoor"]));
 
                 sendCommand(entry[0],OFF)
                 timerMappings[entry[0]] = None
@@ -183,6 +189,8 @@ class TerasseMotionDetectorRule:
             else:
                 global ruleTimeouts
                 ruleTimeouts["Light_Outdoor"] = ZonedDateTime.now()
+
+                self.log.info(u"MotionDetectorRule: callback for {} => {}".format("pOutdoor_Terrace_Light_Brightness", ruleTimeouts["Light_Outdoor"]));
 
                 sendCommand("pOutdoor_Terrace_Light_Brightness",0)
                 timerMappings["pOutdoor_Terrace_Light_Brightness"] = None
