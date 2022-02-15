@@ -38,9 +38,9 @@ class ValuesNetworkSpeedRule:
             
             self.log.info(u"speedtest done")
 
-            data = result.split("{\"type\"")
-            if len(data) == 2:
-                json = "{\"type\"" + data[1]
+            index = result.find("{\"type\":\"result\"")
+            if index != -1:
+                json = result[index:]
 
                 resultPing = Transformation.transform("JSONPATH", "$.ping.latency", json )
                 resultDownBytes = Transformation.transform("JSONPATH", "$.download.bytes", json )
