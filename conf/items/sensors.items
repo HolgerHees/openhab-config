@@ -160,13 +160,18 @@ String pOutdoor_WeatherStation_Rain_Heater_Request   "Heizung" <heating> (eOutdo
 String pOutdoor_WeatherStation_Rain_State_Message    "Status [%s]" <selfrain> (eOutdoor_WeatherStation)
 String pOutdoor_WeatherStation_Rain_Message          "Regen [%s]" <selfrain> (eOutdoor_WeatherStation)
 
-Number pOutdoor_WeatherStation_Wind_Current          "Böe (15 min). [%.1f km/h]" <wind> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_Mqtt) ["Measurement","Wind"] 
+Number pOutdoor_WeatherStation_Wind_Speed_15Min      "Geschwindigkeit (15min). [%.1f km/h]" <wind> (eOutdoor_WeatherStation,gPersistance_Chart) ["Measurement","Wind"] 
+Number pOutdoor_WeatherStation_Wind_Gust_15Min       "Böe (15min). [%.1f km/h]" <wind> (eOutdoor_WeatherStation,gPersistance_Chart) ["Measurement","Wind"] 
+
+Number pOutdoor_WeatherStation_Wind_Speed_1h         "Geschwindigkeit (1h). [%.1f km/h]" <wind> (eOutdoor_WeatherStation) ["Measurement","Wind"] 
+Number pOutdoor_WeatherStation_Wind_Gust_1h          "Böe (1h). [%.1f km/h]" <wind> (eOutdoor_WeatherStation) ["Measurement","Wind"] 
 
 Number pOutdoor_WeatherStation_Wind_Speed            "Geschwindigkeit [%.1f km/h]" <wind> (eOutdoor_WeatherStation,gWeatherstationInputValues,gPersistance_History,gPersistance_Mqtt) ["Point"] {channel="mqtt:topic:mosquitto:weatherstation:windSpeed" }
-Number pOutdoor_WeatherStation_Wind_Gust             "Böe [%.1f km/h]" <wind> (eOutdoor_WeatherStation,gWeatherstationInputValues,gPersistance_Mqtt) ["Point"] {channel="mqtt:topic:mosquitto:weatherstation:windGust" }
+Number pOutdoor_WeatherStation_Wind_Gust             "Böe [%.1f km/h]" <wind> (eOutdoor_WeatherStation,gWeatherstationInputValues,gPersistance_History,gPersistance_Mqtt) ["Point"] {channel="mqtt:topic:mosquitto:weatherstation:windGust" }
 Number pOutdoor_WeatherStation_Wind_Direction_Raw    "Richtung Raw [%d °]" <wind> (eOutdoor_WeatherStation,gWeatherstationInputValues) {channel="mqtt:topic:mosquitto:weatherstation:windDirection" }
 Number pOutdoor_WeatherStation_Wind_Direction        "Richtung [%d °]" <wind> (eOutdoor_WeatherStation,gPersistance_Mqtt) ["Measurement"]
-String pOutdoor_WeatherStation_Wind_Direction_Message "Richtung [%s]" <wind> (eOutdoor_WeatherStation)
+String pOutdoor_WeatherStation_Wind_Direction_Short  "Richtung [%s]" <wind> (eOutdoor_WeatherStation)
+String pOutdoor_WeatherStation_Wind_Direction_Long   "Richtung [%s]" <wind> (eOutdoor_WeatherStation)
 String pOutdoor_WeatherStation_Wind_Message          "Wind [%s]" <wind> (eOutdoor_WeatherStation)
 
 Number pOutdoor_WeatherStation_Dewpoint              "Taupunkt [%.1f °C]" <selftemperature> (eOutdoor_WeatherStation,gPersistance_Mqtt) ["Point"]

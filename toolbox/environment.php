@@ -14,7 +14,9 @@ class Environment
             #"Rain_Garden_Current" => new IntervalConfig("Rain_Garden_Counter", "interval", "0 0 * * * ?", 30, "DIFF", 3600, 3600, 99 ),
             #"Rain_Garden_Current_Daily" => new IntervalConfig("Rain_Garden_Counter", "daily", "0 */5 * * * ?", 100 ),
 
-            "pOutdoor_WeatherStation_Wind_Current" => new IntervalConfig("pOutdoor_WeatherStation_Wind_Speed", "interval", "0 */15 * * * ?", 150, "MAX", 900, 900, 99 ),
+            "pOutdoor_WeatherStation_Wind_Gust_15Min" => new IntervalConfig("pOutdoor_WeatherStation_Wind_Gust", "interval", "0 */15 * * * ?", 150, "MAX", 900, 900, 99 ),
+            "pOutdoor_WeatherStation_Wind_Speed_15Min" => new IntervalConfig("pOutdoor_WeatherStation_Wind_Speed", "interval", "0 */15 * * * ?", 150, "MAX", 900, 900, 99 ),
+
             "pOutdoor_WeatherStation_Rain_Current" => new IntervalConfig("pOutdoor_WeatherStation_Rain_Counter", "interval", "0 0 * * * ?", 30, "DIFF", 3600, 3600, 99 ),
             "pOutdoor_WeatherStation_Rain_Daily" => new IntervalConfig("pOutdoor_WeatherStation_Rain_Counter", "daily", "0 */5 * * * ?", 100 ),
 

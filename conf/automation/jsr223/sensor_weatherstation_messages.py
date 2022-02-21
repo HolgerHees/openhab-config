@@ -418,30 +418,40 @@ class WeatherstationWindRule:
         direction = getItemState("pOutdoor_WeatherStation_Wind_Direction").intValue()
 
         if direction >= 338 or direction < 23: 
-            directionMsg = u"Nord"
+            directionLong = u"Nord"
+            directionShort = u"N"
         elif direction < 68: 
-            directionMsg = u"Nordost"
+            directionLong = u"Nordost"
+            directionShort = u"NO"
         elif direction < 113: 
-            directionMsg = u"Ost"
+            directionLong = u"Ost"
+            directionShort = u"O"
         elif direction < 158: 
-            directionMsg = u"Südost"
+            directionLong = u"Südost"
+            directionShort = u"SO"
         elif direction < 203: 
-            directionMsg = u"Süd"
+            directionLong = u"Süd"
+            directionShort = u"S"
         elif direction < 248: 
-            directionMsg = u"Südwest"
+            directionLong = u"Südwest"
+            directionShort = u"SW"
         elif direction < 293: 
-            directionMsg = u"West"
+            directionLong = u"West"
+            directionShort = u"W"
         elif direction < 338: 
-            directionMsg = u"Nordwest"
+            directionLong = u"Nordwest"
+            directionShort = u"NW"
         else:
-            directionMsg = u""
+            directionLong = u""
+            directionShort = u""
         
-        postUpdateIfChanged("pOutdoor_WeatherStation_Wind_Direction_Message", directionMsg)
+        postUpdateIfChanged("pOutdoor_WeatherStation_Wind_Direction_Long", directionLong)
+        postUpdateIfChanged("pOutdoor_WeatherStation_Wind_Direction_Short", directionShort)
         
         if getItemState("pOutdoor_WeatherStation_Wind_Speed").doubleValue() == 0:
             msg = u"Ruhig"
         else:
-            msg = u"{} km/h, {}".format(getItemState("pOutdoor_WeatherStation_Wind_Speed").format("%.1f"),directionMsg)
+            msg = u"{} km/h, {}".format(getItemState("pOutdoor_WeatherStation_Wind_Speed").format("%.1f"),directionLong)
 
         postUpdateIfChanged("pOutdoor_WeatherStation_Wind_Message", msg)
 
@@ -459,17 +469,25 @@ class WeatherstationWindRule:
         self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
 
 @rule("sensor_weatherstation.py")
-class UpdateWindLast15MinutesRule:
+class UpdateWindRule:
     def __init__(self):
         self.triggers = [
           CronTrigger("0 */5 * * * ?")
         ]
 
     def execute(self, module, input):
+        value = getMaxItemState("pOutdoor_WeatherStation_Wind_Gust", ZonedDateTime.now().minusMinutes(15)).doubleValue()
+        postUpdateIfChanged("pOutdoor_WeatherStation_Wind_Gust_15Min", value)
+
+        value = getMaxItemState("pOutdoor_WeatherStation_Wind_Gust", ZonedDateTime.now().minusMinutes(60)).doubleValue()
+        postUpdateIfChanged("pOutdoor_WeatherStation_Wind_Gust_1h", value)
+
         value = getMaxItemState("pOutdoor_WeatherStation_Wind_Speed", ZonedDateTime.now().minusMinutes(15)).doubleValue()
-        
-        postUpdateIfChanged("pOutdoor_WeatherStation_Wind_Current", value)
-        
+        postUpdateIfChanged("pOutdoor_WeatherStation_Wind_Speed_15Min", value)
+
+        value = getMaxItemState("pOutdoor_WeatherStation_Wind_Speed", ZonedDateTime.now().minusMinutes(60)).doubleValue()
+        postUpdateIfChanged("pOutdoor_WeatherStation_Wind_Speed_1h", value)
+
 @rule("sensor_weatherstation.py")
 class WeatherstationAirRule:
     def __init__(self):

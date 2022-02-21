@@ -625,10 +625,10 @@ sitemap haus label="Main Menu"
                         }
                         Group item=pOutdoor_WeatherStation_Wind_Message {
                             Frame label="Details" {
-                                Text item=pOutdoor_WeatherStation_Wind_Speed
-                                Text item=pOutdoor_WeatherStation_Wind_Direction_Message
-                                Text item=pOutdoor_WeatherStation_Wind_Current
-                                Text item=pOutdoor_WeatherStation_Wind_Gust
+                                Text item=pOutdoor_WeatherStation_Wind_Speed_1h label="Geschwindigkeit"
+                                Text item=pOutdoor_WeatherStation_Wind_Gust_1h label="Böen"
+                                Text item=pOutdoor_WeatherStation_Wind_Speed label="Aktuell"
+                                Text item=pOutdoor_WeatherStation_Wind_Direction_Long
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]

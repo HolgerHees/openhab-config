@@ -8,7 +8,7 @@
         "parameters": [],
         "parameterGroups": []
       },
-      "timestamp": "Dec 26, 2021, 4:51:54 PM",
+      "timestamp": "Feb 21, 2022, 2:03:05 PM",
       "component": "panelconfiguration",
       "config": {
         "default": true,
@@ -52,7 +52,7 @@
             "component": "customwidget",
             "config": {
               "id": "OutdoorWeather",
-              "template": "\u003cdiv oc-lazy-load\u003d\"[\u0027/static/shared/habpanel/js/helper.js\u0027]\" style\u003d\"height:100%\"\u003e\n  \u003cdiv class\u003d\"mvWidget mvOutdoorWeather mvItemValue mvClickable\" mv-trigger dashboard-button dashboard\u003d\"Wetterbericht\"\u003e\n    \u003cdiv class\u003d\"groupTitle\"\u003eGarten\u003c/div\u003e\n    \u003cdiv class\u003d\"content\"\u003e\n      \u003cdiv class\u003d\"column\" style\u003d\"width:30%\"\u003e\n        \u003cdiv class\u003d\"top\"\u003e\n          \u003cdiv class\u003d\"icon temperature\" style\u003d\"margin-left: -7%;\"\u003e\u003csvg viewBox\u003d\"0 0 64 64\"\u003e\u003cuse xlink:href\u003d\"/static/shared/habpanel/svg/icons.svg#self_temperature_grayscaled\" /\u003e\u003c/svg\u003e\u003c/div\u003e\n          \u003cdiv class\u003d\"value\"\u003e\n            \u003cdiv class\u003d\"main\" mv-watch mv-content\u003d\"itemState(config.temperatureItem) | number:1\"\u003e\u003c/div\u003e\n            \u003cdiv class\u003d\"sub\"\u003e\u0026#176C\u003c/div\u003e\n          \u003c/div\u003e\n        \u003c/div\u003e\n        \u003cdiv class\u003d\"bottom\"\u003e\n          \u003cdiv class\u003d\"value\"\u003e\u003cspan mv-watch mv-content\u003d\"itemState(config.humidityItem) | number:1\"\u003e\u003c/span\u003e\u0026nbsp;%\u003c/div\u003e\n        \u003c/div\u003e\n      \u003c/div\u003e\n\n      \u003cdiv class\u003d\"column\" style\u003d\"width:33%\"\u003e\n        \u003cdiv class\u003d\"top\"\u003e\n          \u003cdiv class\u003d\"icon rain\" style\u003d\"margin-left: 5%;\"\u003e\u003csvg viewBox\u003d\"0 0 64 64\"\u003e\u003cuse xlink:href\u003d\"/static/shared/habpanel/svg/icons.svg#self_rain_grayscaled\" /\u003e\u003c/svg\u003e\u003c/div\u003e\n          \u003cdiv class\u003d\"value\"\u003e\n            \u003cdiv class\u003d\"main\" mv-watch mv-content\u003d\"itemState(config.rainCurrentItem) | number:1\"\u003e\u003c/div\u003e\n            \u003cdiv class\u003d\"sub\"\u003emm\u003c/div\u003e\n          \u003c/div\u003e\n        \u003c/div\u003e\n        \u003cdiv class\u003d\"bottom\"\u003e\n          \u003cdiv class\u003d\"value\"\u003e24h:\u0026nbsp;\u003cspan mv-watch mv-content\u003d\"itemState(config.rainTodayItem) | number:0\"\u003e\u003c/span\u003e\u0026nbsp;mm\u003c/div\u003e\n        \u003c/div\u003e\n      \u003c/div\u003e  \n\n      \u003cdiv class\u003d\"column\" style\u003d\"width:35%;\"\u003e\n        \u003cdiv class\u003d\"top\"\u003e\n          \u003cdiv class\u003d\"icon wind\" style\u003d\"margin-left: 7%;\"\u003e\u003csvg viewBox\u003d\"0 0 64 64\"\u003e\u003cuse xlink:href\u003d\"/static/shared/habpanel/svg/icons.svg#self_wind_grayscaled\" /\u003e\u003c/svg\u003e\u003c/div\u003e\n          \u003cdiv class\u003d\"value\"\u003e\n            \u003cdiv class\u003d\"main\" mv-watch mv-content\u003d\"itemState(config.windSpeedItem) | number:1\"\u003e\u003c/div\u003e\n            \u003cdiv class\u003d\"sub\"\u003ekm/h\u003c/div\u003e\n          \u003c/div\u003e\n        \u003c/div\u003e\n        \u003cdiv class\u003d\"bottom\"\u003e\n          \u003cdiv class\u003d\"value\"\u003e\u003cspan mv-watch mv-content\u003d\"itemState(config.windDirectionItem)\"\u003e\u003c/span\u003e\u003c/div\u003e\n      \t\u003c/div\u003e\n      \u003c/div\u003e  \n    \u003c/div\u003e\n  \u003c/div\u003e\n\u003c/div\u003e\n"
+              "template": "\u003cdiv oc-lazy-load\u003d\"[\u0027/static/shared/habpanel/js/helper.js\u0027]\" style\u003d\"height:100%\"\u003e\n  \u003cdiv class\u003d\"mvWidget mvOutdoorWeather mvItemValue mvClickable\" mv-trigger dashboard-button dashboard\u003d\"Wetterbericht\"\u003e\n    \u003cdiv class\u003d\"groupTitle\"\u003eGarten\u003c/div\u003e\n    \u003cdiv class\u003d\"content\"\u003e\n      \u003cdiv class\u003d\"column\" style\u003d\"width:30%\"\u003e\n        \u003cdiv class\u003d\"top\"\u003e\n          \u003cdiv class\u003d\"icon temperature\" style\u003d\"margin-left: -7%;\"\u003e\u003csvg viewBox\u003d\"0 0 64 64\"\u003e\u003cuse xlink:href\u003d\"/static/shared/habpanel/svg/icons.svg#self_temperature_grayscaled\" /\u003e\u003c/svg\u003e\u003c/div\u003e\n          \u003cdiv class\u003d\"value\"\u003e\n            \u003cdiv class\u003d\"main\" mv-watch mv-content\u003d\"itemState(config.temperatureItem) | number:1\"\u003e\u003c/div\u003e\n            \u003cdiv class\u003d\"sub\"\u003e\u0026#176C\u003c/div\u003e\n          \u003c/div\u003e\n        \u003c/div\u003e\n        \u003cdiv class\u003d\"bottom\"\u003e\n          \u003cdiv class\u003d\"value\"\u003e\u003cspan mv-watch mv-content\u003d\"itemState(config.humidityItem) | number:1\"\u003e\u003c/span\u003e\u0026nbsp;%\u003c/div\u003e\n        \u003c/div\u003e\n      \u003c/div\u003e\n\n      \u003cdiv class\u003d\"column\" style\u003d\"width:33%\"\u003e\n        \u003cdiv class\u003d\"top\"\u003e\n          \u003cdiv class\u003d\"icon rain\" style\u003d\"margin-left: 5%;\"\u003e\u003csvg viewBox\u003d\"0 0 64 64\"\u003e\u003cuse xlink:href\u003d\"/static/shared/habpanel/svg/icons.svg#self_rain_grayscaled\" /\u003e\u003c/svg\u003e\u003c/div\u003e\n          \u003cdiv class\u003d\"value\"\u003e\n            \u003cdiv class\u003d\"main\" mv-watch mv-content\u003d\"itemState(config.rainCurrentItem) | number:1\"\u003e\u003c/div\u003e\n            \u003cdiv class\u003d\"sub\"\u003emm\u003c/div\u003e\n          \u003c/div\u003e\n        \u003c/div\u003e\n        \u003cdiv class\u003d\"bottom\"\u003e\n          \u003cdiv class\u003d\"value\"\u003e24h:\u0026nbsp;\u003cspan mv-watch mv-content\u003d\"itemState(config.rainTodayItem) | number:0\"\u003e\u003c/span\u003e\u0026nbsp;mm\u003c/div\u003e\n        \u003c/div\u003e\n      \u003c/div\u003e  \n\n      \u003cdiv class\u003d\"column\" style\u003d\"width:35%;\"\u003e\n        \u003cdiv class\u003d\"top\"\u003e\n          \u003cdiv class\u003d\"icon wind\" style\u003d\"margin-left: 7%;\"\u003e\u003csvg viewBox\u003d\"0 0 64 64\"\u003e\u003cuse xlink:href\u003d\"/static/shared/habpanel/svg/icons.svg#self_wind_grayscaled\" /\u003e\u003c/svg\u003e\u003c/div\u003e\n          \u003cdiv class\u003d\"value\"\u003e\n            \u003cdiv class\u003d\"main\" mv-watch mv-content\u003d\"itemState(config.windSpeedItem) | number:1\"\u003e\u003c/div\u003e\n            \u003cdiv class\u003d\"subGroup\"\u003e\n              \u003cdiv class\u003d\"sub\"\u003ekm/h\u003c/div\u003e\n              \u003cdiv class\u003d\"sub\"\u003e\u003cspan mv-watch mv-content\u003d\"itemState(config.windDirectionItem)\"\u003e\u003c/span\u003e\u003c/div\u003e\n            \u003c/div\u003e\n          \u003c/div\u003e\n        \u003c/div\u003e\n        \u003cdiv class\u003d\"bottom\"\u003e\n          \u003cdiv class\u003d\"value\"\u003eBöe:\u0026nbsp;\u003cspan mv-watch mv-content\u003d\"itemState(config.windGustItem) | number:1\"\u003e\u003c/span\u003e\u0026nbsp;km/h\u003c/div\u003e\n      \t\u003c/div\u003e\n      \u003c/div\u003e  \n    \u003c/div\u003e\n  \u003c/div\u003e\n\u003c/div\u003e\n"
             },
             "slots": {
               "settings": [
@@ -89,6 +89,13 @@
                   "config": {
                     "id": "windSpeedItem",
                     "label": "Windgeschwindigkeit"
+                  }
+                },
+                {
+                  "component": "item",
+                  "config": {
+                    "id": "windGustItem",
+                    "label": "Böe"
                   }
                 },
                 {
@@ -465,8 +472,9 @@
                       "rainTodayItem": "pOutdoor_WeatherStation_Rain_Daily",
                       "temperatureItem": "pOutdoor_WeatherStation_Temperature",
                       "title": "Garten",
-                      "windDirectionItem": "pOutdoor_WeatherStation_Wind_Direction_Message",
-                      "windSpeedItem": "pOutdoor_WeatherStation_Wind_Current"
+                      "windDirectionItem": "pOutdoor_WeatherStation_Wind_Direction_Short",
+                      "windGustItem": "pOutdoor_WeatherStation_Wind_Gust_1h",
+                      "windSpeedItem": "pOutdoor_WeatherStation_Wind_Speed_1h"
                     },
                     "customwidget": "OutdoorWeather",
                     "name": "Garten",
