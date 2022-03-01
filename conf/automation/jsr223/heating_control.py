@@ -678,8 +678,16 @@ class HeatingControlRule():
         if azimut >= 120 and azimut <= SunRadiation.AZIMUT_NW_LIMIT and elevation >= SunRadiation.getMinElevation(azimut):
             #self.log.info(u"Sun     : {:.1f} W/min ({:.1f} W/min)".format(effectiveRadiationShortTerm,effectiveRadiationLongTerm))
             if effectiveRadiationLongTerm > 8.0:
-                if postUpdateIfChanged("pOther_Automatic_State_Sunprotection_Terrace", SunProtectionHelper.STATE_TERRACE_CLOSED ):
-                    self.log.info(u"DEBUG: SP switching 2 • {} {} {}".format("Terrace",effectiveRadiationShortTerm,effectiveRadiationLongTerm))
+                
+                terraceTooWarm = currentOutdoorTemperature > 25 or currentOutdoorTemperature4 > 25
+                
+                targetRoomTemperature = hhs.getHeatingState("lGF_Livingroom").getHeatingTargetTemperature()
+                currentRoomTemperature = cr.getRoomState("lGF_Livingroom").getCurrentTemperature()
+                roomTooWarm = self.isTooWarm(effectiveRadiationShortTerm, currentOutdoorTemperature, currentOutdoorTemperature4, currentRoomTemperature, targetRoomTemperature )
+
+                if terraceTooWarm or roomTooWarm or azimut >= 190:
+                    if postUpdateIfChanged("pOther_Automatic_State_Sunprotection_Terrace", SunProtectionHelper.STATE_TERRACE_CLOSED ):
+                        self.log.info(u"DEBUG: SP switching 2 • {} {} {}".format("Terrace",effectiveRadiationShortTerm,effectiveRadiationLongTerm))
             elif getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == 0:
                 postUpdate("pOther_Automatic_State_Sunprotection_Terrace", SunProtectionHelper.STATE_TERRACE_MAYBE_CLOSED )
                 self.log.info(u"DEBUG: SP switching 1 • {} {} {}".format("Terrace",effectiveRadiationShortTerm,effectiveRadiationLongTerm))
@@ -730,31 +738,34 @@ class HeatingControlRule():
                         else:
                             self.log.warn(u"DEBUG: SP skipped OFF • {} {} {} {}".format(room.getName(),effectiveRadiationShortTerm,effectiveRadiationLongTerm,effectiveRadiationMax))
                 else:
-                    radiationTooHigh = effectiveRadiationShortTerm > 5.0
-                    
-                    roomTemperatureTooWarm = currentRoomTemperature > targetRoomTemperature - 0.5
-                    
-                    radiationWayTooHigh = effectiveRadiationShortTerm > 15.0
-                    itsGettingWarmerOrRoomIsWayTooWarm = ( \
-                        currentOutdoorTemperature > targetRoomTemperature \
-                        or \
-                        currentOutdoorTemperature4 > targetRoomTemperature \
-                        or \
-                        currentRoomTemperature > targetRoomTemperature + ( 2.0 if not radiationWayTooHigh else 1.0 ) \
-                    )
-                    
                     #self.log.info(u"{} {}".format(room.getName(),effectiveRadiationShortTerm))
                     #self.log.info(u"{} {}".format(radiationTooHigh,roomTemperatureTooWarm))
                     #self.log.info(u"{} {}".format(currentRoomTemperature,targetRoomTemperature))
                     #self.log.info(u"{} {}".format(currentOutdoorTemperature,currentOutdoorTemperature4))
-                    
-                    if radiationTooHigh and roomTemperatureTooWarm and itsGettingWarmerOrRoomIsWayTooWarm:
+
+                    tooWarm = self.isTooWarm(effectiveRadiationShortTerm, currentOutdoorTemperature, currentOutdoorTemperature4, currentRoomTemperature, targetRoomTemperature )
+                    if tooWarm:
                         if itemLastUpdateOlderThen(transition.getSunProtectionItem(), ZonedDateTime.now().minusMinutes(30)):
                             postUpdate(transition.getSunProtectionItem(), ON )
                             self.log.info(u"DEBUG: SP switching ON • {} {} {} {}".format(room.getName(),effectiveRadiationShortTerm,effectiveRadiationLongTerm,effectiveRadiationMax))
                         else:
                             self.log.warn(u"DEBUG: SP skipped ON • {} {} {} {}".format(room.getName(),effectiveRadiationShortTerm,effectiveRadiationLongTerm,effectiveRadiationMax))
-
+                            
+    def isTooWarm( self, effectiveRadiationShortTerm, currentOutdoorTemperature, currentOutdoorTemperature4, currentRoomTemperature, targetRoomTemperature ):
+        radiationTooHigh = effectiveRadiationShortTerm > 5.0
+        
+        roomTemperatureTooWarm = currentRoomTemperature > targetRoomTemperature - 0.5
+        
+        radiationWayTooHigh = effectiveRadiationShortTerm > 15.0
+        itsGettingWarmerOrRoomIsWayTooWarm = ( \
+            currentOutdoorTemperature > targetRoomTemperature \
+            or \
+            currentOutdoorTemperature4 > targetRoomTemperature \
+            or \
+            currentRoomTemperature > targetRoomTemperature + ( 2.0 if not radiationWayTooHigh else 1.0 ) \
+        )
+        return radiationTooHigh and roomTemperatureTooWarm and itsGettingWarmerOrRoomIsWayTooWarm
+                    
     def controlHeating( self, now, currentOperatingMode, currentOperatingModeChange, isHeatingRequested ):
 
         # 0 - Abschalten
