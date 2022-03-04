@@ -165,12 +165,6 @@ class HouseState(State):
     def getSunRadiation(self):
         return self.sunRadiation
 
-    def setSunRadiationLazy(self,value):
-        self.sunRadiationLazy = value
-        
-    def getSunRadiationLazy(self):
-        return self.sunRadiationLazy
-
     def setSunRadiationMax(self,value):
         self.sunRadiationMax = value
         
@@ -316,3 +310,9 @@ class HouseHeatingState():
 
     def isHeatingRequested(self):
         return self.heatingRequested
+
+    def setChargeLevelDebugInfos(self,value):
+        self.chargeLevelDebugInfos=value
+
+    def getChargeLevelDebugInfos(self):
+        return self.chargeLevelDebugInfos

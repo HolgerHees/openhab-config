@@ -454,7 +454,7 @@ class Heating(object):
     
         return ( maxMinutes * multiplier ) / 60.0
 
-    def getCoolingAndRadiations(self,hours,sunRadiation=None,sunRadiationLazy=None):
+    def getCoolingAndRadiations(self,hours,sunRadiation=None):
         isForecast = hours != 0
         
         time = self.now
@@ -486,7 +486,7 @@ class Heating(object):
         cloudCover = round(self.getCachedItemFloat(self.cloudCoverItem),1)
         
         currentTotalVentilationEnergy = self.getVentilationEnergy(tempDiffOffset) / 3.6 # converting kj into watt
-        sunSouthRadiation, sunWestRadiation, sunRadiation, sunDebugInfo = SunRadiation.getSunPowerPerHour(time,cloudCover,sunRadiation,sunRadiationLazy)
+        sunSouthRadiation, sunWestRadiation, sunRadiation, sunDebugInfo = SunRadiation.getSunPowerPerHour(time,cloudCover,sunRadiation)
         sunSouthRadiationMax, sunWestRadiationMax, sunRadiationMax, sunMaxDebugInfo = SunRadiation.getSunPowerPerHour(time,0)
         
         totalOpenWindowCount = 0
@@ -606,7 +606,6 @@ class Heating(object):
 
         houseState.setCloudCover(cloudCover)
         houseState.setSunRadiation(sunRadiation)
-        houseState.setSunRadiationLazy(sunRadiation if sunRadiationLazy == None else sunRadiationLazy)
         houseState.setSunRadiationMax(sunRadiationMax)
         houseState.setSunSouthRadiation(sunSouthRadiation)
         houseState.setSunSouthRadiationMax(sunSouthRadiationMax)
@@ -812,9 +811,17 @@ class Heating(object):
         
     def formatEnergy(self,energy,precision=1):
         return round(energy/60.0,precision)
-    
-    def logCoolingAndRadiations(self,prefix,cr):
-        self.log.info(u"{}: {}".format(prefix,cr.getSunDebugInfo()))
+                
+    def logCoolingAndRadiations(self,prefix, cr, sunRadiationLazy = None, sunLightLevel = None):
+        
+        sdi = cr.getSunDebugInfo()
+        
+        lazyRadiationMsg = u" (∾ {})".format( round(sunRadiationLazy / 60.0, 1) ) if sunRadiationLazy != None else ""
+        lightLevelMsg = u", {} lux".format( int(sunLightLevel) ) if sunLightLevel != None else ""
+        debugInfo = u"Az {}° • El {}{}° • Clouds {} ⊗ • Sun {}{} W/min{}{}".format(sdi["azimut"], sdi["elevation"], sdi["minElevation"], cr.getCloudCover(), sdi["effectiveRadiation"], lazyRadiationMsg, lightLevelMsg, sdi["active"])
+
+        self.log.info(u"{}: {}".format(prefix, debugInfo))
+        
         self.log.info(u"        : Wall {} ({}☀) W/min • Air {} W/min • Leak {} W/min • Window {} ({}☀) W/min".format(
             self.formatEnergy(cr.getWallEnergy()),
             self.formatEnergy(cr.getWallRadiation()),
@@ -827,6 +834,19 @@ class Heating(object):
         self.log.info(u"        : ↑↓ {} W/min ({}°C) • HU {}".format(self.formatEnergy(cr.getPassiveSaldo()),round(cr.getReferenceTemperature(),1), msg ))
         self.log.info(u"        : ---")
                   
+    def logHeatingStates(self, cr, hhs ):
+        if cr.getHeatingVolume() > 0:
+            self.log.info(u"        : {} ({} m³) • Factor {}".format(cr.getHeatingDebugInfo(),round(cr.getHeatingVolume() / 1000.0,3),round(cr.getHeatingVolumeFactor(),2)))
+            self.log.info(u"        : ---")
+        
+        if len(hhs.getChargeLevelDebugInfos()) > 0:
+            for chargeLevelDebugInfo in hhs.getChargeLevelDebugInfos():
+                self.log.info(chargeLevelDebugInfo)
+            self.log.info(u"        : ---")
+
+        for room in Heating.rooms:
+            self.logHeatingState(room, cr, hhs )
+        
     def logHeatingState(self,room, cr, hhs ):
         
         rs = cr.getRoomState(room.getName())
@@ -899,7 +919,7 @@ class Heating(object):
             self.log.info(u"        : {}".format(infoMsg))
 
                 
-    def calculate(self,isHeatingActive,sunRadiation,sunRadiationLazy):
+    def calculate(self,isHeatingActive,sunRadiation):
         # handle outdated ventilation values
         if itemLastUpdateOlderThen(self.ventilationFilterRuntimeItem, self.now.minusMinutes(120)):
             self.cache[self.ventilationLevelItem] = DecimalType(3)
@@ -924,19 +944,10 @@ class Heating(object):
 
         # *** 8 HOUR FORECAST ***
         cr8 = self.getCoolingAndRadiations(8)
-        self.logCoolingAndRadiations("FC8     ",cr8)
-
         # *** 4 HOUR FORECAST ***
         cr4 = self.getCoolingAndRadiations(4)
-        self.logCoolingAndRadiations("FC4     ",cr4)
-
         # *** CURRENT ***
-        cr = self.getCoolingAndRadiations(0,sunRadiation,sunRadiationLazy)
-        self.logCoolingAndRadiations("Current ",cr)
-
-        if cr.getHeatingVolume() > 0:
-            self.log.info(u"        : {} ({} m³) • Factor {}".format(cr.getHeatingDebugInfo(),round(cr.getHeatingVolume() / 1000.0,3),round(cr.getHeatingVolumeFactor(),2)))
-            self.log.info(u"        : ---")
+        cr = self.getCoolingAndRadiations(0,sunRadiation)
 
         # *** NIGHT MODE DETECTION ***
         nightModeActive = self.isNightMode(isHeatingActive)
@@ -944,7 +955,7 @@ class Heating(object):
         
         hhs = HouseHeatingState()
         heatingRequested = False
-        hasChargeLevelDebugInfos = False
+        chargeLevelDebugInfos = []
         
         for room in filter( lambda room: room.getHeatingVolume() != None,Heating.rooms):
             
@@ -961,8 +972,7 @@ class Heating(object):
             rs8.setChargedBuffer(totalChargeLevel)
             
             if chargeLevelDebugInfo != None:
-                self.log.info(chargeLevelDebugInfo)
-                hasChargeLevelDebugInfos = True
+                chargeLevelDebugInfos.append(chargeLevelDebugInfo)
 
             # *** HEATING STATE ***
 
@@ -1077,13 +1087,6 @@ class Heating(object):
 
             hhs.setHeatingState(room.getName(),rhs)
 
-        if hasChargeLevelDebugInfos:
-            self.log.info(u"        : ---")
-            
-        # *** LOGGING ***
-        for room in Heating.rooms:
-            self.logHeatingState(room, cr, hhs )
-            
         # *** REGISTER FORCED HEATINGS IF HEATING IS POSSIBLE
         if heatingRequested:
             for room in filter( lambda room: room.getHeatingVolume() != None,Heating.rooms):
@@ -1094,6 +1097,8 @@ class Heating(object):
 
         hhs.setHeatingRequested(heatingRequested)
 
+        hhs.setChargeLevelDebugInfos(chargeLevelDebugInfos)
+        
         Heating.lastRuntime = self.now
 
         return cr, cr4, cr8, hhs

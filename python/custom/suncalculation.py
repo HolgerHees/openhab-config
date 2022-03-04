@@ -50,7 +50,7 @@ class SunRadiation(object):
         return minElevation
 
     @staticmethod
-    def getSunPowerPerHour( referenceTime, cloudCover, sunRadiation = None, sunRadiationLazy = None ):
+    def getSunPowerPerHour( referenceTime, cloudCover, sunRadiation = None ):
 
         elevation, azimut = SunRadiation._getSunData( referenceTime )
 
@@ -111,8 +111,8 @@ class SunRadiation(object):
         sunAzimutMsg = round( azimut, 1 )
       
         minElevationMsg = u" (min {})".format( round( minElevation,1) ) if minElevation > 0 else ""
-        lazyRadiationMsg = u" (∾ {})".format( round(sunRadiationLazy / 60.0, 1) ) if sunRadiationLazy != None else ""
-        debugInfo = u"Az {}° • El {}{}° • Clouds {} ⊗ • Sun {}{} W/min{}".format(sunAzimutMsg, sunElevationMsg, minElevationMsg, cloudCover, round(_effectiveRadiation / 60.0, 1), lazyRadiationMsg, activeMsg)
+        
+        debugInfo = { "azimut": sunAzimutMsg, "elevation": sunElevationMsg, "minElevation": minElevationMsg, "effectiveRadiation": round(_effectiveRadiation / 60.0, 1), "active": activeMsg }
 
         return _effectiveSouthRadiation, _effectiveWestRadiation, _effectiveRadiation, debugInfo
 

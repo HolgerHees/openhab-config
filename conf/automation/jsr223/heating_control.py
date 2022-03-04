@@ -487,8 +487,6 @@ class HeatingControlRule():
             CronTrigger("15 * * * * ?")
         ]
         self.activeHeatingOperatingMode = -1
-        self.messuredRadiationShortTerm = None
-        self.messuredRadiationLongTerm = None
 
     def execute(self, module, input):
         self.log.info(u"--------: >>>" )
@@ -504,19 +502,23 @@ class HeatingControlRule():
         outdoorTemperatureItemName = getItemState("pOutdoor_WeatherStation_Temperature_Item_Name").toString()
         heating = Heating(self.log,outdoorTemperatureItemName)
 
+        messuredRadiationShortTerm = messuredRadiationLongTerm = None
+        messuredLightLevel = 1000
         if getItemState("pOutdoor_WeatherStation_Is_Working") == ON:
-            _messuredRadiationShortTerm = getStableItemState(now,"pOutdoor_WeatherStation_Solar_Power",10)
-            if self.messuredRadiationShortTerm == None or _messuredRadiationShortTerm > self.messuredRadiationShortTerm:
-                self.messuredRadiationShortTerm = _messuredRadiationShortTerm
+            essuredRadiationShortTerm = getStableItemState(now,"pOutdoor_WeatherStation_Solar_Power",10)
+            messuredRadiationLongTerm = getStableItemState(now,"pOutdoor_WeatherStation_Solar_Power",30)
+            messuredLightLevel = getStableItemState(now,"pOutdoor_WeatherStation_Light_Level",60)
 
-            _messuredRadiationLongTerm = getStableItemState(now,"pOutdoor_WeatherStation_Solar_Power",30)
-            if self.messuredRadiationLongTerm == None or _messuredRadiationLongTerm > self.messuredRadiationLongTerm:
-                self.messuredRadiationLongTerm = _messuredRadiationLongTerm
-        else:
-            self.messuredRadiationShortTerm = self.messuredRadiationLongTerm = None
+        cr, cr4, cr8, hhs = heating.calculate(currentHeatingDemand == ON, messuredRadiationShortTerm)    
+
+        # **** DEBUG ****
+        heating.logCoolingAndRadiations("FC8     ",cr8)
+        heating.logCoolingAndRadiations("FC4     ",cr4)
+        heating.logCoolingAndRadiations("Current ",cr, messuredRadiationLongTerm, messuredLightLevel)
         
-        cr, cr4, cr8, hhs = heating.calculate(currentHeatingDemand == ON,self.messuredRadiationShortTerm,self.messuredRadiationLongTerm)    
- 
+        heating.logHeatingStates(cr, hhs )
+        # ***************
+
         if autoModeEnabled:
             heatingRequested = hhs.isHeatingRequested()
             
@@ -633,15 +635,14 @@ class HeatingControlRule():
         else:
             self.log.info(u"Demand  : SKIPPED • MANUAL MODE ACTIVE")
 
-        self.setSunStates(now,cr,cr4,hhs)
+        self.setSunStates(now,cr,cr4,hhs, messuredRadiationLongTerm, messuredLightLevel)
         
         self.log.info(u"--------: <<<" )
    
-    def setSunStates(self, now, cr, cr4, hhs):
+    def setSunStates(self, now, cr, cr4, hhs, messuredRadiationLongTerm, messuredLightLevel):
         cloudCover = cr.getCloudCover()
         
         messuredRadiationShortTerm = cr.getSunRadiation()
-        messuredRadiationLongTerm = cr.getSunRadiationLazy()
 
         _sunSouthRadiation, _sunWestRadiation, _sunRadiation, _sunDebugInfo = SunRadiation.getSunPowerPerHour(now,cloudCover,messuredRadiationShortTerm)
         effectiveSouthRadiationShortTerm = _sunSouthRadiation / 60.0
@@ -677,17 +678,18 @@ class HeatingControlRule():
 
         if azimut >= 120 and azimut <= SunRadiation.AZIMUT_NW_LIMIT and elevation >= SunRadiation.getMinElevation(azimut):
             #self.log.info(u"Sun     : {:.1f} W/min ({:.1f} W/min)".format(effectiveRadiationShortTerm,effectiveRadiationLongTerm))
-            if effectiveRadiationLongTerm > 8.0:
-                
-                terraceTooWarm = currentOutdoorTemperature > 25 or currentOutdoorTemperature4 > 25
-                
-                targetRoomTemperature = hhs.getHeatingState("lGF_Livingroom").getHeatingTargetTemperature()
-                currentRoomTemperature = cr.getRoomState("lGF_Livingroom").getCurrentTemperature()
-                roomTooWarm = self.isTooWarm(effectiveRadiationShortTerm, currentOutdoorTemperature, currentOutdoorTemperature4, currentRoomTemperature, targetRoomTemperature )
-
-                if terraceTooWarm or roomTooWarm or azimut >= 190:
-                    if postUpdateIfChanged("pOther_Automatic_State_Sunprotection_Terrace", SunProtectionHelper.STATE_TERRACE_CLOSED ):
-                        self.log.info(u"DEBUG: SP switching 2 • {} {} {}".format("Terrace",effectiveRadiationShortTerm,effectiveRadiationLongTerm))
+            
+            needsSunprotection = azimut >= 180 and messuredLightLevel > 10000
+            if not needsSunprotection and effectiveRadiationLongTerm > 8.0:
+                needsSunprotection = currentOutdoorTemperature > 25 or currentOutdoorTemperature4 > 25
+                if not needsSunprotection:
+                    targetRoomTemperature = hhs.getHeatingState("lGF_Livingroom").getHeatingTargetTemperature()
+                    currentRoomTemperature = cr.getRoomState("lGF_Livingroom").getCurrentTemperature()
+                    needsSunprotection = self.isTooWarm(effectiveRadiationShortTerm, currentOutdoorTemperature, currentOutdoorTemperature4, currentRoomTemperature, targetRoomTemperature )
+                        
+            if needsSunprotection:
+                if postUpdateIfChanged("pOther_Automatic_State_Sunprotection_Terrace", SunProtectionHelper.STATE_TERRACE_CLOSED ):
+                    self.log.info(u"DEBUG: SP switching 2 • {} {} {}".format("Terrace",effectiveRadiationShortTerm,effectiveRadiationLongTerm))
             elif getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == 0:
                 postUpdate("pOther_Automatic_State_Sunprotection_Terrace", SunProtectionHelper.STATE_TERRACE_MAYBE_CLOSED )
                 self.log.info(u"DEBUG: SP switching 1 • {} {} {}".format("Terrace",effectiveRadiationShortTerm,effectiveRadiationLongTerm))
@@ -846,7 +848,7 @@ class HeatingControlRule():
                    
                     sendCommand("pGF_Utilityroom_Heating_Operating_Mode",self.activeHeatingOperatingMode)
                     self.log.info(u"Switch  : Reduziert{}{}".format(forceReducedMsg,forceRetryMsg))
-        
+         
         # Reduziert
         elif currentOperatingMode == 3:
             # Wenn Temperatur seit XX min OK ist und der brenner sowieso aus ist kann gleich in 'Nur WW' gewechselt werden
