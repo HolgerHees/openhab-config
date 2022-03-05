@@ -503,18 +503,19 @@ class HeatingControlRule():
         heating = Heating(self.log,outdoorTemperatureItemName)
 
         messuredRadiationShortTerm = messuredRadiationLongTerm = None
-        messuredLightLevel = 1000
+        messuredLightLevelShortTerm = messuredLightLevelLongTerm = 1000
         if getItemState("pOutdoor_WeatherStation_Is_Working") == ON:
-            essuredRadiationShortTerm = getStableItemState(now,"pOutdoor_WeatherStation_Solar_Power",10)
+            messuredRadiationShortTerm = getStableItemState(now,"pOutdoor_WeatherStation_Solar_Power",10)
             messuredRadiationLongTerm = getStableItemState(now,"pOutdoor_WeatherStation_Solar_Power",30)
-            messuredLightLevel = getStableItemState(now,"pOutdoor_WeatherStation_Light_Level",60)
+            messuredLightLevelShortTerm = getStableItemState(now,"pOutdoor_WeatherStation_Light_Level",30)
+            messuredLightLevelLongTerm = getStableItemState(now,"pOutdoor_WeatherStation_Light_Level",60)
 
         cr, cr4, cr8, hhs = heating.calculate(currentHeatingDemand == ON, messuredRadiationShortTerm)    
 
         # **** DEBUG ****
         heating.logCoolingAndRadiations("FC8     ",cr8)
         heating.logCoolingAndRadiations("FC4     ",cr4)
-        heating.logCoolingAndRadiations("Current ",cr, messuredRadiationLongTerm, messuredLightLevel)
+        heating.logCoolingAndRadiations("Current ",cr, messuredRadiationLongTerm, messuredLightLevelLongTerm)
         
         heating.logHeatingStates(cr, hhs )
         # ***************
@@ -635,11 +636,11 @@ class HeatingControlRule():
         else:
             self.log.info(u"Demand  : SKIPPED • MANUAL MODE ACTIVE")
 
-        self.setSunStates(now,cr,cr4,hhs, messuredRadiationLongTerm, messuredLightLevel)
+        self.setSunStates(now,cr,cr4,hhs, messuredRadiationLongTerm, messuredLightLevelShortTerm, messuredLightLevelLongTerm)
         
         self.log.info(u"--------: <<<" )
    
-    def setSunStates(self, now, cr, cr4, hhs, messuredRadiationLongTerm, messuredLightLevel):
+    def setSunStates(self, now, cr, cr4, hhs, messuredRadiationLongTerm, messuredLightLevelShortTerm, messuredLightLevelLongTerm):
         cloudCover = cr.getCloudCover()
         
         messuredRadiationShortTerm = cr.getSunRadiation()
@@ -679,7 +680,7 @@ class HeatingControlRule():
         if azimut >= 120 and azimut <= SunRadiation.AZIMUT_NW_LIMIT and elevation >= SunRadiation.getMinElevation(azimut):
             #self.log.info(u"Sun     : {:.1f} W/min ({:.1f} W/min)".format(effectiveRadiationShortTerm,effectiveRadiationLongTerm))
             
-            needsSunprotection = azimut >= 180 and messuredLightLevel > 10000
+            needsSunprotection = azimut >= 180 and messuredLightLevelShortTerm > 15000 and messuredLightLevelLongTerm > 15000
             if not needsSunprotection and effectiveRadiationLongTerm > 8.0:
                 needsSunprotection = currentOutdoorTemperature > 25 or currentOutdoorTemperature4 > 25
                 if not needsSunprotection:
@@ -689,10 +690,10 @@ class HeatingControlRule():
                         
             if needsSunprotection:
                 if postUpdateIfChanged("pOther_Automatic_State_Sunprotection_Terrace", SunProtectionHelper.STATE_TERRACE_CLOSED ):
-                    self.log.info(u"DEBUG: SP switching 2 • {} {} {}".format("Terrace",effectiveRadiationShortTerm,effectiveRadiationLongTerm))
+                    self.log.info(u"DEBUG: SP switching 2 • {} • {} ({}) W/m² • {} ({}) lux".format("Terrace",round(effectiveRadiationShortTerm,1),round(effectiveRadiationLongTerm,1),int(messuredLightLevelShortTerm), int(messuredLightLevelLongTerm)))
             elif getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == 0:
                 postUpdate("pOther_Automatic_State_Sunprotection_Terrace", SunProtectionHelper.STATE_TERRACE_MAYBE_CLOSED )
-                self.log.info(u"DEBUG: SP switching 1 • {} {} {}".format("Terrace",effectiveRadiationShortTerm,effectiveRadiationLongTerm))
+                self.log.info(u"DEBUG: SP switching 1 • {} • {} ({}) W/m² • {} ({}) lux".format("Terrace",round(effectiveRadiationShortTerm,1),round(effectiveRadiationLongTerm,1),int(messuredLightLevelShortTerm), int(messuredLightLevelLongTerm)))
         else:
             #if getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == 2:
             if postUpdateIfChanged("pOther_Automatic_State_Sunprotection_Terrace", SunProtectionHelper.STATE_TERRACE_OPEN ):
@@ -766,7 +767,7 @@ class HeatingControlRule():
             or \
             currentRoomTemperature > targetRoomTemperature + ( 2.0 if not radiationWayTooHigh else 1.0 ) \
         )
-        return radiationTooHigh and roomTemperatureTooWarm and itsGettingWarmerOrRoomIsWayTooWarm
+        return currentOutdoorTemperature > 10 and radiationTooHigh and roomTemperatureTooWarm and itsGettingWarmerOrRoomIsWayTooWarm
                     
     def controlHeating( self, now, currentOperatingMode, currentOperatingModeChange, isHeatingRequested ):
 
