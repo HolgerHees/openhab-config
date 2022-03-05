@@ -680,10 +680,13 @@ class HeatingControlRule():
         if azimut >= 120 and azimut <= SunRadiation.AZIMUT_NW_LIMIT and elevation >= SunRadiation.getMinElevation(azimut):
             #self.log.info(u"Sun     : {:.1f} W/min ({:.1f} W/min)".format(effectiveRadiationShortTerm,effectiveRadiationLongTerm))
             
+            # glare protection 
             needsSunprotection = azimut >= 180 and messuredLightLevelShortTerm > 15000 and messuredLightLevelLongTerm > 15000
-            if not needsSunprotection and effectiveRadiationLongTerm > 8.0:
-                needsSunprotection = currentOutdoorTemperature > 25 or currentOutdoorTemperature4 > 25
+            if not needsSunprotection:
+                # hot stone protection
+                needsSunprotection = effectiveRadiationLongTerm > 8.0 and (currentOutdoorTemperature > 26 or currentOutdoorTemperature4 > 26)
                 if not needsSunprotection:
+                    # hot room protection (only above 18°C)
                     targetRoomTemperature = hhs.getHeatingState("lGF_Livingroom").getHeatingTargetTemperature()
                     currentRoomTemperature = cr.getRoomState("lGF_Livingroom").getCurrentTemperature()
                     needsSunprotection = self.isTooWarm(effectiveRadiationShortTerm, currentOutdoorTemperature, currentOutdoorTemperature4, currentRoomTemperature, targetRoomTemperature )
@@ -755,6 +758,9 @@ class HeatingControlRule():
                             self.log.warn(u"DEBUG: SP skipped ON • {} {} {} {}".format(room.getName(),effectiveRadiationShortTerm,effectiveRadiationLongTerm,effectiveRadiationMax))
                             
     def isTooWarm( self, effectiveRadiationShortTerm, currentOutdoorTemperature, currentOutdoorTemperature4, currentRoomTemperature, targetRoomTemperature ):
+        if currentOutdoorTemperature <= 18 and currentOutdoorTemperature4 <= 18:
+            return False
+        
         radiationTooHigh = effectiveRadiationShortTerm > 5.0
         
         roomTemperatureTooWarm = currentRoomTemperature > targetRoomTemperature - 0.5
@@ -767,7 +773,7 @@ class HeatingControlRule():
             or \
             currentRoomTemperature > targetRoomTemperature + ( 2.0 if not radiationWayTooHigh else 1.0 ) \
         )
-        return currentOutdoorTemperature > 10 and radiationTooHigh and roomTemperatureTooWarm and itsGettingWarmerOrRoomIsWayTooWarm
+        return radiationTooHigh and roomTemperatureTooWarm and itsGettingWarmerOrRoomIsWayTooWarm
                     
     def controlHeating( self, now, currentOperatingMode, currentOperatingModeChange, isHeatingRequested ):
 
