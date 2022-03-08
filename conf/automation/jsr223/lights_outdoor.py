@@ -2,16 +2,16 @@ import time
 from java.time import ZonedDateTime
 from java.time.temporal import ChronoUnit
 
-from shared.helper import rule, startTimer, getItemState, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged
+from shared.helper import rule, startTimer, getItem, getItemState, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged
 from shared.triggers import ItemCommandTrigger, ItemStateChangeTrigger
 
 
 manualMappings = [
-    ["pOutdoor_Streedside_Frontdoor_Light_Powered", "pOutdoor_Streedside_Frontdoor_Automatic_Switch","pOutdoor_Streedside_Frontdoor_Motiondetector_State"],
-    ["pOutdoor_Carport_Light_Powered", "pOutdoor_Carport_Automatic_Switch","pOutdoor_Carport_Motiondetector_State"],
-    ["pOutdoor_Terrace_Light_Brightness", "pOutdoor_Terrace_Automatic_Switch",None],
-    ["pOutdoor_Streedside_Garage_Light_Powered", "pOutdoor_Streedside_Garage_Automatic_Switch","pOutdoor_Streedside_Garage_Motiondetector_State"],
-    ["pOutdoor_Garden_Garage_Light_Powered", "pOutdoor_Garden_Garage_Automatic_Switch","pOutdoor_Garden_Garage_Motiondetector_State"]
+    ["pOutdoor_Streedside_Frontdoor_Light_Powered", "pOutdoor_Streedside_Frontdoor_Automatic_Switch", [ "pOutdoor_Streedside_Frontdoor_Motiondetector_State" ] ],
+    ["pOutdoor_Carport_Light_Powered"             , "pOutdoor_Carport_Automatic_Switch"             , [ "pOutdoor_Carport_Motiondetector_State" ] ],
+    ["pOutdoor_Terrace_Light_Brightness"          , "pOutdoor_Terrace_Automatic_Switch"             , [ "pOutdoor_Terrace_Motiondetector_State1", "pOutdoor_Terrace_Motiondetector_State2" ] ],
+    ["pOutdoor_Streedside_Garage_Light_Powered"   , "pOutdoor_Streedside_Garage_Automatic_Switch"   , [ "pOutdoor_Streedside_Garage_Motiondetector_State" ] ],
+    ["pOutdoor_Garden_Garage_Light_Powered"       , "pOutdoor_Garden_Garage_Automatic_Switch"       , [ "pOutdoor_Garden_Garage_Motiondetector_State" ] ]
 ]
 
 timerDuration = 60.0
@@ -28,12 +28,12 @@ class MotiondetectorOutdoorSwitchRule:
     def execute(self, module, input):
         global ruleTimeouts
         now = ZonedDateTime.now()
-        last = ruleTimeouts.get("Motiondetector_Outdoor_Main_Switch",ZonedDateTime.now().minusHours(1))
+        last = ruleTimeouts.get("Motiondetector_Outdoor_Main_Switch",now.minusHours(1))
         
         if ChronoUnit.SECONDS.between(last,now) > 1:
             itemState = input["event"].getItemState()
             
-            self.log.info("MotiondetectorOutdoorSwitchRule => POWERED => OFF, last: {}, now: {}, state: {}".format(last,now,itemState))
+            self.log.info("MotiondetectorOutdoorSwitchRule => last: {}, now: {}, state: {}".format(last,now,itemState))
 
             if itemState == ON:
                 ruleTimeouts["Light_Outdoor"] = now
@@ -108,7 +108,7 @@ class LightOutdoorControlRule:
         
         global ruleTimeouts
         now = ZonedDateTime.now()
-        last = ruleTimeouts.get("Light_Outdoor",ZonedDateTime.now().minusHours(1))
+        last = ruleTimeouts.get("Light_Outdoor",now.minusHours(1))
         
         # No Motion Detector related events
         if ChronoUnit.SECONDS.between(last,now) > 1:
@@ -141,23 +141,25 @@ class MotionDetectorRule:
         self.triggers = []
         self.triggerMappings = {}
         for i, entry in enumerate(manualMappings):
-            if entry[2] is not None:
-                self.triggers.append(ItemStateChangeTrigger(entry[2],state="OPEN"))
-                self.triggerMappings[entry[2]]=i
+            for motionDetectorItem in entry[2]:
+                self.triggers.append(ItemStateChangeTrigger(motionDetectorItem,state="OPEN"))
+                self.triggerMappings[motionDetectorItem]=i
 
     def callback(self,entry):
         global timerMappings
         if getItemState(entry[1]) == ON:
-            if getItemState(entry[2]) == OPEN:
-                timerMappings[entry[0]] = startTimer(self.log, timerDuration, self.callback,[entry])
-            else:
-                global ruleTimeouts
-                ruleTimeouts["Light_Outdoor"] = ZonedDateTime.now()
+            for motionDetectorItem in entry[2]:
+                if getItemState(motionDetectorItem) == OPEN:
+                    timerMappings[entry[0]] = startTimer(self.log, timerDuration, self.callback,[entry])
+                    return
 
-                self.log.info(u"MotionDetectorRule: callback for {} => {}".format(entry[0], ruleTimeouts["Light_Outdoor"]));
+            global ruleTimeouts
+            ruleTimeouts["Light_Outdoor"] = ZonedDateTime.now()
 
-                sendCommand(entry[0],OFF)
-                timerMappings[entry[0]] = None
+            self.log.info(u"MotionDetectorRule: callback for {} => {}".format(entry[0], ruleTimeouts["Light_Outdoor"]));
+
+            sendCommand(entry[0], 0 if getItem(entry[0]).getType() == "Dimmer" else OFF )
+            timerMappings[entry[0]] = None
         else:
             timerMappings[entry[0]] = None
 
@@ -171,41 +173,44 @@ class MotionDetectorRule:
             global ruleTimeouts
             ruleTimeouts["Light_Outdoor"] = ZonedDateTime.now()
 
-            sendCommand(entry[0],ON)
+            self.log.info(u"MotionDetectorRule: execute for {} => {}".format(entry[0], ruleTimeouts["Light_Outdoor"]));
 
+            sendCommand(entry[0], 100 if getItem(entry[0]).getType() == "Dimmer" else ON)
 
 # Terasse Motion Detector Events
-@rule("lights_outdoor.py")
-class TerasseMotionDetectorRule:
-    def __init__(self):
-        self.triggers = [
-            ItemStateChangeTrigger("pOutdoor_Terrace_Motiondetector_State1",state="OPEN"),
-            ItemStateChangeTrigger("pOutdoor_Terrace_Motiondetector_State2",state="OPEN")
-        ]
-
-    def callback(self):
-        global timerMappings
-        if getItemState("pOutdoor_Terrace_Automatic_Switch") == ON:
-            if getItemState("pOutdoor_Terrace_Motiondetector_State1") == OPEN or getItemState("pOutdoor_Terrace_Motiondetector_State2") == OPEN:
-                timerMappings["pOutdoor_Terrace_Light_Brightness"] = startTimer(self.log, timerDuration, self.callback)
-            else:
-                global ruleTimeouts
-                ruleTimeouts["Light_Outdoor"] = ZonedDateTime.now()
-
-                self.log.info(u"MotionDetectorRule: callback for {} => {}".format("pOutdoor_Terrace_Light_Brightness", ruleTimeouts["Light_Outdoor"]));
-
-                sendCommand("pOutdoor_Terrace_Light_Brightness",0)
-                timerMappings["pOutdoor_Terrace_Light_Brightness"] = None
-        else:
-            timerMappings["pOutdoor_Terrace_Light_Brightness"] = None
-
-    def execute(self, module, input):
-        if getItemState("pOther_Automatic_State_Outdoorlights") == ON and getItemState("pOutdoor_Terrace_Automatic_Switch") == ON:
-            global timerMappings
-            timerMappings["pOutdoor_Terrace_Light_Brightness"] = startTimer(self.log, timerDuration, self.callback, oldTimer = timerMappings.get("pOutdoor_Terrace_Light_Brightness") )
-
-            global ruleTimeouts
-            ruleTimeouts["Light_Outdoor"] = ZonedDateTime.now()
-
-            sendCommand("pOutdoor_Terrace_Light_Brightness",100)
+#@rule("lights_outdoor.py")
+#class TerasseMotionDetectorRule:
+#    def __init__(self):
+#        self.triggers = [
+#            ItemStateChangeTrigger("pOutdoor_Terrace_Motiondetector_State1",state="OPEN"),
+#            ItemStateChangeTrigger("pOutdoor_Terrace_Motiondetector_State2",state="OPEN")
+#        ]
+#
+#    def callback(self):
+#        global timerMappings
+#        if getItemState("pOutdoor_Terrace_Automatic_Switch") == ON:
+#            if getItemState("pOutdoor_Terrace_Motiondetector_State1") == OPEN or getItemState("pOutdoor_Terrace_Motiondetector_State2") == OPEN:
+#                timerMappings["pOutdoor_Terrace_Light_Brightness"] = startTimer(self.log, timerDuration, self.callback)
+#            else:
+#                global ruleTimeouts
+#                ruleTimeouts["Light_Outdoor"] = ZonedDateTime.now()
+#
+#                self.log.info(u"TerasseMotionDetectorRule: callback for {} => {}".format("pOutdoor_Terrace_Light_Brightness", ruleTimeouts["Light_Outdoor"]));
+#
+#                sendCommand("pOutdoor_Terrace_Light_Brightness",0)
+#                timerMappings["pOutdoor_Terrace_Light_Brightness"] = None
+#        else:
+#            timerMappings["pOutdoor_Terrace_Light_Brightness"] = None
+#
+#    def execute(self, module, input):
+#        if getItemState("pOther_Automatic_State_Outdoorlights") == ON and getItemState("pOutdoor_Terrace_Automatic_Switch") == ON:
+#            global timerMappings
+#            timerMappings["pOutdoor_Terrace_Light_Brightness"] = startTimer(self.log, timerDuration, self.callback, oldTimer = timerMappings.get("pOutdoor_Terrace_Light_Brightness") )
+#
+#            global ruleTimeouts
+#            ruleTimeouts["Light_Outdoor"] = ZonedDateTime.now()
+#
+#            self.log.info(u"TerasseMotionDetectorRule: execute for {} => {}".format("pOutdoor_Terrace_Light_Brightness", ruleTimeouts["Light_Outdoor"]));
+#
+#            sendCommand("pOutdoor_Terrace_Light_Brightness",100)
         
