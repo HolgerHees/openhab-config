@@ -33,6 +33,8 @@ class MotiondetectorOutdoorSwitchRule:
         if ChronoUnit.SECONDS.between(last,now) > 1:
             itemState = input["event"].getItemState()
             
+            self.log.info("MotiondetectorOutdoorSwitchRule => POWERED => OFF, last: {}, now: {}, state: {}".format(last,now,itemState))
+
             if itemState == ON:
                 ruleTimeouts["Light_Outdoor"] = now
 
