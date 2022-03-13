@@ -680,8 +680,10 @@ class HeatingControlRule():
         if azimut >= 120 and azimut <= SunRadiation.AZIMUT_NW_LIMIT and elevation >= SunRadiation.getMinElevation(azimut):
             #self.log.info(u"Sun     : {:.1f} W/min ({:.1f} W/min)".format(effectiveRadiationShortTerm,effectiveRadiationLongTerm))
             
-            # glare protection during workdays
-            needsSunprotection = azimut >= 180 and messuredLightLevelShortTerm > 15000 and messuredLightLevelLongTerm > 15000 and now.getDayOfWeek().getValue() <= 5
+            # glare protection during sandra's workdays
+            needsSunprotection = azimut >= 180 \
+                and messuredLightLevelShortTerm > 15000 and messuredLightLevelLongTerm > 15000 \
+                and now.getDayOfWeek().getValue() <= 5 and getItemState("pOther_Presence_Sandra_State") == ON
             if not needsSunprotection:
                 # hot stone protection
                 needsSunprotection = effectiveRadiationLongTerm > 8.0 and (currentOutdoorTemperature > 26 or currentOutdoorTemperature4 > 26)
