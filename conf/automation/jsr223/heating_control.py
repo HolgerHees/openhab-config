@@ -676,12 +676,12 @@ class HeatingControlRule():
         #elevation = getItemState("pOutdoor_Astro_Sun_Elevation").doubleValue()
 
         #self.log.info(u"{} {} {}".format(azimut,elevation,SunRadiation.getMinElevation(azimut)))
-
+        
         if azimut >= 120 and azimut <= SunRadiation.AZIMUT_NW_LIMIT and elevation >= SunRadiation.getMinElevation(azimut):
             #self.log.info(u"Sun     : {:.1f} W/min ({:.1f} W/min)".format(effectiveRadiationShortTerm,effectiveRadiationLongTerm))
             
-            # glare protection 
-            needsSunprotection = azimut >= 180 and messuredLightLevelShortTerm > 15000 and messuredLightLevelLongTerm > 15000
+            # glare protection during workdays
+            needsSunprotection = azimut >= 180 and messuredLightLevelShortTerm > 15000 and messuredLightLevelLongTerm > 15000 and now.getDayOfWeek().getValue() <= 5
             if not needsSunprotection:
                 # hot stone protection
                 needsSunprotection = effectiveRadiationLongTerm > 8.0 and (currentOutdoorTemperature > 26 or currentOutdoorTemperature4 > 26)
