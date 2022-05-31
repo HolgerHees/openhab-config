@@ -888,16 +888,10 @@ sitemap haus label="Main Menu"
                         Webview url="/static/custom/grafana/server.html?fromItem=Chart_From" icon="none" height=72
                     }
                 }
-                Group item=pGF_Corridor_Fritzbox_WanPhysicalLinkStatus label="WAN Status [MAP(network_states.map):%s]" {
-                    Frame label="Status" {
-                        Text item=pGF_Corridor_Fritzbox_Uptime
-                        Switch item=pGF_Corridor_Fritzbox_GuestWifi
-                    }
+                Group item=pGF_Corridor_Network_WanPhysicalLinkStatus label="WAN Status [MAP(network_states.map):%s]" {
                     Frame label="WAN Verbindung" {
-                        Text item=pGF_Corridor_Fritzbox_WanAccessType
-                        Text item=pGF_Corridor_Fritzbox_WanPhysicalLinkStatus
-                        Text item=pGF_Corridor_Fritzbox_WanUpstreamCurrRate
-                        Text item=pGF_Corridor_Fritzbox_WanDownstreamCurrRate
+                        Text item=pGF_Corridor_Network_WanAccessType
+                        Text item=pGF_Corridor_Network_WanPhysicalLinkStatus
                     }
                     Frame label="WAN Speedtest" {
                         Text item=pGF_Corridor_Speedtest_Time

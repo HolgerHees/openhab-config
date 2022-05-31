@@ -1,8 +1,8 @@
 // **** PRESENCE ****
 Group  eOther_Presence                          "Präsenz"         <selfinfo> (lIndoor) ["Sensor"]
 Number pOther_Presence_State                    "Präsenz"         <selfinfo> (eOther_Presence,gPersistance_History) ["Status"]
-Switch pOther_Presence_Holger_State             "Holger anwesend" <selfinfo> (eOther_Presence,gPersistance_History) ["Status","Presence"] { channel="mqtt:topic:mosquitto:device_ping:phone_hhees" }                                                       
-Switch pOther_Presence_Sandra_State             "Sandra anwesend" <selfinfo> (eOther_Presence,gPersistance_History) ["Status","Presence"] { channel="mqtt:topic:mosquitto:device_ping:phone_sandra" }
+Switch pOther_Presence_Holger_State             "Holger anwesend" <selfinfo> (eOther_Presence,gPersistance_History) ["Status","Presence"] { channel="mqtt:topic:mosquitto:system_service:phone_hhees" }                                                       
+Switch pOther_Presence_Sandra_State             "Sandra anwesend" <selfinfo> (eOther_Presence,gPersistance_History) ["Status","Presence"] { channel="mqtt:topic:mosquitto:system_service:phone_sandra" }
 
 // **** GARDEN DOOR ****
 Group  eOutdoor_Streedside_Gardendoor           "Gartentür"       <selfinfo> (lOutdoor_Streedside) ["Gate"]

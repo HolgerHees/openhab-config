@@ -18,10 +18,12 @@ Bridge mqtt:broker:cloud [ host="cloud_mosquitto", secure=false ]
 
 Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
 {
-    Thing topic device_ping "Device Ping" @ "Geräte" {
+    Thing topic system_service "System Info" @ "Geräte" {
+        Type string : wan_type "WAN Type" [ stateTopic="system_info/network/{{default_gateway}}/wan_type" ]
+        Type string : wan_state "WAN State" [ stateTopic="system_info/network/{{default_gateway}}/wan_state" ]
 {% for username in userdata %}
 {% if userdata[username].phone_device is defined %}
-        Type switch : phone_{{username}} "Device" [ stateTopic="device_ping/phone_{{username}}" ]
+        Type switch : phone_{{username}} "Device" [ stateTopic="system_info/network/{{userdata[username].phone_device.ip}}/online" ]
 {% endif %}
 {% endfor %}
     }

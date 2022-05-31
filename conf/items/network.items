@@ -1,0 +1,13 @@
+// **** FRITZBOX ****
+Group   eGF_Corridor_Network                        "WAN Router"                                            <selfinfo> (lGF_Corridor) ["NetworkAppliance"] {synonyms="Internet"}
+
+String  pGF_Corridor_Network_WanAccessType          "WAN Typ [%s]"                                        <selfinfo>  (eGF_Corridor_Network) ["Point"] { channel="mqtt:topic:mosquitto:system_service:wan_type" }        
+String  pGF_Corridor_Network_WanPhysicalLinkStatus  "WAN Link Status [MAP(network_states.map):%s]"        <selfinfo>  (eGF_Corridor_Network) ["Point"] { channel="mqtt:topic:mosquitto:system_service:wan_state" }        
+
+Number  pGF_Corridor_Speedtest_UpstreamRate         "Upstream [%.0f MBit]"                        <flowpipe> (eGF_Corridor_Network,gPersistance_Chart,gPersistance_History) ["Point"]
+Number  pGF_Corridor_Speedtest_DownstreamRate       "Downstream [%.0f MBit]"                      <returnpipe> (eGF_Corridor_Network,gPersistance_Chart,gPersistance_History) ["Point"] 
+Number  pGF_Corridor_Speedtest_Ping                 "Ping [%.1f ms]"                              <time> (eGF_Corridor_Network,gPersistance_Chart,gPersistance_History) ["Point"]
+String  pGF_Corridor_Speedtest_Time                 "Zeit [%s]"                                   <selfinfo> (eGF_Corridor_Network) ["Point"]
+String  pGF_Corridor_Speedtest_Location             "Location [%s]"                               <selfinfo> (eGF_Corridor_Network) ["Point"]
+
+Switch  pGF_Corridor_Speedtest_Rerun                "Messung starten"                                     <selfautomode> (eGF_Corridor_Network) ["Point"]
