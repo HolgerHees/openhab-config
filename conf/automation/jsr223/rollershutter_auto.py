@@ -90,12 +90,12 @@ class RollershutterAutoWindowContactRule:
         else:
             if getItemState("pOther_Automatic_State_Rollershutter").intValue() == SunProtectionHelper.STATE_ROLLERSHUTTER_DOWN:
                 # check that more windows are DOWN than UP.
-                closedShutters = 0
-                for _config in configs:
-                    if getItemState(_config["shutter"]).intValue() == 100:
-                        closedShutters += 1
-                if closedShutters >= math.floor( len(configs) / 2 ):
-                    state = DOWN
+                #closedShutters = 0
+                #for _config in configs:
+                #    if getItemState(_config["shutter"]).intValue() == 100:
+                #        closedShutters += 1
+                #if closedShutters >= math.floor( len(configs) / 2 ):
+                state = DOWN
             elif ("sunprotection" in config and getItemState(config["sunprotection"]) == ON and "sunprotectionOnlyIfAway" not in config):
                 state = DOWN
             

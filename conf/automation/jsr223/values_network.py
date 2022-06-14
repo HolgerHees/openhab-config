@@ -1,4 +1,4 @@
-from shared.helper import rule, postUpdateIfChanged
+from shared.helper import rule, postUpdateIfChanged, getStableItemState, getItemState
 from shared.actions import Transformation, Exec
 from shared.triggers import ItemStateChangeTrigger, CronTrigger
 
@@ -24,10 +24,10 @@ class ValuesNetworkSpeedRule:
         ]
         
         self.messureThread = None
-        
-    def messure(self):        
+
+    def messure(self):
         try:
-            self.log.info(u"speedtest started")
+            self.log.info(u"Speedtest started")
       
             now = ZonedDateTime.now()
             postUpdateIfChanged("pGF_Corridor_Speedtest_Time","{:02d}:{:02d}".format(now.getHour(),now.getMinute()))
@@ -36,7 +36,7 @@ class ValuesNetworkSpeedRule:
             #result = Exec.executeCommandLine("/usr/bin/speedtest -f json --accept-gdpr --accept-license --server-id 40048",100000)
             result = Exec.executeCommandLine(Duration.ofSeconds(100),"/usr/bin/speedtest","-f", "json", "--accept-gdpr", "--accept-license")
             
-            self.log.info(u"speedtest done")
+            self.log.info(u"Speedtest done")
 
             index = result.find("{\"type\":\"result\"")
             if index != -1:
@@ -78,6 +78,13 @@ class ValuesNetworkSpeedRule:
                 #self.log.info("json: {}".format(json)) 
                 #self.log.info("ping: {}, down: {}, up: {}".format(resultPing,round(resultDown / 1024 / 1024,2),round(resultUp / 1024 / 1024,2))) 
                 #self.log.info("server: {} ({}, {})".format(serverName,serverLocation,serverCountry)) 
+
+                downstream = getItemState("pGF_Corridor_Speedtest_DownstreamRate").doubleValue()
+                if downstream < 750:
+                    downstream = getStableItemState(now, "pGF_Corridor_Speedtest_DownstreamRate", 60 * 60 * 6)
+                    if downstream < 750:
+                        self.log.error(u"Speedtest detect slow wan connection: {} MBit".format(int(downstream)))
+
             else:
                 #postUpdateIfChanged("pGF_Corridor_Speedtest_UpstreamRate",0)
                 #postUpdateIfChanged("pGF_Corridor_Speedtest_DownstreamRate",0)
@@ -86,7 +93,7 @@ class ValuesNetworkSpeedRule:
                 postUpdateIfChanged("pGF_Corridor_Speedtest_Time","{:02d}:{:02d}".format(now.getHour(),now.getMinute()))
                 postUpdateIfChanged("pGF_Corridor_Speedtest_Location","Fehler")
 
-                self.log.error(u"speedtest data error: {}".format(result))
+                self.log.error(u"Speedtest data error: {}".format(result))
         except Exception, e:
             self.log.error(u"speedtest data exception: {}".format(e))
             
