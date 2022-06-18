@@ -1,4 +1,4 @@
-from shared.helper import rule, postUpdateIfChanged, getStableItemState, getItemState
+from shared.helper import rule, postUpdateIfChanged, getStableItemState, getStableMinMaxItemState, getItemState
 from shared.actions import Transformation, Exec
 from shared.triggers import ItemStateChangeTrigger, CronTrigger
 
@@ -81,8 +81,8 @@ class ValuesNetworkSpeedRule:
 
                 downstream = getItemState("pGF_Corridor_Speedtest_DownstreamRate").doubleValue()
                 if downstream < 750:
-                    downstream = getStableItemState(now, "pGF_Corridor_Speedtest_DownstreamRate", 60 * 60 * 6)
-                    if downstream < 750:
+                    _, _, maxDownstream = getStableMinMaxItemState(now, "pGF_Corridor_Speedtest_DownstreamRate", 60 * 4)
+                    if maxDownstream < 750:
                         self.log.error(u"Speedtest detect slow wan connection: {} MBit".format(int(downstream)))
 
             else:
