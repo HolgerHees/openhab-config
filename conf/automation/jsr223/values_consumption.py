@@ -415,6 +415,14 @@ class SolarConsumptionRule:
 
 
 @rule("values_consumption.py")
+class GasConsumptionDailyRule:
+    def __init__(self):
+        self.triggers = [CronTrigger("0 0 0 * * ?")]
+
+    def execute(self, module, input):
+        postUpdateIfChanged("pGF_Utilityroom_Gas_Current_Daily_Consumption",0)
+
+@rule("values_consumption.py")
 class GasConsumption5MinRule:
     def __init__(self):
         self.triggers = [CronTrigger("15 */5 * * * ?")]
