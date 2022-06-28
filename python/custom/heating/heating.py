@@ -1037,7 +1037,15 @@ class Heating(object):
                 if rhs.getHeatingDemandTime() == 0 and not isHeatingActive:
                     fh_info_type_r = {'not needed':[], 'wrong time': [], 'other': []}
                     
-                    if cr.getReferenceTemperature() > rhs.getHeatingTargetTemperature() and cr4.getReferenceTemperature() > rhs.getHeatingTargetTemperature() and cr8.getReferenceTemperature() > rhs.getHeatingTargetTemperature():
+                    count = 0
+                    if cr.getReferenceTemperature() > rhs.getHeatingTargetTemperature():
+                        count += 1
+                    if cr4.getReferenceTemperature() > rhs.getHeatingTargetTemperature():
+                        count += 1
+                    if cr8.getReferenceTemperature() > rhs.getHeatingTargetTemperature():
+                        count += 1
+
+                    if count >= 2 and rs.getCurrentTemperature() > rhs.getHeatingTargetTemperature():
                     #if rs.getCurrentTemperature() > rhs.getHeatingTargetTemperature() + 2.0 and cr.getReferenceTemperature():
                         fh_info_type_r["other"].append(u"'PRE' & 'CF' summer mode")
                     else:
