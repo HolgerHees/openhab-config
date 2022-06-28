@@ -1022,7 +1022,7 @@ class Heating(object):
                     rhs.setHeatingDemandEnergy(neededEnergy)
                     rhs.setHeatingDemandTime(neededTime)
                     hhs.setHeatingState(room.getName(),rhs)
-                                
+
             if rhs == None:
                 # *** OUTDOOR REDUCTION ***
                 outdoorReduction = self.calculateOutdoorReduction(rs.getPassiveSaldo(),rs4.getPassiveSaldo(),rs8.getPassiveSaldo())
@@ -1037,36 +1037,40 @@ class Heating(object):
                 if rhs.getHeatingDemandTime() == 0 and not isHeatingActive:
                     fh_info_type_r = {'not needed':[], 'wrong time': [], 'other': []}
                     
-                    # *** CHECK FOR PRE HEATING IN THE MORNING ***
-                    if nightModeActive and self.now.getHour() < 12:
-                        day_rhs = self.getHeatingDemand(room,rs,outdoorReduction,0,False)
-                        if day_rhs.getHeatingDemandTime() > 0:
-                            if not self.isNightModeTime( int(round(self.limitHeatingDemandTime( room.getName(), day_rhs.getHeatingDemandTime() ) * 60, 0)) ):
-                                rhs = day_rhs
-                                rhs.setForcedInfo('PRE')
-                            else:
-                                fh_info_type_r['other'].append(u"'PRE' too early for {} W in {} min".format(round(day_rhs.getHeatingDemandEnergy(),1),Heating.visualizeHeatingDemandTime(day_rhs.getHeatingDemandTime())))
-                        else:
-                            fh_info_type_r["not needed"].append('PRE')
+                    if cr.getReferenceTemperature() > rhs.getHeatingTargetTemperature() and cr4.getReferenceTemperature() > rhs.getHeatingTargetTemperature() and cr8.getReferenceTemperature() > rhs.getHeatingTargetTemperature():
+                    #if rs.getCurrentTemperature() > rhs.getHeatingTargetTemperature() + 2.0 and cr.getReferenceTemperature():
+                        fh_info_type_r["other"].append(u"'PRE' & 'CF' summer mode")
                     else:
-                        fh_info_type_r["wrong time"].append('PRE')
-                    
-                    # *** CHECK FOR COLD FLOOR HEATING ***
-                    if self.now.minusMinutes(180).isBefore(lastHeatingChange):
-                        fh_info_type_r["not needed"].append('CF')
-                    elif self.possibleColdFloorHeating(nightModeActive,lastHeatingChange):
-                        neededTime = self.getColdFloorHeatingTime(lastHeatingChange)
-                        if rhs.getHeatingDemandTime() < neededTime:
-                            if not self.isNightModeTime( int(round(self.limitHeatingDemandTime( room.getName(), neededTime ) * 60, 0)) ):
-                                rhs.setHeatingDemandEnergy(None)
-                                rhs.setHeatingDemandTime(neededTime)
-                                rhs.setForcedInfo('CF')
+                        # *** CHECK FOR PRE HEATING IN THE MORNING ***
+                        if nightModeActive and self.now.getHour() < 12:
+                            day_rhs = self.getHeatingDemand(room,rs,outdoorReduction,0,False)
+                            if day_rhs.getHeatingDemandTime() > 0:
+                                if not self.isNightModeTime( int(round(self.limitHeatingDemandTime( room.getName(), day_rhs.getHeatingDemandTime() ) * 60, 0)) ):
+                                    rhs = day_rhs
+                                    rhs.setForcedInfo('PRE')
+                                else:
+                                    fh_info_type_r['other'].append(u"'PRE' too early for {} W in {} min".format(round(day_rhs.getHeatingDemandEnergy(),1),Heating.visualizeHeatingDemandTime(day_rhs.getHeatingDemandTime())))
                             else:
-                                fh_info_type_r['other'].append(u"'CF' too early for {} min".format(Heating.visualizeHeatingDemandTime(neededTime)))
+                                fh_info_type_r["not needed"].append('PRE')
                         else:
+                            fh_info_type_r["wrong time"].append('PRE')
+
+                        # *** CHECK FOR COLD FLOOR HEATING ***
+                        if self.now.minusMinutes(180).isBefore(lastHeatingChange):
                             fh_info_type_r["not needed"].append('CF')
-                    else:
-                        fh_info_type_r["wrong time"].append('CF')
+                        elif self.possibleColdFloorHeating(nightModeActive,lastHeatingChange):
+                            neededTime = self.getColdFloorHeatingTime(lastHeatingChange)
+                            if rhs.getHeatingDemandTime() < neededTime:
+                                if not self.isNightModeTime( int(round(self.limitHeatingDemandTime( room.getName(), neededTime ) * 60, 0)) ):
+                                    rhs.setHeatingDemandEnergy(None)
+                                    rhs.setHeatingDemandTime(neededTime)
+                                    rhs.setForcedInfo('CF')
+                                else:
+                                    fh_info_type_r['other'].append(u"'CF' too early for {} min".format(Heating.visualizeHeatingDemandTime(neededTime)))
+                            else:
+                                fh_info_type_r["not needed"].append('CF')
+                        else:
+                            fh_info_type_r["wrong time"].append('CF')
                     
                     if rhs.getForcedInfo() == None:
                         fh_info_r = []

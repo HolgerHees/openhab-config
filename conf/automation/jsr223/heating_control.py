@@ -636,11 +636,11 @@ class HeatingControlRule():
         else:
             self.log.info(u"Demand  : SKIPPED • MANUAL MODE ACTIVE")
 
-        self.setSunStates(now,cr,cr4,hhs, messuredRadiationLongTerm, messuredLightLevelShortTerm, messuredLightLevelLongTerm)
+        self.setSunStates(now,cr,cr4,cr8,hhs, messuredRadiationLongTerm, messuredLightLevelShortTerm, messuredLightLevelLongTerm)
         
         self.log.info(u"--------: <<<" )
    
-    def setSunStates(self, now, cr, cr4, hhs, messuredRadiationLongTerm, messuredLightLevelShortTerm, messuredLightLevelLongTerm):
+    def setSunStates(self, now, cr, cr4, cr8, hhs, messuredRadiationLongTerm, messuredLightLevelShortTerm, messuredLightLevelLongTerm):
         cloudCover = cr.getCloudCover()
         
         messuredRadiationShortTerm = cr.getSunRadiation()
@@ -661,6 +661,7 @@ class HeatingControlRule():
       
         currentOutdoorTemperature = cr.getReferenceTemperature()
         currentOutdoorTemperature4 = cr4.getReferenceTemperature()
+        currentOutdoorTemperature8 = cr8.getReferenceTemperature()
 
         fallbackTargetTemperature = hhs.getHeatingState("lGF_Livingroom").getHeatingTargetTemperature()
         
@@ -709,17 +710,17 @@ class HeatingControlRule():
             
             targetRoomTemperature = fallbackTargetTemperature if room.getHeatingVolume() == None else hhs.getHeatingState(room.getName()).getHeatingTargetTemperature()
             
-            weatherAvgTemperature = getItemState("pOutdoor_Weather_Current_Temperature_Avg").floatValue()
+            #weatherAvgTemperature = getItemState("pOutdoor_Weather_Current_Temperature_Avg").floatValue()
             
             for transition in room.transitions:
                 if not isinstance(transition,Window) or transition.getRadiationArea() == None or transition.getSunProtectionItem() == None:
                     continue
                   
+                #if currentOutdoorTemperature < targetRoomTemperature and currentOutdoorTemperature4 < targetRoomTemperature and currentOutdoorTemperature8 < targetRoomTemperature:
+                #    postUpdateIfChanged(transition.getSunProtectionItem(), OFF )
+                #    continue
+
                 currentRoomTemperature = rs.getCurrentTemperature()
-                
-                if weatherAvgTemperature <= currentRoomTemperature:
-                    postUpdateIfChanged(transition.getSunProtectionItem(), OFF )
-                    continue
 
                 effectiveRadiationShortTerm = effectiveSouthRadiationShortTerm if transition.getDirection() == 'south' else effectiveWestRadiationShortTerm
                 effectiveRadiationLongTerm = effectiveSouthRadiationLongTerm if transition.getDirection() == 'south' else effectiveWestRadiationLongTerm
@@ -758,7 +759,7 @@ class HeatingControlRule():
                             self.log.info(u"DEBUG: SP switching ON • {} {} {} {}".format(room.getName(),effectiveRadiationShortTerm,effectiveRadiationLongTerm,effectiveRadiationMax))
                         else:
                             self.log.warn(u"DEBUG: SP skipped ON • {} {} {} {}".format(room.getName(),effectiveRadiationShortTerm,effectiveRadiationLongTerm,effectiveRadiationMax))
-                            
+
     def isTooWarm( self, effectiveRadiationShortTerm, currentOutdoorTemperature, currentOutdoorTemperature4, currentRoomTemperature, targetRoomTemperature ):
         if currentOutdoorTemperature <= 18 and currentOutdoorTemperature4 <= 18:
             return False
