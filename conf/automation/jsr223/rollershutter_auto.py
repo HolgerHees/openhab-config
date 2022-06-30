@@ -146,12 +146,9 @@ class RollershutterAutoPresenceRule:
 @rule("rollershutter_auto.py")
 class RollershutterAutoSunprotectionRule:
     def __init__(self):
-        self.triggers = [
-            ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Attic"),
-            ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Bathroom"),
-            ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Dressingroom"),
-            ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Livingroom")
-        ]
+        self.triggers = []
+        for sunprotection_item in sunprotection_map:
+            self.triggers.append(ItemStateChangeTrigger(sunprotection_item))
 
     def execute(self, module, input):
         if getItemState("pOther_Manual_State_Auto_Rollershutter") != ON:
