@@ -10,12 +10,12 @@ class HomeConnectStateRule:
             ThingStatusChangeTrigger("homeconnect:api_bridge:default")
         ]
         self.check()
-        
+
     def check(self):
         thing = getThing("homeconnect:api_bridge:default")
         status = thing.getStatus()
         info = thing.getStatusInfo()
-        
+
         if status is not None and info is not None:
             #self.log.info(u"Home Connect bridge status: '{}',  detail: '{}'".format(status.toString(),info.toString()))
             if status.toString() != "ONLINE":

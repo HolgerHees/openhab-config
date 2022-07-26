@@ -125,6 +125,8 @@ class PresenceCheckRule:
         if holgerPhone == ON or sandraPhone == ON:
             # only possible if we are away
             if presenceState in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
+                #if presenceState == PresenceHelper.STATE_MAYBE_PRESENT and (holgerPhone == OFF or sandraPhone == OFF):
+                #    sendNotification(u"System", u"Unbekannter Gast ist {}".format("Sandra" if holgerPhone == OFF else "Holger")
                 postUpdate("pOther_Presence_State",PresenceHelper.STATE_PRESENT)
         else:
             # only possible if we are present and not sleeping

@@ -20,7 +20,7 @@ class RoboterMessagesRule:
         if getItemState("pIndoor_Roomba_status") != NULL and ( getItemState("pIndoor_Roomba_status").toString() == "Stuck" or getItemState("pIndoor_Roomba_full") == ON ):
             active.append("Roomba")
 
-        if getItemState("pOutdoor_Mower_Status") != NULL and ( getItemState("pOutdoor_Mower_Status").intValue() == 7 or getItemState("pOutdoor_Mower_Status").intValue() == 8 ):
+        if getItemState("pOutdoor_Mower_Status") != NULL and ( getItemState("pOutdoor_Mower_Status").intValue() == 7 or getItemState("pOutdoor_Mower_Status").intValue() == 8 or getItemState("pOutdoor_Mower_Status").intValue() == 98 ):
             active.append("Mower")
             #url = "https://smartmarvin.de/cameraAutomowerImage"
 
