@@ -182,16 +182,18 @@ class EnergyCounterSupplyRule:
             postUpdate("pGF_Utilityroom_Electricity_Current_Annual_Supply_Forecast", msg )
 
 
-@rule("values_consumption.py")
+'''@rule("values_consumption.py")
 class EnergySupplyRule:
     def __init__(self):
         self.triggers = [
-          ItemStateChangeTrigger("pGF_Utilityroom_Electricity_Current_Consumption"),
-          CronTrigger("0 */5 * * * ?")
+          #ItemStateChangeTrigger("pGF_Utilityroom_Electricity_Current_Consumption"),
+          #CronTrigger("0 */5 * * * ?")
         ]
 
         self.stack = []
         self.lastLimitationIncrease = ZonedDateTime.now()
+
+        postUpdate("pGF_Garage_Solar_Inverter_Power_Limitation",100)
         
     def getAvgConsumption(self,now,value):        
         if len(self.stack) > 0:
@@ -264,7 +266,7 @@ class EnergySupplyRule:
                 self.log.info(u"Refresh power limitation of {}%".format( currentPowerLimitation ))
         elif currentPowerLimitation != 100:
             postUpdate("pGF_Garage_Solar_Inverter_Power_Limitation",100)
-            self.log.info(u"Shutdown power limitation")
+            self.log.info(u"Shutdown power limitation")'''
 
 @rule("values_consumption.py")
 class EnergyTotalYieldRefreshRule:

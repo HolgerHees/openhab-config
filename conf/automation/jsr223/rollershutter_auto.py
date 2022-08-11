@@ -23,11 +23,11 @@ configs = [
 ]
 
 contact_map = {}
-shutter_map = {}
+#shutter_map = {}
 sunprotection_map = {}
 for config in configs:
     contact_map[config["contact"]] = config
-    shutter_map[config["shutter"]] = config
+    #shutter_map[config["shutter"]] = config
     
     if "sunprotection" not in config:
         continue
@@ -139,7 +139,7 @@ class RollershutterAutoPresenceRule:
             return
     
         if input['event'].getItemState().intValue() == PresenceHelper.STATE_AWAY:
-            self.presenceTimer = startTimer(self.log, 1800, self.updateCallback, args = [ DOWN ])
+            self.awayTimer = startTimer(self.log, 1800, self.updateCallback, args = [ DOWN ])
         elif input['event'].getItemState().intValue() == PresenceHelper.STATE_PRESENT and input['event'].getOldItemState().intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
             self.updateCallback(UP)
 
