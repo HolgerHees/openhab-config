@@ -645,6 +645,9 @@ class HeatingControlRule():
         
         messuredRadiationShortTerm = cr.getSunRadiation()
 
+        if messuredRadiationLongTerm is None:
+            messuredRadiationLongTerm = messuredRadiationShortTerm
+
         _sunSouthRadiation, _sunWestRadiation, _sunRadiation, _sunDebugInfo = SunRadiation.getSunPowerPerHour(now,cloudCover,messuredRadiationShortTerm)
         effectiveSouthRadiationShortTerm = _sunSouthRadiation / 60.0
         effectiveWestRadiationShortTerm = _sunWestRadiation / 60.0

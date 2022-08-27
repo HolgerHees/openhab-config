@@ -1,4 +1,4 @@
-from shared.helper import rule, sendNotification, getItemState, postUpdateIfChanged
+from shared.helper import rule, sendNotification, getItemState, getPreviousItemState, postUpdateIfChanged
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
 
 
@@ -6,7 +6,8 @@ from shared.triggers import CronTrigger, ItemStateChangeTrigger
 class RoboterMessagesRule:
     def __init__(self):
         self.triggers = [
-            CronTrigger("0 0 * * * ?"),
+            CronTrigger("*/15 * * * * ?"),
+            #CronTrigger("0 0 * * * ?"),
             ItemStateChangeTrigger("pIndoor_Roomba_status"),
             ItemStateChangeTrigger("pIndoor_Roomba_full"),
             ItemStateChangeTrigger("pOutdoor_Mower_Status")
@@ -20,8 +21,15 @@ class RoboterMessagesRule:
         if getItemState("pIndoor_Roomba_status") != NULL and ( getItemState("pIndoor_Roomba_status").toString() == "Stuck" or getItemState("pIndoor_Roomba_full") == ON ):
             active.append("Roomba")
 
-        if getItemState("pOutdoor_Mower_Status") != NULL and ( getItemState("pOutdoor_Mower_Status").intValue() == 7 or getItemState("pOutdoor_Mower_Status").intValue() == 8 or getItemState("pOutdoor_Mower_Status").intValue() == 98 ):
-            active.append("Mower")
+        mowerState = getItemState("pOutdoor_Mower_Status")
+        if mowerState != NULL and ( mowerState.intValue() == 7 or mowerState.intValue() == 8 or mowerState.intValue() == 98 ):
+            isDeepSleep = False
+            if mowerState.intValue() == 98:
+                previousState = getPreviousItemState("pOutdoor_Mower_Status")
+                if previousState != NULL and previousState.intValue() == 17:
+                    isDeepSleep = True
+            if not isDeepSleep:
+                active.append("Mower")
             #url = "https://smartmarvin.de/cameraAutomowerImage"
 
         if len(active) == 0:

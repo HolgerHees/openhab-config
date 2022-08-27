@@ -5,7 +5,7 @@ Number   pOutdoor_Mower_Battery              "Batterie [%d %%]"                 
 Number   pOutdoor_Mower_Hours                "Betriebsstunden [%d h]"                            <selfclock>    (eOutdoor_Mower) ["Point"] {channel="robonect:mower:automower:mowing-hours"}
 Number   pOutdoor_Mower_Duration             "Aktueller Modus [%s Sekunden]"                     <selfclock>    (eOutdoor_Mower) ["Point"] {channel="robonect:mower:automower:status-duration"}
 String   pOutdoor_Mower_Mode                 "Modus"                                             <selfautomode> (eOutdoor_Mower) ["Point"] {channel="robonect:mower:automower:mode"}
-Number   pOutdoor_Mower_Status               "Status [MAP(robonect_status.map):%s]"              <selfinfo>     (eOutdoor_Mower) ["Point"] {channel="robonect:mower:automower:status"}
+Number   pOutdoor_Mower_Status               "Status [MAP(robonect_status.map):%s]"              <selfinfo>     (eOutdoor_Mower,gPersistance_History) ["Point"] {channel="robonect:mower:automower:status"}
 String   pOutdoor_Mower_StatusFormatted      "Status [%s]"                                       <selfinfo>     (eOutdoor_Mower) ["State"] 
 Switch   pOutdoor_Mower_Started              "Mähen"                                             <selfswitch>   (eOutdoor_Mower) ["Point"] {channel="robonect:mower:automower:start"}
 String   pOutdoor_Mower_TimerStatus          "Timer Status [MAP(robonect_timer_status.map):%s]"  <selfinfo>     (eOutdoor_Mower) ["Point"] {channel="robonect:mower:automower:timer-status"}
