@@ -69,6 +69,19 @@ sitemap haus label="Main Menu"
             }
             Frame label="Garten" {
 				Switch item=pGF_Garage_Light_Ceiling_Powered label="Schuppen"
+                Slider item=gOutdoor_Terrace_Light_Hue_Color label="Terasse Indirekt"
+                Text label="Terasse Indirekt anpassen" icon="selfcontrol" visibility=[gOutdoor_Terrace_Light_Hue_Color>0] {
+                    Frame label="Gruppe" {
+                        Slider item=gOutdoor_Terrace_Light_Hue_Color label="Alle Lampen [%d %%]"
+                        Colorpicker item=gOutdoor_Terrace_Light_Hue_Color label="Alle Lampen"
+                    }
+                    Frame label="Einzeln" {
+                        Slider item=pOutdoor_Terrace_Light_Hue_Left_Color label="Terasse Links [%d %%]"
+                        Colorpicker item=pOutdoor_Terrace_Light_Hue_Left_Color label="Terasse Links"
+                        Slider item=pOutdoor_Terrace_Light_Hue_Right_Color label="Terasse Rechts [%d %%]"
+                        Colorpicker item=pOutdoor_Terrace_Light_Hue_Right_Color label="Terasse Rechts"
+                    }
+                }
 				Group item=gOutdoor_Lights label="Aussen Lampen [MAP(group_light.map):%d]" {
                     Slider item=pOutdoor_Terrace_Light_Brightness label="Terasse"
                     Switch item=pOutdoor_Streedside_Frontdoor_Light_Powered label="Haustür"
@@ -131,7 +144,20 @@ sitemap haus label="Main Menu"
 			}
 			Frame label="Licht & Steckdosen" {
                 Group item=gOutdoor_Lights label="Lampen [MAP(group_light.map):%d]" {
-                    Slider item=pOutdoor_Terrace_Light_Brightness label="Terasse"
+                    Slider item=pOutdoor_Terrace_Light_Brightness label="Terasse Wand"
+                    Slider item=gOutdoor_Terrace_Light_Hue_Color label="Terasse Indirekt"
+                    Text label="Terasse Indirekt anpassen" icon="selfcontrol" visibility=[gOutdoor_Terrace_Light_Hue_Color>0] {
+                        Frame label="Gruppe" {
+                            Slider item=gOutdoor_Terrace_Light_Hue_Color label="Alle Lampen [%d %%]"
+                            Colorpicker item=gOutdoor_Terrace_Light_Hue_Color label="Alle Lampen"
+                        }
+                        Frame label="Einzeln" {
+                            Slider item=pOutdoor_Terrace_Light_Hue_Left_Color label="Terasse Links [%d %%]"
+                            Colorpicker item=pOutdoor_Terrace_Light_Hue_Left_Color label="Terasse Links"
+                            Slider item=pOutdoor_Terrace_Light_Hue_Right_Color label="Terasse Rechts [%d %%]"
+                            Colorpicker item=pOutdoor_Terrace_Light_Hue_Right_Color label="Terasse Rechts"
+                        }
+                    }
                     Switch item=pOutdoor_Streedside_Frontdoor_Light_Powered label="Haustür"
                     Switch item=pOutdoor_Carport_Light_Powered label="Carport"
                     Switch item=pOutdoor_Streedside_Garage_Light_Powered label="Schuppentür vorne"

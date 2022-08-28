@@ -4,6 +4,7 @@ Bridge hue:bridge:default [ ipAddress="{{hue_ip}}", userName="{{vault_hue_user_i
 	group mobile     "HUE Gruppe" @ "Geräte" [ groupId="3" ]
 	group bedroom    "HUE Gruppe" @ "Geräte" [ groupId="5" ]
 	group play       "HUE Gruppe" @ "Geräte" [ groupId="6" ]
+	group terrace       "HUE Gruppe" @ "Geräte" [ groupId="7" ]
 	0210 lamp1 [ lightId="1" ] // bassbox
 	0210 lamp2 [ lightId="2" ] // stehlampe unten
 	0210 lamp3 [ lightId="3" ] // stehlampe oben
@@ -18,6 +19,8 @@ Bridge hue:bridge:default [ ipAddress="{{hue_ip}}", userName="{{vault_hue_user_i
 	0210 strip2 [ lightId="8" ] // tresen
 	0210 lamp5 [ lightId="14" ] // bedroom
 	0210 lamp6 [ lightId="15" ] // bedroom
+	0210 lamp7 [ lightId="26" ] // terasse rechts
+	0210 lamp8 [ lightId="27" ] // terasse links
 	0010 socket1 [ lightId="5" ] // osram
 	0010 socket2 [ lightId="6" ] // osram
 	0010 socket3 [ lightId="24" ] // philipps

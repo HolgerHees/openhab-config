@@ -152,6 +152,16 @@ Group  eOutdoor_Terrace_Light            "Lampen"             <selflight> (lOutd
 Dimmer pOutdoor_Terrace_Light_Brightness "Licht"              <selflight> (eOutdoor_Terrace_Light,gOutdoor_Lights)        ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:outdoorTerrace"}
 Switch pOutdoor_Terrace_Automatic_Switch "Automatik"          <selflight> (eOutdoor_Terrace_Light,gOutdoor_Motiondetector_Counter) ["Point"]
 
+Group:Color:MAX  gOutdoor_Terrace_Light_Hue_Color "Farbe"              <colorwheel> {autoupdate="false"}
+
+Group  eOutdoor_Terrace_Light_Hue_Left               "HUE Lampe links"    <selflight> (lOutdoor_Terrace)                    ["Lightbulb"] { synonyms="Indirekt" }
+Color  pOutdoor_Terrace_Light_Hue_Left_Color         "Farbe"              <colorwheel> (eOutdoor_Terrace_Light_Hue_Left,gOutdoor_Terrace_Light_Hue_Color,lOutdoor_Terrace,gOutdoor_Lights) ["Control","Light"] { channel="hue:0210:default:lamp8:color"}
+Dimmer pOutdoor_Terrace_Light_Hue_Left_Temperature   "Farbtemperatur"     <selflight> (eOutdoor_Terrace_Light_Hue_Left)      ["Setpoint","ColorTemperature"] { channel="hue:0210:default:lamp8:color_temperature"}
+
+Group  eOutdoor_Terrace_Light_Hue_Right              "HUE Lampe rechts"   <selflight> (lOutdoor_Terrace)                    ["Lightbulb"] { synonyms="Indirekt" }
+Color  pOutdoor_Terrace_Light_Hue_Right_Color        "Farbe"              <colorwheel> (eOutdoor_Terrace_Light_Hue_Right,gOutdoor_Terrace_Light_Hue_Color,lOutdoor_Terrace,gOutdoor_Lights) ["Control","Light"] { channel="hue:0210:default:lamp7:color"}
+Dimmer pOutdoor_Terrace_Light_Hue_Right_Temperature  "Farbtemperatur"     <selflight> (eOutdoor_Terrace_Light_Hue_Right)      ["Setpoint","ColorTemperature"] { channel="hue:0210:default:lamp7:color_temperature"}
+
 // **** OUTDOOR GARAGE GARDEN ****
 Group  eOutdoor_Garden_Garage_Light             "Lampe"              <selflight> (lOutdoor_Garden)                                      ["Lightbulb"] {synonyms="Schuppen"}
 Switch pOutdoor_Garden_Garage_Light_Powered     "Licht"              <selflight> (eOutdoor_Garden_Garage_Light,gOutdoor_Lights)         ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:garageGardenside" }
