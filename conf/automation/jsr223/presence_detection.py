@@ -111,8 +111,6 @@ class PresenceCheckRule:
         ]
         
         self.skippedTimer = {}
-
-        sendNotification(u"System", u"Test", recipients = ["hhees"])
         
     def process(self,itemName,itemState):
         presenceState = getItemState("pOther_Presence_State").intValue()
