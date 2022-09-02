@@ -111,6 +111,8 @@ class PresenceCheckRule:
         ]
         
         self.skippedTimer = {}
+
+        sendNotification(u"System", u"Test", recipients = ["hhees"])
         
     def process(self,itemName,itemState):
         presenceState = getItemState("pOther_Presence_State").intValue()
@@ -119,8 +121,8 @@ class PresenceCheckRule:
         
         holgerPhone = itemState if itemName == "pOther_Presence_Holger_State" else getItemState("pOther_Presence_Holger_State")
         sandraPhone = itemState if itemName == "pOther_Presence_Sandra_State" else getItemState("pOther_Presence_Sandra_State")
-        
-        bot = PresenceHelper.getRecipientByStateItem(itemName)
+
+        userName = PresenceHelper.getRecipientByStateItem(itemName)
         
         if holgerPhone == ON or sandraPhone == ON:
             # only possible if we are away
@@ -134,14 +136,14 @@ class PresenceCheckRule:
                 postUpdate("pOther_Presence_State",PresenceHelper.STATE_AWAY)
 
         if itemState == ON:
-            sendNotification(u"System", u"Willkommen", recipients = [bot])
+            sendNotification(u"System", u"Willkommen", recipients = [userName])
         else:
             if holgerPhone == OFF and sandraPhone == OFF:
                 lightMsg = u" - LICHT an" if getItemState("gIndoor_Lights") != OFF else u""
                 windowMsg = u" - FENSTER offen" if getItemState("gOpeningcontacts") != CLOSED else u""
-                sendNotification(u"System", u"Auf Wiedersehen{}{}".format(lightMsg,windowMsg), recipients = [bot])
+                sendNotification(u"System", u"Auf Wiedersehen{}{}".format(lightMsg,windowMsg), recipients = [userName])
             else:
-                sendNotification(u"System", u"Auf Wiedersehen", recipients = [bot])
+                sendNotification(u"System", u"Auf Wiedersehen", recipients = [userName])
 
     def execute(self, module, input):
         itemName = input['event'].getItemName()
@@ -151,13 +153,13 @@ class PresenceCheckRule:
         if itemState == OFF:
             if itemLastChangeOlderThen("pGF_Corridor_Openingcontact_Door_State",ZonedDateTime.now().minusMinutes(30)):
                 self.skippedTimer[itemName] = startTimer(self.log, 7200, self.process, args = [ itemName,itemState ]) # 1 hour
-                sendNotification(u"System", u"Delayed presence processing {} for {}".format(itemState,itemName), recipients = ['bot_holger'])
+                sendNotification(u"System", u"Delayed presence processing {} for {}".format(itemState,itemName), recipients = [PresenceHelper.getRecipientByStateItem('pOther_Presence_Holger_State')])
                 return
         else:
             if itemName in self.skippedTimer:
                 self.skippedTimer[itemName].cancel()
                 del self.skippedTimer[itemName]
-                sendNotification(u"System", u"Cancel presence processing {} for {}".format(itemState,itemName), recipients = ['bot_holger'])
+                sendNotification(u"System", u"Cancel presence processing {} for {}".format(itemState,itemName), recipients = [PresenceHelper.getRecipientByStateItem('pOther_Presence_Sandra_State')])
                 return
               
         self.process(itemName,itemState)

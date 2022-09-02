@@ -11,16 +11,15 @@ class PresenceHelper:
     @staticmethod
     def getPresentRecipients():
         recipients = []
-        if getItemState("pOther_Presence_Holger_State") == OnOffType.ON:
-            recipients.append('bot_holger')
-        if getItemState("pOther_Presence_Sandra_State") == OnOffType.ON:
-            recipients.append('bot_sandra')
+        for userName in userConfigs:
+            if not userConfigs[userName].state_item or getItemState(userConfigs[userName].state_item) != OnOffType.ON:
+                continue
+            recipients.append(userName)
         return recipients
 
     @staticmethod
-    def getRecipientByStateItem(item):
-        if item == u"pOther_Presence_Holger_State":
-            return 'bot_holger'
-        elif item == u"pOther_Presence_Sandra_State":
-            return 'bot_sandra'
-        return None
+    def getRecipientByStateItem(stateItem):
+        for userName in userConfigs:
+            if userConfigs[userName].state_item != stateItem:
+                continue
+            return userName
