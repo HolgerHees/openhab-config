@@ -1,7 +1,7 @@
 import time
 from java.time import ZonedDateTime
 
-from shared.helper import rule, itemLastChangeOlderThen, getItemState, sendNotification, postUpdate, postUpdateIfChanged, sendCommand
+from shared.helper import rule, itemLastChangeOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand, NotificationHelper
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
 
 from custom.presence import PresenceHelper
@@ -136,7 +136,7 @@ class RoombaBinFullNotificationRule:
         self.triggers = [ItemStateChangeTrigger("pIndoor_Roomba_full", state="ON")]
 
     def execute(self, module, input):
-        sendNotification("Roomba", u"Behälter ist voll")
+        NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, "Roomba", u"Behälter ist voll")
 
 
 @rule("roboter_roomba.py")
@@ -145,7 +145,7 @@ class RoombaErrorNotificationRule:
         self.triggers = [ItemStateChangeTrigger("pIndoor_Roomba_error", state="ON")]
 
     def execute(self, module, input):
-        sendNotification("Roomba", u"Es ist ein Fehler aufgetreten")
+        NotificationHelper.sendNotification(NotificationHelper.PRIORITY_ERROR, "Roomba", u"Es ist ein Fehler aufgetreten")
 
 
 @rule("roboter_roomba.py")
@@ -154,7 +154,7 @@ class RoombaNotificationRule:
         self.triggers = [ItemStateChangeTrigger("pIndoor_Roomba_StatusFormatted")]
 
     def execute(self, module, input):
-        sendNotification("Roomba", getItemState("pIndoor_Roomba_StatusFormatted").toString())
+        NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, "Roomba", getItemState("pIndoor_Roomba_StatusFormatted").toString())
 
 
 @rule("roboter_roomba.py")

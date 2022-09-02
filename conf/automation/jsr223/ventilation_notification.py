@@ -1,6 +1,6 @@
 from java.time import ZonedDateTime
 
-from shared.helper import rule, getItemState, getHistoricItemState, getStableItemState, getStableMinMaxItemState, getGroupMember, sendNotification, startTimer
+from shared.helper import rule, getItemState, getHistoricItemState, getStableItemState, getStableMinMaxItemState, getGroupMember, startTimer, NotificationHelper
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
 
 from custom.presence import PresenceHelper
@@ -141,7 +141,7 @@ class TemperatureConditionCheckRule:
                     # initial debug
                     if self.lastDirection is None:
                         recipients = ["bot_holger"]
-                    sendNotification(u"Lüften", msg, recipients = recipients )
+                    NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"Lüften", msg, recipients = recipients )
 
         self.lastDirection = direction
         self.lastGFShouldOpen = gfShouldOpen

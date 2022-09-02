@@ -1,7 +1,7 @@
 import math
 from java.time import ZonedDateTime
 
-from shared.helper import rule, itemLastChangeOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand, startTimer, getThing, sendNotificationToAllAdmins
+from shared.helper import rule, itemLastChangeOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand, startTimer, getThing
 from shared.triggers import CronTrigger, ItemCommandTrigger, ItemStateChangeTrigger, ThingStatusChangeTrigger
 
 from custom.presence import PresenceHelper

@@ -1,4 +1,4 @@
-from shared.helper import rule, itemLastUpdateOlderThen, sendNotificationToAllAdmins, getItemState, postUpdateIfChanged
+from shared.helper import rule, itemLastUpdateOlderThen, getItemState, postUpdateIfChanged, NotificationHelper
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
 from java.time import ZonedDateTime
 
@@ -43,4 +43,4 @@ class StateMessageMainRule:
         msg = u", ".join(active)
 
         if postUpdateIfChanged("pOther_State_Message_Main", msg):
-            sendNotificationToAllAdmins("Main " + group, msg)
+            NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_ERROR if msg != "Filter" else NotificationHelper.PRIORITY_NOTICE, "Main " + group, msg)

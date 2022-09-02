@@ -1,7 +1,7 @@
 from java.time import ZonedDateTime
 from java.time.temporal import ChronoUnit
 
-from shared.helper import log, rule, itemLastChangeOlderThen, getItem, getItemState, getItemLastUpdate, postUpdate, postUpdateIfChanged, sendNotification, sendNotificationToAllAdmins, startTimer, getGroupMember, getGroupMemberChangeTrigger
+from shared.helper import log, rule, itemLastChangeOlderThen, getItem, getItemState, getItemLastUpdate, postUpdate, postUpdateIfChanged, startTimer, getGroupMember, getGroupMemberChangeTrigger, NotificationHelper
 from shared.triggers import ItemStateChangeTrigger
 from custom.presence import PresenceHelper
 
@@ -22,7 +22,7 @@ class PresenceMovingCheckRule:
  
     def setAway(self,isFallback):
         postUpdateIfChanged("pOther_Presence_State",PresenceHelper.STATE_AWAY)
-        sendNotification(u"System", u"Unbekannter Gast {}".format( u"verschwunden" if isFallback else u"gegangen" ))
+        NotificationHelper.sendNotification(NotificationHelper.PRIORITY_WARN, u"System", u"Unbekannter Gast {}".format( u"verschwunden" if isFallback else u"gegangen" ))
 
     def setSleeping(self):
         postUpdateIfChanged("pOther_Presence_State",PresenceHelper.STATE_SLEEPING)
@@ -88,7 +88,7 @@ class PresenceMovingCheckRule:
             if input['event'].getItemState() == OPEN:
                 if presenceState == PresenceHelper.STATE_AWAY:
                     postUpdate("pOther_Presence_State",PresenceHelper.STATE_MAYBE_PRESENT)
-                    sendNotification(u"System", u"Unbekannter Gast gekommen")
+                    NotificationHelper.sendNotification(NotificationHelper.PRIORITY_WARN, u"System", u"Unbekannter Gast gekommen")
             else:
                 if presenceState == PresenceHelper.STATE_MAYBE_PRESENT:
                     # check in 15 seconds again if there was any move events
@@ -115,7 +115,7 @@ class PresenceCheckRule:
     def process(self,itemName,itemState):
         presenceState = getItemState("pOther_Presence_State").intValue()
         
-        #sendNotificationToAllAdmins(u"{}".format(itemName), u"{}".format(itemState))
+        #NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_NOTICE, u"{}".format(itemName), u"{}".format(itemState))
         
         holgerPhone = itemState if itemName == "pOther_Presence_Holger_State" else getItemState("pOther_Presence_Holger_State")
         sandraPhone = itemState if itemName == "pOther_Presence_Sandra_State" else getItemState("pOther_Presence_Sandra_State")
@@ -126,7 +126,7 @@ class PresenceCheckRule:
             # only possible if we are away
             if presenceState in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
                 #if presenceState == PresenceHelper.STATE_MAYBE_PRESENT and (holgerPhone == OFF or sandraPhone == OFF):
-                #    sendNotification(u"System", u"Unbekannter Gast ist {}".format("Sandra" if holgerPhone == OFF else "Holger")
+                #    NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"System", u"Unbekannter Gast ist {}".format("Sandra" if holgerPhone == OFF else "Holger")
                 postUpdate("pOther_Presence_State",PresenceHelper.STATE_PRESENT)
         else:
             # only possible if we are present and not sleeping
@@ -134,14 +134,14 @@ class PresenceCheckRule:
                 postUpdate("pOther_Presence_State",PresenceHelper.STATE_AWAY)
 
         if itemState == ON:
-            sendNotification(u"System", u"Willkommen", recipients = [userName])
+            NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"System", u"Willkommen", recipients = [userName])
         else:
             if holgerPhone == OFF and sandraPhone == OFF:
                 lightMsg = u" - LICHT an" if getItemState("gIndoor_Lights") != OFF else u""
                 windowMsg = u" - FENSTER offen" if getItemState("gOpeningcontacts") != CLOSED else u""
-                sendNotification(u"System", u"Auf Wiedersehen{}{}".format(lightMsg,windowMsg), recipients = [userName])
+                NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"System", u"Auf Wiedersehen{}{}".format(lightMsg,windowMsg), recipients = [userName])
             else:
-                sendNotification(u"System", u"Auf Wiedersehen", recipients = [userName])
+                NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"System", u"Auf Wiedersehen", recipients = [userName])
 
     def execute(self, module, input):
         itemName = input['event'].getItemName()
@@ -151,13 +151,13 @@ class PresenceCheckRule:
         if itemState == OFF:
             if itemLastChangeOlderThen("pGF_Corridor_Openingcontact_Door_State",ZonedDateTime.now().minusMinutes(30)):
                 self.skippedTimer[itemName] = startTimer(self.log, 7200, self.process, args = [ itemName,itemState ]) # 1 hour
-                sendNotification(u"System", u"Delayed presence processing {} for {}".format(itemState,itemName), recipients = [PresenceHelper.getRecipientByStateItem('pOther_Presence_Holger_State')])
+                NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"System", u"Delayed presence processing {} for {}".format(itemState,itemName), recipients = [PresenceHelper.getRecipientByStateItem('pOther_Presence_Holger_State')])
                 return
         else:
             if itemName in self.skippedTimer:
                 self.skippedTimer[itemName].cancel()
                 del self.skippedTimer[itemName]
-                sendNotification(u"System", u"Cancel presence processing {} for {}".format(itemState,itemName), recipients = [PresenceHelper.getRecipientByStateItem('pOther_Presence_Sandra_State')])
+                NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"System", u"Cancel presence processing {} for {}".format(itemState,itemName), recipients = [PresenceHelper.getRecipientByStateItem('pOther_Presence_Sandra_State')])
                 return
               
         self.process(itemName,itemState)
@@ -178,7 +178,7 @@ class WakeupRule:
         
     def wakeup(self):
         postUpdate("pOther_Presence_State", PresenceHelper.STATE_PRESENT)
-        sendNotification(u"System", u"Guten Morgen")
+        NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"System", u"Guten Morgen")
 
     def delayedWakeup(self, checkCounter ):
         if getItemState("gGF_Lights") == ON:

@@ -1,4 +1,4 @@
-from shared.helper import rule, getGroupMemberChangeTrigger, ItemStateChangeTrigger, sendNotification, getItem, getItemState, itemLastChangeNewerThen
+from shared.helper import rule, getGroupMemberChangeTrigger, ItemStateChangeTrigger, getItem, getItemState, itemLastChangeNewerThen, NotificationHelper
 from custom.presence import PresenceHelper
 
 @rule("sensor_security_notification.py")
@@ -55,4 +55,4 @@ class SensorSecurityNotificationRule:
                 
             #self.log.info(u"{} {} {} {}".format(group,itemName,item.getLabel(),location.getLabel()))
 
-            sendNotification(u"Alarm", u"{}".format(msg))
+            NotificationHelper.sendNotification(NotificationHelper.PRIORITY_ALERT, u"Alarm", u"{}".format(msg))

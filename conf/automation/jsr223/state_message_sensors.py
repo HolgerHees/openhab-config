@@ -1,4 +1,4 @@
-from shared.helper import rule, itemLastUpdateOlderThen, sendNotificationToAllAdmins, getItemState, postUpdateIfChanged
+from shared.helper import rule, itemLastUpdateOlderThen, getItemState, postUpdateIfChanged, NotificationHelper
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
 from java.time import ZonedDateTime
 
@@ -71,5 +71,5 @@ class StateMessageSensorsRule:
         msg = u", ".join(active)
 
         if postUpdateIfChanged("pOther_State_Message_Sensors", msg):
-            sendNotificationToAllAdmins("Sensoren " + group, msg)
+            NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_ERROR, "Sensoren " + group, msg)
  

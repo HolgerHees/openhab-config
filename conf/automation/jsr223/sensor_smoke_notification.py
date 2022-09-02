@@ -1,4 +1,4 @@
-from shared.helper import rule, ItemStateChangeTrigger, sendNotification
+from shared.helper import rule, ItemStateChangeTrigger, NotificationHelper
 
 
 @rule("scene_contact_notifications.py")
@@ -7,4 +7,4 @@ class SmokeDetectorNotificationsRule:
         self.triggers = [ItemStateChangeTrigger("pOther_Smoke_Detector_State",state="OPEN")]
 
     def execute(self, module, input):
-        sendNotification("Alarm", u"Rauchmelder") 
+        NotificationHelper.sendNotification(NotificationHelper.PRIORITY_ALERT, "Alarm", u"Rauchmelder")

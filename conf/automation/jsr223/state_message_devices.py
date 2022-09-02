@@ -1,4 +1,4 @@
-from shared.helper import rule, sendNotification, getItemState, postUpdateIfChanged, sendNotificationToAllAdmins
+from shared.helper import rule, getItemState, postUpdateIfChanged, NotificationHelper
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
 
 
@@ -31,7 +31,7 @@ class StateMessageDevicesRule:
         if postUpdateIfChanged("pOther_State_Message_Devices", msg):
             # don't notify robots, because they are already notified seperatly
             if msg not in ["Roboter","Alles ok"] or oldMsg not in ["Roboter","Alles ok"]:
-                sendNotificationToAllAdmins(u"Geräte", msg)
+                NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_ERROR, u"Geräte", msg)
 
     def execute(self, module, input):
         self.check()

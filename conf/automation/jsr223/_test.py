@@ -1,5 +1,5 @@
 from shared.triggers import CronTrigger
-from shared.helper import rule, sendNotification, sendCommand, getItem
+from shared.helper import rule, sendCommand, getItem
 
 @rule("_test.py")
 class TestRule:

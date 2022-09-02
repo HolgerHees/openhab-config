@@ -1,4 +1,4 @@
-from shared.helper import rule, getItemState, postUpdateIfChanged, sendNotification, startTimer
+from shared.helper import rule, getItemState, postUpdateIfChanged, startTimer, NotificationHelper
 from shared.actions import Transformation
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
 
@@ -37,7 +37,7 @@ class HomeConnectWasherNotificationRule:
 
     def notify(self,state):
         self.checkTimer = None
-        sendNotification(u"Waschmaschine", u"Wäsche ist fertig" if state else u"Wäsche ist wahrscheinlich fertig" )
+        NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"Waschmaschine", u"Wäsche ist fertig" if state else u"Wäsche ist wahrscheinlich fertig" )
   
     def execute(self, module, input):
         if input['event'].getItemName() == "pGF_Utilityroom_Washer_RemainingProgramTimeState":

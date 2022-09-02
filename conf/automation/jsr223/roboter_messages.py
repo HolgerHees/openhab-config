@@ -1,4 +1,4 @@
-from shared.helper import rule, sendNotification, getItemState, getPreviousItemState, postUpdateIfChanged
+from shared.helper import rule, getItemState, getPreviousItemState, postUpdateIfChanged, NotificationHelper
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
 
 
@@ -39,5 +39,5 @@ class RoboterMessagesRule:
         msg = ", ".join(active)
 
         if postUpdateIfChanged("pOther_State_Message_Robot", msg):
-            sendNotification("Roboter " + group, msg)
+            NotificationHelper.sendNotification(NotificationHelper.PRIORITY_ERROR, "Roboter " + group, msg)
 

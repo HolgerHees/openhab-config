@@ -1,4 +1,4 @@
-from shared.helper import rule, getItemState, itemStateNewerThen, itemStateOlderThen, sendNotification
+from shared.helper import rule, getItemState, itemStateNewerThen, itemStateOlderThen, NotificationHelper
 from shared.triggers import CronTrigger
 
 from java.time import ZonedDateTime
@@ -34,5 +34,5 @@ class CalendarNotificationRule:
 
         if len(active) > 0:
             msg = ", ".join(active)
-            sendNotification(u"Müllabholung",msg)
+            NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"Müllabholung",msg)
             #self.log.info(u"{}".format(msg))
