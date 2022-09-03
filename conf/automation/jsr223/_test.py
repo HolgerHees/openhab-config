@@ -1,5 +1,5 @@
 from shared.triggers import CronTrigger
-from shared.helper import rule, sendCommand, getItem
+from shared.helper import rule, sendCommand, getItem, NotificationHelper
 
 @rule("_test.py")
 class TestRule:
@@ -7,6 +7,7 @@ class TestRule:
         #self.triggers = [
         #    CronTrigger("*/15 * * * * ?")
         #]
+        #NotificationHelper.sendNotification(NotificationHelper.PRIORITY_ALERT, u"Test", u"Info", recipients = ["hhees"] )
         pass
 
     def execute(self, module, input):     

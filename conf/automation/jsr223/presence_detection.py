@@ -5,7 +5,7 @@ from shared.helper import log, rule, itemLastChangeOlderThen, getItem, getItemSt
 from shared.triggers import ItemStateChangeTrigger
 from custom.presence import PresenceHelper
 
-        
+
 @rule("presence_detection.py")
 class PresenceMovingCheckRule:
     def __init__(self):

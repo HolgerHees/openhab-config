@@ -1,6 +1,7 @@
 from shared.helper import rule, getGroupMemberChangeTrigger, ItemStateChangeTrigger, getItem, getItemState, itemLastChangeNewerThen, NotificationHelper
 from custom.presence import PresenceHelper
 
+
 @rule("sensor_security_notification.py")
 class SensorSecurityNotificationRule:
     def __init__(self):

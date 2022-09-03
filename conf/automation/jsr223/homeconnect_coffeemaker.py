@@ -2,6 +2,7 @@ from shared.helper import rule, getItemState, postUpdateIfChanged, NotificationH
 from custom.presence import PresenceHelper
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
 
+
 @rule("homeconnect_coffeemaker.py")
 class HomeConnectCoffeemakerMessageRule:
     def __init__(self):

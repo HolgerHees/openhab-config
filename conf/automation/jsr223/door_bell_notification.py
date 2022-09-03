@@ -7,8 +7,6 @@ class DoorBellNotificationRule:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pOutdoor_Streedside_Gardendoor_Bell_State", state="OPEN")]
 
-        NotificationHelper.sendNotification(NotificationHelper.PRIORITY_ALERT, "Klingel", "Es klingelt", "https://smartmarvin.de/cameraStrasseImage", ["sandra"] )
-
     def execute(self, module, input):
         if itemStateOlderThen("pOutdoor_Streedside_Gardendoor_Bell_Last_Change", ZonedDateTime.now().minusSeconds(30)):
             NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, "Klingel", "Es klingelt", "https://smartmarvin.de/cameraStrasseImage" )
