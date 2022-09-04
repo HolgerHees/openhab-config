@@ -1,6 +1,6 @@
 from java.time import ZonedDateTime
 
-from shared.helper import rule, getItemState, getHistoricItemState, getStableItemState, getStableMinMaxItemState, getGroupMember, startTimer, NotificationHelper
+from shared.helper import rule, getItemState, getHistoricItemState, getStableItemState, getStableMinMaxItemState, getGroupMember, startTimer, NotificationHelper, UserHelper
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
 
 from custom.presence import PresenceHelper
@@ -103,7 +103,7 @@ class TemperatureConditionCheckRule:
         ffIsOpen = self.getOpenState("gFF_Sensor_Window")
         
         if (self.lastGFShouldOpen!=gfShouldOpen and gfShouldOpen!=gfIsOpen) or (self.lastFFShouldOpen!=ffShouldOpen and ffShouldOpen!=ffIsOpen):
-            recipients = PresenceHelper.getPresentRecipients()
+            recipients = UserHelper.getPresentUser()
             
         self.log.info(u"STATE - gfShouldOpen: {}, gfIsOpen: {}, ffShouldOpen: {}, ffIsOpen: {}, direction: {}".format(gfShouldOpen,gfIsOpen,ffShouldOpen,ffIsOpen,direction))
         

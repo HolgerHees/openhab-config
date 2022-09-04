@@ -1,7 +1,7 @@
 from java.time import ZonedDateTime
 from java.time.temporal import ChronoUnit
 
-from shared.helper import log, rule, itemLastChangeOlderThen, getItem, getItemState, getItemLastUpdate, postUpdate, postUpdateIfChanged, startTimer, getGroupMember, getGroupMemberChangeTrigger, NotificationHelper
+from shared.helper import log, rule, itemLastChangeOlderThen, getItem, getItemState, getItemLastUpdate, postUpdate, postUpdateIfChanged, startTimer, getGroupMember, getGroupMemberChangeTrigger, NotificationHelper, UserHelper
 from shared.triggers import ItemStateChangeTrigger
 from custom.presence import PresenceHelper
 
@@ -120,7 +120,7 @@ class PresenceCheckRule:
         holgerPhone = itemState if itemName == "pOther_Presence_Holger_State" else getItemState("pOther_Presence_Holger_State")
         sandraPhone = itemState if itemName == "pOther_Presence_Sandra_State" else getItemState("pOther_Presence_Sandra_State")
 
-        userName = PresenceHelper.getRecipientByStateItem(itemName)
+        userName = UserHelper.getUserByStateItem(itemName)
         
         if holgerPhone == ON or sandraPhone == ON:
             # only possible if we are away
@@ -151,13 +151,13 @@ class PresenceCheckRule:
         if itemState == OFF:
             if itemLastChangeOlderThen("pGF_Corridor_Openingcontact_Door_State",ZonedDateTime.now().minusMinutes(30)):
                 self.skippedTimer[itemName] = startTimer(self.log, 7200, self.process, args = [ itemName,itemState ]) # 1 hour
-                NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"System", u"Delayed presence processing {} for {}".format(itemState,itemName), recipients = [PresenceHelper.getRecipientByStateItem('pOther_Presence_Holger_State')])
+                NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"System", u"Delayed presence processing {} for {}".format(itemState,itemName), recipients = [UserHelper.getUserByStateItem('pOther_Presence_Holger_State')])
                 return
         else:
             if itemName in self.skippedTimer:
                 self.skippedTimer[itemName].cancel()
                 del self.skippedTimer[itemName]
-                NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"System", u"Cancel presence processing {} for {}".format(itemState,itemName), recipients = [PresenceHelper.getRecipientByStateItem('pOther_Presence_Sandra_State')])
+                NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"System", u"Cancel presence processing {} for {}".format(itemState,itemName), recipients = [UserHelper.getUserByStateItem('pOther_Presence_Sandra_State')])
                 return
               
         self.process(itemName,itemState)

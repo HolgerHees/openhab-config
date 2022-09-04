@@ -9,19 +9,3 @@ class PresenceHelper:
     STATE_PRESENT = 2
     STATE_MAYBE_SLEEPING = 3
     STATE_SLEEPING = 4
-
-    @staticmethod
-    def getPresentRecipients():
-        recipients = []
-        for userName in userConfigs:
-            if not userConfigs[userName]["state_item"] or getItemState(userConfigs[userName]["state_item"]) != OnOffType.ON:
-                continue
-            recipients.append(userName)
-        return recipients
-
-    @staticmethod
-    def getRecipientByStateItem(stateItem):
-        for userName in userConfigs:
-            if userConfigs[userName]["state_item"] != stateItem:
-                continue
-            return userName
