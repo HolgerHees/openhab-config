@@ -1,7 +1,5 @@
 from shared.helper import getItemState
-from org.openhab.core.library.types import OnOffType
 
-from configuration import userConfigs
 
 class PresenceHelper:
     STATE_AWAY = 0
