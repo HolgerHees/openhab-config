@@ -159,7 +159,7 @@ class TemperatureConditionCheckRule:
                 
             if input['event'].getItemState().intValue() == PresenceHelper.STATE_PRESENT and input['event'].getOldItemState().intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
                 # delayed notification to give all devices the chance to be detected as present
-                self.timer = startTimer(self.log, 60, self.process, args = [ PresenceHelper.getPresentRecipients() ]) # 1 min
+                self.timer = startTimer(self.log, 60, self.process, args = [ UserHelper.getPresentUser() ]) # 1 min
         else:
             # we are away
             if getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
