@@ -13,6 +13,7 @@ class StateMessageDevicesRule:
         self.check()
         
     def check(self):
+        priority = NotificationHelper.PRIORITY_ERROR
         active = []
         
         if getItemState("pOther_State_Message_Robot").toString() != "Alles ok":
@@ -23,6 +24,7 @@ class StateMessageDevicesRule:
 
         if len(active) == 0:
             active.append("Alles ok")
+            priority = NotificationHelper.PRIORITY_NOTICE
 
         msg = ", ".join(active)
         
@@ -31,7 +33,7 @@ class StateMessageDevicesRule:
         if postUpdateIfChanged("pOther_State_Message_Devices", msg):
             # don't notify robots, because they are already notified seperatly
             if msg not in ["Roboter","Alles ok"] or oldMsg not in ["Roboter","Alles ok"]:
-                NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_ERROR, u"Geräte", msg)
+                NotificationHelper.sendNotificationToAllAdmins(priority, u"Geräte", msg)
 
     def execute(self, module, input):
         self.check()

@@ -17,6 +17,7 @@ class StateMessageMainRule:
         ]
 
     def execute(self, module, input):
+        priority = NotificationHelper.PRIORITY_ERROR
         active = []
         group = "Fehler"
 
@@ -39,8 +40,13 @@ class StateMessageMainRule:
         if len(active) == 0:
             active.append(u"Alles ok")
             group = "Info" 
+            priority = NotificationHelper.PRIORITY_NOTICE
 
         msg = u", ".join(active)
 
+        if msg == "Filter":
+            group = "Info"
+            priority = NotificationHelper.PRIORITY_NOTICE
+
         if postUpdateIfChanged("pOther_State_Message_Main", msg):
-            NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_ERROR if msg != "Filter" else NotificationHelper.PRIORITY_NOTICE, "Main " + group, msg)
+            NotificationHelper.sendNotificationToAllAdmins(priority, "Main " + group, msg)

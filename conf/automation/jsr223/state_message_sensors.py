@@ -36,6 +36,7 @@ class StateMessageSensorsRule:
         ]
 
     def execute(self, module, input):
+        priority = NotificationHelper.PRIORITY_ERROR
         active = []
         group = "Fehler"
 
@@ -50,6 +51,7 @@ class StateMessageSensorsRule:
             if getItemState(co2SensorItem).intValue() > 1500:
                 active.append(u"CO2 Wert")
                 self.log.warn(u"CO2 Sensor: '{}', Value: '{}'".format(co2SensorItem,getItemState(co2SensorItem).intValue()))
+                priority = NotificationHelper.PRIORITY_ALERT
                 break
 
             if itemLastUpdateOlderThen(co2SensorItem, refDate):
@@ -67,9 +69,10 @@ class StateMessageSensorsRule:
         if len(active) == 0:
             active.append(u"Alles ok")
             group = "Info" 
+            priority = NotificationHelper.PRIORITY_NOTICE
             
         msg = u", ".join(active)
 
         if postUpdateIfChanged("pOther_State_Message_Sensors", msg):
-            NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_ERROR, "Sensoren " + group, msg)
+            NotificationHelper.sendNotificationToAllAdmins(priority, "Sensoren " + group, msg)
  

@@ -14,9 +14,9 @@ class RoboterMessagesRule:
         ]
 
     def execute(self, module, input):
+        priority = NotificationHelper.PRIORITY_ERROR
         group = "Fehler"
         active = []
-        #url = None
         
         if getItemState("pIndoor_Roomba_status") != NULL and ( getItemState("pIndoor_Roomba_status").toString() == "Stuck" or getItemState("pIndoor_Roomba_full") == ON ):
             active.append("Roomba")
@@ -30,14 +30,14 @@ class RoboterMessagesRule:
                     isDeepSleep = True
             if not isDeepSleep:
                 active.append("Mower")
-            #url = "https://smartmarvin.de/cameraAutomowerImage"
 
         if len(active) == 0:
+            priority = NotificationHelper.PRIORITY_NOTICE
             active.append("Alles ok")
             group = "Info"
 
         msg = ", ".join(active)
 
         if postUpdateIfChanged("pOther_State_Message_Robot", msg):
-            NotificationHelper.sendNotification(NotificationHelper.PRIORITY_ERROR, "Roboter " + group, msg)
+            NotificationHelper.sendNotification(priority, "Roboter " + group, msg)
 
