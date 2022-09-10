@@ -151,13 +151,13 @@ class PresenceCheckRule:
         if itemState == OFF:
             if itemLastChangeOlderThen("pGF_Corridor_Openingcontact_Door_State",ZonedDateTime.now().minusMinutes(30)):
                 self.skippedTimer[itemName] = startTimer(self.log, 7200, self.process, args = [ itemName,itemState ]) # 1 hour
-                NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"System", u"Delayed presence processing {} for {}".format(itemState,itemName), recipients = [UserHelper.getUserByStateItem('pOther_Presence_Holger_State')])
+                NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_NOTICE, u"System", u"Delayed presence processing {} for {}".format(itemState,itemName))
                 return
         else:
             if itemName in self.skippedTimer:
                 self.skippedTimer[itemName].cancel()
                 del self.skippedTimer[itemName]
-                NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"System", u"Cancel presence processing {} for {}".format(itemState,itemName), recipients = [UserHelper.getUserByStateItem('pOther_Presence_Sandra_State')])
+                NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_NOTICE, u"System", u"Cancel presence processing {} for {}".format(itemState,itemName))
                 return
               
         self.process(itemName,itemState)
