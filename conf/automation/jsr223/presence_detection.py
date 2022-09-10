@@ -24,24 +24,6 @@ class PresenceMovingCheckRule:
         postUpdateIfChanged("pOther_Presence_State",PresenceHelper.STATE_AWAY)
         NotificationHelper.sendNotification(NotificationHelper.PRIORITY_WARN, u"System", u"Unbekannter Gast {}".format( u"verschwunden" if isFallback else u"gegangen" ))
 
-    def setSleeping(self):
-        postUpdateIfChanged("pOther_Presence_State",PresenceHelper.STATE_SLEEPING)
-
-    def delayedSleepingCheck(self):
-        presenceState = getItemState("pOther_Presence_State").intValue()
-      
-        if presenceState != PresenceHelper.STATE_MAYBE_SLEEPING:
-            return
-          
-        if self.fallbackTimer == None or getItemState("gIndoor_Lights") == ON:
-            self.fallbackTimer = startTimer(self.log, 600, self.delayedSleepingCheck) # 10 min
-        else:
-            lastUpdateDiff = ChronoUnit.SECONDS.between(getItemLastUpdate("gIndoor_Lights"),ZonedDateTime.now())
-            if lastUpdateDiff >= 600:
-                self.setSleeping()
-            else:
-                self.fallbackTimer = startTimer(self.log, 600 - lastUpdateDiff, self.delayedSleepingCheck) # 10 min
-        
     def delayedAwayCheck(self):
         self.fallbackTimer = startTimer(self.log, 7200, self.setAway, args = [ True ]) # 1 hour
       
@@ -70,6 +52,24 @@ class PresenceMovingCheckRule:
             self.setAway( False )
             
         self.confirmTimer = None
+
+    def setSleeping(self):
+        postUpdateIfChanged("pOther_Presence_State",PresenceHelper.STATE_SLEEPING)
+
+    def delayedSleepingCheck(self):
+        presenceState = getItemState("pOther_Presence_State").intValue()
+
+        if presenceState != PresenceHelper.STATE_MAYBE_SLEEPING:
+            return
+
+        if self.fallbackTimer == None or getItemState("gIndoor_Lights") == ON:
+            self.fallbackTimer = startTimer(self.log, 600, self.delayedSleepingCheck) # 10 min
+        else:
+            lastUpdateDiff = ChronoUnit.SECONDS.between(getItemLastUpdate("gIndoor_Lights"),ZonedDateTime.now())
+            if lastUpdateDiff >= 600:
+                self.setSleeping()
+            else:
+                self.fallbackTimer = startTimer(self.log, 600 - lastUpdateDiff, self.delayedSleepingCheck) # 10 min
 
     def execute(self, module, input):
         if self.fallbackTimer != None:
@@ -117,16 +117,13 @@ class PresenceCheckRule:
         
         #NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_NOTICE, u"{}".format(itemName), u"{}".format(itemState))
         
-        holgerPhone = itemState if itemName == "pOther_Presence_Holger_State" else getItemState("pOther_Presence_Holger_State")
-        sandraPhone = itemState if itemName == "pOther_Presence_Sandra_State" else getItemState("pOther_Presence_Sandra_State")
-
         userName = UserHelper.getUserByStateItem(itemName)
         
-        if holgerPhone == ON or sandraPhone == ON:
+        if itemState == ON:
             # only possible if we are away
             if presenceState in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
-                #if presenceState == PresenceHelper.STATE_MAYBE_PRESENT and (holgerPhone == OFF or sandraPhone == OFF):
-                #    NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"System", u"Unbekannter Gast ist {}".format("Sandra" if holgerPhone == OFF else "Holger")
+                if presenceState == PresenceHelper.STATE_MAYBE_PRESENT:
+                    NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"System", u"Unbekannter Gast ist {}".format( UserHelper.getName(userName) ) )
                 postUpdate("pOther_Presence_State",PresenceHelper.STATE_PRESENT)
         else:
             # only possible if we are present and not sleeping
@@ -136,6 +133,9 @@ class PresenceCheckRule:
         if itemState == ON:
             NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"System", u"Willkommen", recipients = [userName])
         else:
+            holgerPhone = itemState if itemName == "pOther_Presence_Holger_State" else getItemState("pOther_Presence_Holger_State")
+            sandraPhone = itemState if itemName == "pOther_Presence_Sandra_State" else getItemState("pOther_Presence_Sandra_State")
+
             if holgerPhone == OFF and sandraPhone == OFF:
                 lightMsg = u" - LICHT an" if getItemState("gIndoor_Lights") != OFF else u""
                 windowMsg = u" - FENSTER offen" if getItemState("gOpeningcontacts") != CLOSED else u""
