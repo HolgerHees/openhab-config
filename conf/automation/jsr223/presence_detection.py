@@ -109,7 +109,7 @@ class PresenceCheckRule:
             ItemStateChangeTrigger("pOther_Presence_Holger_State"),
             ItemStateChangeTrigger("pOther_Presence_Sandra_State")
         ]
-        
+
         self.skippedTimer = {}
         
     def process(self,itemName,itemState):
