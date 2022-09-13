@@ -21,6 +21,9 @@ class PresenceMovingCheckRule:
         #self.log.info(u"{}".format(seconds))
  
     def setAway(self,isFallback):
+        if presenceState != PresenceHelper.STATE_MAYBE_PRESENT:
+            return
+
         postUpdateIfChanged("pOther_Presence_State",PresenceHelper.STATE_AWAY)
         NotificationHelper.sendNotification(NotificationHelper.PRIORITY_WARN, u"System", u"Unbekannter Gast {}".format( u"verschwunden" if isFallback else u"gegangen" ))
 
