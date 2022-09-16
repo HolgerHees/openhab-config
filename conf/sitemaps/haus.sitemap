@@ -389,9 +389,7 @@ sitemap haus label="Main Menu"
                     Selection item=pOther_Presence_State label="Präsenz" mappings=[0="Abwesend", 1="(Anwesend)", 2="Anwesend",3="(Schlafen)", 4="Schlafen"]
                     Text item=pOther_Presence_Holger_State label="Holger anwesend [%s]"
                     Text item=pOther_Presence_Sandra_State label="Sandra anwesend [%s]"
-                    Switch item=pOther_Scene7 label="Tablet Reload [%s]"
-                    Switch item=pOther_Scene8 label="Tablet Wakeup [%s]"
-                    Switch item=pOther_Scene9 label="Tablet Light Theme [%s]"
+                    Switch item=pOther_Scene7 label="Tablet Wakeup [%s]"
                 }
 				Text label="Beschattung, Beleuchtung & Solar" icon="selfsun"
                 {

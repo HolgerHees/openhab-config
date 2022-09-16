@@ -21,7 +21,7 @@ class PresenceMovingCheckRule:
         #self.log.info(u"{}".format(seconds))
  
     def setAway(self,isFallback):
-        if presenceState != PresenceHelper.STATE_MAYBE_PRESENT:
+        if getItemState("pOther_Presence_State").intValue() != PresenceHelper.STATE_MAYBE_PRESENT:
             return
 
         postUpdateIfChanged("pOther_Presence_State",PresenceHelper.STATE_AWAY)
@@ -31,9 +31,7 @@ class PresenceMovingCheckRule:
         self.fallbackTimer = startTimer(self.log, 7200, self.setAway, args = [ True ]) # 1 hour
       
     def confirmArriving(self):
-        presenceState = getItemState("pOther_Presence_State").intValue()
-      
-        if presenceState != PresenceHelper.STATE_MAYBE_PRESENT:
+        if getItemState("pOther_Presence_State").intValue() != PresenceHelper.STATE_MAYBE_PRESENT:
             return
           
         newestUpdate = None
@@ -60,9 +58,7 @@ class PresenceMovingCheckRule:
         postUpdateIfChanged("pOther_Presence_State",PresenceHelper.STATE_SLEEPING)
 
     def delayedSleepingCheck(self):
-        presenceState = getItemState("pOther_Presence_State").intValue()
-
-        if presenceState != PresenceHelper.STATE_MAYBE_SLEEPING:
+        if getItemState("pOther_Presence_State").intValue() != PresenceHelper.STATE_MAYBE_SLEEPING:
             return
 
         if self.fallbackTimer == None or getItemState("gIndoor_Lights") == ON:
