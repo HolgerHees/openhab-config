@@ -2,7 +2,7 @@ import time
 import urllib2
 from java.time import ZonedDateTime
 
-from shared.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastChangeOlderThen, sendCommand, startTimer
+from shared.helper import rule, getItemState, postUpdate, sendCommandIfChanged, startTimer
 from shared.triggers import ItemStateChangeTrigger, ItemCommandTrigger
 
 from custom.presence import PresenceHelper
@@ -28,24 +28,29 @@ class TabletScreenRule:
         self.timer = None
 
     def process(self, i, cmd):
+        try:
+            urllib2.urlopen("https://smartmarvin.de/wallmountedTabletLivingroom/?cmd=screen{}".format("Off" if cmd == OFF else "On")).read()
+            time.sleep(1)
+            status_result = urllib2.urlopen("https://smartmarvin.de/wallmountedTabletLivingroom/?cmd=getDeviceInfo").read()
+            index = status_result.find("\"screenOn\": {}".format("false" if cmd == OFF else "true"))
+            if index != -1:
+                return
+
+            msg = "Tablet screen action not successful"
+
+        except Exception as e:
+            msg = "Can't reach tablet. Retry in 1 seconds"
+            status_result = None
+
+        if status_result is not None:
+            self.log.info(status_result)
+
         if i > 5:
             self.log.error("Maximum number of attempts reached")
             postUpdate("pOther_Scene7", ON if cmd == OFF else OFF)
             return
 
-        try:
-            urllib2.urlopen("https://smartmarvin.de/wallmountedTabletLivingroom/?cmd=screen{}".format("Off" if cmd == OFF else "On")).read()
-            time.sleep(1)
-            result = urllib2.urlopen("https://smartmarvin.de/wallmountedTabletLivingroom/?cmd=getDeviceInfo").read()
-            index = result.find("\"screenOn\": {}".format("false" if cmd == OFF else "true"))
-            if index != -1:
-                return
-
-            self.log.info("Tablet screen action not successful. Retry in 1 second")
-
-        except Exception as e:
-            self.log.info("Can't reach tablet. Retry in 1 seconds")
-
+        self.log.info("{}. Retry in 1 seconds".format(msg))
         self.timer = startTimer(self.log, 1,self.process, args=[i + 1, cmd])
 
     def execute(self, module, input):
