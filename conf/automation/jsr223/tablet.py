@@ -1,3 +1,4 @@
+import time
 import urllib2
 from java.time import ZonedDateTime
 
@@ -15,13 +16,13 @@ class WakeupRule:
 
     def execute(self, module, input):
         if getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_SLEEPING]:
-            sendCommand("pOther_Scene7", OFF)
+            sendCommandIfChanged("pOther_Scene7", OFF)
         else:
-            sendCommand("pOther_Scene7", ON)
-            
+            sendCommandIfChanged("pOther_Scene7", ON)
+
 
 @rule("tablet.py")
-class ManualReloadRule:
+class TabletScreenRule:
     def __init__(self):
         self.triggers = [ItemCommandTrigger("pOther_Scene7")]
         self.timer = None
@@ -34,9 +35,18 @@ class ManualReloadRule:
 
         try:
             urllib2.urlopen("https://smartmarvin.de/wallmountedTabletLivingroom/?cmd=screen{}".format("Off" if cmd == OFF else "On")).read()
-        except:
+            time.sleep(1)
+            result = urllib2.urlopen("https://smartmarvin.de/wallmountedTabletLivingroom/?cmd=getDeviceInfo").read()
+            index = result.find("\"screenOn\": {}".format("false" if cmd == OFF else "true"))
+            if index != -1:
+                return
+
+            self.log.info("Tablet screen action not successful. Retry in 1 second")
+
+        except Exception as e:
             self.log.info("Can't reach tablet. Retry in 1 seconds")
-            self.timer = startTimer(self.log, 1,self.process, args=[i + 1, cmd])
+
+        self.timer = startTimer(self.log, 1,self.process, args=[i + 1, cmd])
 
     def execute(self, module, input):
         if self.timer != None:
