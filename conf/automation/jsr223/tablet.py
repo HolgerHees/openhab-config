@@ -39,7 +39,7 @@ class TabletScreenRule:
             msg = "Tablet screen action not successful"
 
         except Exception as e:
-            msg = "Can't reach tablet. Retry in 1 seconds"
+            msg = "Can't reach tablet"
             status_result = None
 
         if status_result is not None:
