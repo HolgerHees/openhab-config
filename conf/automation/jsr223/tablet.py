@@ -50,7 +50,7 @@ class TabletScreenRule:
             postUpdate("pOther_Scene7", ON if cmd == OFF else OFF)
             return
 
-        self.log.info("{}. Retry in 1 seconds".format(msg))
+        self.log.warn("{}. Retry in 1 seconds".format(msg))
         self.timer = startTimer(self.log, 1,self.process, args=[i + 1, cmd])
 
     def execute(self, module, input):
