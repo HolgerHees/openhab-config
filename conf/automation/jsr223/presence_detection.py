@@ -104,10 +104,7 @@ class PresenceMovingCheckRule:
 @rule("presence_detection.py")
 class PresenceCheckRule:
     def __init__(self):
-        self.triggers = [
-            ItemStateChangeTrigger("pOther_Presence_Holger_State"),
-            ItemStateChangeTrigger("pOther_Presence_Sandra_State")
-        ]
+        self.triggers = getGroupMemberChangeTrigger("gOther_Presence_State")
 
         self.skippedTimer = {}
         
@@ -124,18 +121,14 @@ class PresenceCheckRule:
                 if presenceState == PresenceHelper.STATE_MAYBE_PRESENT:
                     NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"System", u"Unbekannter Gast ist {}".format( UserHelper.getName(userName) ) )
                 postUpdate("pOther_Presence_State",PresenceHelper.STATE_PRESENT)
-        else:
-            # only possible if we are present and not sleeping
-            if presenceState in [PresenceHelper.STATE_MAYBE_PRESENT,PresenceHelper.STATE_PRESENT]:
-                postUpdate("pOther_Presence_State",PresenceHelper.STATE_AWAY)
 
-        if itemState == ON:
             NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"System", u"Willkommen", recipients = [userName])
         else:
-            holgerPhone = itemState if itemName == "pOther_Presence_Holger_State" else getItemState("pOther_Presence_Holger_State")
-            sandraPhone = itemState if itemName == "pOther_Presence_Sandra_State" else getItemState("pOther_Presence_Sandra_State")
+            if getItemState("gOther_Presence_State") == OFF:
+                # only possible if we are present and not sleeping
+                if presenceState in [PresenceHelper.STATE_MAYBE_PRESENT,PresenceHelper.STATE_PRESENT]:
+                    postUpdate("pOther_Presence_State",PresenceHelper.STATE_AWAY)
 
-            if holgerPhone == OFF and sandraPhone == OFF:
                 lightMsg = u" - LICHT an" if getItemState("gIndoor_Lights") != OFF else u""
                 windowMsg = u" - FENSTER offen" if getItemState("gOpeningcontacts") != CLOSED else u""
                 NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"System", u"Auf Wiedersehen{}{}".format(lightMsg,windowMsg), recipients = [userName])

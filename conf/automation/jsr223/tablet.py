@@ -7,11 +7,10 @@ from shared.triggers import ItemStateChangeTrigger, ItemCommandTrigger
 
 from custom.presence import PresenceHelper
 
-
 @rule("tablet.py")
 class WakeupRule:
     def __init__(self):
-        self.triggers = [ ItemStateChangeTrigger("pOther_Presence_State") ]
+        self.triggers = [ItemStateChangeTrigger("pOther_Presence_State")]
         self.timer = None
 
     def execute(self, module, input):
