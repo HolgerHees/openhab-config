@@ -925,9 +925,15 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Corridor_Speedtest_Ping
                         Switch item=pGF_Corridor_Speedtest_Rerun
                     }
+                    Frame label="Cloud Peer" {
+                        Text item=pOther_Cloud_Pbolle_Peer_State1
+                        Text item=pOther_Cloud_Pbolle_Peer_State2
+                        Text item=pOther_Cloud_MSchelhorn_Peer_State1
+                        Text item=pOther_Cloud_MSchelhorn_Peer_State2
+                    }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/custom/grafana/internet.html?fromItem=Chart_From" icon="none" height=26
+                        Webview url="/static/custom/grafana/internet.html?fromItem=Chart_From" icon="none" height=39
                     }
                 }
                 Group item=pGF_Workroom_PrinterStatus label="Drucker Status [%s]" {

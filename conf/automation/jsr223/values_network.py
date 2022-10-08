@@ -8,6 +8,11 @@ from java.time.temporal import ChronoUnit
 
 from org.openhab.core.types import UnDefType
 
+from configuration import cloudPeerConfigs
+
+import urllib2
+
+
 #wget "http://influxdb:8086/query?u=openhab&p=default123&chunked=true&db=openhab_db&epoch=ns&q=DROP+SERIES+FROM+%22pGF_Corridor_Fritzbox_WanUpstreamCurrRate%22"
 #wget "http://influxdb:8086/query?u=openhab&p=default123&chunked=true&db=openhab_db&epoch=ns&q=DROP+SERIES+FROM+%22pGF_Corridor_Fritzbox_WanDownstreamCurrRate%22"
 
@@ -15,7 +20,7 @@ from org.openhab.core.types import UnDefType
 #wget "http://influxdb:8086/query?u=openhab&p=default123&chunked=true&db=openhab_db&epoch=ns&q=DROP+SERIES+FROM+%22FritzboxWanDownstreamCurrRate%22"
 
 #tail -f /dataDisk/var/log/openhab/events.log | grep -P "pGF_Corridor_Fritzbox_WanTotalBytesReceived|pGF_Corridor_Fritzbox_WanDownstreamCurrRate"
-@rule("values_network.py")
+@rule("values_network_speed.py")
 class ValuesNetworkSpeedRule:
     def __init__(self):
         self.triggers = [
@@ -108,4 +113,3 @@ class ValuesNetworkSpeedRule:
         if self.messureThread == None or not self.messureThread.isAlive():
             self.messureThread = Thread(target = self.messure) 
             self.messureThread.start()
-

@@ -14,6 +14,12 @@ Bridge mqtt:broker:cloud [ host="cloud_mosquitto", secure=false ]
         Type number : temperatureAvg "Temperatur Avg 24 Stunden" [ stateTopic="hhees/weather/items/airTemperatureInCelsius/avg" ]
         Type number : cloudcoverAvg "Bewölkung Avg 24 Stunden" [ stateTopic="hhees/weather/items/effectiveCloudCoverInOcta/avg" ]
     }
+    Thing topic peers "Peers" @ "Cloud" {
+        Type number : hhees_pbolle "pbolle" [ stateTopic="hhees/cloud/peer/pbolle" ]
+        Type number : mschelhorn_pbolle "pbolle" [ stateTopic="mschelhorn/cloud/peer/pbolle" ]
+        Type number : hhees_mschelhorn "mschelhorn" [ stateTopic="hhees/cloud/peer/mschelhorn" ]
+        Type number : pbolle_mschelhorn "mschelhorn" [ stateTopic="pbolle/cloud/peer/mschelhorn" ]
+    }
 }
 
 Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]

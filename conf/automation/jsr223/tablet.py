@@ -11,7 +11,6 @@ from custom.presence import PresenceHelper
 class WakeupRule:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pOther_Presence_State")]
-        self.timer = None
 
     def execute(self, module, input):
         if getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_SLEEPING]:
@@ -24,37 +23,52 @@ class WakeupRule:
 class TabletScreenRule:
     def __init__(self):
         self.triggers = [ItemCommandTrigger("pOther_Scene7")]
-        self.timer = None
+        self.in_progress = False
 
-    def process(self, i, cmd):
+    def switch(self,cmd):
         try:
-            urllib2.urlopen("https://smartmarvin.de/wallmountedTabletLivingroom/?cmd=screen{}".format("Off" if cmd == OFF else "On")).read()
+            action = "Off" if cmd == OFF else "On"
+            self.log.info("Try tablet switch {}".format(action))
+
+            urllib2.urlopen("https://smartmarvin.de/wallmountedTabletLivingroom/?cmd=screen{}".format(action)).read()
+
             time.sleep(1)
+
             status_result = urllib2.urlopen("https://smartmarvin.de/wallmountedTabletLivingroom/?cmd=getDeviceInfo").read()
             index = status_result.find("\"screenOn\": {}".format("false" if cmd == OFF else "true"))
             if index != -1:
-                return
+                self.log.info("Tablet switch successful")
+                return True
 
-            msg = "Tablet screen action not successful"
-
-        except Exception as e:
-            msg = "Can't reach tablet"
-            status_result = None
-
-        if status_result is not None:
+            self.log.error("Tablet switch not successful")
             self.log.info(status_result)
+        except Exception as e:
+            self.log.error("Can't reach tablet")
 
-        if i > 5:
-            self.log.error("Maximum number of attempts reached")
-            postUpdate("pOther_Scene7", ON if cmd == OFF else OFF)
+        return False
+
+    def process(self, i, requested_cmd):
+        is_success = self.switch(requested_cmd)
+
+        active__cmd = getItemState("pOther_Presence_State")
+
+        if requested_cmd == active__cmd:
+            if not is_success:
+                if i > 5:
+                    self.log.error("Maximum number of attempts reached")
+                    postUpdate("pOther_Scene7", ON if requested_cmd == OFF else OFF)
+                else:
+                    self.log.warn("Retry in 1 seconds".format(msg))
+                    time.sleep(1)
+                    self.process(i + 1, requested_cmd)
             return
 
-        self.log.warn("{}. Retry in 1 seconds".format(msg))
-        self.timer = startTimer(self.log, 1,self.process, args=[i + 1, cmd])
+        self.log.info("Requested tablet state changed")
+        self.process(0, active__cmd)
 
     def execute(self, module, input):
-        if self.timer != None:
-            self.timer.cancel()
-            self.timer = None
+        if self.in_progress:
+            return
 
-        self.timer = startTimer(self.log, 0,self.process, args=[0, input["event"].getItemCommand()])
+        self.in_progress = True
+        startTimer(self.log, 0,self.process, args=[0, input["event"].getItemCommand()])

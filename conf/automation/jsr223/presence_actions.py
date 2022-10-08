@@ -32,7 +32,7 @@ class SleepingActionRule:
             
     def execute(self, module, input):
         sendCommandIfChanged("gIndoor_Lights", OFF)
-        sendCommandIfChanged("eOutdoor_Terrace_Light_Hue", OFF)
+        sendCommandIfChanged("gOutdoor_Terrace_Light_Hue_Color", OFF)
         sendCommandIfChanged("pOutdoor_Light_Automatic_Main_Switch", ON)
         
         for child in getGroupMember("gAll_Sockets"):

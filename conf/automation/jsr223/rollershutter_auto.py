@@ -151,7 +151,7 @@ class RollershutterAutoSunprotectionRule:
             self.triggers.append(ItemStateChangeTrigger(sunprotection_item))
 
     def execute(self, module, input):
-        if getItemState("pOther_Manual_State_Auto_Rollershutter") != ON:
+        if getItemState("pOther_Manual_State_Auto_Sunprotection") != ON:
             return
           
         sunprotectionItemName = input['event'].getItemName()

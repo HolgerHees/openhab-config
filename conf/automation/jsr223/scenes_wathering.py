@@ -2,7 +2,7 @@ import math
 from java.time import ZonedDateTime
 from java.time.temporal import ChronoUnit
 
-from shared.helper import rule, startTimer, getGroupMember, getItemState, postUpdate, sendCommand, getItemLastChange
+from shared.helper import rule, startTimer, getGroupMember, getItemState, postUpdate, sendCommand, sendCommandIfChanged, getItemLastChange
 from shared.triggers import ItemCommandTrigger, ItemStateChangeTrigger
 
 
@@ -106,9 +106,14 @@ class ScenesWatheringRule(WatheringHelperOld):
         self.progressTimer = None
         self.currentProgressMsg = ""
 
+        self.activeIndex = -1
+
     def disableAllCircuits(self):
-        for child in getGroupMember("gOutdoor_Watering_Circuits"):
-            sendCommand(child, OFF)
+        for i in range(len(circuits)):
+            group = circuits[i]
+            for circuit in group[2]:
+                if getItemState(circuit + "_Auto") == ON:
+                    sendCommand(circuit + "_Powered", OFF)
         postUpdate("pOutdoor_Watering_Logic_Program_State", u"läuft nicht")
 
     def cancelProgressTimer(self):
@@ -127,21 +132,25 @@ class ScenesWatheringRule(WatheringHelperOld):
         info = u""
 
         # detect current active index
-        activeIndex = -1
-        for i in range(len(circuits)):
-            group = circuits[i]
-            if getItemState(group[2][0] + "_Powered") == ON:
-                activeIndex = i
-                runtime = ChronoUnit.SECONDS.between(getItemLastChange(group[2][0] + "_Powered"),ZonedDateTime.now())
-                remaining = ( duration * group[0] ) - runtime
-                break
+        if self.activeIndex == -1:
+            for i in range(len(circuits)):
+                group = circuits[i]
+                if getItemState(group[2][0] + "_Powered") == ON:
+                    self.activeIndex = i
+                    runtime = ChronoUnit.SECONDS.between(getItemLastChange(group[2][0] + "_Powered"),ZonedDateTime.now())
+                    remaining = ( duration * group[0] ) - runtime
+                    break
+        else:
+            group = circuits[self.activeIndex]
+            runtime = ChronoUnit.SECONDS.between(getItemLastChange(group[2][0] + "_Powered"),ZonedDateTime.now())
+            remaining = ( duration * group[0] ) - runtime
 
         if remaining <= 0:
             nextIndex = -1
 
             # detect next index
             for i in range(len(circuits)):
-                if activeIndex != -1 and i <= activeIndex:
+                if self.activeIndex != -1 and i <= self.activeIndex:
                     continue;
                 group = circuits[i]
                 for circuit in group[2]:
@@ -154,6 +163,7 @@ class ScenesWatheringRule(WatheringHelperOld):
             if nextIndex == -1:
                 self.disableAllCircuits()
                 postUpdate("pOutdoor_Watering_Logic_Program_Start", OFF)
+                self.activeIndex = -1
             else:
                 for circuit in circuits[nextIndex][2]:
                     if getItemState(circuit + "_Auto") == ON:
@@ -165,11 +175,18 @@ class ScenesWatheringRule(WatheringHelperOld):
                 info = nextGroup[1]
 
                 # deactivate current index
-                if activeIndex != -1:
-                    for circuit in circuits[activeIndex][2]:
-                        sendCommand(circuit + "_Powered", OFF)
+                if self.activeIndex != -1:
+                    for circuit in circuits[self.activeIndex][2]:
+                        if getItemState(circuit + "_Auto") == ON:
+                            sendCommand(circuit + "_Powered", OFF)
+
+                self.activeIndex = nextIndex
         else:
-            info = circuits[activeIndex][1]
+            info = circuits[self.activeIndex][1]
+            for circuit in circuits[self.activeIndex][2]:
+                if getItemState(circuit + "_Auto") == ON:
+                    if sendCommandIfChanged(circuit + "_Powered", ON):
+                        self.log.error("Unexcpected circuit state. Powered ON again.")
         
         return [ info, remaining ]
 
