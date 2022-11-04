@@ -9,8 +9,10 @@ from custom.presence import PresenceHelper
 @rule("presence_detection.py")
 class PresenceMovingCheckRule:
     def __init__(self):
-        self.triggers = [ ItemStateChangeTrigger("pGF_Corridor_Openingcontact_Door_State") ]
-        self.triggers += getGroupMemberChangeTrigger("gSensor_Indoor",state="OPEN")
+        self.triggers = []
+        self.triggers += getGroupMemberChangeTrigger("gGF_Sensor_Doors")
+        self.triggers += [ItemStateChangeTrigger("pGF_Corridor_Openingcontact_Door_State"), ItemStateChangeTrigger("pGF_Garage_Openingcontact_Door_Streedside_State")]
+        #self.triggers += getGroupMemberChangeTrigger("gSensor_Indoor",state="OPEN")
 
         self.isConfirmed = False
         self.confirmTimer = None
@@ -77,7 +79,7 @@ class PresenceMovingCheckRule:
             
         presenceState = getItemState("pOther_Presence_State").intValue()
             
-        if input['event'].getItemName() == "pGF_Corridor_Openingcontact_Door_State":
+        if "Openingcontact_Door" in input['event'].getItemName():
             if self.confirmTimer != None:
                 self.confirmTimer.cancel()
                 self.confirmTimer = None 
@@ -85,9 +87,10 @@ class PresenceMovingCheckRule:
             self.isConfirmed = False
              
             if input['event'].getItemState() == OPEN:
-                if presenceState == PresenceHelper.STATE_AWAY:
+                if presenceState in [PresenceHelper.STATE_AWAY, PresenceHelper.STATE_SLEEPING]:
                     postUpdate("pOther_Presence_State",PresenceHelper.STATE_MAYBE_PRESENT)
-                    NotificationHelper.sendNotification(NotificationHelper.PRIORITY_WARN, u"System", u"Unbekannter Gast gekommen")
+                    priority = NotificationHelper.PRIORITY_WARN if presenceState == PresenceHelper.STATE_AWAY else NotificationHelper.PRIORITY_ALERT
+                    NotificationHelper.sendNotification(priority, u"System", u"Unbekannter Gast gekommen")
             else:
                 if presenceState == PresenceHelper.STATE_MAYBE_PRESENT:
                     # check in 15 seconds again if there was any move events

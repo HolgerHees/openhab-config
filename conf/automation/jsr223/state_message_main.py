@@ -12,8 +12,7 @@ class StateMessageMainRule:
             ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_State_Message"),
             ItemStateChangeTrigger("pGF_Utilityroom_Heating_State_Message"),
             ItemStateChangeTrigger("pGF_Garage_Solar_Inverter_Is_Working"),
-            ItemStateChangeTrigger("pOutdoor_WeatherStation_Is_Working"),
-            ItemStateChangeTrigger("State_Server")
+            ItemStateChangeTrigger("pOutdoor_WeatherStation_Is_Working")
         ]
 
     def execute(self, module, input):
@@ -33,9 +32,6 @@ class StateMessageMainRule:
 
         if getItemState("pGF_Garage_Solar_Inverter_Is_Working") == OFF:
             active.append(u"Solar")
-
-        if getItemState("State_Server").intValue() > 1:
-            active.append(u"Server")
 
         if len(active) == 0:
             active.append(u"Alles ok")

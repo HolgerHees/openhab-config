@@ -7,13 +7,6 @@ Group:Switch:OR(ON, OFF) gOther_Presence_State  "Präsenz"         <selflight> {
 Switch pOther_Presence_Holger_State             "Holger anwesend" <selfinfo> (eOther_Presence,gOther_Presence_State,gPersistance_History) ["Status","Presence"] { channel="mqtt:topic:mosquitto:system_service:phone_hhees" }
 Switch pOther_Presence_Sandra_State             "Sandra anwesend" <selfinfo> (eOther_Presence,gOther_Presence_State,gPersistance_History) ["Status","Presence"] { channel="mqtt:topic:mosquitto:system_service:phone_sandra" }
 
-Group  eOther_Cloud_Peer                        "Cloud Peer"      <selfinfo> (lIndoor) ["Sensor"]
-
-Number pOther_Cloud_Pbolle_Peer_State1          "'hhees' => 'pbolle' [MAP(state_cloud_peers.map):%s]" <selfinfo> (eOther_Cloud_Peer,gPersistance_Chart,gPersistance_History) ["Status"] { channel="mqtt:topic:cloud:peers:hhees_pbolle" }
-Number pOther_Cloud_Pbolle_Peer_State2          "'mschelhorn' => 'pbolle' [MAP(state_cloud_peers.map):%s] " <selfinfo> (eOther_Cloud_Peer,gPersistance_Chart,gPersistance_History) ["Status"] { channel="mqtt:topic:cloud:peers:mschelhorn_pbolle" }
-Number pOther_Cloud_MSchelhorn_Peer_State1      "'hhees' => 'mschelhorn' [MAP(state_cloud_peers.map):%s]" <selfinfo> (eOther_Cloud_Peer,gPersistance_Chart,gPersistance_History) ["Status"] { channel="mqtt:topic:cloud:peers:hhees_mschelhorn" }
-Number pOther_Cloud_MSchelhorn_Peer_State2      "'pbolle' => 'mschelhorn' [MAP(state_cloud_peers.map):%s]" <selfinfo> (eOther_Cloud_Peer,gPersistance_Chart,gPersistance_History) ["Status"] { channel="mqtt:topic:cloud:peers:pbolle_mschelhorn" }
-
 // **** GARDEN DOOR ****
 Group  eOutdoor_Streedside_Gardendoor           "Gartentür"       <selfinfo> (lOutdoor_Streedside) ["Gate"]
 Contact pOutdoor_Streedside_Gardendoor_Bell_State                                                              (eOutdoor_Streedside_Gardendoor) ["Status"]                                                                                                  { channel="knx:device:bridge:other:switchBell" }
@@ -95,4 +88,3 @@ String Chart_From                               "Zeitraum" <selfcalendar> (eOthe
 String HabpanelViewer_Control_Cmd               "Habpanel Command" <selfautomode> (eOther_Helper) ["Point"]
 String VoiceCommand                             "Sprachbefehl [%s]" <recorder> (eOther_Helper) ["Point"]
 String VoiceMessage                             "Sprachnachricht [%s]" <recorder> (eOther_Helper) ["Point"]
-Number State_Server                             "Serverstatus [MAP(server_status.map):%s]" <selferror> (eOther_Helper) ["Point"]

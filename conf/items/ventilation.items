@@ -19,8 +19,8 @@ Number pGF_Utilityroom_Ventilation_Indoor_Outgoing_Temperature  "Raumabluft [%.1
 Number pGF_Utilityroom_Ventilation_Incoming                     "Ventilator Zuluft [%d %%]"     <selfairing>      (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:ventilation#fanInPercent"}
 Number pGF_Utilityroom_Ventilation_Outgoing                     "Ventilator Abluft [%d %%]"     <selfairing>      (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:ventilation#fanOutPercent"}
 Number pGF_Utilityroom_Ventilation_Filter_Runtime               "Filterlaufzeit [%d h]"         <selfruntime>     (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:times#filterHours"}
-Switch pGF_Utilityroom_Ventilation_Filter_Reset                 "Filterreset"                   <selfFilterintern> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:resets#filterReset"}
+Switch pGF_Utilityroom_Ventilation_Filter_Reset                 "Filterreset [%s]"                   <selfFilterintern> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:resets#filterReset"}
 Switch pGF_Utilityroom_Ventilation_Filter_Error                 "Filter [MAP(ventilation_filter_de.map):%s]" <selfFilterintern>    (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:errors#filterError"}
-Switch pGF_Utilityroom_Ventilation_Error_Reset                  "Fehlerreset"                   <selfinfo> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:resets#errorReset"}
+Switch pGF_Utilityroom_Ventilation_Error_Reset                  "Fehlerreset [%s]"                   <selfinfo> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:resets#errorReset"}
 String pGF_Utilityroom_Ventilation_Error_Message                "Fehlercode [%s]"               <selfinfo> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:errors#errorsCurrent"}
  

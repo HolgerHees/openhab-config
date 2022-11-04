@@ -903,20 +903,13 @@ sitemap haus label="Main Menu"
                 }
             }
             Frame label="Server & Network" {
-                Group item=State_Server {
-                    Frame label="Daten" {
-                        Text item=State_Server
-                    }
+                Text label="Server" {
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                         Webview url="/static/custom/grafana/server.html?fromItem=Chart_From" icon="none" height=72
                     }
                 }
                 Group item=pGF_Corridor_Network_WanPhysicalLinkStatus label="WAN Status [MAP(network_states.map):%s]" {
-                    Frame label="WAN Verbindung" {
-                        Text item=pGF_Corridor_Network_WanAccessType
-                        Text item=pGF_Corridor_Network_WanPhysicalLinkStatus
-                    }
                     Frame label="WAN Speedtest" {
                         Text item=pGF_Corridor_Speedtest_Time
                         Text item=pGF_Corridor_Speedtest_Location
@@ -925,15 +918,10 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Corridor_Speedtest_Ping
                         Switch item=pGF_Corridor_Speedtest_Rerun
                     }
-                    Frame label="Cloud Peer" {
-                        Text item=pOther_Cloud_Pbolle_Peer_State1
-                        Text item=pOther_Cloud_Pbolle_Peer_State2
-                        Text item=pOther_Cloud_MSchelhorn_Peer_State1
-                        Text item=pOther_Cloud_MSchelhorn_Peer_State2
-                    }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/custom/grafana/internet.html?fromItem=Chart_From" icon="none" height=39
+                        Webview url="/static/custom/grafana/network_cloud.html?fromItem=Chart_From" icon="none" height=5
+                        Webview url="/static/custom/grafana/network_wan.html?fromItem=Chart_From" icon="none" height=39
                     }
                 }
                 Group item=pGF_Workroom_PrinterStatus label="Drucker Status [%s]" {
