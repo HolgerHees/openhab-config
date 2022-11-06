@@ -19,13 +19,13 @@ Bridge mqtt:broker:cloud [ host="cloud_mosquitto", secure=false ]
 Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
 {
     Thing topic system_service "System Info" @ "Geräte" {
-        Type string : speedtest_upstream_rate "Upstream" [ stateTopic="system_info/speedtest/upstream_rate" ]
-        Type string : speedtest_downstream_rate "Downstream" [ stateTopic="system_info/speedtest/downstream_rate" ]
-        Type string : speedtest_ping "Ping" [ stateTopic="system_info/speedtest/ping" ]
-        Type string : speedtest_time "Time" [ stateTopic="system_info/speedtest/time" ]
-        Type string : speedtest_location "Location" [ stateTopic="system_info/speedtest/location" ]
-        Type string : wan_type "WAN Type" [ stateTopic="system_info/network/{{default_gateway}}/wan_type" ]
-        Type string : wan_state "WAN State" [ stateTopic="system_info/network/{{default_gateway}}/wan_state" ]
+//        Type string : speedtest_upstream_rate "Upstream" [ stateTopic="system_info/speedtest/upstream_rate" ]
+//        Type string : speedtest_downstream_rate "Downstream" [ stateTopic="system_info/speedtest/downstream_rate" ]
+//        Type string : speedtest_ping "Ping" [ stateTopic="system_info/speedtest/ping" ]
+//        Type string : speedtest_time "Time" [ stateTopic="system_info/speedtest/time" ]
+//        Type string : speedtest_location "Location" [ stateTopic="system_info/speedtest/location" ]
+//        Type string : wan_type "WAN Type" [ stateTopic="system_info/network/{{default_gateway}}/wan_type" ]
+//        Type string : wan_state "WAN State" [ stateTopic="system_info/network/{{default_gateway}}/wan_state" ]
 {% for username in userdata %}
 {% if userdata[username].phone_device is defined %}
         Type switch : phone_{{username}} "Device" [ stateTopic="system_info/network/{{userdata[username].phone_device.ip}}/online" ]

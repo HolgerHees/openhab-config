@@ -902,51 +902,6 @@ sitemap haus label="Main Menu"
                 
                 }
             }
-            Frame label="Server & Network" {
-                Text label="Server" {
-                    Frame label="Auswertung" {
-                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/custom/grafana/server.html?fromItem=Chart_From" icon="none" height=72
-                    }
-                }
-                Group item=pGF_Corridor_Network_WanPhysicalLinkStatus label="WAN Status [MAP(network_states.map):%s]" {
-                    Frame label="WAN Speedtest" {
-                        Text item=pGF_Corridor_Speedtest_Time
-                        Text item=pGF_Corridor_Speedtest_Location
-                        Text item=pGF_Corridor_Speedtest_UpstreamRate
-                        Text item=pGF_Corridor_Speedtest_DownstreamRate
-                        Text item=pGF_Corridor_Speedtest_Ping
-                        Switch item=pGF_Corridor_Speedtest_Rerun
-                    }
-                    Frame label="Auswertung" {
-                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/custom/grafana/network_cloud.html?fromItem=Chart_From" icon="none" height=5
-                        Webview url="/static/custom/grafana/network_wan.html?fromItem=Chart_From" icon="none" height=39
-                    }
-                }
-                Group item=pGF_Workroom_PrinterStatus label="Drucker Status [%s]" {
-                    Frame label="Status" {
-                        Text item=pGF_Workroom_PrinterStatus
-                    }
-                    Frame label="Füllstand" {
-                        Text item=pGF_Workroom_PrinterBlackLevel
-                        Text item=pGF_Workroom_PrinterCyanLevel
-                        Text item=pGF_Workroom_PrinterMagentaLevel
-                        Text item=pGF_Workroom_PrinterYellowLevel
-                    }
-                    Frame label="Druckvolumen" {
-                        Text item=pGF_Workroom_PrinterTotalPages
-                        Text item=pGF_Workroom_PrinterTotalColourPages
-                        Text item=pGF_Workroom_PrinterTotalMonochromePages
-                    }
-                }
-                Text label="Alexa" {
-                    Frame label="Status" {
-                        Text item=VoiceCommand
-                        Text item=VoiceMessage
-                    }
-                }
-            }
             Frame label="Sonstiges" {
                 Group item=gOutdoor_Lights label="Lampen Garten (RAW) [MAP(group_socket.map):%d]" {
                     Slider item=pOutdoor_Terrace_Light_Brightness label="Terasse"
@@ -975,6 +930,12 @@ sitemap haus label="Main Menu"
                         Switch item=pMobile_Socket_4_Powered label="Steckdose 4"
                         Switch item=pMobile_Socket_5_Powered label="Steckdose 5"
                         Text item=pMobile_Socket_5_Consumption label="Steckdose 5"
+                    }
+                }
+                Text label="Alexa" {
+                    Frame label="Status" {
+                        Text item=VoiceCommand
+                        Text item=VoiceMessage
                     }
                 }
             }
