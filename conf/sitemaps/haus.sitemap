@@ -932,6 +932,8 @@ sitemap haus label="Main Menu"
                         Text item=pMobile_Socket_5_Consumption label="Steckdose 5"
                     }
                 }
+            }
+            Frame label="Debug" {
                 Text label="Alexa" {
                     Frame label="Status" {
                         Text item=VoiceCommand
