@@ -1,2 +1,0 @@
-Thing hpprinter:printer:laserjet "Drucker" @ "Geräte" [ ipAddress="{{printer_ip}}", usageInterval="30", statusInterval="4" ]
- 

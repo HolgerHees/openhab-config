@@ -37,42 +37,44 @@ class StateMessageSensorsRule:
 
     def execute(self, module, input):
         priority = NotificationHelper.PRIORITY_ERROR
-        active = []
+        states = []
+        details = []
         group = "Fehler"
 
         if getItemState("pOutdoor_WeatherStation_Is_Working") == OFF:
-            active.append(u"Wetter")
+            states.append(u"Wetter")
             
         if getItemState("pIndoor_Plant_Sensor_Main_Info").toString() != 'Alles ok':
-            active.append(getItemState("pIndoor_Plant_Sensor_Main_Info").toString())
+            states.append(getItemState("pIndoor_Plant_Sensor_Main_Info").toString())
 
-        refDate = ZonedDateTime.now().minusMinutes(15)  # last 24 hours
-        for co2SensorItem in co2SensorItems:
-            if getItemState(co2SensorItem).intValue() > 1500:
-                active.append(u"CO2 Wert")
-                self.log.warn(u"CO2 Sensor: '{}', Value: '{}'".format(co2SensorItem,getItemState(co2SensorItem).intValue()))
+        refDate = ZonedDateTime.now().minusMinutes(60)  # last 1 hour
+        for sensorItem in co2SensorItems:
+            if getItemState(sensorItem).intValue() > 1500:
+                states.append(u"CO2 Wert")
+                details.append(sensorItem)
                 priority = NotificationHelper.PRIORITY_ALERT
                 break
 
-            if itemLastUpdateOlderThen(co2SensorItem, refDate):
-                active.append(u"CO2 Sensor")
-                self.log.warn(u"CO2 Sensor: '{}' was not updated for 15 minutes".format(co2SensorItem))
+            if itemLastUpdateOlderThen(sensorItem, refDate):
+                states.append(u"CO2 Update")
+                details.append(sensorItem)
                 break
 
         refDate = ZonedDateTime.now().minusMinutes(1440)  # last 24 hours
         for sensorItem in sensorItems:
             if itemLastUpdateOlderThen(sensorItem, refDate):
-                active.append(u"T/F Sensor")
-                self.log.warn(u"Room Sensor: '{}' was not updated for more then 24 hours".format(co2SensorItem))
+                states.append(u"T/F Sensor")
+                details.append(sensorItem)
                 break
 
-        if len(active) == 0:
-            active.append(u"Alles ok")
+        if len(states) == 0:
+            states.append(u"Alles ok")
             group = "Info" 
             priority = NotificationHelper.PRIORITY_NOTICE
             
-        msg = u", ".join(active)
+        msg = u", ".join(list(set(states)))
 
         if postUpdateIfChanged("pOther_State_Message_Sensors", msg):
             NotificationHelper.sendNotificationToAllAdmins(priority, "Sensoren " + group, msg)
  
+        postUpdateIfChanged("pOther_State_Details_Sensors", u", ".join(list(set(details))))

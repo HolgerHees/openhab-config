@@ -333,6 +333,9 @@ sitemap haus label="Main Menu"
                         Text item=pOutdoor_Mower_ErrorDate
                         Text item=pOutdoor_Mower_Hours
                     }
+                    Frame label="Sonstiges" {
+                        Switch item=pOutdoor_Mower_Winter_Mode
+                    }
                 }
             }
 		}
@@ -597,6 +600,7 @@ sitemap haus label="Main Menu"
                         Webview url="/static/custom/grafana/pflanzen.html?fromItem=Chart_From" icon="none" height=18
                     }
                 }
+                Text item=pOther_State_Details_Sensors label="[%s]" visibility=[pOther_State_Message_Sensors!="Alles ok"]
             }
             Frame label="Garten"
             {

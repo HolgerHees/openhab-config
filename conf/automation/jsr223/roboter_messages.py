@@ -10,7 +10,8 @@ class RoboterMessagesRule:
             #CronTrigger("0 0 * * * ?"),
             ItemStateChangeTrigger("pIndoor_Roomba_status"),
             ItemStateChangeTrigger("pIndoor_Roomba_full"),
-            ItemStateChangeTrigger("pOutdoor_Mower_Status")
+            ItemStateChangeTrigger("pOutdoor_Mower_Status"),
+            ItemStateChangeTrigger("pOutdoor_Mower_Winter_Mode")
         ]
 
     def execute(self, module, input):
@@ -21,15 +22,16 @@ class RoboterMessagesRule:
         if getItemState("pIndoor_Roomba_status") != NULL and ( getItemState("pIndoor_Roomba_status").toString() == "Stuck" or getItemState("pIndoor_Roomba_full") == ON ):
             active.append("Roomba")
 
-        mowerState = getItemState("pOutdoor_Mower_Status")
-        if mowerState != NULL and ( mowerState.intValue() == 7 or mowerState.intValue() == 8 or mowerState.intValue() == 98 ):
-            isDeepSleep = False
-            if mowerState.intValue() == 98:
-                previousState = getPreviousItemState("pOutdoor_Mower_Status")
-                if previousState != NULL and previousState.intValue() == 17:
-                    isDeepSleep = True
-            if not isDeepSleep:
-                active.append("Mower")
+        if getItemState("pOutdoor_Mower_Winter_Mode") == OFF:
+            mowerState = getItemState("pOutdoor_Mower_Status")
+            if mowerState != NULL and ( mowerState.intValue() == 7 or mowerState.intValue() == 8 or mowerState.intValue() == 98 ):
+                isDeepSleep = False
+                if mowerState.intValue() == 98:
+                    previousState = getPreviousItemState("pOutdoor_Mower_Status")
+                    if previousState != NULL and previousState.intValue() == 17:
+                        isDeepSleep = True
+                if not isDeepSleep:
+                    active.append("Mower")
 
         if len(active) == 0:
             priority = NotificationHelper.PRIORITY_NOTICE

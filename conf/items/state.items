@@ -67,7 +67,9 @@ String pOther_State_Message_Robot               "Status [%s]" <selfinfo> (eOther
 String pOther_State_Message_Homeconnect         "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // homeconnect state
 String pOther_State_Message_Devices             "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // summerized device state
 
+String pOther_State_Details_Sensors             "[%s]" <selferror> (eOther_State_Messages) ["Point"] // sensors state details
 String pOther_State_Message_Sensors             "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // sensors state
+
 String pOther_State_Message_Main                "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // main (utilityroom) state
 
 //####### SCENES #######
