@@ -24,8 +24,8 @@ Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
 //        Type string : speedtest_ping "Ping" [ stateTopic="system_info/speedtest/ping" ]
 //        Type string : speedtest_time "Time" [ stateTopic="system_info/speedtest/time" ]
 //        Type string : speedtest_location "Location" [ stateTopic="system_info/speedtest/location" ]
-//        Type string : wan_type "WAN Type" [ stateTopic="system_info/network/{{default_gateway}}/wan_type" ]
-//        Type string : wan_state "WAN State" [ stateTopic="system_info/network/{{default_gateway}}/wan_state" ]
+//        Type string : wan_type "WAN Type" [ stateTopic="system_info/network/{{default_server_gateway}}/wan_type" ]
+//        Type string : wan_state "WAN State" [ stateTopic="system_info/network/{{default_server_gateway}}/wan_state" ]
 {% for username in userdata %}
 {% if userdata[username].phone_device is defined %}
         Type switch : phone_{{username}} "Device" [ stateTopic="system_info/network/{{userdata[username].phone_device.ip}}/online" ]

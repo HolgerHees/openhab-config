@@ -2,7 +2,7 @@ from shared.helper import rule, getItemState, postUpdateIfChanged, startTimer, N
 from shared.actions import Transformation
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
 
-
+ 
 @rule("homeconnect_dishwasher.py")
 class HomeConnectDishwasherMessageRule:
     def __init__(self):

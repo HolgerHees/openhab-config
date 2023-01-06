@@ -7,7 +7,7 @@ from java.time.temporal import ChronoUnit
 
 from org.openhab.core.types.RefreshType import REFRESH
   
-  
+
 totalSupply = 3600 # total possible photovoltaic power in watt
 maxTimeSlot = 300000 # value timeslot to messure average power consumption => 5 min
 

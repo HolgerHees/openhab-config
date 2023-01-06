@@ -50,7 +50,7 @@ class TabletScreenRule:
     def process(self, i, requested_cmd):
         is_success = self.switch(requested_cmd)
 
-        active__cmd = getItemState("pOther_Presence_State")
+        active__cmd = getItemState("pOther_Scene7")
 
         if requested_cmd == active__cmd:
             if not is_success:
@@ -61,6 +61,8 @@ class TabletScreenRule:
                     self.log.warn("Retry in 1 seconds".format(msg))
                     time.sleep(1)
                     self.process(i + 1, requested_cmd)
+
+            self.in_progress = False
             return
 
         self.log.info("Requested tablet state changed")

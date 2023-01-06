@@ -26,12 +26,10 @@ class HueColorMainRule:
         
         sendCommand("pGF_Livingroom_Light_Hue1_Color", command)
         sendCommand("pGF_Livingroom_Light_Hue2_Color", command)
-        sendCommand("pGF_Livingroom_Light_Hue3_Color", command)
         sendCommand("pGF_Livingroom_Light_Hue4_Color", command)
         sendCommand("pGF_Livingroom_Light_Hue5_Color", command)
         
         postUpdate("pGF_Livingroom_Light_Hue_Scene","")
-        sendCommand("pOther_Manual_State_Lightprogram", 0)
 
 @rule("lights_indoor_livingroom_control.py")
 class HueColorIndividualRule:
@@ -39,7 +37,6 @@ class HueColorIndividualRule:
         self.triggers = [
             ItemCommandTrigger("pGF_Livingroom_Light_Hue1_Color"),
             ItemCommandTrigger("pGF_Livingroom_Light_Hue2_Color"),
-            ItemCommandTrigger("pGF_Livingroom_Light_Hue3_Color"),
             ItemCommandTrigger("pGF_Livingroom_Light_Hue4_Color"),
             ItemCommandTrigger("pGF_Livingroom_Light_Hue5_Color")
         ]
@@ -74,10 +71,9 @@ class HueColorProgramRule:
     def _getCurrentColors(self):
         color1 = getItemState("pGF_Livingroom_Light_Hue1_Color").toString().split(",")
         color2 = getItemState("pGF_Livingroom_Light_Hue2_Color").toString().split(",")
-        color3 = getItemState("pGF_Livingroom_Light_Hue3_Color").toString().split(",")
         color4 = getItemState("pGF_Livingroom_Light_Hue4_Color").toString().split(",")
         color5 = getItemState("pGF_Livingroom_Light_Hue5_Color").toString().split(",")
-        return [color1,color2,color3,color4,color5]
+        return [color1,color2,color4,color5]
     
     def _setCurrentColors(self,data):
         global ruleTimeouts
@@ -85,7 +81,6 @@ class HueColorProgramRule:
         
         sendCommand("pGF_Livingroom_Light_Hue1_Color",u"{},{},{}".format(data[0][0],data[0][1],data[0][2]))
         sendCommand("pGF_Livingroom_Light_Hue2_Color",u"{},{},{}".format(data[1][0],data[1][1],data[1][2]))
-        sendCommand("pGF_Livingroom_Light_Hue3_Color",u"{},{},{}".format(data[2][0],data[2][1],data[2][2]))
         sendCommand("pGF_Livingroom_Light_Hue4_Color",u"{},{},{}".format(data[3][0],data[3][1],data[3][2]))
         sendCommand("pGF_Livingroom_Light_Hue5_Color",u"{},{},{}".format(data[4][0],data[4][1],data[4][2]))
 
@@ -108,30 +103,27 @@ class HueColorProgramRule:
         if getItemState("pOther_Manual_State_Lightprogram").intValue() == 0:
             return
             
-        color1, color2, color3, color4, color5 = data
+        color1, color2, color4, color5 = data
         
         if step == self.fadingSteps:
             newColor1 = color2
-            newColor2 = color3
-            newColor3 = color4
+            newColor2 = color4
             newColor4 = color5
             newColor5 = color1
         else:
-            currentColor1, currentColor2, currentColor3, currentColor4 , currentColor5 = self._getCurrentColors()
+            currentColor1, currentColor2, currentColor4 , currentColor5 = self._getCurrentColors()
             
             newColor1 = self._fade( step, color1, color2, currentColor1 )
-            newColor2 = self._fade( step, color2, color3, currentColor2 )
-            newColor3 = self._fade( step, color3, color4, currentColor3 )
+            newColor2 = self._fade( step, color2, color4, currentColor2 )
             newColor4 = self._fade( step, color4, color5, currentColor4 )
             newColor5 = self._fade( step, color5, color1, currentColor5 )
             
         self.log.info(u"{} - 1 {}, from {} => {}".format(step,newColor1,color1, color2))
-        self.log.info(u"{} - 2 {}, from {} => {}".format(step,newColor2,color2, color3))
-        self.log.info(u"{} - 3 {}, from {} => {}".format(step,newColor3,color3, color4))
+        self.log.info(u"{} - 2 {}, from {} => {}".format(step,newColor2,color2, color4))
         self.log.info(u"{} - 4 {}, from {} => {}".format(step,newColor4,color4, color5))
         self.log.info(u"{} - 5 {}, from {} => {}".format(step,newColor5,color5, color1))
         
-        self._setCurrentColors([newColor1,newColor2,newColor3,newColor4,newColor5])
+        self._setCurrentColors([newColor1,newColor2,newColor4,newColor5])
         
         if step < self.fadingSteps:
             self.timer = startTimer(self.log, self.timeout, self.callbackFaded, [step + 1, data] )
@@ -144,7 +136,6 @@ class HueColorProgramRule:
         
         color1 = getItemState("pGF_Livingroom_Light_Hue1_Color")
         color2 = getItemState("pGF_Livingroom_Light_Hue2_Color")
-        color3 = getItemState("pGF_Livingroom_Light_Hue3_Color")
         color4 = getItemState("pGF_Livingroom_Light_Hue4_Color")
         color5 = getItemState("pGF_Livingroom_Light_Hue5_Color")
             
@@ -152,8 +143,7 @@ class HueColorProgramRule:
         ruleTimeouts["Livingroom_Hue_Color_Backward"] = ZonedDateTime.now()
     
         sendCommand("pGF_Livingroom_Light_Hue1_Color",color2)
-        sendCommand("pGF_Livingroom_Light_Hue2_Color",color3)
-        sendCommand("pGF_Livingroom_Light_Hue3_Color",color4)
+        sendCommand("pGF_Livingroom_Light_Hue2_Color",color4)
         sendCommand("pGF_Livingroom_Light_Hue4_Color",color5)
         sendCommand("pGF_Livingroom_Light_Hue5_Color",color1)
                     

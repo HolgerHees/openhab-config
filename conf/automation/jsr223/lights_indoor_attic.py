@@ -8,7 +8,7 @@ class LightsIndoorAutoAtticRule:
     def __init__(self):
         self.triggers = [
             CronTrigger("0 1 5,8,20,23 * * ?"),
-            ItemStateChangeTrigger("Attic_Light_Mode")
+            ItemStateChangeTrigger("pOther_Manual_State_Auto_Attic_Light")
         ]
 
     def execute(self, module, input):

@@ -198,57 +198,57 @@ class WeatherstationLastUpdateRule:
         #    self.log.error("Weatherstation is working")
         #    self.notified = False
         
-@rule("sensor_weatherstation.py")
-class WeatherstationBatteryRule:
-    def __init__(self):
-        self.triggers = [
-            #CronTrigger("0/5 * * * * ?"),
-            ItemStateChangeTrigger("pOutdoor_WeatherStation_Battery_Voltage"),
-            ItemStateChangeTrigger("pOutdoor_WeatherStation_Battery_Current")
-        ]
-        self.updateTimer = None
+#@rule("sensor_weatherstation.py")
+#class WeatherstationBatteryRule:
+#    def __init__(self):
+#        self.triggers = [
+#            #CronTrigger("0/5 * * * * ?"),
+#            ItemStateChangeTrigger("pOutdoor_WeatherStation_Battery_Voltage"),
+#            ItemStateChangeTrigger("pOutdoor_WeatherStation_Battery_Current")
+#        ]
+#        self.updateTimer = None
 
-    def delayUpdate(self):
-        level = getItemState("pOutdoor_WeatherStation_Battery_Level").intValue()
-        current = getItemState("pOutdoor_WeatherStation_Battery_Current").doubleValue()
+#    def delayUpdate(self):
+#        level = getItemState("pOutdoor_WeatherStation_Battery_Level").intValue()
+#        current = getItemState("pOutdoor_WeatherStation_Battery_Current").doubleValue()
             
-        msg = u"";
-        msg = u"{}{:.0f} %, ".format(msg,level)
-        msg = u"{}{} mA".format(msg,getItemState("pOutdoor_WeatherStation_Battery_Current").intValue())
+#        msg = u"";
+#        msg = u"{}{:.0f} %, ".format(msg,level)
+#        msg = u"{}{} mA".format(msg,getItemState("pOutdoor_WeatherStation_Battery_Current").intValue())
 
-        postUpdateIfChanged("pOutdoor_WeatherStation_Battery_Message", msg)
+#        postUpdateIfChanged("pOutdoor_WeatherStation_Battery_Message", msg)
         
-        self.updateTimer = None
+#        self.updateTimer = None
 
-    def execute(self, module, input):
-        if input['event'].getItemName() == "pOutdoor_WeatherStation_Battery_Voltage":
-            level = 0.0
-            voltage = input['event'].getItemState().doubleValue()
-            if voltage > fuelLevel[0][0]:
-                if voltage > fuelLevel[-1][0]:
-                    level = 100.0
-                else:
-                    for i in range(1,len(fuelLevel)):
-                        toVoltageLevel = fuelLevel[i][0]
+#    def execute(self, module, input):
+#        if input['event'].getItemName() == "pOutdoor_WeatherStation_Battery_Voltage":
+#            level = 0.0
+#            voltage = input['event'].getItemState().doubleValue()
+#            if voltage > fuelLevel[0][0]:
+#                if voltage > fuelLevel[-1][0]:
+#                    level = 100.0
+#                else:
+#                    for i in range(1,len(fuelLevel)):
+#                        toVoltageLevel = fuelLevel[i][0]
 
-                        if voltage < toVoltageLevel:
-                            fromVoltageLevel = fuelLevel[i-1][0]
+#                        if voltage < toVoltageLevel:
+#                            fromVoltageLevel = fuelLevel[i-1][0]
 
-                            toPercentageLevel = fuelLevel[i][1]
-                            fromPercentageLevel = fuelLevel[i-1][1]
+#                            toPercentageLevel = fuelLevel[i][1]
+#                            fromPercentageLevel = fuelLevel[i-1][1]
                             
-                            # toVoltageLevel - fromVoltageLevel => 100%
-                            # voltage - fromVoltageLevel => X
-                            x = ( (voltage - fromVoltageLevel) * 100 ) / (toVoltageLevel - fromVoltageLevel)
+#                            # toVoltageLevel - fromVoltageLevel => 100%
+#                            # voltage - fromVoltageLevel => X
+#                            x = ( (voltage - fromVoltageLevel) * 100 ) / (toVoltageLevel - fromVoltageLevel)
                             
-                            # toPercentageLevel - fromPercentageLevel => 100%
-                            # ?? => x
-                            level = int(round( ( ( x * (toPercentageLevel - fromPercentageLevel) ) / 100 ) + fromPercentageLevel ))
-                            break
+#                            # toPercentageLevel - fromPercentageLevel => 100%
+#                            # ?? => x
+#                            level = int(round( ( ( x * (toPercentageLevel - fromPercentageLevel) ) / 100 ) + fromPercentageLevel ))
+#                            break
                           
-            postUpdateIfChanged("pOutdoor_WeatherStation_Battery_Level", level)
+#            postUpdateIfChanged("pOutdoor_WeatherStation_Battery_Level", level)
          
-        self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
+#        self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
         
 @rule("sensor_weatherstation.py")
 class WeatherstationRainHeaterRule:

@@ -2,6 +2,7 @@ from shared.helper import rule, itemLastUpdateOlderThen, getItemState, postUpdat
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
 from java.time import ZonedDateTime
 
+
 sensorItems = [
     "pGF_Livingroom_Air_Sensor_Temperature_Value",
     "pGF_Boxroom_Air_Sensor_Temperature_Value",
