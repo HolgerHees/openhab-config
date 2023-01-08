@@ -11,19 +11,19 @@ sitemap haus label="Main Menu"
 						Slider item=gGF_Livingroom_Light_Hue_Color label="Wohnzimmer Indirekt"
 						Text label="Wohnz. Indirekt anpassen" icon="selfcontrol" visibility=[gGF_Livingroom_Light_Hue_Color>0] {
 							Frame label="Gruppe" {
-								Slider item=gGF_Livingroom_Light_Hue_Color label="Alle Lampen [%d %%]"
+								Slider item=gGF_Livingroom_Light_Hue_Color label="Alle Lampen"
 								Colorpicker item=gGF_Livingroom_Light_Hue_Color label="Alle Lampen"
                                 Selection item=pGF_Livingroom_Light_Hue_Scene mappings=[""="Inaktiv","UE5pD8Sq7zF10vC"="Energie tanken","MMBgkjIxB6O8AW8"="Entspannen","58DQOkgsPwCjaNH"="Frühlingsblüten","KWuGbb-uYUlXnBn"="Gedimmt","MNEcJR8jmHvfN22"="Hell","Kyn5IAl3vDAg5zJ"="Konzentrieren","gXuyjVKqA0jL7J9"="Lesen","ggH5jKBGEAWiNNI"="Nachtlicht","Mi5nViqP95r7yFM"="Nordlichter","WNhaVwj2HHb7eja"="Sonnenuntergang Savanne","cpBrul9dhNQvXin"="Tropendämmerung"]
                                 Switch item=pOther_Manual_State_Lightprogram label="Programm" mappings=[0="Aus", 1="1", 2="2"]
 							}
 							Frame label="Einzeln" {
-								Slider item=pGF_Livingroom_Light_Hue4_Color label="Küche Tresen [%d %%]"
+								Slider item=pGF_Livingroom_Light_Hue4_Color label="Küche Tresen"
 								Colorpicker item=pGF_Livingroom_Light_Hue4_Color label="Küche Tresen"
-								Slider item=pGF_Livingroom_Light_Hue5_Color label="Bücherregal [%d %%]"
+								Slider item=pGF_Livingroom_Light_Hue5_Color label="Bücherregal"
 								Colorpicker item=pGF_Livingroom_Light_Hue5_Color label="Bücherregal"
-								Slider item=pGF_Livingroom_Light_Hue2_Color label="Stehlampe [%d %%]"
+								Slider item=pGF_Livingroom_Light_Hue2_Color label="Stehlampe"
 								Colorpicker item=pGF_Livingroom_Light_Hue2_Color label="Stehlampe"
-								Slider item=pGF_Livingroom_Light_Hue1_Color label="Couchecke [%d %%]"
+								Slider item=pGF_Livingroom_Light_Hue1_Color label="Couchecke"
 								Colorpicker item=pGF_Livingroom_Light_Hue1_Color label="Couchecke"
 							}
 						}
