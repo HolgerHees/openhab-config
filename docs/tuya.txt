@@ -1,0 +1,5 @@
+Binding: https://github.com/smarthomej/addons/tree/3.2.x/bundles/org.smarthomej.binding.tuya
+
+DP ID's: https://www.zigbee2mqtt.io/advanced/support-new-devices/03_find_tuya_data_points.html#_7-display-device-logs
+
+Login: https://iot.tuya.com/

@@ -37,7 +37,7 @@ sitemap haus label="Main Menu"
 						Switch item=pGF_Corridor_Light_Mirror_Powered label="Flur Spiegel"
 						Slider item=pGF_Corridor_Light_Hue_Color label="Flur Indirekt"
 						Colorpicker item=pGF_Corridor_Light_Hue_Color visibility=[pGF_Corridor_Light_Hue_Color>0]
-						Switch item=pGF_Workroom_Light_Ceiling_Powered label="Büro"
+						Switch item=pGF_Workroom_Light_Ceiling_Powered label="Arbeitszimmer"
 						Switch item=pGF_Guesttoilet_Light_Ceiling_Powered label="Gäste WC"
 						Switch item=pGF_Guesttoilet_Light_Mirror_Powered label="Gäste WC Spiegel"
 						Switch item=pGF_Boxroom_Light_Ceiling_Powered label="Abstellkammer"
@@ -98,7 +98,7 @@ sitemap haus label="Main Menu"
                     Switch item=pGF_Livingroom_Shutter_Terrace_Control label="Wohnzimmer Terasse" mappings=[UP="▲",STOP="✖",DOWN="▼"]
                     Switch item=pGF_Livingroom_Shutter_Couch_Control label="Wohnzimmer Couch" mappings=[UP="▲",STOP="✖",DOWN="▼"]
                     Switch item=pGF_Kitchen_Shutter_Control label="Küche" mappings=[UP="▲",STOP="✖",DOWN="▼"]
-                    Switch item=pGF_Workroom_Shutter_Control label="Büro" mappings=[UP="▲",STOP="✖",DOWN="▼"]
+                    Switch item=pGF_Workroom_Shutter_Control label="Arbeitszimmer" mappings=[UP="▲",STOP="✖",DOWN="▼"]
                     Switch item=pGF_Guesttoilet_Shutter_Control label="Gäste WV" mappings=[UP="▲",STOP="✖",DOWN="▼"]
                 }
 				Group item=gFF_Shutters_Count label="OG Rollläden [MAP(group_rollershutter_sf.map):%d]" {
@@ -510,7 +510,7 @@ sitemap haus label="Main Menu"
                     Text item=pGF_Kitchen_Openingcontact_Window_State label="Küche"
                     Text item=pGF_Livingroom_Openingcontact_Window_Terrace_State label="Wohnzimmer Terasse"
                     Text item=pGF_Livingroom_Openingcontact_Window_Couch_State label="Wohnzimmer Couch"
-                    Text item=pGF_Workroom_Openingcontact_Window_State label="Büro"
+                    Text item=pGF_Workroom_Openingcontact_Window_State label="Arbeitszimmer"
                     Text item=pGF_Garage_Openingcontact_Window_Garden_State label="Garage Gartenseite"
                 }
                 Group item=gFF_Sensor_Window label="OG Fenster [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
@@ -536,8 +536,8 @@ sitemap haus label="Main Menu"
                             Setpoint item=pGF_Livingroom_Heating_Temperature_Desired label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=pGF_Boxroom_Air_Sensor_Message label="Kammer"
-                        Text item=pGF_Workroom_Air_Sensor_Message label="Büro" {
-                            Setpoint item=pGF_Workroom_Heating_Temperature_Desired label="Büro [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        Text item=pGF_Workroom_Air_Sensor_Message label="Arbeitszimmer" {
+                            Setpoint item=pGF_Workroom_Heating_Temperature_Desired label="Arbeitszimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=pGF_Guesttoilet_Air_Sensor_Message label="Gäste WC" {
                             Setpoint item=pGF_Guesttoilet_Heating_Temperature_Desired label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
@@ -715,7 +715,7 @@ sitemap haus label="Main Menu"
                 }
             }
         }
-		Group label="Technik [%s]" icon="selfhouse" item=pOther_State_Message_Main valuecolor=[=="Alles ok"="#6bc305",=="Filter"="#cbcb00",!="Alles ok"="#d72a2a"]
+		Group label="Technik [%s]" icon="selfhouse" item=pOther_State_Message_Main valuecolor=[=="Alles ok"="#6bc305",=="Lüftung Filter"="#cbcb00",=="Befeuchter Filter"="#cbcb00",!="Alles ok"="#d72a2a"]
 		{
             Frame label="Technik" {
                 Group item=pGF_Utilityroom_Ventilation_Fan_Level label="Lüftung [MAP(level_de.map):%d]" icon="selfairing" {
@@ -735,13 +735,13 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Utilityroom_Ventilation_State_Message visibility=[pGF_Utilityroom_Ventilation_State_Message=="Alles ok"] valuecolor=[=="Alles ok"="#6bc305"]
                         Text item=pGF_Utilityroom_Ventilation_State_Message visibility=[pGF_Utilityroom_Ventilation_State_Message!="Alles ok"] valuecolor=[=="Filter"="#cbcb00",!="Alles ok"="#d72a2a"] {
                             Text item=pGF_Utilityroom_Ventilation_Filter_Error
-                            Switch item=pGF_Utilityroom_Ventilation_Filter_Reset
+                            Switch item=pGF_Utilityroom_Ventilation_Filter_Reset mappings=[1="Reset"]
                             Text item=pGF_Utilityroom_Ventilation_Error_Message
-                            Switch item=pGF_Utilityroom_Ventilation_Error_Reset
+                            Switch item=pGF_Utilityroom_Ventilation_Error_Reset mappings=[1="Reset"]
                             Text item=pGF_Utilityroom_Ventilation_Thing_State
                         }
                     }
-                }			
+                }
                 Group item=pGF_Utilityroom_Heating_Operating_Mode label="Heizung [MAP(heating_de.map):%d]" icon="selfheating"{
                     Frame label="Steuerung" {
                         Switch item=pGF_Utilityroom_Heating_Auto_Mode label="Modus" mappings=[1="Auto", 0="Manuell"]
@@ -750,7 +750,7 @@ sitemap haus label="Main Menu"
                         Text label="Komforttemperaturen" icon="selfheating"{
                             Setpoint item=pGF_Guesttoilet_Heating_Temperature_Desired label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
                             Setpoint item=pGF_Livingroom_Heating_Temperature_Desired label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=pGF_Workroom_Heating_Temperature_Desired label="Büro [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pGF_Workroom_Heating_Temperature_Desired label="Arbeitszimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                             Setpoint item=pGF_Corridor_Heating_Temperature_Desired label="Flur unten [%.1f °C]" step=0.5 minValue=15 maxValue=25
                             Setpoint item=pFF_Corridor_Heating_Temperature_Desired label="Flur oben [%.1f °C]" step=0.5 minValue=15 maxValue=25
                             Setpoint item=pFF_Fitnessroom_Heating_Temperature_Desired label="Sportzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
@@ -761,7 +761,7 @@ sitemap haus label="Main Menu"
                         Text label="Heizkreise" icon="selfheating"{
                             Switch item=pGF_Livingroom_Heating_Circuit label="WZ Kreis"
                             Switch item=pGF_Corridor_Heating_Circuit label="Flur unten Kreis"
-                            Switch item=pGF_Workroom_Heating_Circuit label="Büro Kreis"
+                            Switch item=pGF_Workroom_Heating_Circuit label="Arbeitszimmer Kreis"
                             Switch item=pGF_Guesttoilet_Heating_Circuit label="Gäste WC Kreis"
                             Switch item=pGF_Guesttoilet_Heating_HK label="Gäste WC HK"
                             Switch item=pFF_Corridor_Heating_Circuit label="Flur oben Kreis"
@@ -801,6 +801,30 @@ sitemap haus label="Main Menu"
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                         Webview url="/static/custom/grafana/heating_overview.html?fromItem=Chart_From" icon="none" height=36
+                    }
+                }
+                Group item=pGF_Livingroom_Humidifier_Humidity_Value label="Luftbefeuchter [%d%%]" {
+                    Frame label="Steuerung" {
+                        Switch item=pGF_Livingroom_Humidifier_Auto_Mode label="Modus" mappings=[ON="Auto", OFF="Manuell"]
+                        Selection item=pGF_Livingroom_Humidifier_Speed label="Stufe [%s]" mappings=[level_1="1", level_2="2", level_3="3", level_4="Max"]
+                        Text item=pGF_Livingroom_Humidifier_Humidity_Value label="Luftfeuchtigkeit [%d%%]"
+                        Switch item=pGF_Livingroom_Humidifier_Power
+                    }
+                    Frame label="Gerät" {
+                        Text item=pGF_Livingroom_Humidifier_Runtime
+                        Selection item=pGF_Livingroom_Humidifier_Lighting label="Beleuchtung [%d%%]" mappings=[Fully="Voll", Half="Gedimmt", Close="Aus"]
+                        Switch item=pGF_Livingroom_Humidifier_Child_Lock
+                        Text item=pGF_Livingroom_Humidifier_Online
+                        Text item=pGF_Livingroom_Humidifier_State_Message visibility=[pGF_Livingroom_Humidifier_State_Message=="Alles ok"] valuecolor=[=="Alles ok"="#6bc305"]
+                        Text item=pGF_Livingroom_Humidifier_State_Message visibility=[pGF_Livingroom_Humidifier_State_Message!="Alles ok"] valuecolor=[=="Filter"="#cbcb00",!="Alles ok"="#d72a2a"] {
+                            Text item=pGF_Livingroom_Humidifier_Replace_Filter
+                            Switch item=pGF_Livingroom_Humidifier_Filter_Reset
+                            Text item=pGF_Livingroom_Humidifier_Fault
+                        }
+                    }
+                    Frame label="Sonstiges" {
+                        Switch item=pGF_Livingroom_Humidifier_Device_Auto_Mode label="Geräte Automatik"
+                        Selection item=pGF_Livingroom_Humidifier_Target label="Automatik Ziel [%d%%]" mappings=[40="40%", 45="45%", 50="50%", 55="55%", 60="60%"]
                     }
                 }
             }
@@ -905,13 +929,6 @@ sitemap haus label="Main Menu"
                 }
             }
             Frame label="Sonstiges" {
-                Group item=gOutdoor_Lights label="Lampen Garten (RAW) [MAP(group_socket.map):%d]" {
-                    Slider item=pOutdoor_Terrace_Light_Brightness label="Terasse"
-                    Switch item=pOutdoor_Streedside_Frontdoor_Light_Powered label="Haustür"
-                    Switch item=pOutdoor_Carport_Light_Powered label="Carport"
-                    Switch item=pOutdoor_Streedside_Garage_Light_Powered label="Schuppentür vorne"
-                    Switch item=pOutdoor_Garden_Garage_Light_Powered label="Schuppentür hinten"
-                }
                 Group label="Schalten (RAW) [MAP(group_socket.map):%d]" icon="selfsocket" item=gAll_Sockets {
                     Frame label="Wohnen" {
                         Switch item=pGF_Livingroom_Socket_Bassbox_Powered label="Bassbox"

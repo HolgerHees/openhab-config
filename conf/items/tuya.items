@@ -1,0 +1,20 @@
+Group   eGF_Livingroom_Humidifier                             "Luftbefeuchter" <selfinfo> (lGF_Livingroom)
+Switch pGF_Livingroom_Humidifier_Online "Online State [%s]"        <selfinfo> (eGF_Livingroom_Humidifier) ["Point"]
+String pGF_Livingroom_Humidifier_State_Message "Status [%s]"       <selfinfo> (eGF_Livingroom_Humidifier) ["Point"]
+
+Switch pGF_Livingroom_Humidifier_Auto_Mode "Modus"            <selfautomode> (eGF_Livingroom_Humidifier) ["Point"]
+
+Switch pGF_Livingroom_Humidifier_Power "Ein/Aus"   <selfswitch> (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier:power" }
+
+Number pGF_Livingroom_Humidifier_Humidity_Raw (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier:humidity_current" }
+Number pGF_Livingroom_Humidifier_Humidity_Value "Luftfeuchtigkeit [%d%%]"   <humidity> (eGF_Livingroom_Humidifier)
+
+Number pGF_Livingroom_Humidifier_Target "Zielfeuchtigkeit [%d%%]"   <humidity> (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier:humidity_target" }
+Number pGF_Livingroom_Humidifier_Fault "Fehler [%s]"   <selferror> (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier:fault" }
+Switch pGF_Livingroom_Humidifier_Filter_Reset "Filter Reset"   <selfinfo> (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier:filter_reset" }
+Switch pGF_Livingroom_Humidifier_Child_Lock "Kinder Sperre"   <selfinfo> (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier:child_lock" }
+Number pGF_Livingroom_Humidifier_Runtime "Filter Laufzeit [%d%%]"   <selfruntime> (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier:filter_life" }
+String pGF_Livingroom_Humidifier_Lighting "Beleuchtung"   <selflight> (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier:backlight_enum" } /*** Fully, Half, Close ***/
+String pGF_Livingroom_Humidifier_Speed "Lüftergeschwindigkeit [%s]"   <selfairing> (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier:fan_speed_enum" } /*** level_1, level_2, level_3, level_4 ***/
+Switch pGF_Livingroom_Humidifier_Device_Auto_Mode "Automatik"   <selfautomode> (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier:auto" }
+Switch pGF_Livingroom_Humidifier_Replace_Filter "Filter Ersetzen"   <selfinfo> (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier:replace_filter" }

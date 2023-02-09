@@ -1,0 +1,14 @@
+Thing tuya:tuyaDevice:humidifier "Luftbefeuchter" [ pollingInterval="60", protocol="3.3", productId="{{vault_tuya_humidifier_product_id}}", deviceId="{{vault_tuya_humidifier_device_id}}", localKey="{{vault_tuya_humidifier_local_key}}", ip="{{humidifier_ip}}" ] {
+    Type switch : power "Ein/Aus" [ dp="1" ]
+    Type number : humidity_current "Luftfeuchtigkeit" [ dp="14", min="0", max="100" ]
+    Type number : fault "Fehler" [ dp="22", min="0", max="100" ]
+    Type switch : filter_reset "Filter Reset" [ dp="28" ]
+    Type switch : child_lock "Kinder Sperre" [ dp="29" ]
+    Type number : filter_life "Filter Laufzeit" [ dp="33", min="0", max="100" ]
+    Type string : backlight_enum "Beleuchtung" [ dp="34" ]
+    Type string : fan_speed_enum "Lüftergeschwindigkeit" [ dp="101" ]
+    Type switch : auto "Auto" [ dp="102" ]
+    Type string : humidity_target "Zielfeuchtigkeit" [ dp="103" ]
+    Type number : replace_filter "Filter Ersetzen" [ dp="10", min="0", max="100" ]
+}
+

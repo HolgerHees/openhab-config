@@ -12,6 +12,18 @@ from org.openhab.core.types import UnDefType
 DELAYED_UPDATE_TIMEOUT = 3
  
 @rule("ventilation_control.py")
+class VentilationStateResetRule:
+    def __init__(self):
+        self.triggers = [
+            #CronTrigger("*/15 * * * * ?"),
+            ItemCommandTrigger("pGF_Utilityroom_Ventilation_Filter_Reset"),
+            ItemCommandTrigger("pGF_Utilityroom_Ventilation_Error_Reset")
+        ]
+
+    def execute(self, module, input):
+        postUpdateIfChanged(input['event'].getItemName(), 0)
+
+@rule("ventilation_control.py")
 class VentilationStateMessageRule:
     def __init__(self):
         self.triggers = [
@@ -274,18 +286,11 @@ class FilterFanLevelRule:
         newLevel = (coolingLevel if coolingPossible else reducedLevel) if isTooWarm else defaultLevel
 
         if newLevel != currentLevel:
-            # Wenn der aktuelle Level Stufe 'A' (also 1) ist, sollte vor einem erneuten umschalten gewartet werden damit ein
-            # hin und herschalten vermieden wird. z.B. bei kurzzeitigen Temperaturschwankungen
-            if currentLevel == 1:
-                waitBeforeChange = 15
-            else:
-                # must be > 1. Otherwise changedSince does not work properly
-                waitBeforeChange = 2
-
             # 1. self.activeLevel != currentLevel means last try was not successful
             # 2. 'event' in input.keys() is an presence or auto mode change
             # 3. is cron triggered event
-            if self.activeLevel != currentLevel or 'event' in input.keys() or itemLastChangeOlderThen("pGF_Utilityroom_Ventilation_Fan_Level", ZonedDateTime.now().minusMinutes(waitBeforeChange)):
+            # => itemLastChangeOlderThen check to prevent level flapping on temperature changes
+            if self.activeLevel != currentLevel or 'event' in input.keys() or itemLastChangeOlderThen("pGF_Utilityroom_Ventilation_Fan_Level", ZonedDateTime.now().minusMinutes(15)):
                 self.autoChangeInProgress = True
 
                 sendCommand("pGF_Utilityroom_Ventilation_Fan_Level", newLevel)

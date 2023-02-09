@@ -58,7 +58,7 @@ class TabletScreenRule:
                     self.log.error("Maximum number of attempts reached")
                     postUpdate("pOther_Scene7", ON if requested_cmd == OFF else OFF)
                 else:
-                    self.log.warn("Retry in 1 seconds".format(msg))
+                    self.log.warn("Retry in 1 seconds")
                     time.sleep(1)
                     self.process(i + 1, requested_cmd)
 
