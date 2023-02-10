@@ -1,4 +1,4 @@
-from shared.helper import rule, postUpdateIfChanged, getItemState, getThing, itemLastChangeOlderThen
+from shared.helper import rule, postUpdate, postUpdateIfChanged, sendCommand, getItemState, getThing, itemLastChangeOlderThen
 from shared.triggers import CronTrigger, ThingStatusChangeTrigger, ItemCommandTrigger, ItemStateChangeTrigger
 
 from custom.presence import PresenceHelper
@@ -116,7 +116,6 @@ class HumidifierLevelRule:
         currentLevel = int(getItemState("pGF_Livingroom_Humidifier_Speed").toString()[-1])
         if self.activeLevel == -1:
             self.activeLevel = currentLevel
-
         presenceState = getItemState("pOther_Presence_State").intValue()
 
         # Sleep
@@ -153,4 +152,4 @@ class HumidifierLevelRule:
             if 'event' in input.keys() or itemLastChangeOlderThen("pGF_Livingroom_Humidifier_Speed", ZonedDateTime.now().minusMinutes(15)):
                 self.autoChangeInProgress = True
 
-                sendCommand("pGF_Livingroom_Humidifier_Speed", "level_".format(newLevel))
+                sendCommand("pGF_Livingroom_Humidifier_Speed", "level_{}".format(newLevel))

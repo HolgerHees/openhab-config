@@ -803,7 +803,7 @@ sitemap haus label="Main Menu"
                         Webview url="/static/custom/grafana/heating_overview.html?fromItem=Chart_From" icon="none" height=36
                     }
                 }
-                Group item=pGF_Livingroom_Humidifier_Humidity_Value label="Luftbefeuchter [%d%%]" {
+                Group item=pGF_Livingroom_Humidifier_Humidity_Value label="Luftbefeuchter [%d%%]" icon="humidifier" {
                     Frame label="Steuerung" {
                         Switch item=pGF_Livingroom_Humidifier_Auto_Mode label="Modus" mappings=[ON="Auto", OFF="Manuell"]
                         Selection item=pGF_Livingroom_Humidifier_Speed label="Stufe [%s]" mappings=[level_1="1", level_2="2", level_3="3", level_4="Max"]
@@ -812,19 +812,21 @@ sitemap haus label="Main Menu"
                     }
                     Frame label="Gerät" {
                         Text item=pGF_Livingroom_Humidifier_Runtime
-                        Selection item=pGF_Livingroom_Humidifier_Lighting label="Beleuchtung [%d%%]" mappings=[Fully="Voll", Half="Gedimmt", Close="Aus"]
-                        Switch item=pGF_Livingroom_Humidifier_Child_Lock
-                        Text item=pGF_Livingroom_Humidifier_Online
                         Text item=pGF_Livingroom_Humidifier_State_Message visibility=[pGF_Livingroom_Humidifier_State_Message=="Alles ok"] valuecolor=[=="Alles ok"="#6bc305"]
                         Text item=pGF_Livingroom_Humidifier_State_Message visibility=[pGF_Livingroom_Humidifier_State_Message!="Alles ok"] valuecolor=[=="Filter"="#cbcb00",!="Alles ok"="#d72a2a"] {
                             Text item=pGF_Livingroom_Humidifier_Replace_Filter
                             Switch item=pGF_Livingroom_Humidifier_Filter_Reset
                             Text item=pGF_Livingroom_Humidifier_Fault
                         }
-                    }
-                    Frame label="Sonstiges" {
-                        Switch item=pGF_Livingroom_Humidifier_Device_Auto_Mode label="Geräte Automatik"
-                        Selection item=pGF_Livingroom_Humidifier_Target label="Automatik Ziel [%d%%]" mappings=[40="40%", 45="45%", 50="50%", 55="55%", 60="60%"]
+                        Selection item=pGF_Livingroom_Humidifier_Lighting label="Beleuchtung [%d%%]" mappings=[Fully="Voll", Half="Gedimmt", Close="Aus"]
+                        Switch item=pGF_Livingroom_Humidifier_Child_Lock
+                        Text item=pGF_Livingroom_Humidifier_Online
+                        Text item=pGF_Livingroom_Humidifier_Device_Auto_Mode label="Geräte Automatik [%s]" {
+                            Frame label="Sonstiges" {
+                                Switch item=pGF_Livingroom_Humidifier_Device_Auto_Mode label="Geräte Automatik"
+                                Selection item=pGF_Livingroom_Humidifier_Target label="Automatik Ziel [%d%%]" mappings=[40="40%", 45="45%", 50="50%", 55="55%", CO="CO"]
+                            }
+                        }
                     }
                 }
             }
