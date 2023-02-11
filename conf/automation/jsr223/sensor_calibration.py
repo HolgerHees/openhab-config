@@ -2,17 +2,17 @@ from shared.helper import rule, getItemState, postUpdateIfChanged
 from shared.triggers import ItemStateChangeTrigger
 
 rawItems = {
-    "pGF_Livingroom_Air_Sensor_Temperature_Raw": ["pGF_Livingroom_Air_Sensor_Temperature_Value", -1.5],
+    "pGF_Livingroom_Air_Sensor_Temperature_Raw": ["pGF_Livingroom_Air_Sensor_Temperature_Value", -1.2],             # 11.02.23
     "pGF_Livingroom_Air_Sensor_Humidity_Raw": ["pGF_Livingroom_Air_Sensor_Humidity_Value", 7.4],
-    "pGF_Boxroom_Air_Sensor_Temperature_Raw": ["pGF_Boxroom_Air_Sensor_Temperature_Value", -1.5],
+    "pGF_Boxroom_Air_Sensor_Temperature_Raw": ["pGF_Boxroom_Air_Sensor_Temperature_Value", -0.6],                   # 11.02.23
     "pGF_Boxroom_Air_Sensor_Humidity_Raw": ["pGF_Boxroom_Air_Sensor_Humidity_Value", 1.9],
     "pGF_Workroom_Air_Sensor_Temperature_Raw": ["pGF_Workroom_Air_Sensor_Temperature_Value", -1.5],
     "pGF_Workroom_Air_Sensor_Humidity_Raw": ["pGF_Workroom_Air_Sensor_Humidity_Value", 2.6],
-    "pGF_Guesttoilet_Air_Sensor_Temperature_Raw": ["pGF_Guesttoilet_Air_Sensor_Temperature_Value", -1.3],
+    "pGF_Guesttoilet_Air_Sensor_Temperature_Raw": ["pGF_Guesttoilet_Air_Sensor_Temperature_Value", -0.3],           # 11.02.23
     "pGF_Guesttoilet_Air_Sensor_Humidity_Raw": ["pGF_Guesttoilet_Air_Sensor_Humidity_Value", 0.7],
-    "pGF_Corridor_Air_Sensor_Temperature_Raw": ["pGF_Corridor_Air_Sensor_Temperature_Value", -1.3],
+    "pGF_Corridor_Air_Sensor_Temperature_Raw": ["pGF_Corridor_Air_Sensor_Temperature_Value", -1.1],                 # 11.02.23
     "pGF_Corridor_Air_Sensor_Humidity_Raw": ["pGF_Corridor_Air_Sensor_Humidity_Value", 4.0],
-    "pGF_Utilityroom_Air_Sensor_Temperature_Raw": ["pGF_Utilityroom_Air_Sensor_Temperature_Value", -1.5],
+    "pGF_Utilityroom_Air_Sensor_Temperature_Raw": ["pGF_Utilityroom_Air_Sensor_Temperature_Value", -0.9],           # 11.02.23
     "pGF_Utilityroom_Air_Sensor_Humidity_Raw": ["pGF_Utilityroom_Air_Sensor_Humidity_Value", 1.7],
     "pGF_Garage_Air_Sensor_Temperature_Raw": ["pGF_Garage_Air_Sensor_Temperature_Value", -1.4],
     "pGF_Garage_Air_Sensor_Humidity_Raw": ["pGF_Garage_Air_Sensor_Humidity_Value", 3.6],

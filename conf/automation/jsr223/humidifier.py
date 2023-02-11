@@ -6,7 +6,7 @@ from custom.presence import PresenceHelper
 from org.openhab.core.types import UnDefType
 
 REFERENCE_SENSORS = ["pGF_Livingroom_Air_Sensor_Humidity_Value", "pGF_Corridor_Air_Sensor_Humidity_Value"]
-TARGET_HUMIDITY = 55
+TARGET_HUMIDITY = 55.0
 
 MAX_SLEEPING_LEVEL = 1
 MAX_PRESENT_LEVEL = 3
@@ -129,21 +129,26 @@ class HumidifierLevelRule:
 
         humidity = 100
         for sensor in REFERENCE_SENSORS:
-            _humidity = getItemState(sensor).intValue()
+            _humidity = getItemState(sensor).doubleValue()
             if _humidity < humidity:
                 humidity = _humidity
 
-        flappingProtectionDiff = ( (currentLevel -1) * 2) / 10.0
+        #self.log.info("{} {}".format(humidity,TARGET_HUMIDITY - humidity))
 
-        if TARGET_HUMIDITY - humidity < (3 - flappingProtectionDiff):
+        if TARGET_HUMIDITY - humidity < (5 - ( 3 if currentLevel > 1 else 0) ):
             newLevel = 1
-        elif TARGET_HUMIDITY - humidity < (7 - flappingProtectionDiff):
+            #self.log.info("A1")
+        elif TARGET_HUMIDITY - humidity < (10 - ( 3 if currentLevel > 2 else 0) ):
             newLevel = 2
+            #self.log.info("A2")
         else:
             newLevel = 3
+            #self.log.info("A3")
 
         if newLevel > maxLevel:
             newLevel = maxLevel
+
+        #self.log.info("{} {}".format(newLevel,currentLevel))
 
         if newLevel != currentLevel:
             # 1. 'event' in input.keys() is an presence or auto mode change

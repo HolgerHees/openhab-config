@@ -535,7 +535,7 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Livingroom_Air_Sensor_Message label="Wohnzimmer" {
                             Setpoint item=pGF_Livingroom_Heating_Temperature_Desired label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
-                        Text item=pGF_Boxroom_Air_Sensor_Message label="Kammer"
+                        Text item=pGF_Boxroom_Air_Sensor_Message label="Abstellkammer"
                         Text item=pGF_Workroom_Air_Sensor_Message label="Arbeitszimmer" {
                             Setpoint item=pGF_Workroom_Heating_Temperature_Desired label="Arbeitszimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
