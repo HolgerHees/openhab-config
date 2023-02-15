@@ -57,7 +57,7 @@ class HumidifierStateMessageRule:
         ]
         self.check()
 
-        #postUpdateIfChanged("pGF_Livingroom_Humidifier_Replace_Filter", OFF)
+        #postUpdateIfChanged("pGF_Livingroom_Humidifier_Fault", 0)
 
     def check(self):
         active = []
@@ -133,13 +133,15 @@ class HumidifierLevelRule:
             if _humidity < humidity:
                 humidity = _humidity
 
+        #self.log.info("{} {}".format(TARGET_HUMIDITY - humidity, (0 - ( 5 if currentLevel > 1 else 0))))
+
         # slowdown, if humidity >= 55
         # speedup if humidity <= 50
-        if TARGET_HUMIDITY - humidity < (0 - ( 5 if currentLevel > 1 else 0) ):
+        if TARGET_HUMIDITY - humidity <= (0 - ( 5 if currentLevel > 1 else 0) ):
             newLevel = 1
         # slowdown, if humidity >= 50
         # speedup if humidity <= 45
-        elif TARGET_HUMIDITY - humidity < (5 - ( 5 if currentLevel > 2 else 0) ):
+        elif TARGET_HUMIDITY - humidity <= (5 - ( 5 if currentLevel > 2 else 0) ):
             newLevel = 2
         else:
             newLevel = 3
