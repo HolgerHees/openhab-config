@@ -6,7 +6,7 @@ from shared.triggers import CronTrigger, ItemStateChangeTrigger
 class RoboterMessagesRule:
     def __init__(self):
         self.triggers = [
-            CronTrigger("*/15 * * * * ?"),
+            CronTrigger("0 * * * * ?"),
             #CronTrigger("0 0 * * * ?"),
             ItemStateChangeTrigger("pIndoor_Roomba_status"),
             ItemStateChangeTrigger("pIndoor_Roomba_full"),

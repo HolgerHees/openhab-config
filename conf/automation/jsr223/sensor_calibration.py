@@ -54,5 +54,7 @@ class CalibrationRule:
     def execute(self, module, input):
         itemName = input['event'].getItemName()
 
+        #self.log.info("{} {}".format(itemName, input['event'].getItemState()))
+
         self.calibrate(itemName, input['event'].getItemState() )
 

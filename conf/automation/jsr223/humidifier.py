@@ -1,4 +1,4 @@
-from shared.helper import rule, postUpdate, postUpdateIfChanged, sendCommand, getItemState, getThing, itemLastChangeOlderThen
+from shared.helper import rule, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged, getItemState, getThing, itemLastChangeOlderThen
 from shared.triggers import CronTrigger, ThingStatusChangeTrigger, ItemCommandTrigger, ItemStateChangeTrigger
 
 from custom.presence import PresenceHelper
@@ -90,7 +90,7 @@ class HumidifierLevelRule:
             ItemCommandTrigger("pGF_Livingroom_Humidifier_Speed"),
             ItemStateChangeTrigger("pGF_Livingroom_Humidifier_Auto_Mode", state="ON"),
             ItemStateChangeTrigger("pOther_Presence_State"),
-            CronTrigger("0 */1 * * * ?")
+            CronTrigger("0 * * * * ?")
         ]
 
         for sensor in REFERENCE_SENSORS:
@@ -98,6 +98,8 @@ class HumidifierLevelRule:
 
         self.autoChangeInProgress = False
         self.activeLevel = -1
+
+        #sendCommand("pGF_Livingroom_Humidifier_Power", REFRESH)
 
     def execute(self, module, input):
         if 'event' in input.keys() and input['event'].getItemName() == "pGF_Livingroom_Humidifier_Speed":
@@ -107,11 +109,14 @@ class HumidifierLevelRule:
                 postUpdate("pGF_Livingroom_Humidifier_Auto_Mode", OFF)
             return
 
-        if getItemState("pGF_Livingroom_Humidifier_Auto_Mode") == OFF or getItemState("pGF_Livingroom_Humidifier_Online") == OFF:
+        if getItemState("pGF_Livingroom_Humidifier_Auto_Mode") == OFF:
             return
 
-        if isinstance(getItemState("pGF_Livingroom_Humidifier_Speed"), UnDefType):
+        if getItemState("pGF_Livingroom_Humidifier_Online") == OFF:
             return
+
+        # sometimes, if humidifier was offline for some seconds, state is powered off
+        sendCommandIfChanged("pGF_Livingroom_Humidifier_Power", ON)
 
         currentLevel = int(getItemState("pGF_Livingroom_Humidifier_Speed").toString()[-1])
         if self.activeLevel == -1:

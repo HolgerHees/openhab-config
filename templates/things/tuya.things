@@ -11,4 +11,3 @@ Thing tuya:tuyaDevice:humidifier "Luftbefeuchter" [ pollingInterval="60", protoc
     Type string : humidity_target   "Zielfeuchtigkeit"      [ dp="103", range="40,45,50,55,CO" ]
     Type number : replace_filter    "Filter Ersetzen"       [ dp="104", min="0", max="100" ]
 }
-

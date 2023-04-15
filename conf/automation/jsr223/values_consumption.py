@@ -5,7 +5,7 @@ from java.time import ZonedDateTime
 from java.time.format import DateTimeFormatter
 from java.time.temporal import ChronoUnit
 
-from org.openhab.core.types.RefreshType import REFRESH
+#from org.openhab.core.types.RefreshType import REFRESH
   
 
 totalSupply = 3600 # total possible photovoltaic power in watt
