@@ -1,6 +1,6 @@
-from shared.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen, itemStateNewerThen
+from shared.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen, itemStateNewerThen, getThing
 from shared.actions import Transformation
-from shared.triggers import CronTrigger, ItemStateChangeTrigger
+from shared.triggers import CronTrigger, ItemStateChangeTrigger, ThingStatusChangeTrigger
 from java.time import ZonedDateTime
  
 
@@ -8,7 +8,29 @@ from java.time import ZonedDateTime
 #postUpdate("pOutdoor_Mower_Duration",0)
 
 @rule("roboter_robonect.py")
-class MoverStatusRule:
+class MoverStateRule:
+    def __init__(self):
+        self.triggers = [
+            #CronTrigger("*/15 * * * * ?"),
+            ThingStatusChangeTrigger("robonect:mower:automower")
+        ]
+        self.check()
+
+    def check(self):
+        thing = getThing("robonect:mower:automower")
+        status = thing.getStatus()
+        info = thing.getStatusInfo()
+
+        if status is not None and info is not None:
+            #self.log.info(u"Home Connect bridge status: '{}',  detail: '{}'".format(status.toString(),info.toString()))
+            if status.toString() == "ONLINE":
+                postUpdateIfChanged("pOutdoor_Mower_Winter_Mode", OFF)
+
+    def execute(self, module, input):
+        self.check()
+
+@rule("roboter_robonect.py")
+class MoverActionRule:
     def __init__(self):
         self.triggers = [
             CronTrigger("0 2,17,32,47 * * * ?"),
