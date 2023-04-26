@@ -488,6 +488,7 @@ class HeatingControlRule():
             CronTrigger("15 * * * * ?")
         ]
         self.activeHeatingOperatingMode = -1
+        self.activeReducedTimeInSeconds = -1
 
     def execute(self, module, input):
         self.log.info(u"--------: >>>" )
@@ -849,19 +850,19 @@ class HeatingControlRule():
                 # TODO also if Heating_Power is going from 0 to 65 and one minute later from 65 to 0 is a hint for a unsuccessful start
                 
                 # No burner starts since a while
-                if itemLastChangeOlderThen("pGF_Utilityroom_Heating_Power",now.minusMinutes(5)) and itemLastChangeOlderThen("pGF_Utilityroom_Heating_Operating_Mode",now.minusMinutes(5)):
+                if itemLastChangeOlderThen("pGF_Utilityroom_Heating_Power",now.minusMinutes(Heating.CHECK_HEATING_TIME_SLOT)) and itemLastChangeOlderThen("pGF_Utilityroom_Heating_Operating_Mode",now.minusMinutes(Heating.CHECK_HEATING_TIME_SLOT)):
                     forceReducedMsg = u" • No burner starts"
-                else:
-                    burnerStarts = self.getBurnerStarts(now)
-                
-                    if burnerStarts > 1:
-                        forceReducedMsg = u" • Too many burner starts"
+                elif self.getBurnerStarts(now) > 1:
+                    forceReducedMsg = u" • Too many burner starts"
                         
                 if forceReducedMsg != None:
+                    self.activeReducedTimeInSeconds = ( Heating.MIN_REDUCED_TIME * 60 ) if self.activeReducedTimeInSeconds == -1 else min( self.activeReducedTimeInSeconds * 2.0, Heating.MAX_REDUCED_TIME * 60 )
                     self.activeHeatingOperatingMode = 3
                    
                     sendCommand("pGF_Utilityroom_Heating_Operating_Mode",self.activeHeatingOperatingMode)
                     self.log.info(u"Switch  : Reduziert{}{}".format(forceReducedMsg,forceRetryMsg))
+            elif self.activeReducedTimeInSeconds != -1 and itemLastChangeOlderThen("pGF_Utilityroom_Heating_Operating_Mode",now.minusMinutes(Heating.CHECK_HEATING_TIME_SLOT)):
+                self.activeReducedTimeInSeconds = -1
          
         # Reduziert
         elif currentOperatingMode == 3:
@@ -871,21 +872,8 @@ class HeatingControlRule():
                 sendCommand("pGF_Utilityroom_Heating_Operating_Mode",self.activeHeatingOperatingMode)
                 self.log.info(u"Switch  : Nur WW because heating is not needed anymore{}".format(forceRetryMsg))
             else:
-                lastReducedRuntimeSeconds = self.getLastReductionTimeInSeconds( currentOperatingModeChange )
-                if lastReducedRuntimeSeconds > 0:
-                    targetReducedTime = int( round(lastReducedRuntimeSeconds * 2.0 / 60.0, 0) )
-                    if targetReducedTime > Heating.MAX_REDUCTION_TIME:
-                        targetReducedTime = Heating.MAX_REDUCTION_TIME
-                    elif targetReducedTime < Heating.MIN_REDUCED_TIME:
-                        # SHOULD NEVER HAPPEN !!!
-                        self.log.error(u"MIN_REDUCED_TIME less then allowed. Was {}".format(targetReducedTime))
-                        targetReducedTime = Heating.MIN_REDUCED_TIME
-                else:
-                    targetReducedTime = Heating.MIN_REDUCED_TIME
-                                
-                #self.log.info(u"E {}".format(targetReducedTime))
-                    
                 # Dauernd reduziert läuft seit mindestens XX Minuten
+                targetReducedTime = self.activeReducedTimeInSeconds if self.activeReducedTimeInSeconds != -1 else ( Heating.MIN_REDUCED_TIME * 60 )
                 if forceRetry or itemLastChangeOlderThen("pGF_Utilityroom_Heating_Operating_Mode",now.minusMinutes(targetReducedTime) ):
                     self.activeHeatingOperatingMode = 2
                     sendCommand("pGF_Utilityroom_Heating_Operating_Mode",self.activeHeatingOperatingMode)
@@ -898,7 +886,7 @@ class HeatingControlRule():
     def getBurnerStarts( self, now ):
         # max 5 min.
         minTime = getHistoricItemEntry("pGF_Utilityroom_Heating_Operating_Mode",now).getTimestamp()
-        _minTime = now.minusMinutes(5)
+        _minTime = now.minusMinutes(Heating.CHECK_HEATING_TIME_SLOT)
         if minTime.isBefore(_minTime):
             minTime = _minTime
 
@@ -921,30 +909,3 @@ class HeatingControlRule():
             lastItemEntry = currentItemEntry
             
         return burnerStarts
-
-    def getLastReductionTimeInSeconds( self, currentOperatingModeUpdate ):
-        lastOperatingMode = getHistoricItemEntry("pGF_Utilityroom_Heating_Operating_Mode",currentOperatingModeUpdate.minusSeconds(1))
-        #self.log.info(u"A {}".format(lastOperatingMode.getState().intValue()))
-        
-        # last mode was "Heizen mit WW"
-        if lastOperatingMode.getState().intValue() == 2:
-            lastOperatingModeUpdate = lastOperatingMode.getTimestamp()
-            lastHeatingTimeInSeconds = ChronoUnit.SECONDS.between(lastOperatingModeUpdate,currentOperatingModeUpdate)
-            
-            #self.log.info(u"B {}".format(lastHeatingTime))
-
-            # last mode was running less then MIN_HEATING_TIME
-            if lastHeatingTimeInSeconds < Heating.MIN_HEATING_TIME * 60:
-                # mode before was "Reduziert"
-                previousOperatingMode = getHistoricItemEntry("pGF_Utilityroom_Heating_Operating_Mode",lastOperatingModeUpdate.minusSeconds(1))
-                #self.log.info(u"C {}".format(previousOperatingMode.getState().intValue()))
-
-                if previousOperatingMode.getState().intValue() == 3:
-                    # letzt calculate last "reduziert" runtime and increase it by 2
-                    previousOperatingModeUpdate = previousOperatingMode.getTimestamp()
-                    lastReducedRuntimeInSeconds = ChronoUnit.SECONDS.between(previousOperatingModeUpdate,lastOperatingModeUpdate)
-                    
-                    return lastReducedRuntimeInSeconds
-        return 0  
-                                                
-             

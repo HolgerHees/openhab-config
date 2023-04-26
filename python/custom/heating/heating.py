@@ -20,10 +20,11 @@ class Heating(object):
     
     DEFAULT_NIGHT_REDUCTION = 2.0
     LAZY_OFFSET = 90 # Offset time until any heating has an effect
+    CHECK_HEATING_TIME_SLOT = 5 # Timeframe to validate a "stable" 'Heizen mit WW' mode
     MIN_HEATING_TIME = 15 # 'Heizen mit WW' should be active at least for 15 min.
     MIN_ONLY_WW_TIME = 15 # 'Nur WW' should be active at least for 15 min.
     MIN_REDUCED_TIME = 5
-    MAX_REDUCTION_TIME = 60
+    MAX_REDUCED_TIME = 60
     
     OPEN_WINDOW_START_DURATION = 2
     LONG_OPEN_WINDOW_START_DURATION = 5
@@ -775,7 +776,7 @@ class Heating(object):
         # detech last runtime and change calculated values to that timespanInSeconds
         # all calculations are normally per minute
         timespanInSeconds = 30.0 if Heating.lastRuntime is None else ChronoUnit.SECONDS.between(Heating.lastRuntime,self.now)
-        devider = 60.0 / timespanInSeconds
+        devider = 60.0 / ( timespanInSeconds if timespanInSeconds > 0 else 1 )
         #self.log.info(u"{} {}".format(room.getName(),devider))
 
         totalChargeLevel = totalChargeLevel + ( rs.getActiveSaldo() / 60.0 / devider )
