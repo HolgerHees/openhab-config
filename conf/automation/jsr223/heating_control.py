@@ -856,7 +856,7 @@ class HeatingControlRule():
                     forceReducedMsg = u" • Too many burner starts"
                         
                 if forceReducedMsg != None:
-                    self.activeReducedTimeInSeconds = ( Heating.MIN_REDUCED_TIME * 60 ) if self.activeReducedTimeInSeconds == -1 else min( self.activeReducedTimeInSeconds * 2.0, Heating.MAX_REDUCED_TIME * 60 )
+                    self.activeReducedTimeInSeconds = ( Heating.MIN_REDUCED_TIME * 60 ) if self.activeReducedTimeInSeconds == -1 else min( self.activeReducedTimeInSeconds * 2, Heating.MAX_REDUCED_TIME * 60 )
                     self.activeHeatingOperatingMode = 3
                    
                     sendCommand("pGF_Utilityroom_Heating_Operating_Mode",self.activeHeatingOperatingMode)
@@ -874,6 +874,8 @@ class HeatingControlRule():
             else:
                 # Dauernd reduziert läuft seit mindestens XX Minuten
                 targetReducedTime = self.activeReducedTimeInSeconds if self.activeReducedTimeInSeconds != -1 else ( Heating.MIN_REDUCED_TIME * 60 )
+                #self.log.info("{}".format(self.activeReducedTimeInSeconds))
+                #self.log.info("{}".format(targetReducedTime))
                 if forceRetry or itemLastChangeOlderThen("pGF_Utilityroom_Heating_Operating_Mode",now.minusMinutes(targetReducedTime) ):
                     self.activeHeatingOperatingMode = 2
                     sendCommand("pGF_Utilityroom_Heating_Operating_Mode",self.activeHeatingOperatingMode)
@@ -882,7 +884,7 @@ class HeatingControlRule():
                     delayedMsg = u" in {} min.".format(runtimeToGo)
                     
                 self.log.info(u"Switch  : Heizen mit WW{}{}".format(delayedMsg,forceRetryMsg))
-                
+
     def getBurnerStarts( self, now ):
         # max 5 min.
         minTime = getHistoricItemEntry("pGF_Utilityroom_Heating_Operating_Mode",now).getTimestamp()

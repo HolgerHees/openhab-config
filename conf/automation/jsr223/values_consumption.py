@@ -416,13 +416,13 @@ class SolarConsumptionRule:
         postUpdateIfChanged("pGF_Garage_Solar_Inverter_Annual_Consumption",annualConsumption)
 
 
-@rule("values_consumption.py")
-class GasConsumptionDailyRule:
-    def __init__(self):
-        self.triggers = [CronTrigger("0 0 0 * * ?")]
+#@rule("values_consumption.py")
+#class GasConsumptionDailyRule:
+#    def __init__(self):
+#        self.triggers = [CronTrigger("0 0 0 * * ?")]
 
-    def execute(self, module, input):
-        postUpdateIfChanged("pGF_Utilityroom_Gas_Current_Daily_Consumption",0)
+#    def execute(self, module, input):
+#        postUpdateIfChanged("pGF_Utilityroom_Gas_Current_Daily_Consumption",0)
 
 @rule("values_consumption.py")
 class GasConsumption5MinRule:
@@ -436,7 +436,10 @@ class GasConsumption5MinRule:
 @rule("values_consumption.py")
 class GasConsumptionRule:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("pGF_Utilityroom_Gas_Meter_Pulse_Counter")]
+        self.triggers = [
+            CronTrigger("0 0 0 * * ?"),
+            ItemStateChangeTrigger("pGF_Utilityroom_Gas_Meter_Pulse_Counter")
+        ]
 
     def execute(self, module, input):
         now = ZonedDateTime.now()
@@ -472,15 +475,17 @@ class GasConsumptionRule:
         if currentConsumption < 0:
             currentConsumption = 0
 
-        if postUpdateIfChanged("pGF_Utilityroom_Gas_Annual_Consumption", currentConsumption ):
-            # Hochrechnung
-            zaehlerStandCurrentOneYearBefore = getHistoricItemState("pGF_Utilityroom_Gas_Meter_Current_Count", now.minusYears(1) ).doubleValue()
-            forecastConsumtion = zaehlerStandOld - zaehlerStandCurrentOneYearBefore
+        #if postUpdateIfChanged("pGF_Utilityroom_Gas_Annual_Consumption", currentConsumption ):
+        postUpdateIfChanged("pGF_Utilityroom_Gas_Annual_Consumption", currentConsumption )
 
-            refDay = now.withYear(now.getYear()-1).withMonth(1).withDayOfMonth(1)
-            zaehlerStandOldOneYearBefore = getHistoricItemState("pGF_Utilityroom_Gas_Meter_Current_Count", refDay.toLocalDate().atStartOfDay(refDay.getZone())).doubleValue()
+        # Hochrechnung
+        zaehlerStandCurrentOneYearBefore = getHistoricItemState("pGF_Utilityroom_Gas_Meter_Current_Count", now.minusYears(1) ).doubleValue()
+        forecastConsumtion = zaehlerStandOld - zaehlerStandCurrentOneYearBefore
 
-            hochrechnungVerbrauch = round( currentConsumption + forecastConsumtion )
+        refDay = now.withYear(now.getYear()-1).withMonth(1).withDayOfMonth(1)
+        zaehlerStandOldOneYearBefore = getHistoricItemState("pGF_Utilityroom_Gas_Meter_Current_Count", refDay.toLocalDate().atStartOfDay(refDay.getZone())).doubleValue()
 
-            msg = u"{} m³, {} m³".format(hochrechnungVerbrauch,int( round( zaehlerStandOld - zaehlerStandOldOneYearBefore ) ))
-            postUpdate("pGF_Utilityroom_Gas_Forecast", msg )
+        hochrechnungVerbrauch = round( currentConsumption + forecastConsumtion )
+
+        msg = u"{} m³, {} m³".format(hochrechnungVerbrauch,int( round( zaehlerStandOld - zaehlerStandOldOneYearBefore ) ))
+        postUpdate("pGF_Utilityroom_Gas_Forecast", msg )
