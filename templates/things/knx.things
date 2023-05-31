@@ -112,11 +112,11 @@ Bridge	knx:ip:bridge [
     }
     Thing device lights_outdoor "KNX Licht" @ "Garten"
     {
-        Type    switch  :       garageStreedside        "Schuppen Strassenseite"     [ ga="2/0/0+<2/0/1" ]
-        Type    switch  :       frontdoor               "Haupteingang"               [ ga="2/0/3+<2/0/4" ]
-        Type    switch  :       carport                 "Carport"                    [ ga="2/0/6+<2/0/7" ]
-        Type    switch  :       garageGardenside        "Schuppen Gartenseite"       [ ga="2/0/9+<2/0/10" ]
-        Type    dimmer  :       outdoorTerrace          "Terrassen Licht"            [ switch="2/0/12", increaseDecrease="2/0/16", position="2/0/17+<0/0/18" ]
+        Type    switch  :       garageStreedside        "Schuppen Strassenseite"     [ ga="9/0/0+<2/0/1" ]
+        Type    switch  :       frontdoor               "Haupteingang"               [ ga="9/0/3+<2/0/4" ]
+        Type    switch  :       carport                 "Carport"                    [ ga="9/0/6+<2/0/7" ]
+        Type    switch  :       garageGardenside        "Schuppen Gartenseite"       [ ga="9/0/9+<2/0/10" ]
+        Type    dimmer  :       outdoorTerrace          "Terrassen Licht"            [ switch="9/0/12", increaseDecrease="9/0/16", position="9/0/17+<0/0/18" ]
     }
     Thing device sockets_ff "KNX Steckdosen" @ "Erdgeschoss"
     {
@@ -134,8 +134,8 @@ Bridge	knx:ip:bridge [
     }
     Thing device sockets_outdoor "KNX Steckdosen" @ "Garten"
     {
-        Type    switch  :       streedside              "Aussensteckdosen vorne"     [ ga="2/1/0+<2/1/1" ]
-        Type    switch  :       gardenside              "Aussensteckdosen hinten"    [ ga="2/1/2+<2/1/3" ]
+        Type    switch  :       streedside              "Aussensteckdosen vorne"     [ ga="9/1/0+<2/1/1" ]
+        Type    switch  :       gardenside              "Aussensteckdosen hinten"    [ ga="9/1/2+<2/1/3" ]
     }
     Thing device shutter_ff "KNX Rollläden" @ "Erdgeschoss"
     {
@@ -180,13 +180,13 @@ Bridge	knx:ip:bridge [
     }
     Thing device motion_outdoor "KNX Bewegungsmelder" @ "Garten"
     {
-        Type    contact :       garageStreetside        "Schuppen (vorne)"           [ ga="<2/0/2" ]
-        Type    contact :       frontdoor               "Haustür"                    [ ga="<2/0/5" ]
-        Type    contact :       carport                 "Carport"                    [ ga="<2/0/8" ]
-        Type    contact :       garageGardenside        "Schuppen (hinten)"          [ ga="<2/0/11" ]
-        Type    contact :       terrace1                "Terrasse 1"                  [ ga="<2/0/14" ]
-        Type    contact :       terrace2                "Terrasse 2"                  [ ga="<2/0/15" ]
-        Type    switch  :       main                    "Gartenlicht autom."         [ ga="<2/0/30" ]
+        Type    contact :       garageStreetside        "Schuppen (vorne)"           [ ga="<9/0/2" ]
+        Type    contact :       frontdoor               "Haustür"                    [ ga="<9/0/5" ]
+        Type    contact :       carport                 "Carport"                    [ ga="<9/0/8" ]
+        Type    contact :       garageGardenside        "Schuppen (hinten)"          [ ga="<9/0/11" ]
+        Type    contact :       terrace1                "Terrasse 1"                  [ ga="<9/0/14" ]
+        Type    contact :       terrace2                "Terrasse 2"                  [ ga="<9/0/15" ]
+        Type    switch  :       main                    "Gartenlicht autom."         [ ga="<9/0/100" ]
     }
     Thing device motion_indoor "KNX Bewegungsmelder Haus"
     {
@@ -196,16 +196,16 @@ Bridge	knx:ip:bridge [
     }
     Thing device wattering "KNX Bewässerung" @ "Garten"
     {
-        Type    switch  :       gardensideLawnLeft      "Bewässerung Rasen links"    [ ga="2/3/0+<2/3/1" ]
-        Type    switch  :       gardensideLawnRight     "Bewässerung Rasen rechts"   [ ga="2/3/2+<2/3/3" ]
-        Type    switch  :       gardensideBedsFront     "Bewässerung Beete Terrasse" [ ga="2/3/4+<2/3/5" ]
-        Type    switch  :       gardensideBedsBack      "Bewässerung Beete hinten"   [ ga="2/3/6+<2/3/7" ]
-        Type    switch  :       streetsideLawn          "Bewässerung Rasen vorn"     [ ga="2/3/8+<2/3/9" ]
-        Type    switch  :       streetsideBeds          "Bewässerung Beete vorne"    [ ga="2/3/10+<2/3/11" ]
+        Type    switch  :       gardensideLawnLeft      "Bewässerung Rasen links"    [ ga="9/3/0+<2/3/1" ]
+        Type    switch  :       gardensideLawnRight     "Bewässerung Rasen rechts"   [ ga="9/3/2+<2/3/3" ]
+        Type    switch  :       gardensideBedsFront     "Bewässerung Beete Terrasse" [ ga="9/3/4+<2/3/5" ]
+        Type    switch  :       gardensideBedsBack      "Bewässerung Beete hinten"   [ ga="9/3/6+<2/3/7" ]
+        Type    switch  :       streetsideLawn          "Bewässerung Rasen vorn"     [ ga="9/3/8+<2/3/9" ]
+        Type    switch  :       streetsideBeds          "Bewässerung Beete vorne"    [ ga="9/3/10+<2/3/11" ]
     }
     Thing device shading "KNX Beschattung" @ "Garten"
     {
-        Type    rollershutter : terraceLeft             "Terrasse Links"             [ upDown="2/2/0", stopMove="2/2/1", position="<2/2/2" ]
-        Type    rollershutter : terraceRight            "Terrasse Rechts"            [ upDown="2/2/3", stopMove="2/2/4", position="<2/2/5" ]
+        Type    rollershutter : terraceLeft             "Terrasse Links"             [ upDown="9/2/0", stopMove="9/2/1", position="<9/2/2" ]
+        Type    rollershutter : terraceRight            "Terrasse Rechts"            [ upDown="9/2/3", stopMove="9/2/4", position="<9/2/5" ]
     }
 }

@@ -487,5 +487,5 @@ class GasConsumptionRule:
 
         hochrechnungVerbrauch = round( currentConsumption + forecastConsumtion )
 
-        msg = u"{} m³, {} m³".format(hochrechnungVerbrauch,int( round( zaehlerStandOld - zaehlerStandOldOneYearBefore ) ))
+        msg = u"{} m³, {} m³".format(hochrechnungVerbrauch, round( zaehlerStandOld - zaehlerStandOldOneYearBefore ) )
         postUpdate("pGF_Utilityroom_Gas_Forecast", msg )
