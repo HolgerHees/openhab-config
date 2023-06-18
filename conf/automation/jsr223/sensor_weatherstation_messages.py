@@ -182,8 +182,11 @@ class WeatherstationLastUpdateRule:
             msg = u"{} min.".format(newestUpdateInMinutesMsg)
             
         postUpdateIfChanged("pOutdoor_WeatherStation_Update_Message", msg)
-        postUpdateIfChanged("pOutdoor_WeatherStation_Is_Working", ON if oldestUpdateInMinutes <= 60 else OFF)
-        
+
+        is_working = oldestUpdateInMinutes <= 60
+        postUpdateIfChanged("pOutdoor_WeatherStation_Is_Working", ON if is_working else OFF)
+        postUpdateIfChanged("eOther_Error_WeatherStation_Message", NULL if is_working else u"Keine Updates seit mehr als 60 Minuten")
+
         temperatureItemName = 'pOutdoor_WeatherStation_Temperature' if states['pOutdoor_WeatherStation_Temperature_Raw'][0] < 30 else 'pGF_Utilityroom_Heating_Temperature_Outdoor'
         postUpdateIfChanged("pOutdoor_WeatherStation_Temperature_Item_Name", temperatureItemName )
             

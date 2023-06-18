@@ -738,7 +738,6 @@ sitemap haus label="Main Menu"
                             Switch item=pGF_Utilityroom_Ventilation_Filter_Reset mappings=[1="Reset"]
                             Text item=pGF_Utilityroom_Ventilation_Error_Message
                             Switch item=pGF_Utilityroom_Ventilation_Error_Reset mappings=[1="Reset"]
-                            Text item=pGF_Utilityroom_Ventilation_Thing_State
                         }
                     }
                 }
@@ -792,11 +791,6 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Utilityroom_Heating_Temperature_Pipe_In
                         Text item=pGF_Utilityroom_Heating_Burner_Starts_Message
                         Text item=pGF_Utilityroom_Heating_Burner_Hours_Message
-                        Text item=pGF_Utilityroom_Heating_State_Message visibility=[pGF_Utilityroom_Heating_State_Message=="Alles ok"] valuecolor=[=="Alles ok"="#6bc305"]
-                        Text item=pGF_Utilityroom_Heating_State_Message visibility=[pGF_Utilityroom_Heating_State_Message!="Alles ok"] valuecolor=[=="Filter"="#cbcb00",!="Alles ok"="#d72a2a"] {
-                            Text item=pGF_Utilityroom_Heating_State_Message
-                            Text item=pGF_Utilityroom_Heating_Common_Fault
-                        }
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]

@@ -423,29 +423,26 @@ maintenanceMode = {}
 #        pass
  
 @rule("heating_control.py")
-class HeatingStateRule:
+class HeatingErrorMessageRule:
     def __init__(self):
         self.triggers = [
             #CronTrigger("0 */15 * * * ?"),
             ItemStateChangeTrigger("pGF_Utilityroom_Heating_Common_Fault")
         ]
 
+        self.update()
+
+    def update(self):
+        if itemLastUpdateOlderThen("pGF_Utilityroom_Heating_Common_Fault", ZonedDateTime.now().minusMinutes(10)):
+            postUpdateIfChanged("eOther_Error_Heating_Message", u"Keine Updates mehr seit mehr als 10 Minuten")
+        elif getItemState("pGF_Utilityroom_Heating_Common_Fault").intValue() > 0:
+            postUpdateIfChanged("eOther_Error_Heating_Message", Transformation.transform("MAP", "heating_state_de.map", getItemState("pGF_Utilityroom_Heating_Common_Fault").toString() ))
+        else:
+            postUpdateIfChanged("eOther_Error_Heating_Message", NULL)
+
     def execute(self, module, input):
-      active = []
-      
-      if getItemState("pGF_Utilityroom_Heating_Common_Fault").intValue() > 0:
-          active.append(u"Gerätefehler")
+        self.update()
 
-      if itemLastUpdateOlderThen("pGF_Utilityroom_Heating_Common_Fault", ZonedDateTime.now().minusMinutes(10)):
-          active.append(u"Verbindungsfehler")
-          
-      if len(active) == 0:
-            active.append(u"Alles ok")
-
-      msg = ", ".join(active)
-
-      postUpdateIfChanged("pGF_Utilityroom_Heating_State_Message", msg)
- 
 @rule("heating_control.py")
 class HeatingVentileRule():
     def __init__(self):

@@ -24,70 +24,51 @@ class VentilationStateResetRule:
         postUpdateIfChanged(input['event'].getItemName(), 0)
 
 @rule("ventilation_control.py")
+class VentilationErrorMessageRule:
+    def __init__(self):
+        self.triggers = [
+            #CronTrigger("*/15 * * * * ?"),
+            ThingStatusChangeTrigger("comfoair:comfoair:default"),
+            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Filter_Error")
+        ]
+        self.update()
+
+    def update(self):
+        thing = getThing("comfoair:comfoair:default")
+        status = thing.getStatus()
+        if status.toString() != "ONLINE":
+            info = thing.getStatusInfo()
+            postUpdateIfChanged("eOther_Error_Ventilation_Message", u"Thing: {}".format( info.toString() ))
+        elif getItemState("pGF_Utilityroom_Ventilation_Error_Message").toString() != "No Errors":
+            postUpdateIfChanged("eOther_Error_Ventilation_Message", getItemState("pGF_Utilityroom_Ventilation_Error_Message").toString() )
+        else:
+            postUpdateIfChanged("eOther_Error_Ventilation_Message", NULL)
+
+    def execute(self, module, input):
+        self.update()
+
+@rule("ventilation_control.py")
 class VentilationStateMessageRule:
     def __init__(self):
         self.triggers = [
             #CronTrigger("*/15 * * * * ?"),
             ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Error_Message"),
-            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Filter_Error"),
-            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Thing_State")
+            ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Filter_Error")
         ]
-        self.updateTimer = None
-        
-        self.delayUpdate()
+        self.update()
 
-    def delayUpdate(self):
-        active = []
-        
-        if isinstance(getItemState("pGF_Utilityroom_Ventilation_Filter_Error"), UnDefType) \
-            or isinstance(getItemState("pGF_Utilityroom_Ventilation_Error_Message"), UnDefType):
-                return
-
-        if getItemState("pGF_Utilityroom_Ventilation_Filter_Error") == ON:
-            active.append(u"Filter")
-
+    def update(self):
         if getItemState("pGF_Utilityroom_Ventilation_Error_Message").toString() != "No Errors":
-            active.append(u"Error: {}".format( getItemState("pGF_Utilityroom_Ventilation_Error_Message").toString() ))
-
-        if getItemState("pGF_Utilityroom_Ventilation_Thing_State").toString() != "Alles ok":
-            active.append(u"Error: {}".format( getItemState("pGF_Utilityroom_Ventilation_Thing_State").toString() ))
-
-        if len(active) == 0:
-            active.append(u"Alles ok")
-
-        msg = ", ".join(active)
+            msg = u"Error"
+        elif getItemState("pGF_Utilityroom_Ventilation_Filter_Error") == ON:
+            msg = u"Filter"
+        else:
+            msg = u"Alles ok"
 
         postUpdateIfChanged("pGF_Utilityroom_Ventilation_State_Message", msg)
-        
-        self.updateTimer = None
 
     def execute(self, module, input):
-        self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
-
-@rule("ventilation_state.py")
-class VentilationStateRule:
-    def __init__(self):
-        self.triggers = [
-            #CronTrigger("*/15 * * * * ?"),
-            ThingStatusChangeTrigger("comfoair:comfoair:default")
-        ]
-        self.check()
-        
-    def check(self):
-        thing = getThing("comfoair:comfoair:default")
-        status = thing.getStatus()
-        info = thing.getStatusInfo()
-        
-        #self.log.info(u"{}".format(status))
-
-        if status is not None and info is not None:
-            if status.toString() != 'ONLINE':
-                postUpdateIfChanged("pGF_Utilityroom_Ventilation_Thing_State",info.toString())
-            else:
-                postUpdateIfChanged("pGF_Utilityroom_Ventilation_Thing_State","Alles ok")
-
-    def execute(self, module, input):
-        self.check()
+        self.update()
 
 @rule("ventilation_efficiency.py")
 class VentilationEfficiencyRule:

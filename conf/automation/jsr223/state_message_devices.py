@@ -7,8 +7,7 @@ class StateMessageDevicesRule:
     def __init__(self):
         self.triggers = [
             #CronTrigger("0 0 * * * ?"),
-            ItemStateChangeTrigger("pOther_State_Message_Robot"),
-            ItemStateChangeTrigger("pOther_State_Message_Homeconnect")
+            ItemStateChangeTrigger("pOther_State_Message_Robot")
         ]
         self.check()
         
@@ -18,9 +17,6 @@ class StateMessageDevicesRule:
         
         if getItemState("pOther_State_Message_Robot").toString() != "Alles ok":
             active.append("Roboter")
-
-        if getItemState("pOther_State_Message_Homeconnect").toString() != "Alles ok":
-            active.append("Homeconnect")
 
         if len(active) == 0:
             active.append("Alles ok")

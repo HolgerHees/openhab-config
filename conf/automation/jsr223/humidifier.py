@@ -60,23 +60,12 @@ class HumidifierStateMessageRule:
         #postUpdateIfChanged("pGF_Livingroom_Humidifier_Fault", 0)
 
     def check(self):
-        active = []
-
-        if isinstance(getItemState("pGF_Livingroom_Humidifier_Fault"), UnDefType) \
-            or isinstance(getItemState("pGF_Livingroom_Humidifier_Replace_Filter"), UnDefType):
-                return
-
-
-        if getItemState("pGF_Livingroom_Humidifier_Replace_Filter") == ON:
-            active.append(u"Filter")
-
         if getItemState("pGF_Livingroom_Humidifier_Fault").intValue() != 0:
-            active.append(u"Fehler")
-
-        if len(active) == 0:
-            active.append(u"Alles ok")
-
-        msg = ", ".join(active)
+            msg = Transformation.transform("MAP", "tuya_humidifier_fault.map", getItemState("pGF_Livingroom_Humidifier_Fault").toString() )
+        elif getItemState("pGF_Livingroom_Humidifier_Replace_Filter") == ON:
+            msg = u"Filter"
+        else:
+            msg = u"Alles ok"
 
         postUpdateIfChanged("pGF_Livingroom_Humidifier_State_Message", msg)
 

@@ -32,7 +32,6 @@ class StateMessageSensorsRule:
         self.triggers = [
             CronTrigger("*/15 * * * * ?"),
             CronTrigger("0 */5 * * * ?"),
-            ItemStateChangeTrigger("pOutdoor_WeatherStation_Is_Working"),
             ItemStateChangeTrigger("pIndoor_Plant_Sensor_Main_Info")
         ]
 
@@ -42,13 +41,9 @@ class StateMessageSensorsRule:
         details = []
         group = "Fehler"
 
-        if getItemState("pOutdoor_WeatherStation_Is_Working") == OFF:
-            states.append(u"Wetter")
-            
         if getItemState("pIndoor_Plant_Sensor_Main_Info").toString() != 'Alles ok':
             states.append(getItemState("pIndoor_Plant_Sensor_Main_Info").toString())
 
-        refDate = ZonedDateTime.now().minusMinutes(60)  # last 1 hour
         for sensorItem in co2SensorItems:
             if getItemState(sensorItem).intValue() > 1500:
                 states.append(u"CO2 Wert")
@@ -56,26 +51,41 @@ class StateMessageSensorsRule:
                 priority = NotificationHelper.PRIORITY_ALERT
                 break
 
-            if itemLastUpdateOlderThen(sensorItem, refDate):
-                states.append(u"CO2 Update")
-                details.append(sensorItem)
-                break
-
-        refDate = ZonedDateTime.now().minusMinutes(1440)  # last 24 hours
-        for sensorItem in sensorItems:
-            if itemLastUpdateOlderThen(sensorItem, refDate):
-                states.append(u"T/F Sensor")
-                details.append(sensorItem)
-                break
-
         if len(states) == 0:
             states.append(u"Alles ok")
-            group = "Info" 
+            group = "Info"
             priority = NotificationHelper.PRIORITY_NOTICE
-            
+
         msg = u", ".join(list(set(states)))
 
         if postUpdateIfChanged("pOther_State_Message_Sensors", msg):
             NotificationHelper.sendNotificationToAllAdmins(priority, "Sensoren " + group, msg)
- 
+
         postUpdateIfChanged("pOther_State_Details_Sensors", u", ".join(list(set(details))))
+
+        # Verbindungs Fehler
+        co2_error_states = []
+        tf_error_states = []
+
+        refDate = ZonedDateTime.now().minusMinutes(60)  # last 1 hour
+        for sensorItem in co2SensorItems:
+            if itemLastUpdateOlderThen(sensorItem, refDate):
+                #co2_error_states.append(u"CO2 Update")
+                co2_error_states.append(sensorItem)
+
+        refDate = ZonedDateTime.now().minusMinutes(1440)  # last 24 hours
+        for sensorItem in sensorItems:
+            if itemLastUpdateOlderThen(sensorItem, refDate):
+                #tf_error_states.append(u"T/F Sensor")
+                tf_error_states.append(sensorItem)
+
+        if len(co2_error_states) > 0:
+            postUpdateIfChanged("eOther_Error_CO2_Sensor_Message", u"Keine Updates mehr seit mehr als 60 Minuten: {}".format(u", ".join(co2_error_states)))
+        else:
+            postUpdateIfChanged("eOther_Error_CO2_Sensor_Message", NULL)
+
+        if len(tf_error_states) > 0:
+            postUpdateIfChanged("eOther_Error_Temperatur_Sensor_Message", u"Keine Updates mehr seit mehr als 24 Stunden: {}".format(u", ".join(tf_error_states)))
+        else:
+            postUpdateIfChanged("eOther_Error_Temperatur_Sensor_Message", NULL)
+

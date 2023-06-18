@@ -135,15 +135,21 @@ class ScenesWatheringRule(WatheringHelperOld):
         if self.activeIndex == -1:
             for i in range(len(circuits)):
                 group = circuits[i]
-                if getItemState(group[2][0] + "_Powered") == ON:
-                    self.activeIndex = i
-                    runtime = ChronoUnit.SECONDS.between(getItemLastChange(group[2][0] + "_Powered"),ZonedDateTime.now())
-                    remaining = ( duration * group[0] ) - runtime
+                for circuit in group[2]:
+                    if getItemState(circuit + "_Powered") == ON:
+                        self.activeIndex = i
+                        runtime = ChronoUnit.SECONDS.between(getItemLastChange(circuit + "_Powered"),ZonedDateTime.now())
+                        remaining = ( duration * group[0] ) - runtime
+                        break
+                if self.activeIndex != -1:
                     break
         else:
             group = circuits[self.activeIndex]
-            runtime = ChronoUnit.SECONDS.between(getItemLastChange(group[2][0] + "_Powered"),ZonedDateTime.now())
-            remaining = ( duration * group[0] ) - runtime
+            for circuit in group[2]:
+                if getItemState(circuit + "_Powered") == ON:
+                    runtime = ChronoUnit.SECONDS.between(getItemLastChange(circuit + "_Powered"),ZonedDateTime.now())
+                    remaining = ( duration * group[0] ) - runtime
+                    break
 
         if remaining <= 0:
             nextIndex = -1

@@ -327,20 +327,20 @@ class EnergyCurrentDemandAndConsumptionRule:
                        or (itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_AC_Power", ZonedDateTime.now().minusMinutes(60)) and getItemState("pGF_Garage_Solar_Inverter_AC_Power").intValue() > 0)):
                         #  and 
                         #(itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_AC_Power", ZonedDateTime.now().minusMinutes(15)) or getItemState("pGF_Garage_Solar_Inverter_AC_Power").intValue() == 0)):
-                        if postUpdateIfChanged("pGF_Garage_Solar_Inverter_Is_Working",OFF):
+                        if postUpdateIfChanged("eOther_Error_Solar_Inverter_Message",u"Keine Updates mehr seit mehr als 60 Minuten"):
                             postUpdate("pGF_Garage_Solar_Inverter_AC_Power",0)
                             postUpdateIfChanged("pGF_Garage_Solar_Inverter_DC_Power",0)
                             postUpdateIfChanged("pGF_Garage_Solar_Inverter_DC_Current",0)
                             postUpdateIfChanged("pGF_Garage_Solar_Inverter_DC_Voltage",0)
                             postUpdateIfChanged("pGF_Garage_Solar_Inverter_Daily_Yield",0)
                     else:
-                        postUpdateIfChanged("pGF_Garage_Solar_Inverter_Is_Working",ON)
+                        postUpdateIfChanged("eOther_Error_Solar_Inverter_Message",NULL)
 
                 # triggers solar value update
                 sendCommand("pGF_Garage_Solar_Inverter_AC_Power",REFRESH)
             else:
                 self.updateConsumption(0)
-                postUpdateIfChanged("pGF_Garage_Solar_Inverter_Is_Working",ON)
+                postUpdateIfChanged("eOther_Error_Solar_Inverter_Message",NULL)
             postUpdateIfChanged("pGF_Utilityroom_Electricity_Current_Demand",self.currentDemand)
 
 

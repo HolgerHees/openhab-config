@@ -18,6 +18,8 @@ class TemperatureConditionCheckRule:
         self.lastFFShouldOpen = None
         
         self.timer = None
+
+        #self.process(None)
         
     def getOpenState(self,windowGroupItemName,excludedItems=[]):
         isOpen = False
@@ -60,15 +62,15 @@ class TemperatureConditionCheckRule:
     def process(self,recipients):
         now = ZonedDateTime.now()
         
-        weatherAvgTemperature = getItemState("pOutdoor_Weather_Current_Temperature_Avg").floatValue()
+        #weatherAvgTemperature = getItemState("pOutdoor_Weather_Current_Temperature_Avg").floatValue()
 
-        room1Temperature = getItemState("pGF_Livingroom_Air_Sensor_Temperature_Value").floatValue()
-        room2Temperature = getItemState("pFF_Bedroom_Air_Sensor_Temperature_Value").floatValue()
+        #room1Temperature = getItemState("pGF_Livingroom_Air_Sensor_Temperature_Value").floatValue()
+        #room2Temperature = getItemState("pFF_Bedroom_Air_Sensor_Temperature_Value").floatValue()
         
         # if temperature difference
-        if weatherAvgTemperature <= room1Temperature or weatherAvgTemperature <= room2Temperature:
-            self.log.info(u"PRECONDITION not fit ({} {} {})".format(weatherAvgTemperature,room1Temperature,room2Temperature))
-            return
+        #if weatherAvgTemperature <= room1Temperature or weatherAvgTemperature <= room2Temperature:
+        #    self.log.info(u"PRECONDITION not fit ({} {} {})".format(weatherAvgTemperature,room1Temperature,room2Temperature))
+        #    return
 
         gardenTemp0, gardenTemp0Min, gardenTemp0Max = getStableMinMaxItemState(now,"pOutdoor_WeatherStation_Temperature",15)
         gardenTemp15, gardenTemp15Min, gardenTemp15Max  = getStableMinMaxItemState(now.minusMinutes(15),"pOutdoor_WeatherStation_Temperature",30)
@@ -98,10 +100,10 @@ class TemperatureConditionCheckRule:
 
         gfShouldOpen = self.getOpenRequest(now,gardenTemp0,gardenTemp0Max,direction,"pGF_Livingroom_Air_Sensor_Temperature_Value",self.lastGFShouldOpen)
         gfIsOpen = self.getOpenState("gGF_Sensor_Window",["pGF_Livingroom_Openingcontact_Window_Terrace_State"])
-        
+
         ffShouldOpen = self.getOpenRequest(now,gardenTemp0,gardenTemp0Max,direction,"pFF_Bedroom_Air_Sensor_Temperature_Value",self.lastFFShouldOpen)
         ffIsOpen = self.getOpenState("gFF_Sensor_Window")
-        
+
         if (self.lastGFShouldOpen!=gfShouldOpen and gfShouldOpen!=gfIsOpen) or (self.lastFFShouldOpen!=ffShouldOpen and ffShouldOpen!=ffIsOpen):
             recipients = UserHelper.getPresentUser()
             
@@ -140,7 +142,7 @@ class TemperatureConditionCheckRule:
                 if getItemState("pOther_Presence_State").intValue() not in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
                     # initial debug
                     if self.lastDirection is None:
-                        recipients = ["bot_holger"]
+                        recipients = ["hhees"]
                     NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"Lüften", msg, recipients = recipients )
 
         self.lastDirection = direction

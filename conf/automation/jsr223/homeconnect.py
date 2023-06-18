@@ -14,14 +14,13 @@ class HomeConnectStateRule:
     def check(self):
         thing = getThing("homeconnect:api_bridge:default")
         status = thing.getStatus()
-        info = thing.getStatusInfo()
 
-        if status is not None and info is not None:
-            #self.log.info(u"Home Connect bridge status: '{}',  detail: '{}'".format(status.toString(),info.toString()))
-            if status.toString() != "ONLINE":
-                postUpdateIfChanged("pOther_State_Message_Homeconnect",info.toString())
-            else:
-                postUpdateIfChanged("pOther_State_Message_Homeconnect","Alles ok")
+        #self.log.info(u"Home Connect bridge status: '{}',  detail: '{}'".format(status.toString(),info.toString()))
+        if status.toString() != "ONLINE":
+            info = thing.getStatusInfo()
+            postUpdateIfChanged("eOther_Error_Homeconnect_Message", "Thing: {}".format(info.toString()))
+        else:
+            postUpdateIfChanged("eOther_Error_Homeconnect_Message",NULL)
 
     def execute(self, module, input):
         self.check()

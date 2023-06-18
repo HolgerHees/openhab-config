@@ -1,0 +1,9 @@
+Group  eOther_Error                          "Fehler"               <selfinfo> (lIndoor) ["Sensor"]
+
+String eOther_Error_Ventilation_Message      "Lüftungsanlage"       <selfinfo> (eOther_Error) ["Point"]
+String eOther_Error_Heating_Message          "Heizung"              <selfinfo> (eOther_Error) ["Point"]
+String eOther_Error_Solar_Inverter_Message   "Wechselrichter"       <selfinfo> (eOther_Error) ["Point"]
+String eOther_Error_WeatherStation_Message   "Wetterstation"        <selfinfo> (eOther_Error) ["Point"]
+String eOther_Error_CO2_Sensor_Message       "CO2 Sensor"           <selfinfo> (eOther_Error) ["Point"]
+String eOther_Error_Temperatur_Sensor_Message "Temperatur Sensor"   <selfinfo> (eOther_Error) ["Point"]
+String eOther_Error_Homeconnect_Message      "Homeconnect"          <selfinfo> (eOther_Error) ["Point"]

@@ -4,8 +4,8 @@ Group  eOther_Presence                          "Präsenz"         <selfinfo> (l
 Number pOther_Presence_State                    "Präsenz"         <selfinfo> (eOther_Presence,gPersistance_History) ["Status"]
 
 Group:Switch:OR(ON, OFF) gOther_Presence_State  "Präsenz"         <selflight> {autoupdate="false"}
-Switch pOther_Presence_Holger_State             "Holger anwesend" <selfinfo> (eOther_Presence,gOther_Presence_State,gPersistance_History) ["Status","Presence"] { channel="mqtt:topic:mosquitto:system_service:phone_hhees", expire="15m,state=OFF" }
-Switch pOther_Presence_Sandra_State             "Sandra anwesend" <selfinfo> (eOther_Presence,gOther_Presence_State,gPersistance_History) ["Status","Presence"] { channel="mqtt:topic:mosquitto:system_service:phone_sandra", expire="15m,state=OFF" }
+Switch pOther_Presence_Holger_State             "Holger anwesend" <selfinfo> (eOther_Presence,gOther_Presence_State,gPersistance_History) ["Status","Presence"] { channel="mqtt:topic:mosquitto:system_service:phone_hhees", expire="20m,state=OFF" }
+Switch pOther_Presence_Sandra_State             "Sandra anwesend" <selfinfo> (eOther_Presence,gOther_Presence_State,gPersistance_History) ["Status","Presence"] { channel="mqtt:topic:mosquitto:system_service:phone_sandra", expire="20m,state=OFF" }
 
 // **** GARDEN DOOR ****
 Group  eOutdoor_Streedside_Gardendoor           "Gartentür"       <selfinfo> (lOutdoor_Streedside) ["Gate"]
@@ -64,7 +64,6 @@ String pOther_State_Message_Garden              "Status [%s]" <selfinfo> (eOther
 String pOther_State_Message_Auto                "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // auto programs
  
 String pOther_State_Message_Robot               "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // roomba and automower state
-String pOther_State_Message_Homeconnect         "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // homeconnect state
 String pOther_State_Message_Devices             "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // summerized device state
 
 String pOther_State_Details_Sensors             "[%s]" <selferror> (eOther_State_Messages) ["Point"] // sensors state details

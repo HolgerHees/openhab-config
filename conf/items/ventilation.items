@@ -11,7 +11,6 @@ String pGF_Utilityroom_Ventilation_Indoor_Temperature_Message   "Innen [%s]"    
 String pGF_Utilityroom_Ventilation_Fan_Message                  "Ventilator [%s]"               <selfairing> (eGF_Utilityroom_Ventilation) ["Point"]
 String pGF_Utilityroom_Ventilation_Filter_Runtime_Message       "Filterlaufzeit [%s]"           <selfruntime> (eGF_Utilityroom_Ventilation) ["Point"]
 String pGF_Utilityroom_Ventilation_State_Message                "Status [%s]"                   <selfinfo> (eGF_Utilityroom_Ventilation) ["Point"]
-String pGF_Utilityroom_Ventilation_Thing_State                  "Thing Status [%s]"             <selferror> (eGF_Utilityroom_Ventilation) ["Point"]
 Number pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature "Aussenzuluft [%.1f °C]"        <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:temperatures#outdoorTemperatureIn"}
 Number pGF_Utilityroom_Ventilation_Outdoor_Outgoing_Temperature "Aussenabluft [%.1f °C]"        <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:temperatures#outdoorTemperatureOut"}
 Number pGF_Utilityroom_Ventilation_Indoor_Incoming_Temperature  "Raumzuluft [%.1f °C]"          <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:temperatures#indoorTemperatureIn"}

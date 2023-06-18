@@ -10,10 +10,7 @@ class StateMessageMainRule:
             CronTrigger("0 */5 * * * ?"),
             #CronTrigger("*/15 * * * * ?"),
             ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_State_Message"),
-            ItemStateChangeTrigger("pGF_Utilityroom_Heating_State_Message"),
-            ItemStateChangeTrigger("pGF_Livingroom_Humidifier_State_Message"),
-            ItemStateChangeTrigger("pGF_Garage_Solar_Inverter_Is_Working"),
-            ItemStateChangeTrigger("pOutdoor_WeatherStation_Is_Working")
+            ItemStateChangeTrigger("pGF_Livingroom_Humidifier_State_Message")
         ]
 
     def execute(self, module, input):
@@ -21,25 +18,13 @@ class StateMessageMainRule:
         active = []
         group = "Fehler"
 
-        ventilation_state = getItemState("pGF_Livingroom_Humidifier_State_Message").toString()
-        if ventilation_state != "Alles ok":
-            if ventilation_state == "Filter":
-                active.append(u"Befeuchter Filter")
-            else:
-                active.append(u"Befeuchter Fehler")
-
         ventilation_state = getItemState("pGF_Utilityroom_Ventilation_State_Message").toString()
         if ventilation_state != "Alles ok":
-            if ventilation_state == "Filter":
-                active.append(u"Lüftung Filter")
-            else:
-                active.append(u"Lüftung Fehler")
+            active.append(u"Lüftung {}".format( ventilation_state ))
 
-        if getItemState("pGF_Utilityroom_Heating_State_Message").toString() != "Alles ok":
-            active.append(u"Heizung")
-
-        if getItemState("pGF_Garage_Solar_Inverter_Is_Working") == OFF:
-            active.append(u"Solar")
+        ventilation_state = getItemState("pGF_Livingroom_Humidifier_State_Message").toString()
+        if ventilation_state != "Alles ok":
+            active.append(u"Befeuchter {}".format( ventilation_state ))
 
         if len(active) == 0:
             active.append(u"Alles ok")
