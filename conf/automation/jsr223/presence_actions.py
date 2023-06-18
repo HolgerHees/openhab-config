@@ -14,16 +14,18 @@ class ArrivingActionRule:
             ItemStateChangeTrigger("pOther_Presence_State"),
             ItemStateChangeTrigger("pGF_Corridor_Openingcontact_Door_State",state="OPEN")
         ]
-        
+
     def execute(self, module, input):
-        if getItemState("pOther_Automatic_State_Outdoorlights") != ON:
-            return
-          
         if input["event"].getItemName() == "pGF_Corridor_Openingcontact_Door_State":
             if itemLastChangeOlderThen("pGF_Corridor_Motiondetector_State", ZonedDateTime.now().minusMinutes(10)):
-                sendCommandIfChanged("pGF_Corridor_Light_Ceiling_Powered",ON)
+
+                sendCommand("pGF_Corridor_Alexa_TTS", "Willkommen zu Hause")
+
+                if getItemState("pOther_Automatic_State_Outdoorlights") == ON:
+                    sendCommandIfChanged("pGF_Corridor_Light_Ceiling_Powered",ON)
         elif input["event"].getItemState().intValue() == PresenceHelper.STATE_AWAY and input["oldState"].intValue() == PresenceHelper.STATE_MAYBE_PRESENT:
-            sendCommandIfChanged("pGF_Corridor_Light_Ceiling_Powered",OFF)
+            if getItemState("pOther_Automatic_State_Outdoorlights") == ON:
+                sendCommandIfChanged("pGF_Corridor_Light_Ceiling_Powered",OFF)
 
 @rule("presence_detection.py") 
 class SleepingActionRule:

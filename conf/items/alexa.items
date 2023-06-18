@@ -1,0 +1,9 @@
+String pIndoor_Alexa_Send_Message       "Nachricht an alle Geräte"          {channel="amazonechocontrol:account:account1:sendMessage"}
+
+String pFF_Fitnessroom_Alexa_TTS "Nachricht an Sportzimmer"        {channel="amazonechocontrol:echo:account1:pFF_Fitnessroom_Alexa:textToSpeech"}
+String pFF_Makeuproom_Alexa_TTS "Nachricht an Schminkzimmer"       {channel="amazonechocontrol:echo:account1:pFF_Makeuproom_Alexa:textToSpeech"}
+String pFF_Bedroom_Alexa_TTS "Nachricht an Schlafzimmer"           {channel="amazonechocontrol:echo:account1:pFF_Bedroom_Alexa:textToSpeech"}
+String pFF_Bathroom_Alexa_TTS "Nachricht an Badezimmer"            {channel="amazonechocontrol:echo:account1:pFF_Bathroom_Alexa:textToSpeech"}
+String pGF_Corridor_Alexa_TTS "Nachricht an Flur"                  {channel="amazonechocontrol:echo:account1:pGF_Corridor_Alexa:textToSpeech"}
+String pGF_Workroom_Alexa_TTS "Nachricht an Arbeitzimmer"          {channel="amazonechocontrol:echo:account1:pGF_Workroom_Alexa:textToSpeech"}
+String pGF_Livingroom_Alexa_TTS "Nachricht an Wohnzimmer"          {channel="amazonechocontrol:echo:account1:pGF_Livingroom_Alexa:textToSpeech"}
