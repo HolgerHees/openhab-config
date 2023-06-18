@@ -7,6 +7,7 @@ from shared.semantic.command_processor import CommandProcessor
 from alexa_device_config import AlexaDevices
  
 from custom.semantic_test import Cases
+from custom.alexa import AlexaHelper
 
 import traceback
 
@@ -20,7 +21,7 @@ class Tests:
             else:
                 voice_command, client_id = processor.parseData(case['phrase'])
 
-            fallback_location_name = AlexaDevices[client_id] if client_id in AlexaDevices else None
+            fallback_location_name = AlexaHelper.getLocationByDeviceId(client_id)
 
             try:
                 actions = processor.process(voice_command, fallback_location_name)
@@ -94,7 +95,7 @@ class VoiceCommandRule:
             postUpdate("VoiceMessage","")
 
             voice_command, client_id = self.processor.parseData(input['event'].getItemState().toString())
-            fallback_location_name = AlexaDevices[client_id] if client_id in AlexaDevices else None
+            fallback_location_name = AlexaHelper.getLocationByDeviceId(client_id)
 
             self.log.info(u"Process: '{}', Location: '{}'".format(voice_command, client_id if fallback_location_name is None else fallback_location_name))
 

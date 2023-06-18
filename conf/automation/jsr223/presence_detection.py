@@ -1,7 +1,7 @@
 from java.time import ZonedDateTime
 from java.time.temporal import ChronoUnit
 
-from shared.helper import log, rule, itemLastChangeOlderThen, getItem, getItemState, getItemLastUpdate, postUpdate, postUpdateIfChanged, startTimer, getGroupMember, getGroupMemberChangeTrigger, NotificationHelper, UserHelper
+from shared.helper import log, rule, itemLastChangeOlderThen, getItem, getItemState, getItemLastUpdate, postUpdate, postUpdateIfChanged, startTimer, isMember, getGroupMember, getGroupMemberChangeTrigger, NotificationHelper, UserHelper
 from shared.triggers import ItemStateChangeTrigger
 from custom.presence import PresenceHelper
 
@@ -79,7 +79,7 @@ class PresenceMovingCheckRule:
             
         presenceState = getItemState("pOther_Presence_State").intValue()
             
-        if "Openingcontact_Door" in input['event'].getItemName():
+        if isMember(input['event'].getItemName(), "gGF_Sensor_Doors"):
             if self.confirmTimer != None:
                 self.confirmTimer.cancel()
                 self.confirmTimer = None 

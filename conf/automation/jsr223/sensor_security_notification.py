@@ -1,7 +1,8 @@
 from java.time import ZonedDateTime
 
-from shared.helper import rule, getGroupMemberChangeTrigger, ItemStateChangeTrigger, getItem, getItemState, itemLastChangeNewerThen, NotificationHelper
+from shared.helper import rule, isMember, getGroupMemberChangeTrigger, ItemStateChangeTrigger, getItem, getItemState, itemLastChangeNewerThen, NotificationHelper
 from custom.presence import PresenceHelper
+from custom.alexa import AlexaHelper
 
 
 @rule("sensor_security_notification.py")
@@ -68,3 +69,23 @@ class SensorSecurityNotificationRule:
                 else:
                     NotificationHelper.sendNotification(NotificationHelper.PRIORITY_ALERT, u"Alarm", u"{}".format(msg))
                 self.last_notification = now
+
+@rule("sensor_security_notification.py")
+class SensorSecurityAlertingRule:
+    def __init__(self):
+        self.triggers = []
+        self.triggers += getGroupMemberChangeTrigger("gGF_Sensor_Window")
+        self.triggers += getGroupMemberChangeTrigger("gFF_Sensor_Window")
+        self.triggers += getGroupMemberChangeTrigger("gGF_Sensor_Doors")
+
+    def execute(self, module, input):
+        state = getItemState("pOther_Presence_State").intValue()
+        if state != PresenceHelper.STATE_SLEEPING:
+            return
+
+        if isMember(input['event'].getItemName(), "gGF_Sensor_Doors"):
+            AlexaHelper.sendAlarmTTSToLocation("lFF_Bedroom", "Achtung, die Haustuer wurde unerwartet geoeffnet")
+        elif isMember(input['event'].getItemName(), "gGF_Sensor_Window"):
+            AlexaHelper.sendAlarmTTSToLocation("lFF_Bedroom", "Achtung, es wurde ein Fenster im Ergeschoss unerwartet geoeffnet")
+        else:
+            AlexaHelper.sendTTSToLocation("lFF_Bedroom", "<speak><amazon:effect name=\"whispered\">Achtung, es wurde ein Fenster im Obergeschoss unerwartet geoeffnet</amazon:effect></speak>")

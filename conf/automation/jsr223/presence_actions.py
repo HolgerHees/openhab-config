@@ -5,6 +5,9 @@ from shared.helper import rule, getItemState, itemLastChangeOlderThen, postUpdat
 from shared.triggers import ItemStateChangeTrigger
 
 from custom.presence import PresenceHelper
+from custom.alexa import AlexaHelper
+
+import time
 
 
 @rule("lights_indoor.py")
@@ -19,7 +22,7 @@ class ArrivingActionRule:
         if input["event"].getItemName() == "pGF_Corridor_Openingcontact_Door_State":
             if itemLastChangeOlderThen("pGF_Corridor_Motiondetector_State", ZonedDateTime.now().minusMinutes(10)):
 
-                sendCommand("pGF_Corridor_Alexa_TTS", "Willkommen zu Hause")
+                AlexaHelper.sendTTSToLocation("lGF_Corridor", "Willkommen zu Hause")
 
                 if getItemState("pOther_Automatic_State_Outdoorlights") == ON:
                     sendCommandIfChanged("pGF_Corridor_Light_Ceiling_Powered",ON)
