@@ -1,0 +1,7 @@
+Bridge amazonechocontrol:account:account1 "Amazon Account" [discoverSmartHome=0, pollingIntervalSmartHomeAlexa=30, pollingIntervalSmartSkills=120]
+{
+{% for device in alexa_device_ids %}
+    Thing {{device.type}} {{device.item}} "Alexa Device @ {{device.item}}" [serialNumber="{{device.serial}}"]
+{% endfor %}
+}
+
