@@ -1,6 +1,8 @@
 from shared.helper import rule, getItemState, itemStateNewerThen, itemStateOlderThen, NotificationHelper
 from shared.triggers import CronTrigger
 
+#from custom.alexa import AlexaHelper
+
 from java.time import ZonedDateTime
 
 
@@ -36,3 +38,6 @@ class CalendarNotificationRule:
             msg = ", ".join(active)
             NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"Müllabholung",msg)
             #self.log.info(u"{}".format(msg))
+
+            #AlexaHelper.sendMessageToLocation("lIndoor", "Muellabholung, {}".format(msg))
+

@@ -954,6 +954,7 @@ sitemap haus label="Main Menu"
                     Frame label="Status" {
                         Text item=VoiceCommand
                         Text item=VoiceMessage
+                        Text item=Alexa_Last_TTS
                     }
                 }
             }

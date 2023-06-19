@@ -10,5 +10,4 @@ class SmokeDetectorNotificationsRule:
     def execute(self, module, input):
         NotificationHelper.sendNotification(NotificationHelper.PRIORITY_ALERT, "Alarm", u"Rauchmelder")
 
-        AlexaHelper.sendAlarmTTSToLocation("lFF_Bedroom", "Achtung, es brennt")
-        AlexaHelper.sendAlarmTTSToLocation("lGF_Livingroom", "Achtung, es brennt")
+        AlexaHelper.sendTTS("Achtung, es brennt", priority = NotificationHelper.PRIORITY_ALERT)

@@ -22,15 +22,14 @@ class PresenceMovingCheckRule:
         #seconds = ChronoUnit.SECONDS.between(getItemLastUpdate("gIndoor_Lights"),ZonedDateTime.now())
         #self.log.info(u"{}".format(seconds))
  
-    def setAway(self,isFallback):
+    def setAway(self):
         if getItemState("pOther_Presence_State").intValue() != PresenceHelper.STATE_MAYBE_PRESENT:
             return
 
         postUpdateIfChanged("pOther_Presence_State",PresenceHelper.STATE_AWAY)
-        NotificationHelper.sendNotification(NotificationHelper.PRIORITY_WARN, u"System", u"Unbekannter Gast {}".format( u"verschwunden" if isFallback else u"gegangen" ))
 
     def delayedAwayCheck(self):
-        self.fallbackTimer = startTimer(self.log, 7200, self.setAway, args = [ True ]) # 1 hour
+        self.fallbackTimer = startTimer(self.log, 7200, self.setAway, args = []) # 1 hour
       
     def confirmArriving(self):
         if getItemState("pOther_Presence_State").intValue() != PresenceHelper.STATE_MAYBE_PRESENT:
@@ -52,7 +51,7 @@ class PresenceMovingCheckRule:
         if self.isConfirmed:
             self.delayedAwayCheck()
         else:
-            self.setAway( False )
+            self.setAway()
             
         self.confirmTimer = None
 
@@ -89,8 +88,6 @@ class PresenceMovingCheckRule:
             if input['event'].getItemState() == OPEN:
                 if presenceState in [PresenceHelper.STATE_AWAY, PresenceHelper.STATE_SLEEPING]:
                     postUpdate("pOther_Presence_State",PresenceHelper.STATE_MAYBE_PRESENT)
-                    priority = NotificationHelper.PRIORITY_WARN if presenceState == PresenceHelper.STATE_AWAY else NotificationHelper.PRIORITY_ALERT
-                    NotificationHelper.sendNotification(priority, u"System", u"Unbekannter Gast gekommen")
             else:
                 if presenceState == PresenceHelper.STATE_MAYBE_PRESENT:
                     # check in 15 seconds again if there was any move events
@@ -107,36 +104,26 @@ class PresenceMovingCheckRule:
 @rule("presence_detection.py")
 class PresenceCheckRule:
     def __init__(self):
-        self.triggers = getGroupMemberChangeTrigger("gOther_Presence_State")
+        self.triggers = getGroupMemberChangeTrigger("gOther_Presence_State_Raw")
 
         self.skippedTimer = {}
-        
+
     def process(self,itemName,itemState):
         presenceState = getItemState("pOther_Presence_State").intValue()
-        
-        #NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_NOTICE, u"{}".format(itemName), u"{}".format(itemState))
-        
-        userName = UserHelper.getUserByStateItem(itemName)
         
         if itemState == ON:
             # only possible if we are away
             if presenceState in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
-                if presenceState == PresenceHelper.STATE_MAYBE_PRESENT:
-                    NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"System", u"Unbekannter Gast ist {}".format( UserHelper.getName(userName) ) )
                 postUpdate("pOther_Presence_State",PresenceHelper.STATE_PRESENT)
 
-            NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"System", u"Willkommen", recipients = [userName])
+            postUpdate( itemName[:-4] ,ON) # Item name without raw, is the real one
         else:
-            if getItemState("gOther_Presence_State") == OFF:
+            if getItemState("gOther_Presence_State_Raw") == OFF:
                 # only possible if we are present and not sleeping
                 if presenceState in [PresenceHelper.STATE_MAYBE_PRESENT,PresenceHelper.STATE_PRESENT]:
                     postUpdate("pOther_Presence_State",PresenceHelper.STATE_AWAY)
 
-                lightMsg = u" - LICHT an" if getItemState("gIndoor_Lights") != OFF else u""
-                windowMsg = u" - FENSTER offen" if getItemState("gOpeningcontacts") != CLOSED else u""
-                NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"System", u"Auf Wiedersehen{}{}".format(lightMsg,windowMsg), recipients = [userName])
-            else:
-                NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"System", u"Auf Wiedersehen", recipients = [userName])
+            postUpdate( itemName[:-4] ,OFF) # Item name without "_Raw", is the real one
 
     def execute(self, module, input):
         itemName = input['event'].getItemName()

@@ -15,7 +15,7 @@ class ErrorMessageRule:
         for item in items:
             #self.log.info(u"{}".format(item.getLabel()))
             #self.log.info(u"{}".format(item.getState() == NULL))
-            if item.getState() != NULL:
+            if item.getState() != NULL and len(item.getState().toString()) > 0: # len() can be 0 during startup
                 self.log.info(u"STATE: {} - {}".format(item.getLabel(), item.getState()))
             #else:
             #    self.log.info(u"STATE: {} - {}".format(item.getLabel(), "test"))

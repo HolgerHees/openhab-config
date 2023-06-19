@@ -3,9 +3,13 @@ Group  eOther_Presence                          "Präsenz"         <selfinfo> (l
 
 Number pOther_Presence_State                    "Präsenz"         <selfinfo> (eOther_Presence,gPersistance_History) ["Status"]
 
-Group:Switch:OR(ON, OFF) gOther_Presence_State  "Präsenz"         <selflight> {autoupdate="false"}
-Switch pOther_Presence_Holger_State             "Holger anwesend" <selfinfo> (eOther_Presence,gOther_Presence_State,gPersistance_History) ["Status","Presence"] { channel="mqtt:topic:mosquitto:system_service:phone_hhees", expire="20m,state=OFF" }
-Switch pOther_Presence_Sandra_State             "Sandra anwesend" <selfinfo> (eOther_Presence,gOther_Presence_State,gPersistance_History) ["Status","Presence"] { channel="mqtt:topic:mosquitto:system_service:phone_sandra", expire="20m,state=OFF" }
+Group:Switch:OR(ON, OFF) gOther_Presence_State_Raw "Präsenz"      <selflight>
+Switch pOther_Presence_Holger_State_Raw         "Holger anwesend" <selfinfo> (gOther_Presence_State_Raw) { channel="mqtt:topic:mosquitto:system_service:phone_hhees", expire="20m,state=OFF" }
+Switch pOther_Presence_Sandra_State_Raw         "Sandra anwesend" <selfinfo> (gOther_Presence_State_Raw) { channel="mqtt:topic:mosquitto:system_service:phone_sandra", expire="20m,state=OFF" }
+
+Group:Switch:OR(ON, OFF) gOther_Presence_State  "Präsenz"         <selflight>
+Switch pOther_Presence_Holger_State             "Holger anwesend" <selfinfo> (eOther_Presence,gOther_Presence_State,gPersistance_History) ["Status","Presence"]
+Switch pOther_Presence_Sandra_State             "Sandra anwesend" <selfinfo> (eOther_Presence,gOther_Presence_State,gPersistance_History) ["Status","Presence"]
 
 // **** GARDEN DOOR ****
 Group  eOutdoor_Streedside_Gardendoor           "Gartentür"       <selfinfo> (lOutdoor_Streedside) ["Gate"]
@@ -87,5 +91,3 @@ Switch pOther_Scene9                            "Scene 9" <selfautomode> (eOther
 Group  eOther_Helper                            "Helper" <selfinfo> (lOther) ["Equipment"]
 String Chart_From                               "Zeitraum" <selfcalendar> (eOther_Helper) ["Point"]
 String HabpanelViewer_Control_Cmd               "Habpanel Command" <selfautomode> (eOther_Helper) ["Point"]
-String VoiceCommand                             "Sprachbefehl [%s]" <recorder> (eOther_Helper) ["Point"]
-String VoiceMessage                             "Sprachnachricht [%s]" <recorder> (eOther_Helper) ["Point"]

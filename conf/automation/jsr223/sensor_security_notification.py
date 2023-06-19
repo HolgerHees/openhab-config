@@ -84,8 +84,8 @@ class SensorSecurityAlertingRule:
             return
 
         if isMember(input['event'].getItemName(), "gGF_Sensor_Doors"):
-            AlexaHelper.sendAlarmTTSToLocation("lFF_Bedroom", "Achtung, die Haustuer wurde unerwartet geoeffnet")
+            AlexaHelper.sendTTS("Achtung, die Haustuer wurde unerwartet geoeffnet", location = "lFF_Bedroom", priority = NotificationHelper.PRIORITY_ALERT)
         elif isMember(input['event'].getItemName(), "gGF_Sensor_Window"):
-            AlexaHelper.sendAlarmTTSToLocation("lFF_Bedroom", "Achtung, es wurde ein Fenster im Ergeschoss unerwartet geoeffnet")
+            AlexaHelper.sendTTS("Achtung, es wurde ein Fenster im Ergeschoss unerwartet geoeffnet", location = "lFF_Bedroom", priority = NotificationHelper.PRIORITY_ALERT)
         else:
-            AlexaHelper.sendTTSToLocation("lFF_Bedroom", "<speak><amazon:effect name=\"whispered\">Achtung, es wurde ein Fenster im Obergeschoss unerwartet geoeffnet</amazon:effect></speak>")
+            AlexaHelper.sendTTS("Achtung, es wurde ein Fenster im Obergeschoss unerwartet geoeffnet", location = "lFF_Bedroom", effect = AlexaHelper.EFFECT_WISPER)
