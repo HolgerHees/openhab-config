@@ -4,6 +4,7 @@ from shared.helper import rule, getItemState, getHistoricItemState, getStableIte
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
 
 from custom.presence import PresenceHelper
+from custom.alexa import AlexaHelper
 
 
 @rule("ventilation_notification.py")
@@ -59,7 +60,7 @@ class TemperatureConditionCheckRule:
         else:
             return False
           
-    def process(self,recipients):
+    def process(self,recipients, notify_state):
         now = ZonedDateTime.now()
         
         #weatherAvgTemperature = getItemState("pOutdoor_Weather_Current_Temperature_Avg").floatValue()
@@ -122,36 +123,45 @@ class TemperatureConditionCheckRule:
                 else:
                     actions["CLOSE"].append("OG")
               
-            msg = []
+            push_msg = []
+            alexa_msg = []
             if len(actions["OPEN"]) == 2:
-                msg.append(u"Alle Fenster auf")
+                push_msg.append(u"Alle Fenster auf")
+                alexa_msg.append(u"Alle Fenster auf")
             elif len(actions["CLOSE"]) == 2:
-                msg.append(u"Alle Fenster zu")
+                push_msg.append(u"Alle Fenster zu")
+                alexa_msg.append(u"Alle Fenster zu")
             else:
                 if len(actions["OPEN"]) == 1:
-                    msg.append(u"{} Fenster auf".format(actions["OPEN"][0]))
+                    push_msg.append(u"{} Fenster auf".format(actions["OPEN"][0]))
+                    alexa_msg.append(u"Fenster im {} auf".format("Obergeschoss" if actions["OPEN"][0] == "OG" else "Erdgeschoss"))
                 if len(actions["CLOSE"]) == 1:
-                    msg.append(u"{} Fenster zu".format(actions["CLOSE"][0]))
+                    push_msg.append(u"{} Fenster zu".format(actions["CLOSE"][0]))
+                    alexa_msg.append(u"Fenster im {} zu".format("Obergeschoss" if actions["CLOSE"][0] == "OG" else "Erdgeschoss"))
 
-            if len(msg) > 0:
-                msg = u" und ".join(msg)
+            # we have messages and we are not sleeping
+            if len(push_msg) > 0 and getItemState("pOther_Presence_State").intValue() not in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
+                # lastDirection is None after a reloaded rule
+                if self.lastDirection is not None:
+                    if notify_state & 1:
+                        push_msg = u", ".join(push_msg)
+                        NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"Lüften", push_msg, recipients = recipients )
 
-                self.log.info(u"MSG: {}".format(msg))
-                
-                # we are not sleeping
-                if getItemState("pOther_Presence_State").intValue() not in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
-                    # initial debug
-                    if self.lastDirection is None:
-                        recipients = ["hhees"]
-                    NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"Lüften", msg, recipients = recipients )
+                    if notify_state & 2 and getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_PRESENT:
+                        alexa_msg = u" und ".join(alexa_msg)
+                        AlexaHelper.sendTTS(alexa_msg, title = u"Lüftungshinweiss")
+                else:
+                    self.log.info(u"MSG: {}".format(push_msg))
 
         self.lastDirection = direction
         self.lastGFShouldOpen = gfShouldOpen
         self.lastFFShouldOpen = ffShouldOpen
         
     def execute(self, module, input):
+        notify_state = getItemState("pOther_Manual_State_Air_Thoroughly_Notify").intValue()
+
         # we don't want do be notified
-        if getItemState("pOther_Manual_State_Air_Thoroughly_Notify") != ON:
+        if notify_state == 0:
             return
           
         if 'event' in input:
@@ -161,7 +171,7 @@ class TemperatureConditionCheckRule:
                 
             if input['event'].getItemState().intValue() == PresenceHelper.STATE_PRESENT and input['event'].getOldItemState().intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
                 # delayed notification to give all devices the chance to be detected as present
-                self.timer = startTimer(self.log, 60, self.process, args = [ UserHelper.getPresentUser() ]) # 1 min
+                self.timer = startTimer(self.log, 60, self.process, args = [ UserHelper.getPresentUser(), notify_state ]) # 1 min
         else:
             # we are away
             if getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
@@ -170,5 +180,5 @@ class TemperatureConditionCheckRule:
             # recipients will be selected only if there are state changes
             recipients = None
             
-            self.process(recipients)
+            self.process(recipients, notify_state)
 

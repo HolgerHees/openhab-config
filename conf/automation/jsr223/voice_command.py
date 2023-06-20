@@ -8,6 +8,7 @@ from alexa_device_config import AlexaDevices
  
 from custom.semantic_test import Cases
 from custom.alexa import AlexaHelper
+from custom.shuffle import ShuffleHelper
 
 import traceback
 
@@ -103,7 +104,9 @@ class VoiceCommandRule:
 
             msg, is_valid = self.processor.applyActions(actions,voice_command,False)
 
+            msg = ShuffleHelper.getRandomSynonym(msg)
+
             postUpdate("VoiceMessage",msg)
-                                                         
+
 #postUpdate("VoiceCommand","Flur farbe grün")
 

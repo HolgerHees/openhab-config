@@ -31,7 +31,7 @@ String pGF_Livingroom_Alexa_TTS     "Nachricht an Wohnzimmer"                   
 String pGF_Livingroom_Alexa_CMD     "Befehl an Wohnzimmer"                      (eFF_Livingroom_Alexa)  ["Point"]      {channel="amazonechocontrol:echo:account1:pGF_Livingroom_Alexa:textCommand"}
 
 Group  eAlexa_Helper                "Helper"                        <selfinfo>  (lOther)                ["Equipment"]
-String Alexa_Last_TTS               "Letzte TTS Nachricht"          <recorder>  (eAlexa_Helper)         ["Point"]
+String Alexa_Last_TTS               "Letzte TTS Nachricht [%s]"     <recorder>  (eAlexa_Helper)         ["Point"] { synonyms="Letzte Nachricht,Letze Durchsage, Letzte Ansage" }
 String VoiceCommand                 "Sprachbefehl [%s]"             <recorder>  (eAlexa_Helper)         ["Point"]
 String VoiceMessage                 "Sprachnachricht [%s]"          <recorder>  (eAlexa_Helper)         ["Point"]
 

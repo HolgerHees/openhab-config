@@ -4,8 +4,8 @@ Group  eOther_Presence                          "Präsenz"         <selfinfo> (l
 Number pOther_Presence_State                    "Präsenz"         <selfinfo> (eOther_Presence,gPersistance_History) ["Status"]
 
 Group:Switch:OR(ON, OFF) gOther_Presence_State_Raw "Präsenz"      <selflight>
-Switch pOther_Presence_Holger_State_Raw         "Holger anwesend" <selfinfo> (gOther_Presence_State_Raw) { channel="mqtt:topic:mosquitto:system_service:phone_hhees", expire="20m,state=OFF" }
-Switch pOther_Presence_Sandra_State_Raw         "Sandra anwesend" <selfinfo> (gOther_Presence_State_Raw) { channel="mqtt:topic:mosquitto:system_service:phone_sandra", expire="20m,state=OFF" }
+Switch pOther_Presence_Holger_State_Raw         "Holger anwesend (RAW)" <selfinfo> (gOther_Presence_State_Raw) { channel="mqtt:topic:mosquitto:system_service:phone_hhees", expire="20m,state=OFF" }
+Switch pOther_Presence_Sandra_State_Raw         "Sandra anwesend (RAW)" <selfinfo> (gOther_Presence_State_Raw) { channel="mqtt:topic:mosquitto:system_service:phone_sandra", expire="20m,state=OFF" }
 
 Group:Switch:OR(ON, OFF) gOther_Presence_State  "Präsenz"         <selflight>
 Switch pOther_Presence_Holger_State             "Holger anwesend" <selfinfo> (eOther_Presence,gOther_Presence_State,gPersistance_History) ["Status","Presence"]
@@ -37,9 +37,12 @@ Switch pFF_Bedroom_Switches_Long_Pressed_Right_State "Schlafz. Bett Wand (lang)"
 
 //####### MANUAL STATE FLAGS #######
 Group  eOther_Manual_States                     "Aktive Features" <selfinfo> (lOther) ["Equipment"]
-Switch pOther_Manual_State_Notify               "Benachrichtigen" <selfshield> (eOther_Manual_States) ["Point"] { channel="knx:device:bridge:other:stateNotify" }
+
+Switch pOther_Manual_State_Security_Notify      "Sicherheitsbenachrichtigen" <selfshield> (eOther_Manual_States) ["Point"] { channel="knx:device:bridge:other:stateNotify" }
+Number pOther_Manual_State_Air_Thoroughly_Notify "Lüftungshinweise [MAP(state_notify.map):%s]"<selfshield> (eOther_Manual_States) ["Point"]
+Number pOther_Manual_State_Calendar_Event_Notify "Kalenderbenachrichtigung [MAP(state_notify.map):%s]" <selfshield> (eOther_Manual_States) ["Point"]
+
 Switch pOther_Manual_State_Holiday              "Urlaubsmodus"    <selfshield> (eOther_Manual_States) ["Point"] { channel="knx:device:bridge:other:stateHoliday" }
-Switch pOther_Manual_State_Air_Thoroughly_Notify"Lüftungshinweise"<selfshield> (eOther_Manual_States) ["Point"]
 Number pOther_Manual_State_Lightprogram         "Lichtprogram"    <selfautomode> (eOther_Manual_States) ["Point"]
 Number pOther_Manual_State_Auto_Attic_Light     "Mode [%d]"       <selfautomode> (eOther_Manual_States) ["Point"]
 Switch pOther_Manual_State_Auto_Christmas       "Weihnachtsmodus" <selfautomode> (eOther_Manual_States) ["Point"]

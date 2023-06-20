@@ -6,6 +6,7 @@ from shared.triggers import ItemStateChangeTrigger
 
 from custom.presence import PresenceHelper
 from custom.alexa import AlexaHelper
+from custom.shuffle import ShuffleHelper
 
 import time
 
@@ -79,10 +80,12 @@ class ArrivingActionRule:
                 for user_name in UserHelper.getPresentUser(timeout = 10):
                     user_fullnames.append(UserHelper.getName(user_name))
 
+                welcome_msg = ShuffleHelper.getRandomSynonym(u"Willkommen zu Hause")
+
                 if len(user_fullnames) > 0:
-                    AlexaHelper.sendTTS("Hallo {}, Willkommen zu Hause".format(" und Hallo ".join(user_fullnames)), location = "lGF_Corridor")
+                    AlexaHelper.sendTTS(u"Hallo {}, {}".format(" und Hallo ".join(user_fullnames), welcome_msg), location = "lGF_Corridor")
                 else:
-                    AlexaHelper.sendTTS("Willkommen zu Hause", location = "lGF_Corridor")
+                    AlexaHelper.sendTTS(welcome_msg, location = "lGF_Corridor")
 
                 if getItemState("pOther_Automatic_State_Outdoorlights") == ON:
                     sendCommandIfChanged("pGF_Corridor_Light_Ceiling_Powered",ON)

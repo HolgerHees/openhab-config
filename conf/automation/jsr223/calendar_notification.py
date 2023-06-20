@@ -1,9 +1,10 @@
+from java.time import ZonedDateTime
+
 from shared.helper import rule, getItemState, itemStateNewerThen, itemStateOlderThen, NotificationHelper
 from shared.triggers import CronTrigger
 
-#from custom.alexa import AlexaHelper
-
-from java.time import ZonedDateTime
+from custom.presence import PresenceHelper
+from custom.alexa import AlexaHelper
 
 
 @rule("calendar_notification.py")
@@ -18,6 +19,10 @@ class CalendarNotificationRule:
         active.append(state)
 
     def execute(self, module, input):
+        notify_state = getItemState("pOther_Manual_State_Calendar_Event_Notify").intValue()
+        # we don't want do be notified
+        if notify_state == 0:
+            return
       
         #day = getItemState("pGF_Corridor_Garbage_Appointments_Begin_0")
         #info = getItemState("pGF_Corridor_Garbage_Appointments_Info_0")
@@ -35,9 +40,13 @@ class CalendarNotificationRule:
             self.append(active,getItemState("pGF_Corridor_Garbage_Appointments_Info_2").toString().strip())
 
         if len(active) > 0:
-            msg = ", ".join(active)
-            NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"Müllabholung",msg)
-            #self.log.info(u"{}".format(msg))
+            push_msg = ", ".join(active)
+            alexa_msg = " und ".join(active)
 
-            #AlexaHelper.sendMessageToLocation("lIndoor", "Muellabholung, {}".format(msg))
+            if notify_state & 1:
+                NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"Müllabholung",push_msg)
+
+            if notify_state & 2 and getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_PRESENT:
+                AlexaHelper.sendTTS(alexa_msg, title = u"Müllabholung")
+
 

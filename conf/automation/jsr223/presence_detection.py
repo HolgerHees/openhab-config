@@ -127,22 +127,24 @@ class PresenceCheckRule:
 
     def execute(self, module, input):
         itemName = input['event'].getItemName()
-        itemState = input['event'].getItemState()
-        
+        newItemState = input['event'].getItemState()
+        oldItemState = input['oldState']
+
         # sometimes, phones are losing wifi connections because of their sleep mode
-        if itemState == OFF:
-            if itemLastChangeOlderThen("pGF_Corridor_Openingcontact_Door_State",ZonedDateTime.now().minusMinutes(30)):
-                self.skippedTimer[itemName] = startTimer(self.log, 7200, self.process, args = [ itemName,itemState ]) # 1 hour
-                NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_NOTICE, u"System", u"Delayed presence processing {} for {}".format(itemState,itemName))
-                return
+        if newItemState == OFF:
+            if oldItemState == ON:
+                if itemLastChangeOlderThen("pGF_Corridor_Openingcontact_Door_State",ZonedDateTime.now().minusMinutes(30)):
+                    self.skippedTimer[itemName] = startTimer(self.log, 7200, self.process, args = [ itemName,newItemState ]) # 1 hour
+                    NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_NOTICE, u"System", u"Delayed presence processing {} for {}".format(newItemState,itemName))
+                    return
         else:
-            if itemName in self.skippedTimer:
+            if oldItemState == OFF and itemName in self.skippedTimer:
                 self.skippedTimer[itemName].cancel()
                 del self.skippedTimer[itemName]
-                NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_NOTICE, u"System", u"Cancel presence processing {} for {}".format(itemState,itemName))
+                NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_NOTICE, u"System", u"Cancel presence processing {} for {}".format(newItemState,itemName))
                 return
               
-        self.process(itemName,itemState)
+        self.process(itemName,newItemState)
           
     
 @rule("presence_detection.py")

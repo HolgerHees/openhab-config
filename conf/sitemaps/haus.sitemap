@@ -340,16 +340,20 @@ sitemap haus label="Main Menu"
 	}
 	Frame label="Sonstiges"
 	{
+        Text label="Benachrichtigungen" icon="selfinfo"
+        {
+            Switch item=pOther_Manual_State_Security_Notify label="Sicherheit"
+            Selection item=pOther_Manual_State_Air_Thoroughly_Notify mappings=[0="Aus", 1="Push", 2="Alexa", 3="Komplett"]
+            Selection item=pOther_Manual_State_Calendar_Event_Notify mappings=[0="Aus", 1="Push", 2="Alexa", 3="Komplett"]
+        }
 		Text label="Status [%s]" icon="selfstate" item=pOther_State_Message_Auto valuecolor=[pOther_State_Message_Auto=="Inaktiv"="#d72a2a"]
         {
 			Frame label="Steuerung"
 			{
-				Switch item=pOther_Manual_State_Notify label="Benachrichtigung"
                 Switch item=pOther_Manual_State_Holiday label="Urlaub aktiv"
 				Group label="Programme [%s]" icon="selfcontrol" item=pOther_State_Message_Auto valuecolor=[pOther_State_Message_Auto=="Inaktiv"="#d72a2a"]
 				{
 					Frame label="Klima und Beschattung" {
-                        Switch item=pOther_Manual_State_Air_Thoroughly_Notify
                         Switch item=pOther_Manual_State_Auto_Rollershutter
 						Switch item=pOther_Manual_State_Auto_Sunprotection visibility=[pOther_Manual_State_Auto_Rollershutter==ON]
 						Group item=gShutters visibility=[pOther_Manual_State_Auto_Rollershutter==ON]
@@ -388,9 +392,11 @@ sitemap haus label="Main Menu"
 				Group label="Präsenz & Schlafen [MAP(state_presence.map):%d]" icon="selfsettings" item=pOther_Presence_State
                 {
                     Selection item=pOther_Presence_State label="Präsenz" mappings=[0="Abwesend", 1="(Anwesend)", 2="Anwesend",3="(Schlafen)", 4="Schlafen"]
-                    Text item=pOther_Presence_Holger_State label="Holger anwesend [%s]"
-                    Text item=pOther_Presence_Sandra_State label="Sandra anwesend [%s]"
                     Switch item=pOther_Scene7 label="Tablet Wakeup [%s]"
+                    Text item=pOther_Presence_Holger_State label="Holger anwesend [%s]"
+                    Text item=pOther_Presence_Holger_State_Raw label="Holger anwesend (RAW) [%s]"
+                    Text item=pOther_Presence_Sandra_State label="Sandra anwesend [%s]"
+                    Text item=pOther_Presence_Sandra_State_Raw label="Sandra anwesend (RAW) [%s]"
                 }
 				Text label="Beschattung, Beleuchtung & Solar" icon="selfsun"
                 {

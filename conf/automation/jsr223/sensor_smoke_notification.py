@@ -8,6 +8,6 @@ class SmokeDetectorNotificationsRule:
         self.triggers = [ItemStateChangeTrigger("pOther_Smoke_Detector_State",state="OPEN")]
 
     def execute(self, module, input):
-        NotificationHelper.sendNotification(NotificationHelper.PRIORITY_ALERT, "Alarm", u"Rauchmelder")
+        NotificationHelper.sendNotification(NotificationHelper.PRIORITY_ALERT, u"Alarm", u"Rauchmelder")
 
-        AlexaHelper.sendTTS("Achtung, es brennt", priority = NotificationHelper.PRIORITY_ALERT)
+        AlexaHelper.sendTTS(u"Es brennt", priority = NotificationHelper.PRIORITY_ALERT)

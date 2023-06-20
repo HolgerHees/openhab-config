@@ -35,7 +35,7 @@ class SensorSecurityNotificationRule:
 
 
     def execute(self, module, input):
-        if getItemState("pOther_Manual_State_Notify") != ON:
+        if getItemState("pOther_Manual_State_Security_Notify") != ON:
             return
 
         state = getItemState("pOther_Presence_State").intValue()
@@ -84,8 +84,8 @@ class SensorSecurityAlertingRule:
             return
 
         if isMember(input['event'].getItemName(), "gGF_Sensor_Doors"):
-            AlexaHelper.sendTTS("Achtung, die Haustuer wurde unerwartet geoeffnet", location = "lFF_Bedroom", priority = NotificationHelper.PRIORITY_ALERT)
+            AlexaHelper.sendTTS(u"Die Haustür wurde unerwartet geöffnet", location = "lFF_Bedroom", priority = NotificationHelper.PRIORITY_ALERT)
         elif isMember(input['event'].getItemName(), "gGF_Sensor_Window"):
-            AlexaHelper.sendTTS("Achtung, es wurde ein Fenster im Ergeschoss unerwartet geoeffnet", location = "lFF_Bedroom", priority = NotificationHelper.PRIORITY_ALERT)
+            AlexaHelper.sendTTS(u"Es wurde ein Fenster im Ergeschoss unerwartet geöffnet", location = "lFF_Bedroom", priority = NotificationHelper.PRIORITY_ALERT)
         else:
-            AlexaHelper.sendTTS("Achtung, es wurde ein Fenster im Obergeschoss unerwartet geoeffnet", location = "lFF_Bedroom", effect = AlexaHelper.EFFECT_WISPER)
+            AlexaHelper.sendTTS(u"Es wurde ein Fenster im Obergeschoss unerwartet geöffnet", location = "lFF_Bedroom", effect = AlexaHelper.EFFECT_WISPER)
