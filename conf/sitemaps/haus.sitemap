@@ -340,11 +340,11 @@ sitemap haus label="Main Menu"
 	}
 	Frame label="Sonstiges"
 	{
-        Text label="Benachrichtigungen" icon="selfinfo"
+        Text label="Benachrichtigungen" icon="selfnotification"
         {
-            Switch item=pOther_Manual_State_Security_Notify label="Sicherheit"
-            Selection item=pOther_Manual_State_Air_Thoroughly_Notify mappings=[0="Aus", 1="Push", 2="Alexa", 3="Komplett"]
-            Selection item=pOther_Manual_State_Calendar_Event_Notify mappings=[0="Aus", 1="Push", 2="Alexa", 3="Komplett"]
+            Switch item=pOther_Manual_State_Security_Notify
+            Selection item=pOther_Manual_State_Air_Thoroughly_Notify icon="selfnotification" mappings=[0="Aus", 1="Push", 2="Alexa (Bei Anwesenheit)", 3="Push & Alexa (Bei Anwesenheit)"]
+            Selection item=pOther_Manual_State_Calendar_Event_Notify icon="selfnotification" mappings=[0="Aus", 1="Push", 2="Alexa (Bei Anwesenheit)", 3="Push & Alexa (Bei Anwesenheit)"]
         }
 		Text label="Status [%s]" icon="selfstate" item=pOther_State_Message_Auto valuecolor=[pOther_State_Message_Auto=="Inaktiv"="#d72a2a"]
         {

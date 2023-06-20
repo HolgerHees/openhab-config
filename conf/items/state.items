@@ -38,9 +38,9 @@ Switch pFF_Bedroom_Switches_Long_Pressed_Right_State "Schlafz. Bett Wand (lang)"
 //####### MANUAL STATE FLAGS #######
 Group  eOther_Manual_States                     "Aktive Features" <selfinfo> (lOther) ["Equipment"]
 
-Switch pOther_Manual_State_Security_Notify      "Sicherheitsbenachrichtigen" <selfshield> (eOther_Manual_States) ["Point"] { channel="knx:device:bridge:other:stateNotify" }
-Number pOther_Manual_State_Air_Thoroughly_Notify "Lüftungshinweise [MAP(state_notify.map):%s]"<selfshield> (eOther_Manual_States) ["Point"]
-Number pOther_Manual_State_Calendar_Event_Notify "Kalenderbenachrichtigung [MAP(state_notify.map):%s]" <selfshield> (eOther_Manual_States) ["Point"]
+Switch pOther_Manual_State_Security_Notify      "Sicherheitsbenachrichtigen" <selfnotification> (eOther_Manual_States) ["Point"] { channel="knx:device:bridge:other:stateNotify" }
+Number pOther_Manual_State_Air_Thoroughly_Notify "Lüftungshinweise [MAP(state_notify.map):%s]"<selfnotification> (eOther_Manual_States) ["Point"]
+Number pOther_Manual_State_Calendar_Event_Notify "Kalenderbenachrichtigung [MAP(state_notify.map):%s]" <selfnotification> (eOther_Manual_States) ["Point"]
 
 Switch pOther_Manual_State_Holiday              "Urlaubsmodus"    <selfshield> (eOther_Manual_States) ["Point"] { channel="knx:device:bridge:other:stateHoliday" }
 Number pOther_Manual_State_Lightprogram         "Lichtprogram"    <selfautomode> (eOther_Manual_States) ["Point"]
