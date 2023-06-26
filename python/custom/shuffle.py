@@ -1,39 +1,46 @@
+# -*- coding: utf-8 -*-
+
 import random
 
 class ShuffleHelper:
     _synonyms = {
-        "Gute Nacht": [
-            "Gute Nacht",
-            "Schlaf gut",
-            "Schlaf schoen",
-            "Traum was schoenes",
-            "Traum was suesses",
-            "Schoene Traeume",
-            "Suesse Traeume",
-            "Schlummer gut",
-            "Angenehme Nachtruhe",
-            "Wuensche dir behagliche Traeume",
-            "Wuensche dir eine sanfte Nachtruhe",
-            "Wuensche dir einen ruhigen Schlaf"
+        u"Gute Nacht": [
+            u"Gute Nacht",
+            u"Schlaf gut",
+            u"Schlaf schön",
+            u"Träume was schönes",
+            u"Träume was süsses",
+            u"Schöne Träume",
+            u"Süsse Traeume",
+            u"Schlummer gut",
+            u"Angenehme Nachtruhe",
+            u"Wünsche dir behagliche Träume",
+            u"Wünsche dir einen erholsamen Schlaf",
+            u"Wünsche dir entspanntes Einschlafen",
+            u"Wünsche dir ruhige Träume",
+            u"Wünsche dir süsse Traeume",
+            u"Wünsche dir behagliche Traeume",
+            u"Wünsche dir eine sanfte Nachtruhe",
+            u"Wünsche dir einen ruhigen Schlaf"
         ],
-        "Willkommen zu Hause": [
+        u"Willkommen zu Hause": [
             [
-                "Willkommen zu Hause",
-                "Willkommen zurueck",
-                "Herzlich willkommen daheim",
-                "Schoen, dass du wieder zu Hause bist",
-                "Schoen das du wieder da bist",
-                "Schoen das du zurueck bist",
-                "Schoen dich zu sehen"
+                u"Willkommen zu Hause",
+                u"Willkommen zurück",
+                u"Herzlich willkommen daheim",
+                u"Schön, dass du wieder zu Hause bist",
+                u"Schön das du wieder da bist",
+                u"Schön das du zurück bist",
+                u"Schön dich zu sehen"
             ],
             [
-                "",
-                "",
-                "",
-                "",
-                "Ich hab mich schon gelangweilt",
-                "War ganzschoen langweilig ohne dich",
-                "Ich hoffe du hattest einen angenehmen Tag"
+                u"",
+                u"",
+                u"",
+                u"",
+                u"Ich hab mich schon gelangweilt",
+                u"War ganzschön langweilig ohne dich",
+                u"Ich hoffe du hattest einen angenehmen Tag"
             ]
         ]
     }
@@ -50,3 +57,4 @@ class ShuffleHelper:
             else:
                 return random.choice(ShuffleHelper._synonyms[input])
         return input
+

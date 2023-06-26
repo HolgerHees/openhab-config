@@ -112,18 +112,18 @@ class PresenceCheckRule:
         presenceState = getItemState("pOther_Presence_State").intValue()
         
         if itemState == ON:
+            postUpdate( itemName[:-4] ,ON) # Item name without raw, is the real one
+
             # only possible if we are away
             if presenceState in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
                 postUpdate("pOther_Presence_State",PresenceHelper.STATE_PRESENT)
-
-            postUpdate( itemName[:-4] ,ON) # Item name without raw, is the real one
         else:
+            postUpdate( itemName[:-4] ,OFF) # Item name without "_Raw", is the real one
+
             if getItemState("gOther_Presence_State_Raw") == OFF:
                 # only possible if we are present and not sleeping
                 if presenceState in [PresenceHelper.STATE_MAYBE_PRESENT,PresenceHelper.STATE_PRESENT]:
                     postUpdate("pOther_Presence_State",PresenceHelper.STATE_AWAY)
-
-            postUpdate( itemName[:-4] ,OFF) # Item name without "_Raw", is the real one
 
     def execute(self, module, input):
         itemName = input['event'].getItemName()

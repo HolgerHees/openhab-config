@@ -20,7 +20,8 @@ class TemperatureConditionCheckRule:
         
         self.timer = None
 
-        #self.process(None)
+        #self.process(None, 3)
+        #AlexaHelper.sendTTSTest(self.log,"test", header = u"Lüftungshinweiss")
         
     def getOpenState(self,windowGroupItemName,excludedItems=[]):
         isOpen = False
@@ -134,10 +135,10 @@ class TemperatureConditionCheckRule:
             else:
                 if len(actions["OPEN"]) == 1:
                     push_msg.append(u"{} Fenster auf".format(actions["OPEN"][0]))
-                    alexa_msg.append(u"Fenster im {} auf".format("Obergeschoss" if actions["OPEN"][0] == "OG" else "Erdgeschoss"))
+                    alexa_msg.append(u"Fenster im {} auf".format(u"Obergeschoss" if actions["OPEN"][0] == "OG" else u"Erdgeschoss"))
                 if len(actions["CLOSE"]) == 1:
                     push_msg.append(u"{} Fenster zu".format(actions["CLOSE"][0]))
-                    alexa_msg.append(u"Fenster im {} zu".format("Obergeschoss" if actions["CLOSE"][0] == "OG" else "Erdgeschoss"))
+                    alexa_msg.append(u"Fenster im {} zu".format(u"Obergeschoss" if actions["CLOSE"][0] == "OG" else u"Erdgeschoss"))
 
             # we have messages and we are not sleeping
             if len(push_msg) > 0 and getItemState("pOther_Presence_State").intValue() not in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
@@ -149,7 +150,7 @@ class TemperatureConditionCheckRule:
 
                     if notify_state & 2 and getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_PRESENT:
                         alexa_msg = u" und ".join(alexa_msg)
-                        AlexaHelper.sendTTS(alexa_msg, title = u"Lüftungshinweiss")
+                        AlexaHelper.sendTTS(alexa_msg, header = u"Lüftungshinweiss")
                 else:
                     self.log.info(u"MSG: {}".format(push_msg))
 

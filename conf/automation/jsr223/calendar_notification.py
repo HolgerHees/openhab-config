@@ -1,6 +1,6 @@
 from java.time import ZonedDateTime
 
-from shared.helper import rule, getItemState, itemStateNewerThen, itemStateOlderThen, NotificationHelper
+from shared.helper import rule, getItemState, sendCommand, itemStateNewerThen, itemStateOlderThen, NotificationHelper
 from shared.triggers import CronTrigger
 
 from custom.presence import PresenceHelper
@@ -11,6 +11,10 @@ from custom.alexa import AlexaHelper
 class CalendarNotificationRule:
     def __init__(self):
         self.triggers = [CronTrigger("0 0 18 * * ?")]
+
+        #sendCommand("pGF_Workroom_Alexa_CMD", u"Mache eine Ankündigung. Müllabholung, Papiertonnen")
+
+        #AlexaHelper.sendTTS(u"Papiertonnen", header = u"Müllabholung")
         
     def append(self,active,state):
         if state == u"Laubsäcke":
@@ -47,6 +51,6 @@ class CalendarNotificationRule:
                 NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"Müllabholung",push_msg)
 
             if notify_state & 2 and getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_PRESENT:
-                AlexaHelper.sendTTS(alexa_msg, title = u"Müllabholung")
+                AlexaHelper.sendTTS(alexa_msg, header = u"Müllabholung")
 
 

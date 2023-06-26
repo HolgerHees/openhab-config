@@ -1,14 +1,14 @@
 import urllib2
 from java.time import ZonedDateTime
+import time
 
-from shared.helper import rule, getItemState, itemLastChangeOlderThen, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged, getGroupMember, getGroupMemberChangeTrigger, NotificationHelper, UserHelper
+from shared.helper import rule, getItemState, getItemLastUpdate, itemLastChangeOlderThen, postUpdate, postUpdateIfChanged, startTimer, sendCommand, sendCommandIfChanged, getGroupMember, getGroupMemberChangeTrigger, NotificationHelper, UserHelper
 from shared.triggers import ItemStateChangeTrigger
 
 from custom.presence import PresenceHelper
 from custom.alexa import AlexaHelper
 from custom.shuffle import ShuffleHelper
 
-import time
 
 @rule("presence_actions.py")
 class UnknownPersonRuleRule:
@@ -33,7 +33,7 @@ class UnknownPersonRuleRule:
         elif newPresentState == PresenceHelper.STATE_PRESENT:
             if oldPresentState == PresenceHelper.STATE_MAYBE_PRESENT:
                 user_fullnames = []
-                for user_name in UserHelper.getPresentUser(timeout = 10):
+                for user_name in UserHelper.getPresentUser(timeout = 60):
                     user_fullnames.append(UserHelper.getName(user_name))
 
                 if len(user_fullnames) == 1:
@@ -41,7 +41,7 @@ class UnknownPersonRuleRule:
                 elif len(user_fullnames) > 1:
                     NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"System", u"Unbekannte Gaest sind {}".format( " und ".join(user_fullnames) ) )
                 else:
-                    self.log.error("Unbekannte Gäste konnten nicht bestimmt werden")
+                    self.log.error(u"Unbekannte Gäste konnten nicht bestimmt werden")
 
 @rule("presence_actions.py")
 class KnownPersonRuleRule:
@@ -72,23 +72,61 @@ class ArrivingActionRule:
             ItemStateChangeTrigger("pGF_Corridor_Openingcontact_Door_State",state="OPEN")
         ]
 
+        self.arrivedUser = {}
+        self.arrivingTimer = None
+
+    def checkArrivedUser(self, user_name, last_change):
+        if user_name in self.arrivedUser and not last_change.isAfter(self.arrivedUser[user_name]):
+            return False
+
+        self.arrivedUser[user_name] = last_change
+        return True
+
+    def getArrivedUser(self, confirm):
+        arrived_user = []
+        if getItemState("gOther_Presence_State") == ON:
+            for user_name, data in UserHelper.getPresentUserData(timeout = 60).items():
+                if confirm and not self.checkArrivedUser(user_name, data["lastUpdate"]):
+                    continue
+                arrived_user.append(UserHelper.getName(user_name))
+        return arrived_user
+
+    def checkArriving(self, doorOpenTime):
+        if itemLastChangeOlderThen("pGF_Corridor_Motiondetector_State", doorOpenTime):
+            # check for maximum of 20 seconds
+            if ZonedDateTime.now().minusSeconds(20).isBefore(doorOpenTime):
+                self.arrivingTimer = startTimer(self.log, 1, self.checkArriving, args = [doorOpenTime] )
+            return
+
+        self.confirmTimer = None
+
+        arrived_user = self.getArrivedUser(True)
+        if len(arrived_user) > 0:
+            welcome_msg = ShuffleHelper.getRandomSynonym(u"Willkommen zu Hause")
+            AlexaHelper.sendTTS(u"Hallo {}, {}".format(" und Hallo ".join(arrived_user), welcome_msg), location = "lGF_Corridor")
+        else:
+            state = getItemState("pOther_Presence_State").intValue()
+            if state in [PresenceHelper.STATE_AWAY, PresenceHelper.STATE_MAYBE_PRESENT]:
+                if state == PresenceHelper.STATE_MAYBE_PRESENT:
+                    lastUpdate = getItemLastUpdate("pOther_Presence_State")
+                else:
+                    # if away, a presence state change will happen during next seconds by rule "PresenceMovingCheckRule" in presence_detection.py
+                    lastUpdate = ZonedDateTime.now().plusSeconds(5)
+                if self.checkArrivedUser("guest", lastUpdate):
+                    AlexaHelper.sendTTS(u"Hallo, unbekannter Gast. Die Hausbewohner wurden über Ihre Ankunft benachrichtigt.", location = "lGF_Corridor")
+
     def execute(self, module, input):
         if input["event"].getItemName() == "pGF_Corridor_Openingcontact_Door_State":
-            if itemLastChangeOlderThen("pGF_Corridor_Motiondetector_State", ZonedDateTime.now().minusMinutes(10)):
-
-                user_fullnames = []
-                for user_name in UserHelper.getPresentUser(timeout = 10):
-                    user_fullnames.append(UserHelper.getName(user_name))
-
-                welcome_msg = ShuffleHelper.getRandomSynonym(u"Willkommen zu Hause")
-
-                if len(user_fullnames) > 0:
-                    AlexaHelper.sendTTS(u"Hallo {}, {}".format(" und Hallo ".join(user_fullnames), welcome_msg), location = "lGF_Corridor")
-                else:
-                    AlexaHelper.sendTTS(welcome_msg, location = "lGF_Corridor")
+            arrived_user = self.getArrivedUser(False)
+            if len(arrived_user) > 0 or itemLastChangeOlderThen("pGF_Corridor_Motiondetector_State", ZonedDateTime.now().minusMinutes(10)):
 
                 if getItemState("pOther_Automatic_State_Outdoorlights") == ON:
                     sendCommandIfChanged("pGF_Corridor_Light_Ceiling_Powered",ON)
+
+                if self.arrivingTimer is not None:
+                    self.arrivingTimer.cancel()
+                self.arrivingTimer = startTimer(self.log, 1, self.checkArriving, args = [ZonedDateTime.now()] )
+
         elif input["event"].getItemState().intValue() == PresenceHelper.STATE_AWAY and input["oldState"].intValue() == PresenceHelper.STATE_MAYBE_PRESENT:
             if getItemState("pOther_Automatic_State_Outdoorlights") == ON:
                 sendCommandIfChanged("pGF_Corridor_Light_Ceiling_Powered",OFF)

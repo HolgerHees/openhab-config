@@ -30,53 +30,45 @@ class SensorSecurityNotificationRule:
                     return location
         return None
 
-    def confirmArriving(self):
-        state = getItemState("pOther_Presence_State").intValue()
-
-
     def execute(self, module, input):
         if getItemState("pOther_Manual_State_Security_Notify") != ON:
             return
 
         state = getItemState("pOther_Presence_State").intValue()
-        
-        if state in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_SLEEPING]:
-            itemName = input['event'].getItemName()
-            item = getItem(itemName)
-            
-            location = self.getLocation(item)
+        if state != PresenceHelper.STATE_AWAY:
+            return
 
-            if "pGF_Garage_Openingcontact_Door_Garden_State" == itemName:
-                msg = u"Garagentür zum Garten {}".format( u"offen" if input['event'].getItemState() == OPEN else u"geschlossen" )
-            elif "Openingcontact_Window" in itemName:
-                msg = u"Fenster im {} {}".format( location.getLabel(), u"offen" if input['event'].getItemState() == OPEN else u"geschlossen" )
-            elif "Motiondetector" in itemName:
-                if input['event'].getItemState() == CLOSED:
-                    return
+        itemName = input['event'].getItemName()
+        item = getItem(itemName)
 
-                # during sleep, ignore moving detection
-                if state == PresenceHelper.STATE_SLEEPING:
-                    return
+        location = self.getLocation(item)
 
-                msg = u"Bewegung im {} erkannt".format(location.getLabel())
-                
-            #self.log.info(u"{} {} {} {}".format(group,itemName,item.getLabel(),location.getLabel()))
+        if "pGF_Garage_Openingcontact_Door_Garden_State" == itemName:
+            msg = u"Garagentür zum Garten {}".format( u"offen" if input['event'].getItemState() == OPEN else u"geschlossen" )
+        elif "Openingcontact_Window" in itemName:
+            msg = u"Fenster im {} {}".format( location.getLabel(), u"offen" if input['event'].getItemState() == OPEN else u"geschlossen" )
+        elif "Motiondetector" in itemName:
+            if input['event'].getItemState() == CLOSED:
+                return
+            msg = u"Bewegung im {} erkannt".format(location.getLabel())
 
-            now = ZonedDateTime.now()
-            if ChronoUnit.MINUTES.between(self.last_notification, now) > 5:
-                if "Motiondetector" in itemName:
-                    NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_ALERT, u"Alarm", u"{}".format(msg))
-                else:
-                    NotificationHelper.sendNotification(NotificationHelper.PRIORITY_ALERT, u"Alarm", u"{}".format(msg))
-                self.last_notification = now
+        #self.log.info(u"{} {} {} {}".format(group,itemName,item.getLabel(),location.getLabel()))
+
+        now = ZonedDateTime.now()
+        if ChronoUnit.MINUTES.between(self.last_notification, now) > 5:
+            if "Motiondetector" in itemName:
+                NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_ALERT, u"Alarm", u"{}".format(msg))
+            else:
+                NotificationHelper.sendNotification(NotificationHelper.PRIORITY_ALERT, u"Alarm", u"{}".format(msg))
+            self.last_notification = now
 
 @rule("sensor_security_notification.py")
 class SensorSecurityAlertingRule:
     def __init__(self):
         self.triggers = []
-        self.triggers += getGroupMemberChangeTrigger("gGF_Sensor_Window")
-        self.triggers += getGroupMemberChangeTrigger("gFF_Sensor_Window")
-        self.triggers += getGroupMemberChangeTrigger("gGF_Sensor_Doors")
+        self.triggers += getGroupMemberChangeTrigger("gGF_Sensor_Window", "OPEN")
+        self.triggers += getGroupMemberChangeTrigger("gFF_Sensor_Window", "OPEN")
+        self.triggers += getGroupMemberChangeTrigger("gGF_Sensor_Doors", "OPEN")
 
     def execute(self, module, input):
         state = getItemState("pOther_Presence_State").intValue()
@@ -84,8 +76,13 @@ class SensorSecurityAlertingRule:
             return
 
         if isMember(input['event'].getItemName(), "gGF_Sensor_Doors"):
-            AlexaHelper.sendTTS(u"Die Haustür wurde unerwartet geöffnet", location = "lFF_Bedroom", priority = NotificationHelper.PRIORITY_ALERT)
+            msg = u"Die Haustür wurde unerwartet geöffnet"
+            AlexaHelper.sendTTS(msg, location = "lFF_Bedroom", priority = NotificationHelper.PRIORITY_ALERT)
         elif isMember(input['event'].getItemName(), "gGF_Sensor_Window"):
-            AlexaHelper.sendTTS(u"Es wurde ein Fenster im Ergeschoss unerwartet geöffnet", location = "lFF_Bedroom", priority = NotificationHelper.PRIORITY_ALERT)
+            msg = u"Es wurde ein Fenster im Ergeschoss unerwartet geöffnet"
+            AlexaHelper.sendTTS(msg, location = "lFF_Bedroom", priority = NotificationHelper.PRIORITY_ALERT)
         else:
-            AlexaHelper.sendTTS(u"Es wurde ein Fenster im Obergeschoss unerwartet geöffnet", location = "lFF_Bedroom", effect = AlexaHelper.EFFECT_WISPER)
+            msg = u"Es wurde ein Fenster im Obergeschoss unerwartet geöffnet"
+            AlexaHelper.sendTTS(msg, location = "lFF_Bedroom", effects = AlexaHelper.EFFECT_WISPER)
+
+        NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"Alarm", msg)
