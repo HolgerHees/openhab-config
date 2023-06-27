@@ -43,6 +43,7 @@ class TabletScreenRule:
             self.log.error("Tablet switch not successful")
             self.log.info(status_result)
         except Exception as e:
+            self.log.error("{}: {}".format(e.__class__, str(e)))
             self.log.error("Can't reach tablet")
 
         return False

@@ -1,7 +1,7 @@
 from java.time import ZonedDateTime
 from java.time.temporal import ChronoUnit
 
-from shared.helper import log, rule, itemLastChangeOlderThen, getItem, getItemState, getItemLastUpdate, postUpdate, postUpdateIfChanged, startTimer, isMember, getGroupMember, getGroupMemberChangeTrigger, NotificationHelper, UserHelper
+from shared.helper import log, rule, itemLastChangeOlderThen, getItem, getItemState, getFilteredChildItems, getItemLastUpdate, postUpdate, postUpdateIfChanged, startTimer, isMember, getGroupMember, getGroupMemberChangeTrigger, NotificationHelper, UserHelper
 from shared.triggers import ItemStateChangeTrigger
 from custom.presence import PresenceHelper
 
@@ -36,7 +36,7 @@ class PresenceMovingCheckRule:
             return
           
         newestUpdate = None
-        for item in getItem("gSensor_Indoor").getAllMembers():
+        for item in getGroupMember("gSensor_Indoor"):
             if getItemState(item) == OPEN:
                 newestUpdate = ZonedDateTime.now()
                 break
@@ -120,7 +120,9 @@ class PresenceCheckRule:
         else:
             postUpdate( itemName[:-4] ,OFF) # Item name without "_Raw", is the real one
 
-            if getItemState("gOther_Presence_State_Raw") == OFF:
+            # we must check child items instead of group item, because group item is updated too late
+            #if getItemState("gOther_Presence_State_Raw") == OFF:
+            if len(getFilteredChildItems("gOther_Presence_State_Raw", ON)) == 0:
                 # only possible if we are present and not sleeping
                 if presenceState in [PresenceHelper.STATE_MAYBE_PRESENT,PresenceHelper.STATE_PRESENT]:
                     postUpdate("pOther_Presence_State",PresenceHelper.STATE_AWAY)
@@ -134,9 +136,10 @@ class PresenceCheckRule:
         if newItemState == OFF:
             if oldItemState == ON:
                 if itemLastChangeOlderThen("pGF_Corridor_Openingcontact_Door_State",ZonedDateTime.now().minusMinutes(30)):
-                    self.skippedTimer[itemName] = startTimer(self.log, 7200, self.process, args = [ itemName,newItemState ]) # 1 hour
-                    NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_NOTICE, u"System", u"Delayed presence processing {} for {}".format(newItemState,itemName))
-                    return
+                    pass
+                    #self.skippedTimer[itemName] = startTimer(self.log, 7200, self.process, args = [ itemName,newItemState ]) # 1 hour
+                    #NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_NOTICE, u"System", u"Delayed presence processing {} for {}".format(newItemState,itemName))
+                    #return
         else:
             if oldItemState == OFF and itemName in self.skippedTimer:
                 self.skippedTimer[itemName].cancel()
@@ -159,7 +162,13 @@ class WakeupRule:
             ItemStateChangeTrigger("gGF_Shutters",state="0")
         ]
         self.checkTimer = None
-        
+
+        #startTimer(self.log, 5, self.test)
+
+    #def test(self):
+    #    postUpdate("pOther_Presence_Holger_State_Raw", ON)
+    #    postUpdate("pOther_Presence_Sandra_State_Raw", ON)
+
     def wakeup(self):
         postUpdate("pOther_Presence_State", PresenceHelper.STATE_PRESENT)
         NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"System", u"Guten Morgen")

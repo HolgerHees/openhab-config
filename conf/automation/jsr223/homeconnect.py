@@ -20,7 +20,7 @@ class HomeConnectStateRule:
             info = thing.getStatusInfo()
             postUpdateIfChanged("eOther_Error_Homeconnect_Message", "Thing: {}".format(info.toString()))
         else:
-            postUpdateIfChanged("eOther_Error_Homeconnect_Message",NULL)
+            postUpdateIfChanged("eOther_Error_Homeconnect_Message","")
 
     def execute(self, module, input):
         self.check()

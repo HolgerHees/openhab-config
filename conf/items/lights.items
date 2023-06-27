@@ -126,6 +126,10 @@ Switch pFF_Makeuproom_Light_Ceiling_Powered         "Deckenlicht"        <selfli
 Group  eFF_Attic_Light_Ceiling                  "Deckenlampe"        <selflight> (lFF_Attic)                                               ["Lightbulb"] { synonyms="Decke" }
 Switch pFF_Attic_Light_Ceiling_Powered          "Deckenlicht"        <selflight> (eFF_Attic_Light_Ceiling,gIndoor_Lights,gFF_Lights)    ["Switch","Light"] { channel="knx:device:bridge:lights_sf:attic" }
 
+// **** GF GARAGE ****
+Group  eGardenHouse_Light_Ceiling            "Deckenlampe"        <selflight> (lGardenHouse)                                        ["Lightbulb"] { synonyms="Decke" }
+Switch pGardenHouse_Light_Ceiling_Powered    "Deckenlicht"        <selflight> (eGF_GardenHouse_Light_Ceiling,gIndoor_Lights)        ["Switch","Light"] { channel="knx:device:bridge:lights_gardenhouse:ceiling" }
+
 Group:Number:SUM gOutdoor_Motiondetector_Counter "Automatik [MAP(motiondetector_counter_de.map):%s]" <selflightInfo> {autoupdate="false"}
 
 // **** OUTDOOR GARAGE STREEDSIDE ****

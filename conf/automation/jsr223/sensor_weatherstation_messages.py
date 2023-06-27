@@ -89,7 +89,7 @@ def addToStack(self,stackName,itemValue):
         if len(stack) > 5:
             stack = stack[-5:]
         
-    #self.log.info(u"Save {}: {}".format(stackName,json.dumps(stack)))
+    #self.log.info(u"Save {}: {}".format(stackName,json.dumps(stack))).
     postUpdate(stackName,json.dumps(stack))
     return stack
 
@@ -185,7 +185,7 @@ class WeatherstationLastUpdateRule:
 
         is_working = oldestUpdateInMinutes <= 60
         postUpdateIfChanged("pOutdoor_WeatherStation_Is_Working", ON if is_working else OFF)
-        postUpdateIfChanged("eOther_Error_WeatherStation_Message", NULL if is_working else u"Keine Updates seit mehr als 60 Minuten")
+        postUpdateIfChanged("eOther_Error_WeatherStation_Message", "" if is_working else u"Keine Updates seit mehr als 60 Minuten")
 
         temperatureItemName = 'pOutdoor_WeatherStation_Temperature' if states['pOutdoor_WeatherStation_Temperature_Raw'][0] < 30 else 'pGF_Utilityroom_Heating_Temperature_Outdoor'
         postUpdateIfChanged("pOutdoor_WeatherStation_Temperature_Item_Name", temperatureItemName )

@@ -66,7 +66,8 @@ sitemap haus label="Main Menu"
 				Switch item=pFF_Attic_Light_Ceiling_Powered label="Dachboden"
             }
             Frame label="Garten" {
-				Switch item=pGF_Garage_Light_Ceiling_Powered label="Schuppen"
+				Switch item=pGF_Garage_Light_Ceiling_Powered label="Garage"
+				Switch item=pGardenHouse_Light_Ceiling_Powered label="Gartenlaube"
                 Slider item=gOutdoor_Terrace_Light_Hue_Color label="Terasse Indirekt"
                 Text label="Terasse Indirekt anpassen" icon="selfcontrol" visibility=[gOutdoor_Terrace_Light_Hue_Color>0] {
                     Frame label="Gruppe" {
@@ -340,13 +341,13 @@ sitemap haus label="Main Menu"
 	}
 	Frame label="Sonstiges"
 	{
-        Text label="Benachrichtigungen" icon="selfnotification"
+        Text label="Benachrichtigungen [%s]" icon="selfnotification" item=pOther_State_Message_Notifications
         {
             Switch item=pOther_Manual_State_Security_Notify
             Selection item=pOther_Manual_State_Air_Thoroughly_Notify icon="selfnotification" mappings=[0="Aus", 1="Push", 2="Alexa (Bei Anwesenheit)", 3="Push & Alexa (Bei Anwesenheit)"]
             Selection item=pOther_Manual_State_Calendar_Event_Notify icon="selfnotification" mappings=[0="Aus", 1="Push", 2="Alexa (Bei Anwesenheit)", 3="Push & Alexa (Bei Anwesenheit)"]
         }
-		Text label="Status [%s]" icon="selfstate" item=pOther_State_Message_Auto valuecolor=[pOther_State_Message_Auto=="Inaktiv"="#d72a2a"]
+		Text label="Automatik & Status [%s]" icon="selfstate" item=pOther_State_Message_Auto valuecolor=[pOther_State_Message_Auto=="Inaktiv"="#d72a2a"]
         {
 			Frame label="Steuerung"
 			{
@@ -458,7 +459,7 @@ sitemap haus label="Main Menu"
 				}
             }
 		}
-		Group label="Sicherheit [%s]" icon="selfsecurity" item=pOther_State_Message_Room valuecolor=[=="Alles geschlossen"="#6bc305",!="Alles geschlossen"="#d72a2a"]
+		Group label="Sicherheit [%s]" icon="selfsecurity" item=pOther_State_Message_Security valuecolor=[=="Alles geschlossen"="#6bc305",!="Alles geschlossen"="#d72a2a"]
         {
             Frame label="Sonstiges"
             {
@@ -499,10 +500,6 @@ sitemap haus label="Main Menu"
                 {
                     Image url="https://smartmarvin.de/cameraStrasseImage" label="Strasse Video" refresh=2000
                 }
-                Text label="Ereignisse" icon="selfstate"
-                {
-                    Webview url="/static/custom/logs/security.html" icon="none" height=36
-                }
             }
             Frame label="Fenster & Türen"
             {
@@ -517,7 +514,7 @@ sitemap haus label="Main Menu"
                     Text item=pGF_Livingroom_Openingcontact_Window_Terrace_State label="Wohnzimmer Terasse"
                     Text item=pGF_Livingroom_Openingcontact_Window_Couch_State label="Wohnzimmer Couch"
                     Text item=pGF_Workroom_Openingcontact_Window_State label="Arbeitszimmer"
-                    Text item=pGF_Garage_Openingcontact_Window_Garden_State label="Garage Gartenseite"
+                    Text item=pGF_Garage_Openingcontact_Window_Garden_State label="Garage"
                 }
                 Group item=gFF_Sensor_Window label="OG Fenster [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
                     Text item=pFF_Bathroom_Openingcontact_Window_State label="Badezimmer"
@@ -527,7 +524,16 @@ sitemap haus label="Main Menu"
                     Text item=pFF_Makeuproom_Openingcontact_Window_State label="Schminkzimmer"
                     Text item=pFF_Attic_Openingcontact_Window_State label="Dachboden"
                 }
-                Text label="Ereignisse" icon="selfstate"
+                Text item=pGardenhouse_Openingcontact_Door_State label="Gartenhaus Tür"
+                Text item=pGardenhouse_Openingcontact_Window_State label="Gartenhaus Fenster"
+            }
+            Frame label="Historie"
+            {
+                Text label="Bewegungsevents" icon="selfstate"
+                {
+                    Webview url="/static/custom/logs/security.html" icon="none" height=36
+                }
+                Text label="Fenster & Türevents" icon="selfstate"
                 {
                     Webview url="/static/custom/logs/security.html" icon="none" height=36
                 }

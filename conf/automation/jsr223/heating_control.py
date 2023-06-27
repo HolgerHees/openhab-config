@@ -438,7 +438,7 @@ class HeatingErrorMessageRule:
         elif getItemState("pGF_Utilityroom_Heating_Common_Fault").intValue() > 0:
             postUpdateIfChanged("eOther_Error_Heating_Message", Transformation.transform("MAP", "heating_state_de.map", getItemState("pGF_Utilityroom_Heating_Common_Fault").toString() ))
         else:
-            postUpdateIfChanged("eOther_Error_Heating_Message", NULL)
+            postUpdateIfChanged("eOther_Error_Heating_Message", "")
 
     def execute(self, module, input):
         self.update()

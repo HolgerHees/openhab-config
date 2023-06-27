@@ -18,7 +18,7 @@ class AlexaStateRule:
             info = thing.getStatusInfo()
             postUpdateIfChanged("eOther_Error_Alexa_Message", "Thing: {}".format(info.toString()))
         else:
-            postUpdateIfChanged("eOther_Error_Alexa_Message",NULL)
+            postUpdateIfChanged("eOther_Error_Alexa_Message","")
 
     def execute(self, module, input):
         self.check()

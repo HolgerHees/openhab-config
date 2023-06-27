@@ -2,7 +2,7 @@ from shared.helper import rule, getItemState, postUpdateIfChanged
 from shared.triggers import ItemStateChangeTrigger
 
 
-@rule("auto.py")
+@rule("state_message_auto.py")
 class AutoProgramRule:
     def __init__(self):
         self.triggers = [
@@ -13,16 +13,18 @@ class AutoProgramRule:
             ItemStateChangeTrigger("pOther_Manual_State_Auto_Sunprotection")
         ]
 
+    def format(self, itemName, shortcut):
+        return shortcut if getItemState(itemName) == ON else u"X"
+
     def execute(self, module, input):
         active = []
 
-        if getItemState("pOther_Manual_State_Auto_Rollershutter") == ON:        active.append("R")
-        if getItemState("pOther_Manual_State_Auto_Sunprotection") == ON:        active.append("S")
-        if getItemState("pOther_Manual_State_Auto_Lighting") == ON:             active.append("L")
-        if getItemState("pOther_Manual_State_Auto_Christmas") == ON:            active.append("W")
-        if getItemState("pOther_Manual_State_Auto_Attic_Light").intValue() > 1: active.append("D")
-        if len(active) == 0:                                active.append("Inaktiv")
+        active.append(self.format("pOther_Manual_State_Auto_Rollershutter",u"R"))
+        active.append(self.format("pOther_Manual_State_Auto_Sunprotection",u"S"))
+        active.append(self.format("pOther_Manual_State_Auto_Lighting",u"L"))
+        active.append(self.format("pOther_Manual_State_Auto_Christmas",u"W"))
+        active.append(self.format("pOther_Manual_State_Auto_Attic_Light",u"D"))
 
-        msg = ", ".join(active)
+        msg = u"-".join(active)
 
         postUpdateIfChanged("pOther_State_Message_Auto", msg)

@@ -42,7 +42,7 @@ class VentilationErrorMessageRule:
         elif getItemState("pGF_Utilityroom_Ventilation_Error_Message").toString() != "No Errors":
             postUpdateIfChanged("eOther_Error_Ventilation_Message", getItemState("pGF_Utilityroom_Ventilation_Error_Message").toString() )
         else:
-            postUpdateIfChanged("eOther_Error_Ventilation_Message", NULL)
+            postUpdateIfChanged("eOther_Error_Ventilation_Message", "")
 
     def execute(self, module, input):
         self.update()

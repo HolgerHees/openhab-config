@@ -38,17 +38,17 @@ Switch pFF_Bedroom_Switches_Long_Pressed_Right_State "Schlafz. Bett Wand (lang)"
 //####### MANUAL STATE FLAGS #######
 Group  eOther_Manual_States                     "Aktive Features" <selfinfo> (lOther) ["Equipment"]
 
-Switch pOther_Manual_State_Security_Notify      "Sicherheitsbenachrichtigen" <selfnotification> (eOther_Manual_States) ["Point"] { channel="knx:device:bridge:other:stateNotify" }
+Switch pOther_Manual_State_Security_Notify      "Sicherheitsbenachrichtigen (S)" <selfnotification> (eOther_Manual_States) ["Point"] { channel="knx:device:bridge:other:stateNotify" }
 Number pOther_Manual_State_Air_Thoroughly_Notify "Lüftungshinweise [MAP(state_notify.map):%s]"<selfnotification> (eOther_Manual_States) ["Point"]
 Number pOther_Manual_State_Calendar_Event_Notify "Kalenderbenachrichtigung [MAP(state_notify.map):%s]" <selfnotification> (eOther_Manual_States) ["Point"]
 
 Switch pOther_Manual_State_Holiday              "Urlaubsmodus"    <selfshield> (eOther_Manual_States) ["Point"] { channel="knx:device:bridge:other:stateHoliday" }
 Number pOther_Manual_State_Lightprogram         "Lichtprogram"    <selfautomode> (eOther_Manual_States) ["Point"]
-Number pOther_Manual_State_Auto_Attic_Light     "Mode [%d]"       <selfautomode> (eOther_Manual_States) ["Point"]
-Switch pOther_Manual_State_Auto_Christmas       "Weihnachtsmodus" <selfautomode> (eOther_Manual_States) ["Point"]
-Switch pOther_Manual_State_Auto_Lighting        "Beleuchtung Automatik" <selfautomode> (eOther_Manual_States) ["Point"]
-Switch pOther_Manual_State_Auto_Rollershutter   "Rollläden Automatik" <selfautomode> (eOther_Manual_States) ["Point"]
-Switch pOther_Manual_State_Auto_Sunprotection   "Beschattung Automatik" <selfautomode> (eOther_Manual_States) ["Point"]
+Number pOther_Manual_State_Auto_Attic_Light     "Mode (D) [%d]"       <selfautomode> (eOther_Manual_States) ["Point"]
+Switch pOther_Manual_State_Auto_Christmas       "Weihnachtsmodus (W)" <selfautomode> (eOther_Manual_States) ["Point"]
+Switch pOther_Manual_State_Auto_Lighting        "Beleuchtung Automatik (L)" <selfautomode> (eOther_Manual_States) ["Point"]
+Switch pOther_Manual_State_Auto_Rollershutter   "Rollläden Automatik (R)" <selfautomode> (eOther_Manual_States) ["Point"]
+Switch pOther_Manual_State_Auto_Sunprotection   "Beschattung Automatik (S)" <selfautomode> (eOther_Manual_States) ["Point"]
 
 //####### AUTOMATIC STATE FLAGS #######
 Group  eOther_Automatic_States                  "Auto Features"   <selfinfo> (lOther) ["Equipment"]
@@ -66,17 +66,17 @@ Number pOther_Automatic_State_Sunprotection_Terrace "Terasse geschlossen [MAP(st
 
 //####### STATE MESSAGES #######
 Group  eOther_State_Messages                    "Nachrichten" <selfinfo> (lOther) ["Equipment"]
-String pOther_State_Message_Room                "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // room state
 String pOther_State_Message_Garden              "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // garden state
-String pOther_State_Message_Auto                "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // auto programs
- 
-String pOther_State_Message_Robot               "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // roomba and automower state
 String pOther_State_Message_Devices             "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // summerized device state
-
-String pOther_State_Details_Sensors             "[%s]" <selferror> (eOther_State_Messages) ["Point"] // sensors state details
+String pOther_State_Message_Notifications       "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // notifications
+String pOther_State_Message_Auto                "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // auto programs
+String pOther_State_Message_Security            "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // security state
 String pOther_State_Message_Sensors             "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // sensors state
-
+String pOther_State_Details_Sensors             "[%s]" <selferror> (eOther_State_Messages) ["Point"] // sensors state details
 String pOther_State_Message_Main                "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // main (utilityroom) state
+
+String pOther_State_Message_Robot               "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // roomba and automower state
+
 
 //####### SCENES #######
 Group  eOther_Scenes                            "Szenen" <selfinfo> (lOther) ["Equipment"]

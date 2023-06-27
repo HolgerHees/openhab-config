@@ -334,13 +334,13 @@ class EnergyCurrentDemandAndConsumptionRule:
                             postUpdateIfChanged("pGF_Garage_Solar_Inverter_DC_Voltage",0)
                             postUpdateIfChanged("pGF_Garage_Solar_Inverter_Daily_Yield",0)
                     else:
-                        postUpdateIfChanged("eOther_Error_Solar_Inverter_Message",NULL)
+                        postUpdateIfChanged("eOther_Error_Solar_Inverter_Message","")
 
                 # triggers solar value update
                 sendCommand("pGF_Garage_Solar_Inverter_AC_Power",REFRESH)
             else:
                 self.updateConsumption(0)
-                postUpdateIfChanged("eOther_Error_Solar_Inverter_Message",NULL)
+                postUpdateIfChanged("eOther_Error_Solar_Inverter_Message","")
             postUpdateIfChanged("pGF_Utilityroom_Electricity_Current_Demand",self.currentDemand)
 
 

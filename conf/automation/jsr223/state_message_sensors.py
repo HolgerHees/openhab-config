@@ -82,10 +82,10 @@ class StateMessageSensorsRule:
         if len(co2_error_states) > 0:
             postUpdateIfChanged("eOther_Error_CO2_Sensor_Message", u"Keine Updates mehr seit mehr als 60 Minuten: {}".format(u", ".join(co2_error_states)))
         else:
-            postUpdateIfChanged("eOther_Error_CO2_Sensor_Message", NULL)
+            postUpdateIfChanged("eOther_Error_CO2_Sensor_Message", "")
 
         if len(tf_error_states) > 0:
             postUpdateIfChanged("eOther_Error_Temperatur_Sensor_Message", u"Keine Updates mehr seit mehr als 24 Stunden: {}".format(u", ".join(tf_error_states)))
         else:
-            postUpdateIfChanged("eOther_Error_Temperatur_Sensor_Message", NULL)
+            postUpdateIfChanged("eOther_Error_Temperatur_Sensor_Message", "")
 

@@ -1,8 +1,10 @@
 // **** OPENING CONTACTS ****
 Group:Contact:OR(OPEN, CLOSED) gOpeningcontacts            "Öffnungssensoren [%d]" <shield> {autoupdate="false"}
-Group:Contact:OR(OPEN, CLOSED) gGF_Sensor_Doors            "EG Türen [%d]" <selfdoor> (gOpeningcontacts) {autoupdate="false"}
-Group:Contact:OR(OPEN, CLOSED) gGF_Sensor_Window           "EG Fenster [%d]" <selfwindow> (gOpeningcontacts) {autoupdate="false"}
-Group:Contact:OR(OPEN, CLOSED) gFF_Sensor_Window           "OG Fenster [%d]" <selfwindow> (gOpeningcontacts) {autoupdate="false"}
+Group:Contact:OR(OPEN, CLOSED) gOpeningcontactsSecurityRelevant "Öffnungssensoren [%d]" <shield> {autoupdate="false"}
+
+Group:Contact:OR(OPEN, CLOSED) gGF_Sensor_Doors            "EG Türen [%d]" <selfdoor> (gOpeningcontacts,gOpeningcontactsSecurityRelevant) {autoupdate="false"}
+Group:Contact:OR(OPEN, CLOSED) gGF_Sensor_Window           "EG Fenster [%d]" <selfwindow> (gOpeningcontacts,gOpeningcontactsSecurityRelevant) {autoupdate="false"}
+Group:Contact:OR(OPEN, CLOSED) gFF_Sensor_Window           "OG Fenster [%d]" <selfwindow> (gOpeningcontacts,gOpeningcontactsSecurityRelevant) {autoupdate="false"}
 
 // **** GF CORRIDOR ****
 Group   eGF_Corridor_Openingcontact_Door                   "Öffnungssensor" <selfinfo> (lGF_Corridor) ["FrontDoor"]
@@ -61,3 +63,10 @@ Contact pFF_Makeuproom_Openingcontact_Window_State             "Öffnungssensor 
 Group   eFF_Attic_Openingcontact_Window                    "Öffnungssensor" <selfinfo> (lFF_Attic) ["Window"]
 Contact pFF_Attic_Openingcontact_Window_State              "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eFF_Attic_Openingcontact_Window,gPersistance_History,gFF_Sensor_Window) ["OpenState"] { channel="knx:device:bridge:contacts_window_sf:attic" }
 
+// **** Gardenhouse Door ****
+Group   eGardenhouse_Openingcontact_Door                   "Tür-Öffnungssensor" <selfinfo> (lGardenHouse) ["GarageDoor"] {synonyms="Tür"}
+Contact pGardenhouse_Openingcontact_Door_State             "Tür-Öffnungssensor [MAP(de.map):%s]" <selfdoor> (eGardenhouse_Openingcontact_Door,gPersistance_History,gOpeningcontacts,gOpeningcontactsSecurityRelevant) ["OpenState"]    { channel="knx:device:bridge:contacts_gardenhouse:door" }
+
+// **** Gardenhouse Window ****
+Group   eGardenhouse_Openingcontact_Window                 "Fenster-Öffnungssensor" <selfinfo> (lGardenHouse) ["Window"] {synonyms="Fenster"}
+Contact pGardenhouse_Openingcontact_Window_State           "Fenster-Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eGardenhouse_Openingcontact_Window,gPersistance_History,gOpeningcontacts) ["OpenState"]    { channel="knx:device:bridge:contacts_gardenhouse:window" }

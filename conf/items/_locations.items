@@ -19,6 +19,8 @@ Group lFF_Makeuproom    "Schminkzimmer" <girl_3>        (lFirstFloor)  ["Room"] 
 Group lFF_Corridor      "Flur"          <corridor>      (lFirstFloor)  ["Corridor"]     { synonyms="oben" }
 Group lFF_Attic         "Dachboden"     <attic>         (lFirstFloor)  ["Attic"]
 
+Group lGardenHouse      "Gartenhaus" <group>            (lIndoor)      ["Garage"]       { synonyms="Gartenlaube" }
+
 Group lOutdoor          "Garten"      <garden>                         ["Outdoor"]      { synonyms="draussen,aussen" }
 Group lOutdoor_Streedside "Vorgarten"   <garden>        (lOutdoor)     ["Garden"]       { synonyms="Strassenseite, vorne" }
 Group lOutdoor_Carport  "Carport"       <garden>        (lOutdoor)     ["Carport"]
