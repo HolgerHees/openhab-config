@@ -2,6 +2,7 @@
 Group  eOther_Presence                          "Präsenz"         <selfinfo> (lIndoor) ["Sensor"]
 
 Number pOther_Presence_State                    "Präsenz"         <selfinfo> (eOther_Presence,gPersistance_History) ["Status"]
+Number pOther_Presence_Arrive_State             "Ankunft"         <selfinfo> (eOther_Presence) ["Status"]
 
 Group:Switch:OR(ON, OFF) gOther_Presence_State_Raw "Präsenz"      <selflight>
 Switch pOther_Presence_Holger_State_Raw         "Holger anwesend (RAW)" <selfinfo> (gOther_Presence_State_Raw) { channel="mqtt:topic:mosquitto:system_service:phone_hhees", expire="20m,state=OFF" }

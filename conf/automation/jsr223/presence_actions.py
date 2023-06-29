@@ -11,149 +11,52 @@ from custom.shuffle import ShuffleHelper
 
 
 @rule("presence_actions.py")
-class ArrivingActionRule:
-    def __init__(self):
-        self.triggers = [ ItemStateChangeTrigger("pGF_Corridor_Openingcontact_Door_State",state="OPEN") ]
-
-        self.arrivedUser = {}
-        self.arrivingTimer = None
-
-    def checkArrivedUser(self, user_name, last_change, confirm):
-        if user_name in self.arrivedUser and not last_change.isAfter(self.arrivedUser[user_name]):
-            return False
-
-        if confirm:
-            self.arrivedUser[user_name] = last_change
-
-        return True
-
-    def getArrivedUser(self, confirm):
-        arrived_user = []
-        for user_name, stateItem in UserHelper.getPresentUserData().items():
-            if not self.checkArrivedUser(user_name, getItemLastUpdate(stateItem), confirm):
-                continue
-            arrived_user.append(UserHelper.getName(user_name))
-        return arrived_user
-
-    def checkArriving(self, doorOpenTime):
-        if itemLastChangeOlderThen("pGF_Corridor_Motiondetector_State", doorOpenTime):
-            # check for maximum of 20 seconds
-            if ZonedDateTime.now().minusSeconds(20).isBefore(doorOpenTime):
-                self.arrivingTimer = startTimer(self.log, 1, self.checkArriving, args = [doorOpenTime] )
-            return
-
-        self.confirmTimer = None
-
-        arrived_user = self.getArrivedUser(True)
-        if len(arrived_user) > 0:
-            welcome_msg = ShuffleHelper.getRandomSynonym(u"Willkommen zu Hause")
-            AlexaHelper.sendTTS(u"Hallo {}, {}".format(" und Hallo ".join(arrived_user), welcome_msg), location = "lGF_Corridor")
-        else:
-            state = getItemState("pOther_Presence_State").intValue()
-            if state in [PresenceHelper.STATE_AWAY, PresenceHelper.STATE_MAYBE_PRESENT]:
-                if state == PresenceHelper.STATE_MAYBE_PRESENT:
-                    lastUpdate = getItemLastUpdate("pOther_Presence_State")
-                else:
-                    # if away, a presence state change will happen during next seconds by rule "PresenceMovingCheckRule" in presence_detection.py
-                    lastUpdate = ZonedDateTime.now().plusSeconds(5)
-                if self.checkArrivedUser("guest", lastUpdate):
-                    AlexaHelper.sendTTS(u"Hallo, unbekannter Gast. Die Hausbewohner wurden über Ihre Ankunft benachrichtigt.", location = "lGF_Corridor")
-
-    def execute(self, module, input):
-        arrived_user = self.getArrivedUser(False)
-        if len(arrived_user) > 0 or itemLastChangeOlderThen("pGF_Corridor_Motiondetector_State", ZonedDateTime.now().minusMinutes(10)):
-
-            if getItemState("pOther_Automatic_State_Outdoorlights") == ON:
-                sendCommandIfChanged("pGF_Corridor_Light_Ceiling_Powered",ON)
-
-            if self.arrivingTimer is not None:
-                self.arrivingTimer.cancel()
-            self.arrivingTimer = startTimer(self.log, 1, self.checkArriving, args = [ZonedDateTime.now()] )
-
-@rule("presence_actions.py")
-class LeavingActionRule:
-    def __init__(self):
-        self.triggers = [ ItemStateChangeTrigger("pOther_Presence_State", PresenceHelper.STATE_AWAY) ]
-
-    def execute(self, module, input):
-        if input["oldState"].intValue() == PresenceHelper.STATE_MAYBE_PRESENT:
-            if getItemState("pOther_Automatic_State_Outdoorlights") == ON:
-                sendCommandIfChanged("pGF_Corridor_Light_Ceiling_Powered",OFF)
-
-@rule("presence_actions.py")
-class SleepingActionRule:
-    def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("pOther_Presence_State",state=PresenceHelper.STATE_SLEEPING)]
-            
-    def execute(self, module, input):
-        sendCommandIfChanged("gIndoor_Lights", OFF)
-        sendCommandIfChanged("gOutdoor_Terrace_Light_Hue_Color", OFF)
-        sendCommandIfChanged("pOutdoor_Light_Automatic_Main_Switch", ON)
-        
-        for child in getGroupMember("gAll_Sockets"):
-            if child.getName() == "pFF_Attic_Socket_Powered":
-                continue
-            sendCommandIfChanged(child, OFF)
-    
-@rule("presence_actions.py")
 class UnknownPersonRuleRule:
     def __init__(self):
-        self.triggers = [
-            ItemStateChangeTrigger("pOther_Presence_State")
-        ]
+        self.triggers = [ItemStateChangeTrigger("pOther_Presence_State")]
+
+        self.timer = None
+
+    def checkArriving(self):
+        user_fullnames = []
+        ref = ZonedDateTime.now().minusSeconds(5)
+        for user_name, stateItem in UserHelper.getPresentUserData().items():
+            _update = getItemLastUpdate(stateItem)
+            if _update.isBefore(ref):
+                continue
+            user_fullnames.append(UserHelper.getName(user_name))
+
+        if len(user_fullnames) == 1:
+            NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"System", u"Unbekannter Gast ist {}".format( user_fullnames[0] ) )
+        elif len(user_fullnames) > 1:
+            NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"System", u"Unbekannte Gaest sind {}".format( " und ".join(user_fullnames) ) )
+        else:
+            self.log.error(u"Not able to detect unknown guests")
+
+        self.timer = None
 
     def execute(self, module, input):
+        if self.timer != None:
+            self.timer.cancel()
+            self.timer = None
+
         newPresentState = input["event"].getItemState().intValue()
         oldPresentState = input["oldState"].intValue()
+
         if newPresentState == PresenceHelper.STATE_AWAY:
             if oldPresentState == PresenceHelper.STATE_MAYBE_PRESENT:
                 isFallback = False # => 1 hour of no moving in the house
-                NotificationHelper.sendNotification(NotificationHelper.PRIORITY_WARN, u"System", u"Unbekannter Gast {}".format( u"verschwunden" if isFallback else u"gegangen" ))
+                NotificationHelper.sendNotification(NotificationHelper.PRIORITY_WARN, u"System", u"Unbekannter Gast {}".format( u"verschwunden" if isFallback else u"gegangen" ), "https://smartmarvin.de/cameraStrasseImage")
 
         elif newPresentState == PresenceHelper.STATE_MAYBE_PRESENT:
-            if oldPresentState in [PresenceHelper.STATE_AWAY, PresenceHelper.STATE_SLEEPING]:
-                priority = NotificationHelper.PRIORITY_WARN if oldPresentState == PresenceHelper.STATE_AWAY else NotificationHelper.PRIORITY_ALERT
-                NotificationHelper.sendNotification(priority, u"System", u"Unbekannter Gast gekommen")
+            if oldPresentState == PresenceHelper.STATE_AWAY:
+                NotificationHelper.sendNotification(NotificationHelper.PRIORITY_WARN, u"System", u"Unbekannter Gast gekommen", "https://smartmarvin.de/cameraStrasseImage")
 
         elif newPresentState == PresenceHelper.STATE_PRESENT:
             if oldPresentState == PresenceHelper.STATE_MAYBE_PRESENT:
-                user_fullnames = []
-                ref = ZonedDateTime.now().minusSeconds(5)
-                for user_name, stateItem in UserHelper.getPresentUserData().items():
-                    _update = getItemLastUpdate(stateItem)
-                    if _update.isBefore(ref):
-                        continue
-                    user_fullnames.append(UserHelper.getName(user_name))
-
-                if len(user_fullnames) == 1:
-                    NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"System", u"Unbekannter Gast ist {}".format( user_fullnames[0] ) )
-                elif len(user_fullnames) > 1:
-                    NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"System", u"Unbekannte Gaest sind {}".format( " und ".join(user_fullnames) ) )
-                else:
-                    # can happen, because lastChange Date is comming from database which can be updated too late
-                    # maybe add a async task with a delay of 2 seconds here
-
-                    stateItemRaw = getItem("pOther_Presence_Holger_State_Raw")
-                    lastUpdateRaw = getItemLastUpdate(stateItemRaw)
-                    self.log.info("Holgers RAW ITEM STATE: {} {}".format(getItemState(stateItemRaw), lastUpdateRaw))
-                    self.log.info("Holgers RAW HISTORIC ITEM STATE: {}".format(getHistoricItemState(stateItemRaw, lastUpdateRaw)))
-
-                    stateItem = getItem("pOther_Presence_Holger_State")
-                    lastUpdate = getItemLastUpdate(stateItem)
-                    self.log.info("Holgers ITEM STATE: {} {}".format(getItemState(stateItem), lastUpdate))
-                    self.log.info("Holgers HISTORIC ITEM STATE: {}".format(getHistoricItemState(stateItem, lastUpdate)))
-
-                    stateItemRaw = getItem("pOther_Presence_Sandra_State_Raw")
-                    lastUpdateRaw = getItemLastUpdate(stateItemRaw)
-                    self.log.info("Sandras RAW ITEM STATE: {} {}".format(getItemState(stateItemRaw), lastUpdateRaw))
-                    self.log.info("Sandras RAW HISTORIC ITEM STATE: {}".format(getHistoricItemState(stateItemRaw, lastUpdateRaw)))
-
-                    stateItem = getItem("pOther_Presence_Sandra_State")
-                    lastUpdate = getItemLastUpdate(stateItem)
-                    self.log.info("Sandras ITEM STATE: {} {}".format(getItemState(stateItem), lastUpdate))
-                    self.log.info("Sandras HISTORIC ITEM STATE: {}".format(getHistoricItemState(stateItem, lastUpdate)))
-
-                    self.log.error(u"Unbekannte Gäste konnten nicht bestimmt werden")
+                # lastChange Date is comming from database which can be updated too late
+                # thats why I add a async task with a delay of 2 seconds here
+                self.timer = startTimer(self.log, 2, self.checkArriving, args = [ZonedDateTime.now()] )
 
 @rule("presence_actions.py")
 class KnownPersonRuleRule:
@@ -176,3 +79,101 @@ class KnownPersonRuleRule:
                 NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"System", u"Auf Wiedersehen", recipients = [userName])
         else:
             NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"System", u"Willkommen", recipients = [userName])
+
+@rule("presence_actions.py")
+class AlexaWelcomeRule:
+    def __init__(self):
+        self.triggers = [ ItemStateChangeTrigger("pOther_Presence_Arrive_State") ]
+
+        self.timer = None
+
+        self.guestUser = ZonedDateTime.now()
+        self.arrivedUser = {}
+        for user_name in UserHelper.getUserNames():
+            self.arrivedUser[user_name] = ZonedDateTime.now()
+
+    def getArrivedUser(self, confirm):
+        arrived_user = []
+        for user_name, stateItem in UserHelper.getPresentUserData().items():
+            last_change = getItemLastUpdate(stateItem)
+            if last_change.isBefore(self.arrivedUser[user_name]):
+                continue
+            if confirm:
+                self.arrivedUser[user_name] = last_change
+            arrived_user.append(UserHelper.getName(user_name))
+        return arrived_user
+
+    def isNewGuestArrived(self):
+        state = getItemState("pOther_Presence_State").intValue()
+        if state == PresenceHelper.STATE_MAYBE_PRESENT:
+            lastUpdate = getItemLastUpdate("pOther_Presence_State")
+            if self.guestUser.isBefore(lastUpdate):
+                self.guestUser = lastUpdate
+                return True
+        return False
+
+    def checkArriving(self):
+        arrived_user = self.getArrivedUser(True)
+        if len(arrived_user) > 0:
+            welcome_msg = ShuffleHelper.getRandomSynonym(u"Willkommen zu Hause")
+            AlexaHelper.sendTTS(u"Hallo {}, {}".format(" und Hallo ".join(arrived_user), welcome_msg), location = "lGF_Corridor")
+        elif self.isNewGuestArrived():
+            AlexaHelper.sendTTS(u"Hallo, unbekannter Gast. Die Hausbewohner wurden über Ihre Ankunft benachrichtigt.", location = "lGF_Corridor")
+
+        if len(UserHelper.getPresentUser()) != len(self.arrivedUser):
+            # confirm late arrived user
+            self.timer = startTimer(self.log, 300, self.confirmArrivedUser )
+        else:
+            self.timer = None
+
+    def confirmArrivedUser(self):
+        self.getArrivedUser(True)
+        self.timer = None
+
+    def execute(self, module, input):
+        if self.timer != None:
+            self.timer.cancel()
+            self.timer = None
+
+        if input['event'].getItemState().intValue() > 0:
+            self.checkArriving()
+
+@rule("presence_actions.py")
+class ArrivingActionRule:
+    def __init__(self):
+        self.triggers = [ ItemStateChangeTrigger("pGF_Corridor_Openingcontact_Door_State",state="OPEN") ]
+
+    def execute(self, module, input):
+        if getItemState("pOther_Automatic_State_Outdoorlights") != ON:
+            return
+
+        _update = getItemLastUpdate("pOutdoor_Streedside_Frontdoor_Motiondetector_State")
+        # switch light on if outdoor motion detector was triggered directly before
+        if _update.plusSeconds(10).isAfter(ZonedDateTime.now()):
+            sendCommandIfChanged("pGF_Corridor_Light_Ceiling_Powered",ON)
+
+@rule("presence_actions.py")
+class LeavingActionRule:
+    def __init__(self):
+        self.triggers = [ItemStateChangeTrigger("pOther_Presence_State", PresenceHelper.STATE_AWAY)]
+
+    def execute(self, module, input):
+        if input["oldState"].intValue() == PresenceHelper.STATE_MAYBE_PRESENT:
+            if getItemState("pOther_Automatic_State_Outdoorlights") == ON:
+                sendCommandIfChanged("pGF_Corridor_Light_Ceiling_Powered",OFF)
+
+@rule("presence_actions.py")
+class SleepingActionRule:
+    def __init__(self):
+        self.triggers = [ItemStateChangeTrigger("pOther_Presence_State",state=PresenceHelper.STATE_SLEEPING)]
+            
+    def execute(self, module, input):
+        sendCommandIfChanged("gIndoor_Lights", OFF)
+        sendCommandIfChanged("gOutdoor_Terrace_Light_Hue_Color", OFF)
+        sendCommandIfChanged("pOutdoor_Light_Automatic_Main_Switch", ON)
+        
+        for child in getGroupMember("gAll_Sockets"):
+            if child.getName() == "pFF_Attic_Socket_Powered":
+                continue
+            sendCommandIfChanged(child, OFF)
+

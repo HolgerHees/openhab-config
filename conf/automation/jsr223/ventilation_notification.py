@@ -12,7 +12,7 @@ class TemperatureConditionCheckRule:
     def __init__(self):
         self.triggers = [
             CronTrigger("0 */1 * * * ?"),
-            ItemStateChangeTrigger("pOther_Presence_State"),
+            ItemStateChangeTrigger("pOther_Presence_Arrive_State",state="1"),
         ]
         self.lastDirection = None
         self.lastGFShouldOpen = None
@@ -150,6 +150,7 @@ class TemperatureConditionCheckRule:
 
                     if notify_state & 2 and getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_PRESENT:
                         alexa_msg = u" und ".join(alexa_msg)
+
                         AlexaHelper.sendTTS(alexa_msg, header = u"Lüftungshinweiss")
                 else:
                     self.log.info(u"MSG: {}".format(push_msg))
@@ -157,6 +158,8 @@ class TemperatureConditionCheckRule:
         self.lastDirection = direction
         self.lastGFShouldOpen = gfShouldOpen
         self.lastFFShouldOpen = ffShouldOpen
+
+        self.timer = None
         
     def execute(self, module, input):
         notify_state = getItemState("pOther_Manual_State_Air_Thoroughly_Notify").intValue()
@@ -169,17 +172,17 @@ class TemperatureConditionCheckRule:
             if self.timer != None:
                 self.timer.cancel()
                 self.timer = None
-                
-            if input['event'].getItemState().intValue() == PresenceHelper.STATE_PRESENT and input['event'].getOldItemState().intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
-                # delayed notification to give all devices the chance to be detected as present
-                self.timer = startTimer(self.log, 60, self.process, args = [ UserHelper.getPresentUser(), notify_state ]) # 1 min
+
+            # delayed notification to give all devices the chance to be detected as present
+            self.timer = startTimer(self.log, 300, self.process, args = [ UserHelper.getPresentUser(), notify_state ]) # 5 min
         else:
             # we are away
             if getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
                 return
               
-            # recipients will be selected only if there are state changes
-            recipients = None
-            
-            self.process(recipients, notify_state)
+            if self.timer is None:
+                # recipients will be selected only if there are state changes
+                recipients = None
+
+                self.process(recipients, notify_state)
 

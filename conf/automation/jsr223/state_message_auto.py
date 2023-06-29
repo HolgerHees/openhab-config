@@ -14,7 +14,7 @@ class AutoProgramRule:
         ]
 
     def format(self, itemName, shortcut):
-        return shortcut if getItemState(itemName) == ON else u"X"
+        return shortcut if getItemState(itemName) == ON else u"{}\u0336".format(shortcut)
 
     def execute(self, module, input):
         active = []
@@ -25,6 +25,6 @@ class AutoProgramRule:
         active.append(self.format("pOther_Manual_State_Auto_Christmas",u"W"))
         active.append(self.format("pOther_Manual_State_Auto_Attic_Light",u"D"))
 
-        msg = u"-".join(active)
+        msg = u"•".join(active)
 
         postUpdateIfChanged("pOther_State_Message_Auto", msg)

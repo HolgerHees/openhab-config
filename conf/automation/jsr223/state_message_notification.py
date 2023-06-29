@@ -14,26 +14,26 @@ class StateMessageNotificationRule:
     def execute(self, module, input):
         active = []
 
-        active.append( "S" if getItemState("pOther_Manual_State_Security_Notify") == ON else "X")
+        active.append( "S" if getItemState("pOther_Manual_State_Security_Notify") == ON else u"S\u0336")
 
         state = getItemState("pOther_Manual_State_Air_Thoroughly_Notify").intValue()
         if state == 0:
-            active.append("X")
+            active.append(u"PA\u0336")
         elif state == 1:
-            active.append("P")
+            active.append(u"P")
         elif state == 2:
-            active.append("A")
+            active.append(u"A")
         elif state == 3:
-            active.append("PA")
+            active.append(u"PA")
 
         state = getItemState("pOther_Manual_State_Calendar_Event_Notify").intValue()
         if state == 0:
-            active.append("X")
+            active.append(u"PA\u0336")
         elif state == 1:
-            active.append("P")
+            active.append(u"P")
         elif state == 2:
-            active.append("A")
+            active.append(u"A")
         elif state == 3:
-            active.append("PA")
+            active.append(u"PA")
 
         postUpdateIfChanged("pOther_State_Message_Notifications", "-".join(active))
