@@ -50,8 +50,8 @@ circuits = [
 #    ]
 #]
     
-@rule("scenes_wathering.py")
-class ScenesWatheringRule():
+@rule()
+class ScenesWathering:
     def __init__(self):
         self.triggers = [ ItemStateChangeTrigger("pOutdoor_Watering_Logic_Program_Duration") ]
         
@@ -98,8 +98,8 @@ class WatheringHelperOld:
                 break
         return referenceGroup
 
-@rule("scenes_wathering.py")
-class ScenesWatheringRule(WatheringHelperOld):
+@rule()
+class ScenesWathering(WatheringHelperOld):
     def __init__(self):
         self.triggers = [ItemCommandTrigger("pOutdoor_Watering_Logic_Program_Start")]
 

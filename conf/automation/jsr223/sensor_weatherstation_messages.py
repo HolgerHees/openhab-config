@@ -130,8 +130,8 @@ def getAvgStackValue(self,stackName,itemName):
     #self.log.info(u"AVG {}: {}".format(stackName,avgValue))
     return avgValue
    
-@rule("sensor_weatherstation.py")
-class WeatherstationLastUpdateRule:
+@rule()
+class SensorWeatherstationMessagesLastUpdate:
     def __init__(self):
         self.triggers = [
             CronTrigger("0 * * * * ?")
@@ -201,8 +201,8 @@ class WeatherstationLastUpdateRule:
         #    self.log.error("Weatherstation is working")
         #    self.notified = False
         
-#@rule("sensor_weatherstation.py")
-#class WeatherstationBatteryRule:
+#@rule()
+#class WeatherstationBattery:
 #    def __init__(self):
 #        self.triggers = [
 #            #CronTrigger("0/5 * * * * ?"),
@@ -253,8 +253,8 @@ class WeatherstationLastUpdateRule:
          
 #        self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
         
-@rule("sensor_weatherstation.py")
-class WeatherstationRainHeaterRule:
+@rule()
+class SensorWeatherstationMessagesRainHeater:
     def __init__(self):
         self.triggers = [
             ItemStateUpdateTrigger("pOutdoor_WeatherStation_Rain_Heater_Request"),
@@ -283,8 +283,8 @@ class WeatherstationRainHeaterRule:
             mqttActions = actions.get("mqtt","mqtt:broker:mosquitto")
             mqttActions.publishMQTT("mysensors-sub-1/1/4/1/0/2",u"{}".format(1 if getItemState("pOutdoor_WeatherStation_Rain_Heater") == ON else 0))
 
-@rule("sensor_weatherstation.py")
-class WeatherstationRainRule:
+@rule()
+class SensorWeatherstationMessagesRain:
     def __init__(self):
         self.triggers = [
             CronTrigger("0 0 0 * * ?"), # to reset daily counter at midnight
@@ -388,8 +388,8 @@ class WeatherstationRainRule:
                 
             self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers) - 1)
 
-@rule("sensor_weatherstation.py")
-class WeatherstationRainLastHourRule:
+@rule()
+class SensorWeatherstationMessagesRainLastHour:
     def __init__(self):
         self.triggers = [CronTrigger("0 */15 * * * ?")]
 
@@ -406,8 +406,8 @@ class WeatherstationRainLastHourRule:
 
         postUpdateIfChanged("pOutdoor_WeatherStation_Rain_Current", lastHourRain)
         
-@rule("sensor_weatherstation.py")
-class WeatherstationWindRule:
+@rule()
+class SensorWeatherstationMessagesWind:
     def __init__(self):
         self.triggers = [
             #CronTrigger("0/5 * * * * ?"),
@@ -471,8 +471,8 @@ class WeatherstationWindRule:
           
         self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
 
-@rule("sensor_weatherstation.py")
-class UpdateWindRule:
+@rule()
+class SensorWeatherstationMessagesUpdateWind:
     def __init__(self):
         self.triggers = [
           CronTrigger("0 */5 * * * ?")
@@ -491,8 +491,8 @@ class UpdateWindRule:
         value = getMaxItemState("pOutdoor_WeatherStation_Wind_Speed", ZonedDateTime.now().minusMinutes(60)).doubleValue()
         postUpdateIfChanged("pOutdoor_WeatherStation_Wind_Speed_1h", value)
 
-@rule("sensor_weatherstation.py")
-class WeatherstationAirRule:
+@rule()
+class SensorWeatherstationMessagesAir:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pOutdoor_WeatherStation_Temperature_Raw"),
@@ -613,8 +613,8 @@ class WeatherstationAirRule:
         # delay to take care of the latest pOutdoor_WeatherStation_Solar_Power_Raw update
         self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
 
-@rule("sensor_weatherstation.py")
-class UVIndexRule:
+@rule()
+class SensorWeatherstationMessagesUVIndex:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pOutdoor_WeatherStation_UV_A_Raw"),

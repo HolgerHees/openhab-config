@@ -4,8 +4,8 @@ from java.time import ZonedDateTime
 
 DELAYED_UPDATE_TIMEOUT = 3
 
-@rule("heating_messages.py")
-class HeatingPowerMessageRule:
+@rule()
+class HeatingMessagesMessagesPower:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pGF_Utilityroom_Heating_Power"),
@@ -22,8 +22,8 @@ class HeatingPowerMessageRule:
     def execute(self, module, input):
         self.updateTimer = startTimer(self.log,DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
 
-@rule("heating_messages.py")
-class HeatingTemperatureOutdoorMessageRule:
+@rule()
+class HeatingMessagesTemperatureOutdoor:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pGF_Utilityroom_Heating_Temperature_Outdoor"),
@@ -44,8 +44,8 @@ class HeatingTemperatureOutdoorMessageRule:
         else:
             self.updateTimer = startTimer(self.log,DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers) - 1)
 
-@rule("heating_messages.py")
-class HeatingTemperatureOffsetMessageRule:
+@rule()
+class HeatingMessagesTemperatureOffset:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pGF_Utilityroom_Heating_Temperature_Offset"),
@@ -62,8 +62,8 @@ class HeatingTemperatureOffsetMessageRule:
     def execute(self, module, input):
         self.updateTimer = startTimer(self.log,DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
 
-@rule("heating_messages.py")
-class HeatingTemperatureBoilerMessageRule:
+@rule()
+class HeatingMessagesTemperatureBoiler:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pGF_Utilityroom_Heating_Temperature_Boiler"),
@@ -80,8 +80,8 @@ class HeatingTemperatureBoilerMessageRule:
     def execute(self, module, input):
         self.updateTimer = startTimer(self.log,DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
 
-@rule("heating_messages.py")
-class BurnerStartsRule:
+@rule()
+class HeatingMessagesBurnerStarts:
     def __init__(self):
         self.triggers = [
             CronTrigger("15 0 0 * * ?"),
@@ -99,8 +99,8 @@ class BurnerStartsRule:
             postUpdateIfChanged("pGF_Utilityroom_Heating_Burner_Starts_Message", msg)
 
 
-@rule("heating_messages.py")
-class BurnerHoursRule:
+@rule()
+class HeatingMessagesBurnerHours:
     def __init__(self):
         self.triggers = [
             CronTrigger("15 0 0 * * ?"),
@@ -118,8 +118,8 @@ class BurnerHoursRule:
             postUpdateIfChanged("pGF_Utilityroom_Heating_Burner_Hours_Message", msg)
 
 
-@rule("heating_messages.py")
-class HeatingTemperatureSolarMessageRule:
+@rule()
+class HeatingMessagesTemperatureSolar:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pGF_Utilityroom_Heating_Temperature_Solar_Collector"),
@@ -138,8 +138,8 @@ class HeatingTemperatureSolarMessageRule:
     def execute(self, module, input):
         self.updateTimer = startTimer(self.log,DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
 
-@rule("heating_messages.py")
-class HeatingSolarStateMessageRule:
+@rule()
+class HeatingMessagesSolarState:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pGF_Utilityroom_Heating_Solar_Pump_State"),
@@ -167,8 +167,8 @@ class HeatingSolarStateMessageRule:
     def execute(self, module, input):
         self.updateTimer = startTimer(self.log,DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
  
-@rule("heating_messages.py")
-class SolarHoursRule:
+@rule()
+class HeatingMessagesSolarHours:
     def __init__(self):
         self.triggers = [
             CronTrigger("15 0 0 * * ?"),
@@ -185,8 +185,8 @@ class SolarHoursRule:
             postUpdateIfChanged("pGF_Utilityroom_Heating_Solar_Hours_Message", msg)
 
 
-@rule("heating_messages.py")
-class SolarPowerRule:
+@rule()
+class HeatingMessagesSolarPower:
     def __init__(self):
         self.triggers = [
             CronTrigger("15 0 0 * * ?"),

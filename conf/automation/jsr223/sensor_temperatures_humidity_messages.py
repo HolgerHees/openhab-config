@@ -19,8 +19,8 @@ infoConfig = [
     ["pFF_Attic_Air_Sensor_Message", "pFF_Attic_Air_Sensor_Temperature_Value", "pFF_Attic_Air_Sensor_Humidity_Value", None, None]
 ]
 
-@rule("sensor_temperatures_humidity_messages.py")
-class InfoValueRule:
+@rule()
+class SensorTemperatureHumidityMessages:
     def __init__(self):
         self.triggers = []
         self.triggerMappings = {}

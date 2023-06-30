@@ -2,16 +2,16 @@ from shared.helper import rule, getItemState, sendCommand, postUpdate, postUpdat
 from shared.triggers import ItemStateChangeTrigger, ItemCommandTrigger, ThingEventTrigger
 
 
-@rule("tv_control.py")
-class TvLivingroomStatusRule:
+@rule()
+class TvControlLivingroomStatus:
     def __init__(self):
         self.triggers = [ ThingEventTrigger("samsungtv:tv:livingroom", "ThingStatusInfoChangedEvent") ]
 
     def execute(self, module, input):
         postUpdate("pGF_Livingroom_Television_Key_POWER", ON if input["event"].getStatusInfo().getStatus().toString() == "ONLINE" else OFF )
 
-@rule("tv_control.py")
-class TvLivingroomControlRule:
+@rule()
+class TvControlLivingroomControl:
     def __init__(self):
         self.triggers = [ ItemCommandTrigger("pGF_Livingroom_Television_Key_POWER") ]
 

@@ -1,7 +1,7 @@
 from shared.helper import rule, getGroupMemberChangeTrigger
 
-@rule("cloud_mqtt.py")
-class CloudMqttPublishRule:
+@rule()
+class CloudMqttPublish:
     def __init__(self):
         self.triggers = []
         self.triggers += getGroupMemberChangeTrigger("gPersistance_Mqtt")

@@ -1,8 +1,8 @@
 from shared.helper import rule, postUpdateIfChanged, getItemState, getThing
 from shared.triggers import CronTrigger, ThingStatusChangeTrigger
 
-@rule("alexa.py")
-class AlexaStateRule:
+@rule()
+class AlexaState:
     def __init__(self):
         self.triggers = [
             #CronTrigger("*/15 * * * * ?"),

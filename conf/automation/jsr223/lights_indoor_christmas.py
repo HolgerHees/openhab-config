@@ -4,8 +4,8 @@ from shared.triggers import CronTrigger, ItemStateChangeTrigger
 from custom.presence import PresenceHelper
 
 
-@rule("lights_indoor_auto_christmas.py")
-class LightsOnRule:
+@rule()
+class LightsIndoorChristmans:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pOther_Presence_State")
@@ -33,8 +33,8 @@ class LightsOnRule:
             sendCommand("pMobile_Socket_3_Powered", OFF)
             sendCommand("pMobile_Socket_4_Powered", OFF)
 
-@rule("lights_indoor_auto_christmas.py")                
-class OutdoorLightsOnRule:
+@rule()
+class LightsOutdoorChristmans:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pOther_Automatic_State_Outdoorlights"),

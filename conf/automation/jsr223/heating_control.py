@@ -372,7 +372,7 @@ controllableRooms = {
 }
 maintenanceMode = {}
 
-#@rule("heating_control.py")
+#@rule()
 #class TestRule():
 #    def __init__(self):
 #        totalVolume=0
@@ -389,7 +389,7 @@ maintenanceMode = {}
 #    def execute(self, module, input):
 #        pass
 
-#@rule("heating_control.py")
+#@rule()
 #class TestRule():
 #    def __init__(self):
 #        heating = Heating(self.log)
@@ -422,8 +422,8 @@ maintenanceMode = {}
 #    def execute(self, module, input):
 #        pass
  
-@rule("heating_control.py")
-class HeatingErrorMessageRule:
+@rule()
+class HeatingControlErrorMessage:
     def __init__(self):
         self.triggers = [
             #CronTrigger("0 */15 * * * ?"),
@@ -443,8 +443,8 @@ class HeatingErrorMessageRule:
     def execute(self, module, input):
         self.update()
 
-@rule("heating_control.py")
-class HeatingVentileRule():
+@rule()
+class HeatingControlVentile:
     def __init__(self):
         self.triggers = [
             CronTrigger("0 */10 1 ? * MON,FRI"),
@@ -477,8 +477,8 @@ class HeatingVentileRule():
                 elif not maintainanceModeActive:
                     maintenanceMode[room] = True
                     
-@rule("heating_control.py")
-class HeatingControlRule():
+@rule()
+class HeatingControlMain:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pGF_Utilityroom_Heating_Auto_Mode"),

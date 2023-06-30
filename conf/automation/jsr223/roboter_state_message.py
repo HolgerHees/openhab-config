@@ -2,8 +2,8 @@ from shared.helper import rule, getItemState, getPreviousItemState, postUpdateIf
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
 
 
-@rule("roboter_messages.py")
-class RoboterMessagesRule:
+@rule()
+class RoboterStateMessages:
     def __init__(self):
         self.triggers = [
             CronTrigger("0 * * * * ?"),

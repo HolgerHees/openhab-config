@@ -2,8 +2,8 @@ from shared.helper import rule, sendCommand, getItemState
 from shared.triggers import ItemStateChangeTrigger, ItemStateUpdateTrigger
 
 
-@rule("lights_indoor_bedroom_control.py")
-class LightsIndoorBedroomControlRule:
+@rule()
+class LightsIndoorBedroomControl:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pFF_Bedroom_Switches_Long_Pressed_Left_State", state="ON"),
@@ -13,8 +13,8 @@ class LightsIndoorBedroomControlRule:
     def execute(self, module, input):
         sendCommand("pOther_Scene4", ON)
 
-@rule("lights_indoor_bedroom_left_control.py")
-class LightsIndoorBedroomLeftControlRule:
+@rule()
+class LightsIndoorBedroomLeftControl:
     def __init__(self):
         self.triggers = [
             ItemStateUpdateTrigger("pFF_Bedroom_Light_Hue_Left_Switch", state="ON")
@@ -26,8 +26,8 @@ class LightsIndoorBedroomLeftControlRule:
         else:
             sendCommand("pFF_Bedroom_Light_Hue_Left_Color",0)
             
-@rule("lights_indoor_bedroom_right_control.py")
-class LightsIndoorBedroomRightControlRule:
+@rule()
+class LightsIndoorBedroomRightControl:
     def __init__(self):
         self.triggers = [
             ItemStateUpdateTrigger("pFF_Bedroom_Light_Hue_Right_Switch", state="ON")

@@ -2,8 +2,8 @@ from shared.helper import rule, getItemState, postUpdateIfChanged
 from shared.triggers import ItemStateChangeTrigger, CronTrigger
 
 
-@rule("scene_plant_messages.py")
-class SummeryRule:
+@rule()
+class SensorPlantsMessagesSummery:
     def __init__(self):
         self.triggers = [
             #CronTrigger("*/15 * * * * ?"),
@@ -21,8 +21,8 @@ class SummeryRule:
         postUpdateIfChanged("pIndoor_Plant_Sensor_Main_Info", msg)
 
 
-@rule("scene_plant_messages.py")
-class DetailRule:
+@rule()
+class SensorPlantsMessagesDetail:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pOther_Manual_State_Auto_Attic_Light"),
@@ -50,8 +50,8 @@ class DetailRule:
 
         postUpdateIfChanged("pIndoor_Plant_Sensor_Watering_Info", msg)
 
-@rule("scene_plant_messages.py")
-class EnabledRule:
+@rule()
+class SensorPlantsMessagesEnabled:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pIndoor_Plant_Sensor_Device_Enabled1"),

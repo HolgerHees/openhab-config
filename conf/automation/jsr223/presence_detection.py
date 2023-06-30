@@ -44,8 +44,8 @@ class PresenceCache:
     def setPossibleArrive(state):
         PresenceCache._shared_possible_arriving = state
 
-@rule("presence_detection.py")
-class DoorPresenceCheckRule:
+@rule()
+class PresenceDetectionDoorCheck:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pGF_Corridor_Openingcontact_Door_State", "OPEN"),
@@ -95,8 +95,8 @@ class DoorPresenceCheckRule:
             PresenceCache.setPresenceState(PresenceHelper.STATE_MAYBE_PRESENT)
             self.timer = startTimer(self.log, 1, self.checkGuestPresence, args = [1, ZonedDateTime.now(), ZonedDateTime.now().plusSeconds( 300 if input['event'].getItemName() == "pGF_Garage_Openingcontact_Door_Streedside_State" else 60 )])
 
-@rule("presence_detection.py")
-class PresenceMovingCheckRule:
+@rule()
+class PresenceDetectionMovingCheck:
     def __init__(self):
         self.triggers = getGroupMemberChangeTrigger("gSensor_Indoor")
 
@@ -131,8 +131,8 @@ class PresenceMovingCheckRule:
                 PresenceCache.setPresenceState(PresenceHelper.STATE_MAYBE_SLEEPING)
                 self.checkSleeping()
 
-@rule("presence_detection.py")
-class KnownPersonPresenceCheckRule:
+@rule()
+class PresenceDetectionKnownPersonCheck:
     def __init__(self):
         self.triggers = getGroupMemberChangeTrigger("gOther_Presence_State_Raw")
 
@@ -182,8 +182,8 @@ class KnownPersonPresenceCheckRule:
         self.process(itemName,newItemState)
           
     
-@rule("presence_detection.py")
-class WakeupRule:
+@rule()
+class PresenceDetectionWakeup:
     def __init__(self):
         self.triggers = [
             #ItemStateChangeTrigger("pGF_Corridor_Motiondetector_State",state="OPEN"),
@@ -233,14 +233,14 @@ class WakeupRule:
                     self.timer = startTimer(self.log, 30, self.delayedWakeup, args = [ 0 ])
 
 
-@rule("presence_detection.py") 
-class SleepingRule:
+@rule()
+class PresenceDetectionSleeping:
     def __init__(self):
         self.triggers = [ ItemStateChangeTrigger("pOther_Scene4",state="ON") ]
 
     def execute(self, module, input):
         with PresenceCache.getLock():
             if PresenceCache.getPresenceState() in [PresenceHelper.STATE_MAYBE_PRESENT,PresenceHelper.STATE_PRESENT,PresenceHelper.STATE_MAYBE_SLEEPING]:
-                postUpdate("pOther_Presence_State", PresenceHelper.STATE_SLEEPING)
+                PresenceCache.setPresenceState(PresenceHelper.STATE_SLEEPING)
 
             postUpdate("pOther_Scene4", OFF)

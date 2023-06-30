@@ -7,8 +7,8 @@ from custom.presence import PresenceHelper
 from custom.alexa import AlexaHelper
 
 
-@rule("ventilation_notification.py")
-class TemperatureConditionCheckRule:
+@rule()
+class VentilationNotification:
     def __init__(self):
         self.triggers = [
             CronTrigger("0 */1 * * * ?"),

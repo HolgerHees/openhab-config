@@ -2,8 +2,8 @@ from shared.helper import rule, getItemState, postUpdateIfChanged, NotificationH
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
 
 
-@rule("state_message_devices.py")
-class StateMessageDevicesRule:
+@rule()
+class StateMessageDevices:
     def __init__(self):
         self.triggers = [
             #CronTrigger("0 0 * * * ?"),

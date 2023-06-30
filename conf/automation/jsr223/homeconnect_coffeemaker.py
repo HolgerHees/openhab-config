@@ -2,8 +2,8 @@ from shared.helper import rule, getItemState, postUpdateIfChanged, NotificationH
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
 
 
-@rule("homeconnect_coffeemaker.py")
-class HomeConnectCoffeemakerMessageRule:
+@rule()
+class HomeConnectCoffeemakerMessage:
     def __init__(self):
         self.triggers = [
             #CronTrigger("*/15 * * * * ?"),
@@ -28,8 +28,8 @@ class HomeConnectCoffeemakerMessageRule:
             
         postUpdateIfChanged("pGF_Kitchen_Coffeemaker_Message", msg)
 
-@rule("homeconnect_coffeemaker.py")
-class HomeConnectCoffeemakerDripTrayNotificationRule:
+@rule()
+class HomeConnectCoffeemakerDripTrayNotification:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pGF_Kitchen_Coffeemaker_Drip_Tray_Full_State",state="ON")
@@ -38,8 +38,8 @@ class HomeConnectCoffeemakerDripTrayNotificationRule:
     def execute(self, module, input):
         NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"Kaffeemaschine", u"Auffangschale leeren", recipients = UserHelper.getPresentUser() )
 
-@rule("homeconnect_coffeemaker.py")
-class HomeConnectCoffeemakerTankEmptyNotificationRule:
+@rule()
+class HomeConnectCoffeemakerTankEmptyNotification:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pGF_Kitchen_Coffeemaker_Tank_Empty_State",state="ON")
@@ -48,8 +48,8 @@ class HomeConnectCoffeemakerTankEmptyNotificationRule:
     def execute(self, module, input):
         NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"Kaffeemaschine", u"Wasser nachfüllen", recipients = UserHelper.getPresentUser() )
 
-@rule("homeconnect_coffeemaker.py")
-class HomeConnectCoffeemakerBeansEmptyNotificationRule:
+@rule()
+class HomeConnectCoffeemakerBeansEmptyNotification:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pGF_Kitchen_Coffeemaker_Bean_Container_Empty_State",state="ON")

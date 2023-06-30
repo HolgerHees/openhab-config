@@ -7,8 +7,8 @@ from shared.triggers import ItemStateChangeTrigger, ItemCommandTrigger
 
 from custom.presence import PresenceHelper
 
-@rule("tablet.py")
-class WakeupRule:
+@rule()
+class TabletWakeup:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pOther_Presence_State")]
 
@@ -19,8 +19,8 @@ class WakeupRule:
             sendCommandIfChanged("pOther_Scene7", ON)
 
 
-@rule("tablet.py")
-class TabletScreenRule:
+@rule()
+class TabletScreen:
     def __init__(self):
         self.triggers = [ItemCommandTrigger("pOther_Scene7")]
         self.in_progress = False

@@ -7,8 +7,8 @@ from custom.presence import PresenceHelper
 from custom.alexa import AlexaHelper
 
 
-@rule("calendar_notification.py")
-class CalendarNotificationRule:
+@rule()
+class CalendarNotification:
     def __init__(self):
         self.triggers = [CronTrigger("0 0 18 * * ?")]
 

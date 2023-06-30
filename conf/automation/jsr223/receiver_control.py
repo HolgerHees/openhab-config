@@ -2,8 +2,8 @@ from shared.helper import rule, sendCommand
 from shared.triggers import ItemStateChangeTrigger
 
 
-@rule("receiver_control.py")
-class ReceiverControlRule:
+@rule()
+class ReceiverControl:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pGF_Livingroom_Receiver_State")]
 

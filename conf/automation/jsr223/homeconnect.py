@@ -2,8 +2,8 @@ from shared.helper import rule, postUpdateIfChanged, getItemState, getThing
 from shared.triggers import CronTrigger, ThingStatusChangeTrigger
 
 #https://github.com/bruestel/org.openhab.binding.homeconnect/tree/2.5.x-next/bundles/org.openhab.binding.homeconnect#notification-on-credential-error
-@rule("homeconnect.py")
-class HomeConnectStateRule:
+@rule()
+class HomeConnectState:
     def __init__(self):
         self.triggers = [
             #CronTrigger("*/15 * * * * ?"),

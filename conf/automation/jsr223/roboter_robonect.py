@@ -7,8 +7,8 @@ from java.time import ZonedDateTime
 #postUpdate("pOutdoor_Mower_WlanSignal",0)
 #postUpdate("pOutdoor_Mower_Duration",0)
 
-@rule("roboter_robonect.py")
-class MoverStateRule:
+@rule()
+class RoboterRobonectState:
     def __init__(self):
         self.triggers = [
             #CronTrigger("*/15 * * * * ?"),
@@ -29,8 +29,8 @@ class MoverStateRule:
     def execute(self, module, input):
         self.check()
 
-@rule("roboter_robonect.py")
-class MoverActionRule:
+@rule()
+class RoboterRobonectAction:
     def __init__(self):
         self.triggers = [
             CronTrigger("0 2,17,32,47 * * * ?"),
@@ -61,8 +61,8 @@ class MoverActionRule:
             postUpdateIfChanged("pOutdoor_Mower_StatusFormatted", msg)
 
 
-@rule("roboter_robonect.py")
-class MoverTimerRule:
+@rule()
+class RoboterRobonectTimer:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pOutdoor_Mower_TimerStatus"),

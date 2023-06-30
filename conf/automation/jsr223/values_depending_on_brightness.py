@@ -6,8 +6,8 @@ from shared.triggers import CronTrigger
 from custom.sunprotection import SunProtectionHelper
 
  
-@rule("values_depending_on_brightness.py")
-class ValuesDependingOnBrightnessRule:
+@rule()
+class ValuesDependingOnBrightness:
     def __init__(self):
         self.triggers = [CronTrigger("0 * * * * ?")]
 #        self.triggers = [CronTrigger("*/15 * * * * ?")]

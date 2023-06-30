@@ -76,8 +76,8 @@ class Tests:
                 log.info(u"\n\n{}\n\n".format(msg))
                 raise Exception("Wrong detection")
  
-@rule("voice_command.py")
-class VoiceCommandRule:
+@rule()
+class VoiceCommand:
     def __init__(self):
         self.triggers = [ 
             ItemStateUpdateTrigger("VoiceCommand"),

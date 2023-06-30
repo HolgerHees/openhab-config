@@ -10,8 +10,8 @@ from custom.alexa import AlexaHelper
 from custom.shuffle import ShuffleHelper
 
 
-@rule("presence_actions.py")
-class UnknownPersonRuleRule:
+@rule()
+class PresenceActionUnknownPerson:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pOther_Presence_State")]
 
@@ -58,8 +58,8 @@ class UnknownPersonRuleRule:
                 # thats why I add a async task with a delay of 2 seconds here
                 self.timer = startTimer(self.log, 2, self.checkArriving, args = [ZonedDateTime.now()] )
 
-@rule("presence_actions.py")
-class KnownPersonRuleRule:
+@rule()
+class PresenceActionKnownPerson:
     def __init__(self):
         self.triggers = getGroupMemberChangeTrigger("gOther_Presence_State")
 
@@ -80,8 +80,8 @@ class KnownPersonRuleRule:
         else:
             NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"System", u"Willkommen", recipients = [userName])
 
-@rule("presence_actions.py")
-class AlexaWelcomeRule:
+@rule()
+class PresenceActionAlexaWelcome:
     def __init__(self):
         self.triggers = [ ItemStateChangeTrigger("pOther_Presence_Arrive_State") ]
 
@@ -138,8 +138,8 @@ class AlexaWelcomeRule:
         if input['event'].getItemState().intValue() > 0:
             self.checkArriving()
 
-@rule("presence_actions.py")
-class ArrivingActionRule:
+@rule()
+class PresenceActionArrivingAction:
     def __init__(self):
         self.triggers = [ ItemStateChangeTrigger("pGF_Corridor_Openingcontact_Door_State",state="OPEN") ]
 
@@ -152,8 +152,8 @@ class ArrivingActionRule:
         if _update.plusSeconds(10).isAfter(ZonedDateTime.now()):
             sendCommandIfChanged("pGF_Corridor_Light_Ceiling_Powered",ON)
 
-@rule("presence_actions.py")
-class LeavingActionRule:
+@rule()
+class PresenceActionLeavingAction:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pOther_Presence_State", PresenceHelper.STATE_AWAY)]
 
@@ -162,8 +162,8 @@ class LeavingActionRule:
             if getItemState("pOther_Automatic_State_Outdoorlights") == ON:
                 sendCommandIfChanged("pGF_Corridor_Light_Ceiling_Powered",OFF)
 
-@rule("presence_actions.py")
-class SleepingActionRule:
+@rule()
+class PresenceActionSleepingAction:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pOther_Presence_State",state=PresenceHelper.STATE_SLEEPING)]
             

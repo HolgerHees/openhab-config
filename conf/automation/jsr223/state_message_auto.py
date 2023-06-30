@@ -2,8 +2,8 @@ from shared.helper import rule, getItemState, postUpdateIfChanged
 from shared.triggers import ItemStateChangeTrigger
 
 
-@rule("state_message_auto.py")
-class AutoProgramRule:
+@rule()
+class StateMessageAuto:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pOther_Manual_State_Auto_Attic_Light"),

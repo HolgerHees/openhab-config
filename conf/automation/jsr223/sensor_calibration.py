@@ -35,8 +35,8 @@ rawItems = {
 }
 
 
-@rule("sensor_calibration.py")
-class CalibrationRule:
+@rule()
+class SensorCalibration:
     def __init__(self):
         self.triggers = []
         for itemName in rawItems:

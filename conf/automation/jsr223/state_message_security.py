@@ -1,8 +1,8 @@
 from shared.helper import rule, getGroupMemberChangeTrigger, ItemStateChangeTrigger, getFilteredChildItems, postUpdateIfChanged, getItemState
 
 
-@rule("state_message_security.py")
-class StateMessageSecurityRule:
+@rule()
+class StateMessageSecurity:
     def __init__(self):
         self.triggers = []
         self.triggers += getGroupMemberChangeTrigger("gGF_Sensor_Doors")

@@ -26,8 +26,8 @@ co2SensorItems = [
 ]
 
 
-@rule("state_message_sensors.py")
-class StateMessageSensorsRule:
+@rule()
+class StateMessageSensors:
     def __init__(self):
         self.triggers = [
             CronTrigger("*/15 * * * * ?"),

@@ -3,8 +3,8 @@ from shared.actions import Transformation
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
 
  
-@rule("homeconnect_dishwasher.py")
-class HomeConnectDishwasherMessageRule:
+@rule()
+class HomeConnectDishwasherMessage:
     def __init__(self):
         self.triggers = [
             #CronTrigger("0/5 * * * * ?"),
@@ -28,8 +28,8 @@ class HomeConnectDishwasherMessageRule:
                 
             postUpdateIfChanged("pGF_Kitchen_Dishwasher_Message", msg)
 
-@rule("homeconnect_dishwasher.py")
-class HomeConnectDishwasherNotificationRule:
+@rule()
+class HomeConnectDishwasherNotification:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pGF_Kitchen_Dishwasher_RemainingProgramTimeState"),

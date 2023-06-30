@@ -7,8 +7,8 @@ from shared.triggers import CronTrigger, ItemStateChangeTrigger
 from custom.presence import PresenceHelper
 
 
-@rule("roboter_roomba.py")
-class RoombaBoostControlRule:
+@rule()
+class RoboterRoombaBoostControl:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pIndoor_Roomba_boost")]
 
@@ -29,8 +29,8 @@ class RoombaBoostControlRule:
             sendCommand("pIndoor_Roomba_vacHigh", ON)
 
 
-@rule("roboter_roomba.py")
-class RoombaPassesControlRule:
+@rule()
+class RoboterRoombaPassesControl:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pIndoor_Roomba_passes")]
 
@@ -51,8 +51,8 @@ class RoombaPassesControlRule:
             sendCommand("pIndoor_Roomba_twoPass", ON)
 
 
-@rule("roboter_roomba.py")
-class RoombaLastUpdateTimestampRule:
+@rule()
+class RoboterRoombaLastUpdateTimestamp:
     def __init__(self):
         self.triggers = [
             CronTrigger("0 2,17,32,47 * * * ?"),
@@ -84,8 +84,8 @@ class RoombaLastUpdateTimestampRule:
         postUpdateIfChanged("pIndoor_Roomba_cleaning_state", cleaning_state)
 
 
-@rule("roboter_roomba.py")
-class RoombaErrorRule:
+@rule()
+class RoboterRoombaError:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pIndoor_Roomba_error")]
 
@@ -96,8 +96,8 @@ class RoombaErrorRule:
             postUpdate("pIndoor_Roomba_errorFormatted", "Alles OK")
 
 
-@rule("roboter_roomba.py")
-class RoombaCleanedAreaRule:
+@rule()
+class RoboterRoombaCleanedArea:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pIndoor_Roomba_sqft")]
 
@@ -105,8 +105,8 @@ class RoombaCleanedAreaRule:
         postUpdate("pIndoor_Roomba_sqm", u"{}".format( round(getItemState("pIndoor_Roomba_sqft").doubleValue() / 10.76391041671) ))
 
 
-@rule("roboter_roomba.py")
-class RoombaUpdateCommandRule:
+@rule()
+class RoboterRoombaUpdateCommand:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pIndoor_Roomba_phase")]
 
@@ -130,8 +130,8 @@ class RoombaUpdateCommandRule:
             postUpdate("pIndoor_Roomba_command", "stop")
 
 
-@rule("roboter_roomba.py")
-class RoombaBinFullNotificationRule:
+@rule()
+class RoboterRoombaBinFullNotification:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pIndoor_Roomba_full", state="ON")]
 
@@ -139,8 +139,8 @@ class RoombaBinFullNotificationRule:
         NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, "Roomba", u"Behälter ist voll")
 
 
-@rule("roboter_roomba.py")
-class RoombaErrorNotificationRule:
+@rule()
+class RoboterRoombaErrorNotification:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pIndoor_Roomba_error", state="ON")]
 
@@ -148,8 +148,8 @@ class RoombaErrorNotificationRule:
         NotificationHelper.sendNotification(NotificationHelper.PRIORITY_ERROR, "Roomba", u"Es ist ein Fehler aufgetreten")
 
 
-@rule("roboter_roomba.py")
-class RoombaNotificationRule:
+@rule()
+class RoboterRoombaNotification:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pIndoor_Roomba_StatusFormatted")]
 
@@ -157,8 +157,8 @@ class RoombaNotificationRule:
         NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, "Roomba", getItemState("pIndoor_Roomba_StatusFormatted").toString())
 
 
-@rule("roboter_roomba.py")
-class RoombaAutomaticRule:
+@rule()
+class RoboterRoombaAutomatic:
     def __init__(self):
         self.triggers = [CronTrigger("0 2,17,32,47 8-15 ? * MON-FRI")]
 

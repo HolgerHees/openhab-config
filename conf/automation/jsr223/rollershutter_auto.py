@@ -37,16 +37,16 @@ for config in configs:
   
     sunprotection_map[config["sunprotection"]].append(config)
 
-@rule("rollershutter_auto.py")
-class RollershutterAutoCleanupRule:
+@rule()
+class RollershutterAutoCleanup:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pOther_Manual_State_Auto_Rollershutter", state="OFF")]
 
     def execute(self, module, input):
         postUpdate("pOther_Manual_State_Auto_Sunprotection", OFF)
 
-@rule("rollershutter_auto.py")
-class RollershutterAutoMorningEveningRule:
+@rule()
+class RollershutterAutoMorningEvening:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pOther_Automatic_State_Rollershutter")]
 
@@ -62,8 +62,8 @@ class RollershutterAutoMorningEveningRule:
         elif getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_AWAY and getItemState("pOther_Automatic_State_Rollershutter").intValue() == SunProtectionHelper.STATE_ROLLERSHUTTER_UP:
             sendCommand("gShutters", UP)
 
-@rule("rollershutter_auto.py")
-class RollershutterAutoWindowContactRule:
+@rule()
+class RollershutterAutoWindowContact:
     def __init__(self):
         self.triggers = []
         self.triggers += getGroupMemberChangeTrigger("gGF_Sensor_Window")
@@ -104,8 +104,8 @@ class RollershutterAutoWindowContactRule:
         
         sendCommand(config["shutter"], state)
 
-@rule("rollershutter_auto.py")
-class RollershutterAutoPresenceRule:
+@rule()
+class RollershutterAutoPresence:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pOther_Presence_State")]
         self.awayTimer = None
@@ -143,8 +143,8 @@ class RollershutterAutoPresenceRule:
         elif input['event'].getItemState().intValue() == PresenceHelper.STATE_PRESENT and input['event'].getOldItemState().intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
             self.updateCallback(UP)
 
-@rule("rollershutter_auto.py")
-class RollershutterAutoSunprotectionRule:
+@rule()
+class RollershutterAutoSunprotection:
     def __init__(self):
         self.triggers = []
         for sunprotection_item in sunprotection_map:
@@ -171,8 +171,8 @@ class RollershutterAutoSunprotectionRule:
             sendCommand(config["shutter"], state)
 
           
-@rule("rollershutter_auto.py")
-class TerraceAutoSunprotectionRule:
+@rule()
+class RollershutterTerraceAutoSunprotection:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pOther_Automatic_State_Sunprotection_Terrace")

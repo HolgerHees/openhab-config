@@ -2,8 +2,8 @@ from shared.helper import rule, itemStateOlderThen, postUpdate, NotificationHelp
 from shared.triggers import ItemStateChangeTrigger
 from java.time import ZonedDateTime
 
-@rule("door_bell_notification.py")
-class DoorBellNotificationRule:
+@rule()
+class DoorBellNotification:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pOutdoor_Streedside_Gardendoor_Bell_State", state="OPEN")]
 

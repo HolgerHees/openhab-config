@@ -2,8 +2,8 @@ from shared.helper import rule, getItem
 from shared.triggers import CronTrigger
 
 
-@rule("error.py")
-class ErrorMessageRule:
+@rule()
+class ErrorMessage:
     def __init__(self):
         self.triggers = [
             CronTrigger("0 * * * * ?")

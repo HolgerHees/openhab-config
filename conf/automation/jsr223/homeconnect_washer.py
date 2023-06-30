@@ -4,8 +4,8 @@ from shared.triggers import CronTrigger, ItemStateChangeTrigger
 
 from java.time import ZonedDateTime
  
-@rule("homeconnect_washer.py")
-class HomeConnectWasherMessageRule:
+@rule()
+class HomeConnectWasherMessage:
     def __init__(self):
         self.triggers = [
             #CronTrigger("0/5 * * * * ?"),
@@ -45,8 +45,8 @@ class HomeConnectWasherMessageRule:
     def execute(self, module, input):
         self.check()
 
-@rule("homeconnect_washer.py")
-class HomeConnectWasherProgressRule:
+@rule()
+class HomeConnectWasherProgress:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pGF_Utilityroom_Washer_RemainingProgramTimeState"),

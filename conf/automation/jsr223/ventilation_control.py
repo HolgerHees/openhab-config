@@ -11,8 +11,8 @@ from org.openhab.core.types import UnDefType
 
 DELAYED_UPDATE_TIMEOUT = 3
  
-@rule("ventilation_control.py")
-class VentilationStateResetRule:
+@rule()
+class VentilationControlStateReset:
     def __init__(self):
         self.triggers = [
             #CronTrigger("*/15 * * * * ?"),
@@ -23,8 +23,8 @@ class VentilationStateResetRule:
     def execute(self, module, input):
         postUpdateIfChanged(input['event'].getItemName(), 0)
 
-@rule("ventilation_control.py")
-class VentilationErrorMessageRule:
+@rule()
+class VentilationControlErrorMessage:
     def __init__(self):
         self.triggers = [
             #CronTrigger("*/15 * * * * ?"),
@@ -47,8 +47,8 @@ class VentilationErrorMessageRule:
     def execute(self, module, input):
         self.update()
 
-@rule("ventilation_control.py")
-class VentilationStateMessageRule:
+@rule()
+class VentilationControlStateMessage:
     def __init__(self):
         self.triggers = [
             #CronTrigger("*/15 * * * * ?"),
@@ -70,8 +70,8 @@ class VentilationStateMessageRule:
     def execute(self, module, input):
         self.update()
 
-@rule("ventilation_efficiency.py")
-class VentilationEfficiencyRule:
+@rule()
+class VentilationControlEfficiency:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature"),
@@ -108,8 +108,8 @@ class VentilationEfficiencyRule:
     def execute(self, module, input):
         self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
         
-@rule("ventilation_control.py")
-class FilterRuntimeRule:
+@rule()
+class VentilationControlRuntime:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Filter_Runtime")]
 
@@ -139,8 +139,8 @@ class FilterRuntimeRule:
 
         postUpdateIfChanged("pGF_Utilityroom_Ventilation_Filter_Runtime_Message", msg)
  
-@rule("ventilation_control.py")
-class FilterOutdoorTemperatureMessageRule:
+@rule()
+class VentilationControlOutdoorTemperatureMessage:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature"),
@@ -161,8 +161,8 @@ class FilterOutdoorTemperatureMessageRule:
     def execute(self, module, input):
         self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
 
-@rule("ventilation_control.py")
-class FilterIndoorTemperatureMessageRule:
+@rule()
+class VentilationControlIndoorTemperatureMessage:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Indoor_Incoming_Temperature"),
@@ -183,8 +183,8 @@ class FilterIndoorTemperatureMessageRule:
     def execute(self, module, input):
         self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
 
-@rule("ventilation_control.py")
-class FilterVentilationMessageRule:
+@rule()
+class VentilationControlFilterMessage:
     def __init__(self):
         self.triggers = [
             #CronTrigger("*/15 * * * * ?"),
@@ -206,8 +206,8 @@ class FilterVentilationMessageRule:
     def execute(self, module, input):
         self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
 
-@rule("ventilation_control.py")
-class FilterFanLevelRule:
+@rule()
+class VentilationControlFanLevelRule:
     def __init__(self):
         self.triggers = [
             ItemCommandTrigger("pGF_Utilityroom_Ventilation_Fan_Level"),

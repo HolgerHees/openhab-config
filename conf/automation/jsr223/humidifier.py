@@ -12,8 +12,8 @@ MAX_SLEEPING_LEVEL = 1
 MAX_PRESENT_LEVEL = 3
 MAX_AWAY_LEVEL = 3
 
-@rule("humidifier.py")
-class HumidifierStateRule:
+@rule()
+class HumidifierState:
     def __init__(self):
         self.triggers = [
             #CronTrigger("*/15 * * * * ?"),
@@ -36,8 +36,8 @@ class HumidifierStateRule:
     def execute(self, module, input):
         self.check()
 
-@rule("humidifier.py")
-class HumidifierStateResetRule:
+@rule()
+class HumidifierStateReset:
     def __init__(self):
         self.triggers = [
             #CronTrigger("*/15 * * * * ?"),
@@ -47,8 +47,8 @@ class HumidifierStateResetRule:
     def execute(self, module, input):
         postUpdateIfChanged(input['event'].getItemName(), 0)
 
-@rule("humidifier.py")
-class HumidifierStateMessageRule:
+@rule()
+class HumidifierStateMessage:
     def __init__(self):
         self.triggers = [
             #CronTrigger("*/15 * * * * ?"),
@@ -72,8 +72,8 @@ class HumidifierStateMessageRule:
     def execute(self, module, input):
         self.check()
 
-@rule("humidifier.py")
-class HumidifierLevelRule:
+@rule()
+class HumidifierLevel:
     def __init__(self):
         self.triggers = [
             ItemCommandTrigger("pGF_Livingroom_Humidifier_Speed"),

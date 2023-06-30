@@ -5,8 +5,8 @@ from custom.presence import PresenceHelper
 from custom.alexa import AlexaHelper
 
 
-@rule("sensor_security_notification.py")
-class SensorSecurityNotificationRule:
+@rule()
+class SensorSecurityNotificationAwayAlerts:
     def __init__(self):
         self.triggers = []
         self.triggers += getGroupMemberChangeTrigger("gOpeningcontacts")
@@ -56,8 +56,8 @@ class SensorSecurityNotificationRule:
                 NotificationHelper.sendNotification(NotificationHelper.PRIORITY_ALERT, u"Alarm", u"{}".format(msg))
             self.last_notification = now
 
-@rule("sensor_security_notification.py")
-class SensorSecurityAlertingRule:
+@rule()
+class SensorSecurityNotificationSleepAlerts:
     def __init__(self):
         self.triggers = []
         self.triggers += getGroupMemberChangeTrigger("gOpeningcontacts", "OPEN")

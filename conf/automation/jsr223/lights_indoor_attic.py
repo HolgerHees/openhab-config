@@ -3,8 +3,8 @@ from shared.triggers import CronTrigger, ItemStateChangeTrigger
 from java.time import ZonedDateTime
 
 
-@rule("lights_indoor_auto_attic.py")
-class LightsIndoorAutoAtticRule:
+@rule()
+class LightsIndoorAttic:
     def __init__(self):
         self.triggers = [
             CronTrigger("0 1 5,8,20,23 * * ?"),

@@ -2,9 +2,9 @@ from shared.helper import rule, getItem, getItemState, sendCommand, postUpdate
 from shared.triggers import ItemCommandTrigger
 
 
-@rule("scenes_common.py")
+@rule()
 # watch tv
-class pOther_Scene1Rule:
+class ScenesCommon_pOther_Scene1:
     def __init__(self):
         self.triggers = [ItemCommandTrigger("pOther_Scene1",command="ON")]
 
@@ -24,9 +24,9 @@ class pOther_Scene1Rule:
         postUpdate("pOther_Scene1", OFF)
 
 
-@rule("scenes_common.py")
+@rule()
 # wakeup
-class pOther_Scene2Rule:
+class ScenesCommon_pOther_Scene2:
     def __init__(self):
         self.triggers = [ItemCommandTrigger("pOther_Scene2",command="ON")]
 
@@ -39,9 +39,9 @@ class pOther_Scene2Rule:
         postUpdate("pOther_Scene2", OFF)
 
 
-@rule("scenes_common.py")
+@rule()
 # go to bed
-class pOther_Scene3Rule:
+class ScenesCommon_pOther_Scene3:
     def __init__(self):
         self.triggers = [ItemCommandTrigger("pOther_Scene3",command="ON")]
 
@@ -68,8 +68,8 @@ class pOther_Scene3Rule:
 # pOther_Scene4 => is handled in presence_detection.py
 
 
-@rule("scenes_common.py")
-class pOther_Scene5Rule:
+@rule()
+class ScenesCommon_pOther_Scene5:
     def __init__(self):
         self.triggers = [ItemCommandTrigger("pOther_Scene5",command="ON")]
 
@@ -83,8 +83,8 @@ class pOther_Scene5Rule:
         postUpdate("pOther_Scene5", OFF)
 
 
-@rule("scenes_common.py")
-class pOther_Scene6Rule:
+@rule()
+class ScenesCommon_pOther_Scene6:
     def __init__(self):
         self.triggers = [ItemCommandTrigger("pOther_Scene6",command="ON")]
 

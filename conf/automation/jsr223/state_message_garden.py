@@ -2,8 +2,8 @@ from shared.helper import rule, getItemState, postUpdateIfChanged
 from shared.triggers import ItemStateChangeTrigger
 
 
-@rule("state_message_garden.py")
-class StateMessageGardenRule:
+@rule()
+class StateMessageGarden:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pOutdoor_Watering_Logic_Program_State"),

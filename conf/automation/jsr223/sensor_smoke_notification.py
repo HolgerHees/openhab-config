@@ -2,8 +2,8 @@ from shared.helper import rule, ItemStateChangeTrigger, NotificationHelper
 from custom.alexa import AlexaHelper
 
 
-@rule("scene_contact_notifications.py")
-class SmokeDetectorNotificationsRule:
+@rule()
+class SensorSmokeNotification:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pOther_Smoke_Detector_State",state="OPEN")]
 

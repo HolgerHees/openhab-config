@@ -5,8 +5,8 @@ from java.time.temporal import ChronoUnit
 
 ruleTimeouts = {}
 
-@rule("lights_indoor_livingroom_control.py")
-class HueColorMainRule:
+@rule()
+class LightsIndoorLivingroomHueColorMain:
     def __init__(self):
         self.triggers = [ItemCommandTrigger("gGF_Livingroom_Light_Hue_Color")]
 
@@ -31,8 +31,8 @@ class HueColorMainRule:
         
         postUpdate("pGF_Livingroom_Light_Hue_Scene","")
 
-@rule("lights_indoor_livingroom_control.py")
-class HueColorIndividualRule:
+@rule()
+class LightsIndoorLivingroomHueColorIndividual:
     def __init__(self):
         self.triggers = [
             ItemCommandTrigger("pGF_Livingroom_Light_Hue1_Color"),
@@ -50,8 +50,8 @@ class HueColorIndividualRule:
             postUpdate("pGF_Livingroom_Light_Hue_Scene","")
             sendCommand("pOther_Manual_State_Lightprogram", 0)
 
-@rule("lights_indoor_livingroom_control.py")
-class HueColorProgramRule:
+@rule()
+class LightsIndoorLivingroomHueColorProgram:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pOther_Manual_State_Lightprogram")]
         self.orgColors = None

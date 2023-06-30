@@ -88,8 +88,8 @@ def getHistoricReference(log, itemName, valueTime, outdatetTime, messureTime, in
 
     return value
 
-@rule("values_consumption.py")
-class SolarPower5minRule:
+@rule()
+class ValuesConsumptionSolarPower5min:
     def __init__(self):
         self.triggers = [CronTrigger("45 */30 * * * ?")]
 
@@ -98,8 +98,8 @@ class SolarPower5minRule:
         postUpdateIfChanged("pGF_Utilityroom_Heating_Solar_Power_Current5Min",value5Min)
 
 
-@rule("values_consumption.py")
-class EnergyCounterDemandRule:
+@rule()
+class ValuesConsumptionEnergyCounterDemand:
     def __init__(self):
         self.triggers = [
           ItemStateChangeTrigger("pGF_Utilityroom_Energy_Demand_Active"),
@@ -140,8 +140,8 @@ class EnergyCounterDemandRule:
             postUpdate("pGF_Utilityroom_Electricity_Current_Annual_Demand_Forecast", msg )
 
 
-@rule("values_consumption.py")
-class EnergyCounterSupplyRule:
+@rule()
+class ValuesConsumptionEnergyCounterSupply:
     def __init__(self):
         self.triggers = [
           ItemStateChangeTrigger("pGF_Utilityroom_Energy_Supply_Active"),
@@ -182,8 +182,8 @@ class EnergyCounterSupplyRule:
             postUpdate("pGF_Utilityroom_Electricity_Current_Annual_Supply_Forecast", msg )
 
 
-'''@rule("values_consumption.py")
-class EnergySupplyRule:
+'''@rule()
+class EnergySupply:
     def __init__(self):
         self.triggers = [
           #ItemStateChangeTrigger("pGF_Utilityroom_Electricity_Current_Consumption"),
@@ -268,8 +268,8 @@ class EnergySupplyRule:
             postUpdate("pGF_Garage_Solar_Inverter_Power_Limitation",100)
             self.log.info(u"Shutdown power limitation")'''
 
-@rule("values_consumption.py")
-class EnergyTotalYieldRefreshRule:
+@rule()
+class ValuesConsumptionEnergyTotalYieldRefresh:
     def __init__(self):
         self.triggers = [
           CronTrigger("0 * * * * ?")
@@ -280,8 +280,8 @@ class EnergyTotalYieldRefreshRule:
             # triggers solar value update
             sendCommand("pGF_Garage_Solar_Inverter_Total_Yield",REFRESH)
         
-@rule("values_consumption.py")
-class EnergyCurrentDemandAndConsumptionRule:
+@rule()
+class ValuesConsumptionEnergyCurrentDemandAndConsumption:
     def __init__(self):
         self.triggers = [
           ItemStateChangeTrigger("pGF_Utilityroom_Power_Demand_Active"),
@@ -344,8 +344,8 @@ class EnergyCurrentDemandAndConsumptionRule:
             postUpdateIfChanged("pGF_Utilityroom_Electricity_Current_Demand",self.currentDemand)
 
 
-@rule("values_consumption.py")
-class EnergyDailyConsumptionRule:
+@rule()
+class ValuesConsumptionEnergyDailyConsumption:
     def __init__(self):
         self.triggers = [
           #ItemStateChangeTrigger("pGF_Utilityroom_Electricity_Current_Daily_Demand"),
@@ -362,8 +362,8 @@ class EnergyDailyConsumptionRule:
 
         postUpdateIfChanged("pGF_Utilityroom_Electricity_Current_Daily_Consumption",dailyEnergyDemand - dailyEnergySupply + dailySolarSupply)
 
-@rule("values_consumption.py")
-class SolarConsumptionRule:
+@rule()
+class ValuesConsumptionSolarConsumption:
     def __init__(self):
         self.triggers = [
           #ItemStateChangeTrigger("Electricity_Meter_Supply"),
@@ -416,16 +416,16 @@ class SolarConsumptionRule:
         postUpdateIfChanged("pGF_Garage_Solar_Inverter_Annual_Consumption",annualConsumption)
 
 
-#@rule("values_consumption.py")
-#class GasConsumptionDailyRule:
+#@rule()
+#class GasConsumptionDaily:
 #    def __init__(self):
 #        self.triggers = [CronTrigger("0 0 0 * * ?")]
 
 #    def execute(self, module, input):
 #        postUpdateIfChanged("pGF_Utilityroom_Gas_Current_Daily_Consumption",0)
 
-@rule("values_consumption.py")
-class GasConsumption5MinRule:
+@rule()
+class ValuesConsumptionGasConsumption5Min:
     def __init__(self):
         self.triggers = [CronTrigger("15 */5 * * * ?")]
 
@@ -433,8 +433,8 @@ class GasConsumption5MinRule:
         value5Min = getHistoricReference( self.log, "pGF_Utilityroom_Gas_Meter_Current_Count", 300, 615, 900, 300 )
         postUpdateIfChanged("pGF_Utilityroom_Gas_Current_Consumption",value5Min)
 
-@rule("values_consumption.py")
-class GasConsumptionRule:
+@rule()
+class ValuesConsumptionGasConsumption:
     def __init__(self):
         self.triggers = [
             CronTrigger("0 0 0 * * ?"),

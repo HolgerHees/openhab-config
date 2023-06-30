@@ -2,8 +2,8 @@ from shared.helper import rule, startTimer, getItemState, postUpdate, sendComman
 from shared.triggers import ItemStateChangeTrigger
 
 
-@rule("door_opener_control.py")
-class DoorOpenerControlRule:
+@rule()
+class DoorOpenerControl:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pOutdoor_Streedside_Gardendoor_Opener_Timer")]
         self.timer = None

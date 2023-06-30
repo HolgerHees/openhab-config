@@ -3,8 +3,8 @@ from shared.triggers import CronTrigger, ItemStateChangeTrigger
 from java.time import ZonedDateTime
 
 
-@rule("state_message_main.py")
-class StateMessageMainRule:
+@rule()
+class StateMessageMain:
     def __init__(self):
         self.triggers = [
             CronTrigger("0 */5 * * * ?"),

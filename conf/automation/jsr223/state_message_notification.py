@@ -1,8 +1,8 @@
 from shared.helper import rule, getGroupMemberChangeTrigger, ItemStateChangeTrigger, getFilteredChildItems, postUpdateIfChanged, getItemState
 
 
-@rule("state_message_notification.py")
-class StateMessageNotificationRule:
+@rule()
+class StateMessageNotification:
     def __init__(self):
         self.triggers = []
         self.triggers += [
