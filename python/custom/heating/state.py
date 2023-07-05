@@ -206,6 +206,7 @@ class RoomHeatingState():
         self.lazyReduction = 0
         self.outdoorReduction = 0
         self.nightReduction = 0
+        self.forcedReduction = 0
         self.heatingDemandEnergy = 0
         self.heatingDemandTime = 0
         self.reserveBuffer = 0
@@ -237,6 +238,12 @@ class RoomHeatingState():
 
     def getNightReduction(self):
         return self.nightReduction
+
+    def setForcedReduction(self,value):
+        self.forcedReduction = value
+
+    def getForcedReduction(self):
+        return self.forcedReduction
 
     def setHeatingTargetTemperature(self,value):
         self.heatingTargetTemperature = value

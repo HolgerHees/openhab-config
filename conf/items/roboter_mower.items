@@ -1,5 +1,5 @@
 // **** MOWER ****
-Group    eOutdoor_Mower                      "Rasenmäher"                                        <selfinfo>     (lOutdoor) ["LawnMower"]
+Group    eOutdoor_Mower                      "Rasenmäher"                                        <selfinfo>     (lOutdoorOther) ["LawnMower"]
 String   pOutdoor_Mower_Name                 "Name [%s]"                                                        (eOutdoor_Mower) ["Point"] {channel="robonect:mower:automower:name"}
 Number   pOutdoor_Mower_Battery              "Batterie [%d %%]"                                  <selfbattery>  (eOutdoor_Mower) ["Point"] {channel="robonect:mower:automower:battery"}
 Number   pOutdoor_Mower_Hours                "Betriebsstunden [%d h]"                            <selfclock>    (eOutdoor_Mower) ["Point"] {channel="robonect:mower:automower:mowing-hours"}

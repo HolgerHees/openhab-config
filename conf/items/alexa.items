@@ -1,36 +1,36 @@
-Group  eOther_Alexa_Devices         "Nachrichten"                   <selfinfo>  (lOther)                ["Equipment"]
+Group  eOther_Alexa_Devices         "Alexa Geräte"                   <selfinfo>  (lOther)                ["Equipment"]
 
 String pIndoor_Alexa_Message        "Nachricht an alle Geräte"                  (eOther_Alexa_Devices)                  {channel="amazonechocontrol:account:account1:sendMessage"}
 
-Group  eFF_Fitnessroom_Alexa        "Echo"                          <selfinfo>  (eOther_Alexa_Devices)  ["Equipment"]
+Group  eFF_Fitnessroom_Alexa        "Echo Sportzimmer"                          <selfinfo>  (eOther_Alexa_Devices)  ["Equipment"]
 String pFF_Fitnessroom_Alexa_TTS    "Nachricht an Sportzimmer"                  (eFF_Fitnessroom_Alexa) ["Point"]       {channel="amazonechocontrol:echo:account1:pFF_Fitnessroom_Alexa:textToSpeech"}
 String pFF_Fitnessroom_Alexa_CMD    "Befehl an Sportzimmer"                     (eFF_Fitnessroom_Alexa) ["Point"]       {channel="amazonechocontrol:echo:account1:pFF_Fitnessroom_Alexa:textCommand"}
 
-Group  eFF_Makeuproom_Alexa         "Echo"                          <selfinfo>  (eOther_Alexa_Devices)  ["Equipment"]
+Group  eFF_Makeuproom_Alexa         "Echo Schminkzimmer"                          <selfinfo>  (eOther_Alexa_Devices)  ["Equipment"]
 String pFF_Makeuproom_Alexa_TTS     "Nachricht an Schminkzimmer"                (eFF_Makeuproom_Alexa)  ["Point"]       {channel="amazonechocontrol:echo:account1:pFF_Makeuproom_Alexa:textToSpeech"}
 String pFF_Makeuproom_Alexa_CMD     "Befehl an Schminkzimmer"                   (eFF_Makeuproom_Alexa)  ["Point"]       {channel="amazonechocontrol:echo:account1:pFF_Makeuproom_Alexa:textCommand"}
 
-Group  eFF_Bedroom_Alexa            "Echoshow"                      <selfinfo>  (eOther_Alexa_Devices)  ["Equipment"]
+Group  eFF_Bedroom_Alexa            "Echoshow Schlafzimmer"                      <selfinfo>  (eOther_Alexa_Devices)  ["Equipment"]
 String pFF_Bedroom_Alexa_TTS        "Nachricht an Schlafzimmer"                 (eFF_Bedroom_Alexa)     ["Point"]       {channel="amazonechocontrol:echoshow:account1:pFF_Bedroom_Alexa:textToSpeech"}
 String pFF_Bedroom_Alexa_CMD        "Befehl an Schlafzimmer"                    (eFF_Bedroom_Alexa)     ["Point"]       {channel="amazonechocontrol:echoshow:account1:pFF_Bedroom_Alexa:textCommand"}
 
-Group  eFF_Bathroom_Alexa           "Echoshow"                      <selfinfo>  (eOther_Alexa_Devices)  ["Equipment"]
+Group  eFF_Bathroom_Alexa           "Echo Badezimmer"                      <selfinfo>  (eOther_Alexa_Devices)  ["Equipment"]
 String pFF_Bathroom_Alexa_TTS       "Nachricht an Badezimmer"                   (eFF_Bathroom_Alexa)    ["Point"]       {channel="amazonechocontrol:echo:account1:pFF_Bathroom_Alexa:textToSpeech"}
 String pFF_Bathroom_Alexa_CMD       "Befehl an Badezimmer"                      (eFF_Bathroom_Alexa)    ["Point"]       {channel="amazonechocontrol:echo:account1:pFF_Bathroom_Alexa:textCommand"}
 
-Group  eFF_Corridor_Alexa           "Echo"                          <selfinfo>  (eOther_Alexa_Devices)  ["Equipment"]
+Group  eFF_Corridor_Alexa           "EchoFlur "                          <selfinfo>  (eOther_Alexa_Devices)  ["Equipment"]
 String pGF_Corridor_Alexa_TTS       "Nachricht an Flur"                         (eFF_Corridor_Alexa)    ["Point"]       {channel="amazonechocontrol:echo:account1:pGF_Corridor_Alexa:textToSpeech"}
 String pGF_Corridor_Alexa_CMD       "Befehl an Flur"                            (eFF_Corridor_Alexa)    ["Point"]       {channel="amazonechocontrol:echo:account1:pGF_Corridor_Alexa:textCommand"}
 
-Group  eFF_Workroom_Alexa           "Echo"                          <selfinfo>  (eOther_Alexa_Devices)  ["Equipment"]
+Group  eFF_Workroom_Alexa           "Echo Arbeitszimmer"                          <selfinfo>  (eOther_Alexa_Devices)  ["Equipment"]
 String pGF_Workroom_Alexa_TTS       "Nachricht an Arbeitzimmer"                 (eFF_Workroom_Alexa)    ["Point"]       {channel="amazonechocontrol:echo:account1:pGF_Workroom_Alexa:textToSpeech"}
 String pGF_Workroom_Alexa_CMD       "Befehl an Arbeitzimmer"                    (eFF_Workroom_Alexa)    ["Point"]       {channel="amazonechocontrol:echo:account1:pGF_Workroom_Alexa:textCommand"}
 
-Group  eFF_Livingroom_Alexa         "Echo"                          <selfinfo>  (eOther_Alexa_Devices)  ["Equipment"]
+Group  eFF_Livingroom_Alexa         "Echo Wohnzimmer"                          <selfinfo>  (eOther_Alexa_Devices)  ["Equipment"]
 String pGF_Livingroom_Alexa_TTS     "Nachricht an Wohnzimmer"                   (eFF_Livingroom_Alexa)  ["Point"]      {channel="amazonechocontrol:echo:account1:pGF_Livingroom_Alexa:textToSpeech"}
 String pGF_Livingroom_Alexa_CMD     "Befehl an Wohnzimmer"                      (eFF_Livingroom_Alexa)  ["Point"]      {channel="amazonechocontrol:echo:account1:pGF_Livingroom_Alexa:textCommand"}
 
-Group  eAlexa_Helper                "Helper"                        <selfinfo>  (lOther)                ["Equipment"]
+Group  eAlexa_Helper                "Alexa Helper"                        <selfinfo>  (lOther)                ["Equipment"]
 String Alexa_Last_TTS               "Letzte TTS Nachricht [%s]"     <recorder>  (eAlexa_Helper)         ["Point"] { synonyms="Letzte Nachricht,Letze Durchsage, Letzte Ansage" }
 String VoiceCommand                 "Sprachbefehl [%s]"             <recorder>  (eAlexa_Helper)         ["Point"]
 String VoiceMessage                 "Sprachnachricht [%s]"          <recorder>  (eAlexa_Helper)         ["Point"]

@@ -1,4 +1,4 @@
-from shared.helper import rule, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged, getItemState, getThing, itemLastChangeOlderThen
+from shared.helper import rule, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged, getItemState, startTimer, getThing, itemLastChangeOlderThen
 from shared.triggers import CronTrigger, ThingStatusChangeTrigger, ItemCommandTrigger, ItemStateChangeTrigger
 
 from custom.presence import PresenceHelper
@@ -19,7 +19,8 @@ class HumidifierState:
             #CronTrigger("*/15 * * * * ?"),
             ThingStatusChangeTrigger("tuya:tuyaDevice:humidifier")
         ]
-        self.check()
+
+        startTimer(self.log, 5, self.check)
 
     def check(self):
         thing = getThing("tuya:tuyaDevice:humidifier")

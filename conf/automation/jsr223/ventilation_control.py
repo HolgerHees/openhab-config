@@ -31,7 +31,8 @@ class VentilationControlErrorMessage:
             ThingStatusChangeTrigger("comfoair:comfoair:default"),
             ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Filter_Error")
         ]
-        self.update()
+
+        startTimer(self.log, 5, self.update)
 
     def update(self):
         thing = getThing("comfoair:comfoair:default")

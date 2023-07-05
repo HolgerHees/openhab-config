@@ -36,6 +36,8 @@ class Heating(object):
     LEAKING_N50 = 1.0
     LEAKING_E = 0.07
     LEAKING_F = 15.0
+
+    SUMMER_MODE_REDUCTION = 5.0
     
     # To warmup 1 liter of water you need 4,182 Kilojoule
     # 1 Wh == 3,6 kJ
@@ -67,13 +69,15 @@ class Heating(object):
     totalHeatingVolume = None
     
     temperatureSensorItemPlaceholder = u"p{}_Air_Sensor_Temperature_Value"
-    temperatureTargetItemPlaceholder = u"p{}_Heating_Temperature_Desired"
+    temperatureTargetItemPlaceholder = u"p{}_Temperature_Desired"
     
     heatingHKItemPlaceholder = u"p{}_Heating_HK"
     heatingCircuitItemPlaceholder = u"p{}_Heating_Circuit"
     heatingBufferItemPlaceholder = u"p{}_Heating_Charged"
     heatingDemandItemPlaceholder = u"p{}_Heating_Demand"
     heatingTargetTemperatureItemPlaceholder = u"p{}_Heating_Temperature_Target"
+
+    summerModeItem = None
 
     lastRuntime = None
     
@@ -621,6 +625,8 @@ class Heating(object):
         hs = RoomHeatingState()
         hs.setName(room.getName())
 
+        forcedReduction = Heating.SUMMER_MODE_REDUCTION if self.getCachedItemState(Heating.summerModeItem) == OnOffType.ON else 0.0
+
         # check for open windows (long and short)
         for transition in room.getTransitions():
             if transition.getContactItem() != None:
@@ -671,11 +677,12 @@ class Heating(object):
         
         hs.setNightReduction(nightReduction)
         hs.setOutdoorReduction(outdoorReduction)
+        hs.setForcedReduction(forcedReduction)
         
         currentTemperature = round(self.getCachedStableItemFloat(Heating.getTemperatureSensorItem(room)),1)
 
         # set active target temperature to room state
-        targetTemperature = self.getCachedItemFloat(Heating.getTemperatureTargetItem(room)) - nightReduction - outdoorReduction
+        targetTemperature = self.getCachedItemFloat(Heating.getTemperatureTargetItem(room)) - nightReduction - outdoorReduction - forcedReduction
         hs.setHeatingTargetTemperature(round(targetTemperature,1))
         
         charged = rs.getChargedBuffer()
@@ -900,6 +907,8 @@ class Heating(object):
                 reductionMsg.append(u"NR {}".format(rhs.getNightReduction()))
             if rhs.getLazyReduction() > 0:
                 reductionMsg.append(u"LR {}".format(rhs.getLazyReduction()))
+            if rhs.getForcedReduction() > 0:
+                reductionMsg.append(u"FR {}".format(rhs.getForcedReduction()))
             if len(reductionMsg) > 0:
                 infoMsg = u"{} • {}".format(infoMsg, ", ".join(reductionMsg))
                 
@@ -958,6 +967,9 @@ class Heating(object):
         heatingRequested = False
         chargeLevelDebugInfos = []
         
+        month = ZonedDateTime.now().getMonth()
+        isSummerModePriorized = ( month >= 5 and month <= 10 )
+
         for room in filter( lambda room: room.getHeatingVolume() != None,Heating.rooms):
             
             # CLEAN CHARGE LEVEL
@@ -1044,6 +1056,8 @@ class Heating(object):
                     if cr4.getReferenceTemperature() > rhs.getHeatingTargetTemperature():
                         count += 1
                     if cr8.getReferenceTemperature() > rhs.getHeatingTargetTemperature():
+                        count += 1
+                    if isSummerModePriorized:
                         count += 1
 
                     if count >= 2 and rs.getCurrentTemperature() > rhs.getHeatingTargetTemperature():

@@ -25,16 +25,17 @@ class PresenceCache:
     @staticmethod
     def setPresenceState(state):
         if state == PresenceHelper.STATE_AWAY:
-            PresenceCache.setPossibleArrive(False)
             PresenceCache.setArriving(False)
         PresenceCache._shared_presence = state
         postUpdateIfChanged("pOther_Presence_State",PresenceCache._shared_presence)
 
     @staticmethod
     def setArriving(state):
+        PresenceCache.setPossibleArrive(False)
         if PresenceCache._shared_arrive is None:
             PresenceCache._shared_arrive = getItemState("pOther_Presence_Arrive_State").intValue()
-        postUpdate("pOther_Presence_Arrive_State", ( PresenceCache._shared_arrive + 1 ) if state else 0 )
+        PresenceCache._shared_arrive = PresenceCache._shared_arrive + 1 if state else 0
+        postUpdate("pOther_Presence_Arrive_State", PresenceCache._shared_arrive )
 
     @staticmethod
     def isPossibleArriving():
@@ -129,7 +130,9 @@ class PresenceDetectionMovingCheck:
 
             if PresenceCache.getPresenceState() == PresenceHelper.STATE_SLEEPING:
                 PresenceCache.setPresenceState(PresenceHelper.STATE_MAYBE_SLEEPING)
-                self.checkSleeping()
+
+                # must be decoupled, to release lock
+                self.timer = startTimer(self.log, 1, self.checkSleeping)
 
 @rule()
 class PresenceDetectionKnownPersonCheck:
@@ -171,7 +174,7 @@ class PresenceDetectionKnownPersonCheck:
         if newItemState == OFF:
             if oldItemState == ON:
                 if itemLastChangeOlderThen("pGF_Corridor_Openingcontact_Door_State",ZonedDateTime.now().minusMinutes(30)):
-                    self.skippedTimer[itemName] = startTimer(self.log, 7200, self.process, args = [ itemName,newItemState ]) # 1 hour
+                    self.skippedTimer[itemName] = startTimer(self.log, 7200, self.process, args = [ itemName, newItemState ]) # 1 hour
                     NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_NOTICE, u"System", u"Delayed presence processing {} for {}".format(newItemState,itemName))
                     return
         else:
@@ -179,7 +182,7 @@ class PresenceDetectionKnownPersonCheck:
                 NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_NOTICE, u"System", u"Cancel presence processing {} for {}".format(newItemState,itemName))
                 return
               
-        self.process(itemName,newItemState)
+        self.process(itemName, newItemState)
           
     
 @rule()

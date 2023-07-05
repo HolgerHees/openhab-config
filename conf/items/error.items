@@ -1,4 +1,4 @@
-Group  eOther_Error                          "Fehler"               <selfinfo> (lIndoor) ["Sensor"]
+Group  eOther_Error                          "Fehler"               <selfinfo> (lOther)       ["Sensor"]
 
 String eOther_Error_Ventilation_Message      "Lüftungsanlage"       <selfinfo> (eOther_Error) ["Point"]
 String eOther_Error_Heating_Message          "Heizung"              <selfinfo> (eOther_Error) ["Point"]

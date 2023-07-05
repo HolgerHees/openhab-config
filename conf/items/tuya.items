@@ -9,7 +9,7 @@ Switch pGF_Livingroom_Humidifier_Power                          "Ein/Aus"       
 Number pGF_Livingroom_Humidifier_Humidity_Raw                                                                                   (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier:humidity_current" }
 Number pGF_Livingroom_Humidifier_Humidity_Value                 "Luftfeuchtigkeit [%d%%]"                       <humidity>      (eGF_Livingroom_Humidifier)
 
-Number pGF_Livingroom_Humidifier_Fault                          "Fehler [MAP(tuya_humidifier_fault.map):%s]"   <selferror>     (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier:fault" }
+Number pGF_Livingroom_Humidifier_Fault                          "Fehler [MAP(tuya_humidifier_fault.map):%s]"   <selferror>      (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier:fault" }
 Switch pGF_Livingroom_Humidifier_Filter_Reset                   "Filter Reset"                                  <selfinfo>      (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier:filter_reset" }
 Switch pGF_Livingroom_Humidifier_Child_Lock                     "Kinder Sperre"                                 <selfinfo>      (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier:child_lock" }
 Number pGF_Livingroom_Humidifier_Runtime                        "Filter Laufzeit [%d%%]"                        <selfruntime>   (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier:filter_life" }

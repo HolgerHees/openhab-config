@@ -344,39 +344,48 @@ sitemap haus label="Main Menu"
         Text label="Benachrichtigungen [%s]" icon="selfnotification" item=pOther_State_Message_Notifications
         {
             Switch item=pOther_Manual_State_Security_Notify
-            Selection item=pOther_Manual_State_Air_Thoroughly_Notify icon="selfnotification" mappings=[0="Aus", 1="Push", 2="Alexa (Bei Anwesenheit)", 3="Push & Alexa (Bei Anwesenheit)"]
-            Selection item=pOther_Manual_State_Calendar_Event_Notify icon="selfnotification" mappings=[0="Aus", 1="Push", 2="Alexa (Bei Anwesenheit)", 3="Push & Alexa (Bei Anwesenheit)"]
+            Selection item=pOther_Manual_State_Air_Thoroughly_Notify icon="selfnotification" mappings=[0="Aus", 1="Push (P)", 2="Alexa (Bei Anwesenheit) (A)", 3="Push & Alexa (Bei Anwesenheit) (PA)"]
+            Selection item=pOther_Manual_State_Calendar_Event_Notify icon="selfnotification" mappings=[0="Aus", 1="Push (P)", 2="Alexa (Bei Anwesenheit) (A)", 3="Push & Alexa (Bei Anwesenheit) (PA)"]
         }
-		Text label="Automatik & Status [%s]" icon="selfstate" item=pOther_State_Message_Auto valuecolor=[pOther_State_Message_Auto=="Inaktiv"="#d72a2a"]
+		Text label="Programme [%s]" icon="selfstate" item=pOther_State_Message_Auto valuecolor=[pOther_State_Message_Auto=="Inaktiv"="#d72a2a"]
         {
 			Frame label="Steuerung"
 			{
-                Switch item=pOther_Manual_State_Holiday label="Urlaub aktiv"
-				Group label="Programme [%s]" icon="selfcontrol" item=pOther_State_Message_Auto valuecolor=[pOther_State_Message_Auto=="Inaktiv"="#d72a2a"]
-				{
-					Frame label="Klima und Beschattung" {
-                        Switch item=pOther_Manual_State_Auto_Rollershutter
-						Switch item=pOther_Manual_State_Auto_Sunprotection visibility=[pOther_Manual_State_Auto_Rollershutter==ON]
-						Group item=gShutters visibility=[pOther_Manual_State_Auto_Rollershutter==ON]
-					}
-					Frame label="Beleuchtung" {
-						Switch item=pOther_Manual_State_Auto_Lighting
-						Group item=gIndoor_Lights visibility=[pOther_Manual_State_Auto_Lighting==ON]
-					}
-					Frame label="Weihnachten" {
-						Switch item=pOther_Manual_State_Auto_Christmas
-						Switch item=pGF_Livingroom_Socket_Couch_Powered visibility=[pOther_Manual_State_Auto_Christmas==ON]
-						Switch item=pGF_Livingroom_Socket_Fireplace_Powered visibility=[pOther_Manual_State_Auto_Christmas==ON]
-						Switch item=pGF_Corridor_Socket_Powered visibility=[pOther_Manual_State_Auto_Christmas==ON]
-						Switch item=pMobile_Socket_1_Powered visibility=[pOther_Manual_State_Auto_Christmas==ON]
-						Switch item=pMobile_Socket_2_Powered visibility=[pOther_Manual_State_Auto_Christmas==ON]
-						Switch item=pOutdoor_Streeside_Socket_Powered visibility=[pOther_Manual_State_Auto_Christmas==ON]
-					}
-					Frame label="Dachboden" {
-						Switch item=pOther_Manual_State_Auto_Attic_Light label="Modus" mappings=[1="OFF", 2="W", 3="B"]
-						Switch item=pFF_Attic_Socket_Powered visibility=[pOther_Manual_State_Auto_Attic_Light!=1]
-					}
-				}
+                Switch item=pOther_Manual_State_Holiday
+                Switch item=pOther_Manual_State_Summer
+                Group label="Komforttemperaturen [%.1f °C]" item=pGF_Utilityroom_Ventilation_Comfort_Temperature icon="selfheating"{
+                    Setpoint item=pGF_Guesttoilet_Temperature_Desired label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                    Setpoint item=pGF_Livingroom_Temperature_Desired label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                    Setpoint item=pGF_Workroom_Temperature_Desired label="Arbeitszimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                    Setpoint item=pGF_Corridor_Temperature_Desired label="Flur unten [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                    Setpoint item=pFF_Corridor_Temperature_Desired label="Flur oben [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                    Setpoint item=pFF_Fitnessroom_Temperature_Desired label="Sportzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                    Setpoint item=pFF_Makeuproom_Temperature_Desired label="Schminkzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                    Setpoint item=pFF_Bedroom_Temperature_Desired label="Schlafzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                    Setpoint item=pFF_Bathroom_Temperature_Desired label="Badezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                    Text item=pGF_Utilityroom_Ventilation_Comfort_Temperature label="Komforttemperatur (Lüftung) [%.1f °C]"
+                }
+			}
+            Frame label="Automatik" {
+				Switch item=pOutdoor_Light_Automatic_Main_Switch icon="selfautomode" label="Aussenbeleuchtung (AL)"
+                Switch item=pOther_Manual_State_Auto_Lighting label="Innenbeleuchtung (Bei Abwesenheit) (IL)"
+                Selection item=pOther_Manual_State_Auto_Rollershutter label="Rollläden" mappings=[0="Aus", 1="Tageszeitabhängig (T)", 2="Beschattung (B)", 3="Tageszeitabhängig & Beschattung (TB)"]
+            }
+            Frame label="Sonstiges" {
+                Switch item=pOther_Manual_State_Auto_Christmas
+                Text label="Weihnachsmodus (Steckdosen)" icon="selfsocket" visibility=[pOther_Manual_State_Auto_Christmas==ON] {
+                    Switch item=pGF_Livingroom_Socket_Couch_Powered
+                    Switch item=pGF_Livingroom_Socket_Fireplace_Powered
+                    Switch item=pGF_Corridor_Socket_Powered
+                    Switch item=pMobile_Socket_1_Powered
+                    Switch item=pMobile_Socket_2_Powered
+                    Switch item=pOutdoor_Streeside_Socket_Powered
+                }
+                Switch item=pOther_Manual_State_Auto_Attic_Light label="Dachboden (D)" mappings=[1="OFF", 2="W", 3="B"]
+                Switch item=pFF_Attic_Socket_Powered label="Dachboden (Steckdose)" visibility=[pOther_Manual_State_Auto_Attic_Light!=1]
+            }
+			/*Frame label="Sonstiges"
+			{
                 Text label="Szenen" icon="selfcontrol" {
                     Frame label="Wohnen" {
                         Switch item=pOther_Scene1 label="Fernsehen" icon="selfcouch"
@@ -387,78 +396,8 @@ sitemap haus label="Main Menu"
                         Switch item=pOther_Scene4 label="Schlafen" icon="selfbedsleep"
                     }
                 }
-			}
-			Frame label="Status"
-			{ 
-				Group label="Präsenz & Schlafen [MAP(state_presence.map):%d]" icon="selfsettings" item=pOther_Presence_State
-                {
-                    Selection item=pOther_Presence_State label="Präsenz" mappings=[0="Abwesend", 1="(Anwesend)", 2="Anwesend",3="(Schlafen)", 4="Schlafen"]
-                    Switch item=pOther_Scene7 label="Tablet Wakeup [%s]"
-                    Text item=pOther_Presence_Holger_State label="Holger anwesend [%s]"
-                    Text item=pOther_Presence_Holger_State_Raw label="Holger anwesend (RAW) [%s]"
-                    Text item=pOther_Presence_Sandra_State label="Sandra anwesend [%s]"
-                    Text item=pOther_Presence_Sandra_State_Raw label="Sandra anwesend (RAW) [%s]"
-                }
-				Text label="Beschattung, Beleuchtung & Solar" icon="selfsun"
-                {
-					Frame label="Sonstiges"
-					{
-                        Text item=pOther_Automatic_State_Outdoorlights label="Aussenbeleuchtung aktiv [%s]"
-                        Text item=pOther_Automatic_State_Solar label="Solaranlage wird abgefragt [%s]"
-                        Text item=pOther_Automatic_State_Rollershutter label="Rollläden [MAP(state_auto_rollershutter.map):%d]"
-                        Text item=pOther_Automatic_State_Rollershutter_Up
-                        Text item=pOther_Automatic_State_Rollershutter_Down
-                    }
-					Frame label="Sonnenschutz"
-					{
-                        Text item=pOther_Automatic_State_Sunprotection_Attic label="Beschattung Dachboden [%s]"
-                        Text item=pOther_Automatic_State_Sunprotection_Bathroom label="Beschattung Badezimmer [%s]"
-                        Text item=pOther_Automatic_State_Sunprotection_Dressingroom label="Beschattung Ankleide [%s]"
-                        Text item=pOther_Automatic_State_Sunprotection_Bedroom label="Beschattung Schlafzimmer [%s]"
-                        Text item=pOther_Automatic_State_Sunprotection_Livingroom label="Beschattung Wohnzimmer [%s]"
-                        Text item=pOther_Automatic_State_Sunprotection_Terrace label="Beschattung Terasse [MAP(state_auto_terrace.map):%d]"
-                    }
-				}
-			}
-			Frame label="Info"
-			{
-				Text label="Wetterbericht" icon="selfrain" {
-                    Webview url="/weather/weatherDetailOverview.php" icon="none" height=20
-                }
-				Text label="Sonnenauf & Untergang" icon="selfsun" {
-                    Frame label="Tageszeiten"
-                    {
-                        Text item=pOutdoor_Astro_Dawn_Time
-                        Text item=pOutdoor_Astro_Sunrise_Time
-                        Text item=pOutdoor_Astro_Sunset_Time
-                        Text item=pOutdoor_Astro_Dusk_Time
-                    }
-                    Frame label="Sonnenstand"
-                    {
-                        Text item=pOutdoor_Astro_Sun_Azimuth        
-                        Text item=pOutdoor_Astro_Sun_Elevation      
-                        Text item=pOutdoor_Astro_Total_Radiation    
-                        Text item=pOutdoor_Astro_Diffuse_Radiation  
-                    }
-                    Frame label="Details"
-                    {
-                        Text item=pOutdoor_Astro_Zodiac_Name          
-                        Text item=pOutdoor_Astro_Season             
-                        Text item=pOutdoor_Astro_MoonPhase          
-                        Text item=pOutdoor_Astro_FullMoon         
-                        Text item=pOutdoor_Astro_NewMoon          
-                        Text item=pOutdoor_Astro_Eclipse_Time       
-                    }
-                    Frame label="Begin & Ende"
-                    {
-                        Text item=pOutdoor_Astro_Spring_Time		
-                        Text item=pOutdoor_Astro_Summer_Time		
-                        Text item=pOutdoor_Astro_Autumn_Time		
-                        Text item=pOutdoor_Astro_Winter_Time		
-                    }
-				}
-            }
-		}
+			}*/
+        }
 		Group label="Sicherheit [%s]" icon="selfsecurity" item=pOther_State_Message_Security valuecolor=[=="Alles geschlossen"="#6bc305",!="Alles geschlossen"="#d72a2a"]
         {
             Frame label="Sonstiges"
@@ -545,17 +484,17 @@ sitemap haus label="Main Menu"
                 Group item=pGF_Livingroom_Air_Sensor_Message label="EG [%s]"{
                     Frame label="Daten" {
                         Text item=pGF_Livingroom_Air_Sensor_Message label="Wohnzimmer" {
-                            Setpoint item=pGF_Livingroom_Heating_Temperature_Desired label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pGF_Livingroom_Temperature_Desired label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=pGF_Boxroom_Air_Sensor_Message label="Abstellkammer"
                         Text item=pGF_Workroom_Air_Sensor_Message label="Arbeitszimmer" {
-                            Setpoint item=pGF_Workroom_Heating_Temperature_Desired label="Arbeitszimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pGF_Workroom_Temperature_Desired label="Arbeitszimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=pGF_Guesttoilet_Air_Sensor_Message label="Gäste WC" {
-                            Setpoint item=pGF_Guesttoilet_Heating_Temperature_Desired label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pGF_Guesttoilet_Temperature_Desired label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=pGF_Corridor_Air_Sensor_Message label="Flur unten" {
-                            Setpoint item=pGF_Corridor_Heating_Temperature_Desired label="Flur unten [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pGF_Corridor_Temperature_Desired label="Flur unten [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=pGF_Utilityroom_Air_Sensor_Message label="HWR"
                         Text item=pGF_Garage_Air_Sensor_Message label="Garage" 
@@ -568,20 +507,20 @@ sitemap haus label="Main Menu"
                 Group item=pFF_Bedroom_Air_Sensor_Message label="OG [%s]"{
                     Frame label="Daten" {
                         Text item=pFF_Bedroom_Air_Sensor_Message label="Schlafzimmer" {
-                            Setpoint item=pFF_Bedroom_Heating_Temperature_Desired label="Schlafzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pFF_Bedroom_Temperature_Desired label="Schlafzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=pFF_Dressingroom_Air_Sensor_Message label="Ankleide"
                         Text item=pFF_Fitnessroom_Air_Sensor_Message label="Sportzimmer"  {
-                            Setpoint item=pFF_Fitnessroom_Heating_Temperature_Desired label="Sportzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pFF_Fitnessroom_Temperature_Desired label="Sportzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=pFF_Makeuproom_Air_Sensor_Message label="Schminkzimmer" {
-                            Setpoint item=pFF_Makeuproom_Heating_Temperature_Desired label="Schminkzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pFF_Makeuproom_Temperature_Desired label="Schminkzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=pFF_Bathroom_Air_Sensor_Message label="Badezimmer" {
-                            Setpoint item=pFF_Bathroom_Heating_Temperature_Desired label="Badezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pFF_Bathroom_Temperature_Desired label="Badezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=pFF_Corridor_Air_Sensor_Message label="Flur oben" {
-                            Setpoint item=pFF_Corridor_Heating_Temperature_Desired label="Flur oben [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                            Setpoint item=pFF_Corridor_Temperature_Desired label="Flur oben [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=pFF_Attic_Air_Sensor_Message label="Dachboden"
                     }
@@ -727,6 +666,79 @@ sitemap haus label="Main Menu"
                 }
             }
         }
+		Text label="Status [MAP(state_presence.map):%d]" icon="selfstate" item=pOther_Presence_State
+        {
+            Frame label="Status"
+			{
+				Group label="Präsenz & Schlafen [MAP(state_presence.map):%d]" icon="selfsettings" item=pOther_Presence_State
+                {
+                    Selection item=pOther_Presence_State label="Präsenz" mappings=[0="Abwesend", 1="(Anwesend)", 2="Anwesend",3="(Schlafen)", 4="Schlafen"]
+                    Switch item=pOther_Scene7 label="Tablet Wakeup [%s]"
+                    Text item=pOther_Presence_Holger_State label="Holger anwesend [%s]"
+                    Text item=pOther_Presence_Holger_State_Raw label="Holger anwesend (RAW) [%s]"
+                    Text item=pOther_Presence_Sandra_State label="Sandra anwesend [%s]"
+                    Text item=pOther_Presence_Sandra_State_Raw label="Sandra anwesend (RAW) [%s]"
+                }
+				Text label="Beschattung, Beleuchtung & Solar" icon="selfsun"
+                {
+					Frame label="Sonstiges"
+					{
+                        Text item=pOther_Automatic_State_Outdoorlights label="Aussenbeleuchtung aktiv [%s]"
+                        Text item=pOther_Automatic_State_Solar label="Solaranlage wird abgefragt [%s]"
+                        Text item=pOther_Automatic_State_Rollershutter label="Rollläden [MAP(state_auto_rollershutter.map):%d]"
+                        Text item=pOther_Automatic_State_Rollershutter_Up
+                        Text item=pOther_Automatic_State_Rollershutter_Down
+                    }
+					Frame label="Sonnenschutz"
+					{
+                        Text item=pOther_Automatic_State_Sunprotection_Attic label="Beschattung Dachboden [%s]"
+                        Text item=pOther_Automatic_State_Sunprotection_Bathroom label="Beschattung Badezimmer [%s]"
+                        Text item=pOther_Automatic_State_Sunprotection_Dressingroom label="Beschattung Ankleide [%s]"
+                        Text item=pOther_Automatic_State_Sunprotection_Bedroom label="Beschattung Schlafzimmer [%s]"
+                        Text item=pOther_Automatic_State_Sunprotection_Livingroom label="Beschattung Wohnzimmer [%s]"
+                        Text item=pOther_Automatic_State_Sunprotection_Terrace label="Beschattung Terasse [MAP(state_auto_terrace.map):%d]"
+                    }
+				}
+			}
+			Frame label="Info"
+			{
+				Text label="Wetterbericht" icon="selfrain" {
+                    Webview url="/weather/weatherDetailOverview.php" icon="none" height=20
+                }
+				Text label="Sonnenauf & Untergang" icon="selfsun" {
+                    Frame label="Tageszeiten"
+                    {
+                        Text item=pOutdoor_Astro_Dawn_Time
+                        Text item=pOutdoor_Astro_Sunrise_Time
+                        Text item=pOutdoor_Astro_Sunset_Time
+                        Text item=pOutdoor_Astro_Dusk_Time
+                    }
+                    Frame label="Sonnenstand"
+                    {
+                        Text item=pOutdoor_Astro_Sun_Azimuth
+                        Text item=pOutdoor_Astro_Sun_Elevation
+                        Text item=pOutdoor_Astro_Total_Radiation
+                        Text item=pOutdoor_Astro_Diffuse_Radiation
+                    }
+                    Frame label="Details"
+                    {
+                        Text item=pOutdoor_Astro_Zodiac_Name
+                        Text item=pOutdoor_Astro_Season
+                        Text item=pOutdoor_Astro_MoonPhase
+                        Text item=pOutdoor_Astro_FullMoon
+                        Text item=pOutdoor_Astro_NewMoon
+                        Text item=pOutdoor_Astro_Eclipse_Time
+                    }
+                    Frame label="Begin & Ende"
+                    {
+                        Text item=pOutdoor_Astro_Spring_Time
+                        Text item=pOutdoor_Astro_Summer_Time
+                        Text item=pOutdoor_Astro_Autumn_Time
+                        Text item=pOutdoor_Astro_Winter_Time
+                    }
+				}
+            }
+		}
 		Group label="Technik [%s]" icon="selfhouse" item=pOther_State_Message_Main valuecolor=[=="Alles ok"="#6bc305",=="Lüftung Filter"="#cbcb00",=="Befeuchter Filter"="#cbcb00",!="Alles ok"="#d72a2a"]
 		{
             Frame label="Technik" {
@@ -734,7 +746,7 @@ sitemap haus label="Main Menu"
                     Frame label="Steuerung" {
                         Switch item=pGF_Utilityroom_Ventilation_Auto_Mode label="Modus" mappings=[ON="Auto", OFF="Manuell"]
                         Switch item=pGF_Utilityroom_Ventilation_Fan_Level label="Stufe" mappings=[1="A", 2="1", 3="2", 4="3"]
-                        Setpoint item=pGF_Utilityroom_Ventilation_Comfort_Temperature label="Komforttemperatur [%.1f °C]" step=0.5 minValue=15 maxValue=25
+                        Text item=pGF_Utilityroom_Ventilation_Comfort_Temperature label="Komforttemperatur [%.1f °C]"
                         Switch item=pGF_Utilityroom_Ventilation_Control mappings=[ON="App", OFF="CCEase"]
                     }
                     Frame label="Sensordaten" {
@@ -758,17 +770,9 @@ sitemap haus label="Main Menu"
                         Switch item=pGF_Utilityroom_Heating_Auto_Mode label="Modus" mappings=[1="Auto", 0="Manuell"]
                         Switch item=pGF_Utilityroom_Heating_Operating_Mode label="Betrieb" mappings=[1.0="WW", 2.0="HZ", 3.0="RD"]  visibility=[pGF_Utilityroom_Heating_Auto_Mode==0]
                         Text item=pGF_Utilityroom_Heating_Operating_Mode visibility=[pGF_Utilityroom_Heating_Auto_Mode==1]
-                        Text label="Komforttemperaturen" icon="selfheating"{
-                            Setpoint item=pGF_Guesttoilet_Heating_Temperature_Desired label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=pGF_Livingroom_Heating_Temperature_Desired label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=pGF_Workroom_Heating_Temperature_Desired label="Arbeitszimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=pGF_Corridor_Heating_Temperature_Desired label="Flur unten [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=pFF_Corridor_Heating_Temperature_Desired label="Flur oben [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=pFF_Fitnessroom_Heating_Temperature_Desired label="Sportzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=pFF_Makeuproom_Heating_Temperature_Desired label="Schminkzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=pFF_Bedroom_Heating_Temperature_Desired label="Schlafzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                            Setpoint item=pFF_Bathroom_Heating_Temperature_Desired label="Badezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                        }
+                        Switch item=pOther_Manual_State_Summer label="Sommermodus"
+                    }
+                    Frame label="Laufzeitdaten" {
                         Text label="Heizkreise" icon="selfheating"{
                             Switch item=pGF_Livingroom_Heating_Circuit label="WZ Kreis"
                             Switch item=pGF_Corridor_Heating_Circuit label="Flur unten Kreis"
@@ -782,8 +786,6 @@ sitemap haus label="Main Menu"
                             Switch item=pFF_Bathroom_Heating_Circuit label="Badezimmer Kreis"
                             Switch item=pFF_Bathroom_Heating_HK label="Badezimmer HK"
                         }
-                    }
-                    Frame label="Sensordaten" {
                         Text item=pGF_Utilityroom_Heating_Demand label="Berechnungsdetails [MAP(yes_no_de.map):%d]" icon="selfheating"{
                             Frame {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
@@ -793,6 +795,8 @@ sitemap haus label="Main Menu"
                                 Webview url="/static/custom/logs/heating.html" icon="none" height=36
                             }
                         }
+                    }
+                    Frame label="Sensordaten" {
                         Text item=pGF_Utilityroom_Heating_Temperature_Room_Target
                         Text item=pGF_Utilityroom_Heating_Power_Message
                         Text item=pGF_Utilityroom_Heating_Temperature_Outdoor_Message

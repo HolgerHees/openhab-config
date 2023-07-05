@@ -43,6 +43,8 @@ Heating.heatingCircuitPumpSpeedItem = "pGF_Utilityroom_Heating_Circuit_Pump_Spee
 Heating.heatingTemperaturePipeOutItem = "pGF_Utilityroom_Heating_Temperature_Pipe_Out"
 Heating.heatingTemperaturePipeInItem = "pGF_Utilityroom_Heating_Temperature_Pipe_In"
 
+Heating.summerModeItem = "pOther_Manual_State_Summer"
+
 Heating.holidayStatusItem = "pOther_Manual_State_Holiday"
 
 Heating.forcedStatesItem = "pGF_Utilityroom_Heating_Force_States"
@@ -842,7 +844,7 @@ class HeatingControlMain:
             # Brenner läuft nicht
             elif currentPowerState == 0:
                 forceReducedMsg = None
-                
+
                 # TODO maybe check Heating_Temperature_Wather_Storage if the temerature is increasing => hint that water heating is active
                 # TODO also if Heating_Power is going from 0 to 65 and one minute later from 65 to 0 is a hint for a unsuccessful start
                 

@@ -47,10 +47,10 @@ class CalendarNotification:
             push_msg = ", ".join(active)
             alexa_msg = " und ".join(active)
 
-            if notify_state & 1:
+            if notify_state & 1 == 1:
                 NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"Müllabholung",push_msg)
 
-            if notify_state & 2 and getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_PRESENT:
+            if notify_state & 2 == 2 and getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_PRESENT:
                 AlexaHelper.sendTTS(alexa_msg, header = u"Müllabholung")
 
 

@@ -1,4 +1,4 @@
-Group lIndoor           "Haus"       <group>                        ["Indoor"]          { synonyms="drinnen,innen,überall,komplett,alle" }
+Group lIndoor           "Haus"       <group>                           ["Indoor"]          { synonyms="drinnen,innen,überall,komplett,alle" }
 
 Group lGroundFloor      "Erdgeschoss"   <groundfloor>   (lIndoor)      ["GroundFloor"]  { synonyms="Untergeschoss" }
 Group lGF_Guesttoilet   "Gäste WC"      <bath>          (lGroundFloor) ["Room"]         { synonyms="Gäste Toilette,Gäste Bad,Gästeklo" }
@@ -10,6 +10,8 @@ Group lGF_Workroom      "Büro"          <office>        (lGroundFloor) ["Room"]
 Group lGF_Corridor      "Flur"          <corridor>      (lGroundFloor) ["Corridor"]     { synonyms="unten" }
 Group lGF_Garage        "Schuppen"      <corridor>      (lGroundFloor) ["Garage"]
 
+Group lIndoorOther      "Sonstiges"     <group>        (lIndoor)       ["Location"]
+
 Group lFirstFloor       "Obergeschoss"  <firstfloor>    (lIndoor)      ["FirstFloor"]
 Group lFF_Bathroom      "Badezimmer"    <bath>          (lFirstFloor)  ["Bathroom"]     { synonyms="Bad" }
 Group lFF_Dressingroom  "Ankleide"      <wardrobe>      (lFirstFloor)  ["Room"]
@@ -19,13 +21,15 @@ Group lFF_Makeuproom    "Schminkzimmer" <girl_3>        (lFirstFloor)  ["Room"] 
 Group lFF_Corridor      "Flur"          <corridor>      (lFirstFloor)  ["Corridor"]     { synonyms="oben" }
 Group lFF_Attic         "Dachboden"     <attic>         (lFirstFloor)  ["Attic"]
 
-Group lGardenHouse      "Gartenhaus" <group>            (lIndoor)      ["Garage"]       { synonyms="Gartenlaube" }
+Group lGardenHouse      "Gartenhaus" <group>                           ["Building"]     { synonyms="Gartenlaube, Gartenhaus" }
 
 Group lOutdoor          "Garten"      <garden>                         ["Outdoor"]      { synonyms="draussen,aussen" }
 Group lOutdoor_Streedside "Vorgarten"   <garden>        (lOutdoor)     ["Garden"]       { synonyms="Strassenseite, vorne" }
 Group lOutdoor_Carport  "Carport"       <garden>        (lOutdoor)     ["Carport"]
 Group lOutdoor_Garden   "Hintergarten"  <garden>        (lOutdoor)     ["Garden"]       { synonyms="hinten" }
 Group lOutdoor_Terrace  "Terasse" <garden>              (lOutdoor)     ["Terrace"]      { synonyms="hinten" }
+
+Group lOutdoorOther      "Sonstiges"     <group>        (lOutdoor)       ["Location"]
 
 Group lOther            "Sonstiges"     <group>                        ["Location"]
 

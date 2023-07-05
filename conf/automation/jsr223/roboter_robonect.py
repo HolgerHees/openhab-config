@@ -1,4 +1,4 @@
-from shared.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen, itemStateNewerThen, getThing
+from shared.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen, itemStateNewerThen, getThing, startTimer
 from shared.actions import Transformation
 from shared.triggers import CronTrigger, ItemStateChangeTrigger, ThingStatusChangeTrigger
 from java.time import ZonedDateTime
@@ -14,7 +14,8 @@ class RoboterRobonectState:
             #CronTrigger("*/15 * * * * ?"),
             ThingStatusChangeTrigger("robonect:mower:automower")
         ]
-        self.check()
+
+        startTimer(self.log, 5, self.check)
 
     def check(self):
         thing = getThing("robonect:mower:automower")

@@ -100,7 +100,7 @@ Number pFF_Attic_Air_Sensor_Humidity_Value          "Luftfeuchtigkeit [%.1f %%]"
 String pFF_Attic_Air_Sensor_Message                 "Luft [%s]"             <selftemperature> (eFF_Attic_Air_Sensor)
 
 // **** PLANT SENSORS ****
-Group eIndoor_Plant_Sensor "Blumensensor" <selfinfo> (lIndoor) ["Sensor"]
+Group eIndoor_Plant_Sensor "Blumensensor" <selfinfo> (lIndoorOther) ["Sensor"]
 
 String pIndoor_Plant_Sensor_Main_Info      "Sensoren Status  [%s]" <selfsensor> (eIndoor_Plant_Sensor) ["Point"]
 String pIndoor_Plant_Sensor_Watering_Info  "Planzen Status [%s]" <selfplant> (eIndoor_Plant_Sensor) ["Point"]
@@ -121,7 +121,7 @@ Switch pIndoor_Plant_Sensor_Device_Enabled5 "Pflanze 5" <selfautomode> (eIndoor_
 Switch pIndoor_Plant_Sensor_Device_Enabled6 "Pflanze 6" <selfautomode> (eIndoor_Plant_Sensor) ["Point"]
 
 // **** WEATHER FORECAST ****
-Group eOutdoor_Weather_Forecast                 "Wettervorhersage"                  <selfinfo> (lOutdoor) ["Sensor"]
+Group eOutdoor_Weather_Forecast                 "Wettervorhersage"                  <selfinfo> (lOutdoorOther) ["Sensor"]
 
 Number pOutdoor_Weather_Current_Temperature_Min "Garten (Vorhersage Min 24Std) [%.1f °C]" <selftemperature> (eOutdoor_Weather_Forecast) ["Point"] {channel="mqtt:topic:cloud:weatherforecast:temperatureMin" }
 Number pOutdoor_Weather_Current_Cloud_Cover_Min "Wolken (Vorhersage Min 24Std) [%.1f]"    <selftemperature> (eOutdoor_Weather_Forecast) ["Point"] {channel="mqtt:topic:cloud:weatherforecast:cloudcoverMin" }
@@ -141,7 +141,7 @@ Number pOutdoor_Weather_Forecast_Cloud_Cover_8h "Wolken (Vorhersage 8Std) [%.1f]
 // **** WEATHERSTATION ****
 Group gWeatherstationInputValues                     "Wetterstation Input" {autoupdate="false"}
 
-Group eOutdoor_WeatherStation                        "Wetterstation" <selfinfo> (lOutdoor) ["Sensor"]
+Group eOutdoor_WeatherStation                        "Wetterstation" <selfinfo> (lOutdoorOther) ["Sensor"]
 
 String pOutdoor_WeatherStation_Temperature_Item_Name "Item [%s]" <selftemperature> (eOutdoor_WeatherStation)
 

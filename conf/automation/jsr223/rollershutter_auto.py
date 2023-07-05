@@ -38,20 +38,12 @@ for config in configs:
     sunprotection_map[config["sunprotection"]].append(config)
 
 @rule()
-class RollershutterAutoCleanup:
-    def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("pOther_Manual_State_Auto_Rollershutter", state="OFF")]
-
-    def execute(self, module, input):
-        postUpdate("pOther_Manual_State_Auto_Sunprotection", OFF)
-
-@rule()
 class RollershutterAutoMorningEvening:
     def __init__(self):
         self.triggers = [ItemStateChangeTrigger("pOther_Automatic_State_Rollershutter")]
 
     def execute(self, module, input):
-        if getItemState("pOther_Manual_State_Auto_Rollershutter") != ON:
+        if getItemState("pOther_Manual_State_Auto_Rollershutter").intValue() & 1 == 0:
             return
       
         if getItemState("pOther_Automatic_State_Rollershutter").intValue() == SunProtectionHelper.STATE_ROLLERSHUTTER_DOWN:
@@ -59,8 +51,9 @@ class RollershutterAutoMorningEvening:
                 if getItemState(config["contact"]) != CLOSED: 
                     continue
                 sendCommand(config["shutter"], DOWN)
-        elif getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_AWAY and getItemState("pOther_Automatic_State_Rollershutter").intValue() == SunProtectionHelper.STATE_ROLLERSHUTTER_UP:
-            sendCommand("gShutters", UP)
+        elif getItemState("pOther_Automatic_State_Rollershutter").intValue() == SunProtectionHelper.STATE_ROLLERSHUTTER_UP:#
+            if getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_AWAY:
+                sendCommand("gShutters", UP)
 
 @rule()
 class RollershutterAutoWindowContact:
@@ -74,7 +67,7 @@ class RollershutterAutoWindowContact:
         #    self.log.info(u"{} {}".format(getItemState(config["shutter"]),getItemState(config["shutter"]).intValue() == 0))
          
     def execute(self, module, input):
-        if getItemState("pOther_Manual_State_Auto_Rollershutter") != ON:
+        if getItemState("pOther_Manual_State_Auto_Rollershutter").intValue() & 1 == 0:
             return
           
         contactItemName = input['event'].getItemName()
@@ -128,13 +121,15 @@ class RollershutterAutoPresence:
         self.awayTimer = None
 
     def execute(self, module, input):
-        if getItemState("pOther_Manual_State_Auto_Rollershutter") != ON:
+        if getItemState("pOther_Manual_State_Auto_Rollershutter").intValue() & 1 == 0:
             return
           
         if self.awayTimer != None:
             self.awayTimer.cancel()
             self.awayTimer = None
             
+        # Presence state is only related to sun protection.
+        # Means, we handle it only if global state is UP
         if getItemState("pOther_Automatic_State_Rollershutter").intValue() in [SunProtectionHelper.STATE_ROLLERSHUTTER_DOWN,SunProtectionHelper.STATE_ROLLERSHUTTER_MAYBE_UP]:
             return
     
@@ -151,7 +146,7 @@ class RollershutterAutoSunprotection:
             self.triggers.append(ItemStateChangeTrigger(sunprotection_item))
 
     def execute(self, module, input):
-        if getItemState("pOther_Manual_State_Auto_Sunprotection") != ON:
+        if getItemState("pOther_Manual_State_Auto_Rollershutter").intValue() & 2 == 0:
             return
           
         sunprotectionItemName = input['event'].getItemName()
@@ -179,18 +174,19 @@ class RollershutterTerraceAutoSunprotection:
         ]
 
     def execute(self, module, input):
+        if getItemState("pOther_Manual_State_Auto_Rollershutter").intValue() & 2 == 0:
+            return
+
         if getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == SunProtectionHelper.STATE_TERRACE_MAYBE_CLOSED:
             pass
         elif getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == SunProtectionHelper.STATE_TERRACE_CLOSED:
             # DOWN only if automatic is enabled and (people are present or where present changed recently or terrace door is open)
-            if (getItemState("pOther_Manual_State_Auto_Sunprotection") == ON
-                  and ( 
-                    getItemState("pOther_Presence_State").intValue() not in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]
-                    or
-                    itemLastChangeNewerThen("pOther_Presence_State", ZonedDateTime.now().minusMinutes(120)) 
-                    or
-                    getItemState("pGF_Livingroom_Openingcontact_Window_Terrace_State") == OPEN 
-                  )
+            if (
+                 getItemState("pOther_Presence_State").intValue() not in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]
+                 or
+                 itemLastChangeNewerThen("pOther_Presence_State", ZonedDateTime.now().minusMinutes(120))
+                 or
+                 getItemState("pGF_Livingroom_Openingcontact_Window_Terrace_State") == OPEN
                ):
                 #self.log.info(u"down")
                 sendCommand("pOutdoor_Terrace_Shading_Left_Control", DOWN)

@@ -96,28 +96,29 @@ class PresenceActionAlexaWelcome:
         arrived_user = []
         for user_name, stateItem in UserHelper.getPresentUserData().items():
             last_change = getItemLastUpdate(stateItem)
-            if last_change.isBefore(self.arrivedUser[user_name]):
+            if not last_change.isAfter(self.arrivedUser[user_name]):
                 continue
             if confirm:
                 self.arrivedUser[user_name] = last_change
             arrived_user.append(UserHelper.getName(user_name))
         return arrived_user
 
-    def isNewGuestArrived(self):
+    def isNewGuestArrived(self, confirm):
         state = getItemState("pOther_Presence_State").intValue()
         if state == PresenceHelper.STATE_MAYBE_PRESENT:
             lastUpdate = getItemLastUpdate("pOther_Presence_State")
-            if self.guestUser.isBefore(lastUpdate):
+            if not self.guestUser.isAfter(lastUpdate):
+                return False
+            if confirm:
                 self.guestUser = lastUpdate
-                return True
-        return False
+            return True
 
     def checkArriving(self):
         arrived_user = self.getArrivedUser(True)
         if len(arrived_user) > 0:
             welcome_msg = ShuffleHelper.getRandomSynonym(u"Willkommen zu Hause", len(arrived_user) > 1)
             AlexaHelper.sendTTS(u"Hallo {}, {}".format(" und Hallo ".join(arrived_user), welcome_msg), location = "lGF_Corridor")
-        elif self.isNewGuestArrived():
+        elif self.isNewGuestArrived(True):
             AlexaHelper.sendTTS(u"Hallo, unbekannter Gast. Die Hausbewohner wurden über Ihre Ankunft benachrichtigt.", location = "lGF_Corridor")
 
         if len(UserHelper.getPresentUser()) != len(self.arrivedUser):

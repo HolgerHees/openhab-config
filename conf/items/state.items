@@ -1,5 +1,5 @@
 // **** PRESENCE ****
-Group  eOther_Presence                          "Präsenz"         <selfinfo> (lIndoor) ["Sensor"]
+Group  eOther_Presence                          "Präsenz"         <selfinfo> (lOther) ["Sensor"]
 
 Number pOther_Presence_State                    "Präsenz"         <selfinfo> (eOther_Presence,gPersistance_History) ["Status"]
 Number pOther_Presence_Arrive_State             "Ankunft"         <selfinfo> (eOther_Presence) ["Status"]
@@ -24,12 +24,12 @@ Group   eGF_Livingroom_Receiver                 "Receiver"        <selfinfo> (lG
 Contact pGF_Livingroom_Receiver_State                             <selfinfo> (eGF_Livingroom_Receiver) ["Point"] { channel="knx:device:bridge:other:receiverState" }
 
 //####### SMOKE DETECTOR ########
-Group   eOther_Smoke_Detector                   "Rauchmelder"     <selfinfo> (lIndoor) ["SmokeDetector"]
+Group   eOther_Smoke_Detector                   "Rauchmelder"     <selfinfo> (lIndoorOther) ["SmokeDetector"]
 Contact pOther_Smoke_Detector_State             "Rauchmelder [MAP(smoke_detector_de.map):%s]" <smoke> (eOther_Smoke_Detector) ["Smoke"] { channel="knx:device:bridge:other:smokeDetector" }
 
 //####### SMOKE DETECTOR ########
-Group   eOther_Alarm_Siren                      "Alarmsirene"     <selfalarm> (lIndoor) ["Siren"]
-Switch  pOther_Alarm_Siren_Powered              "Alarmsirene"     <selfalarm> (eOther_Alarm_System) ["Point"] { channel="knx:device:bridge:other:alarmSiren" }
+Group   eOther_Alarm_Siren                      "Alarmsirene"     <selfalarm> (lIndoorOther) ["Siren"]
+Switch  pOther_Alarm_Siren_Powered              "Alarmsirene"     <selfalarm> (eOther_Alarm_Siren) ["Point"] { channel="knx:device:bridge:other:alarmSiren" }
 
 //####### HELPER SWITCH STATES ######
 Group  eFF_Bedroom_Switches_Long_Pressed        "Schalter"        <selfinfo> (lFF_Bedroom) ["WallSwitch"]
@@ -43,13 +43,14 @@ Switch pOther_Manual_State_Security_Notify      "Sicherheitsbenachrichtigen (S)"
 Number pOther_Manual_State_Air_Thoroughly_Notify "Lüftungshinweise [MAP(state_notify.map):%s]"<selfnotification> (eOther_Manual_States) ["Point"]
 Number pOther_Manual_State_Calendar_Event_Notify "Kalenderbenachrichtigung [MAP(state_notify.map):%s]" <selfnotification> (eOther_Manual_States) ["Point"]
 
-Switch pOther_Manual_State_Holiday              "Urlaubsmodus"    <selfshield> (eOther_Manual_States) ["Point"] { channel="knx:device:bridge:other:stateHoliday" }
+Switch pOther_Manual_State_Holiday              "Urlaubsmodus (U)"    <selfshield> (eOther_Manual_States) ["Point"] { channel="knx:device:bridge:other:stateHoliday" }
+Switch pOther_Manual_State_Summer               "Sommermodus (Heizung) (S)"     <selfshield> (eOther_Manual_States) ["Point"]
+
 Number pOther_Manual_State_Lightprogram         "Lichtprogram"    <selfautomode> (eOther_Manual_States) ["Point"]
 Number pOther_Manual_State_Auto_Attic_Light     "Mode (D) [%d]"       <selfautomode> (eOther_Manual_States) ["Point"]
 Switch pOther_Manual_State_Auto_Christmas       "Weihnachtsmodus (W)" <selfautomode> (eOther_Manual_States) ["Point"]
 Switch pOther_Manual_State_Auto_Lighting        "Beleuchtung Automatik (L)" <selfautomode> (eOther_Manual_States) ["Point"]
-Switch pOther_Manual_State_Auto_Rollershutter   "Rollläden Automatik (R)" <selfautomode> (eOther_Manual_States) ["Point"]
-Switch pOther_Manual_State_Auto_Sunprotection   "Beschattung Automatik (S)" <selfautomode> (eOther_Manual_States) ["Point"]
+Number pOther_Manual_State_Auto_Rollershutter   "Rollläden Automatik [MAP(state_rollershutter.map):%s]" <selfautomode> (eOther_Manual_States) ["Point"]
 
 //####### AUTOMATIC STATE FLAGS #######
 Group  eOther_Automatic_States                  "Auto Features"   <selfinfo> (lOther) ["Equipment"]
@@ -65,8 +66,20 @@ Switch pOther_Automatic_State_Sunprotection_Bedroom "Rollladen Schlafzimmer gesc
 Switch pOther_Automatic_State_Sunprotection_Livingroom "Rollläden Wohnzimmer geschlossen" <selfrollershutter> (eOther_Automatic_States) ["Point"]
 Number pOther_Automatic_State_Sunprotection_Terrace "Terasse geschlossen [MAP(state_auto_terrace.map):%s]" <selfrollershutter> (eOther_Automatic_States) ["Point"]
 
+//####### TARGET TEMPERATURES #######
+Group  eOther_Target_Temperatures                  "Auto Features"   <selfinfo> (lOther) ["Equipment"]
+Number pGF_Corridor_Temperature_Desired     "Ziel [%.1f °C]"       <selftemperature> (eOther_Target_Temperatures,lGF_Corridor) ["Setpoint"]
+Number pGF_Guesttoilet_Temperature_Desired  "Ziel [%.1f °C]"       <selftemperature> (eOther_Target_Temperatures,lGF_Guesttoilet)  ["Setpoint"]
+Number pGF_Livingroom_Temperature_Desired   "Ziel [%.1f °C]"       <selftemperature> (eOther_Target_Temperatures,lGF_Livingroom) ["Setpoint"]
+Number pGF_Workroom_Temperature_Desired    "Ziel [%.1f °C]"       <selftemperature> (eOther_Target_Temperatures,lGF_Workroom) ["Setpoint"]
+Number pFF_Corridor_Temperature_Desired     "Ziel [%.1f °C]"       <selftemperature> (eOther_Target_Temperatures,lFF_Corridor) ["Setpoint"]
+Number pFF_Bathroom_Temperature_Desired     "Ziel [%.1f °C]"       <selftemperature> (eOther_Target_Temperatures,lFF_Bathroom) ["Setpoint"]
+Number pFF_Bedroom_Temperature_Desired      "Ziel [%.1f °C]"       <selftemperature> (eOther_Target_Temperatures,lFF_Bedroom) ["Setpoint"]
+Number pFF_Fitnessroom_Temperature_Desired       "Ziel [%.1f °C]"       <selftemperature> (eOther_Target_Temperatures,lFF_Fitnessroom) ["Setpoint"]
+Number pFF_Makeuproom_Temperature_Desired       "Ziel [%.1f °C]"       <selftemperature> (eOther_Target_Temperatures,lFF_Makeuproom)["Setpoint"]
+
 //####### STATE MESSAGES #######
-Group  eOther_State_Messages                    "Nachrichten" <selfinfo> (lOther) ["Equipment"]
+Group  eOther_State_Messages                    "Status Nachrichten" <selfinfo> (lOther) ["Equipment"]
 String pOther_State_Message_Garden              "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // garden state
 String pOther_State_Message_Devices             "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // summerized device state
 String pOther_State_Message_Notifications       "Status [%s]" <selfinfo> (eOther_State_Messages) ["Point"] // notifications

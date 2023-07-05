@@ -38,18 +38,18 @@ Group  eOutdoor_Terrace_Socket          "Steckdosen"         <selfsocket> (lOutd
 Switch pOutdoor_Terrace_Socket_Powered  "Steckdosen"         <selfsocket> (eOutdoor_Terrace_Socket,gAll_Sockets,gOutdoor_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_outdoor:gardenside" }
 
 // **** MOBILE ****
-Group  eMobile_Socket_1                        "Mobile 1"           <selfsocket> (lIndoor) ["PowerOutlet"]
+Group  eMobile_Socket_1                        "Mobile 1"           <selfsocket> (lIndoorOther) ["PowerOutlet"]
 Switch pMobile_Socket_1_Powered                "Mobile 1"           <selfsocket> (eMobile_Socket_1,gAll_Sockets) ["Switch","Power"]              { channel="hue:0010:default:socket1:switch" }
 
-Group  eMobile_Socket_2                        "Mobile 2"           <selfsocket> (lIndoor) ["PowerOutlet"]
+Group  eMobile_Socket_2                        "Mobile 2"           <selfsocket> (lIndoorOther) ["PowerOutlet"]
 Switch pMobile_Socket_2_Powered                "Mobile 2"           <selfsocket> (eMobile_Socket_2,gAll_Sockets) ["Switch","Power"]              { channel="hue:0010:default:socket2:switch" }
 
-Group  eMobile_Socket_3                        "Mobile 3"           <selfsocket> (lIndoor) ["PowerOutlet"]
+Group  eMobile_Socket_3                        "Mobile 3"           <selfsocket> (lIndoorOther) ["PowerOutlet"]
 Switch pMobile_Socket_3_Powered                "Mobile 3"           <selfsocket> (eMobile_Socket_3,gAll_Sockets) ["Switch","Power"]              { channel="hue:0010:default:socket3:switch" }
 
-Group  eMobile_Socket_4                        "Mobile 4"           <selfsocket> (lIndoor) ["PowerOutlet"]
+Group  eMobile_Socket_4                        "Mobile 4"           <selfsocket> (lIndoorOther) ["PowerOutlet"]
 Switch pMobile_Socket_4_Powered                "Mobile 4"           <selfsocket> (eMobile_Socket_4,gAll_Sockets) ["Switch","Power"]              { channel="hue:0010:default:socket4:switch" }
 
-Group  eMobile_Socket_5                        "Mobile 5"           <selfsocket> (lIndoor) ["PowerOutlet"]
+Group  eMobile_Socket_5                        "Mobile 5"           <selfsocket> (lIndoorOther) ["PowerOutlet"]
 Switch pMobile_Socket_5_Powered                "Mobile 5"           <selfsocket> (eMobile_Socket_5,gAll_Sockets) ["Switch","Power"]              { channel="shelly:shellyplug:socket1:relay#output" }
 Number pMobile_Socket_5_Consumption	           "Mobile 5 Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_5,gAll_Sockets) ["Messurement","Power"]  { channel="shelly:shellyplug:socket1:meter#currentWatts" }

@@ -3,19 +3,19 @@ from shared.triggers import CronTrigger, ItemStateChangeTrigger
 
 
 infoConfig = [
-    ["pGF_Livingroom_Air_Sensor_Message", "pGF_Livingroom_Air_Sensor_Temperature_Value", "pGF_Livingroom_Air_Sensor_Humidity_Value", None, "pGF_Livingroom_Heating_Temperature_Desired"],
+    ["pGF_Livingroom_Air_Sensor_Message", "pGF_Livingroom_Air_Sensor_Temperature_Value", "pGF_Livingroom_Air_Sensor_Humidity_Value", None, "pGF_Livingroom_Temperature_Desired"],
     ["pGF_Boxroom_Air_Sensor_Message", "pGF_Boxroom_Air_Sensor_Temperature_Value", "pGF_Boxroom_Air_Sensor_Humidity_Value", "pGF_Boxroom_Air_Sensor_CO2_Value", None],
-    ["pGF_Workroom_Air_Sensor_Message", "pGF_Workroom_Air_Sensor_Temperature_Value", "pGF_Workroom_Air_Sensor_Humidity_Value", None, "pGF_Workroom_Heating_Temperature_Desired"],
-    ["pGF_Guesttoilet_Air_Sensor_Message", "pGF_Guesttoilet_Air_Sensor_Temperature_Value", "pGF_Guesttoilet_Air_Sensor_Humidity_Value", None, "pGF_Guesttoilet_Heating_Temperature_Desired"],
-    ["pGF_Corridor_Air_Sensor_Message", "pGF_Corridor_Air_Sensor_Temperature_Value", "pGF_Corridor_Air_Sensor_Humidity_Value", None, "pGF_Corridor_Heating_Temperature_Desired"],
+    ["pGF_Workroom_Air_Sensor_Message", "pGF_Workroom_Air_Sensor_Temperature_Value", "pGF_Workroom_Air_Sensor_Humidity_Value", None, "pGF_Workroom_Temperature_Desired"],
+    ["pGF_Guesttoilet_Air_Sensor_Message", "pGF_Guesttoilet_Air_Sensor_Temperature_Value", "pGF_Guesttoilet_Air_Sensor_Humidity_Value", None, "pGF_Guesttoilet_Temperature_Desired"],
+    ["pGF_Corridor_Air_Sensor_Message", "pGF_Corridor_Air_Sensor_Temperature_Value", "pGF_Corridor_Air_Sensor_Humidity_Value", None, "pGF_Corridor_Temperature_Desired"],
     ["pGF_Utilityroom_Air_Sensor_Message", "pGF_Utilityroom_Air_Sensor_Temperature_Value", "pGF_Utilityroom_Air_Sensor_Humidity_Value", None, None],
     ["pGF_Garage_Air_Sensor_Message", "pGF_Garage_Air_Sensor_Temperature_Value", "pGF_Garage_Air_Sensor_Humidity_Value", None, None],
-    ["pFF_Bedroom_Air_Sensor_Message", "pFF_Bedroom_Air_Sensor_Temperature_Value", "pFF_Bedroom_Air_Sensor_Humidity_Value", None, "pFF_Bedroom_Heating_Temperature_Desired"],
+    ["pFF_Bedroom_Air_Sensor_Message", "pFF_Bedroom_Air_Sensor_Temperature_Value", "pFF_Bedroom_Air_Sensor_Humidity_Value", None, "pFF_Bedroom_Temperature_Desired"],
     ["pFF_Dressingroom_Air_Sensor_Message", "pFF_Dressingroom_Air_Sensor_Temperature_Value", "pFF_Dressingroom_Air_Sensor_Humidity_Value", "pGF_Dressingroom_Air_Sensor_CO2_Value", None],
-    ["pFF_Fitnessroom_Air_Sensor_Message", "pFF_Fitnessroom_Air_Sensor_Temperature_Value", "pFF_Fitnessroom_Air_Sensor_Humidity_Value", None, "pFF_Fitnessroom_Heating_Temperature_Desired"],
-    ["pFF_Makeuproom_Air_Sensor_Message", "pFF_Makeuproom_Air_Sensor_Temperature_Value", "pFF_Makeuproom_Air_Sensor_Humidity_Value", None, "pFF_Makeuproom_Heating_Temperature_Desired"],
-    ["pFF_Bathroom_Air_Sensor_Message", "pFF_Bathroom_Air_Sensor_Temperature_Value", "pFF_Bathroom_Air_Sensor_Humidity_Value", None, "pFF_Bathroom_Heating_Temperature_Desired"],
-    ["pFF_Corridor_Air_Sensor_Message", "pFF_Corridor_Air_Sensor_Temperature_Value", "pFF_Corridor_Air_Sensor_Humidity_Value", None, "pFF_Corridor_Heating_Temperature_Desired"],
+    ["pFF_Fitnessroom_Air_Sensor_Message", "pFF_Fitnessroom_Air_Sensor_Temperature_Value", "pFF_Fitnessroom_Air_Sensor_Humidity_Value", None, "pFF_Fitnessroom_Temperature_Desired"],
+    ["pFF_Makeuproom_Air_Sensor_Message", "pFF_Makeuproom_Air_Sensor_Temperature_Value", "pFF_Makeuproom_Air_Sensor_Humidity_Value", None, "pFF_Makeuproom_Temperature_Desired"],
+    ["pFF_Bathroom_Air_Sensor_Message", "pFF_Bathroom_Air_Sensor_Temperature_Value", "pFF_Bathroom_Air_Sensor_Humidity_Value", None, "pFF_Bathroom_Temperature_Desired"],
+    ["pFF_Corridor_Air_Sensor_Message", "pFF_Corridor_Air_Sensor_Temperature_Value", "pFF_Corridor_Air_Sensor_Humidity_Value", None, "pFF_Corridor_Temperature_Desired"],
     ["pFF_Attic_Air_Sensor_Message", "pFF_Attic_Air_Sensor_Temperature_Value", "pFF_Attic_Air_Sensor_Humidity_Value", None, None]
 ]
 

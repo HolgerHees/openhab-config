@@ -144,11 +144,11 @@ class VentilationNotification:
             if len(push_msg) > 0 and getItemState("pOther_Presence_State").intValue() not in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
                 # lastDirection is None after a reloaded rule
                 if self.lastDirection is not None:
-                    if notify_state & 1:
+                    if notify_state & 1 == 1:
                         push_msg = u", ".join(push_msg)
                         NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"Lüften", push_msg, recipients = recipients )
 
-                    if notify_state & 2 and getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_PRESENT:
+                    if notify_state & 2 == 2 and getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_PRESENT:
                         alexa_msg = u" und ".join(alexa_msg)
 
                         AlexaHelper.sendTTS(alexa_msg, header = u"Lüftungshinweiss")

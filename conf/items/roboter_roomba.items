@@ -1,5 +1,5 @@
 // **** ROOMBA ****
-Group  eIndoor_Roomba                   "Staubsauger"               <selfinfo>     (lIndoor) ["CleaningRobot"]
+Group  eIndoor_Roomba                   "Staubsauger"               <selfinfo>     (lIndoorOther) ["CleaningRobot"]
 
 /* Roomba items */
 Switch pIndoor_Roomba_online            "Roomba Online"                            (eIndoor_Roomba) ["Point"] {channel="network:pingdevice:roomba:online"}

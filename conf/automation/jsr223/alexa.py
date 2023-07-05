@@ -1,4 +1,4 @@
-from shared.helper import rule, postUpdateIfChanged, getItemState, getThing
+from shared.helper import rule, postUpdateIfChanged, getItemState, getThing, startTimer
 from shared.triggers import CronTrigger, ThingStatusChangeTrigger
 
 @rule()
@@ -8,7 +8,8 @@ class AlexaState:
             #CronTrigger("*/15 * * * * ?"),
             ThingStatusChangeTrigger("amazonechocontrol:account:account1")
         ]
-        self.check()
+
+        startTimer(self.log, 5, self.check)
 
     def check(self):
         thing = getThing("amazonechocontrol:account:account1")

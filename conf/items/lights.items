@@ -128,7 +128,7 @@ Switch pFF_Attic_Light_Ceiling_Powered          "Deckenlicht"        <selflight>
 
 // **** GF GARAGE ****
 Group  eGardenHouse_Light_Ceiling            "Deckenlampe"        <selflight> (lGardenHouse)                                        ["Lightbulb"] { synonyms="Decke" }
-Switch pGardenHouse_Light_Ceiling_Powered    "Deckenlicht"        <selflight> (eGF_GardenHouse_Light_Ceiling,gIndoor_Lights)        ["Switch","Light"] { channel="knx:device:bridge:lights_gardenhouse:ceiling" }
+Switch pGardenHouse_Light_Ceiling_Powered    "Deckenlicht"        <selflight> (eGardenHouse_Light_Ceiling,gIndoor_Lights)        ["Switch","Light"] { channel="knx:device:bridge:lights_gardenhouse:ceiling" }
 
 Group:Number:SUM gOutdoor_Motiondetector_Counter "Automatik [MAP(motiondetector_counter_de.map):%s]" <selflightInfo> {autoupdate="false"}
 
@@ -168,7 +168,7 @@ Switch pOutdoor_Garden_Garage_Light_Powered     "Licht"              <selflight>
 Switch pOutdoor_Garden_Garage_Automatic_Switch	"Automatik"          <selflight> (eOutdoor_Garden_Garage_Light,gOutdoor_Motiondetector_Counter) ["Point"]
 
 //####### OUTDOOR LIGHT LOGIC STATES ########
-Group  eOutdoor_Light_Automatic_Logic           "Beleuchtung Steuerung"           <selfinfo> (lOutdoor) ["Equipment"]
+Group  eOutdoor_Light_Automatic_Logic           "Beleuchtung Steuerung"           <selfinfo> (lOutdoorOther) ["Equipment"]
 Switch pOutdoor_Light_Automatic_Main_Switch     "Automatik" <selfinfo> (eOutdoor_Light_Automatic_Logic) ["Point"] { channel="knx:device:bridge:motion_outdoor:main" }
 
 
