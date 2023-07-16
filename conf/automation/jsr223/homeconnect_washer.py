@@ -15,7 +15,7 @@ class HomeConnectWasherMessage:
         #self.check()
 
     def check(self):
-        max_time = ZonedDateTime.now().minusHours( 24 * 31 )
+        max_time = ZonedDateTime.now().minusHours( 24 * 30 * 3 )
 
         #if getItemState("pGF_Utilityroom_Washer_ActiveProgramState") != UNDEF:
         #    return
@@ -76,7 +76,7 @@ class HomeConnectWasherProgress:
         # *** NOTIFICATION ***
         if input['event'].getItemName() == "pGF_Utilityroom_Washer_RemainingProgramTimeState":
             runtime = input['event'].getItemState()
-            if runtime != NULL and runtime != UNDEF and runtime.intValue() > 0 and self.checkTimer != None:
+            if runtime != NULL and runtime != UNDEF and runtime.intValue() > 0:
                 # refresh timer with additional 10 min delay as a fallback
                 self.checkTimer = startTimer(self.log, runtime.intValue() + 600, self.notify, args = [ False ], oldTimer = self.checkTimer)
         else:
@@ -86,6 +86,7 @@ class HomeConnectWasherProgress:
                 if currentMode == "Run":
                     # start timer with initial 15 min delay as a fallback
                     self.checkTimer = startTimer(self.log, 900, self.notify, args = [ False ], oldTimer = self.checkTimer)
-                elif currentMode == "Finished"and self.checkTimer != None:
-                    self.checkTimer.cancel()
+                elif currentMode == "Finished":
+                    if self.checkTimer != None:
+                        self.checkTimer.cancel()
                     self.notify( True )

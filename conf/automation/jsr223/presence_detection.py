@@ -2,7 +2,7 @@ from java.time import ZonedDateTime
 from java.time.temporal import ChronoUnit
 import threading
 
-from shared.helper import log, rule, itemLastChangeOlderThen, getItem, getItemState, getFilteredChildItems, getItemLastUpdate, postUpdate, postUpdateIfChanged, startTimer, isMember, getGroupMember, getGroupMemberChangeTrigger, NotificationHelper, UserHelper
+from shared.helper import log, rule, itemLastChangeOlderThen, itemLastChangeNewerThen, getItem, getItemState, getFilteredChildItems, getItemLastUpdate, postUpdate, postUpdateIfChanged, startTimer, isMember, getGroupMember, getGroupMemberChangeTrigger, NotificationHelper, UserHelper
 from shared.triggers import ItemStateChangeTrigger
 from custom.presence import PresenceHelper
 
@@ -141,18 +141,18 @@ class PresenceDetectionKnownPersonCheck:
 
         self.skippedTimer = {}
 
-    def process(self,itemName,itemState):
+    def process(self, itemName, relatedItemName, itemState):
         with PresenceCache.getLock():
             presenceState = PresenceCache.getPresenceState()
 
             if itemState == ON:
-                postUpdate( itemName[:-4] ,ON) # Item name without raw, is the real one
+                postUpdate( relatedItemName ,ON) # Item name without raw, is the real one
 
                 # only possible if we are away
                 if presenceState in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
                     PresenceCache.setPresenceState(PresenceHelper.STATE_PRESENT)
             else:
-                postUpdate( itemName[:-4] ,OFF) # Item name without "_Raw", is the real one
+                postUpdate( relatedItemName ,OFF) # Item name without "_Raw", is the real one
 
                 # we must check child items instead of group item, because group item is updated too late
                 #if getItemState("gOther_Presence_State_Raw") == OFF:
@@ -163,26 +163,32 @@ class PresenceDetectionKnownPersonCheck:
 
     def execute(self, module, input):
         itemName = input['event'].getItemName()
+        relatedItemName = itemName[:-4]
+
         newItemState = input['event'].getItemState()
         oldItemState = input['oldState']
 
-        if itemName in self.skippedTimer:
+        itemHasSkipTimer = ( itemName in self.skippedTimer )
+        if itemHasSkipTimer:
             self.skippedTimer[itemName].cancel()
             del self.skippedTimer[itemName]
 
         # sometimes, phones are losing wifi connections because of their sleep mode
         if newItemState == OFF:
             if oldItemState == ON:
-                if itemLastChangeOlderThen("pGF_Corridor_Openingcontact_Door_State",ZonedDateTime.now().minusMinutes(30)):
-                    self.skippedTimer[itemName] = startTimer(self.log, 7200, self.process, args = [ itemName, newItemState ]) # 1 hour
-                    NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_NOTICE, u"System", u"Delayed presence processing {} for {}".format(newItemState,itemName))
-                    return
+                if itemLastChangeOlderThen("pGF_Corridor_Openingcontact_Door_State",ZonedDateTime.now().minusMinutes(30)) and getItemState("pOther_Presence_Arrive_State") > 0:
+                    # relatedItem state is still ON
+                    lastChangedState = getItemLastChange(relatedItemName)
+                    if itemLastChangeNewerThen("pGF_Corridor_Openingcontact_Door_State",lastChangedState.minusMinutes(15)):
+                        self.skippedTimer[itemName] = startTimer(self.log, 7200, self.process, args = [ itemName, relatedItemName, newItemState ]) # 1 hour
+                        NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_NOTICE, u"System", u"Delayed presence processing {} for {}".format(newItemState,itemName))
+                        return
         else:
-            if oldItemState == OFF and itemName in self.skippedTimer:
+            if oldItemState == OFF and itemHasSkipTimer:
                 NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_NOTICE, u"System", u"Cancel presence processing {} for {}".format(newItemState,itemName))
                 return
-              
-        self.process(itemName, newItemState)
+
+        self.process(itemName, relatedItemName, newItemState)
           
     
 @rule()

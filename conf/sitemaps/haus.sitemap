@@ -343,16 +343,16 @@ sitemap haus label="Main Menu"
 	{
         Text label="Benachrichtigungen [%s]" icon="selfnotification" item=pOther_State_Message_Notifications
         {
-            Switch item=pOther_Manual_State_Security_Notify
-            Selection item=pOther_Manual_State_Air_Thoroughly_Notify icon="selfnotification" mappings=[0="Aus", 1="Push (P)", 2="Alexa (Bei Anwesenheit) (A)", 3="Push & Alexa (Bei Anwesenheit) (PA)"]
-            Selection item=pOther_Manual_State_Calendar_Event_Notify icon="selfnotification" mappings=[0="Aus", 1="Push (P)", 2="Alexa (Bei Anwesenheit) (A)", 3="Push & Alexa (Bei Anwesenheit) (PA)"]
+            Switch item=pOther_Manual_State_Security_Notify label="Sicherheitsbenachrichtigung (s)"
+            Selection item=pOther_Manual_State_Air_Thoroughly_Notify icon="selfnotification" mappings=[0="Aus", 1="Push (p)", 2="Alexa (Bei Anwesenheit) (a)", 3="Push & Alexa (Bei Anwesenheit) (pa)"]
+            Selection item=pOther_Manual_State_Calendar_Event_Notify icon="selfnotification" mappings=[0="Aus", 1="Push (p)", 2="Alexa (Bei Anwesenheit) (a)", 3="Push & Alexa (Bei Anwesenheit) (pa)"]
         }
 		Text label="Programme [%s]" icon="selfstate" item=pOther_State_Message_Auto valuecolor=[pOther_State_Message_Auto=="Inaktiv"="#d72a2a"]
         {
 			Frame label="Steuerung"
 			{
-                Switch item=pOther_Manual_State_Holiday
-                Switch item=pOther_Manual_State_Summer
+                Switch item=pOther_Manual_State_Holiday label="Urlaubsmodus (u)"
+                Switch item=pOther_Manual_State_Summer label="Sommermodus (Heizung) (s)"
                 Group label="Komforttemperaturen [%.1f °C]" item=pGF_Utilityroom_Ventilation_Comfort_Temperature icon="selfheating"{
                     Setpoint item=pGF_Guesttoilet_Temperature_Desired label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
                     Setpoint item=pGF_Livingroom_Temperature_Desired label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
@@ -367,12 +367,12 @@ sitemap haus label="Main Menu"
                 }
 			}
             Frame label="Automatik" {
-				Switch item=pOutdoor_Light_Automatic_Main_Switch icon="selfautomode" label="Aussenbeleuchtung (AL)"
-                Switch item=pOther_Manual_State_Auto_Lighting label="Innenbeleuchtung (Bei Abwesenheit) (IL)"
-                Selection item=pOther_Manual_State_Auto_Rollershutter label="Rollläden" mappings=[0="Aus", 1="Tageszeitabhängig (T)", 2="Beschattung (B)", 3="Tageszeitabhängig & Beschattung (TB)"]
+				Switch item=pOutdoor_Light_Automatic_Main_Switch icon="selfautomode" label="Aussenbeleuchtung (a)"
+                Switch item=pOther_Manual_State_Auto_Lighting label="Innenbeleuchtung (Bei Abwesenheit) (i)"
+                Selection item=pOther_Manual_State_Auto_Rollershutter label="Rollläden" mappings=[0="Aus", 1="Tageszeitabhängig (t)", 2="Beschattung (b)", 3="Tageszeitabhängig & Beschattung (tb)"]
             }
             Frame label="Sonstiges" {
-                Switch item=pOther_Manual_State_Auto_Christmas
+                Switch item=pOther_Manual_State_Auto_Christmas label="Weihnachtsmodus (w)"
                 Text label="Weihnachsmodus (Steckdosen)" icon="selfsocket" visibility=[pOther_Manual_State_Auto_Christmas==ON] {
                     Switch item=pGF_Livingroom_Socket_Couch_Powered
                     Switch item=pGF_Livingroom_Socket_Fireplace_Powered
@@ -381,7 +381,7 @@ sitemap haus label="Main Menu"
                     Switch item=pMobile_Socket_2_Powered
                     Switch item=pOutdoor_Streeside_Socket_Powered
                 }
-                Switch item=pOther_Manual_State_Auto_Attic_Light label="Dachboden (D)" mappings=[1="OFF", 2="W", 3="B"]
+                Switch item=pOther_Manual_State_Auto_Attic_Light label="Dachboden (d)" mappings=[1="OFF", 2="W", 3="B"]
                 Switch item=pFF_Attic_Socket_Powered label="Dachboden (Steckdose)" visibility=[pOther_Manual_State_Auto_Attic_Light!=1]
             }
 			/*Frame label="Sonstiges"

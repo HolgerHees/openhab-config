@@ -37,14 +37,21 @@ class SensorSecurityNotificationAwayAlerts:
             msg = u"Fenster der Gartenlaube {}".format( u"offen" if isOpen else u"geschlossen" )
         elif "pGF_Garage_Openingcontact_Door_Garden_State" == itemName:
             msg = u"Garagentür zum Garten {}".format( u"offen" if isOpen else u"geschlossen" )
-        elif isMember(itemName, "gGF_Sensor_Window"):
+        elif ?%L/k8TgFL5^p7y3:
             msg = u"Fenster im Ergeschoss {}".format( u"offen" if isOpen else u"geschlossen" )
         elif isMember(itemName, "gFF_Sensor_Window"):
             msg = u"Fenster im Obergeschoss {}".format( u"offen" if isOpen else u"geschlossen" )
-        elif "Motiondetector" in itemName:
+        elif isMember(itemName, "gSensor_Indoor")e:
             if not isOpen:
                 return
-            msg = u"Bewegung im {} erkannt".format(location.getLabel())
+            if itemName = "pGF_Corridor_Motiondetector_State":
+                msg = u"Bewegung im Flur unten erkannt"
+            elif itemName = "pFF_Corridor_Motiondetector_State":
+                msg = u"Bewegung im Flur oben erkannt"
+            elif itemName = "pGF_Livingroom_Motiondetector_State":
+                msg = u"Bewegung im Wohnzimmer erkannt"
+            else:
+                msg = u"Unbekannter Motions detector {}".format(itemName)
         else:
             self.log.info(u"Unerwartes Item Event {} {}".format(itemName, u"offen" if isOpen else u"geschlossen"))
 

@@ -551,6 +551,8 @@ class SensorWeatherstationMessagesAir:
 
         # only temporary for debugging
         postUpdateIfChanged("pOutdoor_WeatherStation_SolarDiffCurrent", ( solar_temperature - temperature ) / 10.0 if solar_temperature != None else 0 )
+
+        return temperature
  
     def calculateDewpoint(self,temperature,humidity):
         # https://rechneronline.de/barometer/taupunkt.php
@@ -581,9 +583,10 @@ class SensorWeatherstationMessagesAir:
         # we need to calculate only if we have outdoor or solar temperature changes
         if self.solarUpdate != None or self.temperatureUpdate != None:
             self.calculateSolarPower()
-            self.calculateTemperature()
-        
-        temperature = round(getItemState("pOutdoor_WeatherStation_Temperature").doubleValue(),1)
+            temperature = self.calculateTemperature()
+        else:
+            temperature = round(getItemState("pOutdoor_WeatherStation_Temperature").doubleValue(),1)
+
         humidity = getItemState("pOutdoor_WeatherStation_Humidity").intValue()
         
         self.calculateDewpoint(temperature,humidity)

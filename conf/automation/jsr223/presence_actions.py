@@ -56,7 +56,7 @@ class PresenceActionUnknownPerson:
             if oldPresentState == PresenceHelper.STATE_MAYBE_PRESENT:
                 # lastChange Date is comming from database which can be updated too late
                 # thats why I add a async task with a delay of 2 seconds here
-                self.timer = startTimer(self.log, 2, self.checkArriving, args = [ZonedDateTime.now()] )
+                self.timer = startTimer(self.log, 2, self.checkArriving, args = [] )
 
 @rule()
 class PresenceActionKnownPerson:
@@ -107,7 +107,7 @@ class PresenceActionAlexaWelcome:
         state = getItemState("pOther_Presence_State").intValue()
         if state == PresenceHelper.STATE_MAYBE_PRESENT:
             lastUpdate = getItemLastUpdate("pOther_Presence_State")
-            if not self.guestUser.isAfter(lastUpdate):
+            if not lastUpdate.isAfter(self.guestUser):
                 return False
             if confirm:
                 self.guestUser = lastUpdate

@@ -21,26 +21,26 @@ class StateMessageAuto:
 
     def execute(self, module, input):
         active1 = []
-        active1.append(self.format("pOther_Manual_State_Holiday",u"U"))
-        active1.append(self.format("pOther_Manual_State_Summer",u"S"))
+        active1.append(self.format("pOther_Manual_State_Holiday",u"u"))
+        active1.append(self.format("pOther_Manual_State_Summer",u"s"))
 
         active2 = []
-        active2.append(self.format("pOutdoor_Light_Automatic_Main_Switch",u"AL"))
-        active2.append(self.format("pOther_Manual_State_Auto_Lighting",u"IL"))
+        active2.append(self.format("pOutdoor_Light_Automatic_Main_Switch",u"al"))
+        active2.append(self.format("pOther_Manual_State_Auto_Lighting",u"il"))
         state = getItemState("pOther_Manual_State_Auto_Rollershutter").intValue()
         if state == 0:
-            active2.append(u"TB\u0336")
+            active2.append(u"t\u0336b\u0336")
         elif state == 1:
-            active2.append(u"T")
+            active2.append(u"tb\u0336")
         elif state == 2:
-            active2.append(u"B")
+            active2.append(u"t\u0336b")
         elif state == 3:
-            active2.append(u"TB")
+            active2.append(u"tb")
 
         active3 = []
-        active3.append(self.format("pOther_Manual_State_Auto_Christmas",u"W"))
-        active3.append(self.format("pOther_Manual_State_Auto_Attic_Light",u"D", getItemState("pOther_Manual_State_Auto_Attic_Light").intValue() != 1))
+        active3.append(self.format("pOther_Manual_State_Auto_Christmas",u"w"))
+        active3.append(self.format("pOther_Manual_State_Auto_Attic_Light",u"d", getItemState("pOther_Manual_State_Auto_Attic_Light").intValue() != 1))
 
-        msg = u"{} | {} | {}".format( u"-".join(active1), u"-".join(active2), u"-".join(active3) )
+        msg = u"{},{},{}".format( u",".join(active1), u",".join(active2), u",".join(active3) )
 
         postUpdateIfChanged("pOther_State_Message_Auto", msg)
