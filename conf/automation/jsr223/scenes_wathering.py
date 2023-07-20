@@ -115,6 +115,7 @@ class ScenesWatheringControl(WatheringHelperOld):
                 if getItemState(circuit + "_Auto") == ON:
                     sendCommand(circuit + "_Powered", OFF)
         postUpdate("pOutdoor_Watering_Logic_Program_State", u"läuft nicht")
+        self.activeIndex = -1
 
     def cancelProgressTimer(self):
         if self.progressTimer is not None:
@@ -169,7 +170,6 @@ class ScenesWatheringControl(WatheringHelperOld):
             if nextIndex == -1:
                 self.disableAllCircuits()
                 postUpdate("pOutdoor_Watering_Logic_Program_Start", OFF)
-                self.activeIndex = -1
             else:
                 for circuit in circuits[nextIndex][2]:
                     if getItemState(circuit + "_Auto") == ON:

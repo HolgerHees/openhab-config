@@ -8,7 +8,7 @@
         "parameters": [],
         "parameterGroups": []
       },
-      "timestamp": "Jun 27, 2023, 8:35:08 AM",
+      "timestamp": "Jul 20, 2023, 3:48:14 PM",
       "component": "panelconfiguration",
       "config": {
         "default": true,
@@ -309,7 +309,7 @@
             "component": "customwidget",
             "config": {
               "id": "WeatherDetailOverview",
-              "template": "\u003c!--\nhttps://stackoverflow.com/questions/8702704/alternative-to-iframes-with-html5\n--\u003e\n\u003cdiv class\u003d\"mvWidget\" oc-lazy-load\u003d\"[\u0027/static/shared/habpanel/js/helper.js\u0027]\"\u003e\n  \u003cmv-widget-embedd embedd-url\u003d\"/weather/widgetWeatherDetailOverview.php\" embedd-refresh-interval\u003d\"3600\"\u003e\u003c/mv-widget-embedd\u003e\n\u003c/div\u003e  "
+              "template": "\u003cdiv class\u003d\"mvWidget\" style\u003d\"padding:0px;\" oc-lazy-load\u003d\"[\u0027/static/shared/habpanel/js/helper.js\u0027]\"\u003e\n\t\u003ciframe width\u003d\"100%\" height\u003d\"100%\" frameborder\u003d\"0\" src\u003d\"/weather/weatherDetailOverview.php\"\u003e \n  \u003c/iframe\u003e\n\u003c/div\u003e                                                                              "
             },
             "slots": {
               "settings": []

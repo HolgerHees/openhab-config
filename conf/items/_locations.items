@@ -10,7 +10,7 @@ Group lGF_Workroom      "Büro"          <office>        (lGroundFloor) ["Room"]
 Group lGF_Corridor      "Flur"          <corridor>      (lGroundFloor) ["Corridor"]     { synonyms="unten" }
 Group lGF_Garage        "Schuppen"      <corridor>      (lGroundFloor) ["Garage"]
 
-Group lIndoorOther      "Sonstiges"     <group>        (lIndoor)       ["Location"]
+Group lIndoorOther      "Sonstiges"     <group>        (lIndoor)       ["Equipment"]
 
 Group lFirstFloor       "Obergeschoss"  <firstfloor>    (lIndoor)      ["FirstFloor"]
 Group lFF_Bathroom      "Badezimmer"    <bath>          (lFirstFloor)  ["Bathroom"]     { synonyms="Bad" }
@@ -29,9 +29,9 @@ Group lOutdoor_Carport  "Carport"       <garden>        (lOutdoor)     ["Carport
 Group lOutdoor_Garden   "Hintergarten"  <garden>        (lOutdoor)     ["Garden"]       { synonyms="hinten" }
 Group lOutdoor_Terrace  "Terasse" <garden>              (lOutdoor)     ["Terrace"]      { synonyms="hinten" }
 
-Group lOutdoorOther      "Sonstiges"     <group>        (lOutdoor)       ["Location"]
+Group lOutdoorOther     "Sonstiges"     <group>        (lOutdoor)      ["Equipment"]
 
-Group lOther            "Sonstiges"     <group>                        ["Location"]
+Group lOther            "Sonstiges"     <group>                        ["Equipment"]
 
-//Group lTestFloor1        "Erdgeschoss"   <groundfloor>   (lIndoor)      ["GroundFloor"]  { synonyms="testflur" }
-//Group lTestFloor3        "Erdgeschoss"   <groundfloor>   (lTestFloor2)      ["GroundFloor"]  { synonyms="testflur" }
+//Group lTestFloor1     "Erdgeschoss"   <groundfloor>   (lIndoor)      ["GroundFloor"]  { synonyms="testflur" }
+//Group lTestFloor3     "Erdgeschoss"   <groundfloor>   (lTestFloor2)  ["GroundFloor"]  { synonyms="testflur" }

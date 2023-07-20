@@ -36,4 +36,4 @@ class StateMessageNotification:
         elif state == 3:
             active.append(u"pa")
 
-        postUpdateIfChanged("pOther_State_Message_Notifications", "-".join(active))
+        postUpdateIfChanged("pOther_State_Message_Notifications", ",".join(active))
