@@ -130,9 +130,11 @@ Number pOutdoor_Weather_Current_Cloud_Cover_Max "Wolken (Vorhersage Max 24Std) [
 Number pOutdoor_Weather_Current_Temperature_Avg "Garten (Vorhersage Avg 24Std) [%.1f °C]" <selftemperature> (eOutdoor_Weather_Forecast) ["Point"] {channel="mqtt:topic:cloud:weatherforecast:temperatureAvg" }
 Number pOutdoor_Weather_Current_Cloud_Cover_Avg "Wolken (Vorhersage Avg 24Std) [%.1f]"    <selftemperature> (eOutdoor_Weather_Forecast) ["Point"] {channel="mqtt:topic:cloud:weatherforecast:cloudcoverAvg" }
 
+Number pOutdoor_Weather_Current_Temperature     "Garten [%.1f °C]"                  <selftemperature> (eOutdoor_Weather_Forecast,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:cloud:weatherforecast:airTemperatureCurrent" }
+Number pOutdoor_Weather_Current_Cloud_Cover     "Wolken [%.1f]"                     <selftemperature> (eOutdoor_Weather_Forecast) ["Point"] {channel="mqtt:topic:cloud:weatherforecast:effectiveCloudCoverCurrent" }
+Number pOutdoor_Weather_Current_Humidity        "Luftfeuchtigkeit [%.1f %%]"        <selftemperature> (eOutdoor_Weather_Forecast,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:cloud:weatherforecast:humidityCurrent" }
+Number pOutdoor_Weather_Current_Temperature_Perceived     "Gefühlt [%.1f] °C"       <selftemperature> (eOutdoor_Weather_Forecast) ["Point"] {channel="mqtt:topic:cloud:weatherforecast:perceivedTemperatureCurrent" }
 
-Number pOutdoor_Weather_Current_Temperature     "Garten [%.1f °C]"                  <selftemperature> (eOutdoor_Weather_Forecast,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:cloud:weatherforecast:temperature0" }
-Number pOutdoor_Weather_Current_Cloud_Cover     "Wolken [%.1f]"                       <selftemperature> (eOutdoor_Weather_Forecast) ["Point"] {channel="mqtt:topic:cloud:weatherforecast:cloudcover0" }
 Number pOutdoor_Weather_Forecast_Temperature_4h "Garten (Vorhersage 4Std) [%.1f °C]" <selftemperature> (eOutdoor_Weather_Forecast,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:cloud:weatherforecast:temperature4" }
 Number pOutdoor_Weather_Forecast_Cloud_Cover_4h "Wolken (Vorhersage 4Std) [%.1f]"     <selftemperature> (eOutdoor_Weather_Forecast) ["Point"] {channel="mqtt:topic:cloud:weatherforecast:cloudcover4" }
 Number pOutdoor_Weather_Forecast_Temperature_8h "Garten (Vorhersage 8Std) [%.1f °C]" <selftemperature> (eOutdoor_Weather_Forecast,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:cloud:weatherforecast:temperature8" }
@@ -182,6 +184,7 @@ Number pOutdoor_WeatherStation_Temperature           "Garten [%.1f °C]" <selfte
 Number pOutdoor_WeatherStation_Humidity_Raw          "Luftfeuchtigkeit Raw [%.1f %%]" <humidity> (eOutdoor_WeatherStation,gWeatherstationInputValues) {channel="mqtt:topic:mosquitto:weatherstation:humidity" }
 Number pOutdoor_WeatherStation_Humidity              "Garten [%.1f %%]" <humidity> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History,gPersistance_Mqtt) ["Measurement","Humidity"]
 String pOutdoor_WeatherStation_Air_Message           "Luft [%s]" <selftemperature> (eOutdoor_WeatherStation)
+Number pOutdoor_WeatherStation_Temperature_Perceived "Gefühlt [%.1f °C]" <selftemperature> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_Mqtt)
 
 Number pOutdoor_WeatherStation_Pressure              "Luftdruck [%.1f hPa]" <selfruntime> (eOutdoor_WeatherStation,gWeatherstationInputValues,gPersistance_Chart,gPersistance_History,gPersistance_Mqtt) ["Measurement","Pressure"]                      {channel="mqtt:topic:mosquitto:weatherstation:pressure" }
 

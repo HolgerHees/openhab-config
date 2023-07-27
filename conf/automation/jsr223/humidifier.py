@@ -92,7 +92,7 @@ class HumidifierLevel:
         #sendCommand("pGF_Livingroom_Humidifier_Power", REFRESH)
 
     def execute(self, module, input):
-        if 'event' in input.keys() and input['event'].getItemName() == "pGF_Livingroom_Humidifier_Speed":
+        if input['event'].getType() != "TimerEvent" and input['event'].getItemName() == "pGF_Livingroom_Humidifier_Speed":
             if self.autoChangeInProgress:
                 self.autoChangeInProgress = False
             else:
@@ -145,10 +145,10 @@ class HumidifierLevel:
             newLevel = maxLevel
 
         if newLevel != currentLevel:
-            # 1. 'event' in input.keys() is an presence or auto mode change
+            # 1. input['event'].getType() != "TimerEvent" is an presence or auto mode change
             # 2. is cron triggered event
             # => itemLastChangeOlderThen check to prevent level flapping on humidity changes
-            if 'event' in input.keys() or itemLastChangeOlderThen("pGF_Livingroom_Humidifier_Speed", ZonedDateTime.now().minusMinutes(15)):
+            if input['event'].getType() != "TimerEvent" or itemLastChangeOlderThen("pGF_Livingroom_Humidifier_Speed", ZonedDateTime.now().minusMinutes(15)):
                 self.autoChangeInProgress = True
 
                 sendCommand("pGF_Livingroom_Humidifier_Speed", "level_{}".format(newLevel))

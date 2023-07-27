@@ -1,18 +1,23 @@
 Bridge mqtt:broker:cloud [ host="cloud_mosquitto", secure=false ]
 {
     Thing topic weatherforecast "Wettervorhersage" @ "Geräte" {
-        Type number : temperature0 "Temperatur" [ stateTopic="hhees/weather/items/airTemperatureInCelsius/0" ]
-        Type number : cloudcover0 "Bewölkung" [ stateTopic="hhees/weather/items/effectiveCloudCoverInOcta/0" ]
-        Type number : temperature4 "Temperatur 4 Stunden" [ stateTopic="hhees/weather/items/airTemperatureInCelsius/4" ]
-        Type number : cloudcover4 "Bewölkung 4 Stunden" [ stateTopic="hhees/weather/items/effectiveCloudCoverInOcta/4" ]
-        Type number : temperature8 "Temperatur 8 Stunden" [ stateTopic="hhees/weather/items/airTemperatureInCelsius/8" ]
-        Type number : cloudcover8 "Bewölkung 8 Stunden" [ stateTopic="hhees/weather/items/effectiveCloudCoverInOcta/8" ]
-        Type number : temperatureMin "Temperatur Min 24 Stunden" [ stateTopic="hhees/weather/items/airTemperatureInCelsius/min" ]
-        Type number : cloudcoverMin "Bewölkung Min 24 Stunden" [ stateTopic="hhees/weather/items/effectiveCloudCoverInOcta/min" ]
-        Type number : temperatureMax "Temperatur Max 24 Stunden" [ stateTopic="hhees/weather/items/airTemperatureInCelsius/max" ]
-        Type number : cloudcoverMax "Bewölkung Max 24 Stunden" [ stateTopic="hhees/weather/items/effectiveCloudCoverInOcta/max" ]
-        Type number : temperatureAvg "Temperatur Avg 24 Stunden" [ stateTopic="hhees/weather/items/airTemperatureInCelsius/avg" ]
-        Type number : cloudcoverAvg "Bewölkung Avg 24 Stunden" [ stateTopic="hhees/weather/items/effectiveCloudCoverInOcta/avg" ]
+        Type number : temperature0 "Temperatur" [ stateTopic="hhees/weather/provider/items/airTemperatureInCelsius/0" ]
+        Type number : cloudcover0 "Bewölkung" [ stateTopic="hhees/weather/provider/items/effectiveCloudCoverInOcta/0" ]
+        Type number : temperature4 "Temperatur 4 Stunden" [ stateTopic="hhees/weather/provider/items/airTemperatureInCelsius/4" ]
+        Type number : cloudcover4 "Bewölkung 4 Stunden" [ stateTopic="hhees/weather/provider/items/effectiveCloudCoverInOcta/4" ]
+        Type number : temperature8 "Temperatur 8 Stunden" [ stateTopic="hhees/weather/provider/items/airTemperatureInCelsius/8" ]
+        Type number : cloudcover8 "Bewölkung 8 Stunden" [ stateTopic="hhees/weather/provider/items/effectiveCloudCoverInOcta/8" ]
+        Type number : temperatureMin "Temperatur Min 24 Stunden" [ stateTopic="hhees/weather/provider/items/airTemperatureInCelsius/min" ]
+        Type number : cloudcoverMin "Bewölkung Min 24 Stunden" [ stateTopic="hhees/weather/provider/items/effectiveCloudCoverInOcta/min" ]
+        Type number : temperatureMax "Temperatur Max 24 Stunden" [ stateTopic="hhees/weather/provider/items/airTemperatureInCelsius/max" ]
+        Type number : cloudcoverMax "Bewölkung Max 24 Stunden" [ stateTopic="hhees/weather/provider/items/effectiveCloudCoverInOcta/max" ]
+        Type number : temperatureAvg "Temperatur Avg 24 Stunden" [ stateTopic="hhees/weather/provider/items/airTemperatureInCelsius/avg" ]
+        Type number : cloudcoverAvg "Bewölkung Avg 24 Stunden" [ stateTopic="hhees/weather/provider/items/effectiveCloudCoverInOcta/avg" ]
+
+        Type number : airTemperatureCurrent "Temperatur" [ stateTopic="hhees/weather/provider/current/airTemperatureInCelsius" ]
+        Type number : perceivedTemperatureCurrent "Temperatur" [ stateTopic="hhees/weather/provider/current/feelsLikeTemperatureInCelsius" ]
+        Type number : effectiveCloudCoverCurrent "Temperatur" [ stateTopic="hhees/weather/provider/current/effectiveCloudCoverInOcta" ]
+        Type number : humidityCurrent "Temperatur" [ stateTopic="hhees/weather/provider/current/relativeHumidityInPercent" ]
     }
 }
 

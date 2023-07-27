@@ -661,9 +661,6 @@ sitemap haus label="Main Menu"
                         Text item=pOutdoor_WeatherStation_Update_Message visibility=[pOutdoor_WeatherStation_Is_Working==OFF] valuecolor=[!=""="#d72a2a"]
                     }
                 }
-                Text label="Wetterbericht" icon="selfrain" {
-                    Webview url="/weather/weatherDetailOverview.php" icon="none" height=20
-                }
             }
         }
 		Text label="Status [MAP(state_presence.map):%d]" icon="selfstate" item=pOther_Presence_State

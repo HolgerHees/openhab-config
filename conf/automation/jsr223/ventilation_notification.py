@@ -168,7 +168,7 @@ class VentilationNotification:
         if notify_state == 0:
             return
           
-        if 'event' in input:
+        if input['event'].getType() != "TimerEvent":
             if self.timer != None:
                 self.timer.cancel()
                 self.timer = None

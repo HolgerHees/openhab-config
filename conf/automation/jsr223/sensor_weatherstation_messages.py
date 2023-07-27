@@ -322,7 +322,7 @@ class SensorWeatherstationMessagesRain:
         postUpdateIfChanged("pOutdoor_WeatherStation_Rain_Message", msg)
         
     def execute(self, module, input):
-        if 'event' not in input:
+        if input['event'].getType() == "TimerEvent":
             postUpdateIfChanged("pOutdoor_WeatherStation_Rain_Daily", 0)
             # must be delayed, to give item update time to apply
             self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer)
@@ -615,6 +615,72 @@ class SensorWeatherstationMessagesAir:
           
         # delay to take care of the latest pOutdoor_WeatherStation_Solar_Power_Raw update
         self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
+
+@rule()
+class SensorWeatherstationPerceivedTemperature:
+    def __init__(self):
+        self.triggers = [
+            ItemStateChangeTrigger("pOutdoor_WeatherStation_Temperature"),
+            ItemStateChangeTrigger("pOutdoor_Weather_Current_Humidity"),
+            ItemStateChangeTrigger("pOutdoor_WeatherStation_Humidity"),
+            ItemStateChangeTrigger("pOutdoor_WeatherStation_Wind_Speed_15Min"),
+            ItemStateChangeTrigger("pOutdoor_WeatherStation_Solar_Power"),
+            ItemStateChangeTrigger("pOutdoor_WeatherStation_Temperature_Perceived")
+        ]
+
+        self.calc(None, None)
+
+    def getWindchill(self, temp, speed):
+        # https://de.wikipedia.org/wiki/Windchill
+
+        #return 33 + ( 0.478 + 0.237 * math.sqrt(speed) - 0.0124 * speed ) * ( temp - 33 )
+        return 13.12 + 0.6215 * temp + ( 0.3965 * temp - 11.37 ) * speed**0.16
+
+    def getHeatindex(self, temp, humidity):
+        # https://de.wikipedia.org/wiki/Hitzeindex
+        return -8.784695 + 1.61139411 * temp + 2.338549 * humidity - 0.14611605 * temp * humidity - 0.012308094 * temp**2 - 0.016424828 * humidity**2 + 0.002211732 * temp**2 * humidity + 0.00072546 * temp * humidity**2 - 0.000003582 * temp**2 * humidity**2
+
+    def calc(self, item_name, item_value):
+        temp = item_value if item_name == "pOutdoor_WeatherStation_Temperature" else getItemState("pOutdoor_WeatherStation_Temperature").doubleValue()
+        speed = item_value if item_name == "pOutdoor_WeatherStation_Wind_Speed_15Min" else getItemState("pOutdoor_WeatherStation_Wind_Speed_15Min").doubleValue()
+        humidity = item_value if item_name == "pOutdoor_Weather_Current_Humidity" else getItemState("pOutdoor_Weather_Current_Humidity").doubleValue()
+        #humidity = item_value if item_name == "pOutdoor_WeatherStation_Humidity" else getItemState("pOutdoor_WeatherStation_Humidity").doubleValue()
+        solar = item_value if item_name == "pOutdoor_WeatherStation_Solar_Power" else getItemState("pOutdoor_WeatherStation_Solar_Power").doubleValue()
+        provider = getItemState("pOutdoor_Weather_Current_Temperature_Perceived").doubleValue()
+
+        windChillTemp = self.getWindchill(temp, speed) if temp <= 10 and speed >= 5 else temp
+        headIndexTemp = self.getHeatindex(temp, humidity) if temp >= 22 else temp
+
+
+        windChillDiff = windChillTemp - temp
+        headIndexDiff = headIndexTemp - temp
+        radiationFactor = 1.2 if solar > 800 else 1.0 + ( solar * 0.2 / 800 )
+
+        calculated = ( temp + windChillDiff + headIndexDiff ) * radiationFactor
+
+        self.log.info("Current: {}, Provider: {}, Calculated: {}, Windchill: {}, Heatindex: {}, Factor: {}".format(temp, provider, calculated, windChillDiff, headIndexDiff, radiationFactor))
+
+        postUpdateIfChanged("pOutdoor_WeatherStation_Temperature_Perceived", calculated)
+
+    def execute(self, module, input):
+        self.calc(input['event'].getItemName(), input['event'].getItemState().doubleValue())
+
+#@rule()
+#class SensorWeatherstationPerceivedTemperatureAlt:
+#    def __init__(self):
+#        self.triggers = [
+#            ItemStateChangeTrigger("pOutdoor_Weather_Current_Temperature_Perceived")
+#        ]
+
+#        self.calc(None, None)
+
+#    def calc(self, item_name, item_value):
+#        provider = getItemState("pOutdoor_Weather_Current_Temperature_Perceived").doubleValue()
+
+#        postUpdateIfChanged("pOutdoor_WeatherStation_Temperature_Perceived", provider)
+
+#    def execute(self, module, input):
+#        self.calc(input['event'].getItemName(), input['event'].getItemState().doubleValue())
 
 @rule()
 class SensorWeatherstationMessagesUVIndex:

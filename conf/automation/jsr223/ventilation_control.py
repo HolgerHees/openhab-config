@@ -219,9 +219,10 @@ class VentilationControlFanLevelRule:
         
         self.autoChangeInProgress = False
         self.activeLevel = -1
+        self.log.info("test")
 
     def execute(self, module, input):
-        if 'event' in input.keys() and input['event'].getItemName() == "pGF_Utilityroom_Ventilation_Fan_Level":
+        if input['event'].getType() != "TimerEvent" and input['event'].getItemName() == "pGF_Utilityroom_Ventilation_Fan_Level":
             if self.autoChangeInProgress:
                 self.autoChangeInProgress = False
             else:
@@ -272,7 +273,7 @@ class VentilationControlFanLevelRule:
             # 2. 'event' in input.keys() is an presence or auto mode change
             # 3. is cron triggered event
             # => itemLastChangeOlderThen check to prevent level flapping on temperature changes
-            if self.activeLevel != currentLevel or 'event' in input.keys() or itemLastChangeOlderThen("pGF_Utilityroom_Ventilation_Fan_Level", ZonedDateTime.now().minusMinutes(15)):
+            if self.activeLevel != currentLevel or input['event'].getType() != "TimerEvent" or itemLastChangeOlderThen("pGF_Utilityroom_Ventilation_Fan_Level", ZonedDateTime.now().minusMinutes(15)):
                 self.autoChangeInProgress = True
 
                 sendCommand("pGF_Utilityroom_Ventilation_Fan_Level", newLevel)

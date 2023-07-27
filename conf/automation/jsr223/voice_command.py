@@ -88,7 +88,7 @@ class VoiceCommand:
         Tests.process(self.processor,self.log,ir)
 
     def execute(self, module, input):       
-        if 'event' not in input:
+        if input['event'].getType() == "TimerEvent":
             self.processor = CommandProcessor(self.log,ir)
             Tests.process(self.processor,self.log,ir)
             #self.log.info(u"{}".format(input))

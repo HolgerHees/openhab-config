@@ -14,7 +14,7 @@ String  pGF_Utilityroom_Washer_WashingProgramDosingLevel1  "Dosierung I [MAP(hom
 String  pGF_Utilityroom_Washer_WashingProgramDosingLevel2  "Dosierung 2 [MAP(homeconnect_washer_idos.map):%s]" <selfinfo> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnect:washer:default:washer:laundry_care_washer_idos2"}
 String  pGF_Utilityroom_Washer_WashingProgramActions       "Aktion [%s]" <selfinfo> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnect:washer:default:washer:basic_actions_state"}
 Number pGF_Utilityroom_Washer_RemainingProgramTimeState    "Restlaufzeit [JS(homeconnect_runtime.js):%s]" <selfruntime> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnect:washer:default:washer:remaining_program_time_state"}
-Number pGF_Utilityroom_Washer_ProgramProgressState         "Fortschritt [JS(homeconnect_progress.js):%s]" <selfruntime> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnect:washer:default:washer:program_progress_state"} 
+Number pGF_Utilityroom_Washer_ProgramProgressState         "Fortschritt [JS(homeconnect_progress.js):%s]" <selfruntime> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnect:washer:default:washer:program_progress_state"}
 
 Group   eGF_Kitchen_Dishwasher                             "Geschirrspühler"     <selfinfo> (lGF_Kitchen) ["WhiteGood"]
 String  pGF_Kitchen_Dishwasher_Message                     "Status [%s]"        <selfinfo> (eGF_Kitchen_Dishwasher) ["Point"]
@@ -28,7 +28,7 @@ String  pGF_Kitchen_Dishwasher_ActiveProgramState          "Aktiv [MAP(homeconne
 String  pGF_Kitchen_Dishwasher_SelectedProgramState        "Gewählt [MAP(homeconnect_dishwasher_program.map):%s]" <heating> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnect:dishwasher:default:dishwasher:selected_program_state"}
 String  pGF_Kitchen_Dishwasher_ProgramActionState          "Aktion [%s]" <heating> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnect:dishwasher:default:dishwasher:basic_actions_state"}
 Number  pGF_Kitchen_Dishwasher_RemainingProgramTimeState   "Restlaufzeit [JS(homeconnect_runtime.js):%s]" <selfruntime> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnect:dishwasher:default:dishwasher:remaining_program_time_state"}
-Number  pGF_Kitchen_Dishwasher_ProgramProgressState        "Fortschritt [JS(homeconnect_progress.js):%s]" <selfruntime> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnect:dishwasher:default:dishwasher:program_progress_state"} 
+Number  pGF_Kitchen_Dishwasher_ProgramProgressState        "Fortschritt [JS(homeconnect_progress.js):%s]" <selfruntime> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnect:dishwasher:default:dishwasher:program_progress_state"}
 
 Group   eGF_Kitchen_Coffeemaker                            "Kaffeemaschine"     <selfinfo> (lGF_Kitchen) ["WhiteGood"]
 String  pGF_Kitchen_Coffeemaker_Message                    "Status [%s]"        <selfinfo> (eGF_Kitchen_Coffeemaker) ["Point"]
