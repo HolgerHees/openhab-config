@@ -1,6 +1,8 @@
 from shared.helper import rule, getItemState, postUpdateIfChanged
 from shared.triggers import ItemStateChangeTrigger
 
+from custom.flags import FlagHelper
+
 
 @rule()
 class StateMessageAuto:
@@ -27,15 +29,17 @@ class StateMessageAuto:
         active2 = []
         active2.append(self.format("pOutdoor_Light_Automatic_Main_Switch",u"al"))
         active2.append(self.format("pOther_Manual_State_Auto_Lighting",u"il"))
-        state = getItemState("pOther_Manual_State_Auto_Rollershutter").intValue()
-        if state == 0:
-            active2.append(u"t\u0336b\u0336")
-        elif state == 1:
-            active2.append(u"tb\u0336")
-        elif state == 2:
-            active2.append(u"t\u0336b")
-        elif state == 3:
+        flags = getItemState("pOther_Manual_State_Auto_Rollershutter").intValue()
+        if FlagHelper.hasFlag(FlagHelper.AUTO_ROLLERSHUTTER_TIME_DEPENDENT, flags) and FlagHelper.hasFlag(FlagHelper.AUTO_ROLLERSHUTTER_SHADING, flags):
             active2.append(u"tb")
+        elif FlagHelper.hasFlag(FlagHelper.AUTO_ROLLERSHUTTER_TIME_DEPENDENT, flags):
+            active2.append(u"tb\u0336")
+        elif FlagHelper.hasFlag(FlagHelper.AUTO_ROLLERSHUTTER_SHADING, flags):
+            active2.append(u"t\u0336b")
+        elif FlagHelper.hasFlag(FlagHelper.OFF, flags):
+            active2.append(u"t\u0336b\u0336")
+        else:
+            self.log.error("Unknown flag {}".format(flags))
 
         active3 = []
         active3.append(self.format("pOther_Manual_State_Auto_Christmas",u"w"))

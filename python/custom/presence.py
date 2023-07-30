@@ -1,6 +1,3 @@
-from shared.helper import getItemState
-
-
 class PresenceHelper:
     STATE_AWAY = 0
     STATE_MAYBE_PRESENT = 1

@@ -5,6 +5,7 @@ from shared.triggers import CronTrigger
 
 from custom.presence import PresenceHelper
 from custom.alexa import AlexaHelper
+from custom.flags import FlagHelper
 
 
 @rule()
@@ -23,9 +24,9 @@ class CalendarNotification:
         active.append(state)
 
     def execute(self, module, input):
-        notify_state = getItemState("pOther_Manual_State_Calendar_Event_Notify").intValue()
+        flags = getItemState("pOther_Manual_State_Calendar_Event_Notify").intValue()
         # we don't want do be notified
-        if notify_state == 0:
+        if FlagHelper.hasFlag(FlagHelper.OFF, flags):
             return
       
         #day = getItemState("pGF_Corridor_Garbage_Appointments_Begin_0")
@@ -47,10 +48,10 @@ class CalendarNotification:
             push_msg = ", ".join(active)
             alexa_msg = " und ".join(active)
 
-            if notify_state & 1 == 1:
+            if FlagHelper.hasFlag(FlagHelper.NOTIFY_PUSH, flags):
                 NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"Müllabholung",push_msg)
 
-            if notify_state & 2 == 2 and getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_PRESENT:
+            if FlagHelper.hasFlag(FlagHelper.NOTIFY_ALEXA, flags) and getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_PRESENT:
                 AlexaHelper.sendTTS(alexa_msg, header = u"Müllabholung")
 
 

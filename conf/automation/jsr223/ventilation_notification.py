@@ -5,6 +5,7 @@ from shared.triggers import CronTrigger, ItemStateChangeTrigger
 
 from custom.presence import PresenceHelper
 from custom.alexa import AlexaHelper
+from custom.flags import FlagHelper
 
 
 @rule()
@@ -61,7 +62,7 @@ class VentilationNotification:
         else:
             return False
           
-    def process(self,recipients, notify_state):
+    def process(self,recipients, flags):
         now = ZonedDateTime.now()
         
         #weatherAvgTemperature = getItemState("pOutdoor_Weather_Current_Temperature_Avg").floatValue()
@@ -144,11 +145,11 @@ class VentilationNotification:
             if len(push_msg) > 0 and getItemState("pOther_Presence_State").intValue() not in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
                 # lastDirection is None after a reloaded rule
                 if self.lastDirection is not None:
-                    if notify_state & 1 == 1:
+                    if FlagHelper.hasFlag(FlagHelper.NOTIFY_PUSH, flags):
                         push_msg = u", ".join(push_msg)
                         NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"Lüften", push_msg, recipients = recipients )
 
-                    if notify_state & 2 == 2 and getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_PRESENT:
+                    if FlagHelper.hasFlag(FlagHelper.NOTIFY_ALEXA, flags) and getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_PRESENT:
                         alexa_msg = u" und ".join(alexa_msg)
 
                         AlexaHelper.sendTTS(alexa_msg, header = u"Lüftungshinweiss")
@@ -162,10 +163,10 @@ class VentilationNotification:
         self.timer = None
         
     def execute(self, module, input):
-        notify_state = getItemState("pOther_Manual_State_Air_Thoroughly_Notify").intValue()
+        flags = getItemState("pOther_Manual_State_Air_Thoroughly_Notify").intValue()
 
         # we don't want do be notified
-        if notify_state == 0:
+        if FlagHelper.hasFlag(FlagHelper.OFF, flags):
             return
           
         if input['event'].getType() != "TimerEvent":
@@ -174,7 +175,7 @@ class VentilationNotification:
                 self.timer = None
 
             # delayed notification to give all devices the chance to be detected as present
-            self.timer = startTimer(self.log, 300, self.process, args = [ UserHelper.getPresentUser(), notify_state ]) # 5 min
+            self.timer = startTimer(self.log, 300, self.process, args = [ UserHelper.getPresentUser(), flags ]) # 5 min
         else:
             # we are away
             if getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
@@ -184,5 +185,5 @@ class VentilationNotification:
                 # recipients will be selected only if there are state changes
                 recipients = None
 
-                self.process(recipients, notify_state)
+                self.process(recipients, flags)
 

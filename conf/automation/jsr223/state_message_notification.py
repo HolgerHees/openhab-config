@@ -1,5 +1,7 @@
 from shared.helper import rule, getGroupMemberChangeTrigger, ItemStateChangeTrigger, getFilteredChildItems, postUpdateIfChanged, getItemState
 
+from custom.flags import FlagHelper
+
 
 @rule()
 class StateMessageNotification:
@@ -16,24 +18,28 @@ class StateMessageNotification:
 
         active.append( "s" if getItemState("pOther_Manual_State_Security_Notify") == ON else u"s\u0336")
 
-        state = getItemState("pOther_Manual_State_Air_Thoroughly_Notify").intValue()
-        if state == 0:
-            active.append(u"p\u0336a\u0336")
-        elif state == 1:
-            active.append(u"pa\u0336")
-        elif state == 2:
-            active.append(u"p\u0336a")
-        elif state == 3:
+        flags = getItemState("pOther_Manual_State_Air_Thoroughly_Notify").intValue()
+        if FlagHelper.hasFlag(FlagHelper.NOTIFY_PUSH, flags) and FlagHelper.hasFlag(FlagHelper.NOTIFY_ALEXA, flags):
             active.append(u"pa")
+        elif FlagHelper.hasFlag(FlagHelper.NOTIFY_PUSH, flags):
+            active.append(u"pa\u0336")
+        elif FlagHelper.hasFlag(FlagHelper.NOTIFY_ALEXA, flags):
+            active.append(u"p\u0336a")
+        elif FlagHelper.hasFlag(FlagHelper.OFF, flags):
+            active.append(u"p\u0336a\u0336")
+        else:
+            self.log.error("Unknown flag {}".format(flags))
 
-        state = getItemState("pOther_Manual_State_Calendar_Event_Notify").intValue()
-        if state == 0:
-            active.append(u"p\u0336a\u0336")
-        elif state == 1:
-            active.append(u"pa\u0336")
-        elif state == 2:
-            active.append(u"p\u0336a")
-        elif state == 3:
+        flags = getItemState("pOther_Manual_State_Calendar_Event_Notify").intValue()
+        if FlagHelper.hasFlag(FlagHelper.NOTIFY_PUSH, flags) and FlagHelper.hasFlag(FlagHelper.NOTIFY_ALEXA, flags):
             active.append(u"pa")
+        elif FlagHelper.hasFlag(FlagHelper.NOTIFY_PUSH, flags):
+            active.append(u"pa\u0336")
+        elif FlagHelper.hasFlag(FlagHelper.NOTIFY_ALEXA, flags):
+            active.append(u"p\u0336a")
+        elif FlagHelper.hasFlag(FlagHelper.OFF, flags):
+            active.append(u"p\u0336a\u0336")
+        else:
+            self.log.error("Unknown flag {}".format(flags))
 
         postUpdateIfChanged("pOther_State_Message_Notifications", ",".join(active))

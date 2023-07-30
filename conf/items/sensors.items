@@ -152,8 +152,9 @@ Switch pOutdoor_WeatherStation_Is_Working            "Aktiv [%s]" <selfclock> (e
 
 Number pOutdoor_WeatherStation_Rain_Counter          "Counter (total) [%d]" <selfrain> (eOutdoor_WeatherStation,gPersistance_History) ["Point"]
 Number pOutdoor_WeatherStation_Rain_Current          "Aktuell [%.1f mm]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_Mqtt) ["Point"]
+Number pOutdoor_WeatherStation_Rain_Current_15Min    "Aktuell (15min) [%.1f mm]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_Mqtt) ["Point"]
 Number pOutdoor_WeatherStation_Rain_Daily            "Heute [%.1f mm]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_Mqtt) ["Measurement","Rain"]
-Number pOutdoor_WeatherStation_Rain_State            "Status Numerisch [%d]" <selfrain> (eOutdoor_WeatherStation) ["Point"]
+Number pOutdoor_WeatherStation_Rain_State            "Status Numerisch [%d]" <selfrain> (eOutdoor_WeatherStation,gPersistance_Mqtt) ["Point"]
 
 Number pOutdoor_WeatherStation_Rain_Impulse          "Counter (current) [%d]" <selfrain> (eOutdoor_WeatherStation,gWeatherstationInputValues) {channel="mqtt:topic:mosquitto:weatherstation:rainImpulse" }
 Number pOutdoor_WeatherStation_Rain_Rate             "Rate Sensor [%d Ω]" <selfrain> (eOutdoor_WeatherStation,gWeatherstationInputValues,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:weatherstation:rainRate" }

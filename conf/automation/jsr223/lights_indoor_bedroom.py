@@ -21,7 +21,9 @@ class LightsIndoorBedroomLeftControl:
         ]
 
     def execute(self, module, input):
-        if getItemState("pFF_Bedroom_Light_Hue_Left_Color").intValue() == 0:
+        self.log.info("{}".format(getItemState("pFF_Bedroom_Light_Hue_Left_Color")))
+
+        if getItemState("pFF_Bedroom_Light_Hue_Left_Color").as(OnOffType) == OnOffType.ON:
             sendCommand("pFF_Bedroom_Light_Hue_Left_Color",100)
         else:
             sendCommand("pFF_Bedroom_Light_Hue_Left_Color",0)
@@ -34,7 +36,9 @@ class LightsIndoorBedroomRightControl:
         ]
 
     def execute(self, module, input):
-        if getItemState("pFF_Bedroom_Light_Hue_Right_Color").intValue() == 0:
+        self.log.info("{}".format(getItemState("pFF_Bedroom_Light_Hue_Right_Color")))
+
+        if getItemState("pFF_Bedroom_Light_Hue_Right_Color").as(OnOffType) == OnOffType.ON:
             sendCommand("pFF_Bedroom_Light_Hue_Right_Color",100)
         else:
             sendCommand("pFF_Bedroom_Light_Hue_Right_Color",0)

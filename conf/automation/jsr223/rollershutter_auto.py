@@ -6,6 +6,7 @@ from shared.triggers import ItemStateChangeTrigger
 
 from custom.presence import PresenceHelper
 from custom.sunprotection import SunProtectionHelper
+from custom.flags import FlagHelper
 
 
 configs = [
@@ -43,7 +44,7 @@ class RollershutterAutoMorningEvening:
         self.triggers = [ItemStateChangeTrigger("pOther_Automatic_State_Rollershutter")]
 
     def execute(self, module, input):
-        if getItemState("pOther_Manual_State_Auto_Rollershutter").intValue() & 1 == 0:
+        if not FlagHelper.hasFlag( FlagHelper.AUTO_ROLLERSHUTTER_TIME_DEPENDENT, getItemState("pOther_Manual_State_Auto_Rollershutter").intValue() ):
             return
       
         if getItemState("pOther_Automatic_State_Rollershutter").intValue() == SunProtectionHelper.STATE_ROLLERSHUTTER_DOWN:
@@ -67,7 +68,7 @@ class RollershutterAutoWindowContact:
         #    self.log.info(u"{} {}".format(getItemState(config["shutter"]),getItemState(config["shutter"]).intValue() == 0))
          
     def execute(self, module, input):
-        if getItemState("pOther_Manual_State_Auto_Rollershutter").intValue() & 1 == 0:
+        if not FlagHelper.hasFlag( FlagHelper.AUTO_ROLLERSHUTTER_TIME_DEPENDENT, getItemState("pOther_Manual_State_Auto_Rollershutter").intValue() ):
             return
           
         contactItemName = input['event'].getItemName()
@@ -121,7 +122,7 @@ class RollershutterAutoPresence:
         self.awayTimer = None
 
     def execute(self, module, input):
-        if getItemState("pOther_Manual_State_Auto_Rollershutter").intValue() & 1 == 0:
+        if not FlagHelper.hasFlag( FlagHelper.AUTO_ROLLERSHUTTER_TIME_DEPENDENT, getItemState("pOther_Manual_State_Auto_Rollershutter").intValue() ):
             return
           
         if self.awayTimer != None:
@@ -146,7 +147,7 @@ class RollershutterAutoSunprotection:
             self.triggers.append(ItemStateChangeTrigger(sunprotection_item))
 
     def execute(self, module, input):
-        if getItemState("pOther_Manual_State_Auto_Rollershutter").intValue() & 2 == 0:
+        if not FlagHelper.hasFlag( FlagHelper.AUTO_ROLLERSHUTTER_SHADING, getItemState("pOther_Manual_State_Auto_Rollershutter").intValue() ):
             return
           
         sunprotectionItemName = input['event'].getItemName()
@@ -174,7 +175,7 @@ class RollershutterTerraceAutoSunprotection:
         ]
 
     def execute(self, module, input):
-        if getItemState("pOther_Manual_State_Auto_Rollershutter").intValue() & 2 == 0:
+        if not FlagHelper.hasFlag( FlagHelper.AUTO_ROLLERSHUTTER_SHADING, getItemState("pOther_Manual_State_Auto_Rollershutter").intValue() ):
             return
 
         if getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == SunProtectionHelper.STATE_TERRACE_MAYBE_CLOSED:
