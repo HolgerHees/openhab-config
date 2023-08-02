@@ -150,6 +150,8 @@ String pOutdoor_WeatherStation_Temperature_Item_Name "Item [%s]" <selftemperatur
 String pOutdoor_WeatherStation_Update_Message        "Letzte Änderung [%s]" <selfclock> (eOutdoor_WeatherStation)
 Switch pOutdoor_WeatherStation_Is_Working            "Aktiv [%s]" <selfclock> (eOutdoor_WeatherStation)
 
+Number pOutdoor_WeatherStation_Cloud_Cover           "Wolken [%.1f]" <selfrain> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_Mqtt) ["Point"]
+
 Number pOutdoor_WeatherStation_Rain_Counter          "Counter (total) [%d]" <selfrain> (eOutdoor_WeatherStation,gPersistance_History) ["Point"]
 Number pOutdoor_WeatherStation_Rain_Current          "Aktuell [%.1f mm]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_Mqtt) ["Point"]
 Number pOutdoor_WeatherStation_Rain_Current_15Min    "Aktuell (15min) [%.1f mm]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_Mqtt) ["Point"]

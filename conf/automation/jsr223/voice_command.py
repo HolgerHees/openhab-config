@@ -1,16 +1,11 @@
+import traceback
+
 from shared.triggers import ItemStateUpdateTrigger, CronTrigger
-
 from shared.helper import rule, postUpdate
-
 from shared.semantic.command_processor import CommandProcessor
-
-from alexa_device_config import AlexaDevices
- 
 from custom.semantic_test import Cases
 from custom.alexa import AlexaHelper
 from custom.shuffle import ShuffleHelper
-
-import traceback
 
 
 class Tests:

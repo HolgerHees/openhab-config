@@ -1,14 +1,14 @@
-from shared.helper import rule, getItemState, getItemLastChange, getHistoricItemEntry, postUpdateIfChanged, startTimer, NotificationHelper
-from shared.actions import Transformation
-from shared.triggers import CronTrigger, ItemStateChangeTrigger
-
 from java.time import ZonedDateTime
  
+from shared.helper import rule, getItemState, getHistoricItemEntry, postUpdateIfChanged, startTimer, NotificationHelper
+from shared.actions import Transformation
+from shared.triggers import ItemStateChangeTrigger
+
+
 @rule()
 class HomeConnectWasherMessage:
     def __init__(self):
         self.triggers = [
-            #CronTrigger("0/5 * * * * ?"),
             ItemStateChangeTrigger("pGF_Utilityroom_Washer_ActiveProgramState", state="UNDEF")
         ]
 
@@ -16,9 +16,6 @@ class HomeConnectWasherMessage:
 
     def check(self):
         max_time = ZonedDateTime.now().minusHours( 24 * 30 * 3 )
-
-        #if getItemState("pGF_Utilityroom_Washer_ActiveProgramState") != UNDEF:
-        #    return
 
         currentTime = ZonedDateTime.now()
 

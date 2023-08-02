@@ -1,12 +1,11 @@
 from shared.helper import rule, getItemState, postUpdateIfChanged, NotificationHelper, UserHelper
-from shared.triggers import CronTrigger, ItemStateChangeTrigger
+from shared.triggers import ItemStateChangeTrigger
 
 
 @rule()
 class HomeConnectCoffeemakerMessage:
     def __init__(self):
         self.triggers = [
-            #CronTrigger("*/15 * * * * ?"),
             ItemStateChangeTrigger("pGF_Kitchen_Coffeemaker_Power_State"),
             ItemStateChangeTrigger("pGF_Kitchen_Coffeemaker_Program_Progress_State"),
             ItemStateChangeTrigger("pGF_Kitchen_Coffeemaker_Operation_State")

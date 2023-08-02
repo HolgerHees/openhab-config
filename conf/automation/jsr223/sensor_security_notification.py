@@ -1,6 +1,6 @@
 from java.time import ZonedDateTime
 
-from shared.helper import rule, isMember, getGroupMemberChangeTrigger, ItemStateChangeTrigger, getItem, getItemState, itemLastChangeNewerThen, NotificationHelper
+from shared.helper import rule, isMember, getGroupMemberChangeTrigger, getItem, getItemState, NotificationHelper
 from custom.presence import PresenceHelper
 from custom.alexa import AlexaHelper
 
@@ -13,7 +13,7 @@ class SensorSecurityNotificationAwayAlerts:
         self.triggers += getGroupMemberChangeTrigger("gSensor_Indoor")
 
         self.last_notification = ZonedDateTime.now()
-        
+
     def execute(self, module, input):
         if getItemState("pOther_Manual_State_Security_Notify") != ON:
             return

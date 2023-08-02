@@ -1,6 +1,5 @@
-from shared.helper import rule, itemLastUpdateOlderThen, getItemState, postUpdateIfChanged, NotificationHelper
+from shared.helper import rule, getItemState, postUpdateIfChanged, NotificationHelper
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
-from java.time import ZonedDateTime
 
 
 @rule()
@@ -8,7 +7,6 @@ class StateMessageMain:
     def __init__(self):
         self.triggers = [
             CronTrigger("0 */5 * * * ?"),
-            #CronTrigger("*/15 * * * * ?"),
             ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_State_Message"),
             ItemStateChangeTrigger("pGF_Livingroom_Humidifier_State_Message")
         ]

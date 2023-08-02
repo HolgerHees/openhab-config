@@ -2,6 +2,7 @@ from shared.helper import rule, getGroupMemberChangeTrigger, getGroupMember
 from shared.triggers import CronTrigger
 
 map = {
+    "pOutdoor_WeatherStation_Cloud_Cover": "cloudCoverInOcta",
     "pOutdoor_WeatherStation_Rain_Current": "rainCurrentInMillimeter",
     "pOutdoor_WeatherStation_Rain_Current_15Min": "rainCurrent15MinInMillimeter",
     "pOutdoor_WeatherStation_Rain_Daily": "rainDailyInMillimeter",

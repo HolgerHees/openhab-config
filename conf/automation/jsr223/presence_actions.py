@@ -2,9 +2,8 @@ import urllib2
 from java.time import ZonedDateTime
 import time
 
-from shared.helper import rule, getItemState, getFilteredChildItems, getItemLastUpdate, itemLastChangeOlderThen, postUpdate, postUpdateIfChanged, startTimer, sendCommand, sendCommandIfChanged, getGroupMember, getGroupMemberChangeTrigger, NotificationHelper, UserHelper
+from shared.helper import rule, getItemState, getFilteredChildItems, getItemLastUpdate, startTimer, sendCommandIfChanged, getGroupMember, getGroupMemberChangeTrigger, NotificationHelper, UserHelper
 from shared.triggers import ItemStateChangeTrigger
-
 from custom.presence import PresenceHelper
 from custom.alexa import AlexaHelper
 from custom.shuffle import ShuffleHelper

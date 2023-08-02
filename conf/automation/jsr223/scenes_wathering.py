@@ -2,7 +2,7 @@ import math
 from java.time import ZonedDateTime
 from java.time.temporal import ChronoUnit
 
-from shared.helper import rule, startTimer, getGroupMember, getItemState, postUpdate, sendCommand, sendCommandIfChanged, getItemLastChange
+from shared.helper import rule, startTimer, getItemState, postUpdate, sendCommand, sendCommandIfChanged, getItemLastChange
 from shared.triggers import ItemCommandTrigger, ItemStateChangeTrigger
 
 

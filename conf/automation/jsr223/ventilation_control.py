@@ -3,10 +3,7 @@ from java.time import ZonedDateTime
 
 from shared.helper import rule, itemLastChangeOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand, startTimer, getThing
 from shared.triggers import CronTrigger, ItemCommandTrigger, ItemStateChangeTrigger, ThingStatusChangeTrigger
-
 from custom.presence import PresenceHelper
-
-from org.openhab.core.types import UnDefType
 
 
 DELAYED_UPDATE_TIMEOUT = 3

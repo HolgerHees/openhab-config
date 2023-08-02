@@ -1,7 +1,7 @@
 import math
 from java.time import ZonedDateTime
 
-from shared.helper import rule, getItemState, postUpdate, sendCommand, sendCommandIfChanged, itemLastChangeNewerThen, getGroupMemberChangeTrigger, startTimer
+from shared.helper import rule, getItemState, sendCommand, sendCommandIfChanged, itemLastChangeNewerThen, getGroupMemberChangeTrigger, startTimer
 from shared.triggers import ItemStateChangeTrigger
 
 from custom.presence import PresenceHelper

@@ -1,6 +1,6 @@
 from java.time import ZonedDateTime
 
-from shared.helper import rule, getItemState, sendCommand, itemStateNewerThen, itemStateOlderThen, NotificationHelper
+from shared.helper import rule, getItemState, itemStateNewerThen, itemStateOlderThen, NotificationHelper
 from shared.triggers import CronTrigger
 
 from custom.presence import PresenceHelper
@@ -34,14 +34,15 @@ class CalendarNotification:
         #self.log.info(u"{} {}".format(day,info))
         
         active = []
+        now = ZonedDateTime.now()
 
-        if itemStateNewerThen("pGF_Corridor_Garbage_Appointments_Begin_0",ZonedDateTime.now()) and itemStateOlderThen("pGF_Corridor_Garbage_Appointments_Begin_0",ZonedDateTime.now().plusHours(12)):
+        if itemStateNewerThen("pGF_Corridor_Garbage_Appointments_Begin_0",now) and itemStateOlderThen("pGF_Corridor_Garbage_Appointments_Begin_0",now.plusHours(12)):
             self.append(active,getItemState("pGF_Corridor_Garbage_Appointments_Info_0").toString().strip())
         
-        if itemStateNewerThen("pGF_Corridor_Garbage_Appointments_Begin_1",ZonedDateTime.now()) and itemStateOlderThen("pGF_Corridor_Garbage_Appointments_Begin_1",ZonedDateTime.now().plusHours(12)):
+        if itemStateNewerThen("pGF_Corridor_Garbage_Appointments_Begin_1",now) and itemStateOlderThen("pGF_Corridor_Garbage_Appointments_Begin_1",now.plusHours(12)):
             self.append(active,getItemState("pGF_Corridor_Garbage_Appointments_Info_1").toString().strip())
 
-        if itemStateNewerThen("pGF_Corridor_Garbage_Appointments_Begin_2",ZonedDateTime.now()) and itemStateOlderThen("pGF_Corridor_Garbage_Appointments_Begin_2",ZonedDateTime.now().plusHours(12)):
+        if itemStateNewerThen("pGF_Corridor_Garbage_Appointments_Begin_2",now) and itemStateOlderThen("pGF_Corridor_Garbage_Appointments_Begin_2",now.plusHours(12)):
             self.append(active,getItemState("pGF_Corridor_Garbage_Appointments_Info_2").toString().strip())
 
         if len(active) > 0:

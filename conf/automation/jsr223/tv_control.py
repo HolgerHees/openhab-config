@@ -1,5 +1,5 @@
-from shared.helper import rule, getItemState, sendCommand, postUpdate, postUpdateIfChanged
-from shared.triggers import ItemStateChangeTrigger, ItemCommandTrigger, ThingEventTrigger
+from shared.helper import rule, sendCommand, postUpdate
+from shared.triggers import ItemCommandTrigger, ThingEventTrigger
 
 
 @rule()

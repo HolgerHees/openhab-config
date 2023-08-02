@@ -3,7 +3,6 @@ from java.time import ZonedDateTime
 
 from shared.helper import rule, itemLastChangeOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand, NotificationHelper
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
-
 from custom.presence import PresenceHelper
 
 

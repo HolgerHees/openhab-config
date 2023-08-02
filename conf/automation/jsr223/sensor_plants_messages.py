@@ -1,12 +1,11 @@
 from shared.helper import rule, getItemState, postUpdateIfChanged
-from shared.triggers import ItemStateChangeTrigger, CronTrigger
+from shared.triggers import ItemStateChangeTrigger
 
 
 @rule()
 class SensorPlantsMessagesSummery:
     def __init__(self):
         self.triggers = [
-            #CronTrigger("*/15 * * * * ?"),
             ItemStateChangeTrigger("pIndoor_Plant_Sensor_Watering_Info")
         ]
 

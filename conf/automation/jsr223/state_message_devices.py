@@ -1,12 +1,11 @@
 from shared.helper import rule, getItemState, postUpdateIfChanged, NotificationHelper
-from shared.triggers import CronTrigger, ItemStateChangeTrigger
+from shared.triggers import ItemStateChangeTrigger
 
 
 @rule()
 class StateMessageDevices:
     def __init__(self):
         self.triggers = [
-            #CronTrigger("0 0 * * * ?"),
             ItemStateChangeTrigger("pOther_State_Message_Robot")
         ]
         self.check()

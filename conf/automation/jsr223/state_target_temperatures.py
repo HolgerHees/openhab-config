@@ -1,5 +1,5 @@
-from shared.helper import rule, getItemState, sendCommandIfChanged, getGroupMemberChangeTrigger, getGroupMember
-from shared.triggers import ItemStateChangeTrigger
+from shared.helper import rule, sendCommandIfChanged, getGroupMemberChangeTrigger, getGroupMember
+
 
 @rule()
 class StateTargetTemperatures:

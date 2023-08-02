@@ -1,5 +1,6 @@
-from shared.helper import rule, getItemState, postUpdateIfChanged
+from shared.helper import rule, postUpdateIfChanged
 from shared.triggers import ItemStateChangeTrigger
+
 
 rawItems = {
     "pGF_Livingroom_Air_Sensor_Temperature_Raw": ["pGF_Livingroom_Air_Sensor_Temperature_Value", -1.3],             # 15.02.23

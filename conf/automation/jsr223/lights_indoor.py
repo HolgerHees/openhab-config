@@ -1,6 +1,5 @@
 from shared.helper import rule, getItemState, sendCommand
 from shared.triggers import CronTrigger, ItemStateChangeTrigger 
-
 from custom.presence import PresenceHelper
 
 

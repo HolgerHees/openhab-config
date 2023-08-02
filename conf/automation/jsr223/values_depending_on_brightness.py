@@ -2,7 +2,6 @@ from java.time import ZonedDateTime
 
 from shared.helper import rule, getItemState, itemStateNewerThen, itemStateOlderThen, postUpdateIfChanged, postUpdate
 from shared.triggers import CronTrigger
-
 from custom.sunprotection import SunProtectionHelper
 
  

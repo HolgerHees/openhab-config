@@ -1,6 +1,5 @@
 from shared.helper import rule, getItemState, postUpdateIfChanged
 from shared.triggers import ItemStateChangeTrigger
-
 from custom.flags import FlagHelper
 
 

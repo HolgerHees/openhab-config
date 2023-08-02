@@ -1,13 +1,10 @@
 import math
 import json
-import traceback
-
 from java.time import ZonedDateTime
 from java.time.temporal import ChronoUnit
 
 from shared.helper import rule, getItemState, getItemStateWithFallback, getStableItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged, getItemLastUpdate, getItem, startTimer, itemLastChangeOlderThen
 from shared.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
-from custom.suncalculation import SunRadiation
 
 
 #value = getHistoricItemState("pOutdoor_WeatherStation_Rain_Counter",ZonedDateTime.now()).intValue()
@@ -376,12 +373,12 @@ class SensorWeatherstationMessagesRain:
             else:
                 rainLevel = 0
 
-            if rainLevel > 0:
+            if rainLevel > 0 and getItemState("pOutdoor_Weather_Current_Humidity").doubleValue() >= 100:
                 timeOffice = (11 - rainLevel) * 15
                 if itemLastChangeOlderThen("pOutdoor_WeatherStation_Rain_Counter", ZonedDateTime.now().minusMinutes(timeOffice)):
                     temperature = getItemState("pOutdoor_WeatherStation_Temperature").doubleValue()
                     dewpoint = getItemState("pOutdoor_WeatherStation_Dewpoint").doubleValue()
-                    if temperature - dewpoint <= 3:
+                    if temperature - dewpoint <= 3 and getItemState("pOutdoor_Weather_Current_Humidity").doubleValue() >= 100:
                         rainLevel = rainLevel * -1
 
             postUpdateIfChanged("pOutdoor_WeatherStation_Rain_State", rainLevel)
@@ -625,6 +622,41 @@ class SensorWeatherstationMessagesAir:
           
         # delay to take care of the latest pOutdoor_WeatherStation_Solar_Power_Raw update
         self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
+
+@rule()
+class SensorWeatherstationPerceivedTemperature:
+    def __init__(self):
+        self.triggers = [
+            ItemStateChangeTrigger("pOutdoor_WeatherStation_Light_Level")
+        ]
+
+        #self.calc()
+
+    def calc(self):
+        lux = getStableItemState(ZonedDateTime.now(),"pOutdoor_WeatherStation_Light_Level",10)
+        #input['event'].getItemState().intValue()
+
+        #pOutdoor_WeatherStation_Solar_Power
+        maxLuminationRatio = getItemState("pOutdoor_WeatherStation_Solar_Power_Max").doubleValue() / 900
+        maxLux = 50000 * maxLuminationRatio
+
+        octa = getItemState("pOutdoor_Weather_Current_Cloud_Cover").doubleValue()
+        #self.log.info("{}".format(octa))
+
+        if maxLux > 10000:
+            if lux < maxLux:
+                ratio = lux * 6.0 / maxLux
+                _octa = 6.0 - ratio
+            else:
+                _octa = 0.0
+            if _octa > octa:
+                octa = _octa
+
+        #self.log.info("{}".format(octa))
+        postUpdateIfChanged("pOutdoor_WeatherStation_Cloud_Cover", octa)
+
+    def execute(self, module, input):
+        self.calc()
 
 @rule()
 class SensorWeatherstationPerceivedTemperature:

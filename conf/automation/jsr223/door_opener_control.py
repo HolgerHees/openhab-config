@@ -1,4 +1,4 @@
-from shared.helper import rule, startTimer, getItemState, postUpdate, sendCommand, sendCommandIfChanged
+from shared.helper import rule, startTimer, postUpdate, sendCommand, sendCommandIfChanged
 from shared.triggers import ItemStateChangeTrigger
 
 

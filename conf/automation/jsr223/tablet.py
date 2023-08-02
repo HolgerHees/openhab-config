@@ -1,11 +1,10 @@
 import time
 import urllib2
-from java.time import ZonedDateTime
 
 from shared.helper import rule, getItemState, postUpdate, sendCommandIfChanged, startTimer
 from shared.triggers import ItemStateChangeTrigger, ItemCommandTrigger
-
 from custom.presence import PresenceHelper
+
 
 @rule()
 class TabletWakeup:

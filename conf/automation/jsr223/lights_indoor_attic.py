@@ -1,6 +1,7 @@
+from java.time import ZonedDateTime
+
 from shared.helper import rule, getItemState, sendCommand
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
-from java.time import ZonedDateTime
 
 
 @rule()

@@ -1,6 +1,8 @@
+from java.time import ZonedDateTime
+
 from shared.helper import rule, itemStateOlderThen, postUpdate, NotificationHelper
 from shared.triggers import ItemStateChangeTrigger
-from java.time import ZonedDateTime
+
 
 @rule()
 class DoorBellNotification:

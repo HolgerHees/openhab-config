@@ -1,13 +1,12 @@
 from shared.helper import rule, getItemState, postUpdateIfChanged, startTimer, NotificationHelper, UserHelper
 from shared.actions import Transformation
-from shared.triggers import CronTrigger, ItemStateChangeTrigger
+from shared.triggers import ItemStateChangeTrigger
 
  
 @rule()
 class HomeConnectDishwasherMessage:
     def __init__(self):
         self.triggers = [
-            #CronTrigger("0/5 * * * * ?"),
             ItemStateChangeTrigger("pGF_Kitchen_Dishwasher_RemainingProgramTimeState"),
             ItemStateChangeTrigger("pGF_Kitchen_Dishwasher_OperationState")
         ]

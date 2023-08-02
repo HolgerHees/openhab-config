@@ -1,9 +1,7 @@
 from shared.helper import rule, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged, getItemState, startTimer, getThing, itemLastChangeOlderThen
 from shared.triggers import CronTrigger, ThingStatusChangeTrigger, ItemCommandTrigger, ItemStateChangeTrigger
-
 from custom.presence import PresenceHelper
 
-from org.openhab.core.types import UnDefType
 
 REFERENCE_SENSORS = ["pGF_Livingroom_Air_Sensor_Humidity_Value", "pGF_Corridor_Air_Sensor_Humidity_Value"]
 TARGET_HUMIDITY = 50.0

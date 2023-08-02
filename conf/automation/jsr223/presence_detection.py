@@ -2,9 +2,10 @@ from java.time import ZonedDateTime
 from java.time.temporal import ChronoUnit
 import threading
 
-from shared.helper import log, rule, itemLastChangeOlderThen, itemLastChangeNewerThen, getItem, getItemState, getFilteredChildItems, getItemLastUpdate, getItemLastChange, postUpdate, postUpdateIfChanged, startTimer, isMember, getGroupMember, getGroupMemberChangeTrigger, NotificationHelper, UserHelper
+from shared.helper import log, rule, itemLastChangeOlderThen, itemLastChangeNewerThen, getItemState, getFilteredChildItems, getItemLastUpdate, getItemLastChange, postUpdate, postUpdateIfChanged, startTimer, getGroupMember, getGroupMemberChangeTrigger, NotificationHelper
 from shared.triggers import ItemStateChangeTrigger
 from custom.presence import PresenceHelper
+
 
 class PresenceCache:
     _shared_lock = threading.Lock()
