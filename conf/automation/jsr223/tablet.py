@@ -7,21 +7,9 @@ from custom.presence import PresenceHelper
 
 
 @rule()
-class TabletWakeup:
-    def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("pOther_Presence_State")]
-
-    def execute(self, module, input):
-        if getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_SLEEPING]:
-            sendCommandIfChanged("pOther_Scene7", OFF)
-        else:
-            sendCommandIfChanged("pOther_Scene7", ON)
-
-
-@rule()
 class TabletScreen:
     def __init__(self):
-        self.triggers = [ItemCommandTrigger("pOther_Scene7")]
+        self.triggers = [ItemStateChangeTrigger("pOther_Presence_State")]
         self.in_progress = False
 
     def switch(self,cmd):
@@ -50,13 +38,12 @@ class TabletScreen:
     def process(self, i, requested_cmd):
         is_success = self.switch(requested_cmd)
 
-        active__cmd = getItemState("pOther_Scene7")
+        active__cmd = requested_cmd if i == 0 else self.getRequestedCommand( getItemState("pOther_Presence_State").intValue() )
 
         if requested_cmd == active__cmd:
             if not is_success:
                 if i > 5:
                     self.log.error("Maximum number of attempts reached")
-                    postUpdate("pOther_Scene7", ON if requested_cmd == OFF else OFF)
                 else:
                     self.log.warn("Retry in 1 seconds")
                     time.sleep(1)
@@ -68,9 +55,12 @@ class TabletScreen:
         self.log.info("Requested tablet state changed")
         self.process(0, active__cmd)
 
+    def getRequestedCommand(self, state):
+        return getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_SLEEPING]
+
     def execute(self, module, input):
         if self.in_progress:
             return
 
         self.in_progress = True
-        startTimer(self.log, 0,self.process, args=[0, input["event"].getItemCommand()])
+        startTimer(self.log, 0,self.process, args=[0, self.getRequestedCommand( input["event"].getItemState().intValue() )])

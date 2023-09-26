@@ -8,7 +8,7 @@
         "parameters": [],
         "parameterGroups": []
       },
-      "timestamp": "Jul 24, 2023, 6:42:55 PM",
+      "timestamp": "Aug 7, 2023, 1:41:51 PM",
       "component": "panelconfiguration",
       "config": {
         "default": true,
@@ -1338,7 +1338,7 @@
                 {
                   "component": "label",
                   "config": {
-                    "col": 19.0,
+                    "col": 17.0,
                     "font_size": "16",
                     "name": "Gäste WC",
                     "row": 10.0,
@@ -1524,7 +1524,7 @@
                 {
                   "component": "template",
                   "config": {
-                    "col": 11.0,
+                    "col": 9.0,
                     "config": {
                       "item": "pGF_Utilityroom_Light_Ceiling_Powered",
                       "title": "HWR"
@@ -1539,7 +1539,7 @@
                 {
                   "component": "template",
                   "config": {
-                    "col": 15.0,
+                    "col": 13.0,
                     "config": {
                       "item": "pGF_Workroom_Light_Ceiling_Powered",
                       "title": "Gästezimmer"
@@ -1554,7 +1554,7 @@
                 {
                   "component": "template",
                   "config": {
-                    "col": 19.0,
+                    "col": 17.0,
                     "config": {
                       "item": "pGF_Guesttoilet_Light_Ceiling_Powered",
                       "title": "Decke"
@@ -1569,7 +1569,7 @@
                 {
                   "component": "template",
                   "config": {
-                    "col": 19.0,
+                    "col": 17.0,
                     "config": {
                       "item": "pGF_Guesttoilet_Light_Mirror_Powered",
                       "title": "Spiegel"
@@ -1681,6 +1681,21 @@
                     "sizeY": 2.0,
                     "style": "aCKolor"
                   }
+                },
+                {
+                  "component": "template",
+                  "config": {
+                    "col": 24.0,
+                    "config": {
+                      "item": "pGardenHouse_Light_Ceiling_Powered",
+                      "title": "Laube"
+                    },
+                    "customwidget": "Switch",
+                    "name": "Laube",
+                    "row": 14.0,
+                    "sizeX": 3.0,
+                    "sizeY": 3.0
+                  }
                 }
               ]
             }
@@ -1716,7 +1731,7 @@
                 {
                   "component": "template",
                   "config": {
-                    "col": 15.0,
+                    "col": 12.0,
                     "config": {
                       "autoItem": "pOutdoor_Garden_Garage_Automatic_Switch",
                       "manualItem": "pOutdoor_Garden_Garage_Light_Powered",
@@ -1732,7 +1747,7 @@
                 {
                   "component": "template",
                   "config": {
-                    "col": 6.0,
+                    "col": 5.0,
                     "config": {
                       "autoItem": "pOutdoor_Streedside_Frontdoor_Automatic_Switch",
                       "manualItem": "pOutdoor_Streedside_Frontdoor_Light_Powered",
@@ -1748,7 +1763,7 @@
                 {
                   "component": "template",
                   "config": {
-                    "col": 9.0,
+                    "col": 7.0,
                     "config": {
                       "autoItem": "pOutdoor_Carport_Automatic_Switch",
                       "manualItem": "pOutdoor_Carport_Light_Powered",
@@ -1786,7 +1801,7 @@
                 {
                   "component": "template",
                   "config": {
-                    "col": 19.0,
+                    "col": 17.0,
                     "config": {
                       "itemGroup": "gOutdoor_Motiondetector_Counter",
                       "mainItem": "pOutdoor_Light_Automatic_Main_Switch",
@@ -1803,7 +1818,7 @@
                 {
                   "component": "label",
                   "config": {
-                    "col": 18.0,
+                    "col": 16.0,
                     "font_size": "16",
                     "name": "Automatik",
                     "row": 1.0,
@@ -1814,7 +1829,7 @@
                 {
                   "component": "label",
                   "config": {
-                    "col": 12.0,
+                    "col": 10.0,
                     "font_size": "16",
                     "name": "Garten",
                     "row": 1.0,
@@ -1825,7 +1840,7 @@
                 {
                   "component": "label",
                   "config": {
-                    "col": 22.0,
+                    "col": 21.0,
                     "font_size": "20",
                     "name": "Gartensteckdosen",
                     "row": 0.0,
@@ -1863,7 +1878,7 @@
                 {
                   "component": "template",
                   "config": {
-                    "col": 12.0,
+                    "col": 10.0,
                     "config": {
                       "item": "pOutdoor_Terrace_Light_Brightness",
                       "title": "Terasse"
@@ -1878,7 +1893,7 @@
                 {
                   "component": "template",
                   "config": {
-                    "col": 23.0,
+                    "col": 21.0,
                     "config": {
                       "item": "pOutdoor_Streeside_Socket_Powered",
                       "title": "Strasse"
@@ -1893,7 +1908,7 @@
                 {
                   "component": "template",
                   "config": {
-                    "col": 25.0,
+                    "col": 23.0,
                     "config": {
                       "item": "pOutdoor_Terrace_Socket_Powered",
                       "title": "Garten"
@@ -1908,7 +1923,7 @@
                 {
                   "component": "template",
                   "config": {
-                    "col": 12.0,
+                    "col": 10.0,
                     "config": {
                       "item": "pOutdoor_Terrace_Automatic_Switch",
                       "title": "Auto"
@@ -1918,6 +1933,37 @@
                     "row": 6.0,
                     "sizeX": 2.0,
                     "sizeY": 2.0
+                  }
+                },
+                {
+                  "component": "template",
+                  "config": {
+                    "col": 14.0,
+                    "config": {
+                      "autoItem": "pOutdoor_Gardenhous_Right_Automatic_Switch",
+                      "manualItem": "pOutdoor_Gardenhous_Right_Light_Powered",
+                      "title": "Laube"
+                    },
+                    "customwidget": "ButtonOutdoorLight",
+                    "name": "Laube Garten",
+                    "row": 2.0,
+                    "sizeX": 2.0,
+                    "sizeY": 6.0
+                  }
+                },
+                {
+                  "component": "template",
+                  "config": {
+                    "col": 25.0,
+                    "config": {
+                      "item": "pOutdoor_Gardenhouse_Socket_Powered",
+                      "title": "Laube"
+                    },
+                    "customwidget": "Switch",
+                    "name": "Laube",
+                    "row": 2.0,
+                    "sizeX": 2.0,
+                    "sizeY": 3.0
                   }
                 }
               ]

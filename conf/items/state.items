@@ -94,12 +94,12 @@ String pOther_State_Message_Robot               "Status [%s]" <selfinfo> (eOther
 
 //####### SCENES #######
 Group  eOther_Scenes                            "Szenen" <selfinfo> (lOther) ["Equipment"]
-Switch pOther_Scene1                            "Scene 1" <selfautomode> (eOther_Scenes) ["Point"] { synonyms="Fernsehen" }
-Switch pOther_Scene2                            "Scene 2" <selfautomode> (eOther_Scenes) ["Point"] { synonyms="Aufstehen" }
-Switch pOther_Scene3                            "Scene 3" <selfautomode> (eOther_Scenes) ["Point"] { synonyms="Schlafen gehen" }
-Switch pOther_Scene4                            "Scene 4" <selfautomode> (eOther_Scenes) ["Point"] { synonyms="Gute Nacht", answer="Gute Nacht" }
-Switch pOther_Scene5                            "Scene 5" <selfautomode> (eOther_Scenes) ["Point"] { synonyms="Ich geh raus, Ich bin draussen" }
-Switch pOther_Scene6                            "Scene 6" <selfautomode> (eOther_Scenes) ["Point"] { synonyms="Fernseher einschalten" }
+Switch pOther_Scene1                            "Scene 1" <selfautomode> (eOther_Scenes) ["Point"]
+Switch pOther_Scene2                            "Scene 2" <selfautomode> (eOther_Scenes) ["Point"]
+Switch pOther_Scene3                            "Scene 3" <selfautomode> (eOther_Scenes) ["Point"]
+Switch pOther_Scene4                            "Scene 4" <selfautomode> (eOther_Scenes) ["Point"] { autoupdate="false", synonyms="Gute Nacht", answer="Gute Nacht" }
+Switch pOther_Scene5                            "Scene 5" <selfautomode> (eOther_Scenes) ["Point"] { autoupdate="false", synonyms="Ich geh raus, Ich bin draussen" }
+Switch pOther_Scene6                            "Scene 6" <selfautomode> (eOther_Scenes) ["Point"]
 Switch pOther_Scene7                            "Scene 7" <selfautomode> (eOther_Scenes) ["Point"]
 Switch pOther_Scene8                            "Scene 8" <selfautomode> (eOther_Scenes) ["Point"]
 Switch pOther_Scene9                            "Scene 9" <selfautomode> (eOther_Scenes) ["Point"]

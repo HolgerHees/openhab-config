@@ -70,7 +70,7 @@ class Tests:
  
                 log.info(u"\n\n{}\n\n".format(msg))
                 raise Exception("Wrong detection")
- 
+
 @rule()
 class VoiceCommand:
     def __init__(self):
@@ -97,11 +97,12 @@ class VoiceCommand:
 
             actions = self.processor.process(voice_command, fallback_location_name)
 
+            #for action in actions:
+            #    for item_action in action.item_actions:
+            #        self.log.info("{} {}".format(item_action.item,item_action.cmd_value))
+
             msg, is_valid = self.processor.applyActions(actions,voice_command,False)
 
             msg = ShuffleHelper.getRandomSynonym(msg)
 
             postUpdate("VoiceMessage",msg)
-
-#postUpdate("VoiceCommand","Flur farbe grün")
-

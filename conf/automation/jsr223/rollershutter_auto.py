@@ -41,18 +41,22 @@ for config in configs:
 @rule()
 class RollershutterAutoMorningEvening:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("pOther_Automatic_State_Rollershutter")]
+        self.triggers = [
+            ItemStateChangeTrigger("pOther_Automatic_State_Rollershutter"),
+            ItemStateChangeTrigger("pOther_Presence_State", state=PresenceHelper.STATE_AWAY)
+        ]
 
     def execute(self, module, input):
         if not FlagHelper.hasFlag( FlagHelper.AUTO_ROLLERSHUTTER_TIME_DEPENDENT, getItemState("pOther_Manual_State_Auto_Rollershutter").intValue() ):
             return
       
         if getItemState("pOther_Automatic_State_Rollershutter").intValue() == SunProtectionHelper.STATE_ROLLERSHUTTER_DOWN:
-            for config in configs:
-                if getItemState(config["contact"]) != CLOSED: 
-                    continue
-                sendCommand(config["shutter"], DOWN)
-        elif getItemState("pOther_Automatic_State_Rollershutter").intValue() == SunProtectionHelper.STATE_ROLLERSHUTTER_UP:#
+            if input['event'].getItemName() == "pOther_Automatic_State_Rollershutter":
+                for config in configs:
+                    if getItemState(config["contact"]) != CLOSED:
+                        continue
+                    sendCommand(config["shutter"], DOWN)
+        elif getItemState("pOther_Automatic_State_Rollershutter").intValue() == SunProtectionHelper.STATE_ROLLERSHUTTER_UP:
             if getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_AWAY:
                 sendCommand("gShutters", UP)
 

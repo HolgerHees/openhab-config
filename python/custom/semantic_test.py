@@ -1,15 +1,5 @@
 # -*- coding: utf-8 -*-
 Cases = {
-    "enabled_bak": [
-        { "phrase": u"alle rollläden hoch und fernseher an", "client_id": "amzn1.ask.device.AFUSC2ZJY7NS7773FR5SXTQXXG6RX7B5RFFABEINCTSUNSNWBXUVICA3JDXEZSNBEXEXFRFYSRT3KSGQRRQQSK5YXLH4VWRWF6KEWSEP7RCLPXTYIPFZ7VHFYT36JOALTJJTNYGRYID6E2EYWGOEPGEPYN7Q", "items": [[ "Scene6", "ACTION_ON" ]] },
-        { "phrase": u"licht im wohnzimmer und aussen licht und steckdosen aus", "items": [[ "Light_FF_Livingroom_Couch", "ACTION_OFF" ],[ "Light_FF_Livingroom_Diningtable", "ACTION_OFF" ], [ "Light_FF_Livingroom_Hue_Color", "ACTION_OFF" ],[ "Lights_Outdoor", "ACTION_OFF" ],[ "Sockets_Outdoor", "ACTION_OFF" ]] },
-        { "phrase": u"Hallo", "items": [[ "Scene6", "ACTION_ON" ]] },
-        { "phrase": u"wohnzimmer fernseher an", "items": [[ "Scene6", "ACTION_ON" ]] },
-        { "phrase": u"licht wohnzimmer automower und licht flur schlafzimmer und schuppen an", "items": [[None],[None],[ "Light_FF_Livingroom_Couch", "ACTION_ON" ],[ "Light_FF_Livingroom_Diningtable", "ACTION_ON" ],[ "Light_FF_Floor_Ceiling", "ACTION_ON" ],[ "Light_SF_Bedroom_Ceiling", "ACTION_ON" ],[ "Light_Outdoor_Garage_Gardenside_Manual", "ACTION_ON" ]] }
-    ],
-    "enabled1": [
-        { "phrase": u"licht dachboden an", "items": [["pFF_Attic_Light_Ceiling_Powered","ON"]] },
-    ],
     "enabled": [
         # **** ERDGESCHOSS incl. Schuppen ****
         { "phrase": u"licht gäste bad an", "items": [["pGF_Guesttoilet_Light_Ceiling_Powered","ON"],["pGF_Guesttoilet_Light_Mirror_Powered","ON"]] },
@@ -136,8 +126,8 @@ Cases = {
 
         { "phrase": u"aussensteckdosen vorne an", "items": [[ "pOutdoor_Streeside_Socket_Powered", "ON" ]] },
         { "phrase": u"aussensteckdosen hinten aus", "items": [[ "pOutdoor_Terrace_Socket_Powered", "OFF" ]] },
-        { "phrase": u"aussensteckdosen an", "items": [[ "pOutdoor_Streeside_Socket_Powered", "ON" ],[ "pOutdoor_Terrace_Socket_Powered", "ON" ]] },
-        { "phrase": u"steckdosen draussen aus", "items": [[ "pOutdoor_Streeside_Socket_Powered", "OFF" ],[ "pOutdoor_Terrace_Socket_Powered", "OFF" ]] },
+        { "phrase": u"aussensteckdosen an", "items": [["pOutdoor_Gardenhouse_Socket_Powered","ON"],[ "pOutdoor_Streeside_Socket_Powered", "ON" ],[ "pOutdoor_Terrace_Socket_Powered", "ON" ]] },
+        { "phrase": u"steckdosen draussen aus", "items": [["pOutdoor_Gardenhouse_Socket_Powered","OFF"],[ "pOutdoor_Streeside_Socket_Powered", "OFF" ],[ "pOutdoor_Terrace_Socket_Powered", "OFF" ]] },
         
         { "phrase": u"wie kalt ist es im garten", "items": [["pOutdoor_WeatherStation_Temperature","READ"]] },
         { "phrase": u"wie ist die luftfeuchtigkeit im garten", "items": [["pOutdoor_WeatherStation_Humidity","READ"]] },
@@ -153,8 +143,6 @@ Cases = {
 
         # **** Sonstiges ****
         
-        { "phrase": u"aufstehen", "items": [[ "pOther_Scene2", "ON" ]] },
-        { "phrase": u"schlafen gehen", "items": [[ "pOther_Scene3", "ON" ]] },
         { "phrase": u"gute nacht", "items": [[ "pOther_Scene4", "ON" ]] },
 
         # **** Opener Questions ****
@@ -180,13 +168,6 @@ Cases = {
         { "phrase": u"licht küche fünfzig prozent", "items": [[ "pGF_Kitchen_Light_Ceiling_Brightness", "50" ]] },
         { "phrase": u"licht wohnzimmer indirekt x prozent", "items": [], "is_valid": False },
         
-        # **** ELECTRONIC GADGETS ****        
-
-        #{ "phrase": u"wohnzimmer fernseher kanal fünf", "items": [[ "SAT_KEY_PRO7", "DEFAULT_ON" ]] },
-        #{ "phrase": u"wohnzimmer fernseher an", "items": [[ "Scene6", "ACTION_ON" ]] },
-        #{ "phrase": u"wohnzimmer fernseher kanal drei", "items": [[ "SAT_KEY_RTL", "DEFAULT_ON" ]] },
-        #{ "phrase": u"wohnzimmer licht und fernseher an", "items": [[ "Light_FF_Livingroom_Couch", "ACTION_ON" ],[ "Light_FF_Livingroom_Diningtable", "ACTION_ON" ],[ "Scene6", "ACTION_ON" ]] },
-        
         # **** FALSE POSITIVES ****
         
         { "phrase": u"wie warm ist es im schlafzimmer und in der küche", "items": [[ "pFF_Bedroom_Air_Sensor_Temperature_Value", "READ" ]], "is_valid": False },
@@ -200,7 +181,6 @@ Cases = {
         
         
         { "phrase": u"steckdose bassbox aus", "client_id": "amzn1.ask.device.AFUSC2ZJY7NS7773FR5SXTQXXG626RYY2QYBY3TCA5IYYH7DMKPCVRSAW5MSX727ZVVGHPN4MJ3WDKA7NDIS5GDVSKM64OXUEFVRTLJRRJVKZFYHJ3ZK5EX35XQL5C4VXQUZ54TDDFM2GZLD2R7OIYURXSCQYNYGY2EBHC57ON5JGKN3CI2KE", "items": [["pGF_Livingroom_Socket_Bassbox_Powered","OFF"]] },
-        #{ "phrase": u"fernseher an", "client_id": "amzn1.ask.device.AFUSC2ZJY7NS7773FR5SXTQXXG626RYY2QYBY3TCA5IYYH7DMKPCVRSAW5MSX727ZVVGHPN4MJ3WDKA7NDIS5GDVSKM64OXUEFVRTLJRRJVKZFYHJ3ZK5EX35XQL5C4VXQUZ54TDDFM2GZLD2R7OIYURXSCQYNYGY2EBHC57ON5JGKN3CI2KE", "items": [[ "Scene6", "ACTION_ON" ]] },
         { "phrase": u"licht flur oben an und küche 50%", "client_id": "amzn1.ask.device.AFUSC2ZJY7NS7773FR5SXTQXXG626RYY2QYBY3TCA5IYYH7DMKPCVRSAW5MSX727ZVVGHPN4MJ3WDKA7NDIS5GDVSKM64OXUEFVRTLJRRJVKZFYHJ3ZK5EX35XQL5C4VXQUZ54TDDFM2GZLD2R7OIYURXSCQYNYGY2EBHC57ON5JGKN3CI2KE", "items": [["pFF_Corridor_Light_Ceiling_Powered","ON"],["pGF_Kitchen_Light_Ceiling_Brightness","50"]] },
         
         # **** Kombiniert ****
@@ -213,7 +193,7 @@ Cases = {
         { "phrase": u"licht wohnzimmer und flur an und dachboden und bad rollläden runter", "items": [[ "pGF_Livingroom_Light_Hue4_Color", "ON" ],[ "pGF_Corridor_Light_Ceiling_Powered", "ON" ],[ "pGF_Livingroom_Light_Hue5_Color", "ON" ],[ "pFF_Corridor_Light_Ceiling_Powered", "ON" ],[ "pGF_Livingroom_Light_Hue1_Color", "ON" ],[ "pGF_Livingroom_Light_Couchtable_Brightness", "ON" ],[ "pGF_Livingroom_Light_Diningtable_Brightness", "ON" ],[ "pGF_Livingroom_Light_Hue2_Color", "ON" ],[ "pGF_Corridor_Light_Mirror_Powered", "ON" ],[ "pGF_Corridor_Light_Hue_Color", "ON" ],[ "pFF_Bathroom_Shutter_Control", "DOWN" ],[ "pFF_Attic_Shutter_Control", "DOWN" ]] },
         { "phrase": u"alle licht aus und rollläden komplett runter", "items": [["pGF_Guesttoilet_Light_Ceiling_Powered","OFF"],["pGF_Guesttoilet_Light_Mirror_Powered","OFF"],["pGF_Utilityroom_Light_Ceiling_Powered","OFF"],["pGF_Boxroom_Light_Ceiling_Powered","OFF"],["pGF_Kitchen_Light_Ceiling_Brightness","OFF"],["pGF_Kitchen_Light_Cupboard_Powered","OFF"],["pGF_Livingroom_Light_Diningtable_Brightness","OFF"],["pGF_Livingroom_Light_Hue4_Color","OFF"],["pGF_Livingroom_Light_Hue5_Color","OFF"],["pGF_Livingroom_Light_Hue1_Color","OFF"],["pGF_Livingroom_Light_Hue2_Color","OFF"],["pGF_Livingroom_Light_Couchtable_Brightness","OFF"],["pGF_Workroom_Light_Ceiling_Powered","OFF"],["pGF_Corridor_Light_Hue_Color","OFF"],["pGF_Corridor_Light_Mirror_Powered","OFF"],["pGF_Corridor_Light_Ceiling_Powered","OFF"],["pGF_Garage_Light_Ceiling_Powered","OFF"],["pFF_Bathroom_Light_Ceiling_Powered","OFF"],["pFF_Bathroom_Light_Mirror_Powered","OFF"],["pFF_Dressingroom_Light_Ceiling_Powered","OFF"],["pFF_Bedroom_Light_Hue_Right_Color","OFF"],["pFF_Bedroom_Light_Hue_Left_Color","OFF"],["pFF_Bedroom_Light_Ceiling_Powered","OFF"],["pFF_Fitnessroom_Light_Ceiling_Powered","OFF"],["pFF_Makeuproom_Light_Ceiling_Powered","OFF"],["pFF_Corridor_Light_Ceiling_Powered","OFF"],["pFF_Attic_Light_Ceiling_Powered","OFF"],["pGF_Guesttoilet_Shutter_Control","DOWN"],["pGF_Kitchen_Shutter_Control","DOWN"],["pGF_Livingroom_Shutter_Terrace_Control","DOWN"],["pGF_Livingroom_Shutter_Couch_Control","DOWN"],["pGF_Workroom_Shutter_Control","DOWN"],["pFF_Bathroom_Shutter_Control","DOWN"],["pFF_Dressingroom_Shutter_Control","DOWN"],["pFF_Bedroom_Shutter_Control","DOWN"],["pFF_Fitnessroom_Shutter_Control","DOWN"],["pFF_Makeuproom_Shutter_Control","DOWN"],["pFF_Attic_Shutter_Control","DOWN"]] },
         { "phrase": u"licht innen aus und rollläden obergeschoss runter", "items": [["pGF_Guesttoilet_Light_Ceiling_Powered","OFF"],["pGF_Guesttoilet_Light_Mirror_Powered","OFF"],["pGF_Utilityroom_Light_Ceiling_Powered","OFF"],["pGF_Boxroom_Light_Ceiling_Powered","OFF"],["pGF_Kitchen_Light_Ceiling_Brightness","OFF"],["pGF_Kitchen_Light_Cupboard_Powered","OFF"],["pGF_Livingroom_Light_Diningtable_Brightness","OFF"],["pGF_Livingroom_Light_Hue4_Color","OFF"],["pGF_Livingroom_Light_Hue5_Color","OFF"],["pGF_Livingroom_Light_Hue1_Color","OFF"],["pGF_Livingroom_Light_Hue2_Color","OFF"],["pGF_Livingroom_Light_Couchtable_Brightness","OFF"],["pGF_Workroom_Light_Ceiling_Powered","OFF"],["pGF_Corridor_Light_Hue_Color","OFF"],["pGF_Corridor_Light_Mirror_Powered","OFF"],["pGF_Corridor_Light_Ceiling_Powered","OFF"],["pGF_Garage_Light_Ceiling_Powered","OFF"],["pFF_Bathroom_Light_Ceiling_Powered","OFF"],["pFF_Bathroom_Light_Mirror_Powered","OFF"],["pFF_Dressingroom_Light_Ceiling_Powered","OFF"],["pFF_Bedroom_Light_Hue_Right_Color","OFF"],["pFF_Bedroom_Light_Hue_Left_Color","OFF"],["pFF_Bedroom_Light_Ceiling_Powered","OFF"],["pFF_Fitnessroom_Light_Ceiling_Powered","OFF"],["pFF_Makeuproom_Light_Ceiling_Powered","OFF"],["pFF_Corridor_Light_Ceiling_Powered","OFF"],["pFF_Attic_Light_Ceiling_Powered","OFF"],["pFF_Bathroom_Shutter_Control","DOWN"],["pFF_Dressingroom_Shutter_Control","DOWN"],["pFF_Bedroom_Shutter_Control","DOWN"],["pFF_Fitnessroom_Shutter_Control","DOWN"],["pFF_Makeuproom_Shutter_Control","DOWN"],["pFF_Attic_Shutter_Control","DOWN"]] },
-        { "phrase": u"licht im wohnzimmer und aussen licht und steckdosen aus", "items": [["pGF_Livingroom_Light_Diningtable_Brightness","OFF"],["pGF_Livingroom_Light_Hue4_Color","OFF"],["pGF_Livingroom_Light_Hue5_Color","OFF"],["pGF_Livingroom_Light_Hue1_Color","OFF"],["pGF_Livingroom_Light_Hue2_Color","OFF"],["pGF_Livingroom_Light_Couchtable_Brightness","OFF"],["pOutdoor_Streedside_Garage_Light_Powered","OFF"],["pOutdoor_Streedside_Frontdoor_Light_Powered","OFF"],["pOutdoor_Carport_Light_Powered","OFF"],["pOutdoor_Garden_Garage_Light_Powered","OFF"],["pOutdoor_Terrace_Light_Brightness","OFF"],["pOutdoor_Terrace_Light_Hue_Left_Color","OFF"],["pOutdoor_Terrace_Light_Hue_Right_Color","OFF"],["pOutdoor_Streeside_Socket_Powered","OFF"],["pOutdoor_Terrace_Socket_Powered","OFF"]] },
+        { "phrase": u"licht im wohnzimmer und aussen licht und steckdosen aus", "items": [["pOutdoor_Gardenhous_Right_Light_Powered","OFF"],["pOutdoor_Gardenhouse_Socket_Powered","OFF"],["pGF_Livingroom_Light_Diningtable_Brightness","OFF"],["pGF_Livingroom_Light_Hue4_Color","OFF"],["pGF_Livingroom_Light_Hue5_Color","OFF"],["pGF_Livingroom_Light_Hue1_Color","OFF"],["pGF_Livingroom_Light_Hue2_Color","OFF"],["pGF_Livingroom_Light_Couchtable_Brightness","OFF"],["pOutdoor_Streedside_Garage_Light_Powered","OFF"],["pOutdoor_Streedside_Frontdoor_Light_Powered","OFF"],["pOutdoor_Carport_Light_Powered","OFF"],["pOutdoor_Garden_Garage_Light_Powered","OFF"],["pOutdoor_Terrace_Light_Brightness","OFF"],["pOutdoor_Terrace_Light_Hue_Left_Color","OFF"],["pOutdoor_Terrace_Light_Hue_Right_Color","OFF"],["pOutdoor_Streeside_Socket_Powered","OFF"],["pOutdoor_Terrace_Socket_Powered","OFF"]] },
         { "phrase": u"wie ist die temperatur im schlafzimmer und die luftfeuchtigkeit wohnzimmer", "items": [["pGF_Livingroom_Air_Sensor_Humidity_Value","READ"],["pFF_Bedroom_Air_Sensor_Temperature_Value","READ"]] },
         { "phrase": u"wie warm ist es im schlafzimmer und im wohnzimmer", "items": [["pFF_Bedroom_Air_Sensor_Temperature_Value","READ"],["pGF_Livingroom_Air_Sensor_Temperature_Value","READ"]] },
     ]

@@ -4,8 +4,14 @@ Switch pGF_Livingroom_Television_Key_POWER        "An / Aus"     <selfsettings> 
 String pGF_Livingroom_Television_Key_CODE         "Tastendruck"  <selfsettings> (eGF_Livingroom_Television) ["Control"] {channel="samsungtv:tv:livingroom:keyCode"} 
 Switch pGF_Livingroom_Television_Key_POWER_ON     "TV An"           <selfsettings> (eGF_Livingroom_Television) ["Control"] { wol="192.168.0.73#FC:03:9F:1D:28:38" }
 Switch pGF_Livingroom_Television_Key_POWER_OFF    "TV Aus"          <selfsettings> (eGF_Livingroom_Television) ["Control"] {channel="samsungtv:tv:livingroom:power"} 
-Dimmer pGF_Livingroom_Television_Key_VOLUME       "Lautstärke"   <selfsettings> (eGF_Livingroom_Television) ["Control"] {channel="samsungtv:tv:livingroom:volume"} 
+Dimmer pGF_Livingroom_Television_Key_VOLUME       "Lautstärke [%d%%]"   <selfsettings> (eGF_Livingroom_Television) ["Control"] {channel="samsungtv:tv:livingroom:volume"}
 Switch pGF_Livingroom_Television_Key_MUTE         "Lautlos"      <selfsettings> (eGF_Livingroom_Television) ["Control"] {channel="samsungtv:tv:livingroom:mute"} 
+
+String pGF_Livingroom_Television_Info_Source         "Quelle [%s]"  <selfsettings> (eGF_Livingroom_Television) {channel="samsungtv:tv:livingroom:sourceName"}
+Number pGF_Livingroom_Television_Info_Channel_Number "Kanalnummer [%s]"   <selfsettings> (eGF_Livingroom_Television) {channel="samsungtv:tv:livingroom:channel"}
+String pGF_Livingroom_Television_Info_Program_Title  "Program Titel [%s]"  <selfsettings> (eGF_Livingroom_Television) {channel="samsungtv:tv:livingroom:programTitle"}
+String pGF_Livingroom_Television_Info_Program_Name   "Program Name [%s]"  <selfsettings> (eGF_Livingroom_Television) {channel="samsungtv:tv:livingroom:channelName"}
+
 Number pGF_Livingroom_Television_Key_SOURCE       "Quelle"       <selfsettings> (eGF_Livingroom_Television) ["Control"] {channel="samsungtv:tv:livingroom:sourceId"} 
 String pGF_Livingroom_Television_Key_BROWSER_URL  "Url"          <selfsettings> (eGF_Livingroom_Television) ["Control"] {channel="samsungtv:tv:livingroom:url"} 
 Switch pGF_Livingroom_Television_Key_BROWSER_STOP "Stop Browser" <selfsettings> (eGF_Livingroom_Television) ["Control"] {channel="samsungtv:tv:livingroom:stopBrowser"} 

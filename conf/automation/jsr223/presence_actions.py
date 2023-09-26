@@ -44,7 +44,7 @@ class PresenceActionUnknownPerson:
 
         if newPresentState == PresenceHelper.STATE_AWAY:
             if oldPresentState == PresenceHelper.STATE_MAYBE_PRESENT:
-                isFallback = False # => 1 hour of no moving in the house
+                isFallback = getItemLastUpdate("pGF_Corridor_Openingcontact_Door_State").isBefore(ZonedDateTime.now().minusSeconds(600)) # => No door related away event
                 NotificationHelper.sendNotification(NotificationHelper.PRIORITY_WARN, u"System", u"Unbekannter Gast {}".format( u"verschwunden" if isFallback else u"gegangen" ), "https://smartmarvin.de/cameraStrasseImage")
 
         elif newPresentState == PresenceHelper.STATE_MAYBE_PRESENT:
@@ -155,7 +155,7 @@ class PresenceActionArrivingAction:
 @rule()
 class PresenceActionLeavingAction:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("pOther_Presence_State", PresenceHelper.STATE_AWAY)]
+        self.triggers = [ItemStateChangeTrigger("pOther_Presence_State", state=PresenceHelper.STATE_AWAY)]
 
     def execute(self, module, input):
         if input["oldState"].intValue() == PresenceHelper.STATE_MAYBE_PRESENT:

@@ -87,6 +87,7 @@ sitemap haus label="Main Menu"
                     Switch item=pOutdoor_Carport_Light_Powered label="Carport"
                     Switch item=pOutdoor_Streedside_Garage_Light_Powered label="Schuppentür vorne"
                     Switch item=pOutdoor_Garden_Garage_Light_Powered label="Schuppentür hinten"
+                    Switch item=pOutdoor_Gardenhous_Right_Light_Powered label="Gartenhaus"
 				}
 			}
 		}
@@ -139,6 +140,7 @@ sitemap haus label="Main Menu"
                     Switch item=pOutdoor_Carport_Automatic_Switch label="Carport"
                     Switch item=pOutdoor_Terrace_Automatic_Switch label="Terasse"
                     Switch item=pOutdoor_Garden_Garage_Automatic_Switch label="Garage Gartenseite"
+                    Switch item=pOutdoor_Gardenhous_Right_Automatic_Switch label="Gartenhaus"
                 }
 			}
 			Frame label="Licht & Steckdosen" {
@@ -160,11 +162,12 @@ sitemap haus label="Main Menu"
                     Switch item=pOutdoor_Streedside_Frontdoor_Light_Powered label="Haustür"
                     Switch item=pOutdoor_Carport_Light_Powered label="Carport"
                     Switch item=pOutdoor_Streedside_Garage_Light_Powered label="Schuppentür vorne"
-                    Switch item=pOutdoor_Garden_Garage_Light_Powered label="Schuppentür hinten"
+                    Switch item=pOutdoor_Gardenhous_Right_Light_Powered label="Gartenhaus"
                 }
 				Group item=gOutdoor_Sockets label="Steckdosen [MAP(group_socket.map):%d]" {
 					Switch item=pOutdoor_Streeside_Socket_Powered label="Strassenseite"
 					Switch item=pOutdoor_Terrace_Socket_Powered label="Gartenseite"
+					Switch item=pOutdoor_Gardenhouse_Socket_Powered label="Gartenhaus"
 				}
                 Group label="Bewässerung [MAP(group_watering.map):%d]" item=gOutdoor_Watering_Circuits {
                     Frame label="Programm" {
@@ -315,6 +318,19 @@ sitemap haus label="Main Menu"
                         //Webview url="http://your_OH_ip_address:port/static/pIndoor_Roomba_map.html" icon="none" height=21
                     //}
                 }
+                Text label="Fernseher" item=pGF_Livingroom_Television_Key_POWER {
+                    Frame label="Steuerung" {
+                        Switch item=pGF_Livingroom_Television_Key_POWER
+                        Switch item=pGF_Livingroom_Television_Key_MUTE
+                        Slider item=pGF_Livingroom_Television_Key_VOLUME
+                    }
+                    Frame label="Info" {
+                        Text item=pGF_Livingroom_Television_Info_Source
+                        Text item=pGF_Livingroom_Television_Info_Channel_Number
+                        Text item=pGF_Livingroom_Television_Info_Program_Title
+                        Text item=pGF_Livingroom_Television_Info_Program_Name
+                    }
+                }
             }
             Frame label="Garten" {
                 Text label="Automower" item=pOutdoor_Mower_Status icon="mower" {
@@ -383,20 +399,7 @@ sitemap haus label="Main Menu"
                 }
                 Switch item=pOther_Manual_State_Auto_Attic_Light label="Dachboden (d)" mappings=[1="OFF", 2="W", 3="B"]
                 Switch item=pFF_Attic_Socket_Powered label="Dachboden (Steckdose)" visibility=[pOther_Manual_State_Auto_Attic_Light!=1]
-            }
-			/*Frame label="Sonstiges"
-			{
-                Text label="Szenen" icon="selfcontrol" {
-                    Frame label="Wohnen" {
-                        Switch item=pOther_Scene1 label="Fernsehen" icon="selfcouch"
-                    }
-                    Frame label="Sonstiges" {
-                        Switch item=pOther_Scene2 label="Aufstehen" icon="selfbedwakeup"
-                        Switch item=pOther_Scene3 label="Schlafen gehen" icon="selfbedsleep"
-                        Switch item=pOther_Scene4 label="Schlafen" icon="selfbedsleep"
-                    }
-                }
-			}*/
+			}
         }
 		Group label="Sicherheit [%s]" icon="selfsecurity" item=pOther_State_Message_Security valuecolor=[=="Alles geschlossen"="#6bc305",!="Alles geschlossen"="#d72a2a"]
         {
@@ -434,6 +437,9 @@ sitemap haus label="Main Menu"
                     Text item=pOutdoor_Terrace_Motiondetector_State1 label="Terasse rechts"
                     Text item=pOutdoor_Terrace_Motiondetector_State2 label="Terasse links"
                     Text item=pOutdoor_Garden_Garage_Motiondetector_State label="Garage Gartenseite"
+                    Text item=pOutdoor_Gardenhouse_Right_Motiondetector_State label="Gartenhaus (rechts)"
+                    Text item=pOutdoor_Gardenhouse_Behind_Motiondetector_State label="Gartenhaus (hinten)"
+                    Text item=pOutdoor_Gardenhouse_Left_Motiondetector_State label="Gartenhaus (links)"
                 }
                 Text label="Kameras" icon="camera"
                 {
@@ -670,7 +676,8 @@ sitemap haus label="Main Menu"
 				Group label="Präsenz & Schlafen [MAP(state_presence.map):%d]" icon="selfsettings" item=pOther_Presence_State
                 {
                     Selection item=pOther_Presence_State label="Präsenz" mappings=[0="Abwesend", 1="(Anwesend)", 2="Anwesend",3="(Schlafen)", 4="Schlafen"]
-                    Switch item=pOther_Scene7 label="Tablet Wakeup [%s]"
+                    Switch item=pOther_Scene4 label="Schlafen" icon="selfbedsleep"
+                    Switch item=pOther_Scene5
                     Text item=pOther_Presence_Holger_State label="Holger anwesend [%s]"
                     Text item=pOther_Presence_Holger_State_Raw label="Holger anwesend (RAW) [%s]"
                     Text item=pOther_Presence_Sandra_State label="Sandra anwesend [%s]"
@@ -951,6 +958,7 @@ sitemap haus label="Main Menu"
                     Frame label="Garten" {
                         Switch item=pOutdoor_Streeside_Socket_Powered label="Aussen vorne"
                         Switch item=pOutdoor_Terrace_Socket_Powered label="Aussen hinten"
+                        Switch item=pOutdoor_Gardenhouse_Socket_Powered label="Gartenhaus"
                     }
                     Frame label="Mobile" {
                         Switch item=pMobile_Socket_1_Powered label="Steckdose 1"

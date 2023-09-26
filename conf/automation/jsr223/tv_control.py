@@ -17,7 +17,7 @@ class TvControlLivingroomControl:
 
     def execute(self, module, input):
         if input["event"].getItemCommand() == ON:
-            sendCommand("pGF_Livingroom_Television_KeyPOWER_ON",ON)
-        else:
-            pass
+            sendCommand("pGF_Livingroom_Television_Key_POWER_ON",ON)
+        #else:
+        #    sendCommand("pGF_Livingroom_Television_Key_POWER_OFF",ON)
         #postUpdate("pGF_Livingroom_Television_Key_POWER", ON if input["event"].getStatusInfo() == ONLINE else OFF )

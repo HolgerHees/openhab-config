@@ -28,6 +28,7 @@ Group lOutdoor_Streedside "Vorgarten"   <garden>        (lOutdoor)     ["Garden"
 Group lOutdoor_Carport  "Carport"       <garden>        (lOutdoor)     ["Carport"]
 Group lOutdoor_Garden   "Hintergarten"  <garden>        (lOutdoor)     ["Garden"]       { synonyms="hinten" }
 Group lOutdoor_Terrace  "Terasse" <garden>              (lOutdoor)     ["Terrace"]      { synonyms="hinten" }
+Group lOutdoor_Gardenhouse "Gartenhausbereich" <garden> (lOutdoor)     ["Garden"]
 
 Group lOutdoorOther     "Sonstiges"     <group>        (lOutdoor)      ["Equipment"]
 

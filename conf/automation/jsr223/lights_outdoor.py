@@ -11,7 +11,8 @@ manualMappings = [
     ["pOutdoor_Carport_Light_Powered"             , "pOutdoor_Carport_Automatic_Switch"             , [ "pOutdoor_Carport_Motiondetector_State" ] ],
     ["pOutdoor_Terrace_Light_Brightness"          , "pOutdoor_Terrace_Automatic_Switch"             , [ "pOutdoor_Terrace_Motiondetector_State1", "pOutdoor_Terrace_Motiondetector_State2" ] ],
     ["pOutdoor_Streedside_Garage_Light_Powered"   , "pOutdoor_Streedside_Garage_Automatic_Switch"   , [ "pOutdoor_Streedside_Garage_Motiondetector_State" ] ],
-    ["pOutdoor_Garden_Garage_Light_Powered"       , "pOutdoor_Garden_Garage_Automatic_Switch"       , [ "pOutdoor_Garden_Garage_Motiondetector_State" ] ]
+    ["pOutdoor_Garden_Garage_Light_Powered"       , "pOutdoor_Garden_Garage_Automatic_Switch"       , [ "pOutdoor_Garden_Garage_Motiondetector_State" ] ],
+    ["pOutdoor_Gardenhous_Right_Light_Powered"    , "pOutdoor_Gardenhous_Right_Automatic_Switch"    , [ "pOutdoor_Gardenhouse_Right_Motiondetector_State" ] ]
 ]
 
 timerDuration = 60.0
@@ -38,31 +39,20 @@ class LightsOutdoorMotiondetectorSwitch:
             if itemState == ON:
                 ruleTimeouts["Light_Outdoor"] = now
 
-                sendCommandIfChanged("pOutdoor_Streedside_Garage_Light_Powered",OFF)
-                sendCommandIfChanged("pOutdoor_Streedside_Frontdoor_Light_Powered",OFF)
-                sendCommandIfChanged("pOutdoor_Carport_Light_Powered",OFF)
-                sendCommandIfChanged("pOutdoor_Terrace_Light_Brightness",0)
-                sendCommandIfChanged("pOutdoor_Garden_Garage_Light_Powered",OFF)
+            for mapping in manualMappings:
+                sendCommandIfChanged(mapping[0],OFF if "Powered" in mapping[0] else 0)
 
             #ruleTimeouts["Motiondetector_Outdoor_Individual_Switches"] = now
-            postUpdateIfChanged("pOutdoor_Streedside_Garage_Automatic_Switch",itemState)
-            postUpdateIfChanged("pOutdoor_Streedside_Frontdoor_Automatic_Switch",itemState)
-            postUpdateIfChanged("pOutdoor_Carport_Automatic_Switch",itemState)
-            postUpdateIfChanged("pOutdoor_Terrace_Automatic_Switch",itemState)
-            postUpdateIfChanged("pOutdoor_Garden_Garage_Automatic_Switch",itemState)
-
+            for mapping in manualMappings:
+                postUpdateIfChanged( mapping[1], itemState)
 
 # Individual MotionDetector Switchs
 @rule()
 class LightsOutdoorMotiondetectorIndividualSwitch:
     def __init__(self):
-        self.triggers = [
-            ItemCommandTrigger("pOutdoor_Streedside_Garage_Automatic_Switch"),
-            ItemCommandTrigger("pOutdoor_Streedside_Frontdoor_Automatic_Switch"),
-            ItemCommandTrigger("pOutdoor_Carport_Automatic_Switch"),
-            ItemCommandTrigger("pOutdoor_Terrace_Automatic_Switch"),
-            ItemCommandTrigger("pOutdoor_Garden_Garage_Automatic_Switch")
-        ]
+        self.triggers = []
+        for mapping in manualMappings:
+            self.triggers.append(ItemCommandTrigger(mapping[1]))
 
     def execute(self, module, input):
         global ruleTimeouts
@@ -95,13 +85,9 @@ class LightsOutdoorMotiondetectorIndividualSwitch:
 @rule()
 class LightOutdoorControl:
     def __init__(self):
-        self.triggers = [
-            ItemStateChangeTrigger("pOutdoor_Streedside_Garage_Light_Powered"),
-            ItemStateChangeTrigger("pOutdoor_Streedside_Frontdoor_Light_Powered"),
-            ItemStateChangeTrigger("pOutdoor_Carport_Light_Powered"),
-            ItemStateChangeTrigger("pOutdoor_Terrace_Light_Brightness"),
-            ItemStateChangeTrigger("pOutdoor_Garden_Garage_Light_Powered")
-        ]
+        self.triggers = []
+        for mapping in manualMappings:
+            self.triggers.append(ItemStateChangeTrigger(mapping[0]))
 
     def execute(self, module, input):
         #self.log.info(u"{}".format(input))

@@ -3,10 +3,10 @@ from shared.triggers import CronTrigger
 
 map = {
     "pOutdoor_WeatherStation_Cloud_Cover": "cloudCoverInOcta",
-    "pOutdoor_WeatherStation_Rain_Current": "rainCurrentInMillimeter",
-    "pOutdoor_WeatherStation_Rain_Current_15Min": "rainCurrent15MinInMillimeter",
+    "pOutdoor_WeatherStation_Rain_Current": "rainLastHourInMillimeter",
+    "pOutdoor_WeatherStation_Rain_Current_15Min": "rainLast15MinInMillimeter",
     "pOutdoor_WeatherStation_Rain_Daily": "rainDailyInMillimeter",
-    "pOutdoor_WeatherStation_Rain_State": "rainCurrentLevel",
+    "pOutdoor_WeatherStation_Rain_State": "rainLevel",
     "pOutdoor_WeatherStation_Wind_Speed": "windSpeedInKilometerPerHour",
     "pOutdoor_WeatherStation_Wind_Gust": "windGustInKilometerPerHour",
     "pOutdoor_WeatherStation_Wind_Direction": "windDirectionInDegree",

@@ -1,3 +1,5 @@
+from java.time import ZonedDateTime, LocalDateTime
+
 from shared.helper import rule, getItemState, sendCommand
 from shared.triggers import CronTrigger, ItemStateChangeTrigger 
 from custom.presence import PresenceHelper
@@ -6,12 +8,18 @@ from custom.presence import PresenceHelper
 @rule()
 class LightsIndoorAwayEvening:
     def __init__(self):
-        self.triggers = [ItemStateChangeTrigger("pOther_Automatic_State_Outdoorlights", state="ON")]
+        self.triggers = [
+            ItemStateChangeTrigger("pOther_Automatic_State_Outdoorlights", state="ON"),
+            ItemStateChangeTrigger("pOther_Presence_State", state=PresenceHelper.STATE_AWAY)
+        ]
 
     def execute(self, module, input):
-        if getItemState("pOther_Manual_State_Auto_Lighting") == ON and getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_AWAY:
-            sendCommand("pGF_Corridor_Light_Hue_Color", 30)
-            sendCommand("pGF_Livingroom_Light_Hue4_Color", 30)
+        if getItemState("pOther_Manual_State_Auto_Lighting") == ON and getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_AWAY and getItemState("pOther_Automatic_State_Outdoorlights") == ON:
+            now = ZonedDateTime.now()
+            endTime = now.withHour(21).withMinute(30)
+            if endTime.isBefore( now ):
+                sendCommand("pGF_Corridor_Light_Hue_Color", 30)
+                sendCommand("pGF_Livingroom_Light_Hue4_Color", 30)
 
 
 @rule()
