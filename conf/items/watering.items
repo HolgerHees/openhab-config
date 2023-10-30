@@ -10,10 +10,10 @@ Switch pOutdoor_Garden_Right_Watering_Powered    "Bewässerung" <selfwater> (eOu
 Switch pOutdoor_Garden_Right_Watering_Auto       "Automatik"   <selfwater> (eOutdoor_Garden_Right_Watering) ["Point"]
 String pOutdoor_Garden_Right_Watering_Info       "Info [%s]"   <selfwater> (eOutdoor_Garden_Right_Watering) ["Status"]
 
-Group  eOutdoor_Terrace_Watering          "Bewässerung" <selfinfo> (lOutdoor_Terrace) ["Valve"]
-Switch pOutdoor_Terrace_Watering_Powered  "Bewässerung" <selfwater> (eOutdoor_Terrace_Watering,gOutdoor_Watering_Circuits,gPersistance_History) ["Switch"] { channel="knx:device:bridge:wattering:gardensideBedsFront" }
-Switch pOutdoor_Terrace_Watering_Auto     "Automatik"   <selfwater> (eOutdoor_Terrace_Watering) ["Point"]
-String pOutdoor_Terrace_Watering_Info     "Info [%s]"   <selfwater> (eOutdoor_Terrace_Watering) ["Status"]
+Group  eOutdoor_Terrace_Watering                 "Bewässerung" <selfinfo> (lOutdoor_Terrace) ["Valve"]
+Switch pOutdoor_Terrace_Watering_Powered         "Bewässerung" <selfwater> (eOutdoor_Terrace_Watering,gOutdoor_Watering_Circuits,gPersistance_History) ["Switch"] { channel="knx:device:bridge:wattering:gardensideBedsFront" }
+Switch pOutdoor_Terrace_Watering_Auto            "Automatik"   <selfwater> (eOutdoor_Terrace_Watering) ["Point"]
+String pOutdoor_Terrace_Watering_Info            "Info [%s]"   <selfwater> (eOutdoor_Terrace_Watering) ["Status"]
 
 Group  eOutdoor_Garden_Back_Watering             "Bewässerung" <selfinfo> (lOutdoor_Garden) ["Valve"] {synonyms="hinten"}
 Switch pOutdoor_Garden_Back_Watering_Powered     "Bewässerung" <selfwater> (eOutdoor_Garden_Back_Watering,gOutdoor_Watering_Circuits,gPersistance_History) ["Switch"] { channel="knx:device:bridge:wattering:gardensideBedsBack" }
@@ -33,5 +33,8 @@ String pOutdoor_Streetside_Beds_Watering_Info    "Info [%s]"   <selfwater> (eOut
 // **** WATERING LOGIC ****
 Group  eOutdoor_Watering_Logic                   "Bewässerung Steuerung" <selfinfo> (lOutdoorOther) ["Equipment"]
 String pOutdoor_Watering_Logic_Program_State     "Status [%s]" <selfinfo> (eOutdoor_Watering_Logic) ["Point"]
-Number pOutdoor_Watering_Logic_Program_Duration  "Programm Dauer [%d]" <selfruntime> (eOutdoor_Watering_Logic) ["Status","Duration"]
-Switch pOutdoor_Watering_Logic_Program_Start     "Programm starten" <selfautomode> (eOutdoor_Watering_Logic) ["Control"]
+Number pOutdoor_Watering_Logic_Program_Duration  "Laufzeit pro Kreis [%d]" <selfruntime> (eOutdoor_Watering_Logic) ["Status","Duration"]
+
+Number pOutdoor_Watering_Logic_Program_Start     "Programm starten [MAP(watering_program.map):%s]" <selfautomode> (eOutdoor_Watering_Logic) ["Control"]
+Number pOutdoor_Watering_Logic_Runtime           "Gesamtlaufzeit [%d min.]" (eOutdoor_Watering_Logic) ["Status"]
+String pOutdoor_Watering_Logic_Info              "Gesamtlaufzeit [%s]" (eOutdoor_Watering_Logic) ["Status"]

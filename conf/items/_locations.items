@@ -21,14 +21,14 @@ Group lFF_Makeuproom    "Schminkzimmer" <girl_3>        (lFirstFloor)  ["Room"] 
 Group lFF_Corridor      "Flur"          <corridor>      (lFirstFloor)  ["Corridor"]     { synonyms="oben" }
 Group lFF_Attic         "Dachboden"     <attic>         (lFirstFloor)  ["Attic"]
 
-Group lGardenHouse      "Gartenhaus" <group>                           ["Building"]     { synonyms="Gartenlaube, Gartenhaus" }
+Group lToolshed         "Geräteschuppen" <group>                           ["Building"]     { synonyms="Gartenlaube, Gartenhaus" }
 
 Group lOutdoor          "Garten"      <garden>                         ["Outdoor"]      { synonyms="draussen,aussen" }
 Group lOutdoor_Streedside "Vorgarten"   <garden>        (lOutdoor)     ["Garden"]       { synonyms="Strassenseite, vorne" }
 Group lOutdoor_Carport  "Carport"       <garden>        (lOutdoor)     ["Carport"]
 Group lOutdoor_Garden   "Hintergarten"  <garden>        (lOutdoor)     ["Garden"]       { synonyms="hinten" }
 Group lOutdoor_Terrace  "Terasse" <garden>              (lOutdoor)     ["Terrace"]      { synonyms="hinten" }
-Group lOutdoor_Gardenhouse "Gartenhausbereich" <garden> (lOutdoor)     ["Garden"]
+Group lOutdoor_Toolshed "Geräteschuppenbereich" <garden> (lOutdoor)     ["Garden"]
 
 Group lOutdoorOther     "Sonstiges"     <group>        (lOutdoor)      ["Equipment"]
 

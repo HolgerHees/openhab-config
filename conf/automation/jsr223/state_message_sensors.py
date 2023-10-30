@@ -45,7 +45,7 @@ class StateMessageSensors:
             states.append(getItemState("pIndoor_Plant_Sensor_Main_Info").toString())
 
         for sensorItem in co2SensorItems:
-            if getItemState(sensorItem).intValue() > 1500:
+            if getItemState(sensorItem).intValue() > 2000:
                 states.append(u"CO2 Wert")
                 details.append(sensorItem)
                 priority = NotificationHelper.PRIORITY_ALERT

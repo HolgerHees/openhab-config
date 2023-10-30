@@ -1,10 +1,10 @@
 import math
-from java.time import ZonedDateTime
+from java.time import ZonedDateTime, Duration
+from java.time.format import DateTimeFormatter
 from java.time.temporal import ChronoUnit
 
 from shared.helper import rule, startTimer, getItemState, postUpdate, sendCommand, sendCommandIfChanged, getItemLastChange
-from shared.triggers import ItemCommandTrigger, ItemStateChangeTrigger
-
+from shared.triggers import ItemCommandTrigger, ItemStateChangeTrigger, CronTrigger
 
 circuits = [
     [
@@ -49,12 +49,18 @@ circuits = [
 #        ['pOutdoor_Garden_Back_Watering_Powered', u"Beete", 1.0 ]
 #    ]
 #]
-    
+
+class ScenesWatheringHelper():
+    STATE_OFF = 0
+    STATE_START_NOW = 1
+    STATE_START_MORNING = 2
+    STATE_START_EVENING = 3
+
 @rule()
 class ScenesWatheringMessage:
     def __init__(self):
         self.triggers = [ ItemStateChangeTrigger("pOutdoor_Watering_Logic_Program_Duration") ]
-        
+
         for group in circuits:
             for circuit in group[2]:
                 self.triggers.append(ItemStateChangeTrigger(circuit+"_Auto"))
@@ -62,6 +68,7 @@ class ScenesWatheringMessage:
     def execute(self, module, input):
         reference_duration = getItemState("pOutdoor_Watering_Logic_Program_Duration").intValue()
 
+        total_duration = 0
         for i in range(len(circuits)):
             for circuit in circuits[i][2]:
                 if getItemState(circuit + "_Auto") == ON:
@@ -72,41 +79,33 @@ class ScenesWatheringMessage:
                 else:
                     postUpdate(circuit + "_Info", u"inaktiv")
 
-class WatheringHelper:
-    def getReferenceGroup(self):
-        referenceGroup = -1
-        for i in range(len(circuits)):
-            for circuit in circuits[i][1]:
-                if getItemState(circuit[0] + "_Auto") == ON:
-                    referenceGroup = i
+            for circuit in circuits[i][2]:
+                if getItemState(circuit + "_Auto") == ON:
+                    duration = ( circuits[i][0] * reference_duration )
+                    duration = int( math.floor( duration ) )
+                    total_duration += duration
                     break
-                  
-            if referenceGroup != -1:
-                break
-        return referenceGroup
-
-class WatheringHelperOld:
-    def getReferenceGroup(self):
-        referenceGroup = -1
-        for i in range(len(circuits)):
-            for circuit in circuits[i]:
-                if getItemState(circuit[0] + "_Auto") == ON:
-                    referenceGroup = i
-                    break
-                  
-            if referenceGroup != -1:
-                break
-        return referenceGroup
+        postUpdate("pOutdoor_Watering_Logic_Runtime", total_duration)
+        postUpdate("pOutdoor_Watering_Logic_Info", "{} min.".format(total_duration) if total_duration <= 60 else "{}:{}".format(int(total_duration / 60), int(total_duration % 60)))
 
 @rule()
-class ScenesWatheringControl(WatheringHelperOld):
+class ScenesWatheringControl():
     def __init__(self):
-        self.triggers = [ItemCommandTrigger("pOutdoor_Watering_Logic_Program_Start")]
+        self.triggers = [
+            ItemCommandTrigger("pOutdoor_Watering_Logic_Program_Start"),
+            ItemStateChangeTrigger("pOutdoor_Watering_Logic_Runtime"),
+            CronTrigger("0 0 0 * * ?")
+        ]
 
         self.progressTimer = None
         self.currentProgressMsg = ""
 
         self.activeIndex = -1
+
+        self.programTimerStart = None
+        self.programTimer = None
+
+        self.initProgramTimer()
 
     def disableAllCircuits(self):
         for i in range(len(circuits)):
@@ -168,8 +167,7 @@ class ScenesWatheringControl(WatheringHelperOld):
                     break
         
             if nextIndex == -1:
-                self.disableAllCircuits()
-                postUpdate("pOutdoor_Watering_Logic_Program_Start", OFF)
+                sendCommand("pOutdoor_Watering_Logic_Program_Start", ScenesWatheringHelper.STATE_OFF)
             else:
                 for circuit in circuits[nextIndex][2]:
                     if getItemState(circuit + "_Auto") == ON:
@@ -201,7 +199,7 @@ class ScenesWatheringControl(WatheringHelperOld):
             self.log.info("Cancel Watering Progress Zombie Timer")
             self.cleanProgressTimer()
             return
-        
+
         msg, remaining = self.findStep()
         
         if remaining <= 0:
@@ -220,11 +218,80 @@ class ScenesWatheringControl(WatheringHelperOld):
 
         self.progressTimer = startTimer(self.log, 60.0, self.callbackProgress)
 
+    def triggerProgramTimer(self):
+        self.programTimer = None
+
+        active_programm = getItemState("pOutdoor_Watering_Logic_Program_Start").intValue()
+        if active_programm not in [ScenesWatheringHelper.STATE_START_MORNING, ScenesWatheringHelper.STATE_START_EVENING]:
+            self.log.error("Invalid call of triggerProgramTimer")
+            return
+
+        sendCommand("pOutdoor_Watering_Logic_Program_Start", ScenesWatheringHelper.STATE_START_NOW)
+
+    def initProgramTimer(self, input = None):
+        active_programm = input['command'].intValue() if input is not None and input['event'].getItemName() == "pOutdoor_Watering_Logic_Program_Start" else getItemState("pOutdoor_Watering_Logic_Program_Start").intValue()
+        if active_programm not in [ScenesWatheringHelper.STATE_START_MORNING, ScenesWatheringHelper.STATE_START_EVENING]:
+            self.programTimer = None
+            return
+
+        total_duration = input['event'].getItemState().intValue() if input is not None and input['event'].getItemName() == "pOutdoor_Watering_Logic_Runtime" else getItemState("pOutdoor_Watering_Logic_Runtime").intValue()
+
+        now = ZonedDateTime.now()
+        if active_programm == ScenesWatheringHelper.STATE_START_MORNING:
+            #next_start = now.plusSeconds(total_duration * 60 + 10)
+            next_start = now.withHour(8).withMinute(0).withSecond(0)
+        elif active_programm == ScenesWatheringHelper.STATE_START_EVENING:
+            next_start = now.withHour(22).withMinute(0).withSecond(0)
+
+        next_start = next_start.minusMinutes(total_duration)
+
+        while next_start.isBefore(now):
+            next_start = next_start.plusHours(24)
+
+        time_span = Duration.between(now, next_start).getSeconds() if next_start.isAfter(now) else 0
+
+        #self.log.info("{} -> {}".format(next_start, now))
+        self.programTimer = startTimer(self.log, time_span, self.triggerProgramTimer)
+        self.programTimerStart = next_start
+
+        self.updateProgramTimerNextStart(now)
+
+        #self.log.info("InitProgramTimer: {} -> {} -> {}".format(active_programm, total_duration, time_span))
+
+    def updateProgramTimerNextStart(self, now):
+        if self.programTimerStart is None:
+            return
+
+        diff = self.programTimerStart.getDayOfYear() - now.getDayOfYear()
+        if diff <= 1:
+            offset = "Heute" if diff == 0 else "Morgen"
+            fmt = DateTimeFormatter.ofPattern("HH:mm");
+            msg = "{}, {}".format(offset, self.programTimerStart.format(fmt))
+        else:
+            fmt = DateTimeFormatter.ofPattern("dd.MM - HH:mm");
+            msg = "Startet {}".format(self.programTimerStart.format(fmt))
+        postUpdate("pOutdoor_Watering_Logic_Program_State", msg)
+
     def execute(self, module, input):
+        if input['event'].getType() == "TimerEvent":
+            self.updateProgramTimerNextStart(ZonedDateTime.now())
+            return
+
+        #self.log.info("-----------------")
+        if self.programTimer != None:
+            self.programTimer.cancel()
+            self.programTimer = None
+
         self.cancelProgressTimer()
 
-        if input["command"] == OFF:
-            self.disableAllCircuits()
-        else:
-            self.callbackProgress()
+        if input['event'].getItemName() == "pOutdoor_Watering_Logic_Program_Start":
+            if input["command"].intValue() == ScenesWatheringHelper.STATE_START_NOW:
+                self.log.info("callbackProgress")
+                self.callbackProgress()
+                return
+            else:
+                self.disableAllCircuits()
+                if input["command"].intValue() == ScenesWatheringHelper.STATE_OFF:
+                    return
 
+        self.initProgramTimer(input)

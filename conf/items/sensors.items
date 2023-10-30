@@ -99,6 +99,13 @@ Number pFF_Attic_Air_Sensor_Humidity_Raw                                        
 Number pFF_Attic_Air_Sensor_Humidity_Value          "Luftfeuchtigkeit [%.1f %%]" <chart>      (eFF_Attic_Air_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
 String pFF_Attic_Air_Sensor_Message                 "Luft [%s]"             <selftemperature> (eFF_Attic_Air_Sensor)
 
+Group  eToolshed_Sensor                          "Luftsensor"            <selfinfo>        (lGardenHouse) ["Sensor"]
+Number pToolshed_Sensor_Temperature_Raw                                                   (eToolshed_Sensor) { channel="knx:device:bridge:sensors_toolshed:temperature" }
+Number pToolshed_Sensor_Temperature_Value         "Temperatur [%.1f °C]"  <selftemperature> (eToolshed_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Temperature"]
+Number pToolshed_Sensor_Humidity_Raw                                                      (eToolshed_Sensor) { channel="knx:device:bridge:sensors_toolshed:humidity" }
+Number pToolshed_Sensor_Humidity_Value            "Luftfeuchtigkeit [%.1f %%]" <chart>      (eToolshed_Sensor,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"]
+String pToolshed_Sensor_Message                   "Luft [%s]"             <selftemperature> (eToolshed_Sensor)
+
 // **** PLANT SENSORS ****
 Group eIndoor_Plant_Sensor "Blumensensor" <selfinfo> (lIndoorOther) ["Sensor"]
 

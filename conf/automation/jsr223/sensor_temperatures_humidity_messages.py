@@ -16,7 +16,9 @@ infoConfig = [
     ["pFF_Makeuproom_Air_Sensor_Message", "pFF_Makeuproom_Air_Sensor_Temperature_Value", "pFF_Makeuproom_Air_Sensor_Humidity_Value", None, "pFF_Makeuproom_Temperature_Desired"],
     ["pFF_Bathroom_Air_Sensor_Message", "pFF_Bathroom_Air_Sensor_Temperature_Value", "pFF_Bathroom_Air_Sensor_Humidity_Value", None, "pFF_Bathroom_Temperature_Desired"],
     ["pFF_Corridor_Air_Sensor_Message", "pFF_Corridor_Air_Sensor_Temperature_Value", "pFF_Corridor_Air_Sensor_Humidity_Value", None, "pFF_Corridor_Temperature_Desired"],
-    ["pFF_Attic_Air_Sensor_Message", "pFF_Attic_Air_Sensor_Temperature_Value", "pFF_Attic_Air_Sensor_Humidity_Value", None, None]
+    ["pFF_Attic_Air_Sensor_Message", "pFF_Attic_Air_Sensor_Temperature_Value", "pFF_Attic_Air_Sensor_Humidity_Value", None, None],
+
+    ["pToolshed_Sensor_Message", "pToolshed_Sensor_Temperature_Value", "pToolshed_Sensor_Humidity_Value", None, None]
 ]
 
 @rule()
@@ -64,7 +66,7 @@ class SensorTemperatureHumidityMessages:
         #self.log.info(temperatureItem)
         msg = u"{}{} °C, ".format(msg,getItemState(temperatureItem).format("%.1f"))
         #self.log.info(humidityItem)
-        msg = u"{}{} %".format(msg,getItemState(humidityItem).format("%.1f"))
+        msg = u"{}{} %".format(msg,getItemState(humidityItem).format("%.0f"))
 
         if co2Item is not None:
             msg = u"{}, {} ppm".format(msg,getItemState(co2Item).format("%d"))

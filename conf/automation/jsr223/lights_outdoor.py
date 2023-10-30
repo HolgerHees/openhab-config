@@ -12,7 +12,7 @@ manualMappings = [
     ["pOutdoor_Terrace_Light_Brightness"          , "pOutdoor_Terrace_Automatic_Switch"             , [ "pOutdoor_Terrace_Motiondetector_State1", "pOutdoor_Terrace_Motiondetector_State2" ] ],
     ["pOutdoor_Streedside_Garage_Light_Powered"   , "pOutdoor_Streedside_Garage_Automatic_Switch"   , [ "pOutdoor_Streedside_Garage_Motiondetector_State" ] ],
     ["pOutdoor_Garden_Garage_Light_Powered"       , "pOutdoor_Garden_Garage_Automatic_Switch"       , [ "pOutdoor_Garden_Garage_Motiondetector_State" ] ],
-    ["pOutdoor_Gardenhous_Right_Light_Powered"    , "pOutdoor_Gardenhous_Right_Automatic_Switch"    , [ "pOutdoor_Gardenhouse_Right_Motiondetector_State" ] ]
+    ["pOutdoor_Toolshed_Right_Light_Powered"      , "pOutdoor_Toolshed_Right_Automatic_Switch"      , [ "pOutdoor_Toolshed_Right_Motiondetector_State" ] ]
 ]
 
 timerDuration = 60.0

@@ -599,7 +599,7 @@ class SensorWeatherstationMessagesAir:
               
         msg = u"";
         msg = u"{}{} °C, ".format(msg,temperature)
-        msg = u"{}{}.0 %".format(msg,humidity)
+        msg = u"{}{} %".format(msg,humidity)
 
         postUpdateIfChanged("pOutdoor_WeatherStation_Air_Message", msg)
         

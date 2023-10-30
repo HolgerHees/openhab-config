@@ -1,4 +1,4 @@
-from shared.helper import rule, postUpdateIfChanged
+from shared.helper import rule, postUpdateIfChanged, getItemState
 from shared.triggers import ItemStateChangeTrigger
 
 
@@ -32,6 +32,9 @@ rawItems = {
     "pFF_Attic_Air_Sensor_Temperature_Raw": ["pFF_Attic_Air_Sensor_Temperature_Value", -0.1],                       # 15.02.23
     "pFF_Attic_Air_Sensor_Humidity_Raw": ["pFF_Attic_Air_Sensor_Humidity_Value", 6.3],                              # 15.02.23
 
+    "pToolshed_Sensor_Temperature_Raw": ["pToolshed_Sensor_Temperature_Value", 0],                                  # 27.10.23
+    "pToolshed_Sensor_Humidity_Raw": ["pToolshed_Sensor_Humidity_Value", 0.0],                                      # 27.10.23
+
     "pGF_Livingroom_Humidifier_Humidity_Raw": ["pGF_Livingroom_Humidifier_Humidity_Value", 0.0],
 }
 
@@ -48,7 +51,7 @@ class SensorCalibration:
     def calibrate(self, itemName, itemState):
         config = rawItems[itemName]
 
-        value = round(round(itemState.doubleValue(),1) + config[1], 1)
+        value = round(itemState.doubleValue() + config[1], 0 if "Humidity" in itemName else 1)
         postUpdateIfChanged(config[0], value)
 
 

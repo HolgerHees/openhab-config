@@ -32,17 +32,17 @@ Contact pOutdoor_Terrace_Motiondetector_State1              "Bewegungsmelder [MA
 Contact pOutdoor_Terrace_Motiondetector_State2              "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eOutdoor_Terrace_Motiondetector, gSensor_Outdoor) ["Alarm"] { channel="knx:device:bridge:motion_outdoor:terrace2" }
 
 // **** OUTDOOR GARAGE GARDENSIDE ****
-Group  eOutdoor_Garden_Garage_Motiondetector                "Bewegungsmelder" <selfinfo> (lOutdoor_Garden) ["MotionDetector"] {synonyms="Schuppen"}
+Group  eOutdoor_Garden_Garage_Motiondetector                "Bewegungsmelder" <selfinfo> (lOutdoor_Garden) ["MotionDetector"] {synonyms="Werkstatt"}
 Contact pOutdoor_Garden_Garage_Motiondetector_State         "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eOutdoor_Garden_Garage_Motiondetector, gSensor_Outdoor)  ["Alarm"] { channel="knx:device:bridge:motion_outdoor:garageGardenside" }
 
 // **** OUTDOOR GARDENHOUSE RIGHT ****
-Group  eOutdoor_Gardenhouse_Right_Motiondetector            "Bewegungsmelder" <selfinfo> (lOutdoor_Gardenhouse) ["MotionDetector"] {synonyms="Gartenhaus"}
-Contact pOutdoor_Gardenhouse_Right_Motiondetector_State     "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eOutdoor_Gardenhouse_Right_Motiondetector, gSensor_Outdoor)  ["Alarm"] { channel="knx:device:bridge:motion_outdoor:gardenhouseRight" }
+Group  eOutdoor_Toolshed_Right_Motiondetector            "Bewegungsmelder" <selfinfo> (lOutdoor_Toolshed) ["MotionDetector"] {synonyms="Geräteschuppen"}
+Contact pOutdoor_Toolshed_Right_Motiondetector_State     "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eOutdoor_Toolshed_Right_Motiondetector, gSensor_Outdoor)  ["Alarm"] { channel="knx:device:bridge:motion_outdoor:toolshedRight" }
 
 // **** OUTDOOR GARDENHOUSE BEHIND ****
-//Group  eOutdoor_Gardenhouse_Behind_Motiondetector            "Bewegungsmelder" <selfinfo> (lOutdoor_Gardenhouse) ["MotionDetector"] {synonyms="Gartenhaus"}
-//Contact pOutdoor_Gardenhouse_Behind_Motiondetector_State     "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eOutdoor_Gardenhouse_Behind_Motiondetector, gSensor_Outdoor)  ["Alarm"] { channel="knx:device:bridge:motion_outdoor:gardenhouseBehind" }
+//Group  eOutdoor_Toolshed_Behind_Motiondetector            "Bewegungsmelder" <selfinfo> (lOutdoor_Toolshed) ["MotionDetector"] {synonyms="Gartenhaus"}
+//Contact pOutdoor_Toolshed_Behind_Motiondetector_State     "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eOutdoor_Toolshed_Behind_Motiondetector, gSensor_Outdoor)  ["Alarm"] { channel="knx:device:bridge:motion_outdoor:toolshedBehind" }
 
 // **** OUTDOOR GARDENHOUSE LEFT ****
-//Group  eOutdoor_Gardenhouse_Left_Motiondetector            "Bewegungsmelder" <selfinfo> (lOutdoor_Gardenhouse) ["MotionDetector"] {synonyms="Gartenhaus"}
-//Contact pOutdoor_Gardenhouse_Left_Motiondetector_State     "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eOutdoor_Gardenhouse_Left_Motiondetector, gSensor_Outdoor)  ["Alarm"] { channel="knx:device:bridge:motion_outdoor:gardenhouseLeft" }
+//Group  eOutdoor_Toolshed_Left_Motiondetector            "Bewegungsmelder" <selfinfo> (lOutdoor_Toolshed) ["MotionDetector"] {synonyms="Gartenhaus"}
+//Contact pOutdoor_Toolshed_Left_Motiondetector_State     "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eOutdoor_Toolshed_Left_Motiondetector, gSensor_Outdoor)  ["Alarm"] { channel="knx:device:bridge:motion_outdoor:toolshedLeft" }

@@ -84,6 +84,11 @@ Bridge	knx:ip:bridge [
         Type    number  :       temperatureAttic        "Dachboden Temperatur"       [ ga="1/7/13" ]
         Type    number  :       humidityAttic           "Dachboden Feuchtigkeit"     [ ga="1/7/14" ]
     }
+    Thing device sensors_toolshed "KNX Sensoren Geräteschuppen"
+    {
+        Type    number  :       temperature             "Temperatur"                 [ ga="2/2/0" ]
+        Type    number  :       humidity                "Feuchtigkeit"               [ ga="2/2/1" ]
+    }
     Thing device lights_ff "KNX Licht Erdgeschoss"
     {
         Type    dimmer  :       kitchenCeiling          "Küche Licht"                [ switch="0/0/1", increaseDecrease="0/0/2", position="0/0/30+<0/0/31" ]
@@ -110,7 +115,7 @@ Bridge	knx:ip:bridge [
         Type    switch  :       child2Ceiling           "Kinderzimmer zwei"          [ ga="1/0/12+<1/0/13" ]
         Type    switch  :       attic                   "Dachboden"                  [ ga="1/0/14+<1/0/15" ]
     }
-    Thing device lights_gardenhouse "KNX Licht Gartenlaube"
+    Thing device lights_toolshed "KNX Licht Geräteschuppen"
     {
         Type    switch  :       ceiling                 "Deckenlicht"                [ ga="2/0/0+<2/0/1" ]
     }
@@ -121,9 +126,9 @@ Bridge	knx:ip:bridge [
         Type    switch  :       carport                 "Carport"                    [ ga="9/0/6+<9/0/7" ]
         Type    switch  :       garageGardenside        "Schuppen Gartenseite"       [ ga="9/0/9+<9/0/10" ]
         Type    dimmer  :       outdoorTerrace          "Terrassen Licht"            [ switch="9/0/12", increaseDecrease="9/0/16", position="9/0/17+<0/0/18" ]
-        Type    switch  :       gardenhouseRight        "Gartenlaube (rechts)"       [ ga="9/0/19+<9/0/20" ]
-        Type    switch  :       gardenhouseBehind       "Gartenlaube (hinten)"       [ ga="9/0/22+<9/0/23" ]
-        Type    switch  :       gardenhouseLeft         "Gartenlaube (links)"        [ ga="9/0/25+<9/0/26" ]
+        Type    switch  :       toolshedRight           "Geräteschuppen (rechts)"    [ ga="9/0/19+<9/0/20" ]
+        Type    switch  :       toolshedBehind          "Geräteschuppen (hinten)"    [ ga="9/0/22+<9/0/23" ]
+        Type    switch  :       toolshedLeft            "Geräteschuppen (links)"     [ ga="9/0/25+<9/0/26" ]
     }
     Thing device sockets_ff "KNX Steckdosen Erdgeschoss"
     {
@@ -143,7 +148,7 @@ Bridge	knx:ip:bridge [
     {
         Type    switch  :       streedside              "Aussensteckdosen vorne"     [ ga="9/1/0+<9/1/1" ]
         Type    switch  :       gardenside              "Aussensteckdosen hinten"    [ ga="9/1/2+<9/1/3" ]
-        Type    switch  :       gardenhouse             "Gartenlaube"                [ ga="9/1/4+<9/1/5" ]
+        Type    switch  :       toolshed                "Geräteschuppen"             [ ga="9/1/4+<9/1/5" ]
     }
     Thing device shutter_ff "KNX Rollläden Erdgeschoss"
     {
@@ -186,7 +191,7 @@ Bridge	knx:ip:bridge [
         Type    contact :       child2                  "Kind 2"                     [ ga="<1/3/4" ]
         Type    contact :       attic                   "Dachboden"                  [ ga="<1/3/5" ]
     }
-    Thing device contacts_gardenhouse "KNX Kontakte Gartenlaube"
+    Thing device contacts_toolshed "KNX Kontakte Geräteschuppen"
     {
         Type    contact :       door                    "Tür"                        [ ga="<2/1/0" ]
         Type    contact :       window                  "Fenster"                    [ ga="<2/1/1" ]
@@ -199,9 +204,9 @@ Bridge	knx:ip:bridge [
         Type    contact :       garageGardenside        "Schuppen (hinten)"          [ ga="<9/0/11" ]
         Type    contact :       terrace1                "Terrasse 1"                 [ ga="<9/0/14" ]
         Type    contact :       terrace2                "Terrasse 2"                 [ ga="<9/0/15" ]
-        Type    contact :       gardenhouseRight        "Gartenlaube (rechts)"       [ ga="9/0/21" ]
-        Type    contact :       gardenhouseBehind       "Gartenlaube (hinten)"       [ ga="9/0/24" ]
-        Type    contact :       gardenhouseLeft         "Gartenlaube (links)"        [ ga="9/0/27" ]
+        Type    contact :       toolshedRight           "Geräteschuppen (rechts)"    [ ga="9/0/21" ]
+        Type    contact :       toolshedBehind          "Geräteschuppen (hinten)"    [ ga="9/0/24" ]
+        Type    contact :       toolshedLeft            "Geräteschuppen (links)"     [ ga="9/0/27" ]
         Type    switch  :       main                    "Gartenlicht autom."         [ ga="<9/0/100" ]
     }
     Thing device motion_indoor "KNX Bewegungsmelder Haus"

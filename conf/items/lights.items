@@ -127,8 +127,8 @@ Group  eFF_Attic_Light_Ceiling                  "Deckenlampe"        <selflight>
 Switch pFF_Attic_Light_Ceiling_Powered          "Deckenlicht"        <selflight> (eFF_Attic_Light_Ceiling,gIndoor_Lights,gFF_Lights)    ["Switch","Light"] { channel="knx:device:bridge:lights_sf:attic" }
 
 // **** GF GARAGE ****
-Group  eGardenHouse_Light_Ceiling            "Deckenlampe"        <selflight> (lGardenHouse)                                        ["Lightbulb"] { synonyms="Decke" }
-Switch pGardenHouse_Light_Ceiling_Powered    "Deckenlicht"        <selflight> (eGardenHouse_Light_Ceiling,gIndoor_Lights)        ["Switch","Light"] { channel="knx:device:bridge:lights_gardenhouse:ceiling" }
+Group  eToolshed_Light_Ceiling            "Deckenlampe"        <selflight> (lToolshed)                                        ["Lightbulb"] { synonyms="Decke" }
+Switch pToolshed_Light_Ceiling_Powered    "Deckenlicht"        <selflight> (eToolshed_Light_Ceiling,gIndoor_Lights)        ["Switch","Light"] { channel="knx:device:bridge:lights_toolshed:ceiling" }
 
 Group:Number:SUM gOutdoor_Motiondetector_Counter "Automatik [MAP(motiondetector_counter_de.map):%s]" <selflightInfo> {autoupdate="false"}
 
@@ -168,19 +168,19 @@ Switch pOutdoor_Garden_Garage_Light_Powered     "Licht"              <selflight>
 Switch pOutdoor_Garden_Garage_Automatic_Switch	"Automatik"          <selflight> (eOutdoor_Garden_Garage_Light,gOutdoor_Motiondetector_Counter) ["Point"]
 
 // **** OUTDOOR GARDENHOUSE ****
-Group  eOutdoor_Gardenhous_Right_Light             "Lampe"           <selflight> (lOutdoor_Gardenhouse)                                            ["Lightbulb"]
-Switch pOutdoor_Gardenhous_Right_Light_Powered     "Licht"           <selflight> (eOutdoor_Gardenhous_Right_Light,gOutdoor_Lights)                 ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:gardenhouseRight" }
-Switch pOutdoor_Gardenhous_Right_Automatic_Switch  "Automatik"       <selflight> (eOutdoor_Gardenhous_Right_Light,gOutdoor_Motiondetector_Counter) ["Point"]
+Group  eOutdoor_Toolshed_Right_Light             "Lampe"           <selflight> (lOutdoor_Toolshed)                                            ["Lightbulb"]
+Switch pOutdoor_Toolshed_Right_Light_Powered     "Licht"           <selflight> (eOutdoor_Toolshed_Right_Light,gOutdoor_Lights)                 ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:toolshedRight" }
+Switch pOutdoor_Toolshed_Right_Automatic_Switch  "Automatik"       <selflight> (eOutdoor_Toolshed_Right_Light,gOutdoor_Motiondetector_Counter) ["Point"]
 
 // **** OUTDOOR GARDENHOUSE ****
-//Group  eOutdoor_Gardenhous_Behind_Light             "Lampe"           <selflight> (lOutdoor_Gardenhouse)                                            ["Lightbulb"]
-//Switch pOutdoor_Gardenhous_Behind_Light_Powered     "Licht"           <selflight> (eOutdoor_Gardenhous_Behind_Light,gOutdoor_Lights)                 ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:gardenhouseBehind" }
-//Switch pOutdoor_Gardenhous_Behind_Automatic_Switch  "Automatik"       <selflight> (eOutdoor_Gardenhous_Behind_Light,gOutdoor_Motiondetector_Counter) ["Point"]
+//Group  eOutdoor_Toolshed_Behind_Light             "Lampe"           <selflight> (lOutdoor_Toolshede)                                            ["Lightbulb"]
+//Switch pOutdoor_Toolshed_Behind_Light_Powered     "Licht"           <selflight> (eOutdoor_Toolshed_Behind_Light,gOutdoor_Lights)                 ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:toolshedBehind" }
+//Switch pOutdoor_Toolshed_Behind_Automatic_Switch  "Automatik"       <selflight> (eOutdoor_Toolshed_Behind_Light,gOutdoor_Motiondetector_Counter) ["Point"]
 
 // **** OUTDOOR GARDENHOUSE ****
-//Group  eOutdoor_Gardenhous_Left_Light             "Lampe"           <selflight> (lOutdoor_Gardenhouse)                                            ["Lightbulb"]
-//Switch pOutdoor_Gardenhous_Left_Light_Powered     "Licht"           <selflight> (eOutdoor_Gardenhous_Left_Light,gOutdoor_Lights)                 ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:gardenhouseLeft" }
-//Switch pOutdoor_Gardenhous_Left_Automatic_Switch  "Automatik"       <selflight> (eOutdoor_Gardenhous_Left_Light,gOutdoor_Motiondetector_Counter) ["Point"]
+//Group  eOutdoor_Toolshed_Left_Light             "Lampe"           <selflight> (lOutdoor_Toolshede)                                            ["Lightbulb"]
+//Switch pOutdoor_Toolshed_Left_Light_Powered     "Licht"           <selflight> (eOutdoor_Toolshed_Left_Light,gOutdoor_Lights)                 ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:toolshedLeft" }
+//Switch pOutdoor_Toolshed_Left_Automatic_Switch  "Automatik"       <selflight> (eOutdoor_Toolshed_Left_Light,gOutdoor_Motiondetector_Counter) ["Point"]
 
 //####### OUTDOOR LIGHT LOGIC STATES ########
 Group  eOutdoor_Light_Automatic_Logic           "Beleuchtung Steuerung"           <selfinfo> (lOutdoorOther) ["Equipment"]

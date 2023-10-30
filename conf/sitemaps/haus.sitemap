@@ -66,8 +66,8 @@ sitemap haus label="Main Menu"
 				Switch item=pFF_Attic_Light_Ceiling_Powered label="Dachboden"
             }
             Frame label="Garten" {
-				Switch item=pGF_Garage_Light_Ceiling_Powered label="Garage"
-				Switch item=pGardenHouse_Light_Ceiling_Powered label="Gartenlaube"
+				Switch item=pGF_Garage_Light_Ceiling_Powered label="Werkstatt"
+				Switch item=pToolshed_Light_Ceiling_Powered label="Geräteschuppen"
                 Slider item=gOutdoor_Terrace_Light_Hue_Color label="Terasse Indirekt"
                 Text label="Terasse Indirekt anpassen" icon="selfcontrol" visibility=[gOutdoor_Terrace_Light_Hue_Color>0] {
                     Frame label="Gruppe" {
@@ -87,7 +87,7 @@ sitemap haus label="Main Menu"
                     Switch item=pOutdoor_Carport_Light_Powered label="Carport"
                     Switch item=pOutdoor_Streedside_Garage_Light_Powered label="Schuppentür vorne"
                     Switch item=pOutdoor_Garden_Garage_Light_Powered label="Schuppentür hinten"
-                    Switch item=pOutdoor_Gardenhous_Right_Light_Powered label="Gartenhaus"
+                    Switch item=pOutdoor_Toolshed_Right_Light_Powered label="Geräteschuppen"
 				}
 			}
 		}
@@ -135,12 +135,12 @@ sitemap haus label="Main Menu"
 			Frame label="Licht Bewegungsmelder" {
 				Switch item=pOutdoor_Light_Automatic_Main_Switch label="Aktiv"
 				Group item=gOutdoor_Motiondetector_Counter label="Einstellungen" {
-                    Switch item=pOutdoor_Streedside_Garage_Automatic_Switch label="Garage Strassenseite"
+                    Switch item=pOutdoor_Streedside_Garage_Automatic_Switch label="Werkstatt Strassenseite"
                     Switch item=pOutdoor_Streedside_Frontdoor_Automatic_Switch label="Haustür"
                     Switch item=pOutdoor_Carport_Automatic_Switch label="Carport"
                     Switch item=pOutdoor_Terrace_Automatic_Switch label="Terasse"
-                    Switch item=pOutdoor_Garden_Garage_Automatic_Switch label="Garage Gartenseite"
-                    Switch item=pOutdoor_Gardenhous_Right_Automatic_Switch label="Gartenhaus"
+                    Switch item=pOutdoor_Garden_Garage_Automatic_Switch label="Werkstatt Gartenseite"
+                    Switch item=pOutdoor_Toolshed_Right_Automatic_Switch label="Geräteschuppen"
                 }
 			}
 			Frame label="Licht & Steckdosen" {
@@ -161,41 +161,39 @@ sitemap haus label="Main Menu"
                     }
                     Switch item=pOutdoor_Streedside_Frontdoor_Light_Powered label="Haustür"
                     Switch item=pOutdoor_Carport_Light_Powered label="Carport"
-                    Switch item=pOutdoor_Streedside_Garage_Light_Powered label="Schuppentür vorne"
-                    Switch item=pOutdoor_Gardenhous_Right_Light_Powered label="Gartenhaus"
+                    Switch item=pOutdoor_Streedside_Garage_Light_Powered label="Werkstatt vorne"
+                    Switch item=pOutdoor_Toolshed_Right_Light_Powered label="Geräteschuppen"
                 }
 				Group item=gOutdoor_Sockets label="Steckdosen [MAP(group_socket.map):%d]" {
 					Switch item=pOutdoor_Streeside_Socket_Powered label="Strassenseite"
 					Switch item=pOutdoor_Terrace_Socket_Powered label="Gartenseite"
-					Switch item=pOutdoor_Gardenhouse_Socket_Powered label="Gartenhaus"
+					Switch item=pOutdoor_Toolshed_Socket_Powered label="Geräteschuppen"
 				}
                 Group label="Bewässerung [MAP(group_watering.map):%d]" item=gOutdoor_Watering_Circuits {
                     Frame label="Programm" {
                         Text item=pOutdoor_Watering_Logic_Program_State
-                        Switch item=pOutdoor_Watering_Logic_Program_Start
+                        Selection item=pOutdoor_Watering_Logic_Program_Start mappings=[0="Aus",1="Jetzt starten",2="Am Morgen starten",3="Am Abend starten"]
                         Setpoint item=pOutdoor_Watering_Logic_Program_Duration step=1.0 minValue=10 maxValue=60
+                        Text label="Programm Kreise [Gesamtlaufzeit %s]" item=pOutdoor_Watering_Logic_Info icon="selfautomode" {
+                            Frame label="Rasen" {
+                                Switch item=pOutdoor_Garden_Left_Watering_Auto label="Garten links"
+                                Switch item=pOutdoor_Garden_Right_Watering_Auto label="Garten rechts"
+                                Switch item=pOutdoor_Streetside_Lawn_Watering_Auto label="Strasse"
+                            }
+                            Frame label="Beete & Hecken" {
+                                Switch item=pOutdoor_Terrace_Watering_Auto label="Terasse"
+                                Switch item=pOutdoor_Streetside_Beds_Watering_Auto label="Strasse "
+                                Switch item=pOutdoor_Garden_Back_Watering_Auto label="Brombeeren"
+                            }
+                        }
                     }
-                    Frame label="Rasen" {
-                        Text item=pOutdoor_Garden_Left_Watering_Info label="Garten links [%s]" {
-                            Switch item=pOutdoor_Garden_Left_Watering_Auto label="Garten links"
-                        }
-                        Text item=pOutdoor_Garden_Right_Watering_Info label="Garten rechts [%s]" {
-                            Switch item=pOutdoor_Garden_Right_Watering_Auto label="Garten rechts"
-                        }
-                        Text item=pOutdoor_Streetside_Lawn_Watering_Info label="Strasse [%s]" {
-                            Switch item=pOutdoor_Streetside_Lawn_Watering_Auto label="Strasse"
-                        }
-                    }
-                    Frame label="Beete & Hecken" {
-                        Text item=pOutdoor_Terrace_Watering_Info label="Terasse [%s]" {
-                            Switch item=pOutdoor_Terrace_Watering_Auto label="Terasse"
-                        }
-                        Text item=pOutdoor_Streetside_Beds_Watering_Info label="Strasse [%s]" {
-                            Switch item=pOutdoor_Streetside_Beds_Watering_Auto label="Strasse "
-                        }
-                        Text item=pOutdoor_Garden_Back_Watering_Info label="Brombeeren [%s]" {
-                            Switch item=pOutdoor_Garden_Back_Watering_Auto label="Brombeeren"
-                        }
+                    Frame label="Details" {
+                        Text item=pOutdoor_Garden_Left_Watering_Info label="Rasen Garten links [%s]"
+                        Text item=pOutdoor_Garden_Right_Watering_Info label="Rasen Garten rechts [%s]"
+                        Text item=pOutdoor_Streetside_Lawn_Watering_Info label="Rasen Strasse [%s]"
+                        Text item=pOutdoor_Terrace_Watering_Info label="Beete Terasse [%s]"
+                        Text item=pOutdoor_Streetside_Beds_Watering_Info label="Beete & Hecke Strasse [%s]"
+                        Text item=pOutdoor_Garden_Back_Watering_Info label="Brombeeren [%s]"
                     }
                     Frame label="Direkt" {
                         Group item=gOutdoor_Watering_Circuits label="Bewässerungskreise [%d]" {
@@ -431,15 +429,15 @@ sitemap haus label="Main Menu"
                     Text item=pFF_Corridor_Motiondetector_State label="Flur oben"
                 }
                 Group item=gSensor_Outdoor label="Aussen [MAP(group_motion.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
-                    Text item=pOutdoor_Streedside_Garage_Motiondetector_State label="Garage Strassenseite"
+                    Text item=pOutdoor_Streedside_Garage_Motiondetector_State label="Werkstatt Strassenseite"
                     Text item=pOutdoor_Streedside_Frontdoor_Motiondetector_State label="Haustür"
                     Text item=pOutdoor_Carport_Motiondetector_State label="Carport"
                     Text item=pOutdoor_Terrace_Motiondetector_State1 label="Terasse rechts"
                     Text item=pOutdoor_Terrace_Motiondetector_State2 label="Terasse links"
-                    Text item=pOutdoor_Garden_Garage_Motiondetector_State label="Garage Gartenseite"
-                    Text item=pOutdoor_Gardenhouse_Right_Motiondetector_State label="Gartenhaus (rechts)"
-                    Text item=pOutdoor_Gardenhouse_Behind_Motiondetector_State label="Gartenhaus (hinten)"
-                    Text item=pOutdoor_Gardenhouse_Left_Motiondetector_State label="Gartenhaus (links)"
+                    Text item=pOutdoor_Garden_Garage_Motiondetector_State label="Werkstatt Gartenseite"
+                    Text item=pOutdoor_Toolshed_Right_Motiondetector_State label="Geräteschuppen (rechts)"
+                    Text item=pOutdoor_Toolshed_Behind_Motiondetector_State label="Geräteschuppen (hinten)"
+                    Text item=pOutdoor_Toolshed_Left_Motiondetector_State label="Geräteschuppen (links)"
                 }
                 Text label="Kameras" icon="camera"
                 {
@@ -450,8 +448,8 @@ sitemap haus label="Main Menu"
             {
                 Group item=gGF_Sensor_Doors label="EG Türen [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
                     Text item=pGF_Corridor_Openingcontact_Door_State label="Haustür"
-                    Text item=pGF_Garage_Openingcontact_Door_Streedside_State label="Garage Strassenseite"
-                    Text item=pGF_Garage_Openingcontact_Door_Garden_State label="Garage Gartenseite"
+                    Text item=pGF_Garage_Openingcontact_Door_Streedside_State label="Werkstatt Strassenseite"
+                    Text item=pGF_Garage_Openingcontact_Door_Garden_State label="Werkstatt Gartenseite"
                 }
                 Group item=gGF_Sensor_Window label="EG Fenster [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
                     Text item=pGF_Guesttoilet_Openingcontact_Window_State label="Gäste WC"
@@ -459,7 +457,7 @@ sitemap haus label="Main Menu"
                     Text item=pGF_Livingroom_Openingcontact_Window_Terrace_State label="Wohnzimmer Terasse"
                     Text item=pGF_Livingroom_Openingcontact_Window_Couch_State label="Wohnzimmer Couch"
                     Text item=pGF_Workroom_Openingcontact_Window_State label="Arbeitszimmer"
-                    Text item=pGF_Garage_Openingcontact_Window_Garden_State label="Garage"
+                    Text item=pGF_Garage_Openingcontact_Window_Garden_State label="Werkstatt"
                 }
                 Group item=gFF_Sensor_Window label="OG Fenster [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
                     Text item=pFF_Bathroom_Openingcontact_Window_State label="Badezimmer"
@@ -469,8 +467,8 @@ sitemap haus label="Main Menu"
                     Text item=pFF_Makeuproom_Openingcontact_Window_State label="Schminkzimmer"
                     Text item=pFF_Attic_Openingcontact_Window_State label="Dachboden"
                 }
-                Text item=pGardenhouse_Openingcontact_Door_State label="Gartenhaus Tür"
-                Text item=pGardenhouse_Openingcontact_Window_State label="Gartenhaus Fenster"
+                Text item=pToolshed_Openingcontact_Door_State label="Geräteschuppen Tür"
+                Text item=pToolshed_Openingcontact_Window_State label="Geräteschuppen Fenster"
             }
             Frame label="Historie"
             {
@@ -503,7 +501,6 @@ sitemap haus label="Main Menu"
                             Setpoint item=pGF_Corridor_Temperature_Desired label="Flur unten [%.1f °C]" step=0.5 minValue=15 maxValue=25
                         }
                         Text item=pGF_Utilityroom_Air_Sensor_Message label="HWR"
-                        Text item=pGF_Garage_Air_Sensor_Message label="Garage" 
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
@@ -535,29 +532,19 @@ sitemap haus label="Main Menu"
                         Webview url="/static/custom/grafana/temperatures_og.html?fromItem=Chart_From" icon="none" height=27
                     }
                 }
-                Group item=pIndoor_Plant_Sensor_Watering_Info label="Pflanzen [%s]" valuecolor=[=="Feucht genug"="#6bc305",=="Giessen"="#cbcb00",=="Jetzt Giessen"="#d72a2a"]{
-                    Frame label="Daten" {
-                        Text item=pIndoor_Plant_Sensor_Device_State1
-                        Text item=pIndoor_Plant_Sensor_Device_State2
-                        Text item=pIndoor_Plant_Sensor_Device_State3
-                        Text item=pIndoor_Plant_Sensor_Device_State4
-                        Text item=pIndoor_Plant_Sensor_Activation_Info label="Überwachen [%s]"{
-                            Switch item=pIndoor_Plant_Sensor_Device_Enabled1
-                            Switch item=pIndoor_Plant_Sensor_Device_Enabled2
-                            Switch item=pIndoor_Plant_Sensor_Device_Enabled3
-                            Switch item=pIndoor_Plant_Sensor_Device_Enabled4
-                            Switch item=pIndoor_Plant_Sensor_Device_Enabled5
-                            Switch item=pIndoor_Plant_Sensor_Device_Enabled6 
-                        }
-                    }
-                    Frame label="Auswertung" {
-                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/custom/grafana/pflanzen.html?fromItem=Chart_From" icon="none" height=18
-                    }
-                }
-                Text item=pOther_State_Details_Sensors label="[%s]" visibility=[pOther_State_Message_Sensors!="Alles ok"]
             }
             Frame label="Garten"
+            {
+                Group item=pGF_Garage_Air_Sensor_Message label="Werkstatt" {
+                    Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                    Webview url="/static/custom/grafana/temperatures_garden.html?fromItem=Chart_From" icon="none" height=18
+                }
+                Group item=pToolshed_Sensor_Message label="Geräteschuppen" {
+                    Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                    Webview url="/static/custom/grafana/temperatures_garden.html?fromItem=Chart_From" icon="none" height=18
+                }
+            }
+            Frame label="Sonstiges"
             {
                 Group item=pOutdoor_WeatherStation_Air_Message label="Aktuelles Wetter [%s]" {
                     Frame label="Wetter" {
@@ -667,6 +654,27 @@ sitemap haus label="Main Menu"
                         Text item=pOutdoor_WeatherStation_Update_Message visibility=[pOutdoor_WeatherStation_Is_Working==OFF] valuecolor=[!=""="#d72a2a"]
                     }
                 }
+                Group item=pIndoor_Plant_Sensor_Watering_Info label="Pflanzen [%s]" valuecolor=[=="Feucht genug"="#6bc305",=="Giessen"="#cbcb00",=="Jetzt Giessen"="#d72a2a"]{
+                    Frame label="Daten" {
+                        Text item=pIndoor_Plant_Sensor_Device_State1
+                        Text item=pIndoor_Plant_Sensor_Device_State2
+                        Text item=pIndoor_Plant_Sensor_Device_State3
+                        Text item=pIndoor_Plant_Sensor_Device_State4
+                        Text item=pIndoor_Plant_Sensor_Activation_Info label="Überwachen [%s]"{
+                            Switch item=pIndoor_Plant_Sensor_Device_Enabled1
+                            Switch item=pIndoor_Plant_Sensor_Device_Enabled2
+                            Switch item=pIndoor_Plant_Sensor_Device_Enabled3
+                            Switch item=pIndoor_Plant_Sensor_Device_Enabled4
+                            Switch item=pIndoor_Plant_Sensor_Device_Enabled5
+                            Switch item=pIndoor_Plant_Sensor_Device_Enabled6
+                        }
+                    }
+                    Frame label="Auswertung" {
+                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="/static/custom/grafana/pflanzen.html?fromItem=Chart_From" icon="none" height=18
+                    }
+                }
+                Text item=pOther_State_Details_Sensors label="[%s]" visibility=[pOther_State_Message_Sensors!="Alles ok"]
             }
         }
 		Text label="Status [MAP(state_presence.map):%d]" icon="selfstate" item=pOther_Presence_State
@@ -958,7 +966,7 @@ sitemap haus label="Main Menu"
                     Frame label="Garten" {
                         Switch item=pOutdoor_Streeside_Socket_Powered label="Aussen vorne"
                         Switch item=pOutdoor_Terrace_Socket_Powered label="Aussen hinten"
-                        Switch item=pOutdoor_Gardenhouse_Socket_Powered label="Gartenhaus"
+                        Switch item=pOutdoor_Toolshed_Socket_Powered label="Geräteschuppen"
                     }
                     Frame label="Mobile" {
                         Switch item=pMobile_Socket_1_Powered label="Steckdose 1"

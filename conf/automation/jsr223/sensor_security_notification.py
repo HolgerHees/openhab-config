@@ -31,9 +31,9 @@ class SensorSecurityNotificationAwayAlerts:
         item = getItem(itemName)
         isOpen = input['event'].getItemState()
 
-        if "pGardenhouse_Openingcontact_Door_State" == itemName:
+        if "pToolshed_Openingcontact_Door_State" == itemName:
             msg = u"Tür der Gartenlaube {}".format( u"offen" if isOpen else u"geschlossen" )
-        elif "pGardenhouse_Openingcontact_Window_State" == itemName:
+        elif "pToolshed_Openingcontact_Window_State" == itemName:
             msg = u"Fenster der Gartenlaube {}".format( u"offen" if isOpen else u"geschlossen" )
         elif "pGF_Garage_Openingcontact_Door_Garden_State" == itemName:
             msg = u"Garagentür zum Garten {}".format( u"offen" if isOpen else u"geschlossen" )
@@ -84,11 +84,11 @@ class SensorSecurityNotificationSleepAlerts:
             msg = u"Es wurde ein Fenster im Obergeschoss unerwartet geöffnet"
             AlexaHelper.sendTTS(msg, location = "lFF_Bedroom", effects = AlexaHelper.EFFECT_WISPER)
 
-        elif input['event'].getItemName() == "pGardenhouse_Openingcontact_Door_State":
-            msg = u"Es wurde die Tür der Gartenlaube unerwartet geöffnet"
+        elif input['event'].getItemName() == "pToolshed_Openingcontact_Door_State":
+            msg = u"Es wurde die Tür des Geräteschuppens unerwartet geöffnet"
             AlexaHelper.sendTTS(msg, location = "lFF_Bedroom", priority = NotificationHelper.PRIORITY_ALERT)
-        elif input['event'].getItemName() == "pGardenhouse_Openingcontact_Window_State":
-            msg = u"Es wurde das Fenster der Gartenlaube unerwartet geöffnet"
+        elif input['event'].getItemName() == "pToolshed_Openingcontact_Window_State":
+            msg = u"Es wurde das Fenster des Geräteschuppens unerwartet geöffnet"
             AlexaHelper.sendTTS(msg, location = "lFF_Bedroom", priority = NotificationHelper.PRIORITY_ALERT)
         else:
             msg = u"Unbekannter Fenster oder Tür Kontakt unerwartet geöffnet"
