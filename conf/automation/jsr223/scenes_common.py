@@ -81,7 +81,7 @@ class ScenesCommon_pOther_Scene5:
         sendCommand("pOutdoor_Terrace_Automatic_Switch", OFF)
         sendCommand("pOutdoor_Streedside_Garage_Automatic_Switch", OFF)
         sendCommand("pOutdoor_Garden_Garage_Automatic_Switch", ON)
-        sendCommand("pOutdoor_Gardenhous_Right_Automatic_Switch", OFF)
+        sendCommand("pOutdoor_Toolshed_Right_Automatic_Switch", OFF)
 
         #postUpdate("pOther_Scene5", OFF)
 

@@ -106,3 +106,5 @@ class VoiceCommand:
             msg = ShuffleHelper.getRandomSynonym(msg)
 
             postUpdate("VoiceMessage",msg)
+
+

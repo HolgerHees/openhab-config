@@ -14,7 +14,10 @@ from shared.helper import getItemState, itemLastUpdateOlderThen, itemLastChangeO
 from custom.suncalculation import SunRadiation
 from custom.heating.house import Window
 from custom.heating.state import RoomState, HouseState, RoomHeatingState, HouseHeatingState
- 
+from custom.presence import PresenceHelper
+from custom.flags import FlagHelper
+
+
 class Heating(object):
     INFINITE_HEATING_TIME = 999.0 # const value for an invifinte heating time
     
@@ -37,8 +40,6 @@ class Heating(object):
     LEAKING_E = 0.07
     LEAKING_F = 15.0
 
-    SUMMER_MODE_REDUCTION = 5.0
-    
     # To warmup 1 liter of water you need 4,182 Kilojoule
     # 1 Wh == 3,6 kJ
     # 1000 l * 4,182 kJ / 3,6kJ = 1161,66666667
@@ -61,8 +62,10 @@ class Heating(object):
     heatingTemperaturePipeOutItem = None
     heatingTemperaturePipeInItem = None
     
+    precenceStatusItem = None
     holidayStatusItem = None
-    
+    heatingModeItem = None
+
     forcedStatesItem = None
     
     totalVolume = 0
@@ -76,8 +79,6 @@ class Heating(object):
     heatingBufferItemPlaceholder = u"p{}_Heating_Charged"
     heatingDemandItemPlaceholder = u"p{}_Heating_Demand"
     heatingTargetTemperatureItemPlaceholder = u"p{}_Heating_Temperature_Target"
-
-    summerModeItem = None
 
     lastRuntime = None
     
@@ -160,6 +161,10 @@ class Heating(object):
     def getCachedItemFloat(self,itemName):
         state = self.getCachedItemState(itemName)
         return 0 if isinstance(state, UnDefType) else state.floatValue()
+
+    def getCachedItemInt(self,itemName):
+        state = self.getCachedItemState(itemName)
+        return 0 if isinstance(state, UnDefType) else state.intValue()
 
     def getCachedItemState(self,itemName):
         if itemName not in self.cache:
@@ -428,19 +433,21 @@ class Heating(object):
         day = self.now.getDayOfWeek()
         hour = self.now.getHour()
         
-        hadTodayHeating = lastHeatingChange.getDayOfWeek() == day
+        _hadTodayHeating = lastHeatingChange.getDayOfWeek() == day
 
         isMorning = hour < 12 and nightModeActive
-        hadMorningHeating = hadTodayHeating
+        if isMorning:
+            _hadMorningHeating = _hadTodayHeating
+            return not _hadMorningHeating
         
-        holidaysInactive = self.getCachedItemState(Heating.holidayStatusItem) == OnOffType.OFF
-        eveningStartHour = 17 if holidaysInactive and day <= 5 else 16
-        isEvening = ( hour == eveningStartHour )
-        hadEveningHeating = hadTodayHeating and lastHeatingChange.getHour() >= eveningStartHour
+        _presenceStateAway = self.getCachedItemState(Heating.precenceStatusItem) == PresenceHelper.STATE_AWAY
+        _eveningStartHour = (17 if day <= 5 and _presenceStateAway else 16)
+        isEvening = (hour == _eveningStartHour)
+        if isEvening:
+            _hadEveningHeating = _hadTodayHeating and lastHeatingChange.getHour() >= _eveningStartHour
+            return not _hadEveningHeating
         
-        #self.log.info(u"{} {} {} {}".format(isMorning,hadMorningHeating,isEvening,hadEveningHeating))
-        
-        return (isMorning and not hadMorningHeating) or (isEvening and not hadEveningHeating)
+        return False
       
     def getColdFloorHeatingTime(self, lastUpdate ):
         # when was the last heating job
@@ -621,11 +628,11 @@ class Heating(object):
         return houseState
         
     def getHeatingDemand(self,room,rs,outdoorReduction,nightReduction,isHeatingActive):
-      
+
         hs = RoomHeatingState()
         hs.setName(room.getName())
 
-        forcedReduction = Heating.SUMMER_MODE_REDUCTION if self.getCachedItemState(Heating.summerModeItem) == OnOffType.ON else 0.0
+        forcedReduction = self.getCachedItemInt(Heating.heatingModeItem)
 
         # check for open windows (long and short)
         for transition in room.getTransitions():

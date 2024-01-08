@@ -73,9 +73,9 @@ Group  eGF_Livingroom_Light_Hue5                "Regal"  <selflight> (lGF_Living
 Color  pGF_Livingroom_Light_Hue5_Color          "Farbe"      <colorwheel> (eGF_Livingroom_Light_Hue5,gGF_Livingroom_Light_Hue_Color,gIndoor_Lights,gGF_Lights,gGF_Livingroom_Lights) ["Control","Light"] { channel="hue:device:default:strip1:color"}
 Dimmer pGF_Livingroom_Light_Hue5_Temperature    "Farbtemperatur" <selflight> (eGF_Livingroom_Light_Hue5)                                ["Setpoint","ColorTemperature"] { channel="hue:device:default:strip1:color-temperature"}
 
-// **** GF GUESTROOM ****
+// **** GF WORKROOM ****
 Group  eGF_Workroom_Light_Ceiling              "Deckenlampe"        <selflight> (lGF_Workroom)                                        ["Lightbulb"] { synonyms="Decke" }
-Switch pGF_Workroom_Light_Ceiling_Powered      "Deckenlicht"        <selflight> (eGF_Workroom_Light_Ceiling,gIndoor_Lights,gGF_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_ff:guestroomCeiling" }
+Switch pGF_Workroom_Light_Ceiling_Powered      "Deckenlicht"        <selflight> (eGF_Workroom_Light_Ceiling,gIndoor_Lights,gGF_Lights) ["Switch","Light"] { channel="knx:device:bridge:lights_ff:workroomCeiling" }
 
 // **** GF GARAGE ****
 Group  eGF_Garage_Light_Ceiling                 "Deckenlampe"        <selflight> (lGF_Garage)                                           ["Lightbulb"] { synonyms="Decke" }

@@ -55,4 +55,12 @@ Switch pMobile_Socket_4_Powered                "Mobile 4"           <selfsocket>
 
 Group  eMobile_Socket_5                        "Mobile 5"           <selfsocket> (lIndoorOther) ["PowerOutlet"]
 Switch pMobile_Socket_5_Powered                "Mobile 5"           <selfsocket> (eMobile_Socket_5,gAll_Sockets) ["Switch","Power"]              { channel="shelly:shellyplugs:socket1:relay#output" }
-Number pMobile_Socket_5_Consumption	           "Mobile 5 Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_5,gAll_Sockets) ["Messurement","Power"]  { channel="shelly:shellyplugs:socket1:meter#currentWatts" }
+Number pMobile_Socket_5_Consumption	           "Mobile 5 Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_5) ["Messurement","Power"]  { channel="shelly:shellyplugs:socket1:meter#currentWatts" }
+Number pMobile_Socket_5_Total   	           "Mobile 5 Gesamt [%.2f KWh]"	<selfenergy> (eMobile_Socket_5,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]  { channel="shelly:shellyplugs:socket1:meter#totalKWH" }
+Number pMobile_Socket_5_Daily_Consumption	   "Mobile 5 Tagesverbrauch [%.2f KWh]"	<selfenergy> (eMobile_Socket_5) ["Point"]
+
+Group  eMobile_Socket_6                        "Mobile 6"           <selfsocket> (lIndoorOther) ["PowerOutlet"]
+Switch pMobile_Socket_6_Powered                "Mobile 6"           <selfsocket> (eMobile_Socket_6,gAll_Sockets) ["Switch","Power"]              { channel="shelly:shellyplugs:socket2:relay#output" }
+Number pMobile_Socket_6_Consumption	           "Mobile 6 Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_6) ["Messurement","Power"]  { channel="shelly:shellyplugs:socket2:meter#currentWatts" }
+Number pMobile_Socket_6_Total   	           "Mobile 6 Gesamt [%.2f KWh]"	<selfenergy> (eMobile_Socket_6,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]  { channel="shelly:shellyplugs:socket2:meter#totalKWH" }
+Number pMobile_Socket_6_Daily_Consumption	   "Mobile 6 Tagesverbrauch [%.2f KWh]"	<selfenergy> (eMobile_Socket_6) ["Point"]

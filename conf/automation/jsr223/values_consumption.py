@@ -490,3 +490,19 @@ class ValuesConsumptionGasConsumption:
 
         msg = u"{} m³, {} m³".format(hochrechnungVerbrauch, round( zaehlerStandOld - zaehlerStandOldOneYearBefore ) )
         postUpdate("pGF_Utilityroom_Gas_Forecast", msg )
+
+@rule()
+class ValuesConsumptionSocketConsumption:
+    def __init__(self):
+        self.triggers = [
+            ItemStateChangeTrigger("pMobile_Socket_5_Total"),
+            ItemStateChangeTrigger("pMobile_Socket_6_Total")
+        ]
+
+    def execute(self, module, input):
+        now = ZonedDateTime.now()
+        itemName = input["event"].getItemName()
+        itemValue = input["event"].getItemState().doubleValue()
+        oldItemValue = getHistoricItemState(itemName, now.toLocalDate().atStartOfDay(now.getZone()) ).doubleValue()
+
+        postUpdate("{}Daily_Consumption".format(itemName[:-5]), itemValue - oldItemValue )

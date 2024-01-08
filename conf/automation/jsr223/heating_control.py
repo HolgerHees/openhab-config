@@ -43,9 +43,9 @@ Heating.heatingCircuitPumpSpeedItem = "pGF_Utilityroom_Heating_Circuit_Pump_Spee
 Heating.heatingTemperaturePipeOutItem = "pGF_Utilityroom_Heating_Temperature_Pipe_Out"
 Heating.heatingTemperaturePipeInItem = "pGF_Utilityroom_Heating_Temperature_Pipe_In"
 
-Heating.summerModeItem = "pOther_Manual_State_Summer"
-
+Heating.heatingModeItem = "pOther_Manual_State_Heating"
 Heating.holidayStatusItem = "pOther_Manual_State_Holiday"
+Heating.precenceStatusItem = "pOther_Presence_State"
 
 Heating.forcedStatesItem = "pGF_Utilityroom_Heating_Force_States"
  
@@ -487,7 +487,7 @@ class HeatingControlMain:
             CronTrigger("15 * * * * ?")
         ]
         self.activeHeatingOperatingMode = -1
-        self.activeReducedTimeInSeconds = -1
+        self.activeReducedTimeInMinutes = -1
 
     def execute(self, module, input):
         self.log.info(u"--------: >>>" )
@@ -817,6 +817,7 @@ class HeatingControlMain:
                     delayedMsg = u" in {} min.".format(runtimeToGo)
 
                 self.log.info(u"Switch  : Heizen mit WW{}{}".format(delayedMsg,forceRetryMsg))
+            self.activeReducedTimeInMinutes = -1
 
         # Heizen mit WW
         elif currentOperatingMode == 2:
@@ -840,6 +841,7 @@ class HeatingControlMain:
                     delayedMsg = u" in {} min.".format(runtimeToGo)
 
                 self.log.info(u"Switch  : Nur WW{}{}".format(delayedMsg,forceRetryMsg))
+                self.activeReducedTimeInMinutes = -1
                   
             # Brenner läuft nicht
             elif currentPowerState == 0:
@@ -855,13 +857,13 @@ class HeatingControlMain:
                     forceReducedMsg = u" • Too many burner starts"
                         
                 if forceReducedMsg != None:
-                    self.activeReducedTimeInSeconds = ( Heating.MIN_REDUCED_TIME * 60 ) if self.activeReducedTimeInSeconds == -1 else min( self.activeReducedTimeInSeconds * 2, Heating.MAX_REDUCED_TIME * 60 )
+                    self.activeReducedTimeInMinutes = Heating.MIN_REDUCED_TIME if self.activeReducedTimeInMinutes == -1 else min( self.activeReducedTimeInMinutes * 2, Heating.MAX_REDUCED_TIME )
                     self.activeHeatingOperatingMode = 3
                    
                     sendCommand("pGF_Utilityroom_Heating_Operating_Mode",self.activeHeatingOperatingMode)
                     self.log.info(u"Switch  : Reduziert{}{}".format(forceReducedMsg,forceRetryMsg))
-            elif self.activeReducedTimeInSeconds != -1 and itemLastChangeOlderThen("pGF_Utilityroom_Heating_Operating_Mode",now.minusMinutes(Heating.CHECK_HEATING_TIME_SLOT)):
-                self.activeReducedTimeInSeconds = -1
+            elif self.activeReducedTimeInMinutes != -1 and itemLastChangeOlderThen("pGF_Utilityroom_Heating_Operating_Mode",now.minusMinutes(Heating.CHECK_HEATING_TIME_SLOT)):
+                self.activeReducedTimeInMinutes = -1
          
         # Reduziert
         elif currentOperatingMode == 3:
@@ -872,14 +874,14 @@ class HeatingControlMain:
                 self.log.info(u"Switch  : Nur WW because heating is not needed anymore{}".format(forceRetryMsg))
             else:
                 # Dauernd reduziert läuft seit mindestens XX Minuten
-                targetReducedTime = self.activeReducedTimeInSeconds if self.activeReducedTimeInSeconds != -1 else ( Heating.MIN_REDUCED_TIME * 60 )
-                #self.log.info("{}".format(self.activeReducedTimeInSeconds))
-                #self.log.info("{}".format(targetReducedTime))
-                if forceRetry or itemLastChangeOlderThen("pGF_Utilityroom_Heating_Operating_Mode",now.minusMinutes(targetReducedTime) ):
+                targetReducedTimeInMinutes = self.activeReducedTimeInMinutes if self.activeReducedTimeInMinutes != -1 else Heating.MIN_REDUCED_TIME
+                #self.log.info("{}".format(self.activeReducedTimeInMinutes))
+                #self.log.info("{}".format(targetReducedTimeInMinutes))
+                if forceRetry or itemLastChangeOlderThen("pGF_Utilityroom_Heating_Operating_Mode",now.minusMinutes(targetReducedTimeInMinutes) ):
                     self.activeHeatingOperatingMode = 2
                     sendCommand("pGF_Utilityroom_Heating_Operating_Mode",self.activeHeatingOperatingMode)
                 elif not forceRetry:
-                    runtimeToGo = targetReducedTime - lastChangeBeforeInMinutes
+                    runtimeToGo = targetReducedTimeInMinutes - lastChangeBeforeInMinutes
                     delayedMsg = u" in {} min.".format(runtimeToGo)
                     
                 self.log.info(u"Switch  : Heizen mit WW{}{}".format(delayedMsg,forceRetryMsg))

@@ -11,7 +11,9 @@ class DoorBellNotification:
 
     def execute(self, module, input):
         if itemStateOlderThen("pOutdoor_Streedside_Gardendoor_Bell_Last_Change", ZonedDateTime.now().minusSeconds(30)):
-            NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, "Klingel", "Es klingelt", "https://smartmarvin.de/cameraStrasseImage" )
+            NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, "Klingel", "Es klingelt", "https://smartmarvin.de/cameraStreedsideImage" )
 
         postUpdate("pOutdoor_Streedside_Gardendoor_Bell_Last_Change", DateTimeType())
- 
+
+
+

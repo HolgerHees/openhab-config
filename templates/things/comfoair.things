@@ -1,1 +1,1 @@
-Thing comfoair:comfoair:default "ComfoAir" @ "Geräte" [serialPort="/dev/ttyOpenHabLueftung", refreshInterval="60"] 
+Thing comfoair:comfoair:default "Lüftungsanlage ComfoAir" [serialPort="/dev/ttyOpenHabLueftung", refreshInterval="60"]

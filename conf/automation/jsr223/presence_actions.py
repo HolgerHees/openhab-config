@@ -45,11 +45,11 @@ class PresenceActionUnknownPerson:
         if newPresentState == PresenceHelper.STATE_AWAY:
             if oldPresentState == PresenceHelper.STATE_MAYBE_PRESENT:
                 isFallback = getItemLastUpdate("pGF_Corridor_Openingcontact_Door_State").isBefore(ZonedDateTime.now().minusSeconds(600)) # => No door related away event
-                NotificationHelper.sendNotification(NotificationHelper.PRIORITY_WARN, u"System", u"Unbekannter Gast {}".format( u"verschwunden" if isFallback else u"gegangen" ), "https://smartmarvin.de/cameraStrasseImage")
+                NotificationHelper.sendNotification(NotificationHelper.PRIORITY_WARN, u"System", u"Unbekannter Gast {}".format( u"verschwunden" if isFallback else u"gegangen" ), "https://smartmarvin.de/cameraStreedsideImage")
 
         elif newPresentState == PresenceHelper.STATE_MAYBE_PRESENT:
             if oldPresentState == PresenceHelper.STATE_AWAY:
-                NotificationHelper.sendNotification(NotificationHelper.PRIORITY_WARN, u"System", u"Unbekannter Gast gekommen", "https://smartmarvin.de/cameraStrasseImage")
+                NotificationHelper.sendNotification(NotificationHelper.PRIORITY_WARN, u"System", u"Unbekannter Gast gekommen", "https://smartmarvin.de/cameraStreedsideImage")
 
         elif newPresentState == PresenceHelper.STATE_PRESENT:
             if oldPresentState == PresenceHelper.STATE_MAYBE_PRESENT:
@@ -147,9 +147,8 @@ class PresenceActionArrivingAction:
         if getItemState("pOther_Automatic_State_Outdoorlights") != ON:
             return
 
-        _update = getItemLastUpdate("pOutdoor_Streedside_Frontdoor_Motiondetector_State")
         # switch light on if outdoor motion detector was triggered directly before
-        if _update.plusSeconds(10).isAfter(ZonedDateTime.now()):
+        if getItemLastUpdate("pOutdoor_Streedside_Frontdoor_Motiondetector_State").plusSeconds(60).isAfter(ZonedDateTime.now()):
             sendCommandIfChanged("pGF_Corridor_Light_Ceiling_Powered",ON)
 
 @rule()
@@ -172,8 +171,11 @@ class PresenceActionSleepingAction:
         sendCommandIfChanged("gOutdoor_Terrace_Light_Hue_Color", OFF)
         sendCommandIfChanged("pOutdoor_Light_Automatic_Main_Switch", ON)
         
-        for child in getGroupMember("gAll_Sockets"):
-            if child.getName() == "pFF_Attic_Socket_Powered":
-                continue
-            sendCommandIfChanged(child, OFF)
+        #sendCommandIfChanged("pGF_Livingroom_Socket_Couch_Powered", OFF)
+        #sendCommandIfChanged("pGF_Livingroom_Socket_Fireplace_Powered", OFF)
+
+        #for child in getGroupMember("gAll_Sockets"):
+        #    if child.getName() in ["pFF_Attic_Socket_Powered","pMobile_Socket_6_Powered"]:
+        #        continue
+        #    sendCommandIfChanged(child, OFF)
 

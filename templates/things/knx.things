@@ -9,7 +9,7 @@ Bridge	knx:ip:bridge [
 	autoReconnectPeriod=60,
 	localSourceAddr="0.0.0" 
 ] {
-    Thing device other "KNX Sonstiges"
+    Thing device other "Sonstiges"
     {
         Type    number  :       energyDemandActive      "Wirkenergie Bezug"          [ ga="13.010:0/4/10" ]
         Type    number  :       energySupplyActive      "Wirkenergie Lieferung"      [ ga="13.010:0/4/11" ]
@@ -30,15 +30,15 @@ Bridge	knx:ip:bridge [
         Type    switch  :       bedroomRight            "Schlafz. Bett Wand"         [ ga="1/4/3" ]
         Type    switch  :       bedroomRightLongPressed "Schlafz. Bett Wand (lang)"  [ ga="1/4/4" ]
     }
-    Thing device heating_ff "KNX Heizungskreise Erdgeschoss"
+    Thing device heating_ff "Heizungskreise Erdgeschoss"
     {
         Type    switch  :       livingroomCircuit       "Heizkreis Wohnzimmer"       [ ga="0/5/0+<0/5/1" ]
         Type    switch  :       floorCircuit            "Heizkreis Flur"             [ ga="0/5/2+<0/5/3" ]
-        Type    switch  :       guestroomCircuit        "Heizkreis Gästezimmer"      [ ga="0/5/4+<0/5/5" ]
+        Type    switch  :       workroomCircuit         "Heizkreis Arbeitszimmer"    [ ga="0/5/4+<0/5/5" ]
         Type    switch  :       guestWCCircuit          "Heizkreis Gäste WC"         [ ga="0/5/6+<0/5/7" ]
         Type    switch  :       guestWCHK               "Heizkreis Gäste WC HK"      [ ga="0/5/8+<0/5/9" ]
     }
-    Thing device heating_sf "KNX Heizungskreise Obergeschoss"
+    Thing device heating_sf "Heizungskreise Obergeschoss"
     {
         Type    switch  :       floorCircuit            "Heizkreis Flur"             [ ga="1/5/0+<1/5/1" ]
         Type    switch  :       child1Circuit           "Heizkreis Kind 1"           [ ga="1/5/2+<1/5/3" ]
@@ -47,7 +47,7 @@ Bridge	knx:ip:bridge [
         Type    switch  :       bathroomCircuit         "Heizkreis Badezimmer"       [ ga="1/5/8+<1/5/9" ]
         Type    switch  :       bathroomHK              "Heizkreis Badezimmer HK"    [ ga="1/5/10+<1/5/11" ]
     }
-    Thing device sensors_ff "KNX Sensoren Erdgeschoss"
+    Thing device sensors_ff "Sensoren Erdgeschoss"
     {
         Type    number  :       heatingPipeOut          "Heizung Vorlauf"            [ ga="<0/7/50" ]
         Type    number  :       heatingPipeIn           "Heizung Rücklauf"           [ ga="<0/7/51" ]
@@ -67,7 +67,7 @@ Bridge	knx:ip:bridge [
         Type    number  :       temperatureGarage       "Schuppen Temperatur"        [ ga="0/7/13" ]
         Type    number  :       humidityGarage          "Schuppen Feuchtigkeit"      [ ga="0/7/14" ]
     }
-    Thing device sensors_sf "KNX Sensoren Obergeschoss"
+    Thing device sensors_sf "Sensoren Obergeschoss"
     {
         Type    number  :       temperatureBedroom      "Schlafzimmer Temperatur"    [ ga="1/7/1" ]
         Type    number  :       humidityBedroom         "Schlafzimmer Feuchtigkeit"  [ ga="1/7/2" ]
@@ -84,12 +84,12 @@ Bridge	knx:ip:bridge [
         Type    number  :       temperatureAttic        "Dachboden Temperatur"       [ ga="1/7/13" ]
         Type    number  :       humidityAttic           "Dachboden Feuchtigkeit"     [ ga="1/7/14" ]
     }
-    Thing device sensors_toolshed "KNX Sensoren Geräteschuppen"
+    Thing device sensors_toolshed "Sensoren Geräteschuppen"
     {
         Type    number  :       temperature             "Temperatur"                 [ ga="2/2/0" ]
         Type    number  :       humidity                "Feuchtigkeit"               [ ga="2/2/1" ]
     }
-    Thing device lights_ff "KNX Licht Erdgeschoss"
+    Thing device lights_ff "Licht Erdgeschoss"
     {
         Type    dimmer  :       kitchenCeiling          "Küche Licht"                [ switch="0/0/1", increaseDecrease="0/0/2", position="0/0/30+<0/0/31" ]
         Type    switch  :       kitchenCupboard         "Küche Schrank"              [ ga="0/0/6+<0/0/7" ]
@@ -100,11 +100,11 @@ Bridge	knx:ip:bridge [
         Type    switch  :       utilityroomCeiling      "HWR"                        [ ga="0/0/18+<0/0/19" ]
         Type    switch  :       guesttoiletCeiling      "Gäste WC Decke"             [ ga="0/0/20+<0/0/21" ]
         Type    switch  :       guesttoiletMirror       "Gäste WC Spiegel"           [ ga="0/0/22+<0/0/23" ]
-        Type    switch  :       guestroomCeiling        "Gästezimmer"                [ ga="0/0/24+<0/0/25" ]
+        Type    switch  :       workroomCeiling         "Arbeitszimmer"              [ ga="0/0/24+<0/0/25" ]
         Type    switch  :       floorCeiling            "Flur Decke"                 [ ga="0/0/26+<0/0/27" ]
         Type    switch  :       floorMirror             "Flur Spiegel"               [ ga="0/0/28+<0/0/29" ]
     }
-    Thing device lights_sf "KNX Licht Obergeschoss"
+    Thing device lights_sf "Licht Obergeschoss"
     {
         Type    switch  :       floorCeiling            "Flur oben"                  [ ga="1/0/0+<1/0/1" ]
         Type    switch  :       bathroomCeiling         "Badezimmer Decke"           [ ga="1/0/2+<1/0/3" ]
@@ -115,11 +115,11 @@ Bridge	knx:ip:bridge [
         Type    switch  :       child2Ceiling           "Kinderzimmer zwei"          [ ga="1/0/12+<1/0/13" ]
         Type    switch  :       attic                   "Dachboden"                  [ ga="1/0/14+<1/0/15" ]
     }
-    Thing device lights_toolshed "KNX Licht Geräteschuppen"
+    Thing device lights_toolshed "Licht Geräteschuppen"
     {
         Type    switch  :       ceiling                 "Deckenlicht"                [ ga="2/0/0+<2/0/1" ]
     }
-    Thing device lights_outdoor "KNX Licht Garten"
+    Thing device lights_outdoor "Licht Garten"
     {
         Type    switch  :       garageStreedside        "Schuppen Strassenseite"     [ ga="9/0/0+<9/0/1" ]
         Type    switch  :       frontdoor               "Haupteingang"               [ ga="9/0/3+<9/0/4" ]
@@ -130,7 +130,7 @@ Bridge	knx:ip:bridge [
         Type    switch  :       toolshedBehind          "Geräteschuppen (hinten)"    [ ga="9/0/22+<9/0/23" ]
         Type    switch  :       toolshedLeft            "Geräteschuppen (links)"     [ ga="9/0/25+<9/0/26" ]
     }
-    Thing device sockets_ff "KNX Steckdosen Erdgeschoss"
+    Thing device sockets_ff "Steckdosen Erdgeschoss"
     {
         Type    switch  :       guesttoilet             "WC Radio"                   [ ga="0/1/1+<0/1/2" ]
         Type    switch  :       livingroomBassbox       "Wohnzimmersteckdose Bassbox" [ ga="0/1/3+<0/1/4" ]
@@ -138,27 +138,27 @@ Bridge	knx:ip:bridge [
         Type    switch  :       floor                   "Flursteckdose"              [ ga="0/1/7+<0/1/8" ]
         Type    switch  :       livingroomFireplace     "Wohnzimmersteckdose Kamin"  [ ga="0/1/9+<0/1/10" ]
     }
-    Thing device sockets_sf "KNX Steckdosen Obergeschoss"
+    Thing device sockets_sf "Steckdosen Obergeschoss"
     {
         Type    switch  :       bathroomLeft            "Badezimmer links"           [ ga="1/1/0+<1/1/1" ]
         Type    switch  :       bathroomRight           "Badezimmer links"           [ ga="1/1/2+<1/1/3" ]
         Type    switch  :       attic                   "Dachbodensteckdose"         [ ga="1/1/8+<1/1/9" ]
     }
-    Thing device sockets_outdoor "KNX Steckdosen Garten"
+    Thing device sockets_outdoor "Steckdosen Garten"
     {
         Type    switch  :       streedside              "Aussensteckdosen vorne"     [ ga="9/1/0+<9/1/1" ]
         Type    switch  :       gardenside              "Aussensteckdosen hinten"    [ ga="9/1/2+<9/1/3" ]
         Type    switch  :       toolshed                "Geräteschuppen"             [ ga="9/1/4+<9/1/5" ]
     }
-    Thing device shutter_ff "KNX Rollläden Erdgeschoss"
+    Thing device shutter_ff "Rollläden Erdgeschoss"
     {
         Type    rollershutter : kitchen                 "Küche"                      [ upDown="0/2/1", stopMove="0/2/2", position="<0/2/3" ]
         Type    rollershutter : livingroomTerrace       "Terrasse"                   [ upDown="0/2/4", stopMove="0/2/5", position="<0/2/6" ]
         Type    rollershutter : livingroomCouch         "Couch"                      [ upDown="0/2/7", stopMove="0/2/8", position="<0/2/9" ]
-        Type    rollershutter : guestroom               "Gästezimmer"                [ upDown="0/2/13", stopMove="0/2/14", position="<0/2/15" ]
+        Type    rollershutter : workroom                "Arbeitszimmer"              [ upDown="0/2/13", stopMove="0/2/14", position="<0/2/15" ]
         Type    rollershutter : guestWC                 "Gäste WC"                   [ upDown="0/2/10", stopMove="0/2/11", position="<0/2/12" ]
     }
-    Thing device shutter_sf "KNX Rollläden Obergeschoss"
+    Thing device shutter_sf "Rollläden Obergeschoss"
     {
         Type    rollershutter : bathroom                "Badezimmer"                 [ upDown="1/2/1", stopMove="1/2/2", position="<1/2/3" ]
         Type    rollershutter : dressingroom            "Ankleide"                   [ upDown="1/2/4", stopMove="1/2/5", position="<1/2/6" ]
@@ -167,22 +167,22 @@ Bridge	knx:ip:bridge [
         Type    rollershutter : child2                  "Kindzimmer 2"               [ upDown="1/2/13", stopMove="1/2/14", position="<1/2/15" ]
         Type    rollershutter : attic                   "Dachboden"                  [ upDown="1/2/16", stopMove="1/2/17", position="<1/2/18" ]
     }
-    Thing device contacts_door "KNX Kontakte Türen"
+    Thing device contacts_door "Kontakte Türen"
     {
         Type    contact :       main                    "Haustür"                    [ ga="<0/3/5" ]
         Type    contact :       garageStreedside        "Schuppentür Strasse"        [ ga="<0/3/6" ]
         Type    contact :       garageGardenside        "Schuppentür Garten"         [ ga="<0/3/7" ]
     }
-    Thing device contacts_window_ff "KNX Kontakte Fenster Erdgeschoss"
+    Thing device contacts_window_ff "Kontakte Fenster Erdgeschoss"
     {
         Type    contact :       guestWC                 "Gäste WC"                   [ ga="<0/3/0" ]
         Type    contact :       kitchen                 "Küche"                      [ ga="<0/3/1" ]
         Type    contact :       livingroomTerrace       "Terrasse"                   [ ga="<0/3/2" ]
         Type    contact :       livingroomCouch         "Couch"                      [ ga="<0/3/3" ]
-        Type    contact :       guestroom               "Gästezimmer"                [ ga="<0/3/4" ]
+        Type    contact :       workroom                "Arbeitszimmer"              [ ga="<0/3/4" ]
         Type    contact :       garage                  "Schuppenfenster"            [ ga="<0/3/8" ]
     }
-    Thing device contacts_window_sf "KNX Kontakte Fenster Obergeschoss"
+    Thing device contacts_window_sf "Kontakte Fenster Obergeschoss"
     {
         Type    contact :       bathroom                "Badezimmer"                 [ ga="<1/3/0" ]
         Type    contact :       dressingroom            "Ankleide"                   [ ga="<1/3/1" ]
@@ -191,12 +191,12 @@ Bridge	knx:ip:bridge [
         Type    contact :       child2                  "Kind 2"                     [ ga="<1/3/4" ]
         Type    contact :       attic                   "Dachboden"                  [ ga="<1/3/5" ]
     }
-    Thing device contacts_toolshed "KNX Kontakte Geräteschuppen"
+    Thing device contacts_toolshed "Kontakte Geräteschuppen"
     {
         Type    contact :       door                    "Tür"                        [ ga="<2/1/0" ]
         Type    contact :       window                  "Fenster"                    [ ga="<2/1/1" ]
     }
-    Thing device motion_outdoor "KNX Bewegungsmelder Garten"
+    Thing device motion_outdoor "Bewegungsmelder Garten"
     {
         Type    contact :       garageStreetside        "Schuppen (vorne)"           [ ga="<9/0/2" ]
         Type    contact :       frontdoor               "Haustür"                    [ ga="<9/0/5" ]
@@ -209,13 +209,13 @@ Bridge	knx:ip:bridge [
         Type    contact :       toolshedLeft            "Geräteschuppen (links)"     [ ga="9/0/27" ]
         Type    switch  :       main                    "Gartenlicht autom."         [ ga="<9/0/100" ]
     }
-    Thing device motion_indoor "KNX Bewegungsmelder Haus"
+    Thing device motion_indoor "Bewegungsmelder Haus"
     {
         Type    contact :       livingroom              "Wohnzimmer"                 [ ga="<0/4/2" ]
         Type    contact :       ffFloor                 "Flur unten"                 [ ga="<0/4/3" ]
         Type    contact :       sfFloor                 "Flur oben"                  [ ga="<1/4/0" ]
     }
-    Thing device wattering "KNX Bewässerung Garten"
+    Thing device wattering "Bewässerung Garten"
     {
         Type    switch  :       gardensideLawnLeft      "Bewässerung Rasen links"    [ ga="9/3/0+<9/3/1" ]
         Type    switch  :       gardensideLawnRight     "Bewässerung Rasen rechts"   [ ga="9/3/2+<9/3/3" ]
@@ -224,7 +224,7 @@ Bridge	knx:ip:bridge [
         Type    switch  :       streetsideLawn          "Bewässerung Rasen vorn"     [ ga="9/3/8+<9/3/9" ]
         Type    switch  :       streetsideBeds          "Bewässerung Beete vorne"    [ ga="9/3/10+<9/3/11" ]
     }
-    Thing device shading "KNX Beschattung Garten"
+    Thing device shading "Beschattung Garten"
     {
         Type    rollershutter : terraceLeft             "Terrasse Links"             [ upDown="9/2/0", stopMove="9/2/1", position="<9/2/2" ]
         Type    rollershutter : terraceRight            "Terrasse Rechts"            [ upDown="9/2/3", stopMove="9/2/4", position="<9/2/5" ]

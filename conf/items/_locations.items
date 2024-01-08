@@ -8,9 +8,9 @@ Group lGF_Kitchen       "Küche"         <kitchen>       (lGroundFloor) ["Kitche
 Group lGF_Livingroom    "Wohnzimmer"    <sofa>          (lGroundFloor) ["LivingRoom"]
 Group lGF_Workroom      "Büro"          <office>        (lGroundFloor) ["Room"]         { synonyms="Bastelzimmer, Gästezimmer" }
 Group lGF_Corridor      "Flur"          <corridor>      (lGroundFloor) ["Corridor"]     { synonyms="unten" }
-Group lGF_Garage        "Schuppen"      <corridor>      (lGroundFloor) ["Garage"]
+Group lGF_Garage        "Werkstatt"     <corridor>      (lGroundFloor) ["Garage"]       { synonyms="Garage, Schuppen" }
 
-Group lIndoorOther      "Sonstiges"     <group>        (lIndoor)       ["Equipment"]
+Group lIndoorOther      "Sonstiges"     <group>         (lIndoor)       ["Equipment"]
 
 Group lFirstFloor       "Obergeschoss"  <firstfloor>    (lIndoor)      ["FirstFloor"]
 Group lFF_Bathroom      "Badezimmer"    <bath>          (lFirstFloor)  ["Bathroom"]     { synonyms="Bad" }
@@ -21,7 +21,7 @@ Group lFF_Makeuproom    "Schminkzimmer" <girl_3>        (lFirstFloor)  ["Room"] 
 Group lFF_Corridor      "Flur"          <corridor>      (lFirstFloor)  ["Corridor"]     { synonyms="oben" }
 Group lFF_Attic         "Dachboden"     <attic>         (lFirstFloor)  ["Attic"]
 
-Group lToolshed         "Geräteschuppen" <group>                           ["Building"]     { synonyms="Gartenlaube, Gartenhaus" }
+Group lToolshed         "Geräteschuppen" <group>                       ["Building"]     { synonyms="Gartenlaube, Gartenhaus" }
 
 Group lOutdoor          "Garten"      <garden>                         ["Outdoor"]      { synonyms="draussen,aussen" }
 Group lOutdoor_Streedside "Vorgarten"   <garden>        (lOutdoor)     ["Garden"]       { synonyms="Strassenseite, vorne" }

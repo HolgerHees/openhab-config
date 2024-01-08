@@ -19,9 +19,9 @@ Rollershutter pGF_Livingroom_Shutter_Couch_Control "Couch-Rollladen" <selfroller
 Group  eGF_Kitchen_Shutter "Rollladen" <selfrollershutter> (lGF_Kitchen) ["Blinds"]
 Rollershutter pGF_Kitchen_Shutter_Control "Rollladen"  <selfrollershutter> (eGF_Kitchen_Shutter,gShutters,gGF_Shutters,gShutters_Count,gGF_Shutters_Count,gWest_Shutters) ["Control"] { channel="knx:device:bridge:shutter_ff:kitchen" }
 
-// **** GF GUESTROOM ****
+// **** GF WORKROOM ****
 Group  eGF_Workroom_Shutter "Rollladen" <selfrollershutter> (lGF_Workroom) ["Blinds"]
-Rollershutter pGF_Workroom_Shutter_Control "Rollladen"  <selfrollershutter> (eGF_Workroom_Shutter,gShutters,gGF_Shutters,gShutters_Count,gGF_Shutters_Count) ["Control"] { channel="knx:device:bridge:shutter_ff:guestroom"[profile="transform:ROLLERSHUTTERPOSITION", uptime=20, downtime=18, precision=5] }
+Rollershutter pGF_Workroom_Shutter_Control "Rollladen"  <selfrollershutter> (eGF_Workroom_Shutter,gShutters,gGF_Shutters,gShutters_Count,gGF_Shutters_Count) ["Control"] { channel="knx:device:bridge:shutter_ff:workroom"[profile="transform:ROLLERSHUTTERPOSITION", uptime=20, downtime=18, precision=5]}
 
 // **** GF GUESTTOILET ****
 Group  eGF_Guesttoilet_Shutter "Rollladen" <selfrollershutter> (lGF_Guesttoilet) ["Blinds"]

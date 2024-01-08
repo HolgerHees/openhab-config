@@ -127,10 +127,6 @@ sitemap haus label="Main Menu"
 		Group label="Garten [%s]" icon="selfgarden" item=pOther_State_Message_Garden valuecolor=[=="Alles ok"="#6bc305",!="Alles ok"="#d72a2a"] {
 			Frame label="Allgemein • Letztes klingeln [%1$tH:%1$tM:%1$tS, %1$td.%1$tm]" item=pOutdoor_Streedside_Gardendoor_Bell_Last_Change{
 				Switch item=pOutdoor_Streedside_Gardendoor_Opener_Timer
-				Text label="Kameras" icon="camera"
-				{
-					Image url="https://smartmarvin.de/cameraStrasseImage" label="Strasse" refresh=2000
-				}
 			}
 			Frame label="Licht Bewegungsmelder" {
 				Switch item=pOutdoor_Light_Automatic_Main_Switch label="Aktiv"
@@ -365,8 +361,8 @@ sitemap haus label="Main Menu"
         {
 			Frame label="Steuerung"
 			{
-                Switch item=pOther_Manual_State_Holiday label="Urlaubsmodus (u)"
-                Switch item=pOther_Manual_State_Summer label="Sommermodus (Heizung) (s)"
+                Switch item=pOther_Manual_State_Holiday label="Urlaubsmodus (Heizung ignoriert Werktage) (u)"
+                Selection item=pOther_Manual_State_Heating label="Heizungsreduktion (h)" mappings=[0="Normal", 1="-1", 2="-2", 3="-3 (Kaminunterstützt)", 4="-4", 5="-5 (Sommermodus)"]
                 Group label="Komforttemperaturen [%.1f °C]" item=pGF_Utilityroom_Ventilation_Comfort_Temperature icon="selfheating"{
                     Setpoint item=pGF_Guesttoilet_Temperature_Desired label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
                     Setpoint item=pGF_Livingroom_Temperature_Desired label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
@@ -438,10 +434,6 @@ sitemap haus label="Main Menu"
                     Text item=pOutdoor_Toolshed_Right_Motiondetector_State label="Geräteschuppen (rechts)"
                     Text item=pOutdoor_Toolshed_Behind_Motiondetector_State label="Geräteschuppen (hinten)"
                     Text item=pOutdoor_Toolshed_Left_Motiondetector_State label="Geräteschuppen (links)"
-                }
-                Text label="Kameras" icon="camera"
-                {
-                    Image url="https://smartmarvin.de/cameraStrasseImage" label="Strasse Video" refresh=2000
                 }
             }
             Frame label="Fenster & Türen"
@@ -542,6 +534,7 @@ sitemap haus label="Main Menu"
                 Group item=pToolshed_Sensor_Message label="Geräteschuppen" {
                     Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                     Webview url="/static/custom/grafana/temperatures_garden.html?fromItem=Chart_From" icon="none" height=18
+                    Webview url="/static/custom/grafana/mobile_socket_6_consumption.html?fromItem=Chart_From" icon="none" height=9
                 }
             }
             Frame label="Sonstiges"
@@ -714,9 +707,6 @@ sitemap haus label="Main Menu"
 			}
 			Frame label="Info"
 			{
-				Text label="Wetterbericht" icon="selfrain" {
-                    Webview url="/weather/weatherDetailOverview.php" icon="none" height=20
-                }
 				Text label="Sonnenauf & Untergang" icon="selfsun" {
                     Frame label="Tageszeiten"
                     {
@@ -782,7 +772,7 @@ sitemap haus label="Main Menu"
                         Switch item=pGF_Utilityroom_Heating_Auto_Mode label="Modus" mappings=[1="Auto", 0="Manuell"]
                         Switch item=pGF_Utilityroom_Heating_Operating_Mode label="Betrieb" mappings=[1.0="WW", 2.0="HZ", 3.0="RD"]  visibility=[pGF_Utilityroom_Heating_Auto_Mode==0]
                         Text item=pGF_Utilityroom_Heating_Operating_Mode visibility=[pGF_Utilityroom_Heating_Auto_Mode==1]
-                        Switch item=pOther_Manual_State_Summer label="Sommermodus"
+                        Selection item=pOther_Manual_State_Heating label="Heizungsreduktion" mappings=[0="Normal", 1="-1", 2="-2", 3="-3", 4="-4", 5="-5"]
                     }
                     Frame label="Laufzeitdaten" {
                         Text label="Heizkreise" icon="selfheating"{
@@ -968,13 +958,37 @@ sitemap haus label="Main Menu"
                         Switch item=pOutdoor_Terrace_Socket_Powered label="Aussen hinten"
                         Switch item=pOutdoor_Toolshed_Socket_Powered label="Geräteschuppen"
                     }
+                    Frame label="Geräte" {
+                        Switch item=pMobile_Socket_5_Powered label="Lüfter"
+                        Group item=pMobile_Socket_5_Consumption label="Lüfter (Verbrauch)" {
+                            Frame label="Status" {
+                                Text item=pMobile_Socket_5_Consumption label="Verbrauch"
+                                Text item=pMobile_Socket_5_Total label="Gesamt"
+                                Text item=pMobile_Socket_5_Daily_Consumption label="Heute"
+                            }
+                            Frame label="Auswertung" {
+                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/custom/grafana/mobile_socket_5_consumption.html?fromItem=Chart_From" icon="none" height=9
+                            }
+                        }
+                        Switch item=pMobile_Socket_6_Powered label="Frostwächter"
+                        Group item=pMobile_Socket_6_Consumption label="Frostwächter (Verbrauch)" {
+                            Frame label="Status" {
+                                Text item=pMobile_Socket_6_Consumption label="Verbrauch"
+                                Text item=pMobile_Socket_6_Total label="Gesamt"
+                                Text item=pMobile_Socket_6_Daily_Consumption label="Heute"
+                            }
+                            Frame label="Auswertung" {
+                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/custom/grafana/mobile_socket_6_consumption.html?fromItem=Chart_From" icon="none" height=9
+                            }
+                        }
+                    }
                     Frame label="Mobile" {
                         Switch item=pMobile_Socket_1_Powered label="Steckdose 1"
                         Switch item=pMobile_Socket_2_Powered label="Steckdose 2"
                         Switch item=pMobile_Socket_3_Powered label="Steckdose 3"
                         Switch item=pMobile_Socket_4_Powered label="Steckdose 4"
-                        Switch item=pMobile_Socket_5_Powered label="Steckdose 5"
-                        Text item=pMobile_Socket_5_Consumption label="Steckdose 5"
                     }
                 }
             }

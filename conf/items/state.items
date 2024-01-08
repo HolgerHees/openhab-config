@@ -44,7 +44,7 @@ Number pOther_Manual_State_Air_Thoroughly_Notify "Lüftungshinweise [MAP(state_n
 Number pOther_Manual_State_Calendar_Event_Notify "Kalenderbenachrichtigung [MAP(state_notify.map):%s]" <selfnotification> (eOther_Manual_States) ["Point"]
 
 Switch pOther_Manual_State_Holiday              "Urlaubsmodus"    <selfshield> (eOther_Manual_States) ["Point"] { channel="knx:device:bridge:other:stateHoliday" }
-Switch pOther_Manual_State_Summer               "Sommermodus (Heizung)"     <selfshield> (eOther_Manual_States) ["Point"]
+Number pOther_Manual_State_Heating              "Heizungsmodus"     <selfshield> (eOther_Manual_States) ["Point"]
 
 Number pOther_Manual_State_Lightprogram         "Lichtprogram"    <selfautomode> (eOther_Manual_States) ["Point"]
 Number pOther_Manual_State_Auto_Attic_Light     "Mode [%d]"       <selfautomode> (eOther_Manual_States) ["Point"]

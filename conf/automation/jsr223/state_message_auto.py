@@ -8,7 +8,7 @@ class StateMessageAuto:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pOther_Manual_State_Holiday"),
-            ItemStateChangeTrigger("pOther_Manual_State_Summer"),
+            ItemStateChangeTrigger("pOther_Manual_State_Heating"),
             ItemStateChangeTrigger("pOther_Manual_State_Auto_Attic_Light"),
             ItemStateChangeTrigger("pOther_Manual_State_Auto_Christmas"),
             ItemStateChangeTrigger("pOther_Manual_State_Auto_Lighting"),
@@ -23,11 +23,18 @@ class StateMessageAuto:
     def execute(self, module, input):
         active1 = []
         active1.append(self.format("pOther_Manual_State_Holiday",u"u"))
-        active1.append(self.format("pOther_Manual_State_Summer",u"s"))
+
+        heatingMode = getItemState("pOther_Manual_State_Heating").intValue()
+
+        if heatingMode == 0:
+            active1.append(u"h\u0336{}\u0336".format(heatingMode))
+        else:
+            active1.append(u"h{}".format(heatingMode))
 
         active2 = []
         active2.append(self.format("pOutdoor_Light_Automatic_Main_Switch",u"al"))
         active2.append(self.format("pOther_Manual_State_Auto_Lighting",u"il"))
+
         flags = getItemState("pOther_Manual_State_Auto_Rollershutter").intValue()
         if FlagHelper.hasFlag(FlagHelper.AUTO_ROLLERSHUTTER_TIME_DEPENDENT, flags) and FlagHelper.hasFlag(FlagHelper.AUTO_ROLLERSHUTTER_SHADING, flags):
             active2.append(u"tb")

@@ -216,7 +216,6 @@ class VentilationControlFanLevelRule:
         
         self.autoChangeInProgress = False
         self.activeLevel = -1
-        self.log.info("test")
 
     def execute(self, module, input):
         if input['event'].getType() != "TimerEvent" and input['event'].getItemName() == "pGF_Utilityroom_Ventilation_Fan_Level":
@@ -235,35 +234,51 @@ class VentilationControlFanLevelRule:
         currentLevel = getItemState("pGF_Utilityroom_Ventilation_Fan_Level").intValue()
         if self.activeLevel == -1:
             self.activeLevel = currentLevel
-        
-        raumTemperatur = getItemState("pGF_Livingroom_Air_Sensor_Temperature_Value").doubleValue()
-        zielTemperatur = getItemState("pGF_Utilityroom_Ventilation_Comfort_Temperature").doubleValue
-        
-        presenceState = getItemState("pOther_Presence_State").intValue()
-        
-        isTooWarm = raumTemperatur >= zielTemperatur
-        
-        outdoorTemperatureItemName = getItemState("pOutdoor_WeatherStation_Temperature_Item_Name").toString()
-        coolingPossible = getItemState(outdoorTemperatureItemName).doubleValue() < raumTemperatur
 
-        # Sleep
-        if presenceState in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
-            reducedLevel = 2    # Level 1
-            defaultLevel = 2    # Level 1
-            coolingLevel = 2    # Level 1
-        # Away since 60 minutes
-        elif presenceState == [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT] and itemLastChangeOlderThen("pOther_Presence_State", ZonedDateTime.now().minusMinutes(60)):
-            reducedLevel = 1    # Level A
-            defaultLevel = 2    # Level 1
-            coolingLevel = 3    # Level 2
+        outdoorTemperatureItemName = getItemState("pOutdoor_WeatherStation_Temperature_Item_Name").toString()
+        outdoorTemperature = getItemState(outdoorTemperatureItemName).doubleValue()
+
+        #incomingTemperature = getItemState("pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature").doubleValue()
+        #self.log.info(str(incommingTemperature))
+
+        # antifreeze
+        if outdoorTemperature <= -10.0:
+            newLevel = 1    # Level A
+        elif outdoorTemperature <= -5.0:
+            newLevel = 2    # Level 1
         else:
-            reducedLevel = 2    # Level 1
-            defaultLevel = 3    # Level 2
-            coolingLevel = 3    # Level 2
-            
-        # reducedLevel if it is too warm inside and also outside
-        # coolingLevel if it is too warm inside but outside colder then inside
-        newLevel = (coolingLevel if coolingPossible else reducedLevel) if isTooWarm else defaultLevel
+            raumTemperatur = getItemState("pGF_Livingroom_Air_Sensor_Temperature_Value").doubleValue()
+            zielTemperatur = getItemState("pGF_Utilityroom_Ventilation_Comfort_Temperature").doubleValue
+
+            presenceState = getItemState("pOther_Presence_State").intValue()
+
+            # Sleep
+            if presenceState in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
+                reducedLevel = 2    # Level 1
+                defaultLevel = 2    # Level 1
+                coolingLevel = 2    # Level 1
+            # Away since 60 minutes
+            elif presenceState == [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT] and itemLastChangeOlderThen("pOther_Presence_State", ZonedDateTime.now().minusMinutes(60)):
+                reducedLevel = 1    # Level A
+                defaultLevel = 2    # Level 1
+                coolingLevel = 3    # Level 2
+            else:
+                reducedLevel = 2    # Level 1
+                defaultLevel = 3    # Level 2
+                coolingLevel = 3    # Level 2
+
+            if raumTemperatur >= zielTemperatur:
+                if outdoorTemperature < raumTemperatur:
+                    # coolingLevel if it is too warm inside but outside colder then inside
+                    newLevel = coolingLevel
+                else:
+                    # reducedLevel if it is too warm inside and also outside
+                    newLevel = reducedLevel
+            else:
+                newLevel = defaultLevel
+
+        #self.log.info(str(currentLevel))
+        #self.log.info(str(newLevel))
 
         if newLevel != currentLevel:
             # 1. self.activeLevel != currentLevel means last try was not successful

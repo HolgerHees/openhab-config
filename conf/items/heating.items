@@ -20,9 +20,9 @@ Switch pGF_Livingroom_Heating_Demand                "Bedarf [%d]"          <self
 Number pGF_Livingroom_Heating_Charged               "Geladen"              <selfsettings> (eGF_Livingroom_Heating) ["Point"]
 Number pGF_Livingroom_Heating_Temperature_Target    "Ziel - aktiv"         <selfsettings> (eGF_Livingroom_Heating) ["Point"]
 
-// **** GF GUESTROOM ****
+// **** GF WORKROOM ****
 Group  eGF_Workroom_Heating                        "Heizung"              <selfinfo>     (lGF_Workroom) ["RadiatorControl"]
-Switch pGF_Workroom_Heating_Circuit                "Gästezimmer Kreis"    <selfsettings> (eGF_Workroom_Heating,gPersistance_History) ["Point"] { channel="knx:device:bridge:heating_ff:guestroomCircuit" }
+Switch pGF_Workroom_Heating_Circuit                "Gästezimmer Kreis"    <selfsettings> (eGF_Workroom_Heating,gPersistance_History) ["Point"] { channel="knx:device:bridge:heating_ff:workroomCircuit" }
 Switch pGF_Workroom_Heating_Demand                 "Bedarf [%d]"          <selfsettings> (eGF_Workroom_Heating) ["Point"]
 Number pGF_Workroom_Heating_Charged                "Gästezimmer Geladen"  <selfsettings> (eGF_Workroom_Heating) ["Point"]
 Number pGF_Workroom_Heating_Temperature_Target     "Ziel - aktiv"         <selfsettings> (eGF_Workroom_Heating) ["Point"]

@@ -1,6 +1,6 @@
 Bridge mqtt:broker:cloud [ host="cloud_mosquitto", secure=false ]
 {
-    Thing topic weatherforecast "Wettervorhersage" @ "Geräte" {
+    Thing topic weatherforecast "Wettervorhersage" {
         Type number : temperature0 "Temperatur" [ stateTopic="hhees/weather/provider/items/airTemperatureInCelsius/0" ]
         Type number : cloudcover0 "Bewölkung" [ stateTopic="hhees/weather/provider/items/effectiveCloudCoverInOcta/0" ]
         Type number : temperature4 "Temperatur 4 Stunden" [ stateTopic="hhees/weather/provider/items/airTemperatureInCelsius/4" ]
@@ -19,11 +19,29 @@ Bridge mqtt:broker:cloud [ host="cloud_mosquitto", secure=false ]
         Type number : effectiveCloudCoverCurrent "Temperatur" [ stateTopic="hhees/weather/provider/current/effectiveCloudCoverInOcta" ]
         Type number : humidityCurrent "Temperatur" [ stateTopic="hhees/weather/provider/current/relativeHumidityInPercent" ]
     }
+    Thing topic weatherstation "Wetterstation" {
+        Type number : cloudCoverInOcta "Cloud cover" [ commandTopic="hhees/weather/station/cloudCoverInOcta" ]
+        Type number : rainLastHourInMillimeter "Rain last hour" [ commandTopic="hhees/weather/station/rainLastHourInMillimeter" ]
+        Type number : rainLast15MinInMillimeter "Rain last 15 minutes" [ commandTopic="hhees/weather/station/rainLast15MinInMillimeter" ]
+        Type number : rainDailyInMillimeter "Rain daily" [ commandTopic="hhees/weather/station/rainDailyInMillimeter" ]
+        Type number : rainLevel "Rain level" [ commandTopic="hhees/weather/station/rainLevel" ]
+        Type number : windSpeedInKilometerPerHour "Wind speed" [ commandTopic="hhees/weather/station/windSpeedInKilometerPerHour" ]
+        Type number : windGustInKilometerPerHour "Wind guest" [ commandTopic="hhees/weather/station/windGustInKilometerPerHour" ]
+        Type number : windDirectionInDegree "Wind direction" [ commandTopic="hhees/weather/station/windDirectionInDegree" ]
+        Type number : dewpointInCelsius "Dewpoint" [ commandTopic="hhees/weather/station/dewpointInCelsius" ]
+        Type number : airTemperatureInCelsius "Air temperature" [ commandTopic="hhees/weather/station/airTemperatureInCelsius" ]
+        Type number : perceivedTemperatureInCelsius "Perceived temperature" [ commandTopic="hhees/weather/station/perceivedTemperatureInCelsius" ]
+        Type number : airHumidityInPercent "Air humidity" [ commandTopic="hhees/weather/station/airHumidityInPercent" ]
+        Type number : pressureInHectopascals "Pressure" [ commandTopic="hhees/weather/station/pressureInHectopascals" ]
+        Type number : solarPowerInWatt "Solar power" [ commandTopic="hhees/weather/station/solarPowerInWatt" ]
+        Type number : lightLevelInLux "Light level" [ commandTopic="hhees/weather/station/lightLevelInLux" ]
+        Type number : uvIndex "UV index" [ commandTopic="hhees/weather/station/uvIndex" ]
+    }
 }
 
 Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
 {
-    Thing topic system_service "System Info" @ "Geräte" {
+    Thing topic system_service "System Info" {
 //        Type string : speedtest_upstream_rate "Upstream" [ stateTopic="system_info/speedtest/upstream_rate" ]
 //        Type string : speedtest_downstream_rate "Downstream" [ stateTopic="system_info/speedtest/downstream_rate" ]
 //        Type string : speedtest_ping "Ping" [ stateTopic="system_info/speedtest/ping" ]
@@ -37,7 +55,7 @@ Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
 {% endif %}
 {% endfor %}
     }
-    Thing topic vcontrol "Heizung" @ "Geräte" {
+    Thing topic vcontrol "Heizung" {
         Type number : operationMode "Betriebsart" [ stateTopic="vcontrol/getBetriebsart", commandTopic="vcontrol/setBetriebsartTo" ]
 //        Type number : operationMode "Betriebsart" [ stateTopic="vcontrol/getBetriebsart" ]
         Type number : power "Leistung" [ stateTopic="vcontrol/getLeistungIst" ]
@@ -60,7 +78,7 @@ Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
         Type number : solarReheatingState "Nachladeunterdrückung" [ stateTopic="vcontrol/getNachladeunterdrueckungStatus" ]
         Type number : commonFault "Status" [ stateTopic="vcontrol/getSammelstoerung" ]
     }    
-    Thing topic weatherstation "Wetterstation" @ "Geräte" {
+    Thing topic weatherstation "Wetterstation" {
         Type number : rainImpulse "Counter (current)" [ stateTopic="mysensors-pub-1/1/2/#" ]
         Type number : rainRate "Rate Sensor" [ stateTopic="mysensors-pub-1/1/3/#" ]
         Type switch : rainHeater "Heizung" [ stateTopic="mysensors-pub-1/1/4/1/0/2", transformationPattern="MAP:weatherstation_heating.map" ]
@@ -76,11 +94,11 @@ Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
         Type number : uvA "UV A" [ stateTopic="mysensors-pub-1/1/13/#" ]
         Type number : uvB "UV B" [ stateTopic="mysensors-pub-1/1/14/#" ]
     }
-    Thing topic co2sensor "CO2 Sensor" @ "Geräte" {
+    Thing topic co2sensor "Sensoren CO2" {
         Type number : boxroom "Kammer" [ stateTopic="co2sensor/kammer" ]
         Type number : dressingroom "Ankleide" [ stateTopic="co2sensor/ankleide" ]
     }
-    Thing topic roomba "Roomba" @ "Geräte" {
+    Thing topic roomba "Roomba" {
         //Type string : command "Command" [ commandTopic="/roomba/command:command:*:${command}" ]
         Type switch : carpetBoost "Auto carpet Boost" [ stateTopic="/roomba/setting:command:ON:carpetBoost", transformationPattern="MAP:roomba_switch.map" ]
         Type switch : vacHigh "Vacuum Boost" [ stateTopic="/roomba/setting:command:ON:vacHigh", transformationPattern="MAP:roomba_switch.map" ]

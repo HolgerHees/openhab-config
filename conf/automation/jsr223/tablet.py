@@ -5,6 +5,8 @@ from shared.helper import rule, getItemState, postUpdate, sendCommandIfChanged, 
 from shared.triggers import ItemStateChangeTrigger, ItemCommandTrigger
 from custom.presence import PresenceHelper
 
+from custom_configuration import livingroom_api
+
 
 @rule()
 class TabletScreen:
@@ -12,16 +14,19 @@ class TabletScreen:
         self.triggers = [ItemStateChangeTrigger("pOther_Presence_State")]
         self.in_progress = False
 
-    def switch(self,cmd):
+        #status_result = urllib2.urlopen(livingroom_api + "&cmd=getDeviceInfo").read()
+        #self.log.info(status_result)
+
+    def switch(self,i, cmd):
         try:
             action = "Off" if cmd == OFF else "On"
             self.log.info("Try tablet switch {}".format(action))
 
-            urllib2.urlopen("https://smartmarvin.de/wallmountedTabletLivingroom/?cmd=screen{}".format(action)).read()
+            urllib2.urlopen(livingroom_api + "&cmd=screen{}".format(action)).read()
 
             time.sleep(1)
 
-            status_result = urllib2.urlopen("https://smartmarvin.de/wallmountedTabletLivingroom/?cmd=getDeviceInfo").read()
+            status_result = urllib2.urlopen(livingroom_api + "&cmd=getDeviceInfo").read()
             index = status_result.find("\"screenOn\": {}".format("false" if cmd == OFF else "true"))
             if index != -1:
                 self.log.info("Tablet switch successful")
@@ -30,13 +35,14 @@ class TabletScreen:
             self.log.error("Tablet switch not successful")
             self.log.info(status_result)
         except Exception as e:
-            self.log.error("{}: {}".format(e.__class__, str(e)))
-            self.log.error("Can't reach tablet")
+            if i > 5 or !isinstance(e, urllib2.URLError):
+                self.log.error("{}: {}".format(e.__class__, str(e)))
+                self.log.error("Can't reach tablet")
 
         return False
 
     def process(self, i, requested_cmd):
-        is_success = self.switch(requested_cmd)
+        is_success = self.switch(i, requested_cmd)
 
         active__cmd = requested_cmd if i == 0 else self.getRequestedCommand( getItemState("pOther_Presence_State").intValue() )
 

@@ -1,5 +1,6 @@
 from shared.helper import rule, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged, getItemState, startTimer, getThing, itemLastChangeOlderThen
 from shared.triggers import CronTrigger, ThingStatusChangeTrigger, ItemCommandTrigger, ItemStateChangeTrigger
+from shared.actions import Transformation
 from custom.presence import PresenceHelper
 
 
@@ -44,7 +45,7 @@ class HumidifierStateReset:
         ]
 
     def execute(self, module, input):
-        postUpdateIfChanged(input['event'].getItemName(), 0)
+        postUpdate(input['event'].getItemName(), OFF)
 
 @rule()
 class HumidifierStateMessage:

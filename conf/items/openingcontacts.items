@@ -25,9 +25,9 @@ Contact pGF_Livingroom_Openingcontact_Window_Couch_State   "Couch-Öffnungssenso
 Group   eGF_Kitchen_Openingcontact_Window                  "Öffnungssensor" <selfinfo> (lGF_Kitchen) ["Window"]
 Contact pGF_Kitchen_Openingcontact_Window_State            "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eGF_Kitchen_Openingcontact_Window,gPersistance_History,gGF_Sensor_Window)    ["OpenState"] { channel="knx:device:bridge:contacts_window_ff:kitchen" }
 
-// **** GF GUESTROOM ****
+// **** GF WORKROOM ****
 Group   eGF_Workroom_Openingcontact_Window                "Öffnungssensor" <selfinfo> (lGF_Workroom) ["Window"]
-Contact pGF_Workroom_Openingcontact_Window_State          "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eGF_Workroom_Openingcontact_Window,gPersistance_History,gGF_Sensor_Window) ["OpenState"] { channel="knx:device:bridge:contacts_window_ff:guestroom" }
+Contact pGF_Workroom_Openingcontact_Window_State          "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eGF_Workroom_Openingcontact_Window,gPersistance_History,gGF_Sensor_Window) ["OpenState"] { channel="knx:device:bridge:contacts_window_ff:workroom" }
 
 // **** GF GARAGE ****
 Group   eGF_Garage_Openingcontact_Door_Streedside          "Strassen-Öffnungssensor" <selfinfo> (lGF_Garage) ["GarageDoor"]
@@ -64,9 +64,9 @@ Group   eFF_Attic_Openingcontact_Window                    "Öffnungssensor" <se
 Contact pFF_Attic_Openingcontact_Window_State              "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eFF_Attic_Openingcontact_Window,gPersistance_History,gFF_Sensor_Window) ["OpenState"] { channel="knx:device:bridge:contacts_window_sf:attic" }
 
 // **** Toolshed Door ****
-Group   eToolshed_Openingcontact_Door                   "Tür-Öffnungssensor" <selfinfo> (lGardenHouse) ["GarageDoor"] {synonyms="Tür"}
+Group   eToolshed_Openingcontact_Door                   "Tür-Öffnungssensor" <selfinfo> (lToolshed) ["GarageDoor"] {synonyms="Tür"}
 Contact pToolshed_Openingcontact_Door_State             "Tür-Öffnungssensor [MAP(de.map):%s]" <selfdoor> (eToolshed_Openingcontact_Door,gPersistance_History,gOpeningcontacts,gOpeningcontactsSecurityRelevant) ["OpenState"]    { channel="knx:device:bridge:contacts_toolshed:door" }
 
 // **** Toolshed Window ****
-Group   eToolshed_Openingcontact_Window                 "Fenster-Öffnungssensor" <selfinfo> (lGardenHouse) ["Window"] {synonyms="Fenster"}
+Group   eToolshed_Openingcontact_Window                 "Fenster-Öffnungssensor" <selfinfo> (lToolshed) ["Window"] {synonyms="Fenster"}
 Contact pToolshed_Openingcontact_Window_State           "Fenster-Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eToolshed_Openingcontact_Window,gPersistance_History,gOpeningcontacts) ["OpenState"]    { channel="knx:device:bridge:contacts_toolshed:window" }

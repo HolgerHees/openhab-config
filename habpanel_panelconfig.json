@@ -8,7 +8,7 @@
         "parameters": [],
         "parameterGroups": []
       },
-      "timestamp": "Oct 30, 2023, 9:33:52 AM",
+      "timestamp": "Jan 5, 2024, 4:43:28 PM",
       "component": "panelconfiguration",
       "config": {
         "default": true,
@@ -715,8 +715,8 @@
                     "col": 7.0,
                     "config": {
                       "imageRefresh": "3",
-                      "imageUrl": "/cameraStrasseImageResized/?width\u003d{width}\u0026height\u003d{height}\u0026age\u003d{age}",
-                      "streamUrl": "/cameraStrasseVideo"
+                      "imageUrl": "/cameraStreedsideImage/?width\u003d{width}\u0026height\u003d{height}\u0026age\u003d{age}",
+                      "streamUrl": ""
                     },
                     "customwidget": "ImagePopup",
                     "name": "Kamera",
