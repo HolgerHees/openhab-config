@@ -70,7 +70,7 @@ class RollershutterAutoWindowContact:
         #self.log.info(u"{}".format(math.floor( len(configs) / 2 )))
         #for config in configs:
         #    self.log.info(u"{} {}".format(getItemState(config["shutter"]),getItemState(config["shutter"]).intValue() == 0))
-         
+
     def execute(self, module, input):
         if not FlagHelper.hasFlag( FlagHelper.AUTO_ROLLERSHUTTER_TIME_DEPENDENT, getItemState("pOther_Manual_State_Auto_Rollershutter").intValue() ):
             return

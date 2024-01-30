@@ -56,6 +56,10 @@ class SensorTemperatureHumidityMessages:
                 self.triggerMappings[entry[4]]=i
                 self.triggers.append(ItemStateChangeTrigger(entry[4]))
 
+            #self.log.info(entry[0])
+            #self.updateInfoMessage(entry[0], entry[1], entry[2], entry[3], entry[4] )
+
+
     def updateInfoMessage(self, infoItem, temperatureItem, humidityItem, co2Item=None, temperatureTargetItem=None):
         #self.log.info(u">>>delay: {}".format(infoItem))
         

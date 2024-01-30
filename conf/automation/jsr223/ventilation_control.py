@@ -1,7 +1,7 @@
 import math
 from java.time import ZonedDateTime
 
-from shared.helper import rule, itemLastChangeOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand, startTimer, getThing
+from shared.helper import rule, itemLastChangeOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand, startTimer, getThing, getStableItemState
 from shared.triggers import CronTrigger, ItemCommandTrigger, ItemStateChangeTrigger, ThingStatusChangeTrigger
 from custom.presence import PresenceHelper
 
@@ -235,8 +235,10 @@ class VentilationControlFanLevelRule:
         if self.activeLevel == -1:
             self.activeLevel = currentLevel
 
+        now = ZonedDateTime.now()
+
         outdoorTemperatureItemName = getItemState("pOutdoor_WeatherStation_Temperature_Item_Name").toString()
-        outdoorTemperature = getItemState(outdoorTemperatureItemName).doubleValue()
+        outdoorTemperature = getStableItemState(now, outdoorTemperatureItemName, 15)#.doubleValue()
 
         #incomingTemperature = getItemState("pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature").doubleValue()
         #self.log.info(str(incommingTemperature))
@@ -247,7 +249,7 @@ class VentilationControlFanLevelRule:
         elif outdoorTemperature <= -5.0:
             newLevel = 2    # Level 1
         else:
-            raumTemperatur = getItemState("pGF_Livingroom_Air_Sensor_Temperature_Value").doubleValue()
+            raumTemperatur = getStableItemState(now, "pGF_Livingroom_Air_Sensor_Temperature_Value", 15)#.doubleValue()
             zielTemperatur = getItemState("pGF_Utilityroom_Ventilation_Comfort_Temperature").doubleValue
 
             presenceState = getItemState("pOther_Presence_State").intValue()

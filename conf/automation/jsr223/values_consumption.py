@@ -289,6 +289,8 @@ class ValuesConsumptionEnergyCurrentDemandAndConsumption:
           ItemStateChangeTrigger("pGF_Utilityroom_Power_Supply_Active"),
           ItemStateUpdateTrigger("pGF_Garage_Solar_Inverter_AC_Power")
         ]
+
+        self.currentDemand = self.powerDemand = self.powerSupply = None
         
     def updateConsumption(self,solarPower):
         consumption = self.currentDemand + solarPower
@@ -300,7 +302,8 @@ class ValuesConsumptionEnergyCurrentDemandAndConsumption:
 
     def execute(self, module, input):
         if input["event"].getItemName() == "pGF_Garage_Solar_Inverter_AC_Power":
-            self.updateConsumption(input['event'].getItemState().intValue())
+            if self.currentDemand is not None:
+                self.updateConsumption(input['event'].getItemState().intValue())
         else:
             if input["event"].getItemName() == "pGF_Utilityroom_Power_Demand_Active":
                 self.powerDemand = input["event"].getItemState().intValue()
@@ -495,14 +498,39 @@ class ValuesConsumptionGasConsumption:
 class ValuesConsumptionSocketConsumption:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("pMobile_Socket_5_Total"),
-            ItemStateChangeTrigger("pMobile_Socket_6_Total")
+            ItemStateChangeTrigger("pMobile_Socket_5_Total_Raw"),
+            ItemStateChangeTrigger("pMobile_Socket_6_Total_Raw")
         ]
+
+        now = ZonedDateTime.now()
+
+        #postUpdate("pMobile_Socket_5_Total_Consumption",0)
+        #postUpdate("pMobile_Socket_6_Total_Consumption",0)
+
+        #test = getItemState("pMobile_Socket_5_Total_Consumption").doubleValue()
+        #self.log.info(str(test))
+        #test = getHistoricItemState("pMobile_Socket_6_Total_Consumption", now.toLocalDate().atStartOfDay(now.getZone()) ).doubleValue()
+        #self.log.info(str(test))
 
     def execute(self, module, input):
         now = ZonedDateTime.now()
-        itemName = input["event"].getItemName()
-        itemValue = input["event"].getItemState().doubleValue()
-        oldItemValue = getHistoricItemState(itemName, now.toLocalDate().atStartOfDay(now.getZone()) ).doubleValue()
+        rawItemName = input["event"].getItemName()
+        realItemName = "{}Consumption".format(rawItemName[:-3])
 
-        postUpdate("{}Daily_Consumption".format(itemName[:-5]), itemValue - oldItemValue )
+        newItemValue = input["event"].getItemState().doubleValue()
+        oldItemValue = input["event"].getOldItemState().doubleValue()
+
+        if newItemValue < oldItemValue:
+            if abs(newItemValue - oldItemValue) <= 0.002:
+                self.log.info("Item {} ignored. {} => {}".format(rawItemName, oldItemValue, newItemValue))
+                return
+            else:
+                self.log.info("Item {} resetted. {} => {}".format(rawItemName, oldItemValue, newItemValue))
+                oldItemValue = 0
+
+        diff = newItemValue - oldItemValue
+        realItemValue = getItemState(realItemName).doubleValue() + diff
+        postUpdate(realItemName, realItemValue )
+
+        oldDailyItemValue = getHistoricItemState(realItemName, now.toLocalDate().atStartOfDay(now.getZone()) ).doubleValue()
+        postUpdate("{}Daily_Consumption".format(realItemName[:-17]), realItemValue - oldDailyItemValue )

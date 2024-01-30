@@ -963,7 +963,7 @@ sitemap haus label="Main Menu"
                         Group item=pMobile_Socket_5_Consumption label="Lüfter (Verbrauch)" {
                             Frame label="Status" {
                                 Text item=pMobile_Socket_5_Consumption label="Verbrauch"
-                                Text item=pMobile_Socket_5_Total label="Gesamt"
+                                Text item=pMobile_Socket_5_Total_Consumption label="Gesamt"
                                 Text item=pMobile_Socket_5_Daily_Consumption label="Heute"
                             }
                             Frame label="Auswertung" {
@@ -975,7 +975,7 @@ sitemap haus label="Main Menu"
                         Group item=pMobile_Socket_6_Consumption label="Frostwächter (Verbrauch)" {
                             Frame label="Status" {
                                 Text item=pMobile_Socket_6_Consumption label="Verbrauch"
-                                Text item=pMobile_Socket_6_Total label="Gesamt"
+                                Text item=pMobile_Socket_6_Total_Consumption label="Gesamt"
                                 Text item=pMobile_Socket_6_Daily_Consumption label="Heute"
                             }
                             Frame label="Auswertung" {
