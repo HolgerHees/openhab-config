@@ -1,1 +1,4 @@
 *$py.class
+
+.env*
+.vscode*
