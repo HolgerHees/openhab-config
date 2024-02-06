@@ -15,6 +15,8 @@ class CalendarNotification:
 
         #sendCommand("pGF_Workroom_Alexa_CMD", u"Mache eine Ankündigung. Müllabholung, Papiertonnen")
 
+        #NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_NOTICE, u"System", u"test")
+
         #AlexaHelper.sendTTS(u"Papiertonnen", header = u"Müllabholung")
         
     def append(self,active,state):

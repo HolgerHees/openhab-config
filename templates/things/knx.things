@@ -1,6 +1,6 @@
 Bridge	knx:ip:bridge [
 	type="TUNNEL",
-	ipAddress="{{knx_gateway_ip}}",
+	ipAddress="{{custom_knx_gateway_ip}}",
 	localIp="{{default_server_ip}}",
 	portNumber=3671,
 	readingPause=50,

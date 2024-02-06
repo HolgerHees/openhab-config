@@ -1,4 +1,4 @@
-Bridge icalendar:calendar:muellabfuhr "Müllentsorgungstermine" [ url="{{vault_garbage_calendar_url}}", refreshTime=60 ] 
+Bridge icalendar:calendar:muellabfuhr "Müllentsorgungstermine" [ url="{{custom_garbage_calendar_url}}", refreshTime=60 ]
 {
   Thing eventfilter entsorgungstermine "Müllentsorgungstermine" [ maxEvents=4, datetimeUnit="DAY", datetimeStart=1, datetimeEnd=30, datetimeRound=true, refreshTime=10 ]
 }

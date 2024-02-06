@@ -1,4 +1,4 @@
-Bridge hue:bridge-api2:default "Hue Bridge (v2)" [ ipAddress="{{hue_ip}}", applicationKey="{{vault_hue_user_id}}" ] {
+Bridge hue:bridge-api2:default "Hue Bridge (v2)" [ ipAddress="{{custom_hue_ip}}", applicationKey="{{custom_hue_user_id}}" ] {
     Thing device lamp1 "Licht Wohnzimmer Bassbox" [ resourceId="6b17c722-7c07-4227-a4db-95e8f1279163" ] // bassbox
 	Thing device lamp2 "Licht Wohnzimmer Stehlampe" [ resourceId="97107ee2-bfed-4273-8346-707e7f16b7e0" ] // stehlampe
 	Thing device lamp4 "Licht Flur EG Indirekt" [ resourceId="a1153a4d-abf5-4314-9c18-a2f16d82819f" ] // corridor

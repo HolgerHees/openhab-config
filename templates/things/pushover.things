@@ -1,3 +1,1 @@
-{% if vault_pushover_api_key is defined and vault_pushover_api_key != "" and vault_pushover_user_key is defined and vault_pushover_user_key != "" %}
-Thing pushover:pushover-account:account [ apikey="{{vault_pushover_api_key}}", user="{{vault_pushover_user_key}}" ]
-{% endif %}
+Thing pushover:pushover-account:account [ apikey="{{custom_pushover_api_key}}", user="{{custom_pushover_user_key}}" ]

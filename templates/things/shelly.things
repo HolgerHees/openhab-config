@@ -1,2 +1,2 @@
-Thing shelly:shellyplugs:socket1 "Steckdose Lüfter" [deviceIp="{{shelly_socket_1_ip}}"]
-Thing shelly:shellyplugs:socket2 "Steckdose Frostwächter" [deviceIp="{{shelly_socket_2_ip}}"]
+Thing shelly:shellyplugs:socket1 "Steckdose Lüfter" [deviceIp="{{custom_shelly_socket_1_ip}}"]
+Thing shelly:shellyplugs:socket2 "Steckdose Frostwächter" [deviceIp="{{custom_shelly_socket_2_ip}}"]

@@ -1,4 +1,4 @@
-Thing tuya:tuyaDevice:humidifier "Luftbefeuchter Karl Big" [ pollingInterval="60", protocol="3.3", productId="{{vault_tuya_humidifier_product_id}}", deviceId="{{vault_tuya_humidifier_device_id}}", localKey="{{vault_tuya_humidifier_local_key}}", ip="{{humidifier_ip}}" ] {
+Thing tuya:tuyaDevice:humidifier "Luftbefeuchter Karl Big" [ pollingInterval="60", protocol="3.3", productId="{{custom_humidifier_product_id}}", deviceId="{{custom_humidifier_device_id}}", localKey="{{custom_humidifier_local_key}}", ip="{{custom_humidifier_ip}}" ] {
     Type switch : power             "Ein/Aus"               [ dp="1" ]
     Type number : humidity_current  "Luftfeuchtigkeit"      [ dp="14", min="0", max="100" ]
     Type number : fault             "Fehler"                [ dp="22", min="0", max="100" ]
