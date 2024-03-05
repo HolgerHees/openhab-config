@@ -1,6 +1,6 @@
 import time
-import urllib2
 
+from shared.actions import HTTP
 from shared.helper import rule, getItemState, postUpdate, sendCommandIfChanged, startTimer
 from shared.triggers import ItemStateChangeTrigger, ItemCommandTrigger
 from custom.presence import PresenceHelper
@@ -14,19 +14,16 @@ class TabletScreen:
         self.triggers = [ItemStateChangeTrigger("pOther_Presence_State")]
         self.in_progress = False
 
-        #status_result = urllib2.urlopen(livingroom_api + "&cmd=getDeviceInfo").read()
-        #self.log.info(status_result)
-
     def switch(self,i, cmd):
         try:
             action = "Off" if cmd == OFF else "On"
             self.log.info("Try tablet switch {}".format(action))
 
-            urllib2.urlopen(livingroom_api + "&cmd=screen{}".format(action)).read()
+            HTTP.sendHttpGetRequest(livingroom_api + "&cmd=screen{}".format(action))
 
             time.sleep(1)
 
-            status_result = urllib2.urlopen(livingroom_api + "&cmd=getDeviceInfo").read()
+            status_result = HTTP.sendHttpGetRequest(livingroom_api + "&cmd=getDeviceInfo")
             index = status_result.find("\"screenOn\": {}".format("false" if cmd == OFF else "true"))
             if index != -1:
                 self.log.info("Tablet switch successful")
@@ -35,7 +32,7 @@ class TabletScreen:
             self.log.error("Tablet switch not successful")
             self.log.info(status_result)
         except Exception as e:
-            if i > 5 or !isinstance(e, urllib2.URLError):
+            if i > 5:
                 self.log.error("{}: {}".format(e.__class__, str(e)))
                 self.log.error("Can't reach tablet")
 

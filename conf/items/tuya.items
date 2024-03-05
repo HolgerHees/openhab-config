@@ -6,7 +6,7 @@ Switch pGF_Livingroom_Humidifier_Auto_Mode                      "Modus"         
 
 Switch pGF_Livingroom_Humidifier_Power                          "Ein/Aus"                                       <selfswitch>    (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier:power" }
 
-Number:Dimensionless pGF_Livingroom_Humidifier_Humidity_Value   "Luftfeuchtigkeit [%d%%]"                       <humidity>      (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier:humidity_current"[profile="offset",offset="0.0 %"], unit="%" }
+Number:Dimensionless pGF_Livingroom_Humidifier_Humidity_Value   "Luftfeuchtigkeit [%d%%]"                       <humidity>      (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier:humidity_current"[profile="offset",offset="0.0"] } // , unit="%" }
 
 Number pGF_Livingroom_Humidifier_Fault                          "Fehler [MAP(tuya_humidifier_fault.map):%s]"   <selferror>      (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier:fault" }
 Switch pGF_Livingroom_Humidifier_Filter_Reset                   "Filter Reset"                                  <selfinfo>      (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier:filter_reset" }

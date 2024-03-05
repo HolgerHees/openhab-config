@@ -44,15 +44,17 @@
   
   if( isPhone ) document.getElementsByTagName("body")[0].className="phone";
       
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", "/loki/loki/api/v1/query_range?limit=500&query=" + encodeURI( '{group=~\"openhab_events\"} |~ \".*Motiondetector_State.*CLOSED to OPEN|.*_Openingcontact.*CLOSED to OPEN|.*_Openingcontact.*OPEN to CLOSED|pOther_Presence.*\"' ) );
-  xhr.onload = function() 
-  {  
+  async function load() {
+      const result = await fetch ("/loki/loki/api/v1/query_range?limit=500&query=" + encodeURI( '{group=~\"openhab_events\"} |~ \".*Motiondetector_State.*CLOSED to OPEN|.*_Openingcontact.*CLOSED to OPEN|.*_Openingcontact.*OPEN to CLOSED|pOther_Presence.*\"' ));
+      let data = await result.text();
+      return data;
+  }
+
+  load().then(function(result)
+  {
       var tableElement = document.getElementById("result");
-      
       var tableContent = "";
-      
-      var data = JSON.parse(this.response);
+      var data = JSON.parse(result);
       for( i = 0; i < data['data']['result'].length; i++ )
       {
           values = data['data']['result'][i]['values'];
@@ -75,9 +77,7 @@
       }
 
       tableElement.innerHTML = tableContent;
-  };
-
-  xhr.send();
+  });
 </script>
 </body>
 </html>

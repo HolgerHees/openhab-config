@@ -1,4 +1,3 @@
-import urllib2
 from java.time import ZonedDateTime
 import time
 

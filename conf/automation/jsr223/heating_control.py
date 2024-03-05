@@ -4,7 +4,7 @@ from java.time.format import DateTimeFormatter
 from java.time.temporal import ChronoUnit
 
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
-from shared.helper import rule, getHistoricItemEntry, getItemState, getItemLastChange, getItemLastUpdate, sendCommand, sendCommandIfChanged, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen, itemLastChangeOlderThen, getStableItemState
+from shared.helper import rule, getHistoricItemEntry, getItemState, getItemLastChange, getItemLastUpdate, sendCommand, sendCommandIfChanged, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen, itemLastChangeOlderThen, getStableItemState, getMinItemState
 from shared.actions import Transformation
 from custom.heating.heating import Heating
 from custom.heating.house import ThermalStorageType, ThermalBridgeType, Wall, Door, Window, Room
@@ -489,8 +489,14 @@ class HeatingControlMain:
         self.activeHeatingOperatingMode = -1
         self.activeReducedTimeInMinutes = -1
 
+        #self.test()
+
     def execute(self, module, input):
         self.log.info(u"--------: >>>" )
+
+        if input['event'].getType() != "TimerEvent" and input['event'].getItemName() == 'pGF_Utilityroom_Heating_Auto_Mode':
+            self.activeHeatingOperatingMode = -1
+            self.activeReducedTimeInMinutes = -1
 
         now = ZonedDateTime.now()
         autoModeEnabled = getItemState("pGF_Utilityroom_Heating_Auto_Mode").intValue() == 1
@@ -847,14 +853,16 @@ class HeatingControlMain:
             elif currentPowerState == 0:
                 forceReducedMsg = None
 
-                # TODO maybe check Heating_Temperature_Wather_Storage if the temerature is increasing => hint that water heating is active
-                # TODO also if Heating_Power is going from 0 to 65 and one minute later from 65 to 0 is a hint for a unsuccessful start
-                
-                # No burner starts since a while
-                if itemLastChangeOlderThen("pGF_Utilityroom_Heating_Power",now.minusMinutes(Heating.CHECK_HEATING_TIME_SLOT)) and itemLastChangeOlderThen("pGF_Utilityroom_Heating_Operating_Mode",now.minusMinutes(Heating.CHECK_HEATING_TIME_SLOT)):
+                # No burner starts since 10 minutes
+                waiting_time = now.minusMinutes(10)
+                if itemLastChangeOlderThen("pGF_Utilityroom_Heating_Power",waiting_time) and itemLastChangeOlderThen("pGF_Utilityroom_Heating_Operating_Mode",waiting_time):
                     forceReducedMsg = u" • No burner starts"
-                elif self.getBurnerStarts(now) > 1:
-                    forceReducedMsg = u" • Too many burner starts"
+                else:
+                    burnderStarts = self.getBurnerStarts(now, 5)
+                    isWaterHeating = self.isWaterHeating(now, 5)
+                    # if burnder starts during last 5 minutes > 1 and no water heating (diff < 1°)
+                    if burnderStarts > 1 and not isWaterHeating:
+                        forceReducedMsg = u" • Too many burner starts • Heating system tried to start {} times".format(burnderStarts)
                         
                 if forceReducedMsg != None:
                     self.activeReducedTimeInMinutes = Heating.MIN_REDUCED_TIME if self.activeReducedTimeInMinutes == -1 else min( self.activeReducedTimeInMinutes * 2, Heating.MAX_REDUCED_TIME )
@@ -862,8 +870,23 @@ class HeatingControlMain:
                    
                     sendCommand("pGF_Utilityroom_Heating_Operating_Mode",self.activeHeatingOperatingMode)
                     self.log.info(u"Switch  : Reduziert{}{}".format(forceReducedMsg,forceRetryMsg))
-            elif self.activeReducedTimeInMinutes != -1 and itemLastChangeOlderThen("pGF_Utilityroom_Heating_Operating_Mode",now.minusMinutes(Heating.CHECK_HEATING_TIME_SLOT)):
-                self.activeReducedTimeInMinutes = -1
+                elif isWaterHeating:
+                    self.log.info(u"Delayed : Heating system heats water")
+                else:
+                    self.log.info(u"Delayed : Heating system tried to start {} times".format(burnderStarts))
+
+            else:
+                if getItemState("pGF_Utilityroom_Heating_Circuit_Pump_Speed").intValue() == 0:
+                    if self.isWaterHeating(now, 5):
+                        self.log.info(u"Paused  : Heating system heats water")
+                    else:
+                        if getItemState("pGF_Utilityroom_Heating_Temperature_Boiler_Target").doubleValue() >= 55:
+                            self.log.info(u"Paused  : Heating system heats boiler")
+                        else:
+                            self.log.info(u"Paused  : For unkown reason")
+                # reset reduced counter after 5 minutes of heating
+                elif self.activeReducedTimeInMinutes != -1 and itemLastChangeOlderThen("pGF_Utilityroom_Heating_Operating_Mode",now.minusMinutes(5)):
+                    self.activeReducedTimeInMinutes = -1
          
         # Reduziert
         elif currentOperatingMode == 3:
@@ -886,29 +909,40 @@ class HeatingControlMain:
                     
                 self.log.info(u"Switch  : Heizen mit WW{}{}".format(delayedMsg,forceRetryMsg))
 
-    def getBurnerStarts( self, now ):
-        # max 5 min.
+    def isWaterHeating(self, now, limit_minutes):
+        return ( getItemState("pGF_Utilityroom_Heating_Temperature_Water_Storage").doubleValue() - getMinItemState("pGF_Utilityroom_Heating_Temperature_Water_Storage", now.minusMinutes(limit_minutes)).doubleValue() ) >= 1
+
+    def getBurnerStarts( self, now, limit_minutes ):
         minTime = getHistoricItemEntry("pGF_Utilityroom_Heating_Operating_Mode",now).getTimestamp()
-        _minTime = now.minusMinutes(Heating.CHECK_HEATING_TIME_SLOT)
+        _minTime = now.minusMinutes(limit_minutes)
         if minTime.isBefore(_minTime):
             minTime = _minTime
 
         currentTime = now
-        lastItemEntry = None
-        burnerStarts = 0
-        
+        lastIsHeating = False
+
         # check for new burner starts during this time periode
         # "pGF_Utilityroom_Heating_Burner_Starts" is not useable because of wather heating
+        burnerStarts = 0
         while currentTime.isAfter(minTime):
             currentItemEntry = getHistoricItemEntry("pGF_Utilityroom_Heating_Power", currentTime)
-            if lastItemEntry is not None:
-                currentHeating = ( currentItemEntry.getState().doubleValue() != 0.0 )
-                lastHeating = ( lastItemEntry.getState().doubleValue() != 0.0 )
-                
-                if currentHeating != lastHeating:
-                    burnerStarts = burnerStarts + 1
+            currentIsHeating = ( currentItemEntry.getState().doubleValue() != 0.0 )
+
+            # count only heating events
+            if currentIsHeating != lastIsHeating and currentIsHeating:
+                burnerStarts = burnerStarts + 1
             
             currentTime = currentItemEntry.getTimestamp().minusNanos(1)
-            lastItemEntry = currentItemEntry
+            lastIsHeating = currentIsHeating
             
         return burnerStarts
+
+    #def test(self):
+    #    formatter  = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+    #    zdtWithZoneOffset = ZonedDateTime.parse("2024-02-13T07:58:15+01:00", formatter)
+    #    zdtInLocalTimeline = zdtWithZoneOffset.withZoneSameInstant(ZoneId.systemDefault())
+
+    #    ref = ZonedDateTime.now()
+    #    self.log.info("{} {}".format(ref, zdtInLocalTimeline))
+    #    count = self.getBurnerStarts(zdtInLocalTimeline, 5)
+    #    self.log.info(str(count))
