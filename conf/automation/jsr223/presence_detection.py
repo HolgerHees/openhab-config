@@ -41,9 +41,15 @@ class PresenceCache:
     def setArriving(state):
         PresenceCache.setPossibleArrive(False)
         if PresenceCache._shared_arrive is None:
-            PresenceCache._shared_arrive = getItemState("pOther_Presence_Arrive_State").intValue()
+            PresenceCache.getArriving()
         PresenceCache._shared_arrive = PresenceCache._shared_arrive + 1 if state else 0
         postUpdate("pOther_Presence_Arrive_State", PresenceCache._shared_arrive )
+
+    @staticmethod
+    def getArriving():
+        if PresenceCache._shared_arrive is None:
+            PresenceCache._shared_arrive = getItemState("pOther_Presence_Arrive_State").intValue()
+        return PresenceCache._shared_arrive
 
     @staticmethod
     def setPossibleArrive(state):
@@ -210,7 +216,7 @@ class PresenceDetectionKnownPersonCheck:
         # sometimes, phones are losing wifi connections because of their sleep mode
         if newItemState == OFF:
             if oldItemState == ON:
-                if itemLastChangeOlderThen("pGF_Corridor_Openingcontact_Door_State",ZonedDateTime.now().minusMinutes(30)) and getItemState("pOther_Presence_Arrive_State") > 0:
+                if itemLastChangeOlderThen("pGF_Corridor_Openingcontact_Door_State",ZonedDateTime.now().minusMinutes(30)) and PresenceCache.getArriving() > 0:
                     # relatedItem state is still ON
                     lastChangedState = getItemLastChange(relatedItemName)
                     if itemLastChangeNewerThen("pGF_Corridor_Openingcontact_Door_State",lastChangedState.minusMinutes(15)):

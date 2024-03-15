@@ -94,10 +94,18 @@ class PresenceActionAlexaWelcome:
         arrived_user = []
         for user_name, stateItem in UserHelper.getPresentUserData().items():
             last_change = getItemLastUpdate(stateItem)
+
+            # already confirmed
             if not last_change.isAfter(self.arrivedUser[user_name]):
                 continue
+
             if confirm:
                 self.arrivedUser[user_name] = last_change
+
+            # person arrived more then 30 minutes ago, we can ignore welcome
+            if last_change.plusMinutes(30).isAfter(ZonedDateTime.now()):
+                continue
+
             arrived_user.append(UserHelper.getName(user_name))
         return arrived_user
 
