@@ -8,7 +8,7 @@
         "parameters": [],
         "parameterGroups": []
       },
-      "timestamp": "Mar 26, 2024, 7:47:50 PM",
+      "timestamp": "Mar 31, 2024, 12:07:39 PM",
       "component": "panelconfiguration",
       "config": {
         "default": true,
@@ -299,7 +299,7 @@
             "component": "customwidget",
             "config": {
               "id": "WeatherTodayOverview",
-              "template": "\u003c!--\nhttps://stackoverflow.com/questions/8702704/alternative-to-iframes-with-html5\n--\u003e\n\u003cdiv oc-lazy-load\u003d\"[\u0027/static/shared/habpanel/js/helper.js\u0027]\"\u003e\n  \u003cdiv class\u003d\"mvWidget mvClickable\" dashboard-button dashboard\u003d\"Wetterbericht\"\u003e\n    \u003cmv-widget-embedd embedd-url\u003d\"https://smartmarvin.de/weather_service/widgetTodayOverview/\" embedd-refresh-interval\u003d\"3600\"\u003e\u003c/mv-widget-embedd\u003e\n  \u003c/div\u003e  \n\u003c/div\u003e"
+              "template": "\u003c!--\nhttps://stackoverflow.com/questions/8702704/alternative-to-iframes-with-html5\n--\u003e\n\u003cdiv oc-lazy-load\u003d\"[\u0027/static/shared/habpanel/js/helper.js\u0027]\"\u003e\n  \u003cdiv class\u003d\"mvWidget mvClickable\" dashboard-button dashboard\u003d\"Wetterbericht\"\u003e\n    \u003cmv-widget-embedd embedd-url\u003d\"https://smartmarvin.de/weather_service/widgetTodayHabpanel/\" embedd-refresh-interval\u003d\"3600\"\u003e\u003c/mv-widget-embedd\u003e\n  \u003c/div\u003e  \n\u003c/div\u003e"
             },
             "slots": {
               "settings": []

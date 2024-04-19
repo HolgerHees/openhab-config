@@ -72,21 +72,17 @@ class RollershutterAutoWindowContact:
         #    self.log.info(u"{} {}".format(getItemState(config["shutter"]),getItemState(config["shutter"]).intValue() == 0))
 
     def execute(self, module, input):
-        if not FlagHelper.hasFlag( FlagHelper.AUTO_ROLLERSHUTTER_TIME_DEPENDENT, getItemState("pOther_Manual_State_Auto_Rollershutter").intValue() ):
-            return
-          
         contactItemName = input['event'].getItemName()
-        
         if contactItemName not in contact_map:
             return
           
+        rollershutter_flags = getItemState("pOther_Manual_State_Auto_Rollershutter").intValue()
         config = contact_map[contactItemName]
-
         state = None
         if input['event'].getItemState() == OPEN:
             state = UP
         else:
-            if getItemState("pOther_Automatic_State_Rollershutter").intValue() == SunProtectionHelper.STATE_ROLLERSHUTTER_DOWN:
+            if FlagHelper.hasFlag( FlagHelper.AUTO_ROLLERSHUTTER_TIME_DEPENDENT, rollershutter_flags ) and getItemState("pOther_Automatic_State_Rollershutter").intValue() == SunProtectionHelper.STATE_ROLLERSHUTTER_DOWN:
                 #closedShutters = 0
                 for _config in configs:
                     if getItemState(_config["shutter"]).intValue() == 100:
@@ -95,7 +91,7 @@ class RollershutterAutoWindowContact:
                         #closedShutters += 1
                 #if closedShutters >= math.floor( len(configs) / 2 ):
                 #state = DOWN if closedShutters >
-            elif ("sunprotection" in config and "sunprotectionOnlyIfAway" not in config and getItemState(config["sunprotection"]) == ON):
+            elif (FlagHelper.hasFlag( FlagHelper.AUTO_ROLLERSHUTTER_SHADING, rollershutter_flags ) and "sunprotection" in config and "sunprotectionOnlyIfAway" not in config and getItemState(config["sunprotection"]) == ON):
                 state = DOWN
 
         #self.log.info(str(state))
@@ -130,7 +126,7 @@ class RollershutterAutoPresence:
         self.awayTimer = None
 
     def execute(self, module, input):
-        if not FlagHelper.hasFlag( FlagHelper.AUTO_ROLLERSHUTTER_TIME_DEPENDENT, getItemState("pOther_Manual_State_Auto_Rollershutter").intValue() ):
+        if not FlagHelper.hasFlag( FlagHelper.AUTO_ROLLERSHUTTER_SHADING, getItemState("pOther_Manual_State_Auto_Rollershutter").intValue() ):
             return
           
         if self.awayTimer != None:
@@ -207,3 +203,4 @@ class RollershutterTerraceAutoSunprotection:
             sendCommand("pOutdoor_Terrace_Shading_Right_Control", UP)
 
 #sendCommand("pOther_Automatic_State_Sunprotection_Terrace", 0)
+
