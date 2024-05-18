@@ -1,0 +1,6 @@
+Bridge gardena:account:default "Bridge Gardena Smart System API" [ apiSecret="{{custom_husqvarna_secret}}", apiKey="{{custom_husqvarna_key}}" ]
+{
+  Thing sensor sensor1 [ deviceId="{{custom_husqvarna_sensor1_id}}" ]
+  Thing sensor sensor2 [ deviceId="{{custom_husqvarna_sensor2_id}}" ]
+}
+

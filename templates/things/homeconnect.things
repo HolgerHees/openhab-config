@@ -1,7 +1,7 @@
-Bridge homeconnect:api_bridge:default "Home Connect API" [ clientId="{{custom_homeconnect_client_id}}", clientSecret="{{custom_homeconnect_client_secret}}", simulator=false] {
+Bridge homeconnect:api_bridge:default "Bridge Home Connect API" [ clientId="{{custom_homeconnect_client_id}}", clientSecret="{{custom_homeconnect_client_secret}}", simulator=false] {
     // Thing configurations
-    Thing washer washer "Waschmaschine" @ "Geräte"  [ haId="{{custom_homeconnect_washer}}" ]
-    Thing dishwasher dishwasher "Geschirrspühler" @ "Geräte"  [ haId="{{custom_homeconnect_dishwasher}}" ]
-    Thing coffeemaker coffeemaker "Kaffeemaschine" @ "Geräte"  [ haId="{{custom_homeconnect_coffeemaker}}" ]
+    Thing washer washer "Gerät Waschmaschine" @ "Geräte"  [ haId="{{custom_homeconnect_washer}}" ]
+    Thing dishwasher dishwasher "Gerät Geschirrspühler" @ "Geräte"  [ haId="{{custom_homeconnect_dishwasher}}" ]
+    Thing coffeemaker coffeemaker "Gerät Kaffeemaschine" @ "Geräte"  [ haId="{{custom_homeconnect_coffeemaker}}" ]
 }
  

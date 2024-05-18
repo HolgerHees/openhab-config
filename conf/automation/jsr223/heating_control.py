@@ -428,7 +428,7 @@ maintenanceMode = {}
 class HeatingControlErrorMessage:
     def __init__(self):
         self.triggers = [
-            #CronTrigger("0 */15 * * * ?"),
+            CronTrigger("0 0 * * * ?"),
             ItemStateChangeTrigger("pGF_Utilityroom_Heating_Common_Fault")
         ]
 

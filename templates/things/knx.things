@@ -1,4 +1,4 @@
-Bridge	knx:ip:bridge [
+Bridge knx:ip:bridge "Bridge KNX Gateway" [
 	type="TUNNEL",
 	ipAddress="{{custom_knx_gateway_ip}}",
 	localIp="{{default_server_ip}}",
