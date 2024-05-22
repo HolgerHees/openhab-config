@@ -1,6 +1,7 @@
 from shared.helper import rule, itemLastUpdateOlderThen, getItemState, postUpdateIfChanged, NotificationHelper, getGroupMember
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
 from java.time import ZonedDateTime
+from custom.watering import WateringHelper
 
 
 @rule()
@@ -9,7 +10,8 @@ class StateMessageSensors:
         self.triggers = [
             #CronTrigger("*/15 * * * * ?"),
             CronTrigger("0 */5 * * * ?"),
-            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Main_Info")
+            ItemStateChangeTrigger("pOther_Plant_Sensor_State_Watering_Info"),
+            ItemStateChangeTrigger("pOther_Plant_Sensor_State_Device_Info")
         ]
 
     def execute(self, module, input):
@@ -18,8 +20,12 @@ class StateMessageSensors:
         details = []
         group = "Fehler"
 
-        if getItemState("pIndoor_Plant_Sensor_Main_Info").toString() != 'Alles ok':
-            states.append(getItemState("pIndoor_Plant_Sensor_Main_Info").toString())
+        watering_state = getItemState("pOther_Plant_Sensor_State_Watering_Info").intValue()
+        if watering_state not in [WateringHelper.STATE_WATERING_INACTIVE, WateringHelper.STATE_WATERING_WET, WateringHelper.STATE_WATERING_OPTIMAL]:
+            states.append(WateringHelper.getStateInfo(watering_state))
+
+        if getItemState("pOther_Plant_Sensor_State_Device_Info").toString() != "Alles ok":
+            states.append(getItemState("pOther_Plant_Sensor_State_Device_Info").toString())
 
         for sensorItem in getGroupMember("gRoom_CO2_Sensors"):
             if getItemState(sensorItem).intValue() > 2000:
@@ -67,4 +73,3 @@ class StateMessageSensors:
             postUpdateIfChanged("eOther_Error_Temperatur_Sensor_Message", u"Keine Updates mehr seit mehr als 60 Minuten: {}".format(u", ".join(tf_error_states)))
         else:
             postUpdateIfChanged("eOther_Error_Temperatur_Sensor_Message", "")
-

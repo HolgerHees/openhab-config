@@ -499,7 +499,8 @@ class ValuesConsumptionSocketConsumption:
     def __init__(self):
         self.triggers = [
             ItemStateChangeTrigger("pMobile_Socket_5_Total_Raw"),
-            ItemStateChangeTrigger("pMobile_Socket_6_Total_Raw")
+            ItemStateChangeTrigger("pMobile_Socket_6_Total_Raw"),
+            ItemStateChangeTrigger("pMobile_Socket_7_Total_Raw")
         ]
 
         now = ZonedDateTime.now()

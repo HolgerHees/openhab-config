@@ -1,79 +1,120 @@
-from shared.helper import rule, getItemState, postUpdateIfChanged
-from shared.triggers import ItemStateChangeTrigger
+from shared.helper import rule, getItemState, postUpdateIfChanged, getThing, getItem, startTimer
+from shared.triggers import ItemStateChangeTrigger, ThingStatusChangeTrigger
+from custom.watering import WateringHelper
 
 
 @rule()
-class SensorPlantsMessagesSummery:
+class SensorPlantsState:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Watering_Info")
+            ThingStatusChangeTrigger("gardena:sensor:default")
         ]
 
-    def execute(self, module, input):
-        state = getItemState("pIndoor_Plant_Sensor_Watering_Info").toString()
+        startTimer(self.log, 5, self.check)
 
-        if state != "Feucht genug" and state != "Nicht aktiv":
-            msg = state
+    def check(self):
+        thing = getThing("gardena:account:default")
+        status = thing.getStatus()
+
+        if status.toString() != "ONLINE":
+            info = thing.getStatusInfo()
+            postUpdateIfChanged("eOther_Error_Gardena_Message", "Thing: {}".format(info.toString()))
         else:
-            msg = u"Alles ok"
+            postUpdateIfChanged("eOther_Error_Gardena_Message","")
 
-        postUpdateIfChanged("pIndoor_Plant_Sensor_Main_Info", msg)
+    def execute(self, module, input):
+        self.check()
 
+@rule()
+class SensorPlantsBatteryDetail:
+    def __init__(self):
+        triggers = []
+
+        self.sensor_device_map = {}
+        for item in getItem("eOther_Plant_Sensor_Devices").getMembers():
+            name = item.getName()[1:]
+
+            #self.log.info(name)
+
+            triggers.append(ItemStateChangeTrigger( "p" + name + "_Batterie_Level"))
+
+            self.sensor_device_map["p" + name + "_Batterie_Level"] = name
+
+        self.triggers = triggers
+
+        self.check()
+
+    def check(self):
+        minLevel = 100
+        for _device_name in self.sensor_device_map.values():
+            if not WateringHelper.isActive(_device_name):
+                continue
+
+            value = getItemState("p" + _device_name + "_Batterie_Level").intValue()
+            if value < minLevel:
+                minLevel = value
+
+        if minLevel < 30:
+            postUpdateIfChanged("pOther_Plant_Sensor_State_Device_Info", "Batterie")
+        else:
+            postUpdateIfChanged("pOther_Plant_Sensor_State_Device_Info", "Alles ok")
+
+    def execute(self, module, input):
+        self.check()
 
 @rule()
 class SensorPlantsMessagesDetail:
     def __init__(self):
-        self.triggers = [
-            ItemStateChangeTrigger("pOther_Manual_State_Auto_Attic_Light"),
-            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Device_State1"),
-            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Device_State2"),
-            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Device_State3"),
-            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Device_State4")
-        ]
+        triggers = []
+
+        self.sensor_devices = []
+        self.sensor_device_map = {}
+        for item in getItem("eOther_Plant_Sensor_Devices").getMembers():
+            name = item.getName()[1:]
+            for item_suffix in ["_Switch","_Soil_Temperature","_Soil_Humidity"]:
+                triggers.append(ItemStateChangeTrigger( "p" + name + item_suffix))
+                self.sensor_device_map["p" + name + item_suffix] = name
+
+            self.sensor_devices.append(name)
+
+        self.triggers = triggers
+
+    def getInfo(self, value):
+        if value < 10:
+            return u"Trocken"
+
+        if value < 50:
+            return u"Leicht Feucht"
+
+        if value < 80:
+            return u"Feucht"
+
+        return u"Nass"
 
     def execute(self, module, input):
-        msg = u"Nicht aktiv"
+        device_name = self.sensor_device_map[input["event"].getItemName()]
 
-        if getItemState("pOther_Manual_State_Auto_Attic_Light").intValue() != 1:
-            soilMoistSensor1 = getItemState("pIndoor_Plant_Sensor_Device_State1").intValue() if getItemState("pIndoor_Plant_Sensor_Device_Enabled1") == ON else 1000
-            soilMoistSensor2 = getItemState("pIndoor_Plant_Sensor_Device_State2").intValue() if getItemState("pIndoor_Plant_Sensor_Device_Enabled2") == ON else 1000
-            soilMoistSensor3 = getItemState("pIndoor_Plant_Sensor_Device_State3").intValue() if getItemState("pIndoor_Plant_Sensor_Device_Enabled3") == ON else 1000
-            soilMoistSensor4 = getItemState("pIndoor_Plant_Sensor_Device_State4").intValue() if getItemState("pIndoor_Plant_Sensor_Device_Enabled4") == ON else 1000
+        if not WateringHelper.isActive(device_name):
+            state_level = WateringHelper.STATE_WATERING_INACTIVE
+            info_msg = WateringHelper.getStateInfo(state_level)
+        else:
+            humidity_value = WateringHelper.getHumidity(device_name)
+            state_level = WateringHelper.getState(device_name, humidity_value)
+            state_msg = WateringHelper.getStateInfo(state_level)
 
-            if soilMoistSensor1 < 380 or soilMoistSensor2 < 380 or soilMoistSensor3 < 380 or soilMoistSensor4 < 380:
-                msg = u"Jetzt Giessen"
-            elif soilMoistSensor1 < 400 or soilMoistSensor2 < 400 or soilMoistSensor3 < 400 or soilMoistSensor4 < 400:
-                msg = u"Giessen"
-            else:
-                msg = u"Feucht genug"
+            temperatur_value = getItemState("p" + device_name  + "_Soil_Temperature").intValue()
+            info_msg = u"{}, {}, {}°C, {}%".format( self.getInfo(humidity_value), state_msg, temperatur_value, humidity_value)
 
-        postUpdateIfChanged("pIndoor_Plant_Sensor_Watering_Info", msg)
+        postUpdateIfChanged("p" + device_name  + "_State", state_level)
+        postUpdateIfChanged("p" + device_name + "_Msg", info_msg )
 
-@rule()
-class SensorPlantsMessagesEnabled:
-    def __init__(self):
-        self.triggers = [
-            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Device_Enabled1"),
-            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Device_Enabled2"),
-            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Device_Enabled3"),
-            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Device_Enabled4"),
-            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Device_Enabled5"),
-            ItemStateChangeTrigger("pIndoor_Plant_Sensor_Device_Enabled6")
-        ]
+        state_level = WateringHelper.STATE_WATERING_INACTIVE
+        for _device_name in self.sensor_devices:
+            if not WateringHelper.isActive(_device_name):
+                continue
 
-    def execute(self, module, input):
-        active = []
-        if getItemState("pIndoor_Plant_Sensor_Device_Enabled1") == ON:
-            active.append("1")
-        if getItemState("pIndoor_Plant_Sensor_Device_Enabled2") == ON:
-            active.append("2")
-        if getItemState("pIndoor_Plant_Sensor_Device_Enabled3") == ON:
-            active.append("3")
-        if getItemState("pIndoor_Plant_Sensor_Device_Enabled4") == ON:
-            active.append("4")
-        if getItemState("pIndoor_Plant_Sensor_Device_Enabled5") == ON:
-            active.append("5")
-        if getItemState("pIndoor_Plant_Sensor_Device_Enabled6") == ON:
-            active.append("6")
-        postUpdateIfChanged("pIndoor_Plant_Sensor_Activation_Info", u", ".join(active)) 
-            
+            _state_level = WateringHelper.getState(_device_name)
+            if _state_level > state_level:
+                state_level = _state_level
+
+        postUpdateIfChanged("pOther_Plant_Sensor_State_Watering_Info", state_level )

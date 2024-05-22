@@ -7,5 +7,6 @@ String eOther_Error_WeatherStation_Message   "Wetterstation"        <selfinfo> (
 String eOther_Error_CO2_Sensor_Message       "CO2 Sensor"           <selfinfo> (eOther_Error) ["Point"]
 String eOther_Error_Temperatur_Sensor_Message "Temperatur Sensor"   <selfinfo> (eOther_Error) ["Point"]
 String eOther_Error_Homeconnect_Message      "Homeconnect"          <selfinfo> (eOther_Error) ["Point"]
+String eOther_Error_Gardena_Message          "Gardena"              <selfinfo> (eOther_Error) ["Point"]
 String eOther_Error_Alexa_Message            "Alexa"                <selfinfo> (eOther_Error) ["Point"]
 String eOther_Error_Hue_Message              "Hue"                  <selfinfo> (eOther_Error) ["Point"]

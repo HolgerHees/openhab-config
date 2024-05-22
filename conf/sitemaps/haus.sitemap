@@ -68,25 +68,25 @@ sitemap haus label="Main Menu"
             Frame label="Garten" {
 				Switch item=pGF_Garage_Light_Ceiling_Powered label="Werkstatt"
 				Switch item=pToolshed_Light_Ceiling_Powered label="Geräteschuppen"
-                Slider item=gOutdoor_Terrace_Light_Hue_Color label="Terasse Indirekt"
-                Text label="Terasse Indirekt anpassen" icon="selfcontrol" visibility=[gOutdoor_Terrace_Light_Hue_Color>0] {
-                    Frame label="Gruppe" {
-                        Slider item=gOutdoor_Terrace_Light_Hue_Color label="Alle Lampen [%d %%]"
-                        Colorpicker item=gOutdoor_Terrace_Light_Hue_Color label="Alle Lampen"
-                    }
-                    Frame label="Einzeln" {
-                        Slider item=pOutdoor_Terrace_Light_Hue_Left_Color label="Terasse Links [%d %%]"
-                        Colorpicker item=pOutdoor_Terrace_Light_Hue_Left_Color label="Terasse Links"
-                        Slider item=pOutdoor_Terrace_Light_Hue_Right_Color label="Terasse Rechts [%d %%]"
-                        Colorpicker item=pOutdoor_Terrace_Light_Hue_Right_Color label="Terasse Rechts"
-                    }
-                }
 				Group item=gOutdoor_Lights label="Aussen Lampen [MAP(group_light.map):%d]" {
                     Slider item=pOutdoor_Terrace_Light_Brightness label="Terasse"
+                    Slider item=gOutdoor_Terrace_Light_Hue_Color label="Terasse Indirekt"
+                    Text label="Terasse Indirekt anpassen" icon="selfcontrol" visibility=[gOutdoor_Terrace_Light_Hue_Color>0] {
+                        Frame label="Gruppe" {
+                            Slider item=gOutdoor_Terrace_Light_Hue_Color label="Alle Lampen [%d %%]"
+                            Colorpicker item=gOutdoor_Terrace_Light_Hue_Color label="Alle Lampen"
+                        }
+                        Frame label="Einzeln" {
+                            Slider item=pOutdoor_Terrace_Light_Hue_Left_Color label="Terasse Links [%d %%]"
+                            Colorpicker item=pOutdoor_Terrace_Light_Hue_Left_Color label="Terasse Links"
+                            Slider item=pOutdoor_Terrace_Light_Hue_Right_Color label="Terasse Rechts [%d %%]"
+                            Colorpicker item=pOutdoor_Terrace_Light_Hue_Right_Color label="Terasse Rechts"
+                        }
+                    }
                     Switch item=pOutdoor_Streedside_Frontdoor_Light_Powered label="Haustür"
                     Switch item=pOutdoor_Carport_Light_Powered label="Carport"
-                    Switch item=pOutdoor_Streedside_Garage_Light_Powered label="Schuppentür vorne"
-                    Switch item=pOutdoor_Garden_Garage_Light_Powered label="Schuppentür hinten"
+                    Switch item=pOutdoor_Streedside_Garage_Light_Powered label="Werkstatt vorne"
+                    Switch item=pOutdoor_Garden_Garage_Light_Powered label="Werkstatt hinten"
                     Switch item=pOutdoor_Toolshed_Right_Light_Powered label="Geräteschuppen"
 				}
 			}
@@ -158,6 +158,7 @@ sitemap haus label="Main Menu"
                     Switch item=pOutdoor_Streedside_Frontdoor_Light_Powered label="Haustür"
                     Switch item=pOutdoor_Carport_Light_Powered label="Carport"
                     Switch item=pOutdoor_Streedside_Garage_Light_Powered label="Werkstatt vorne"
+                    Switch item=pOutdoor_Garden_Garage_Light_Powered label="Werkstatt hinten"
                     Switch item=pOutdoor_Toolshed_Right_Light_Powered label="Geräteschuppen"
                 }
 				Group item=gOutdoor_Sockets label="Steckdosen [MAP(group_socket.map):%d]" {
@@ -539,6 +540,52 @@ sitemap haus label="Main Menu"
             }
             Frame label="Sonstiges"
             {
+                Group item=pOther_Plant_Sensor_State_Watering_Info label="Pflanzen [MAP(gardena_state.map):%s]" valuecolor=[=="3"="#cbcb00",=="4"="#d72a2a"]{
+                    Frame label="Daten" {
+                        Text item=pOutdoor_Plant_Sensor_Garden_Back_Msg label="Rasen hinten [%s]" valuecolor=[pOutdoor_Plant_Sensor_Garden_Back_State=="3"="#cbcb00",pOutdoor_Plant_Sensor_Garden_Back_State=="4"="#d72a2a"] {
+                            Frame label="Daten" {
+                                Text item=pOutdoor_Plant_Sensor_Garden_Back_Soil_Humidity
+                                Text item=pOutdoor_Plant_Sensor_Garden_Back_Soil_Temperature
+                            }
+                            Frame label="Device" {
+                                Switch item=pOutdoor_Plant_Sensor_Garden_Back_Switch
+                                Text item=pOutdoor_Plant_Sensor_Garden_Back_State
+                                Input item=pOutdoor_Plant_Sensor_Garden_Back_Min_Soil_Humidity inputHint="number"
+                                Input item=pOutdoor_Plant_Sensor_Garden_Back_Max_Soil_Humidity inputHint="number"
+                                Text item=pOutdoor_Plant_Sensor_Garden_Back_Last_Refresh
+                                Text item=pOutdoor_Plant_Sensor_Garden_Back_Batterie_Level
+                                Text item=pOutdoor_Plant_Sensor_Garden_Back_Batterie_State
+                                Text item=pOutdoor_Plant_Sensor_Garden_Back_Signal_Level
+                                Text item=pOutdoor_Plant_Sensor_Garden_Back_Signal_State
+                            }
+                        }
+                        Text item=pIndoor_Plant_Sensor_Mobile_Msg label="Dachboden [%s]" valuecolor=[pIndoor_Plant_Sensor_Mobile_State=="5"="#cbcb00",pIndoor_Plant_Sensor_Mobile_State=="4"="#d72a2a"] {
+                            Frame label="Daten" {
+                                Text item=pIndoor_Plant_Sensor_Mobile_Soil_Humidity
+                                Text item=pIndoor_Plant_Sensor_Mobile_Soil_Temperature
+                            }
+                            Frame label="Device" {
+                                Switch item=pIndoor_Plant_Sensor_Mobile_Switch
+                                Text item=pIndoor_Plant_Sensor_Mobile_State
+                                Input item=pIndoor_Plant_Sensor_Mobile_Min_Soil_Humidity inputHint="number"
+                                Input item=pIndoor_Plant_Sensor_Mobile_Max_Soil_Humidity inputHint="number"
+                                Text item=pIndoor_Plant_Sensor_Mobile_Last_Refresh
+                                Text item=pIndoor_Plant_Sensor_Mobile_Batterie_Level
+                                Text item=pIndoor_Plant_Sensor_Mobile_Batterie_State
+                                Text item=pIndoor_Plant_Sensor_Mobile_Signal_Level
+                                Text item=pIndoor_Plant_Sensor_Mobile_Signal_State
+                            }
+                        }
+                    }
+                    Frame label="Auswertung" {
+                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="/static/custom/grafana/pflanzen.html?fromItem=Chart_From" icon="none" height=18
+                    }
+                    Frame item=pOther_Plant_Sensor_State_Device_Info label="Batterien [%s]" {
+                        Text item=pOutdoor_Plant_Sensor_Garden_Back_Batterie_Level label="Garten hinten [%d %%]" valuecolor=[<30="#d72a2a"]
+                        Text item=pIndoor_Plant_Sensor_Mobile_Batterie_Level label="Dachboden [%d %%]" valuecolor=[<30="#d72a2a"]
+                    }
+                }
                 Group item=pOutdoor_WeatherStation_Air_Message label="Aktuelles Wetter [%s]" {
                     Frame label="Wetter" {
                         Group item=pOutdoor_WeatherStation_Air_Message {
@@ -647,27 +694,6 @@ sitemap haus label="Main Menu"
                         Text item=pOutdoor_WeatherStation_Update_Message visibility=[pOutdoor_WeatherStation_Is_Working==OFF] valuecolor=[!=""="#d72a2a"]
                     }
                 }
-                Group item=pIndoor_Plant_Sensor_Watering_Info label="Pflanzen [%s]" valuecolor=[=="Feucht genug"="#6bc305",=="Giessen"="#cbcb00",=="Jetzt Giessen"="#d72a2a"]{
-                    Frame label="Daten" {
-                        Text item=pIndoor_Plant_Sensor_Device_State1
-                        Text item=pIndoor_Plant_Sensor_Device_State2
-                        Text item=pIndoor_Plant_Sensor_Device_State3
-                        Text item=pIndoor_Plant_Sensor_Device_State4
-                        Text item=pIndoor_Plant_Sensor_Activation_Info label="Überwachen [%s]"{
-                            Switch item=pIndoor_Plant_Sensor_Device_Enabled1
-                            Switch item=pIndoor_Plant_Sensor_Device_Enabled2
-                            Switch item=pIndoor_Plant_Sensor_Device_Enabled3
-                            Switch item=pIndoor_Plant_Sensor_Device_Enabled4
-                            Switch item=pIndoor_Plant_Sensor_Device_Enabled5
-                            Switch item=pIndoor_Plant_Sensor_Device_Enabled6
-                        }
-                    }
-                    Frame label="Auswertung" {
-                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/custom/grafana/pflanzen.html?fromItem=Chart_From" icon="none" height=18
-                    }
-                }
-                Text item=pOther_State_Details_Sensors label="[%s]" visibility=[pOther_State_Message_Sensors!="Alles ok"]
             }
         }
 		Text label="Status [MAP(state_presence.map):%d]" icon="selfstate" item=pOther_Presence_State
