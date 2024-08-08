@@ -1,4 +1,4 @@
-from shared.helper import rule, itemLastUpdateOlderThen, getItemState, postUpdateIfChanged, NotificationHelper, getGroupMember
+from shared.helper import rule, itemLastUpdateOlderThen, getItemLastUpdate, getItemState, postUpdateIfChanged, NotificationHelper, getGroupMember
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
 from java.time import ZonedDateTime
 from custom.watering import WateringHelper
@@ -30,7 +30,7 @@ class StateMessageSensors:
         for sensorItem in getGroupMember("gRoom_CO2_Sensors"):
             if getItemState(sensorItem).intValue() > 2000:
                 states.append(u"CO2 Wert")
-                details.append(str(sensorItem))
+                details.append(sensorItem.getName())
                 priority = NotificationHelper.PRIORITY_ALERT
                 break
 
@@ -54,13 +54,15 @@ class StateMessageSensors:
 
         for sensorItem in getGroupMember("gRoom_CO2_Sensors"):
             if itemLastUpdateOlderThen(sensorItem, refDate):
+                self.log.info("CO2 Sensor: {}, lastUpdate: {}".format(sensorItem.getName(), getItemLastUpdate(sensorItem)))
                 #co2_error_states.append(u"CO2 Update")
-                co2_error_states.append(str(sensorItem))
+                co2_error_states.append(sensorItem.getName())
 
         for sensorItem in getGroupMember("gRoom_Temperatur_Sensors"):
             if itemLastUpdateOlderThen(sensorItem, refDate):
+                self.log.info("T/F Sensor: {}, lastUpdate: {}".format(sensorItem.getName(), getItemLastUpdate(sensorItem)))
                 #tf_error_states.append(u"T/F Sensor")
-                tf_error_states.append(str(sensorItem))
+                tf_error_states.append(sensorItem.getName())
 
             #self.log.info("SENSOR: {} {}".format(sensorItem.getName(),getItemLastUpdate(sensorItem)))
 

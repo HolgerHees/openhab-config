@@ -2,5 +2,9 @@ Bridge gardena:account:default "Bridge Gardena Smart System API" [ apiSecret="{{
 {
   Thing sensor sensor1 "Bodenfeuchte Sensor 1" [ deviceId="{{custom_husqvarna_sensor1_id}}" ]
   Thing sensor sensor2 "Bodenfeuchte Sensor 2" [ deviceId="{{custom_husqvarna_sensor2_id}}" ]
+  Thing sensor sensor3 "Bodenfeuchte Sensor 3" [ deviceId="{{custom_husqvarna_sensor3_id}}" ]
+  Thing sensor sensor4 "Bodenfeuchte Sensor 4" [ deviceId="{{custom_husqvarna_sensor4_id}}" ]
+  Thing sensor sensor5 "Bodenfeuchte Sensor 5" [ deviceId="{{custom_husqvarna_sensor5_id}}" ]
+  Thing sensor sensor6 "Bodenfeuchte Sensor 6" [ deviceId="{{custom_husqvarna_sensor6_id}}" ]
 }
 

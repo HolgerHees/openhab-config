@@ -25,6 +25,7 @@ class SensorPlantsState:
     def execute(self, module, input):
         self.check()
 
+
 @rule()
 class SensorPlantsBatteryDetail:
     def __init__(self):
@@ -36,9 +37,9 @@ class SensorPlantsBatteryDetail:
 
             #self.log.info(name)
 
-            triggers.append(ItemStateChangeTrigger( "p" + name + "_Batterie_Level"))
+            triggers.append(ItemStateChangeTrigger( "p" + name + "_Battery_Level"))
 
-            self.sensor_device_map["p" + name + "_Batterie_Level"] = name
+            self.sensor_device_map["p" + name + "_Battery_Level"] = name
 
         self.triggers = triggers
 
@@ -50,7 +51,7 @@ class SensorPlantsBatteryDetail:
             if not WateringHelper.isActive(_device_name):
                 continue
 
-            value = getItemState("p" + _device_name + "_Batterie_Level").intValue()
+            value = getItemState("p" + _device_name + "_Battery_Level").intValue()
             if value < minLevel:
                 minLevel = value
 
@@ -62,6 +63,7 @@ class SensorPlantsBatteryDetail:
     def execute(self, module, input):
         self.check()
 
+
 @rule()
 class SensorPlantsMessagesDetail:
     def __init__(self):
@@ -71,39 +73,46 @@ class SensorPlantsMessagesDetail:
         self.sensor_device_map = {}
         for item in getItem("eOther_Plant_Sensor_Devices").getMembers():
             name = item.getName()[1:]
-            for item_suffix in ["_Switch","_Soil_Temperature","_Soil_Humidity"]:
+            for item_suffix in ["_Switch","_Soil_Temperature","_Soil_Humidity", '_Tresholds']:
                 triggers.append(ItemStateChangeTrigger( "p" + name + item_suffix))
                 self.sensor_device_map["p" + name + item_suffix] = name
 
             self.sensor_devices.append(name)
 
+            self.check(name)
+
         self.triggers = triggers
 
+    # 50 => Leicht feucht
+    # 80 => Nass
+
     def getInfo(self, value):
-        if value < 10:
+        if value <= 35:
             return u"Trocken"
 
-        if value < 50:
+        if value <= 55:
             return u"Leicht Feucht"
 
-        if value < 80:
+        if value <= 80:
             return u"Feucht"
 
         return u"Nass"
 
-    def execute(self, module, input):
-        device_name = self.sensor_device_map[input["event"].getItemName()]
-
+    def check(self, device_name):
         if not WateringHelper.isActive(device_name):
             state_level = WateringHelper.STATE_WATERING_INACTIVE
             info_msg = WateringHelper.getStateInfo(state_level)
         else:
             humidity_value = WateringHelper.getHumidity(device_name)
             state_level = WateringHelper.getState(device_name, humidity_value)
-            state_msg = WateringHelper.getStateInfo(state_level)
+            if state_level is None:
+                state_level = WateringHelper.STATE_WATERING_INACTIVE
+                info_msg = "Fehlerhafte Schwellenwerte"
+            else:
+                state_msg = WateringHelper.getStateInfo(state_level)
 
-            temperatur_value = getItemState("p" + device_name  + "_Soil_Temperature").intValue()
-            info_msg = u"{}, {}, {}°C, {}%".format( self.getInfo(humidity_value), state_msg, temperatur_value, humidity_value)
+                temperatur_value = getItemState("p" + device_name  + "_Soil_Temperature").intValue()
+                info_msg = u"{}, {}, {}°C, {}%".format( self.getInfo(humidity_value), state_msg, temperatur_value, humidity_value)
 
         postUpdateIfChanged("p" + device_name  + "_State", state_level)
         postUpdateIfChanged("p" + device_name + "_Msg", info_msg )
@@ -118,3 +127,9 @@ class SensorPlantsMessagesDetail:
                 state_level = _state_level
 
         postUpdateIfChanged("pOther_Plant_Sensor_State_Watering_Info", state_level )
+
+    def execute(self, module, input):
+        device_name = self.sensor_device_map[input["event"].getItemName()]
+
+        self.check(device_name)
+

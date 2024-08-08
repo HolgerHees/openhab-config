@@ -19,11 +19,11 @@ class LightsIndoorAttic:
         
         if state == 2:
             if hour == 5:
-                sendCommand("pMobile_Socket_6_Powered", ON)
+                sendCommand("pMobile_Socket_7_Powered", ON)
             elif hour == 23:
-                sendCommand("pMobile_Socket_6_Powered", OFF)
+                sendCommand("pMobile_Socket_7_Powered", OFF)
         elif state == 3:
             if hour == 8:
-                sendCommand("pMobile_Socket_6_Powered", ON)
+                sendCommand("pMobile_Socket_7_Powered", ON)
             elif hour == 20:
-                sendCommand("pMobile_Socket_6_Powered", OFF)
+                sendCommand("pMobile_Socket_7_Powered", OFF)

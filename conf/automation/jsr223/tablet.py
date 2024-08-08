@@ -44,14 +44,17 @@ class TabletScreen:
     def initDeviceStateAndBrightness(self):
         try:
             response_json = HTTP.sendHttpGetRequest(livingroom_api + "&cmd=deviceInfo")
-            response = json.loads(response_json)
+            if response_json is not None:
+                response = json.loads(response_json)
+                self.screenStateRequested = self.screenStateActive = 'On' if response["screenOn"] else 'Off'
+                self.screenBrightnessRequested = self.screenBrightnessActive = response["screenBrightness"]
 
-            self.screenStateRequested = self.screenStateActive = 'On' if response["screenOn"] else 'Off'
-            self.screenBrightnessRequested = self.screenBrightnessActive = response["screenBrightness"]
-
-            isTriggered = self.processScreenState(self.getRequestedScreenState())
-            if not isTriggered and self.screenStateActive == 'On':
-                self.processScreenBrightness(self.getRequestedScreenBrightness())
+                isTriggered = self.processScreenState(self.getRequestedScreenState())
+                if not isTriggered and self.screenStateActive == 'On':
+                    self.processScreenBrightness(self.getRequestedScreenBrightness())
+            else:
+                self.log.error("Tablet: Got empty result. Retrigger in 15 seconds.")
+                startTimer(self.log, 15, self.initDeviceStateAndBrightness)
         except Exception as e:
             self.log.error("{}: {}".format(e.__class__, str(e)))
             self.log.error("Tablet: Can't reach tablet")

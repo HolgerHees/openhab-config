@@ -1,0 +1,94 @@
+Group eOther_Plant_Sensor_Devices "Bodensensoren" <selfinfo> (lOther) ["Sensor"]
+Group eOther_Sensor_State "Bodensensoren Status" <selfinfo> (lOther) ["Sensor"]
+Number pOther_Plant_Sensor_State_Watering_Info  "Planzen Status [MAP(gardena_state.map):%s]" <selfplant> (eOther_Sensor_State) ["Point"]
+String pOther_Plant_Sensor_State_Device_Info    "Sensor Status [%s]" <selfplant> (eOther_Sensor_State) ["Point"]
+
+// **** Sensor 1 ****
+Group eOutdoor_Plant_Sensor_Garden_Back "Bodensensor Rasen hinten" <selfinfo> (lOutdoorOther,eOther_Plant_Sensor_Devices) ["Sensor"]
+Switch pOutdoor_Plant_Sensor_Garden_Back_Switch         "Aktiv [%s]" <selfautomode> (eOutdoor_Plant_Sensor_Garden_Back)
+String pOutdoor_Plant_Sensor_Garden_Back_Msg            "Info [%s]" <selfplant> (eOutdoor_Plant_Sensor_Garden_Back) ["Point"]
+Number pOutdoor_Plant_Sensor_Garden_Back_State          "Status [MAP(gardena_state.map):%s]" <selfplant> (eOutdoor_Plant_Sensor_Garden_Back) ["Point"]
+String pOutdoor_Plant_Sensor_Garden_Back_Tresholds      "Schwellenwerte [%s]" <selfwater> (eOutdoor_Plant_Sensor_Garden_Back) ["Point"]
+
+Number pOutdoor_Plant_Sensor_Garden_Back_Battery_Level "Batterieladung [%d %%]" <selfbattery> (eOutdoor_Plant_Sensor_Garden_Back) ["Point"] { channel="gardena:sensor:default:sensor1:common#batteryLevel" }
+String pOutdoor_Plant_Sensor_Garden_Back_Battery_State "Batteriestatus [%s]" <selfbattery> (eOutdoor_Plant_Sensor_Garden_Back) ["Point"] { channel="gardena:sensor:default:sensor1:common#batteryState" }
+Number pOutdoor_Plant_Sensor_Garden_Back_Signal_Level "Signalstärke [MAP(gardena_signal.map):%s]" <selfnetwork> (eOutdoor_Plant_Sensor_Garden_Back) ["Point"] { channel="gardena:sensor:default:sensor1:common#rfLinkLevel" }
+String pOutdoor_Plant_Sensor_Garden_Back_Signal_State "Signalstatus [%s]" <selfnetwork> (eOutdoor_Plant_Sensor_Garden_Back) ["Point"] { channel="gardena:sensor:default:sensor1:common#rfLinkState" }
+DateTime pOutdoor_Plant_Sensor_Garden_Back_Last_Refresh "Letzte Aktualisierung [%1$tH:%1$tM %1$td.%1$tm.%1$tY]" <selfclock> (eOutdoor_Plant_Sensor_Garden_Back) ["Point"] { channel="gardena:sensor:default:sensor1:common#lastUpdate_timestamp" }
+Number pOutdoor_Plant_Sensor_Garden_Back_Soil_Humidity "Bodenfeuchtigkeit [%d %%]" <selfwater> (eOutdoor_Plant_Sensor_Garden_Back,gPersistance_Chart,gPersistance_History) ["Point"] { channel="gardena:sensor:default:sensor1:sensor#soilHumidity" }
+Number pOutdoor_Plant_Sensor_Garden_Back_Soil_Temperature "Bodentemperatur [%d °C]" <selftemperature> (eOutdoor_Plant_Sensor_Garden_Back,gPersistance_Chart,gPersistance_History) ["Point"] { channel="gardena:sensor:default:sensor1:sensor#soilTemperature" }
+
+// **** Sensor 2 ****
+Group eIndoor_Plant_Sensor_Mobile "Bodensensor Mobile" <selfinfo> (lOutdoorOther,eOther_Plant_Sensor_Devices) ["Sensor"]
+Switch pIndoor_Plant_Sensor_Mobile_Switch         "Aktiv [%s]" <selfautomode> (eIndoor_Plant_Sensor_Mobile)
+String pIndoor_Plant_Sensor_Mobile_Msg            "Info [%s]" <selfplant> (eIndoor_Plant_Sensor_Mobile) ["Point"]
+Number pIndoor_Plant_Sensor_Mobile_State          "Status [MAP(gardena_state.map):%s]" <selfplant> (eIndoor_Plant_Sensor_Mobile) ["Point"]
+String pIndoor_Plant_Sensor_Mobile_Tresholds      "Schwellenwerte [%s]" <selfwater> (eIndoor_Plant_Sensor_Mobile) ["Point"]
+
+Number pIndoor_Plant_Sensor_Mobile_Battery_Level "Batterieladung [%d %%]" <selfbattery> (eIndoor_Plant_Sensor_Mobile) ["Point"] { channel="gardena:sensor:default:sensor2:common#batteryLevel" }
+String pIndoor_Plant_Sensor_Mobile_Battery_State "Batteriestatus [%s]" <selfbattery> (eIndoor_Plant_Sensor_Mobile) ["Point"] { channel="gardena:sensor:default:sensor2:common#batteryState" }
+Number pIndoor_Plant_Sensor_Mobile_Signal_Level "Signalstärke [MAP(gardena_signal.map):%s]" <selfnetwork> (eIndoor_Plant_Sensor_Mobile) ["Point"] { channel="gardena:sensor:default:sensor2:common#rfLinkLevel" }
+String pIndoor_Plant_Sensor_Mobile_Signal_State "Signalstatus [%s]" <selfnetwork> (eIndoor_Plant_Sensor_Mobile) ["Point"] { channel="gardena:sensor:default:sensor2:common#rfLinkState" }
+DateTime pIndoor_Plant_Sensor_Mobile_Last_Refresh "Letzte Aktualisierung [%1$tH:%1$tM %1$td.%1$tm.%1$tY]" <selfclock> (eIndoor_Plant_Sensor_Mobile) ["Point"] { channel="gardena:sensor:default:sensor2:common#lastUpdate_timestamp" }
+Number pIndoor_Plant_Sensor_Mobile_Soil_Humidity  "Bodenfeuchtigkeit [%d %%]" <selfwater> (eIndoor_Plant_Sensor_Mobile,gPersistance_Chart,gPersistance_History) ["Point"] { channel="gardena:sensor:default:sensor2:sensor#soilHumidity" }
+Number pIndoor_Plant_Sensor_Mobile_Soil_Temperature "Bodentemperatur [%d °C]" <selftemperature> (eIndoor_Plant_Sensor_Mobile,gPersistance_Chart,gPersistance_History) ["Point"] { channel="gardena:sensor:default:sensor2:sensor#soilTemperature" }
+
+// **** Sensor 3 ****
+Group eOutdoor_Plant_Sensor_Tomatos "Bodensensor Tomaten" <selfinfo> (lOutdoorOther,eOther_Plant_Sensor_Devices) ["Sensor"]
+Switch pOutdoor_Plant_Sensor_Tomatos_Switch         "Aktiv [%s]" <selfautomode> (eOutdoor_Plant_Sensor_Tomatos)
+String pOutdoor_Plant_Sensor_Tomatos_Msg            "Info [%s]" <selfplant> (eOutdoor_Plant_Sensor_Tomatos) ["Point"]
+Number pOutdoor_Plant_Sensor_Tomatos_State          "Status [MAP(gardena_state.map):%s]" <selfplant> (eOutdoor_Plant_Sensor_Tomatos) ["Point"]
+String pOutdoor_Plant_Sensor_Tomatos_Tresholds      "Schwellenwerte [%s]" <selfwater> (eOutdoor_Plant_Sensor_Tomatos) ["Point"]
+
+Number pOutdoor_Plant_Sensor_Tomatos_Battery_Level "Batterieladung [%d %%]" <selfbattery> (eOutdoor_Plant_Sensor_Tomatos) ["Point"] { channel="gardena:sensor:default:sensor3:common#batteryLevel" }
+String pOutdoor_Plant_Sensor_Tomatos_Battery_State "Batteriestatus [%s]" <selfbattery> (eOutdoor_Plant_Sensor_Tomatos) ["Point"] { channel="gardena:sensor:default:sensor3:common#batteryState" }
+Number pOutdoor_Plant_Sensor_Tomatos_Signal_Level "Signalstärke [MAP(gardena_signal.map):%s]" <selfnetwork> (eOutdoor_Plant_Sensor_Tomatos) ["Point"] { channel="gardena:sensor:default:sensor3:common#rfLinkLevel" }
+String pOutdoor_Plant_Sensor_Tomatos_Signal_State "Signalstatus [%s]" <selfnetwork> (eOutdoor_Plant_Sensor_Tomatos) ["Point"] { channel="gardena:sensor:default:sensor3:common#rfLinkState" }
+DateTime pOutdoor_Plant_Sensor_Tomatos_Last_Refresh "Letzte Aktualisierung [%1$tH:%1$tM %1$td.%1$tm.%1$tY]" <selfclock> (eOutdoor_Plant_Sensor_Tomatos) ["Point"] { channel="gardena:sensor:default:sensor3:common#lastUpdate_timestamp" }
+Number pOutdoor_Plant_Sensor_Tomatos_Soil_Humidity  "Bodenfeuchtigkeit [%d %%]" <selfwater> (eOutdoor_Plant_Sensor_Tomatos,gPersistance_Chart,gPersistance_History) ["Point"] { channel="gardena:sensor:default:sensor3:sensor#soilHumidity" }
+Number pOutdoor_Plant_Sensor_Tomatos_Soil_Temperature "Bodentemperatur [%d °C]" <selftemperature> (eOutdoor_Plant_Sensor_Tomatos,gPersistance_Chart,gPersistance_History) ["Point"] { channel="gardena:sensor:default:sensor3:sensor#soilTemperature" }
+
+// **** Sensor 4 ****
+Group eOutdoor_Plant_Sensor_Blackberries "Bodensensor Brombeeren" <selfinfo> (lOutdoorOther,eOther_Plant_Sensor_Devices) ["Sensor"]
+Switch pOutdoor_Plant_Sensor_Blackberries_Switch         "Aktiv [%s]" <selfautomode> (eOutdoor_Plant_Sensor_Blackberries)
+String pOutdoor_Plant_Sensor_Blackberries_Msg            "Info [%s]" <selfplant> (eOutdoor_Plant_Sensor_Blackberries) ["Point"]
+Number pOutdoor_Plant_Sensor_Blackberries_State          "Status [MAP(gardena_state.map):%s]" <selfplant> (eOutdoor_Plant_Sensor_Blackberries) ["Point"]
+String pOutdoor_Plant_Sensor_Blackberries_Tresholds      "Schwellenwerte [%s]" <selfwater> (eOutdoor_Plant_Sensor_Blackberries) ["Point"]
+
+Number pOutdoor_Plant_Sensor_Blackberries_Battery_Level "Batterieladung [%d %%]" <selfbattery> (eOutdoor_Plant_Sensor_Blackberries) ["Point"] { channel="gardena:sensor:default:sensor4:common#batteryLevel" }
+String pOutdoor_Plant_Sensor_Blackberries_Battery_State "Batteriestatus [%s]" <selfbattery> (eOutdoor_Plant_Sensor_Blackberries) ["Point"] { channel="gardena:sensor:default:sensor4:common#batteryState" }
+Number pOutdoor_Plant_Sensor_Blackberries_Signal_Level "Signalstärke [MAP(gardena_signal.map):%s]" <selfnetwork> (eOutdoor_Plant_Sensor_Blackberries) ["Point"] { channel="gardena:sensor:default:sensor4:common#rfLinkLevel" }
+String pOutdoor_Plant_Sensor_Blackberries_Signal_State "Signalstatus [%s]" <selfnetwork> (eOutdoor_Plant_Sensor_Blackberries) ["Point"] { channel="gardena:sensor:default:sensor4:common#rfLinkState" }
+DateTime pOutdoor_Plant_Sensor_Blackberries_Last_Refresh "Letzte Aktualisierung [%1$tH:%1$tM %1$td.%1$tm.%1$tY]" <selfclock> (eOutdoor_Plant_Sensor_Blackberries) ["Point"] { channel="gardena:sensor:default:sensor4:common#lastUpdate_timestamp" }
+Number pOutdoor_Plant_Sensor_Blackberries_Soil_Humidity  "Bodenfeuchtigkeit [%d %%]" <selfwater> (eOutdoor_Plant_Sensor_Blackberries,gPersistance_Chart,gPersistance_History) ["Point"] { channel="gardena:sensor:default:sensor4:sensor#soilHumidity" }
+Number pOutdoor_Plant_Sensor_Blackberries_Soil_Temperature "Bodentemperatur [%d °C]" <selftemperature> (eOutdoor_Plant_Sensor_Blackberries,gPersistance_Chart,gPersistance_History) ["Point"] { channel="gardena:sensor:default:sensor4:sensor#soilTemperature" }
+
+// **** Sensor 5 ****
+Group eOutdoor_Plant_Sensor_Terrace                      "Bodensensor Terasse" <selfinfo> (lOutdoorOther,eOther_Plant_Sensor_Devices) ["Sensor"]
+Switch pOutdoor_Plant_Sensor_Terrace_Switch         "Aktiv [%s]" <selfautomode> (eOutdoor_Plant_Sensor_Terrace)
+String pOutdoor_Plant_Sensor_Terrace_Msg            "Info [%s]" <selfplant> (eOutdoor_Plant_Sensor_Terrace) ["Point"]
+Number pOutdoor_Plant_Sensor_Terrace_State          "Status [MAP(gardena_state.map):%s]" <selfplant> (eOutdoor_Plant_Sensor_Terrace) ["Point"]
+String pOutdoor_Plant_Sensor_Terrace_Tresholds      "Schwellenwerte [%s]" <selfwater> (eOutdoor_Plant_Sensor_Terrace) ["Point"]
+
+Number pOutdoor_Plant_Sensor_Terrace_Battery_Level "Batterieladung [%d %%]" <selfbattery> (eOutdoor_Plant_Sensor_Terrace) ["Point"] { channel="gardena:sensor:default:sensor5:common#batteryLevel" }
+String pOutdoor_Plant_Sensor_Terrace_Battery_State "Batteriestatus [%s]" <selfbattery> (eOutdoor_Plant_Sensor_Terrace) ["Point"] { channel="gardena:sensor:default:sensor5:common#batteryState" }
+Number pOutdoor_Plant_Sensor_Terrace_Signal_Level "Signalstärke [MAP(gardena_signal.map):%s]" <selfnetwork> (eOutdoor_Plant_Sensor_Terrace) ["Point"] { channel="gardena:sensor:default:sensor5:common#rfLinkLevel" }
+String pOutdoor_Plant_Sensor_Terrace_Signal_State "Signalstatus [%s]" <selfnetwork> (eOutdoor_Plant_Sensor_Terrace) ["Point"] { channel="gardena:sensor:default:sensor5:common#rfLinkState" }
+DateTime pOutdoor_Plant_Sensor_Terrace_Last_Refresh "Letzte Aktualisierung [%1$tH:%1$tM %1$td.%1$tm.%1$tY]" <selfclock> (eOutdoor_Plant_Sensor_Terrace) ["Point"] { channel="gardena:sensor:default:sensor5:common#lastUpdate_timestamp" }
+Number pOutdoor_Plant_Sensor_Terrace_Soil_Humidity  "Bodenfeuchtigkeit [%d %%]" <selfwater> (eOutdoor_Plant_Sensor_Terrace,gPersistance_Chart,gPersistance_History) ["Point"] { channel="gardena:sensor:default:sensor5:sensor#soilHumidity" }
+Number pOutdoor_Plant_Sensor_Terrace_Soil_Temperature "Bodentemperatur [%d °C]" <selftemperature> (eOutdoor_Plant_Sensor_Terrace,gPersistance_Chart,gPersistance_History) ["Point"] { channel="gardena:sensor:default:sensor5:sensor#soilTemperature" }
+
+// **** Sensor 6 ****
+Group eOutdoor_Plant_Sensor_Hedge_Street                      "Bodensensor Hecke Strasse" <selfinfo> (lOutdoorOther,eOther_Plant_Sensor_Devices) ["Sensor"]
+Switch pOutdoor_Plant_Sensor_Hedge_Street_Switch         "Aktiv [%s]" <selfautomode> (eOutdoor_Plant_Sensor_Hedge_Street)
+String pOutdoor_Plant_Sensor_Hedge_Street_Msg            "Info [%s]" <selfplant> (eOutdoor_Plant_Sensor_Hedge_Street) ["Point"]
+Number pOutdoor_Plant_Sensor_Hedge_Street_State          "Status [MAP(gardena_state.map):%s]" <selfplant> (eOutdoor_Plant_Sensor_Hedge_Street) ["Point"]
+String pOutdoor_Plant_Sensor_Hedge_Street_Tresholds      "Schwellenwerte [%s]" <selfwater> (eOutdoor_Plant_Sensor_Hedge_Street) ["Point"]
+
+Number pOutdoor_Plant_Sensor_Hedge_Street_Battery_Level "Batterieladung [%d %%]" <selfbattery> (eOutdoor_Plant_Sensor_Hedge_Street) ["Point"] { channel="gardena:sensor:default:sensor6:common#batteryLevel" }
+String pOutdoor_Plant_Sensor_Hedge_Street_Battery_State "Batteriestatus [%s]" <selfbattery> (eOutdoor_Plant_Sensor_Hedge_Street) ["Point"] { channel="gardena:sensor:default:sensor6:common#batteryState" }
+Number pOutdoor_Plant_Sensor_Hedge_Street_Signal_Level "Signalstärke [MAP(gardena_signal.map):%s]" <selfnetwork> (eOutdoor_Plant_Sensor_Hedge_Street) ["Point"] { channel="gardena:sensor:default:sensor6:common#rfLinkLevel" }
+String pOutdoor_Plant_Sensor_Hedge_Street_Signal_State "Signalstatus [%s]" <selfnetwork> (eOutdoor_Plant_Sensor_Hedge_Street) ["Point"] { channel="gardena:sensor:default:sensor6:common#rfLinkState" }
+DateTime pOutdoor_Plant_Sensor_Hedge_Street_Last_Refresh "Letzte Aktualisierung [%1$tH:%1$tM %1$td.%1$tm.%1$tY]" <selfclock> (eOutdoor_Plant_Sensor_Hedge_Street) ["Point"] { channel="gardena:sensor:default:sensor6:common#lastUpdate_timestamp" }
+Number pOutdoor_Plant_Sensor_Hedge_Street_Soil_Humidity  "Bodenfeuchtigkeit [%d %%]" <selfwater> (eOutdoor_Plant_Sensor_Hedge_Street,gPersistance_Chart,gPersistance_History) ["Point"] { channel="gardena:sensor:default:sensor6:sensor#soilHumidity" }
+Number pOutdoor_Plant_Sensor_Hedge_Street_Soil_Temperature "Bodentemperatur [%d °C]" <selftemperature> (eOutdoor_Plant_Sensor_Hedge_Street,gPersistance_Chart,gPersistance_History) ["Point"] { channel="gardena:sensor:default:sensor6:sensor#soilTemperature" }

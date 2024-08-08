@@ -500,13 +500,14 @@ class ValuesConsumptionSocketConsumption:
         self.triggers = [
             ItemStateChangeTrigger("pMobile_Socket_5_Total_Raw"),
             ItemStateChangeTrigger("pMobile_Socket_6_Total_Raw"),
-            ItemStateChangeTrigger("pMobile_Socket_7_Total_Raw")
+            ItemStateChangeTrigger("pMobile_Socket_7_Total_Raw"),
+            ItemStateChangeTrigger("pMobile_Socket_8_Total_Raw")
         ]
 
         now = ZonedDateTime.now()
 
-        #postUpdate("pMobile_Socket_5_Total_Consumption",0)
-        #postUpdate("pMobile_Socket_6_Total_Consumption",0)
+        #postUpdate("pMobile_Socket_7_Total_Consumption",0)
+        #postUpdate("pMobile_Socket_8_Total_Consumption",0)
 
         #test = getItemState("pMobile_Socket_5_Total_Consumption").doubleValue()
         #self.log.info(str(test))

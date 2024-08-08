@@ -1,6 +1,6 @@
 from java.time import ZonedDateTime
 
-from shared.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen, itemStateNewerThen, getThing, startTimer
+from shared.helper import rule, getItemState, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen, itemStateNewerThen, getThing, startTimer, getItemLastUpdate
 from shared.actions import Transformation
 from shared.triggers import CronTrigger, ItemStateChangeTrigger, ThingStatusChangeTrigger
  
@@ -45,7 +45,7 @@ class RoboterRobonectAction:
 
         if itemLastUpdateOlderThen("pOutdoor_Mower_WlanSignal", ZonedDateTime.now().minusMinutes(60)):
             if moverStatus != "98":
-                postUpdate("pOutdoor_Mower_Status", 98)
+                #postUpdate("pOutdoor_Mower_Status", 98)
                 postUpdate("pOutdoor_Mower_StatusFormatted", Transformation.transform("MAP", "robonect_status.map", "98"))
         else:
             seconds = getItemState("pOutdoor_Mower_Duration").intValue()

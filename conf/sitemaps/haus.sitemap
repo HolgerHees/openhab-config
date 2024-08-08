@@ -393,7 +393,7 @@ sitemap haus label="Main Menu"
                     Switch item=pOutdoor_Streeside_Socket_Powered
                 }
                 Switch item=pOther_Manual_State_Auto_Attic_Light label="Dachboden (d)" mappings=[1="OFF", 2="W", 3="B"]
-                Switch item=pFF_Attic_Socket_Powered label="Dachboden (Steckdose)" visibility=[pOther_Manual_State_Auto_Attic_Light!=1]
+                Switch item=pMobile_Socket_7_Powered label="Dachboden (Steckdose)" visibility=[pOther_Manual_State_Auto_Attic_Light!=1]
 			}
         }
 		Group label="Sicherheit [%s]" icon="selfsecurity" item=pOther_State_Message_Security valuecolor=[=="Alles geschlossen"="#6bc305",!="Alles geschlossen"="#d72a2a"]
@@ -475,7 +475,7 @@ sitemap haus label="Main Menu"
                 }
             }
         }
-        Group item=pOther_State_Message_Sensors icon="selfsensor" label="Sensoren [%s]" valuecolor=[=="Alles ok"="#6bc305",=="Giessen"="#cbcb00",!="Alles ok"="#d72a2a"]{
+        Group item=pOther_State_Message_Sensors icon="selfsensor" label="Sensoren [%s]" valuecolor=[pOther_State_Message_Sensors=="Alles ok"="#6bc305",=="Giessen" AND pOther_Plant_Sensor_State_Watering_Info=="3"="#cbcb00",!="Alles ok"="#d72a2a"]{
             Frame label="Haus"
             {
                 Group item=pGF_Livingroom_Air_Sensor_Message label="EG [%s]"{
@@ -541,7 +541,7 @@ sitemap haus label="Main Menu"
             Frame label="Sonstiges"
             {
                 Group item=pOther_Plant_Sensor_State_Watering_Info label="Pflanzen [MAP(gardena_state.map):%s]" valuecolor=[=="3"="#cbcb00",=="4"="#d72a2a"]{
-                    Frame label="Daten" {
+                    Frame label="Flächen" {
                         Text item=pOutdoor_Plant_Sensor_Garden_Back_Msg label="Rasen hinten [%s]" valuecolor=[pOutdoor_Plant_Sensor_Garden_Back_State=="3"="#cbcb00",pOutdoor_Plant_Sensor_Garden_Back_State=="4"="#d72a2a"] {
                             Frame label="Daten" {
                                 Text item=pOutdoor_Plant_Sensor_Garden_Back_Soil_Humidity
@@ -550,16 +550,49 @@ sitemap haus label="Main Menu"
                             Frame label="Device" {
                                 Switch item=pOutdoor_Plant_Sensor_Garden_Back_Switch
                                 Text item=pOutdoor_Plant_Sensor_Garden_Back_State
-                                Input item=pOutdoor_Plant_Sensor_Garden_Back_Min_Soil_Humidity inputHint="number"
-                                Input item=pOutdoor_Plant_Sensor_Garden_Back_Max_Soil_Humidity inputHint="number"
+                                Input item=pOutdoor_Plant_Sensor_Garden_Back_Tresholds inputHint="text"
                                 Text item=pOutdoor_Plant_Sensor_Garden_Back_Last_Refresh
-                                Text item=pOutdoor_Plant_Sensor_Garden_Back_Batterie_Level
-                                Text item=pOutdoor_Plant_Sensor_Garden_Back_Batterie_State
+                                Text item=pOutdoor_Plant_Sensor_Garden_Back_Battery_Level
+                                Text item=pOutdoor_Plant_Sensor_Garden_Back_Battery_State
                                 Text item=pOutdoor_Plant_Sensor_Garden_Back_Signal_Level
                                 Text item=pOutdoor_Plant_Sensor_Garden_Back_Signal_State
                             }
                         }
-                        Text item=pIndoor_Plant_Sensor_Mobile_Msg label="Dachboden [%s]" valuecolor=[pIndoor_Plant_Sensor_Mobile_State=="5"="#cbcb00",pIndoor_Plant_Sensor_Mobile_State=="4"="#d72a2a"] {
+                        Text item=pOutdoor_Plant_Sensor_Terrace_Msg label="Terasse [%s]" valuecolor=[pOutdoor_Plant_Sensor_Terrace_State=="3"="#cbcb00",pOutdoor_Plant_Sensor_Terrace_State=="4"="#d72a2a"] {
+                            Frame label="Daten" {
+                                Text item=pOutdoor_Plant_Sensor_Terrace_Soil_Humidity
+                                Text item=pOutdoor_Plant_Sensor_Terrace_Soil_Temperature
+                            }
+                            Frame label="Device" {
+                                Switch item=pOutdoor_Plant_Sensor_Terrace_Switch
+                                Text item=pOutdoor_Plant_Sensor_Terrace_State
+                                Input item=pOutdoor_Plant_Sensor_Terrace_Tresholds inputHint="text"
+                                Text item=pOutdoor_Plant_Sensor_Terrace_Last_Refresh
+                                Text item=pOutdoor_Plant_Sensor_Terrace_Battery_Level
+                                Text item=pOutdoor_Plant_Sensor_Terrace_Battery_State
+                                Text item=pOutdoor_Plant_Sensor_Terrace_Signal_Level
+                                Text item=pOutdoor_Plant_Sensor_Terrace_Signal_State
+                            }
+                        }
+                        Text item=pOutdoor_Plant_Sensor_Hedge_Street_Msg label="Hecke Strasse [%s]" valuecolor=[pOutdoor_Plant_Sensor_Hedge_Street_State=="3"="#cbcb00",pOutdoor_Plant_Sensor_Hedge_Street_State=="4"="#d72a2a"] {
+                            Frame label="Daten" {
+                                Text item=pOutdoor_Plant_Sensor_Hedge_Street_Soil_Humidity
+                                Text item=pOutdoor_Plant_Sensor_Hedge_Street_Soil_Temperature
+                            }
+                            Frame label="Device" {
+                                Switch item=pOutdoor_Plant_Sensor_Hedge_Street_Switch
+                                Text item=pOutdoor_Plant_Sensor_Hedge_Street_State
+                                Input item=pOutdoor_Plant_Sensor_Hedge_Street_Tresholds inputHint="text"
+                                Text item=pOutdoor_Plant_Sensor_Hedge_Street_Last_Refresh
+                                Text item=pOutdoor_Plant_Sensor_Hedge_Street_Battery_Level
+                                Text item=pOutdoor_Plant_Sensor_Hedge_Street_Battery_State
+                                Text item=pOutdoor_Plant_Sensor_Hedge_Street_Signal_Level
+                                Text item=pOutdoor_Plant_Sensor_Hedge_Street_Signal_State
+                            }
+                        }
+                    }
+                    Frame label="Pflanzen" {
+                        Text item=pIndoor_Plant_Sensor_Mobile_Msg label="Dachboden [%s]" valuecolor=[pIndoor_Plant_Sensor_Mobile_State=="3"="#cbcb00",pIndoor_Plant_Sensor_Mobile_State=="4"="#d72a2a"] {
                             Frame label="Daten" {
                                 Text item=pIndoor_Plant_Sensor_Mobile_Soil_Humidity
                                 Text item=pIndoor_Plant_Sensor_Mobile_Soil_Temperature
@@ -567,23 +600,58 @@ sitemap haus label="Main Menu"
                             Frame label="Device" {
                                 Switch item=pIndoor_Plant_Sensor_Mobile_Switch
                                 Text item=pIndoor_Plant_Sensor_Mobile_State
-                                Input item=pIndoor_Plant_Sensor_Mobile_Min_Soil_Humidity inputHint="number"
-                                Input item=pIndoor_Plant_Sensor_Mobile_Max_Soil_Humidity inputHint="number"
+                                Input item=pIndoor_Plant_Sensor_Mobile_Tresholds inputHint="text"
                                 Text item=pIndoor_Plant_Sensor_Mobile_Last_Refresh
-                                Text item=pIndoor_Plant_Sensor_Mobile_Batterie_Level
-                                Text item=pIndoor_Plant_Sensor_Mobile_Batterie_State
+                                Text item=pIndoor_Plant_Sensor_Mobile_Battery_Level
+                                Text item=pIndoor_Plant_Sensor_Mobile_Battery_State
                                 Text item=pIndoor_Plant_Sensor_Mobile_Signal_Level
                                 Text item=pIndoor_Plant_Sensor_Mobile_Signal_State
+                            }
+                        }
+                        Text item=pOutdoor_Plant_Sensor_Tomatos_Msg label="Tomaten [%s]" valuecolor=[pOutdoor_Plant_Sensor_Tomatos_State=="3"="#cbcb00",pOutdoor_Plant_Sensor_Tomatos_State=="4"="#d72a2a"] {
+                            Frame label="Daten" {
+                                Text item=pOutdoor_Plant_Sensor_Tomatos_Soil_Humidity
+                                Text item=pOutdoor_Plant_Sensor_Tomatos_Soil_Temperature
+                            }
+                            Frame label="Device" {
+                                Switch item=pOutdoor_Plant_Sensor_Tomatos_Switch
+                                Text item=pOutdoor_Plant_Sensor_Tomatos_State
+                                Input item=pOutdoor_Plant_Sensor_Tomatos_Tresholds inputHint="text"
+                                Text item=pOutdoor_Plant_Sensor_Tomatos_Last_Refresh
+                                Text item=pOutdoor_Plant_Sensor_Tomatos_Battery_Level
+                                Text item=pOutdoor_Plant_Sensor_Tomatos_Battery_State
+                                Text item=pOutdoor_Plant_Sensor_Tomatos_Signal_Level
+                                Text item=pOutdoor_Plant_Sensor_Tomatos_Signal_State
+                            }
+                        }
+                        Text item=pOutdoor_Plant_Sensor_Blackberries_Msg label="Brombeeren [%s]" valuecolor=[pOutdoor_Plant_Sensor_Blackberries_State=="3"="#cbcb00",pOutdoor_Plant_Sensor_Blackberries_State=="4"="#d72a2a"] {
+                            Frame label="Daten" {
+                                Text item=pOutdoor_Plant_Sensor_Blackberries_Soil_Humidity
+                                Text item=pOutdoor_Plant_Sensor_Blackberries_Soil_Temperature
+                            }
+                            Frame label="Device" {
+                                Switch item=pOutdoor_Plant_Sensor_Blackberries_Switch
+                                Text item=pOutdoor_Plant_Sensor_Blackberries_State
+                                Input item=pOutdoor_Plant_Sensor_Blackberries_Tresholds inputHint="text"
+                                Text item=pOutdoor_Plant_Sensor_Blackberries_Last_Refresh
+                                Text item=pOutdoor_Plant_Sensor_Blackberries_Battery_Level
+                                Text item=pOutdoor_Plant_Sensor_Blackberries_Battery_State
+                                Text item=pOutdoor_Plant_Sensor_Blackberries_Signal_Level
+                                Text item=pOutdoor_Plant_Sensor_Blackberries_Signal_State
                             }
                         }
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/custom/grafana/pflanzen.html?fromItem=Chart_From" icon="none" height=18
+                        Webview url="/static/custom/grafana/pflanzen.html?fromItem=Chart_From" icon="none" height=27
                     }
                     Frame item=pOther_Plant_Sensor_State_Device_Info label="Batterien [%s]" {
-                        Text item=pOutdoor_Plant_Sensor_Garden_Back_Batterie_Level label="Garten hinten [%d %%]" valuecolor=[<30="#d72a2a"]
-                        Text item=pIndoor_Plant_Sensor_Mobile_Batterie_Level label="Dachboden [%d %%]" valuecolor=[<30="#d72a2a"]
+                        Text item=pOutdoor_Plant_Sensor_Garden_Back_Battery_Level label="Rasen hinten [%d %%]" valuecolor=[<30="#d72a2a"]
+                        Text item=pIndoor_Plant_Sensor_Mobile_Battery_Level label="Dachboden [%d %%]" valuecolor=[<30="#d72a2a"]
+                        Text item=pOutdoor_Plant_Sensor_Tomatos_Battery_Level label="Tomaten [%d %%]" valuecolor=[<30="#d72a2a"]
+                        Text item=pOutdoor_Plant_Sensor_Blackberries_Battery_Level label="Brombeeren [%d %%]" valuecolor=[<30="#d72a2a"]
+                        Text item=pOutdoor_Plant_Sensor_Terrace_Battery_Level label="Terasse [%d %%]" valuecolor=[<30="#d72a2a"]
+                        Text item=pOutdoor_Plant_Sensor_Hedge_Street_Battery_Level label="Hecke Strasse [%d %%]" valuecolor=[<30="#d72a2a"]
                     }
                 }
                 Group item=pOutdoor_WeatherStation_Air_Message label="Aktuelles Wetter [%s]" {
@@ -1007,6 +1075,30 @@ sitemap haus label="Main Menu"
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                                 Webview url="/static/custom/grafana/mobile_socket_6_consumption.html?fromItem=Chart_From" icon="none" height=9
+                            }
+                        }
+                        Switch item=pMobile_Socket_7_Powered label="Dachboden"
+                        Group item=pMobile_Socket_7_Consumption label="Dachboden (Verbrauch)" {
+                            Frame label="Status" {
+                                Text item=pMobile_Socket_7_Consumption label="Verbrauch"
+                                Text item=pMobile_Socket_7_Total_Consumption label="Gesamt"
+                                Text item=pMobile_Socket_7_Daily_Consumption label="Heute"
+                            }
+                            Frame label="Auswertung" {
+                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/custom/grafana/mobile_socket_7_consumption.html?fromItem=Chart_From" icon="none" height=9
+                            }
+                        }
+                        Switch item=pMobile_Socket_8_Powered label="Wetterstation"
+                        Group item=pMobile_Socket_8_Consumption label="Wetterstation (Verbrauch)" {
+                            Frame label="Status" {
+                                Text item=pMobile_Socket_8_Consumption label="Verbrauch"
+                                Text item=pMobile_Socket_8_Total_Consumption label="Gesamt"
+                                Text item=pMobile_Socket_8_Daily_Consumption label="Heute"
+                            }
+                            Frame label="Auswertung" {
+                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/custom/grafana/mobile_socket_8_consumption.html?fromItem=Chart_From" icon="none" height=9
                             }
                         }
                     }

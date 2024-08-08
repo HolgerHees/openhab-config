@@ -3,7 +3,7 @@ import json
 from java.time import ZonedDateTime
 from java.time.temporal import ChronoUnit
 
-from shared.helper import rule, getItemState, getItemStateWithFallback, getStableItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged, getItemLastUpdate, getItem, startTimer, itemLastChangeOlderThen
+from shared.helper import rule, getItemState, getItemStateWithFallback, getStableItemState, getHistoricItemState, getMaxItemState, postUpdate, postUpdateIfChanged, sendCommandIfChanged, getItemLastUpdate, getItem, startTimer, itemLastChangeOlderThen, NotificationHelper
 from shared.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
 
 
@@ -133,22 +133,27 @@ class SensorWeatherstationMessagesLastUpdate:
         self.triggers = [
             CronTrigger("0 * * * * ?")
         ]
-        self.notified = False
+        self.fallbackTimer = None
+        #self.notified = False
         #solar3 = getAvgStackValue(self,"pOutdoor_WeatherStation_Solar_Power_Stack","pOutdoor_WeatherStation_Solar_Power_Raw")
 
     def execute(self, module, input):
         now = ZonedDateTime.now()
         
         newestUpdate = None
-        oldestUpdate = now
+        oldestUpdate = None
         items = getItem("gWeatherstationInputValues").getAllMembers()
         states = {}
         
         for item in items:
             _update = getItemLastUpdate(item)
-            if newestUpdate == None or _update.isAfter(newestUpdate):
+            if _update.year == 1970:
+                continue
+
+            if newestUpdate is None or _update.isAfter(newestUpdate):
                 newestUpdate = _update
-            if _update.isBefore(oldestUpdate):
+
+            if oldestUpdate is None or _update.isBefore(oldestUpdate):
                 oldestUpdate = _update
                 #self.log.info("{} {}".format(item.getName(),getItemLastUpdate(item)))
                 
@@ -166,6 +171,10 @@ class SensorWeatherstationMessagesLastUpdate:
         #    newestUpdate = _update
         #if _update.isBefore(oldestUpdate):
         #    oldestUpdate = _update
+
+        if newestUpdate is None or oldestUpdate is None:
+            self.log.error("Update time calculation has a problem")
+            return
                 
         newestUpdateInMinutes = ChronoUnit.MINUTES.between(newestUpdate,now)
         newestUpdateInMinutesMsg = u"{:.0f}".format(newestUpdateInMinutes) if newestUpdateInMinutes >= 1 else u"<1"
@@ -197,7 +206,19 @@ class SensorWeatherstationMessagesLastUpdate:
         #elif self.notified:
         #    self.log.error("Weatherstation is working")
         #    self.notified = False
-        
+
+        if oldestUpdateInMinutes > 30:
+            if self.fallbackTimer is None:
+                sendCommandIfChanged("pMobile_Socket_8_Powered", OFF)
+                NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_NOTICE, u"Weatherstation", u"Fallback switched off")
+                self.fallbackTimer = startTimer(self.log, 30, self.fallbackReactivation)
+        else:
+            self.fallbackTimer = None
+
+    def fallbackReactivation(self):
+        sendCommandIfChanged("pMobile_Socket_8_Powered", ON)
+        NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_NOTICE, u"Weatherstation", u"Fallback switched on")
+
 #@rule()
 #class WeatherstationBattery:
 #    def __init__(self):
