@@ -542,20 +542,36 @@ sitemap haus label="Main Menu"
             {
                 Group item=pOther_Plant_Sensor_State_Watering_Info label="Pflanzen [MAP(gardena_state.map):%s]" valuecolor=[=="3"="#cbcb00",=="4"="#d72a2a"]{
                     Frame label="Flächen" {
-                        Text item=pOutdoor_Plant_Sensor_Garden_Back_Msg label="Rasen hinten [%s]" valuecolor=[pOutdoor_Plant_Sensor_Garden_Back_State=="3"="#cbcb00",pOutdoor_Plant_Sensor_Garden_Back_State=="4"="#d72a2a"] {
+                        Text item=pOutdoor_Plant_Sensor_Lawn_Back_Left_Msg label="Rasen hinten [%s]" valuecolor=[pOutdoor_Plant_Sensor_Lawn_Back_Left_State=="3"="#cbcb00",pOutdoor_Plant_Sensor_Lawn_Back_Left_State=="4"="#d72a2a"] {
                             Frame label="Daten" {
-                                Text item=pOutdoor_Plant_Sensor_Garden_Back_Soil_Humidity
-                                Text item=pOutdoor_Plant_Sensor_Garden_Back_Soil_Temperature
+                                Text item=pOutdoor_Plant_Sensor_Lawn_Back_Left_Soil_Humidity
+                                Text item=pOutdoor_Plant_Sensor_Lawn_Back_Left_Soil_Temperature
                             }
                             Frame label="Device" {
-                                Switch item=pOutdoor_Plant_Sensor_Garden_Back_Switch
-                                Text item=pOutdoor_Plant_Sensor_Garden_Back_State
-                                Input item=pOutdoor_Plant_Sensor_Garden_Back_Tresholds inputHint="text"
-                                Text item=pOutdoor_Plant_Sensor_Garden_Back_Last_Refresh
-                                Text item=pOutdoor_Plant_Sensor_Garden_Back_Battery_Level
-                                Text item=pOutdoor_Plant_Sensor_Garden_Back_Battery_State
-                                Text item=pOutdoor_Plant_Sensor_Garden_Back_Signal_Level
-                                Text item=pOutdoor_Plant_Sensor_Garden_Back_Signal_State
+                                Switch item=pOutdoor_Plant_Sensor_Lawn_Back_Left_Switch
+                                Text item=pOutdoor_Plant_Sensor_Lawn_Back_Left_State
+                                Input item=pOutdoor_Plant_Sensor_Lawn_Back_Left_Tresholds inputHint="text"
+                                Text item=pOutdoor_Plant_Sensor_Lawn_Back_Left_Last_Refresh
+                                Text item=pOutdoor_Plant_Sensor_Lawn_Back_Left_Battery_Level
+                                Text item=pOutdoor_Plant_Sensor_Lawn_Back_Left_Battery_State
+                                Text item=pOutdoor_Plant_Sensor_Lawn_Back_Left_Signal_Level
+                                Text item=pOutdoor_Plant_Sensor_Lawn_Back_Left_Signal_State
+                            }
+                        }
+                        Text item=pOutdoor_Plant_Sensor_Lawn_Streedside_Msg label="Rasen vorne [%s]" valuecolor=[pOutdoor_Plant_Sensor_Lawn_Streedside_State=="3"="#cbcb00",pOutdoor_Plant_Sensor_Lawn_Streedside_State=="4"="#d72a2a"] {
+                            Frame label="Daten" {
+                                Text item=pOutdoor_Plant_Sensor_Lawn_Streedside_Soil_Humidity
+                                Text item=pOutdoor_Plant_Sensor_Lawn_Streedside_Soil_Temperature
+                            }
+                            Frame label="Device" {
+                                Switch item=pOutdoor_Plant_Sensor_Lawn_Streedside_Switch
+                                Text item=pOutdoor_Plant_Sensor_Lawn_Streedside_State
+                                Input item=pOutdoor_Plant_Sensor_Lawn_Streedside_Tresholds inputHint="text"
+                                Text item=pOutdoor_Plant_Sensor_Lawn_Streedside_Last_Refresh
+                                Text item=pOutdoor_Plant_Sensor_Lawn_Streedside_Battery_Level
+                                Text item=pOutdoor_Plant_Sensor_Lawn_Streedside_Battery_State
+                                Text item=pOutdoor_Plant_Sensor_Lawn_Streedside_Signal_Level
+                                Text item=pOutdoor_Plant_Sensor_Lawn_Streedside_Signal_State
                             }
                         }
                         Text item=pOutdoor_Plant_Sensor_Terrace_Msg label="Terasse [%s]" valuecolor=[pOutdoor_Plant_Sensor_Terrace_State=="3"="#cbcb00",pOutdoor_Plant_Sensor_Terrace_State=="4"="#d72a2a"] {
@@ -640,18 +656,37 @@ sitemap haus label="Main Menu"
                                 Text item=pOutdoor_Plant_Sensor_Blackberries_Signal_State
                             }
                         }
+                        Text item=pOutdoor_Plant_Sensor_Bed_Back_Right_Msg label="Blumenbeet hinten rechts [%s]" valuecolor=[pOutdoor_Plant_Sensor_Bed_Back_Right_State=="3"="#cbcb00",pOutdoor_Plant_Sensor_Bed_Back_Right_State=="4"="#d72a2a"] {
+                            Frame label="Daten" {
+                                Text item=pOutdoor_Plant_Sensor_Bed_Back_Right_Soil_Humidity
+                                Text item=pOutdoor_Plant_Sensor_Bed_Back_Right_Soil_Temperature
+                            }
+                            Frame label="Device" {
+                                Switch item=pOutdoor_Plant_Sensor_Bed_Back_Right_Switch
+                                Text item=pOutdoor_Plant_Sensor_Bed_Back_Right_State
+                                Input item=pOutdoor_Plant_Sensor_Bed_Back_Right_Tresholds inputHint="text"
+                                Text item=pOutdoor_Plant_Sensor_Bed_Back_Right_Last_Refresh
+                                Text item=pOutdoor_Plant_Sensor_Bed_Back_Right_Battery_Level
+                                Text item=pOutdoor_Plant_Sensor_Bed_Back_Right_Battery_State
+                                Text item=pOutdoor_Plant_Sensor_Bed_Back_Right_Signal_Level
+                                Text item=pOutdoor_Plant_Sensor_Bed_Back_Right_Signal_State
+                            }
+                        }
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                         Webview url="/static/custom/grafana/pflanzen.html?fromItem=Chart_From" icon="none" height=27
                     }
                     Frame item=pOther_Plant_Sensor_State_Device_Info label="Batterien [%s]" {
-                        Text item=pOutdoor_Plant_Sensor_Garden_Back_Battery_Level label="Rasen hinten [%d %%]" valuecolor=[<30="#d72a2a"]
+                        Text item=pOutdoor_Plant_Sensor_Lawn_Back_Left_Battery_Level label="Rasen hinten [%d %%]" valuecolor=[<30="#d72a2a"]
+                        Text item=pOutdoor_Plant_Sensor_Lawn_Streedside_Battery_Level label="Rasen vorne [%d %%]" valuecolor=[<30="#d72a2a"]
+                        Text item=pOutdoor_Plant_Sensor_Terrace_Battery_Level label="Terasse [%d %%]" valuecolor=[<30="#d72a2a"]
+                        Text item=pOutdoor_Plant_Sensor_Hedge_Street_Battery_Level label="Hecke Strasse [%d %%]" valuecolor=[<30="#d72a2a"]
+
                         Text item=pIndoor_Plant_Sensor_Mobile_Battery_Level label="Dachboden [%d %%]" valuecolor=[<30="#d72a2a"]
                         Text item=pOutdoor_Plant_Sensor_Tomatos_Battery_Level label="Tomaten [%d %%]" valuecolor=[<30="#d72a2a"]
                         Text item=pOutdoor_Plant_Sensor_Blackberries_Battery_Level label="Brombeeren [%d %%]" valuecolor=[<30="#d72a2a"]
-                        Text item=pOutdoor_Plant_Sensor_Terrace_Battery_Level label="Terasse [%d %%]" valuecolor=[<30="#d72a2a"]
-                        Text item=pOutdoor_Plant_Sensor_Hedge_Street_Battery_Level label="Hecke Strasse [%d %%]" valuecolor=[<30="#d72a2a"]
+                        Text item=pOutdoor_Plant_Sensor_Bed_Back_Right_Battery_Level label="Blumenbeet hinten rechts [%d %%]" valuecolor=[<30="#d72a2a"]
                     }
                 }
                 Group item=pOutdoor_WeatherStation_Air_Message label="Aktuelles Wetter [%s]" {

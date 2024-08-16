@@ -35,7 +35,7 @@ class SensorPlantsBatteryDetail:
         for item in getItem("eOther_Plant_Sensor_Devices").getMembers():
             name = item.getName()[1:]
 
-            #self.log.info(name)
+            self.log.info(name)
 
             triggers.append(ItemStateChangeTrigger( "p" + name + "_Battery_Level"))
 

@@ -10,12 +10,13 @@ from custom.watering import WateringHelper
 
     # Water usage,  Runtime usage,   Item [2]
 circuits = [
-    { "usage": 1.0,  "duration": 0.6, "sensor": "Outdoor_Plant_Sensor_Garden_Back",     "item": 'pOutdoor_Streetside_Lawn_Watering',    "name": "Rasen vorne" },
+    { "usage": 1.0,  "duration": 0.6, "sensor": "Outdoor_Plant_Sensor_Lawn_Streedside", "item": 'pOutdoor_Streetside_Lawn_Watering',    "name": "Rasen vorne" },
     { "usage": 0.33, "duration": 0.5, "sensor": "Outdoor_Plant_Sensor_Hedge_Street",    "item": 'pOutdoor_Streetside_Beds_Watering',    "name": "Beete vorne" },
     { "usage": 0.33, "duration": 0.5, "sensor": "Outdoor_Plant_Sensor_Terrace",         "item": 'pOutdoor_Terrace_Watering',            "name": "Terassenbeete" },
     { "usage": 0.33, "duration": 0.5, "sensor": "Outdoor_Plant_Sensor_Blackberries",    "item": 'pOutdoor_Garden_Back_Watering',        "name": "Brombeeren" },
-    { "usage": 1.0,  "duration": 1.0, "sensor": "Outdoor_Plant_Sensor_Garden_Back",     "item": 'pOutdoor_Garden_Right_Watering',       "name": "Rasen hinten rechts" },
-    { "usage": 1.0,  "duration": 1.0, "sensor": "Outdoor_Plant_Sensor_Garden_Back",     "item": 'pOutdoor_Garden_Left_Watering',        "name": "Rasen hinten links" }
+#    { "usage": 0.33, "duration": 0.5, "sensor": "Outdoor_Plant_Sensor_Bed_Back_Right",    "item": 'pOutdoor_Garden_Back_Watering',        "name": "Blumenwiese hinten rechts" },
+    { "usage": 1.0,  "duration": 1.0, "sensor": "Outdoor_Plant_Sensor_Lawn_Back_Left",  "item": 'pOutdoor_Garden_Right_Watering',       "name": "Rasen hinten rechts" },
+    { "usage": 1.0,  "duration": 1.0, "sensor": "Outdoor_Plant_Sensor_Lawn_Back_Left",  "item": 'pOutdoor_Garden_Left_Watering',        "name": "Rasen hinten links" }
 ]
 
 AUTO = False
