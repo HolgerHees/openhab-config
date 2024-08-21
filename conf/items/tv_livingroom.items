@@ -15,3 +15,11 @@ String pGF_Livingroom_Television_Info_Program_Name   "Program Name [%s]"  <selfs
 Number pGF_Livingroom_Television_Key_SOURCE       "Quelle"       <selfsettings> (eGF_Livingroom_Television) ["Control"] {channel="samsungtv:tv:livingroom:sourceId"} 
 String pGF_Livingroom_Television_Key_BROWSER_URL  "Url"          <selfsettings> (eGF_Livingroom_Television) ["Control"] {channel="samsungtv:tv:livingroom:url"} 
 Switch pGF_Livingroom_Television_Key_BROWSER_STOP "Stop Browser" <selfsettings> (eGF_Livingroom_Television) ["Control"] {channel="samsungtv:tv:livingroom:stopBrowser"} 
+
+Group  eGF_Livingroom_SkyQ                        "SkyQ Receiver"    <selfinfo> (lGF_Livingroom) ["Television"]
+//String pGF_Livingroom_SkyQ_Status_POWER           "Status"       <selfsettings> (eGF_Livingroom_SkyQ) ["Control"] {channel="skyq:skyqreceiver:livingroom:statusChannels#powerStatus"}
+Switch pGF_Livingroom_SkyQ_Key_POWER              "An / Aus"     <selfsettings> (eGF_Livingroom_SkyQ) ["Control"] {channel="skyq:skyqreceiver:livingroom:control#power"}
+String pGF_Livingroom_SkyQ_Key_CODE               "Tastendruck"  <selfsettings> (eGF_Livingroom_Television) ["Control"] {channel="skyq:skyqreceiver:livingroom:control#controlCommand"}
+
+String pGF_Livingroom_SkyQ_Info_Program_Title     "Program Titel [%s]"  <selfsettings> (eGF_Livingroom_Television) {channel="skyq:skyqreceiver:livingroom:statusChannels#currentChannelTitle"}
+

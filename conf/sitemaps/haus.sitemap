@@ -314,16 +314,14 @@ sitemap haus label="Main Menu"
                     //}
                 }
                 Text label="Fernseher" item=pGF_Livingroom_Television_Key_POWER {
-                    Frame label="Steuerung" {
+                    Frame label="Fernseher" {
                         Switch item=pGF_Livingroom_Television_Key_POWER
                         Switch item=pGF_Livingroom_Television_Key_MUTE
                         Slider item=pGF_Livingroom_Television_Key_VOLUME
                     }
-                    Frame label="Info" {
-                        Text item=pGF_Livingroom_Television_Info_Source
-                        Text item=pGF_Livingroom_Television_Info_Channel_Number
-                        Text item=pGF_Livingroom_Television_Info_Program_Title
-                        Text item=pGF_Livingroom_Television_Info_Program_Name
+                    Frame label="SkyQ" {
+                        Switch item=pGF_Livingroom_SkyQ_Key_POWER
+                        Text item=pGF_Livingroom_SkyQ_Info_Program_Title
                     }
                 }
             }

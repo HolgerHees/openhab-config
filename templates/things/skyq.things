@@ -1,0 +1,1 @@
+Thing skyq:skyqreceiver:livingroom "Gerät SkyQ Receiver" [ hostname="192.168.0.118", configurablePresets=true, retryInterval=60, checkStatusInterval=60, refreshInterval=30 ]
