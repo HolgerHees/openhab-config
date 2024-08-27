@@ -1,1 +1,1 @@
-Thing skyq:skyqreceiver:livingroom "Gerät SkyQ Receiver" [ hostname="192.168.0.118", configurablePresets=true, retryInterval=60, checkStatusInterval=60, refreshInterval=30 ]
+Thing skyq:skyqreceiver:livingroom "Gerät SkyQ Receiver" [ hostname="{{custom_skyq_livingroom_ip}}", configurablePresets=true, retryInterval=60, checkStatusInterval=60, refreshInterval=30 ]

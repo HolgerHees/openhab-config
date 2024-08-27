@@ -313,15 +313,16 @@ sitemap haus label="Main Menu"
                         //Webview url="http://your_OH_ip_address:port/static/pIndoor_Roomba_map.html" icon="none" height=21
                     //}
                 }
-                Text label="Fernseher" item=pGF_Livingroom_Television_Key_POWER {
-                    Frame label="Fernseher" {
-                        Switch item=pGF_Livingroom_Television_Key_POWER
-                        Switch item=pGF_Livingroom_Television_Key_MUTE
-                        Slider item=pGF_Livingroom_Television_Key_VOLUME
+                Text label="Fernseher [MAP(on_off_de.map):%s]" item=pGF_Livingroom_Television_POWER {
+                    Frame label="Steuerung" {
+                        Text item=pGF_Livingroom_SkyQ_Info_Program_Title visibility=[pGF_Livingroom_Television_POWER==ON]
+                        Switch item=pGF_Livingroom_Television_POWER
+                        Slider item=pGF_Livingroom_Television_Key_VOLUME visibility=[pGF_Livingroom_Television_POWER==ON]
+                        Switch item=pGF_Livingroom_Television_Key_MUTE visibility=[pGF_Livingroom_Television_POWER==ON]
                     }
-                    Frame label="SkyQ" {
-                        Switch item=pGF_Livingroom_SkyQ_Key_POWER
-                        Text item=pGF_Livingroom_SkyQ_Info_Program_Title
+                    Frame label="Raw" {
+                        Switch item=pGF_Livingroom_Television_Key_POWER label="Power Fernseher"
+                        Switch item=pGF_Livingroom_SkyQ_Key_POWER label="Power SkyQ"
                     }
                 }
             }
