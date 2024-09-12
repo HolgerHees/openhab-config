@@ -193,7 +193,7 @@ class SensorWeatherstationMessagesLastUpdate:
         postUpdateIfChanged("pOutdoor_WeatherStation_Is_Working", ON if is_working else OFF)
         postUpdateIfChanged("eOther_Error_WeatherStation_Message", "" if is_working else u"Keine Updates seit mehr als 60 Minuten")
 
-        temperatureItemName = 'pOutdoor_WeatherStation_Temperature' if states['pOutdoor_WeatherStation_Temperature_Raw'][0] < 30 else 'pGF_Utilityroom_Heating_Temperature_Outdoor'
+        temperatureItemName = 'pOutdoor_WeatherStation_Temperature' if 'pOutdoor_WeatherStation_Temperature_Raw' in states and states['pOutdoor_WeatherStation_Temperature_Raw'][0] < 30 else 'pGF_Utilityroom_Heating_Temperature_Outdoor'
         postUpdateIfChanged("pOutdoor_WeatherStation_Temperature_Item_Name", temperatureItemName )
             
         if oldestUpdateInMinutes > 10:
