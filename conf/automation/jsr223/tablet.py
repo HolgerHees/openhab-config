@@ -6,7 +6,7 @@ from shared.helper import rule, getItemState, postUpdate, sendCommandIfChanged, 
 from shared.triggers import ItemStateChangeTrigger, ItemCommandTrigger
 from custom.presence import PresenceHelper
 
-from custom_configuration import livingroom_api
+from configuration import customConfigs
 
 BRIGHTNESS_LIMIT = 200
 BRIGHTNESS_MAX = int(BRIGHTNESS_LIMIT * 1.00)
@@ -43,7 +43,7 @@ class TabletScreen:
 
     def initDeviceStateAndBrightness(self):
         try:
-            response_json = HTTP.sendHttpGetRequest(livingroom_api + "&cmd=deviceInfo")
+            response_json = HTTP.sendHttpGetRequest(customConfigs['livingroom_api'] + "&cmd=deviceInfo")
             if response_json is not None:
                 response = json.loads(response_json)
                 self.screenStateRequested = self.screenStateActive = 'On' if response["screenOn"] else 'Off'
@@ -61,7 +61,7 @@ class TabletScreen:
 
     def submitCmd(self, cmd, retry = 0):
         try:
-            response_json = HTTP.sendHttpGetRequest(livingroom_api + "&cmd={}".format(cmd))
+            response_json = HTTP.sendHttpGetRequest(customConfigs['livingroom_api'] + "&cmd={}".format(cmd))
             response = json.loads(response_json)
 
             if response["status"] == 'OK':

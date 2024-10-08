@@ -1,8 +1,17 @@
 # -*- coding: utf-8 -*-
 
 import random
+from shared.actions import HTTP
+import json
+
+from configuration import customConfigs
+from shared.helper import getItemState, postUpdate
+
+
 
 class ShuffleHelper:
+    history = None
+
     _synonyms = {
         u"Gute Nacht": [
             u"Gute Nacht",
@@ -46,9 +55,45 @@ class ShuffleHelper:
     }
 
     @staticmethod
-    def getRandomSynonym(input, flag = None):
-        if input in ShuffleHelper._synonyms:
-            values = ShuffleHelper._synonyms[input]
+    def getRandomSynonym2(logging, words, flag = None):
+        if ShuffleHelper.history is None:
+            history = getItemState("VoiceAnswerHistory").toString()
+            try:
+                ShuffleHelper.history = json.loads(history)
+            except:
+                ShuffleHelper.history = {}
+
+        if words not in ShuffleHelper.history:
+            ShuffleHelper.history[words] = []
+
+        url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={}".format(customConfigs['gemini_token'])
+        data = { "contents": [ {"parts" : [ { "text" : u"{}".format( words ) } ] } ], "generation_config": { "temperature": 0.1, "candidate_count": 1 } }
+        #data = { "contents": [ {"parts" : [ { "text" : u"Sag mir {} mit anderen Worten ausser {}".format( words, ",".join(ShuffleHelper.history[words]) ) } ] } ] }
+
+        result = HTTP.sendHttpPostRequest(url, "application/json", json.dumps(data), {}, 5000)
+        answer = json.loads(result)
+        text = answer['candidates'][0]['content']['parts'][0]['text'].strip()
+
+        logging.info(str(answer))
+
+        ShuffleHelper.history[words].append(text)
+        if len(ShuffleHelper.history[words]) > 50:
+            ShuffleHelper.history[words] = ShuffleHelper.history[words][-50:]
+        choice = random.choice(ShuffleHelper.history[words])
+
+        postUpdate("VoiceAnswerHistory",json.dumps(ShuffleHelper.history))
+
+        #logging.info(text + " " + choice)
+
+        return choice
+
+    @staticmethod
+    def getRandomSynonym(logging, words, flag = None):
+        #if words == "Gute Nacht":
+        #    return ShuffleHelper.getRandomSynonym(logging, words, flag)
+
+        if words in ShuffleHelper._synonyms:
+            values = ShuffleHelper._synonyms[words]
             if type(values[0]) is list:
                 parts = []
                 for _values in values:
@@ -59,6 +104,6 @@ class ShuffleHelper:
                         parts.append(choice)
                 return u"{}.".format( u". ".join(parts) )
             else:
-                return u"{}.".format( random.choice(ShuffleHelper._synonyms[input]) )
-        return input
+                return u"{}.".format( random.choice(ShuffleHelper._synonyms[words]) )
+        return words
 

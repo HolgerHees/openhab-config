@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from alexa_device_config import AlexaDevices
-from alexa_device_config import AlexaLocationDeviceMap
+from configuration import customConfigs
 
 from shared.helper import sendCommand, postUpdate, NotificationHelper
 
@@ -10,11 +9,11 @@ class AlexaHelper:
 
     @staticmethod
     def getLocationByDeviceId(client_id):
-        return AlexaDevices[client_id] if client_id in AlexaDevices else None
+        return customConfigs["alexa_devices"][client_id] if client_id in customConfigs["alexa_devices"] else None
 
     #@staticmethod
     #def _getMessageDeviceItemByLocation(location):
-        return "{}_Message".format(AlexaLocationDeviceMap[location])
+        return "{}_Message".format(customConfigs["alexa_location_device_map"][location])
 
     #@staticmethod
     #def sendMessageToLocation(location, message):
@@ -22,7 +21,7 @@ class AlexaHelper:
 
     @staticmethod
     def _getTTSDeviceItemByLocation(location):
-        return "{}_TTS".format(AlexaLocationDeviceMap[location])
+        return "{}_TTS".format(customConfigs["alexa_location_device_map"][location])
 
     @staticmethod
     def sendTTS(message, header = None, location = None, priority = NotificationHelper.PRIORITY_INFO, effects = 0 ):
@@ -51,4 +50,4 @@ class AlexaHelper:
 
     #@staticmethod
     #def _getAlarmDeviceItemByLocation(location):
-    #    return "{}_AlarmSound".format(AlexaLocationDeviceMap[location])
+    #    return "{}_AlarmSound".format(customConfigs["alexa_location_device_map"][location])

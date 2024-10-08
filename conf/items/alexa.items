@@ -35,3 +35,4 @@ String Alexa_Last_TTS               "Letzte TTS Nachricht [%s]"     <recorder>  
 String VoiceCommand                 "Sprachbefehl [%s]"             <recorder>  (eAlexa_Helper)         ["Point"]
 String VoiceMessage                 "Sprachnachricht [%s]"          <recorder>  (eAlexa_Helper)         ["Point"]
 
+String VoiceAnswerHistory                                           <recorder>  (eAlexa_Helper)

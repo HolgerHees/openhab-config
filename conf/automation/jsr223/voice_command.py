@@ -80,7 +80,7 @@ class VoiceCommand:
             #ItemEventTrigger(["ItemAddedEvent","ItemRemovedEvent","ItemUpdatedEvent"])
         ]
         self.processor = CommandProcessor(self.log,ir)
-        Tests.process(self.processor,self.log,ir)
+        #Tests.process(self.processor,self.log,ir)
 
     def execute(self, module, input):
         if input['event'].getType() == "TimerEvent":
@@ -103,8 +103,9 @@ class VoiceCommand:
 
             msg, is_valid = self.processor.applyActions(actions,voice_command,False)
 
-            msg = ShuffleHelper.getRandomSynonym(msg)
+            msg = ShuffleHelper.getRandomSynonym(self.log, msg)
 
             postUpdate("VoiceMessage",msg)
+
 
 
