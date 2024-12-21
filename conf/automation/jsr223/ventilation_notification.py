@@ -5,6 +5,7 @@ from shared.triggers import CronTrigger, ItemStateChangeTrigger
 from custom.presence import PresenceHelper
 from custom.alexa import AlexaHelper
 from custom.flags import FlagHelper
+from custom.weather import WeatherHelper
 
 
 @rule()
@@ -77,11 +78,11 @@ class VentilationNotification:
         gardenTemp0, gardenTemp0Min, gardenTemp0Max = getStableMinMaxItemState(now,"pOutdoor_WeatherStation_Temperature",15)
         gardenTemp15, gardenTemp15Min, gardenTemp15Max  = getStableMinMaxItemState(now.minusMinutes(15),"pOutdoor_WeatherStation_Temperature",30)
         gardenTemp45, gardenTemp45Min, gardenTemp45Max  = getStableMinMaxItemState(now.minusMinutes(45),"pOutdoor_WeatherStation_Temperature",30)
-        
+
         gardenTemp0 = round(gardenTemp0,1)
         gardenTemp15 = round(gardenTemp15,1)
         gardenTemp45 = round(gardenTemp45,1)
-        
+
         if gardenTemp0 > gardenTemp15 > gardenTemp45:
             direction = 1
         elif gardenTemp0 < gardenTemp15 < gardenTemp45:
@@ -97,7 +98,7 @@ class VentilationNotification:
                         direction = 0
             else:
                 direction = 0
-                  
+
         self.log.info(u"GARDEN - Temp0: {}, Temp0Max: {}, Temp15: {}, Temp45: {}".format(gardenTemp0,gardenTemp0Max,gardenTemp15,gardenTemp45))
 
         gfShouldOpen = self.getOpenRequest(now,gardenTemp0,gardenTemp0Max,direction,"pGF_Livingroom_Air_Sensor_Temperature_Value",self.lastGFShouldOpen)
@@ -162,6 +163,9 @@ class VentilationNotification:
         self.timer = None
         
     def execute(self, module, input):
+        if not WeatherHelper.isWorking():
+            return
+
         flags = getItemState("pOther_Manual_State_Air_Thoroughly_Notify").intValue()
 
         # we don't want do be notified

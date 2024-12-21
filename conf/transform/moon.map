@@ -6,5 +6,4 @@ FULL=Vollmond
 WANING_GIBBOUS=abnehmender Mond
 THIRD_QUARTER=letztes Viertel
 WANING_CRESCENT=abnehmender Halbmond
-NULL=unbekannt
-UNDEF=unbekannt
+=Unbekannt

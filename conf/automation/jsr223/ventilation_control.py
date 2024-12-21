@@ -4,6 +4,7 @@ from java.time import ZonedDateTime
 from shared.helper import rule, itemLastChangeOlderThen, getItemState, postUpdate, postUpdateIfChanged, sendCommand, startTimer, getThing, getStableItemState
 from shared.triggers import CronTrigger, ItemCommandTrigger, ItemStateChangeTrigger, ThingStatusChangeTrigger
 from custom.presence import PresenceHelper
+from custom.weather import WeatherHelper
 
 
 DELAYED_UPDATE_TIMEOUT = 3
@@ -237,8 +238,7 @@ class VentilationControlFanLevelRule:
 
         now = ZonedDateTime.now()
 
-        outdoorTemperatureItemName = getItemState("pOutdoor_WeatherStation_Temperature_Item_Name").toString()
-        outdoorTemperature = getStableItemState(now, outdoorTemperatureItemName, 15)#.doubleValue()
+        outdoorTemperature = WeatherHelper.getTemperatureStableItemState(now, 15))
 
         #incomingTemperature = getItemState("pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature").doubleValue()
         #self.log.info(str(incommingTemperature))

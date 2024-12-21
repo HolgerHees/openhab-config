@@ -57,3 +57,33 @@ class HomeConnectDishwasherNotification:
                 elif currentMode == "Finished"and self.checkTimer != None:
                     self.checkTimer.cancel()
                     self.notify( True )
+
+@rule()
+class HomeConnectDishwasherSaltEmptyNotification:
+    def __init__(self):
+        self.triggers = [
+            ItemStateChangeTrigger("pGF_Kitchen_Dishwasher_SaltEmptyState",state="ON")
+        ]
+
+    def execute(self, module, input):
+        NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"Geschirrspühler", u"Salz nachfüllen", recipients = UserHelper.getPresentUser() )
+
+@rule()
+class HomeConnectDishwasherRinseEmptyNotification:
+    def __init__(self):
+        self.triggers = [
+            ItemStateChangeTrigger("pGF_Kitchen_Dishwasher_RinseEmptyState",state="ON")
+        ]
+
+    def execute(self, module, input):
+        NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"Geschirrspühler", u"Klarspühler nachfüllen", recipients = UserHelper.getPresentUser() )
+
+@rule()
+class HomeConnectDishwasherMachineCareNotification:
+    def __init__(self):
+        self.triggers = [
+            ItemStateChangeTrigger("pGF_Kitchen_Dishwasher_MachineCareState",state="ON")
+        ]
+
+    def execute(self, module, input):
+        NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"Geschirrspühler", u"Reiningungsprogramm nötig", recipients = UserHelper.getPresentUser() )

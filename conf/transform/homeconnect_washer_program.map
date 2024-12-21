@@ -51,6 +51,4 @@ Spin\ Drain=Schleudern
 LaundryCare.Washer.Program.Spin.SpinDrain=Schleudern
 Drum\ Clean=Trommel reinigen
 LaundryCare.Washer.Program.DrumClean=Trommel reinigen
--=Aus
-NULL=unbekannt
-UNDEF=unbekannt
+=Unbekannt

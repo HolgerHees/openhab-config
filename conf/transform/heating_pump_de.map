@@ -1,10 +1,4 @@
 0=aus
-0.0=aus
-0.000000=aus
 1=an
-1.0=an
-1.000000=an
 -1=Lesefehler
--=undefiniert
-NULL=unbekannt
-UNDEF=unbekannt
+=Unbekannt

@@ -1,6 +1,3 @@
 ON=Wechseln
 OFF=Ok
-undefined=undefiniert
--=undefiniert
-NULL=unbekannt
-UNDEF=unbekannt
+=Unbekannt

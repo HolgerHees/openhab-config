@@ -1,47 +1,50 @@
 // **** WASHINGMACHINE ****
 Group   eGF_Utilityroom_Washer                             "Waschmaschine" <selfinfo> (lGF_Utilityroom) ["WashingMachine"]
 String  pGF_Utilityroom_Washer_Message                     "Status [%s]" (eGF_Utilityroom_Washer) ["Point"]
-Contact pGF_Utilityroom_Washer_DoorState                   "Tür [MAP(homeconnect_door.map):%s]" <whitegood> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnect:washer:default:washer:door_state"}
-String  pGF_Utilityroom_Washer_OperationState              "Status [MAP(homeconnect_operation.map):%s]" <selfautomode> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnect:washer:default:washer:operation_state"}
-Switch  pGF_Utilityroom_Washer_RemoteStartAllowanceState   "Fernstart erlaubt [MAP(on_off_de.map):%s]" <selfinfo> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnect:washer:default:washer:remote_start_allowance_state"}
-Switch  pGF_Utilityroom_Washer_RemoteControlActiveState    "Fernstart Status [MAP(on_off_de.map):%s]" <selfinfo> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnect:washer:default:washer:remote_control_active_state"}
-Switch  pGF_Utilityroom_Washer_LocalControlActiveState     "Lokale Steuerung [MAP(on_off_de.map):%s]" <selfinfo> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnect:washer:default:washer:local_control_active_state"}
-String  pGF_Utilityroom_Washer_ActiveProgramState          "Aktiv [MAP(homeconnect_washer_program.map):%s]"   <heating> (eGF_Utilityroom_Washer,gPersistance_History) ["Point"] {channel="homeconnect:washer:default:washer:active_program_state"}
-String  pGF_Utilityroom_Washer_SelectedProgramState        "Gewählt [MAP(homeconnect_washer_program.map):%s]" <heating> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnect:washer:default:washer:selected_program_state"}
-String  pGF_Utilityroom_Washer_WashingProgramTemperature   "Temperatur [MAP(homeconnect_washer_temperature.map):%s]" <temperature> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnect:washer:default:washer:laundry_care_washer_temperature"}
-String  pGF_Utilityroom_Washer_WashingProgramSpinSpeed     "Schleudern [MAP(homeconnect_washer_spinspeed.map):%s]" <selfinfo> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnect:washer:default:washer:laundry_care_washer_spin_speed"}
-String  pGF_Utilityroom_Washer_WashingProgramDosingLevel1  "Dosierung I [MAP(homeconnect_washer_idos.map):%s]" <selfinfo> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnect:washer:default:washer:laundry_care_washer_idos1"}
-String  pGF_Utilityroom_Washer_WashingProgramDosingLevel2  "Dosierung 2 [MAP(homeconnect_washer_idos.map):%s]" <selfinfo> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnect:washer:default:washer:laundry_care_washer_idos2"}
-String  pGF_Utilityroom_Washer_WashingProgramActions       "Aktion [%s]" <selfinfo> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnect:washer:default:washer:basic_actions_state"}
-Number pGF_Utilityroom_Washer_RemainingProgramTimeState    "Restlaufzeit [JS(homeconnect_runtime.js):%s]" <selfruntime> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnect:washer:default:washer:remaining_program_time_state"}
-Number pGF_Utilityroom_Washer_ProgramProgressState         "Fortschritt [JS(homeconnect_progress.js):%s]" <selfruntime> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnect:washer:default:washer:program_progress_state"}
+Contact pGF_Utilityroom_Washer_DoorState                   "Tür [MAP(homeconnect_door.map):%s]" <whitegood> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnectdirect:washer:default:door_state"}
+String  pGF_Utilityroom_Washer_OperationState              "Status [MAP(homeconnect_operation.map):%s]" <selfautomode> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnectdirect:washer:default:operation_state"}
+Switch  pGF_Utilityroom_Washer_RemoteStartAllowanceState   "Fernstart erlaubt [MAP(on_off_de.map):%s]" <selfinfo> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnectdirect:washer:default:remote_start_allowance"}
+Switch  pGF_Utilityroom_Washer_RemoteControlActiveState    "Fernstart Status [MAP(on_off_de.map):%s]" <selfinfo> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnectdirect:washer:default:remote_control_active"}
+Switch  pGF_Utilityroom_Washer_LocalControlActiveState     "Lokale Steuerung [MAP(on_off_de.map):%s]" <selfinfo> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnectdirect:washer:default:local_control_active"}
+String  pGF_Utilityroom_Washer_ActiveProgramState          "Aktiv [MAP(homeconnect_washer_program.map):%s]"   <heating> (eGF_Utilityroom_Washer,gPersistance_History) ["Point"] {channel="homeconnectdirect:washer:default:active_program"}
+String  pGF_Utilityroom_Washer_SelectedProgramState        "Gewählt [MAP(homeconnect_washer_program.map):%s]" <heating> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnectdirect:washer:default:selected_program"}
+Number  pGF_Utilityroom_Washer_RemainingProgramTimeState    "Restlaufzeit [JS(homeconnect_runtime.js):%s]" <selfruntime> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnectdirect:washer:default:remaining_program_time"}
+Number:Dimensionless  pGF_Utilityroom_Washer_ProgramProgressState         "Fortschritt [%s]" <selfruntime> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnectdirect:washer:default:program_progress",unit="%"}
+String  pGF_Utilityroom_Washer_WashingProgramTemperature   "Temperatur [MAP(homeconnect_washer_temperature.map):%s]" <temperature> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnectdirect:washer:default:washer_temperature"}
+String  pGF_Utilityroom_Washer_WashingProgramSpinSpeed     "Schleudern [MAP(homeconnect_washer_spinspeed.map):%s]" <selfinfo> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnectdirect:washer:default:washer_spin_speed"}
+String  pGF_Utilityroom_Washer_WashingProgramDosingLevel1  "Dosierung I [MAP(homeconnect_washer_idos.map):%s]" <selfinfo> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnectdirect:washer:default:idos1_active"}
+String  pGF_Utilityroom_Washer_WashingProgramDosingLevel2  "Dosierung 2 [MAP(homeconnect_washer_idos.map):%s]" <selfinfo> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnectdirect:washer:default:idos2_active"}
+Switch  pGF_Utilityroom_Washer_DrumCleanState              "Trommelreinigung [MAP(homeconnect_cleaning.map):%s]" <selfruntime> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnectdirect:washer:default:drum_clean_reminder"}
+Number:Mass  pGF_Utilityroom_Washer_LoadState                   "Beladung [%s]" <selfinfo> (eGF_Utilityroom_Washer) ["Point"] {channel="homeconnectdirect:washer:default:laundry_load_information"}
 
 Group   eGF_Kitchen_Dishwasher                             "Geschirrspühler"     <selfinfo> (lGF_Kitchen) ["WhiteGood"]
 String  pGF_Kitchen_Dishwasher_Message                     "Status [%s]"        <selfinfo> (eGF_Kitchen_Dishwasher) ["Point"]
-Switch  pGF_Kitchen_Dishwasher_Power_State                 "Eingeschaltet [MAP(on_off_de.map):%s]" <selfautomode> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnect:dishwasher:default:dishwasher:power_state"}
-Contact pGF_Kitchen_Dishwasher_DoorState                   "Tür [MAP(homeconnect_door.map):%s]" <whitegood> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnect:dishwasher:default:dishwasher:door_state"}
-String  pGF_Kitchen_Dishwasher_OperationState              "Status [MAP(homeconnect_operation.map):%s]" <selfautomode> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnect:dishwasher:default:dishwasher:operation_state"}
-Switch  pGF_Kitchen_Dishwasher_RemoteStartAllowanceState   "Fernstart erlaubt [MAP(on_off_de.map):%s]" <selfinfo> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnect:dishwasher:default:dishwasher:remote_start_allowance_state"}
-Switch  pGF_Kitchen_Dishwasher_RemoteControlActiveState    "Fernstart Status [MAP(on_off_de.map):%s]" <selfinfo> (eGF_Kitchen_Dishwasher) ["Point"] 
-{channel="homeconnect:dishwasher:default:dishwasher:remote_control_active_state"}
-String  pGF_Kitchen_Dishwasher_ActiveProgramState          "Aktiv [MAP(homeconnect_dishwasher_program.map):%s]"   <heating> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnect:dishwasher:default:dishwasher:active_program_state"}
-String  pGF_Kitchen_Dishwasher_SelectedProgramState        "Gewählt [MAP(homeconnect_dishwasher_program.map):%s]" <heating> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnect:dishwasher:default:dishwasher:selected_program_state"}
-String  pGF_Kitchen_Dishwasher_ProgramActionState          "Aktion [%s]" <heating> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnect:dishwasher:default:dishwasher:basic_actions_state"}
-Number  pGF_Kitchen_Dishwasher_RemainingProgramTimeState   "Restlaufzeit [JS(homeconnect_runtime.js):%s]" <selfruntime> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnect:dishwasher:default:dishwasher:remaining_program_time_state"}
-Number  pGF_Kitchen_Dishwasher_ProgramProgressState        "Fortschritt [JS(homeconnect_progress.js):%s]" <selfruntime> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnect:dishwasher:default:dishwasher:program_progress_state"}
+Switch  pGF_Kitchen_Dishwasher_Power_State                 "Eingeschaltet [MAP(on_off_de.map):%s]" <selfautomode> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnectdirect:dishwasher:default:power_state"}
+Contact pGF_Kitchen_Dishwasher_DoorState                   "Tür [MAP(homeconnect_door.map):%s]" <whitegood> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnectdirect:dishwasher:default:door_state"}
+String  pGF_Kitchen_Dishwasher_OperationState              "Status [MAP(homeconnect_operation.map):%s]" <selfautomode> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnectdirect:dishwasher:default:operation_state"}
+Switch  pGF_Kitchen_Dishwasher_RemoteStartAllowanceState   "Fernstart erlaubt [MAP(on_off_de.map):%s]" <selfinfo> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnectdirect:dishwasher:default:remote_start_allowance"}
+Switch  pGF_Kitchen_Dishwasher_RemoteControlActiveState    "Fernstart Status [MAP(on_off_de.map):%s]" <selfinfo> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnectdirect:dishwasher:default:remote_control_active"}
+String  pGF_Kitchen_Dishwasher_ActiveProgramState          "Aktiv [MAP(homeconnect_dishwasher_program.map):%s]"   <heating> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnectdirect:dishwasher:default:active_program"}
+String  pGF_Kitchen_Dishwasher_SelectedProgramState        "Gewählt [MAP(homeconnect_dishwasher_program.map):%s]" <heating> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnectdirect:dishwasher:default:selected_program"}
+Number  pGF_Kitchen_Dishwasher_RemainingProgramTimeState   "Restlaufzeit [JS(homeconnect_runtime.js):%s]" <selfruntime> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnectdirect:dishwasher:default:remaining_program_time"}
+Number:Dimensionless  pGF_Kitchen_Dishwasher_ProgramProgressState        "Fortschritt [%s]" <selfruntime> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnectdirect:dishwasher:default:program_progress",unit="%"}
+Switch  pGF_Kitchen_Dishwasher_SaltEmptyState              "Salz [MAP(homeconnect_empty.map):%s]" <selfinfo> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnectdirect:dishwasher:default:salt_lack"}
+Switch  pGF_Kitchen_Dishwasher_RinseEmptyState             "Klaarspühler [MAP(homeconnect_empty.map):%s]" <selfinfo> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnectdirect:dishwasher:default:rinse_aid_lack"}
+Switch  pGF_Kitchen_Dishwasher_MachineCareState            "Reiningungsprogramm [MAP(homeconnect_cleaning.map):%s]" <selfruntime> (eGF_Kitchen_Dishwasher) ["Point"] {channel="homeconnectdirect:dishwasher:default:machine_care_reminder"}
 
 Group   eGF_Kitchen_Coffeemaker                            "Kaffeemaschine"     <selfinfo> (lGF_Kitchen) ["WhiteGood"]
 String  pGF_Kitchen_Coffeemaker_Message                    "Status [%s]"        <selfinfo> (eGF_Kitchen_Coffeemaker) ["Point"]
-Switch  pGF_Kitchen_Coffeemaker_Power_State                "Eingeschaltet [MAP(on_off_de.map):%s]" <selfautomode> (eGF_Kitchen_Coffeemaker) ["Point"] {channel="homeconnect:coffeemaker:default:coffeemaker:power_state"}
-String  pGF_Kitchen_Coffeemaker_Operation_State            "Arbeitsmodus [%s]"  <selfautomode> (eGF_Kitchen_Coffeemaker) ["Point"] {channel="homeconnect:coffeemaker:default:coffeemaker:operation_state"}
-Switch  pGF_Kitchen_Coffeemaker_Remote_Start_Allowed       "Fernstart erlaubt [MAP(on_off_de.map):%s]" <selfinfo> (eGF_Kitchen_Coffeemaker) ["Point"] {channel="homeconnect:coffeemaker:default:coffeemaker:remote_start_allowance_state"}
-Switch  pGF_Kitchen_Coffeemaker_Local_Control_State        "Lokale Steuerung [MAP(on_off_de.map):%s]" <selfinfo> (eGF_Kitchen_Coffeemaker) ["Point"] {channel="homeconnect:coffeemaker:default:coffeemaker:local_control_active_state"}
-String  pGF_Kitchen_Coffeemaker_Active_Program_State       "Aktives Programm [%s]" <selfinfo> (eGF_Kitchen_Coffeemaker) ["Point"] {channel="homeconnect:coffeemaker:default:coffeemaker:active_program_state"}
-String  pGF_Kitchen_Coffeemaker_Selected_Program_State     "Ausgewähltes Programm [%s]" <selfinfo> (eGF_Kitchen_Coffeemaker) ["Point"] {channel="homeconnect:coffeemaker:default:coffeemaker:selected_program_state"}
-String  pGF_Kitchen_Coffeemaker_Basic_Action_State         "Basis Aktion [%s]"  <selfinfo> (eGF_Kitchen_Coffeemaker) ["Point"] {channel="homeconnect:coffeemaker:default:coffeemaker:basic_actions_state"}
-Number  pGF_Kitchen_Coffeemaker_Program_Progress_State     "Fortschritt [%s %%]" <selfruntime> (eGF_Kitchen_Coffeemaker) ["Point"] {channel="homeconnect:coffeemaker:default:coffeemaker:program_progress_state"}
-Switch  pGF_Kitchen_Coffeemaker_Drip_Tray_Full_State       "Auslaufschale [%s]" <selfinfo> (eGF_Kitchen_Coffeemaker) ["Point"] {channel="homeconnect:coffeemaker:default:coffeemaker:coffeemaker_drip_tray_full_state"}
-Switch  pGF_Kitchen_Coffeemaker_Tank_Empty_State           "Wassertank [%s]"    <selfinfo> (eGF_Kitchen_Coffeemaker) ["Point"] {channel="homeconnect:coffeemaker:default:coffeemaker:coffeemaker_water_tank_empty_state"}
-Switch  pGF_Kitchen_Coffeemaker_Bean_Container_Empty_State "Bohnenbehälter [%s]" <selfinfo> (eGF_Kitchen_Coffeemaker) ["Point"] {channel="homeconnect:coffeemaker:default:coffeemaker:coffeemaker_bean_container_empty_state"}
+Switch  pGF_Kitchen_Coffeemaker_Power_State                "Eingeschaltet [MAP(on_off_de.map):%s]" <selfautomode> (eGF_Kitchen_Coffeemaker) ["Point"] {channel="homeconnectdirect:coffeemaker:default:power_state"}
+String  pGF_Kitchen_Coffeemaker_Operation_State            "Arbeitsmodus [%s]"  <selfautomode> (eGF_Kitchen_Coffeemaker) ["Point"] {channel="homeconnectdirect:coffeemaker:default:operation_state"}
+Switch  pGF_Kitchen_Coffeemaker_Remote_Start_Allowed       "Fernstart erlaubt [MAP(on_off_de.map):%s]" <selfinfo> (eGF_Kitchen_Coffeemaker) ["Point"] {channel="homeconnectdirect:coffeemaker:default:remote_start_allowance"}
+Switch  pGF_Kitchen_Coffeemaker_Local_Control_State        "Lokale Steuerung [MAP(on_off_de.map):%s]" <selfinfo> (eGF_Kitchen_Coffeemaker) ["Point"] {channel="homeconnectdirect:coffeemaker:default:local_control_active"}
+String  pGF_Kitchen_Coffeemaker_Active_Program_State       "Aktives Programm [%s]" <heating> (eGF_Kitchen_Coffeemaker) ["Point"] {channel="homeconnectdirect:coffeemaker:default:active_program"}
+String  pGF_Kitchen_Coffeemaker_Selected_Program_State     "Ausgewähltes Programm [%s]" <heating> (eGF_Kitchen_Coffeemaker) ["Point"] {channel="homeconnectdirect:coffeemaker:default:selected_program"}
+Number:Dimensionless  pGF_Kitchen_Coffeemaker_Program_Progress_State     "Fortschritt [%s]" <selfruntime> (eGF_Kitchen_Coffeemaker) ["Point"] {channel="homeconnectdirect:coffeemaker:default:program_progress",unit="%"}
+Switch  pGF_Kitchen_Coffeemaker_Drip_Tray_Full_State       "Auslaufschale [MAP(homeconnect_full.map):%s]" <selfinfo> (eGF_Kitchen_Coffeemaker) ["Point"] {channel="homeconnectdirect:coffeemaker:default:drip_tray_full"}
+Switch  pGF_Kitchen_Coffeemaker_Tank_Empty_State           "Wassertank [MAP(homeconnect_empty.map):%s]"    <selfinfo> (eGF_Kitchen_Coffeemaker) ["Point"] {channel="homeconnectdirect:coffeemaker:default:water_tank_empty"}
+Switch  pGF_Kitchen_Coffeemaker_Bean_Container_Empty_State "Bohnenbehälter [MAP(homeconnect_empty.map):%s]" <selfinfo> (eGF_Kitchen_Coffeemaker) ["Point"] {channel="homeconnectdirect:coffeemaker:default:bean_container_empty"}
+Number  pGF_Kitchen_Coffeemaker_Cleaning_Countdown         "Reinigung [in %s Tag(n)]" <selfruntime> (eGF_Kitchen_Coffeemaker) ["Point"] {channel="homeconnectdirect:coffeemaker:default:countdown_cleaning"}
+Number  pGF_Kitchen_Coffeemaker_Descaling_Countdown        "Entkalkung [in %s Tag(n)]" <selfruntime> (eGF_Kitchen_Coffeemaker) ["Point"] {channel="homeconnectdirect:coffeemaker:default:countdown_descaling"}
 
 

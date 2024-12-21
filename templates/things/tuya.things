@@ -1,4 +1,20 @@
-Thing tuya:tuyaDevice:humidifier "Luftbefeuchter Karl Big" [ pollingInterval="60", protocol="3.3", productId="{{custom_humidifier_product_id}}", deviceId="{{custom_humidifier_device_id}}", localKey="{{custom_humidifier_local_key}}", ip="{{custom_humidifier_ip}}" ] {
+Thing tuya:project:bridge "Bridge Tuya" [ username="{{custom_tuya_username}}", password="{{custom_tuya_password}}", accessId="{{custom_tuya_access_id}}", accessSecret="{{custom_tuya_access_secret}}", countryCode="49", schema="smartLife", dataCenter="https://openapi.tuyaeu.com" ] {}
+
+Thing tuya:tuyaDevice:humidifier_eg "Luftbefeuchter EG" [ pollingInterval="60", protocol="3.4", productId="{{custom_humidifier_eg_product_id}}", deviceId="{{custom_humidifier_eg_device_id}}", localKey="{{custom_humidifier_eg_local_key}}", ip="{{custom_humidifier_eg_ip}}" ] {
+    Type switch : power             "Ein/Aus"               [ dp="1" ]
+    Type number : humidity_current  "Luftfeuchtigkeit"      [ dp="14", min="0", max="100" ]
+    Type number : fault             "Fehler"                [ dp="22", min="0", max="100" ]
+    Type switch : filter_reset      "Filter Reset"          [ dp="28" ]
+    Type switch : child_lock        "Kinder Sperre"         [ dp="29" ]
+    Type number : filter_life       "Filter Laufzeit"       [ dp="33", min="0", max="100" ]
+    Type string : backlight_enum    "Beleuchtung"           [ dp="34", range="Fully,Half,Close" ]
+    Type string : fan_speed_enum    "Lüftergeschwindigkeit" [ dp="101", range="level_1,level_2,level_3,level_4" ]
+    Type switch : auto              "Auto"                  [ dp="102" ]
+    Type string : humidity_target   "Zielfeuchtigkeit"      [ dp="103", range="40,45,50,55,CO" ]
+    Type number : replace_filter    "Filter Ersetzen"       [ dp="104", min="0", max="100" ]
+}
+
+Thing tuya:tuyaDevice:humidifier_og "Luftbefeuchter OG" [ pollingInterval="60", protocol="3.3", productId="{{custom_humidifier_og_product_id}}", deviceId="{{custom_humidifier_og_device_id}}", localKey="{{custom_humidifier_og_local_key}}", ip="{{custom_humidifier_og_ip}}" ] {
     Type switch : power             "Ein/Aus"               [ dp="1" ]
     Type number : humidity_current  "Luftfeuchtigkeit"      [ dp="14", min="0", max="100" ]
     Type number : fault             "Fehler"                [ dp="22", min="0", max="100" ]

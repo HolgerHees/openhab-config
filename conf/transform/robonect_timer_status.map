@@ -1,5 +1,4 @@
 STANDBY=Noch nicht aktiv
 ACTIVE=Aktiv
 INACTIVE=Inaktiv
-NULL=unbekannt
-UNDEF=unbekannt
+=Unbekannt

@@ -57,3 +57,22 @@ class HomeConnectCoffeemakerBeansEmptyNotification:
     def execute(self, module, input):
         NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"Kaffeemaschine", u"Bohnen nachfüllen", recipients = UserHelper.getPresentUser() )
  
+@rule()
+class HomeConnectCoffeemakerCleaningNotification:
+    def __init__(self):
+        self.triggers = [
+            ItemStateChangeTrigger("pGF_Kitchen_Coffeemaker_Cleaning_Countdown",state=0)
+        ]
+
+    def execute(self, module, input):
+        NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"Kaffeemaschine", u"Reinigung nötig", recipients = UserHelper.getPresentUser() )
+
+@rule()
+class HomeConnectCoffeemakerCalcNotification:
+    def __init__(self):
+        self.triggers = [
+            ItemStateChangeTrigger("pGF_Kitchen_Coffeemaker_Descaling_Countdown",state=0)
+        ]
+
+    def execute(self, module, input):
+        NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"Kaffeemaschine", u"Entkalkung nötig", recipients = UserHelper.getPresentUser() )

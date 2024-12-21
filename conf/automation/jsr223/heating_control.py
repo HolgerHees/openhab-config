@@ -4,12 +4,13 @@ from java.time.format import DateTimeFormatter
 from java.time.temporal import ChronoUnit
 
 from shared.triggers import CronTrigger, ItemStateChangeTrigger
-from shared.helper import rule, getHistoricItemEntry, getItemState, getItemLastChange, getItemLastUpdate, sendCommand, sendCommandIfChanged, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen, itemLastChangeOlderThen, getStableItemState, getMinItemState
+from shared.helper import rule, getHistoricItemEntry, getItemState, getItemLastChange, getItemLastUpdate, sendCommand, sendCommandIfChanged, postUpdate, postUpdateIfChanged, itemLastUpdateOlderThen, itemLastChangeOlderThen, getStableItemState, getMinItemState, startTimer
 from shared.actions import Transformation
 from custom.heating.heating import Heating
 from custom.heating.house import ThermalStorageType, ThermalBridgeType, Wall, Door, Window, Room
 from custom.suncalculation import SunRadiation
 from custom.sunprotection import SunProtectionHelper
+from custom.weather import WeatherHelper
 
 
 OFFSET_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")
@@ -423,27 +424,25 @@ maintenanceMode = {}
 
 #    def execute(self, module, input):
 #        pass
- 
+
 @rule()
 class HeatingControlErrorMessage:
     def __init__(self):
         self.triggers = [
-            CronTrigger("0 0 * * * ?"),
+            CronTrigger("0 */5 * * * ?"),
             ItemStateChangeTrigger("pGF_Utilityroom_Heating_Common_Fault")
         ]
 
-        self.update()
-
-    def update(self):
-        if itemLastUpdateOlderThen("pGF_Utilityroom_Heating_Common_Fault", ZonedDateTime.now().minusMinutes(10)):
-            postUpdateIfChanged("eOther_Error_Heating_Message", u"Keine Updates mehr seit mehr als 10 Minuten")
+    def execute(self, module, input):
+        if input['event'].getType() != "TimerEvent":
+            if itemLastUpdateOlderThen("pGF_Utilityroom_Heating_Common_Fault", ZonedDateTime.now().minusMinutes(10)):
+                postUpdateIfChanged("eOther_Error_Heating_Message", u"Keine Updates mehr seit mehr als 10 Minuten")
+                return
         elif getItemState("pGF_Utilityroom_Heating_Common_Fault").intValue() > 0:
             postUpdateIfChanged("eOther_Error_Heating_Message", Transformation.transform("MAP", "heating_state_de.map", getItemState("pGF_Utilityroom_Heating_Common_Fault").toString() ))
-        else:
-            postUpdateIfChanged("eOther_Error_Heating_Message", "")
+            return
 
-    def execute(self, module, input):
-        self.update()
+        postUpdateIfChanged("eOther_Error_Heating_Message", "")
 
 @rule()
 class HeatingControlVentile:
@@ -478,7 +477,7 @@ class HeatingControlVentile:
                     del maintenanceMode[room]
                 elif not maintainanceModeActive:
                     maintenanceMode[room] = True
-                    
+
 @rule()
 class HeatingControlMain:
     def __init__(self):
@@ -506,16 +505,12 @@ class HeatingControlMain:
 
         currentHeatingDemand = getItemState("pGF_Utilityroom_Heating_Demand")
 
-        outdoorTemperatureItemName = getItemState("pOutdoor_WeatherStation_Temperature_Item_Name").toString()
-        heating = Heating(self.log,outdoorTemperatureItemName)
+        heating = Heating(self.log, WeatherHelper.getTemperatureItemName())
 
-        messuredRadiationShortTerm = messuredRadiationLongTerm = None
-        messuredLightLevelShortTerm = messuredLightLevelLongTerm = 1000
-        if getItemState("pOutdoor_WeatherStation_Is_Working") == ON:
-            messuredRadiationShortTerm = getStableItemState(now,"pOutdoor_WeatherStation_Solar_Power",10)
-            messuredRadiationLongTerm = getStableItemState(now,"pOutdoor_WeatherStation_Solar_Power",30)
-            messuredLightLevelShortTerm = getStableItemState(now,"pOutdoor_WeatherStation_Light_Level",30)
-            messuredLightLevelLongTerm = getStableItemState(now,"pOutdoor_WeatherStation_Light_Level",60)
+        messuredRadiationShortTerm = WeatherHelper.getSolarPowerStableItemState(now, 10)
+        messuredRadiationLongTerm = WeatherHelper.getSolarPowerStableItemState(now, 30)
+        messuredLightLevelShortTerm = WeatherHelper.getLightLevelStableItemState(now, 30)
+        messuredLightLevelLongTerm = WeatherHelper.getLightLevelStableItemState(now, 60)
 
         cr, cr4, cr8, hhs = heating.calculate(currentHeatingDemand == ON, messuredRadiationShortTerm)    
 

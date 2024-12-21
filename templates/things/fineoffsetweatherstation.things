@@ -1,0 +1,9 @@
+Bridge fineoffsetweatherstation:gateway:default "Bridge Wetterstation" [
+     ip="{{custom_weatherstation_ip}}",
+     port="45000",
+     discoverInterval="900",
+     pollingInterval="16",
+     protocol="DEFAULT"
+] {
+ Thing sensor WH90 "Wetterstation" [sensor="WH90"]
+}

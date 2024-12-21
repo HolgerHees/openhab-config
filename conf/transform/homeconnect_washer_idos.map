@@ -2,6 +2,4 @@ OFF=Aus
 LIGHT=Wenig
 NORMAL=Normal
 STRONG=Viel
--=-
-NULL=unbekannt
-UNDEF=unbekannt
+=Unbekannt

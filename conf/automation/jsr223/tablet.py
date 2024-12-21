@@ -5,6 +5,7 @@ from shared.actions import HTTP
 from shared.helper import rule, getItemState, postUpdate, sendCommandIfChanged, startTimer
 from shared.triggers import ItemStateChangeTrigger, ItemCommandTrigger
 from custom.presence import PresenceHelper
+from custom.weather import WeatherHelper
 
 from configuration import customConfigs
 
@@ -90,7 +91,7 @@ class TabletScreen:
     def getRequestedScreenBrightness(self, input = None):
         isRollershutterOpen = self.getItemState("pGF_Livingroom_Shutter_Terrace_Control", input).intValue() == 0 or self.getItemState("pGF_Livingroom_Shutter_Couch_Control", input).intValue() == 0 or self.getItemState("pGF_Kitchen_Shutter_Control", input).intValue() == 0
         isCeilingLightOn = self.getItemState("pGF_Livingroom_Light_Diningtable_Brightness", input).intValue() > 70 or self.getItemState("pGF_Livingroom_Light_Couchtable_Brightness", input).intValue() > 70 or self.getItemState("pGF_Kitchen_Light_Ceiling_Brightness", input).intValue() > 70
-        currentLuxLevel = self.getItemState("pOutdoor_WeatherStation_Light_Level", input).intValue()
+        currentLuxLevel = WeatherHelper.getLightLevelItemState()
 
         outdoorScreenBrightness = 0
         if isRollershutterOpen:

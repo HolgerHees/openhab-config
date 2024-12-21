@@ -3,12 +3,5 @@
 2=Heizen mit WW
 3=Reduziert
 4=Normal
-0.0=Abschalten
-1.0=Nur WW
-2.0=Heizen mit WW
-3.0=Reduziert
-4.0=Normal
 -1=Lesefehler
--=undefiniert
-NULL=unbekannt
-UNDEF=unbekannt
+=Unbekannt

@@ -16,13 +16,13 @@ class HumidifierState:
     def __init__(self):
         self.triggers = [
             #CronTrigger("*/15 * * * * ?"),
-            ThingStatusChangeTrigger("tuya:tuyaDevice:humidifier")
+            ThingStatusChangeTrigger("tuya:tuyaDevice:humidifier_eg")
         ]
 
         startTimer(self.log, 5, self.check)
 
     def check(self):
-        thing = getThing("tuya:tuyaDevice:humidifier")
+        thing = getThing("tuya:tuyaDevice:humidifier_eg")
         status = thing.getStatus()
         info = thing.getStatusInfo()
 
@@ -55,8 +55,9 @@ class HumidifierStateMessage:
             ItemStateChangeTrigger("pGF_Livingroom_Humidifier_Fault"),
             ItemStateChangeTrigger("pGF_Livingroom_Humidifier_Replace_Filter")
         ]
-        self.check()
+        #self.check()
 
+        sendCommand("pGF_Livingroom_Humidifier_Fault", REFRESH)
         #postUpdateIfChanged("pGF_Livingroom_Humidifier_Fault", 0)
 
     def check(self):

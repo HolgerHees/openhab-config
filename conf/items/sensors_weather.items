@@ -23,66 +23,48 @@ Group gWeatherstationInputValues                     "Wetterstation Input" {auto
 
 Group eOutdoor_WeatherStation                        "Wetterstation" <selfinfo> (lOutdoorOther) ["Sensor"]
 
-String pOutdoor_WeatherStation_Temperature_Item_Name "Item [%s]" <selftemperature> (eOutdoor_WeatherStation)
-
 String pOutdoor_WeatherStation_Update_Message        "Letzte Änderung [%s]" <selfclock> (eOutdoor_WeatherStation)
 Switch pOutdoor_WeatherStation_Is_Working            "Aktiv [%s]" <selfclock> (eOutdoor_WeatherStation)
 
-Number pOutdoor_WeatherStation_Cloud_Cover           "Wolken [%.1f]" <selfrain> (eOutdoor_WeatherStation,gPersistance_Chart) ["Point"] {channel="mqtt:topic:cloud:weatherstation:cloudCoverInOcta"[profile="system:follow"]}
+Number pOutdoor_WeatherStation_Cloud_Cover           "Bewölkung [%.1f octa]" <selfrain> (eOutdoor_WeatherStation,gPersistance_Chart) ["Point"] {channel="mqtt:topic:cloud:weatherstation:cloudCoverInOcta"[profile="system:follow"]}
 
-Number pOutdoor_WeatherStation_Rain_Counter          "Counter (total) [%d]" <selfrain> (eOutdoor_WeatherStation,gPersistance_History) ["Point"]
-Number pOutdoor_WeatherStation_Rain_Current          "Aktuell [%.1f mm]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart) ["Point"] {channel="mqtt:topic:cloud:weatherstation:rainLastHourInMillimeter"[profile="system:follow"]}
-Number pOutdoor_WeatherStation_Rain_Current_15Min    "Aktuell (15min) [%.1f mm]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart) ["Point"] {channel="mqtt:topic:cloud:weatherstation:rainLast15MinInMillimeter"[profile="system:follow"]}
-Number pOutdoor_WeatherStation_Rain_Daily            "Heute [%.1f mm]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart) ["Measurement","Rain"] {channel="mqtt:topic:cloud:weatherstation:rainDailyInMillimeter"[profile="system:follow"]}
-Number pOutdoor_WeatherStation_Rain_State            "Status Numerisch [%d]" <selfrain> (eOutdoor_WeatherStation) ["Point"] {channel="mqtt:topic:cloud:weatherstation:rainLevel"[profile="system:follow"]}
-
-Number pOutdoor_WeatherStation_Rain_Impulse          "Counter (current) [%d]" <selfrain> (eOutdoor_WeatherStation,gWeatherstationInputValues) {channel="mqtt:topic:mosquitto:weatherstation:rainImpulse" }
-Number pOutdoor_WeatherStation_Rain_Rate             "Rate Sensor [%d Ω]" <selfrain> (eOutdoor_WeatherStation,gWeatherstationInputValues,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:weatherstation:rainRate" }
-Switch pOutdoor_WeatherStation_Rain_Heater           "Heizung" <heating> (eOutdoor_WeatherStation) {channel="mqtt:topic:mosquitto:weatherstation:rainHeater" }
-String pOutdoor_WeatherStation_Rain_Heater_Request   "Heizung" <heating> (eOutdoor_WeatherStation) {channel="mqtt:topic:mosquitto:weatherstation:rainHeaterRequest" }
 String pOutdoor_WeatherStation_Rain_State_Message    "Status [%s]" <selfrain> (eOutdoor_WeatherStation)
 String pOutdoor_WeatherStation_Rain_Message          "Regen [%s]" <selfrain> (eOutdoor_WeatherStation)
+Number pOutdoor_WeatherStation_Rain_State            "Status Numerisch [%d]" <selfrain> (eOutdoor_WeatherStation) ["Point"] {channel="mqtt:topic:cloud:weatherstation:rainLevel"[profile="system:follow"]}
 
-Number:Speed pOutdoor_WeatherStation_Wind_Speed_15Min      "Geschwindigkeit (15min). [%.1f km/h]" <wind> (eOutdoor_WeatherStation,gPersistance_Chart) ["Measurement","Wind"]
-Number:Speed pOutdoor_WeatherStation_Wind_Gust_15Min       "Böe (15min). [%.1f km/h]" <wind> (eOutdoor_WeatherStation,gPersistance_Chart) ["Measurement","Wind"]
+Number:Length pOutdoor_WeatherStation_Rain_Daily     "Heute [%.2f mm]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History,gWeatherstationInputValues) ["Measurement","Rain"] { channel="fineoffsetweatherstation:gateway:default:piezo-rain-day ",channel="mqtt:topic:cloud:weatherstation:rainDailyInMillimeter"[profile="system:follow"],unit="mm"}
+Number:Length pOutdoor_WeatherStation_Rain_Hourly    "Letzte Stunde [%.2f mm]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart) ["Measurement","Rain"] { channel="mqtt:topic:cloud:weatherstation:rainLastHourInMillimeter"[profile="system:follow"],unit="mm"}
+Number:Speed pOutdoor_WeatherStation_Rain_Rate       "Aktuell [%.2f mm/h]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart,gWeatherstationInputValues) ["Point"] {channel="fineoffsetweatherstation:gateway:default:piezo-rain-rate",channel="mqtt:topic:cloud:weatherstation:rainRateInMillimeterPerHour"[profile="system:follow"]}
 
-Number:Speed pOutdoor_WeatherStation_Wind_Speed_1h         "Geschwindigkeit (1h). [%.1f km/h]" <wind> (eOutdoor_WeatherStation) ["Measurement","Wind"]
-Number:Speed pOutdoor_WeatherStation_Wind_Gust_1h          "Böe (1h). [%.1f km/h]" <wind> (eOutdoor_WeatherStation) ["Measurement","Wind"]
-
-Number pOutdoor_WeatherStation_Wind_Speed            "Geschwindigkeit [%.1f km/h]" <wind> (eOutdoor_WeatherStation,gWeatherstationInputValues,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:weatherstation:windSpeed",channel="mqtt:topic:cloud:weatherstation:windSpeedInKilometerPerHour"[profile="system:follow"]}
-Number pOutdoor_WeatherStation_Wind_Gust             "Böe [%.1f km/h]" <wind> (eOutdoor_WeatherStation,gWeatherstationInputValues,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:weatherstation:windGust",channel="mqtt:topic:cloud:weatherstation:windGustInKilometerPerHour"[profile="system:follow"]}
-Number pOutdoor_WeatherStation_Wind_Direction_Raw    "Richtung Raw [%d °]" <wind> (eOutdoor_WeatherStation,gWeatherstationInputValues) {channel="mqtt:topic:mosquitto:weatherstation:windDirection" }
-Number:Angle pOutdoor_WeatherStation_Wind_Direction        "Richtung [%d °]" <wind> (eOutdoor_WeatherStation) ["Measurement"] {channel="mqtt:topic:cloud:weatherstation:windDirectionInDegree"[profile="system:follow"]}
+Number:Angle pOutdoor_WeatherStation_Wind_Direction  "Richtung [%d °]" <wind> (eOutdoor_WeatherStation,gWeatherstationInputValues) ["Measurement"] {channel="fineoffsetweatherstation:gateway:default:direction-wind", channel="mqtt:topic:cloud:weatherstation:windDirectionInDegree"[profile="system:follow"]}
 String pOutdoor_WeatherStation_Wind_Direction_Short  "Richtung [%s]" <wind> (eOutdoor_WeatherStation)
 String pOutdoor_WeatherStation_Wind_Direction_Long   "Richtung [%s]" <wind> (eOutdoor_WeatherStation)
 String pOutdoor_WeatherStation_Wind_Message          "Wind [%s]" <wind> (eOutdoor_WeatherStation)
 
-Number:Temperature pOutdoor_WeatherStation_Dewpoint              "Taupunkt [%.1f °C]" <selftemperature> (eOutdoor_WeatherStation) ["Point"] {channel="mqtt:topic:cloud:weatherstation:dewpointInCelsius"[profile="system:follow"]}
-String pOutdoor_WeatherStation_Temperature_Stack                          <selftemperature> (eOutdoor_WeatherStation)
+Number:Speed pOutdoor_WeatherStation_Wind_Speed            "Geschwindigkeit [%.1f km/h]" <wind> (eOutdoor_WeatherStation,gPersistance_History,gWeatherstationInputValues) ["Point"] {channel="fineoffsetweatherstation:gateway:default:speed-wind",channel="mqtt:topic:cloud:weatherstation:windSpeedInKilometerPerHour"[profile="system:follow"],unit="km/h"}
+Number:Speed pOutdoor_WeatherStation_Wind_Gust             "Böe [%.1f km/h]" <wind> (eOutdoor_WeatherStation,gPersistance_History,gWeatherstationInputValues) ["Point"] {channel="fineoffsetweatherstation:gateway:default:speed-gust",channel="mqtt:topic:cloud:weatherstation:windGustInKilometerPerHour"[profile="system:follow"],unit="km/h"}
+Number:Speed pOutdoor_WeatherStation_Wind_Speed_15Min      "Geschwindigkeit (15min). [%.1f km/h]" <wind> (eOutdoor_WeatherStation,gPersistance_Chart) ["Measurement","Wind"] {unit="km/h"}
+Number:Speed pOutdoor_WeatherStation_Wind_Gust_15Min       "Böe (15min). [%.1f km/h]" <wind> (eOutdoor_WeatherStation,gPersistance_Chart) ["Measurement","Wind"] {unit="km/h"}
+Number:Speed pOutdoor_WeatherStation_Wind_Speed_1h         "Geschwindigkeit (1h). [%.1f km/h]" <wind> (eOutdoor_WeatherStation) ["Measurement","Wind"] {unit="km/h"}
+Number:Speed pOutdoor_WeatherStation_Wind_Gust_1h          "Böe (1h). [%.1f km/h]" <wind> (eOutdoor_WeatherStation) ["Measurement","Wind"] {unit="km/h"}
 
-Number pOutdoor_WeatherStation_Temperature_Raw       "Temperatur Raw [%.1f °C]" <selftemperature> (eOutdoor_WeatherStation,gWeatherstationInputValues) {channel="mqtt:topic:mosquitto:weatherstation:temperature" }
-Number:Temperature pOutdoor_WeatherStation_Temperature           "Garten [%.1f °C]" <selftemperature> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History) ["Measurement","Temperature"] {channel="mqtt:topic:cloud:weatherstation:airTemperatureInCelsius"[profile="system:follow"]}
-Number pOutdoor_WeatherStation_Humidity_Raw          "Luftfeuchtigkeit Raw [%.1f %%]" <humidity> (eOutdoor_WeatherStation,gWeatherstationInputValues) {channel="mqtt:topic:mosquitto:weatherstation:humidity" }
-Number:Dimensionless pOutdoor_WeatherStation_Humidity              "Garten [%.1f %%]" <humidity> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History) ["Measurement","Humidity"] {channel="mqtt:topic:cloud:weatherstation:airHumidityInPercent"[profile="system:follow"], unit="%"}
+Number:Temperature pOutdoor_WeatherStation_Dewpoint              "Taupunkt [%.1f °C]" <selftemperature> (eOutdoor_WeatherStation) ["Point"] {channel="mqtt:topic:cloud:weatherstation:dewpointInCelsius"[profile="system:follow"]}
+Number:Temperature pOutdoor_WeatherStation_Temperature           "Garten [%.1f °C]" <selftemperature> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History,gWeatherstationInputValues) ["Measurement","Temperature"] {channel="fineoffsetweatherstation:gateway:default:temperature-outdoor", channel="mqtt:topic:cloud:weatherstation:airTemperatureInCelsius"[profile="system:follow"]}
+Number:Dimensionless pOutdoor_WeatherStation_Humidity              "Garten [%.1f %%]" <humidity> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History,gWeatherstationInputValues) ["Measurement","Humidity"] {channel="fineoffsetweatherstation:gateway:default:humidity-outdoor", channel="mqtt:topic:cloud:weatherstation:airHumidityInPercent"[profile="system:follow"], unit="%"}
 String pOutdoor_WeatherStation_Air_Message           "Luft [%s]" <selftemperature> (eOutdoor_WeatherStation)
+
 Number pOutdoor_WeatherStation_Temperature_Perceived "Gefühlt [%.1f °C]" <selftemperature> (eOutdoor_WeatherStation,gPersistance_Chart) {channel="mqtt:topic:cloud:weatherstation:perceivedTemperatureInCelsius"[profile="system:follow"]}
 
-Number pOutdoor_WeatherStation_Pressure              "Luftdruck [%.1f hPa]" <selfruntime> (eOutdoor_WeatherStation,gWeatherstationInputValues,gPersistance_Chart,gPersistance_History) ["Measurement","Pressure"] {channel="mqtt:topic:mosquitto:weatherstation:pressure",channel="mqtt:topic:cloud:weatherstation:pressureInHectopascals"[profile="system:follow"]}
+Number pOutdoor_WeatherStation_Pressure              "Luftdruck [%.1f hPa]" <selfruntime> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History,gWeatherstationInputValues) ["Measurement","Pressure"] {channel="fineoffsetweatherstation:gateway:default:pressure-relative",channel="mqtt:topic:cloud:weatherstation:pressureInHectopascals"[profile="system:follow"]}
 
-Number pOutdoor_WeatherStation_SolarDiffCurrent      "Solar Current [%.1f °C]" <selftemperature> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History) ["Point"]
-
-String pOutdoor_WeatherStation_Solar_Temperature_Stack "Sonnenkraft [%s]" <selfsun> (eOutdoor_WeatherStation) ["Point"]
 Number:Intensity pOutdoor_WeatherStation_Solar_Power_Max       "Sonnenkraft Max. [%.1f Watt/m²]" <selfsun> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History) ["Point"]
+Number:Intensity pOutdoor_WeatherStation_Solar_Power           "Sonnenkraft [%.1f Watt/m²]" <selfsun> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History,gWeatherstationInputValues) ["Point"] {channel="mqtt:topic:mosquitto:weatherstation:solarRadiation", channel="mqtt:topic:cloud:weatherstation:solarPowerInWatt"[profile="system:follow"]}
 
-Number pOutdoor_WeatherStation_Solar_Temperature_Raw "Sonnentemperatur Raw [%.1f °C]" <selfsun> (eOutdoor_WeatherStation,gWeatherstationInputValues) {channel="mqtt:topic:mosquitto:weatherstation:solarTemperature" }
-Number:Intensity pOutdoor_WeatherStation_Solar_Power           "Sonnenkraft [%.1f Watt/m²]" <selfsun> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:cloud:weatherstation:solarPowerInWatt"[profile="system:follow"]}
+Number:Illuminance pOutdoor_WeatherStation_Light_Level_Max       "Helligkeit Max. [%.1f lux/m²]" <selfsun> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History) ["Point"]
+Number:Illuminance pOutdoor_WeatherStation_Light_Level           "Helligkeit [%d lux]" <selfsun> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History) ["Measurement","Light"] {channel="fineoffsetweatherstation:gateway:default:illumination",channel="mqtt:topic:cloud:weatherstation:lightLevelInLux"[profile="system:follow"]}
 
-Number:Illuminance pOutdoor_WeatherStation_Light_Level           "Helligkeit [%d lux]" <selfsun> (eOutdoor_WeatherStation,gWeatherstationInputValues,gPersistance_Chart,gPersistance_History) ["Measurement","Light"] {channel="mqtt:topic:mosquitto:weatherstation:lightLevel",channel="mqtt:topic:cloud:weatherstation:lightLevelInLux"[profile="system:follow"]}
+Number pOutdoor_WeatherStation_UV_Index              "UV Index [%.1f]" <selfsun> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History,gWeatherstationInputValues) ["Measurement"] {channel="fineoffsetweatherstation:gateway:default:uv-index", channel="mqtt:topic:cloud:weatherstation:uvIndex"[profile="system:follow"]}
 
-Number pOutdoor_WeatherStation_UV_Index              "UV Index [%.1f]" <selfsun> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History) ["Measurement"] {channel="mqtt:topic:cloud:weatherstation:uvIndex"[profile="system:follow"]}
-Number pOutdoor_WeatherStation_UV_A_Raw              "UV A Raw [%.1f]" <selfsun> (eOutdoor_WeatherStation,gWeatherstationInputValues) {channel="mqtt:topic:mosquitto:weatherstation:uvA" }
-Number pOutdoor_WeatherStation_UV_A                  "UV A [%.1f]" <selfsun> (eOutdoor_WeatherStation) ["Measurement"]
-Number pOutdoor_WeatherStation_UV_B_Raw              "UV B Raw [%.1f]" <selfsun> (eOutdoor_WeatherStation,gWeatherstationInputValues) {channel="mqtt:topic:mosquitto:weatherstation:uvB" }
-Number pOutdoor_WeatherStation_UV_B                  "UV B [%.1f]" <selfsun> (eOutdoor_WeatherStation) ["Measurement"]
-String pOutdoor_WeatherStation_UV_Message            "UV Index [%s]" <selfsun> (eOutdoor_WeatherStation)
- 
+Number pOutdoor_WeatherStation_Signal                "Signal [%d]" <network> (eOutdoor_WeatherStation) ["Measurement"] {channel="fineoffsetweatherstation:sensor:default:WH90:signal"}
+Number:ElectricPotential pOutdoor_WeatherStation_Battery_Voltage "Spannung [%.2f V]" <selfinfo> (eOutdoor_WeatherStation) ["Measurement"] {channel="fineoffsetweatherstation:sensor:default:WH90:batteryVoltage"}
+Switch pOutdoor_WeatherStation_Battery_Low                "Batterie niedrig [%s]" <selfinfo> (eOutdoor_WeatherStation) ["Measurement"] {channel="fineoffsetweatherstation:sensor:default:WH90:lowBattery"}

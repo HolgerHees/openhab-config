@@ -181,6 +181,8 @@ class PresenceDetectionKnownPersonCheck:
 
         self.skippedTimer = {}
 
+        #self.process("pOther_Presence_Sandra_State_Raw", "pOther_Presence_Sandra_State", ON)
+
     def process(self, itemName, relatedItemName, itemState):
         with PresenceCache.getLock():
             presenceState = PresenceCache.getPresenceState()

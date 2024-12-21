@@ -6,43 +6,6 @@ from shared.triggers import ItemStateChangeTrigger
 
 
 @rule()
-class HomeConnectWasherMessage:
-    def __init__(self):
-        self.triggers = [
-            ItemStateChangeTrigger("pGF_Utilityroom_Washer_ActiveProgramState", state="UNDEF")
-        ]
-
-        #self.check()
-
-    def check(self):
-        max_time = ZonedDateTime.now().minusHours( 24 * 30 * 3 )
-
-        currentTime = ZonedDateTime.now()
-
-        found = False
-        while True:
-            historicEntry = getHistoricItemEntry("pGF_Utilityroom_Washer_ActiveProgramState", currentTime )
-            currentTime = historicEntry.getTimestamp()
-
-            if currentTime.isBefore(max_time):
-                break
-
-            #self.log.info("{}".format(historicEntry.getState().toString()))
-            if historicEntry.getState().toString() == "Drum Clean":
-                found = True
-                break
-
-            currentTime = currentTime.minusNanos(1)
-
-        if not found:
-            NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, u"Waschmaschine", u"Trommelreinigung nötig" )
-
-        #self.log.info(u"{}".format(found))
-
-    def execute(self, module, input):
-        self.check()
-
-@rule()
 class HomeConnectWasherProgress:
     def __init__(self):
         self.triggers = [
@@ -89,3 +52,13 @@ class HomeConnectWasherProgress:
                 if self.checkTimer != None:
                     self.checkTimer.cancel()
                 self.notify( True )
+
+@rule()
+class HomeConnectWasherDrumCleanNotification:
+    def __init__(self):
+        self.triggers = [
+            ItemStateChangeTrigger("pGF_Utilityroom_Washer_DrumCleanState",state="ON")
+        ]
+
+    def execute(self, module, input):
+        NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"Waschmachine", u"Trommelreinigung nötig", recipients = UserHelper.getPresentUser() )

@@ -2,3 +2,4 @@ Thing shelly:shellyplugs:socket1 "Steckdose Lüfter" [deviceIp="{{custom_shelly_
 Thing shelly:shellyplugs:socket2 "Steckdose Frostwächter" [deviceIp="{{custom_shelly_socket_2_ip}}"]
 Thing shelly:shellyplusplug:socket3 "Steckdose Dachboden" [deviceIp="{{custom_shelly_socket_3_ip}}"]
 Thing shelly:shellyplusplug:socket4 "Steckdose Wetterstation" [deviceIp="{{custom_shelly_socket_4_ip}}"]
+Thing shelly:shellyplusplug:socket5 "Steckdose Server" [deviceIp="{{custom_shelly_socket_5_ip}}"]

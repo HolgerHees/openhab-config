@@ -7,18 +7,13 @@ from shared.triggers import CronTrigger, ItemStateChangeTrigger, ItemStateUpdate
 
 
 #from org.openhab.core.types.RefreshType import REFRESH
-  
 
 totalSupply = 3600 # total possible photovoltaic power in watt
 maxTimeSlot = 300000 # value timeslot to messure average power consumption => 5 min
 
-# offset values for total energy demand and supply (total values at the time when knx based energy meter was installed)
-startEnergyTotalDemandValue = 21158.037
-startEnergyTotalSupplyValue = -90.636
-
 # offset values for electricity meter demand and supply (total values at the time when new electricity meter was changed)
-startElectricityMeterDemandValue = 21830.135
-startElectricityMeterSupplyValue = 52.75
+startElectricityMeterDemandOffset = 0.0
+startElectricityMeterSupplyOffset = 0.0
 
 # offset values for gas meter (total value at the time when knx based impulse counter was resettet)
 startGasMeterValue = 10405.39
@@ -103,18 +98,15 @@ class ValuesConsumptionSolarPower5min:
 class ValuesConsumptionEnergyCounterDemand:
     def __init__(self):
         self.triggers = [
-          ItemStateChangeTrigger("pGF_Utilityroom_Energy_Demand_Active"),
+          ItemStateChangeTrigger("pGF_Utilityroom_Electricity_Meter_Demand"),
           CronTrigger("1 0 0 * * ?")
         ]
 
     def execute(self, module, input):
         now = ZonedDateTime.now()
         
-        demandCurrent = getItemState("pGF_Utilityroom_Energy_Demand_Active").intValue() / 1000.0
-        zaehlerStandCurrent = ( startEnergyTotalDemandValue + demandCurrent )
+        zaehlerStandCurrent = getItemState("pGF_Utilityroom_Electricity_Meter_Demand").doubleValue() + startElectricityMeterDemandOffset
         postUpdateIfChanged("pGF_Utilityroom_Electricity_Total_Demand",zaehlerStandCurrent)
-        
-        postUpdateIfChanged("pGF_Utilityroom_Electricity_Meter_Demand",zaehlerStandCurrent-startElectricityMeterDemandValue)
 
         # *** Tagesbezug ***
         zaehlerStandOld = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Demand", now.toLocalDate().atStartOfDay(now.getZone()) ).doubleValue()
@@ -145,18 +137,15 @@ class ValuesConsumptionEnergyCounterDemand:
 class ValuesConsumptionEnergyCounterSupply:
     def __init__(self):
         self.triggers = [
-          ItemStateChangeTrigger("pGF_Utilityroom_Energy_Supply_Active"),
+          ItemStateChangeTrigger("pGF_Utilityroom_Electricity_Meter_Supply"),
           CronTrigger("1 0 0 * * ?")
         ]
 
     def execute(self, module, input):
         now = ZonedDateTime.now()
         
-        supplyCurrent = getItemState("pGF_Utilityroom_Energy_Supply_Active").intValue() / 1000.0
-        zaehlerStandCurrent = ( startEnergyTotalSupplyValue + supplyCurrent )
+        zaehlerStandCurrent = getItemState("pGF_Utilityroom_Electricity_Meter_Supply").doubleValue() + startElectricityMeterSupplyOffset
         postUpdateIfChanged("pGF_Utilityroom_Electricity_Total_Supply",zaehlerStandCurrent)
-
-        postUpdateIfChanged("pGF_Utilityroom_Electricity_Meter_Supply",zaehlerStandCurrent-startElectricityMeterSupplyValue)
 
         # *** Tageslieferung ***
         zaehlerStandOld = getHistoricItemState("pGF_Utilityroom_Electricity_Total_Supply", now.toLocalDate().atStartOfDay(now.getZone()) ).doubleValue()
@@ -501,13 +490,13 @@ class ValuesConsumptionSocketConsumption:
             ItemStateChangeTrigger("pMobile_Socket_5_Total_Raw"),
             ItemStateChangeTrigger("pMobile_Socket_6_Total_Raw"),
             ItemStateChangeTrigger("pMobile_Socket_7_Total_Raw"),
-            ItemStateChangeTrigger("pMobile_Socket_8_Total_Raw")
+            ItemStateChangeTrigger("pMobile_Socket_8_Total_Raw"),
+            ItemStateChangeTrigger("pMobile_Socket_9_Total_Raw")
         ]
 
         now = ZonedDateTime.now()
 
-        #postUpdate("pMobile_Socket_7_Total_Consumption",0)
-        #postUpdate("pMobile_Socket_8_Total_Consumption",0)
+        #postUpdate("pMobile_Socket_9_Total_Consumption",0)
 
         #test = getItemState("pMobile_Socket_5_Total_Consumption").doubleValue()
         #self.log.info(str(test))

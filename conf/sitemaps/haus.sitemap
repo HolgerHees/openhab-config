@@ -32,14 +32,18 @@ sitemap haus label="Main Menu"
 						Slider item=pGF_Kitchen_Light_Ceiling_Brightness label="Küche"
 						Switch item=pGF_Kitchen_Light_Cupboard_Powered label="Küchenschrank"
 					}
+					Frame label="Flur" {
+						Switch item=pGF_Corridor_Light_Ceiling_Powered label="Decke"
+						Switch item=pGF_Corridor_Light_Mirror_Powered label="Spiegel"
+						Slider item=pGF_Corridor_Light_Hue_Color label="Indirekt"
+						Colorpicker item=pGF_Corridor_Light_Hue_Color label="Indirekt anpassen" visibility=[pGF_Corridor_Light_Hue_Color>0]
+					}
+					Frame label="Gäste WC" {
+						Switch item=pGF_Guesttoilet_Light_Ceiling_Powered label="Decke"
+						Switch item=pGF_Guesttoilet_Light_Mirror_Powered label="Spiegel"
+					}
 					Frame label="Sonstiges" {
-						Switch item=pGF_Corridor_Light_Ceiling_Powered label="Flur"
-						Switch item=pGF_Corridor_Light_Mirror_Powered label="Flur Spiegel"
-						Slider item=pGF_Corridor_Light_Hue_Color label="Flur Indirekt"
-						Colorpicker item=pGF_Corridor_Light_Hue_Color visibility=[pGF_Corridor_Light_Hue_Color>0]
 						Switch item=pGF_Workroom_Light_Ceiling_Powered label="Arbeitszimmer"
-						Switch item=pGF_Guesttoilet_Light_Ceiling_Powered label="Gäste WC"
-						Switch item=pGF_Guesttoilet_Light_Mirror_Powered label="Gäste WC Spiegel"
 						Switch item=pGF_Boxroom_Light_Ceiling_Powered label="Abstellkammer"
 						Switch item=pGF_Utilityroom_Light_Ceiling_Powered label="HWR"
 					}
@@ -209,111 +213,78 @@ sitemap haus label="Main Menu"
                 }
 			}
 		}
-		Group label="Geräte [%s]" item=pOther_State_Message_Devices icon="roomba" valuecolor=[=="Alles ok"="#6bc305",!="Alles ok"="#d72a2a"] {
+		Group label="Geräte [%s]" item=pOther_State_Message_Devices icon="whitegood_coffeemaschine" valuecolor=[=="Alles ok"="#6bc305",!="Alles ok"="#d72a2a"] {
             Frame label="Haus" {
-                Text label="Waschmaschine [%s]" item=pGF_Utilityroom_Washer_Message icon="whitegood_washer.png" {
+                Text label="Waschmaschine [%s]" item=pGF_Utilityroom_Washer_Message icon="whitegood_washer" {
                     Frame label="Status" {
-                        Text item=pGF_Utilityroom_Washer_ProgramProgressState
-                        Text item=pGF_Utilityroom_Washer_RemainingProgramTimeState
                         Text item=pGF_Utilityroom_Washer_OperationState
                         Text item=pGF_Utilityroom_Washer_DoorState
+                        Text item=pGF_Utilityroom_Washer_ProgramProgressState visibility=[pGF_Utilityroom_Washer_OperationState==Run]
+                        Text item=pGF_Utilityroom_Washer_RemainingProgramTimeState visibility=[pGF_Utilityroom_Washer_OperationState==Run]
                     }
                     Frame label="Programm" {
                         Text item=pGF_Utilityroom_Washer_ActiveProgramState
                         Text item=pGF_Utilityroom_Washer_SelectedProgramState
                         Text item=pGF_Utilityroom_Washer_WashingProgramTemperature
                         Text item=pGF_Utilityroom_Washer_WashingProgramSpinSpeed
-                        Text item=pGF_Utilityroom_Washer_WashingProgramDosingLevel1
-                        Text item=pGF_Utilityroom_Washer_WashingProgramDosingLevel2
-                        Text item=pGF_Utilityroom_Washer_WashingProgramActions
+                    }
+                    Frame label="Info" {
+                        Text item=pGF_Utilityroom_Washer_DrumCleanState valuecolor=[==ON="#d72a2a",!=ON="#6bc305"]
+                        Text item=pGF_Utilityroom_Washer_LoadState
                     }
                     Frame label="Sonstiges" {
                         Text item=pGF_Utilityroom_Washer_RemoteStartAllowanceState
                         Text item=pGF_Utilityroom_Washer_RemoteControlActiveState
                         Text item=pGF_Utilityroom_Washer_LocalControlActiveState
+                        Text item=pGF_Utilityroom_Washer_WashingProgramDosingLevel1
+                        Text item=pGF_Utilityroom_Washer_WashingProgramDosingLevel2
                     }
                 }
-                Text label="Geschirrspüler [%s]" item=pGF_Kitchen_Dishwasher_Message icon="whitegood_dishwasher.png" {
+                Text label="Geschirrspüler [%s]" item=pGF_Kitchen_Dishwasher_Message icon="whitegood_dishwasher" {
                     Frame label="Status" {
-                        Text item=pGF_Kitchen_Dishwasher_ProgramProgressState
-                        Text item=pGF_Kitchen_Dishwasher_RemainingProgramTimeState
+                        Text item=pGF_Kitchen_Dishwasher_Power_State
                         Text item=pGF_Kitchen_Dishwasher_OperationState
                         Text item=pGF_Kitchen_Dishwasher_DoorState
+                        Text item=pGF_Kitchen_Dishwasher_ProgramProgressState visibility=[pGF_Kitchen_Dishwasher_OperationState==Run]
+                        Text item=pGF_Kitchen_Dishwasher_RemainingProgramTimeState visibility=[pGF_Kitchen_Dishwasher_OperationState==Run]
                     }
                     Frame label="Programm" {
                         Text item=pGF_Kitchen_Dishwasher_ActiveProgramState
                         Text item=pGF_Kitchen_Dishwasher_SelectedProgramState
-                        Text item=pGF_Kitchen_Dishwasher_ProgramActionState
+                    }
+                    Frame label="Info" {
+                        Text item=pGF_Kitchen_Dishwasher_SaltEmptyState valuecolor=[==ON="#d72a2a",!=ON="#6bc305"]
+                        Text item=pGF_Kitchen_Dishwasher_RinseEmptyState valuecolor=[==ON="#d72a2a",!=ON="#6bc305"]
+                        Text item=pGF_Kitchen_Dishwasher_MachineCareState valuecolor=[==ON="#d72a2a",!=ON="#6bc305"]
                     }
                     Frame label="Sonstiges" {
                         Text item=pGF_Kitchen_Dishwasher_RemoteStartAllowanceState
                         Text item=pGF_Kitchen_Dishwasher_RemoteControlActiveState
                     }
                 }
-                Text label="Kaffeemaschine [%s]" item=pGF_Kitchen_Coffeemaker_Message icon="whitegood_coffeemaschine.png" {
-                    Text item=pGF_Kitchen_Coffeemaker_Power_State
-                    Text item=pGF_Kitchen_Coffeemaker_Operation_State
-                    Text item=pGF_Kitchen_Coffeemaker_Remote_Start_Allowed
-                    Text item=pGF_Kitchen_Coffeemaker_Local_Control_State
-                    Text item=pGF_Kitchen_Coffeemaker_Active_Program_State
-                    Text item=pGF_Kitchen_Coffeemaker_Selected_Program_State
-                    Text item=pGF_Kitchen_Coffeemaker_Basic_Action_State
-                    Text item=pGF_Kitchen_Coffeemaker_Program_Progress_State
-                    Text item=pGF_Kitchen_Coffeemaker_Drip_Tray_Full_State
-                    Text item=pGF_Kitchen_Coffeemaker_Tank_Empty_State
-                    Text item=pGF_Kitchen_Coffeemaker_Bean_Container_Empty_State          
-                }
-                Text label="Roomba" item=pIndoor_Roomba_StatusFormatted icon="roomba"{
+                Text label="Kaffeemaschine [%s]" item=pGF_Kitchen_Coffeemaker_Message icon="whitegood_coffeemaschine" {
                     Frame label="Status" {
-                        Text item=pIndoor_Roomba_batPct
-                        Text item=pIndoor_Roomba_StatusFormatted
-                        Selection item=pIndoor_Roomba_command mappings=[start="Start",stop="Stop",pause="Pause",dock="Dock",resume="Weiter"]
-                        Switch item=pIndoor_Roomba_auto mappings=[ON="Auto", OFF="Man"]
+                        Text item=pGF_Kitchen_Coffeemaker_Power_State
+                        Text item=pGF_Kitchen_Coffeemaker_Operation_State
+                        Text item=pGF_Kitchen_Coffeemaker_Program_Progress_State visibility=[pGF_Kitchen_Dishwasher_OperationState==Run]
                     }
-                    Frame label="Reinigung" {
-                        Text label="Karte" icon="map"
-                        {
-                            Image url="https://smartmarvin.de/roomba/map_notext.png" refresh=2000
-                        }
-                        Text item=pIndoor_Roomba_mssnM
-                        Text item=pIndoor_Roomba_sqm
+                    Frame label="Programm" {
+                        Text item=pGF_Kitchen_Coffeemaker_Active_Program_State
+                        Text item=pGF_Kitchen_Coffeemaker_Selected_Program_State
                     }
-                    Frame label="Infos" {
-                        Text item=pIndoor_Roomba_full
-                        Text item=pIndoor_Roomba_bin_present
-                        Text item=pIndoor_Roomba_rssi
-                        Text item=pIndoor_Roomba_errorFormatted
+                    Frame label="Info" {
+                        Text item=pGF_Kitchen_Coffeemaker_Drip_Tray_Full_State valuecolor=[==ON="#d72a2a",!=ON="#6bc305"]
+                        Text item=pGF_Kitchen_Coffeemaker_Tank_Empty_State valuecolor=[==ON="#d72a2a",!=ON="#6bc305"]
+                        Text item=pGF_Kitchen_Coffeemaker_Bean_Container_Empty_State valuecolor=[==ON="#d72a2a",!=ON="#6bc305"]
+                        Text item=pGF_Kitchen_Coffeemaker_Cleaning_Countdown
+                        Text item=pGF_Kitchen_Coffeemaker_Descaling_Countdown
                     }
                     Frame label="Sonstiges" {
-                        Text label="Settings" icon="selfsettings" {
-                            Frame label="Settings" {
-                                Selection item=pIndoor_Roomba_boost mappings=[auto="Auto",eco="Eco",performance="Performance"]
-                                Selection item=pIndoor_Roomba_passes mappings=[auto="Auto",one="Ein",two="Zwei"]
-                                Switch item=pIndoor_Roomba_edgeClean
-                                Switch item=pIndoor_Roomba_binPause
-                            }
-                            Frame label="Info" {
-                                Text item=pIndoor_Roomba_noAutoPasses
-                                Text item=pIndoor_Roomba_twoPass
-                                Text item=pIndoor_Roomba_carpetBoost
-                                Text item=pIndoor_Roomba_vacHigh
-                            }
-                        }
-                        Text item=pIndoor_Roomba_lastcommand
-                        Text item=pIndoor_Roomba_mission
-                        Text item=pIndoor_Roomba_initiator
-                        Text item=pIndoor_Roomba_expireM
-                        Text item=pIndoor_Roomba_rechrgM
-                        Text item=pIndoor_Roomba_status
-                        Text item=pIndoor_Roomba_phase
+                        Text item=pGF_Kitchen_Coffeemaker_Remote_Start_Allowed
+                        Text item=pGF_Kitchen_Coffeemaker_Local_Control_State
                     }
-                    
-                    //Text label="Map" {
-                        //Image url="http://your_OH_ip_address:port/static/map.png" refresh=1000
-                        //Webview url="http://your_OH_ip_address:port/static/pIndoor_Roomba_map.html" icon="none" height=21
-                    //}
                 }
-                Text label="Fernseher [MAP(on_off_de.map):%s]" item=pGF_Livingroom_Television_POWER {
+                Text label="Fernseher [MAP(on_off_de.map):%s]" item=pGF_Livingroom_Television_POWER icon="screen" {
                     Frame label="Steuerung" {
                         Text item=pGF_Livingroom_SkyQ_Info_Program_Title visibility=[pGF_Livingroom_Television_POWER==ON]
                         Switch item=pGF_Livingroom_Television_POWER
@@ -703,10 +674,6 @@ sitemap haus label="Main Menu"
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                                 Webview url="/static/custom/grafana/weatherstation_temperatures.html?fromItem=Chart_From" icon="none" height=18
                             }
-                            Frame label="Debug" {
-                                Text item=pOutdoor_WeatherStation_Temperature_Raw
-                                Text item=pOutdoor_WeatherStation_Humidity_Raw
-                            }
                         }
                         Group item=pOutdoor_WeatherStation_Pressure {
                             Frame label="Details" {
@@ -719,7 +686,7 @@ sitemap haus label="Main Menu"
                         }
                         Group item=pOutdoor_WeatherStation_Rain_Message {
                             Frame label="Details" {
-                                Text item=pOutdoor_WeatherStation_Rain_Current
+                                Text item=pOutdoor_WeatherStation_Rain_Rate
                                 Text item=pOutdoor_WeatherStation_Rain_Daily
                                 Text item=pOutdoor_WeatherStation_Rain_State_Message
                             }
@@ -729,10 +696,6 @@ sitemap haus label="Main Menu"
                             }
                             Frame label="Debug" {
                                 Text item=pOutdoor_WeatherStation_Rain_State
-                                Text item=pOutdoor_WeatherStation_Rain_Counter
-                                Text item=pOutdoor_WeatherStation_Rain_Impulse
-                                Text item=pOutdoor_WeatherStation_Rain_Rate
-                                Switch item=pOutdoor_WeatherStation_Rain_Heater
                             }
                         }
                         Group item=pOutdoor_WeatherStation_Wind_Message {
@@ -751,20 +714,15 @@ sitemap haus label="Main Menu"
                             }
                         }
                     }
-                    Frame label="Sonne" {
-                        Group item=pOutdoor_WeatherStation_UV_Message {
+                    Frame label="Sonne & Wolken" {
+                        Text item=pOutdoor_WeatherStation_Cloud_Cover
+                        Group item=pOutdoor_WeatherStation_UV_Index {
                             Frame label="Details" {
                                 Text item=pOutdoor_WeatherStation_UV_Index
-                                Text item=pOutdoor_WeatherStation_UV_A
-                                Text item=pOutdoor_WeatherStation_UV_B
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                                 Webview url="/static/custom/grafana/weatherstation_uvindex.html?fromItem=Chart_From" icon="none" height=7
-                            }
-                            Frame label="Debug" {
-                                Text item=pOutdoor_WeatherStation_UV_A_Raw
-                                Text item=pOutdoor_WeatherStation_UV_B_Raw
                             }
                         }
                         Group item=pOutdoor_WeatherStation_Light_Level {
@@ -785,13 +743,12 @@ sitemap haus label="Main Menu"
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                                 Webview url="/static/custom/grafana/weatherstation_solarpower.html?fromItem=Chart_From" icon="none" height=7
                             }
-                            Frame label=Debug {
-                                Text item=pOutdoor_WeatherStation_Solar_Temperature_Raw
-                                Text item=pOutdoor_WeatherStation_Temperature_Raw
-                            }
                         }
                     }
                     Frame label="Sonstiges" {
+                        Text item=pOutdoor_WeatherStation_Battery_Low valuecolor=[ON="#d72a2a"]
+                        Text item=pOutdoor_WeatherStation_Battery_Voltage
+                        Text item=pOutdoor_WeatherStation_Signal
                         Text item=pOutdoor_WeatherStation_Update_Message visibility=[pOutdoor_WeatherStation_Is_Working!=OFF] valuecolor=[!=""="#6bc305"]
                         Text item=pOutdoor_WeatherStation_Update_Message visibility=[pOutdoor_WeatherStation_Is_Working==OFF] valuecolor=[!=""="#d72a2a"]
                     }
@@ -1133,6 +1090,18 @@ sitemap haus label="Main Menu"
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                                 Webview url="/static/custom/grafana/mobile_socket_8_consumption.html?fromItem=Chart_From" icon="none" height=9
+                            }
+                        }
+                        Text item=pMobile_Socket_9_Powered label="Server"
+                        Group item=pMobile_Socket_9_Consumption label="Server (Verbrauch)" {
+                            Frame label="Status" {
+                                Text item=pMobile_Socket_9_Consumption label="Verbrauch"
+                                Text item=pMobile_Socket_9_Total_Consumption label="Gesamt"
+                                Text item=pMobile_Socket_9_Daily_Consumption label="Heute"
+                            }
+                            Frame label="Auswertung" {
+                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/custom/grafana/mobile_socket_9_consumption.html?fromItem=Chart_From" icon="none" height=9
                             }
                         }
                     }

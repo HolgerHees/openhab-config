@@ -80,3 +80,11 @@ Number pMobile_Socket_8_Consumption	           "Wetterstation Verbrauch [%.2f W]
 Number pMobile_Socket_8_Total_Raw 	           "Wetterstation Gesamt Raw [%.2f KWh]"	<selfenergy> (eMobile_Socket_8)  { channel="shelly:shellyplusplug:socket4:meter#totalKWH" }
 Number pMobile_Socket_8_Total_Consumption      "Wetterstation Gesamt [%.2f KWh]"	<selfenergy> (eMobile_Socket_8,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]
 Number pMobile_Socket_8_Daily_Consumption	   "Wetterstation Tagesverbrauch [%.2f KWh]"	<selfenergy> (eMobile_Socket_8) ["Point"]
+
+Group  eMobile_Socket_9                        "Server"           <selfsocket> (lIndoorOther) ["PowerOutlet"]
+Switch pMobile_Socket_9_Powered                "Server"           <selfsocket> (eMobile_Socket_9,gAll_Sockets) ["Switch","Power"]              { channel="shelly:shellyplusplug:socket5:relay#output" }
+Number pMobile_Socket_9_Consumption	           "Server Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_9,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]  { channel="shelly:shellyplusplug:socket5:meter#currentWatts" }
+Number pMobile_Socket_9_Total_Raw 	           "Server Gesamt Raw [%.2f KWh]"	<selfenergy> (eMobile_Socket_9)  { channel="shelly:shellyplusplug:socket5:meter#totalKWH" }
+Number pMobile_Socket_9_Total_Consumption      "Server Gesamt [%.2f KWh]"	<selfenergy> (eMobile_Socket_9,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]
+Number pMobile_Socket_9_Daily_Consumption	   "Server Tagesverbrauch [%.2f KWh]"	<selfenergy> (eMobile_Socket_9) ["Point"]
+
