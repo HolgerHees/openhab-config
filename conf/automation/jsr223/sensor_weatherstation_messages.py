@@ -282,26 +282,20 @@ class SensorWeatherstationPerceivedTemperature:
         #self.calc()
 
     def calc(self):
-        lux = getStableItemState(ZonedDateTime.now(),"pOutdoor_WeatherStation_Light_Level",10)
-        #input['event'].getItemState().intValue()
-
-        #pOutdoor_WeatherStation_Solar_Power
-        maxLuminationRatio = getItemState("pOutdoor_Astro_Total_Radiation").doubleValue() / 900
-        maxLux = 50000 * maxLuminationRatio
+        maxLux = getItemState("pOutdoor_Astro_Light_Level").doubleValue()
 
         octa = getItemState("pOutdoor_Weather_Current_Cloud_Cover").doubleValue()
-        #self.log.info("{}".format(octa))
-
         if maxLux > 10000:
+            lux = getStableItemState(ZonedDateTime.now(),"pOutdoor_WeatherStation_Light_Level",10)
             if lux < maxLux:
                 ratio = lux * 6.0 / maxLux
                 _octa = 6.0 - ratio
             else:
                 _octa = 0.0
+
             if _octa > octa:
                 octa = _octa
 
-        #self.log.info("{}".format(octa))
         postUpdateIfChanged("pOutdoor_WeatherStation_Cloud_Cover", octa)
 
     def execute(self, module, input):
