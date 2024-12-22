@@ -8,7 +8,7 @@
         "parameters": [],
         "parameterGroups": []
       },
-      "timestamp": "Sep 4, 2024, 9:35:00 AM",
+      "timestamp": "Dec 22, 2024, 9:41:43 AM",
       "component": "panelconfiguration",
       "config": {
         "default": true,
@@ -468,13 +468,13 @@
                     "col": 0.0,
                     "config": {
                       "humidityItem": "pOutdoor_WeatherStation_Humidity",
-                      "rainCurrentItem": "pOutdoor_WeatherStation_Rain_Current",
+                      "rainCurrentItem": "pOutdoor_WeatherStation_Rain_Rate",
                       "rainTodayItem": "pOutdoor_WeatherStation_Rain_Daily",
                       "temperatureItem": "pOutdoor_WeatherStation_Temperature",
                       "title": "Garten",
                       "windDirectionItem": "pOutdoor_WeatherStation_Wind_Direction_Short",
-                      "windGustItem": "pOutdoor_WeatherStation_Wind_Gust_1h",
-                      "windSpeedItem": "pOutdoor_WeatherStation_Wind_Speed_1h"
+                      "windGustItem": "pOutdoor_WeatherStation_Wind_Gust",
+                      "windSpeedItem": "pOutdoor_WeatherStation_Wind_Speed"
                     },
                     "customwidget": "OutdoorWeather",
                     "name": "Garten",

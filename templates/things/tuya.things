@@ -1,4 +1,4 @@
-Thing tuya:project:bridge "Bridge Tuya" [ username="{{custom_tuya_username}}", password="{{custom_tuya_password}}", accessId="{{custom_tuya_access_id}}", accessSecret="{{custom_tuya_access_secret}}", countryCode="49", schema="smartLife", dataCenter="https://openapi.tuyaeu.com" ] {}
+Thing tuya:project:bridge "Luftbefeuchter Bridge" [ username="{{custom_tuya_username}}", password="{{custom_tuya_password}}", accessId="{{custom_tuya_access_id}}", accessSecret="{{custom_tuya_access_secret}}", countryCode="49", schema="smartLife", dataCenter="https://openapi.tuyaeu.com" ] {}
 
 Thing tuya:tuyaDevice:humidifier_eg "Luftbefeuchter EG" [ pollingInterval="60", protocol="3.4", productId="{{custom_humidifier_eg_product_id}}", deviceId="{{custom_humidifier_eg_device_id}}", localKey="{{custom_humidifier_eg_local_key}}", ip="{{custom_humidifier_eg_ip}}" ] {
     Type switch : power             "Ein/Aus"               [ dp="1" ]

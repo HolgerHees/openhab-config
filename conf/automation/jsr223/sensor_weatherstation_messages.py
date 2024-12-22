@@ -273,40 +273,6 @@ class SensorWeatherstationMessagesAir:
         self.updateTimer = startTimer(self.log, DELAYED_UPDATE_TIMEOUT, self.delayUpdate, oldTimer = self.updateTimer, groupCount = len(self.triggers))
 
 @rule()
-class SensorWeatherstationSolarPowerMax:
-    def __init__(self):
-        self.triggers = [
-            ItemStateChangeTrigger("pOutdoor_Astro_Sun_Azimuth"),
-            ItemStateChangeTrigger("pOutdoor_Astro_Sun_Elevation")
-        ]
-
-    def execute(self, module, input):
-        azimut = getItemState("pOutdoor_Astro_Sun_Azimuth").doubleValue()
-        elevation = getItemState("pOutdoor_Astro_Sun_Elevation").doubleValue()
-        _usedRadians = math.radians(elevation)
-        if _usedRadians < 0.0: _usedRadians = 0.0
-
-        # http://www.shodor.org/os411/courses/_master/tools/calculators/solarrad/
-        # http://scool.larc.nasa.gov/lesson_plans/CloudCoverSolarRadiation.pdf
-        _maxRadiation = 990.0 * math.sin( _usedRadians ) - 30.0
-        if _maxRadiation < 0.0: _maxRadiation = 0.0
-
-        postUpdateIfChanged("pOutdoor_WeatherStation_Solar_Power_Max", _maxRadiation)
-
-        if elevation > 20:
-            _maxLightLevel = 15000
-        elif elevation > 15:
-            _maxLightLevel = 8000
-        elif elevation > 10:
-            _maxLightLevel = 5000
-        elif elevation > 0:
-            _maxLightLevel = 1000
-        else:
-            _maxLightLevel = 0
-
-        postUpdateIfChanged("pOutdoor_WeatherStation_Light_Level_Max", _maxLightLevel)
-
-@rule()
 class SensorWeatherstationPerceivedTemperature:
     def __init__(self):
         self.triggers = [
@@ -320,7 +286,7 @@ class SensorWeatherstationPerceivedTemperature:
         #input['event'].getItemState().intValue()
 
         #pOutdoor_WeatherStation_Solar_Power
-        maxLuminationRatio = getItemState("pOutdoor_WeatherStation_Solar_Power_Max").doubleValue() / 900
+        maxLuminationRatio = getItemState("pOutdoor_Astro_Total_Radiation").doubleValue() / 900
         maxLux = 50000 * maxLuminationRatio
 
         octa = getItemState("pOutdoor_Weather_Current_Cloud_Cover").doubleValue()
@@ -387,3 +353,16 @@ class SensorWeatherstationPerceivedTemperature:
 
     def execute(self, module, input):
         self.calc(input['event'].getItemName(), input['event'].getItemState().doubleValue())
+
+@rule()
+class SensorWeatherstationBatteryDetail:
+    def __init__(self):
+        triggers = [
+            ItemStateChangeTrigger("pOutdoor_WeatherStation_Battery_Low")
+        ]
+
+    def execute(self, module, input):
+        if input['event'].getItemState() == ON:
+            postUpdateIfChanged("pOutdoor_WeatherStation_State_Device_Info", "Batterie")
+        else:
+            postUpdateIfChanged("pOutdoor_WeatherStation_State_Device_Info", "Alles ok")

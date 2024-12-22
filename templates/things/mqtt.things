@@ -1,6 +1,6 @@
 Bridge mqtt:broker:cloud [ host="cloud_mosquitto", secure=false ]
 {
-    Thing topic weatherforecast "Wettervorhersage" {
+    Thing topic weatherforecast "Wettervorhersage (Cloud-MQTT)" {
         Type number : temperature0 "Temperatur" [ stateTopic="hhees/weather/provider/items/airTemperatureInCelsius/0" ]
         Type number : cloudcover0 "Bewölkung" [ stateTopic="hhees/weather/provider/items/effectiveCloudCoverInOcta/0" ]
         Type number : temperature4 "Temperatur 4 Stunden" [ stateTopic="hhees/weather/provider/items/airTemperatureInCelsius/4" ]
@@ -19,7 +19,7 @@ Bridge mqtt:broker:cloud [ host="cloud_mosquitto", secure=false ]
         Type number : effectiveCloudCoverCurrent "Temperatur" [ stateTopic="hhees/weather/provider/current/effectiveCloudCoverInOcta" ]
         Type number : humidityCurrent "Temperatur" [ stateTopic="hhees/weather/provider/current/relativeHumidityInPercent" ]
     }
-    Thing topic weatherstation "Wetterstation" {
+    Thing topic weatherstation "Wetterstation (Cloud-MQTT)" {
         Type number : cloudCoverInOcta "Cloud cover" [ commandTopic="hhees/weather/station/cloudCoverInOcta" ]
         Type number : rainRateInMillimeterPerHour "Rain current" [ commandTopic="hhees/weather/station/rainRateInMillimeterPerHour" ]
         Type number : rainLastHourInMillimeter "Rain last hour" [ commandTopic="hhees/weather/station/rainLastHourInMillimeter" ]
@@ -74,7 +74,7 @@ Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
         Type number : solarReheatingState "Nachladeunterdrückung" [ stateTopic="vcontrol/getNachladeunterdrueckungStatus" ]
         Type number : commonFault "Status" [ stateTopic="vcontrol/getSammelstoerung" ]
     }    
-    Thing topic weatherstation "Wetterstation" {
+    Thing topic weatherstation "Wetterstation (Default-MQTT)" {
         Type number : solarRadiation "Sonnentemperatur" [ stateTopic="ecowitt/8813BF4638DF/#", transformationPattern="REGEX:.*solarradiation=([0-9\\.]*).*" ]
     }
     Thing topic co2sensor "Sensoren CO2" {

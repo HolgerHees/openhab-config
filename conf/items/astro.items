@@ -6,10 +6,11 @@ DateTime pOutdoor_Astro_Dusk_Time         "Abenddämmerung [%1$tH:%1$tM]"      <
 DateTime pOutdoor_Astro_Sunrise_Time      "Sonnenaufgang [%1$tH:%1$tM]"       <selfsun>      (eOutdoor_Astro) ["Point"] { channel="astro:sun:local:rise#start"}
 DateTime pOutdoor_Astro_Sunset_Time       "Sonnenuntergang [%1$tH:%1$tM]"     <selfsun>      (eOutdoor_Astro) ["Point"] { channel="astro:sun:local:set#end"}
 
-Number   pOutdoor_Astro_Sun_Azimuth       "Azimuth [%.2f]"                    <selfinfo>     (eOutdoor_Astro) ["Point"] { channel="astro:sun:local:position#azimuth" }
-Number   pOutdoor_Astro_Sun_Elevation     "Elevation [%.2f]"                  <selfinfo>     (eOutdoor_Astro) ["Point"] { channel="astro:sun:local:position#elevation" }
-Number   pOutdoor_Astro_Total_Radiation   "Radiation [%.2f]"                  <selfinfo>     (eOutdoor_Astro) ["Point"] { channel="astro:sun:local:radiation#total" }
-Number   pOutdoor_Astro_Diffuse_Radiation "Diffuse Radiation [%.2f]"          <selfinfo>     (eOutdoor_Astro) ["Point"] { channel="astro:sun:local:radiation#diffuse" }
+Number:Angle pOutdoor_Astro_Sun_Azimuth       "Azimuth [%.2f]"                    <selfinfo>     (eOutdoor_Astro) ["Point"] { channel="astro:sun:local:position#azimuth" }
+Number:Angle pOutdoor_Astro_Sun_Elevation     "Elevation [%.2f]"                  <selfinfo>     (eOutdoor_Astro) ["Point"] { channel="astro:sun:local:position#elevation" }
+Number:Intensity pOutdoor_Astro_Total_Radiation   "Radiation [%.2f]"                  <selfinfo>     (eOutdoor_Astro,gPersistance_Chart,gPersistance_History) ["Point"] { channel="astro:sun:local:radiation#total" }
+Number:Intensity pOutdoor_Astro_Diffuse_Radiation "Diffuse Radiation [%.2f]"          <selfinfo>     (eOutdoor_Astro) ["Point"] { channel="astro:sun:local:radiation#diffuse" }
+Number:Intensity pOutdoor_Astro_Direct_Radiation  "Direct Radiation [%.2f]"          <selfinfo>     (eOutdoor_Astro) ["Point"] { channel="astro:sun:local:radiation#direct" }
 String   pOutdoor_Astro_Zodiac_Name       "Tierkreis [MAP(zodiac.map):%s]"    <selfinfo>     (eOutdoor_Astro) ["Point"] { channel="astro:sun:local:zodiac#sign" }
 DateTime pOutdoor_Astro_Eclipse_Time      "Sonnenfinsterniss [%1$td.%1$tm.%1$tY %1$tH:%1$tM]" <selfcalendar> (eOutdoor_Astro) ["Point"] { channel="astro:sun:local:eclipse#total" }
 String   pOutdoor_Astro_Season            "Jahreszeit [MAP(season.map):%s]"   <selfinfo>     (eOutdoor_Astro) ["Point"] { channel="astro:sun:local:season#name" }
@@ -21,3 +22,6 @@ DateTime pOutdoor_Astro_Winter_Time       "Winteranfang [%1$td.%1$tm.]"       <s
 String   pOutdoor_Astro_MoonPhase         "Mondphase [MAP(moon.map):%s]"      <selfinfo>     (eOutdoor_Astro) ["Point"] { channel="astro:moon:local:phase#name" }
 DateTime pOutdoor_Astro_FullMoon          "Nächster Vollmond [%1$td.%1$tm.]"  <selfcalendar> (eOutdoor_Astro) ["Point"] { channel="astro:moon:local:phase#full" }
 DateTime pOutdoor_Astro_NewMoon           "Nächster Neumond [%1$td.%1$tm.]"   <selfcalendar> (eOutdoor_Astro) ["Point"] { channel="astro:moon:local:phase#new" }
+
+Number:Illuminance pOutdoor_Astro_Light_Level "Helligkeit Max. [%.1f lux/m²]" <selfsun> (eOutdoor_Astro,gPersistance_Chart,gPersistance_History) ["Point"]
+

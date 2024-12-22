@@ -737,7 +737,7 @@ sitemap haus label="Main Menu"
                         Group item=pOutdoor_WeatherStation_Solar_Power {
                             Frame label="Details" {
                                 Text item=pOutdoor_WeatherStation_Solar_Power label="Sonnenkraft akt. [%.1f Watt/m²]"
-                                Text item=pOutdoor_WeatherStation_Solar_Power_Max label="Sonnenkraft max [%.1f Watt/m²]"
+                                Text item=pOutdoor_Astro_Total_Radiation label="Sonnenkraft max [%.1f Watt/m²]"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
@@ -746,9 +746,10 @@ sitemap haus label="Main Menu"
                         }
                     }
                     Frame label="Sonstiges" {
+                        Text item=pOutdoor_WeatherStation_State_Device_Info valuecolor=[=="Alles ok"="#6bc305",!="Alles ok"="#d72a2a"]
+                        Text item=pOutdoor_WeatherStation_Signal
                         Text item=pOutdoor_WeatherStation_Battery_Low valuecolor=[ON="#d72a2a"]
                         Text item=pOutdoor_WeatherStation_Battery_Voltage
-                        Text item=pOutdoor_WeatherStation_Signal
                         Text item=pOutdoor_WeatherStation_Update_Message visibility=[pOutdoor_WeatherStation_Is_Working!=OFF] valuecolor=[!=""="#6bc305"]
                         Text item=pOutdoor_WeatherStation_Update_Message visibility=[pOutdoor_WeatherStation_Is_Working==OFF] valuecolor=[!=""="#d72a2a"]
                     }
@@ -806,6 +807,7 @@ sitemap haus label="Main Menu"
                         Text item=pOutdoor_Astro_Sun_Elevation
                         Text item=pOutdoor_Astro_Total_Radiation
                         Text item=pOutdoor_Astro_Diffuse_Radiation
+                        Text item=pOutdoor_Astro_Direct_Radiation
                     }
                     Frame label="Details"
                     {

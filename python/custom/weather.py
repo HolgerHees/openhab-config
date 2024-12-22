@@ -25,7 +25,7 @@ class WeatherHelper:
     @staticmethod
     def _getSolarPowerItemName():
         is_working = getItemState("pOutdoor_WeatherStation_Is_Working") == OnOffType.ON
-        return [ not is_working, "pOutdoor_WeatherStation_Solar_Power" if is_working else "pOutdoor_WeatherStation_Solar_Power_Max" ]
+        return [ not is_working, "pOutdoor_WeatherStation_Solar_Power" if is_working else "pOutdoor_Astro_Total_Radiation" ]
 
     @staticmethod
     def getSolarPowerStableItemState(now, checkTimeRange):
@@ -40,7 +40,7 @@ class WeatherHelper:
     @staticmethod
     def _getLightLevelItemName():
         is_working = getItemState("pOutdoor_WeatherStation_Is_Working") == OnOffType.ON
-        return [ not is_working, "pOutdoor_WeatherStation_Light_Level" if is_working else "pOutdoor_WeatherStation_Light_Level_Max" ]
+        return [ not is_working, "pOutdoor_WeatherStation_Light_Level" if is_working else "pOutdoor_Astro_Light_Level" ]
 
     @staticmethod
     def getLightLevelStableItemState(now, checkTimeRange):

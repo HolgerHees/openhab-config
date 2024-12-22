@@ -11,7 +11,10 @@ class StateMessageSensors:
             #CronTrigger("*/15 * * * * ?"),
             CronTrigger("0 */5 * * * ?"),
             ItemStateChangeTrigger("pOther_Plant_Sensor_State_Watering_Info"),
-            ItemStateChangeTrigger("pOther_Plant_Sensor_State_Device_Info")
+            ItemStateChangeTrigger("pOther_Plant_Sensor_State_Device_Info"),
+            ItemStateChangeTrigger("pOutdoor_WeatherStation_State_Device_Info"),
+
+
         ]
 
     def execute(self, module, input):
@@ -25,7 +28,10 @@ class StateMessageSensors:
             states.append(WateringHelper.getStateInfo(watering_state))
 
         if getItemState("pOther_Plant_Sensor_State_Device_Info").toString() != "Alles ok":
-            states.append(getItemState("pOther_Plant_Sensor_State_Device_Info").toString())
+            states.append("Pflanzensensor: " + getItemState("pOther_Plant_Sensor_State_Device_Info").toString())
+
+        if getItemState("pOutdoor_WeatherStation_State_Device_Info").toString() != "Alles ok":
+            states.append("Wetterstation: " + getItemState("pOutdoor_WeatherStation_State_Device_Info").toString())
 
         for sensorItem in getGroupMember("gRoom_CO2_Sensors"):
             if getItemState(sensorItem).intValue() > 2000:

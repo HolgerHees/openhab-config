@@ -1,4 +1,4 @@
-from shared.helper import rule, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged, getItemState, startTimer, getThing, itemLastChangeOlderThen
+from shared.helper import rule, postUpdate, postUpdateIfChanged, sendCommand, sendCommandIfChanged, getItemState, startTimer, getThing, itemLastChangeOlderThen, UserHelper
 from shared.triggers import CronTrigger, ThingStatusChangeTrigger, ItemCommandTrigger, ItemStateChangeTrigger
 from shared.actions import Transformation
 from custom.presence import PresenceHelper
@@ -52,18 +52,11 @@ class HumidifierStateMessage:
     def __init__(self):
         self.triggers = [
             #CronTrigger("*/15 * * * * ?"),
-            ItemStateChangeTrigger("pGF_Livingroom_Humidifier_Fault"),
             ItemStateChangeTrigger("pGF_Livingroom_Humidifier_Replace_Filter")
         ]
-        #self.check()
-
-        sendCommand("pGF_Livingroom_Humidifier_Fault", REFRESH)
-        #postUpdateIfChanged("pGF_Livingroom_Humidifier_Fault", 0)
 
     def check(self):
-        if getItemState("pGF_Livingroom_Humidifier_Fault").intValue() != 0:
-            msg = Transformation.transform("MAP", "tuya_humidifier_fault.map", getItemState("pGF_Livingroom_Humidifier_Fault").toString() )
-        elif getItemState("pGF_Livingroom_Humidifier_Replace_Filter") == ON:
+        if getItemState("pGF_Livingroom_Humidifier_Replace_Filter") == ON:
             msg = u"Filter"
         else:
             msg = u"Alles ok"
@@ -72,6 +65,21 @@ class HumidifierStateMessage:
 
     def execute(self, module, input):
         self.check()
+
+@rule()
+class HumidifierNotification:
+    def __init__(self):
+        self.triggers = [
+            #CronTrigger("*/15 * * * * ?"),
+            ItemStateChangeTrigger("pGF_Livingroom_Humidifier_Fault",state="1")
+        ]
+        #self.check()
+
+        #sendCommand("pGF_Livingroom_Humidifier_Fault", REFRESH)
+        #postUpdateIfChanged("pGF_Livingroom_Humidifier_Fault", 0)
+
+    def execute(self, module, input):
+        NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, u"Luftbefeuchter", u"Wasser nachfüllen")
 
 @rule()
 class HumidifierLevel:

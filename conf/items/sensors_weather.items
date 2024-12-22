@@ -23,6 +23,8 @@ Group gWeatherstationInputValues                     "Wetterstation Input" {auto
 
 Group eOutdoor_WeatherStation                        "Wetterstation" <selfinfo> (lOutdoorOther) ["Sensor"]
 
+String pOutdoor_WeatherStation_State_Device_Info     "Device Status [%s]" <selfplant> (eOutdoor_WeatherStation) ["Point"]
+
 String pOutdoor_WeatherStation_Update_Message        "Letzte Änderung [%s]" <selfclock> (eOutdoor_WeatherStation)
 Switch pOutdoor_WeatherStation_Is_Working            "Aktiv [%s]" <selfclock> (eOutdoor_WeatherStation)
 
@@ -32,9 +34,9 @@ String pOutdoor_WeatherStation_Rain_State_Message    "Status [%s]" <selfrain> (e
 String pOutdoor_WeatherStation_Rain_Message          "Regen [%s]" <selfrain> (eOutdoor_WeatherStation)
 Number pOutdoor_WeatherStation_Rain_State            "Status Numerisch [%d]" <selfrain> (eOutdoor_WeatherStation) ["Point"] {channel="mqtt:topic:cloud:weatherstation:rainLevel"[profile="system:follow"]}
 
-Number:Length pOutdoor_WeatherStation_Rain_Daily     "Heute [%.2f mm]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History,gWeatherstationInputValues) ["Measurement","Rain"] { channel="fineoffsetweatherstation:gateway:default:piezo-rain-day ",channel="mqtt:topic:cloud:weatherstation:rainDailyInMillimeter"[profile="system:follow"],unit="mm"}
-Number:Length pOutdoor_WeatherStation_Rain_Hourly    "Letzte Stunde [%.2f mm]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart) ["Measurement","Rain"] { channel="mqtt:topic:cloud:weatherstation:rainLastHourInMillimeter"[profile="system:follow"],unit="mm"}
-Number:Speed pOutdoor_WeatherStation_Rain_Rate       "Aktuell [%.2f mm/h]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart,gWeatherstationInputValues) ["Point"] {channel="fineoffsetweatherstation:gateway:default:piezo-rain-rate",channel="mqtt:topic:cloud:weatherstation:rainRateInMillimeterPerHour"[profile="system:follow"]}
+Number:Length pOutdoor_WeatherStation_Rain_Daily     "Heute [%.1f mm]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History,gWeatherstationInputValues) ["Measurement","Rain"] { channel="fineoffsetweatherstation:gateway:default:piezo-rain-day ",channel="mqtt:topic:cloud:weatherstation:rainDailyInMillimeter"[profile="system:follow"],unit="mm"}
+Number:Length pOutdoor_WeatherStation_Rain_Hourly    "Letzte Stunde [%.1f mm]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart) ["Measurement","Rain"] { channel="mqtt:topic:cloud:weatherstation:rainLastHourInMillimeter"[profile="system:follow"],unit="mm/h"}
+Number:Speed pOutdoor_WeatherStation_Rain_Rate       "Aktuell [%.1f mm/h]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart,gWeatherstationInputValues) ["Point"] {channel="fineoffsetweatherstation:gateway:default:piezo-rain-rate",channel="mqtt:topic:cloud:weatherstation:rainRateInMillimeterPerHour"[profile="system:follow"],unit="mm/h"}
 
 Number:Angle pOutdoor_WeatherStation_Wind_Direction  "Richtung [%d °]" <wind> (eOutdoor_WeatherStation,gWeatherstationInputValues) ["Measurement"] {channel="fineoffsetweatherstation:gateway:default:direction-wind", channel="mqtt:topic:cloud:weatherstation:windDirectionInDegree"[profile="system:follow"]}
 String pOutdoor_WeatherStation_Wind_Direction_Short  "Richtung [%s]" <wind> (eOutdoor_WeatherStation)
@@ -57,10 +59,10 @@ Number pOutdoor_WeatherStation_Temperature_Perceived "Gefühlt [%.1f °C]" <self
 
 Number pOutdoor_WeatherStation_Pressure              "Luftdruck [%.1f hPa]" <selfruntime> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History,gWeatherstationInputValues) ["Measurement","Pressure"] {channel="fineoffsetweatherstation:gateway:default:pressure-relative",channel="mqtt:topic:cloud:weatherstation:pressureInHectopascals"[profile="system:follow"]}
 
-Number:Intensity pOutdoor_WeatherStation_Solar_Power_Max       "Sonnenkraft Max. [%.1f Watt/m²]" <selfsun> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History) ["Point"]
-Number:Intensity pOutdoor_WeatherStation_Solar_Power           "Sonnenkraft [%.1f Watt/m²]" <selfsun> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History,gWeatherstationInputValues) ["Point"] {channel="mqtt:topic:mosquitto:weatherstation:solarRadiation", channel="mqtt:topic:cloud:weatherstation:solarPowerInWatt"[profile="system:follow"]}
+Number:Intensity pOutdoor_WeatherStation_Solar_Power           "Sonnenkraft [%.1f Watt/m²]" <selfsun> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History,gWeatherstationInputValues) ["Point"] {channel="mqtt:topic:mosquitto:weatherstation:solarRadiation", channel="mqtt:topic:cloud:weatherstation:solarRadiationInWatt"[profile="system:follow"]}
+Number:Intensity pOutdoor_WeatherStation_Solar_Power_Test      "Sonnenkraft [%.1f Watt/m²]" <selfsun> (eOutdoor_WeatherStation) ["Point"] {channel="fineoffsetweatherstation:gateway:default:irradiation-uv"}
 
-Number:Illuminance pOutdoor_WeatherStation_Light_Level_Max       "Helligkeit Max. [%.1f lux/m²]" <selfsun> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History) ["Point"]
+
 Number:Illuminance pOutdoor_WeatherStation_Light_Level           "Helligkeit [%d lux]" <selfsun> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History) ["Measurement","Light"] {channel="fineoffsetweatherstation:gateway:default:illumination",channel="mqtt:topic:cloud:weatherstation:lightLevelInLux"[profile="system:follow"]}
 
 Number pOutdoor_WeatherStation_UV_Index              "UV Index [%.1f]" <selfsun> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History,gWeatherstationInputValues) ["Measurement"] {channel="fineoffsetweatherstation:gateway:default:uv-index", channel="mqtt:topic:cloud:weatherstation:uvIndex"[profile="system:follow"]}

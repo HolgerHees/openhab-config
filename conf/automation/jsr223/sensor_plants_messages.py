@@ -25,7 +25,6 @@ class SensorPlantsState:
     def execute(self, module, input):
         self.check()
 
-
 @rule()
 class SensorPlantsBatteryDetail:
     def __init__(self):
@@ -34,11 +33,7 @@ class SensorPlantsBatteryDetail:
         self.sensor_device_map = {}
         for item in getItem("eOther_Plant_Sensor_Devices").getMembers():
             name = item.getName()[1:]
-
-            self.log.info(name)
-
             triggers.append(ItemStateChangeTrigger( "p" + name + "_Battery_Level"))
-
             self.sensor_device_map["p" + name + "_Battery_Level"] = name
 
         self.triggers = triggers
@@ -62,7 +57,6 @@ class SensorPlantsBatteryDetail:
 
     def execute(self, module, input):
         self.check()
-
 
 @rule()
 class SensorPlantsMessagesDetail:
