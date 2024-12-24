@@ -1,0 +1,16 @@
+Group  eGF_Corridor_Lock                        "Haustürschloss"    <selflight> (lGF_Corridor)
+
+String pGF_Corridor_Lock_State_Device_Info      "Device Status [%s]" <selfplant> (eGF_Corridor_Lock) ["Point"]
+
+Switch pGF_Corridor_Lock_Connected              "Verbunden [%s]"    <selfinfo>     (eGF_Corridor_Lock) { channel="mqtt:topic:mosquitto:nuki:connected" }
+//Number pGF_Corridor_Lock_Device_Type            "Device Typ [%s]"   <selfinfo>     (eGF_Corridor_Lock) { channel="mqtt:topic:mosquitto:nuki:deviceType" }
+String pGF_Corridor_Lock_Name                   "Name [%s]"         <selfinfo>     (eGF_Corridor_Lock) { channel="mqtt:topic:mosquitto:nuki:name" }
+String pGF_Corridor_Lock_Firmware               "Firmware [%s]"         <selfinfo>     (eGF_Corridor_Lock) { channel="mqtt:topic:mosquitto:nuki:firmware" }
+Number:Dimensionless pGF_Corridor_Lock_Battery_Charge_State   "Batterie Ladezustand [%s]"   <selfbattery>     (eGF_Corridor_Lock) { channel="mqtt:topic:mosquitto:nuki:batteryChargeState",unit="%" }
+Switch pGF_Corridor_Lock_Battery_Critical       "Batteriefehler [%s]"    <selfbattery>     (eGF_Corridor_Lock) { channel="mqtt:topic:mosquitto:nuki:batteryCritical" }
+Switch pGF_Corridor_Lock_Battery_Charging       "Batterie wird geladen [%s]"    <selfbattery>     (eGF_Corridor_Lock) { channel="mqtt:topic:mosquitto:nuki:batteryCharging" }
+Number pGF_Corridor_Lock_State                  "Status [MAP(nuki_state.map):%s]"   <selfdoor>     (eGF_Corridor_Lock) { channel="mqtt:topic:mosquitto:nuki:state" }
+//Number pGF_Corridor_Lock_Mode                   "Modus [%s]"   <selfdoor>     (eGF_Corridor_Lock) { channel="mqtt:topic:mosquitto:nuki:mode" }
+Switch pGF_Corridor_Lock_Server_Connected       "Server verbunden [%s]"  <selfinfo>     (eGF_Corridor_Lock) { channel="mqtt:topic:mosquitto:nuki:serverConnected" }
+
+Number pGF_Corridor_Lock_Action                 "Status"   <selfdoor>     (eGF_Corridor_Lock) { channel="mqtt:topic:mosquitto:nuki:lockAction" }

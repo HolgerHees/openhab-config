@@ -81,4 +81,18 @@ Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
         Type number : boxroom "Kammer" [ stateTopic="co2sensor/kammer" ]
         Type number : dressingroom "Ankleide" [ stateTopic="co2sensor/ankleide" ]
     }
+    Thing topic nuki "Nuki Türschloss" {
+        Type switch : connected "Verbunden" [ stateTopic="nuki/43347577/connected", on="true", off="false" ]
+        Type number : deviceType "Device Typ" [ stateTopic="nuki/43347577/deviceType" ]
+        Type string : name "Name" [ stateTopic="nuki/43347577/name" ]
+        Type string : firmware "Firmware" [ stateTopic="nuki/43347577/firmware" ]
+        Type number : batteryChargeState "Batterie Ladezustand" [ stateTopic="nuki/43347577/batteryChargeState" ]
+        Type switch : batteryCritical "Batteriefehler" [ stateTopic="nuki/43347577/batteryCritical", on="true", off="false" ]
+        Type switch : batteryCharging "Batterie wird geladen" [ stateTopic="nuki/43347577/batteryCharging", on="true", off="false" ]
+        Type number : state "Status" [ stateTopic="nuki/43347577/state" ]
+        Type number : mode "Modus" [ stateTopic="nuki/43347577/mode" ]
+        Type switch : serverConnected "Server verbunden" [ stateTopic="nuki/43347577/serverConnected", on="true", off="false" ]
+
+        Type number : lockAction "Aktion" [ commandTopic="nuki/43347577/lockAction" ]
+    }
 }

@@ -63,66 +63,79 @@ class PresenceCache:
     def getLock():
         return PresenceCache._shared_lock
 
+
+@rule()
+class PresenceDetectionLockCheck:
+    def __init__(self):
+        self.triggers = [
+            ItemStateChangeTrigger("pGF_Corridor_Lock_State",state=1),
+            ItemStateChangeTrigger("pOther_Presence_State",state=PresenceHelper.STATE_MAYBE_PRESENT),
+#            ItemStateChangeTrigger("pGF_Corridor_Openingcontact_Door_State",state="CLOSED"),
+            ItemStateChangeTrigger("pGF_Garage_Openingcontact_Door_Streedside_State",state="CLOSED")
+        ]
+
+    def execute(self, module, input):
+        self.log.info(str(input))
+
+        with PresenceCache.getLock():
+            if PresenceCache.getPresenceState() != PresenceHelper.STATE_MAYBE_PRESENT:
+                return
+
+#            if getItemState("pGF_Corridor_Openingcontact_Door_State") == OPEN or getItemState("pGF_Garage_Openingcontact_Door_Streedside_State") == OPEN:
+            if getItemState("pGF_Garage_Openingcontact_Door_Streedside_State") == OPEN:
+                return
+
+            if getItemState("pGF_Corridor_Lock_State").intValue() != 1:
+                return
+
+            PresenceCache.setPresenceState(PresenceHelper.STATE_AWAY)
+
 @rule()
 class PresenceDetectionDoorCheck:
     def __init__(self):
         self.triggers = [
-            ItemStateChangeTrigger("pGF_Corridor_Openingcontact_Door_State"),
-            ItemStateChangeTrigger("pGF_Garage_Openingcontact_Door_Streedside_State")
+            ItemStateChangeTrigger("pGF_Corridor_Openingcontact_Door_State",state="OPEN"),
+            ItemStateChangeTrigger("pGF_Garage_Openingcontact_Door_Streedside_State",state="OPEN")
         ]
 
-        self.timer = None
+    #    self.timer = None
 
-    def checkGaragePresence(self, checkInterval):
-        with PresenceCache.getLock():
-            if PresenceCache.getPresenceState() != PresenceHelper.STATE_MAYBE_PRESENT:
-                self.timer = None
-                return
+    #def checkPresence(self, checkInterval, checkTimeSlot, lastInteractionTime):
+    #    with PresenceCache.getLock():
+    #        if PresenceCache.getPresenceState() != PresenceHelper.STATE_MAYBE_PRESENT:
+    #            self.timer = None
+    #            return
 
-            # DOOR STILL OPEN. => If reopened, time will be canceled and restarted from scratch
-            if getItemState("pGF_Garage_Openingcontact_Door_Streedside_State") == OPEN:
-                self.timer = startTimer(self.log, checkInterval, self.checkGaragePresence, args = [checkInterval])
-                return
+    #        # DOOR STILL OPEN. => If reopened, time will be canceled and restarted from scratch
+    #        if getItemState("pGF_Corridor_Openingcontact_Door_State") == OPEN or getItemState("pGF_Garage_Openingcontact_Door_Streedside_State") == OPEN:
+    #            self.timer = startTimer(self.log, checkInterval, self.checkPresence, args = [checkInterval, checkTimeSlot, ZonedDateTime.now()])
+    #            return
 
-            PresenceCache.setPresenceState(PresenceHelper.STATE_AWAY)
-            self.timer = None
+    #        newestInteractionTime = None
+    #        for item in getGroupMember("gSensor_Indoor"):
+    #            _update = getItemLastUpdate(item)
+    #            if newestInteractionTime == None or _update.isAfter(newestInteractionTime):
+    #                newestInteractionTime = _update
 
-    def checkFrontdoorPresence(self, checkInterval, checkTimeSlot, lastInteractionTime):
-        with PresenceCache.getLock():
-            if PresenceCache.getPresenceState() != PresenceHelper.STATE_MAYBE_PRESENT:
-                self.timer = None
-                return
+    #        if newestInteractionTime.isAfter(lastInteractionTime):
+    #            # guest has arrived
+    #            self.timer = startTimer(self.log, 60, self.checkPresence, args = [60, 3600, newestInteractionTime ])
+    #            return
 
-            # DOOR STILL OPEN. => If reopened, time will be canceled and restarted from scratch
-            if getItemState("pGF_Corridor_Openingcontact_Door_State") == OPEN:
-                self.timer = startTimer(self.log, checkInterval, self.checkFrontdoorPresence, args = [checkInterval, checkTimeSlot, ZonedDateTime.now()])
-                return
+    #        if ZonedDateTime.now().isAfter(lastInteractionTime.plusSeconds(checkTimeSlot)):
+    #            #PresenceCache.setPresenceState(PresenceHelper.STATE_AWAY)
+    #            self.timer = None
+    #            return
 
-            newestInteractionTime = None
-            for item in getGroupMember("gSensor_Indoor"):
-                _update = getItemLastUpdate(item)
-                if newestInteractionTime == None or _update.isAfter(newestInteractionTime):
-                    newestInteractionTime = _update
-
-            if newestInteractionTime.isAfter(lastInteractionTime):
-                # guest has arrived
-                self.timer = startTimer(self.log, 60, self.checkFrontdoorPresence, args = [60, 3600, newestInteractionTime ])
-                return
-
-            if ZonedDateTime.now().isAfter(lastInteractionTime.plusSeconds(checkTimeSlot)):
-                PresenceCache.setPresenceState(PresenceHelper.STATE_AWAY)
-                self.timer = None
-                return
-
-            self.timer = startTimer(self.log, checkInterval, self.checkFrontdoorPresence, args = [checkInterval, checkTimeSlot, lastInteractionTime])
+    #        self.timer = startTimer(self.log, checkInterval, self.checkPresence, args = [checkInterval, checkTimeSlot, lastInteractionTime])
 
     def execute(self, module, input):
-        if self.timer != None:
-            self.timer.cancel()
-            self.timer = None
+        #if self.timer != None:
+        #    self.timer.cancel()
+        #    self.timer = None
 
         with PresenceCache.getLock():
-            if input['event'].getItemName() == "pGF_Corridor_Openingcontact_Door_State" and input['event'].getItemState() == OPEN:
+            if input['event'].getItemName() == "pGF_Corridor_Openingcontact_Door_State":
                 PresenceCache.setPossibleArrive(True)
 
             if PresenceCache.getPresenceState() not in [PresenceHelper.STATE_AWAY, PresenceHelper.STATE_MAYBE_PRESENT]:
@@ -131,10 +144,7 @@ class PresenceDetectionDoorCheck:
             if PresenceCache.getPresenceState() != PresenceHelper.STATE_MAYBE_PRESENT:
                 PresenceCache.setPresenceState(PresenceHelper.STATE_MAYBE_PRESENT)
 
-            if input['event'].getItemName() == "pGF_Corridor_Openingcontact_Door_State":
-                self.timer = startTimer(self.log, 1, self.checkFrontdoorPresence, args = [1, 60, ZonedDateTime.now()])
-            else:
-                self.timer = startTimer(self.log, 300, self.checkGaragePresence, args = [300])
+            #self.timer = startTimer(self.log, 1, self.checkPresence, args = [1, 60, ZonedDateTime.now()])
 
 @rule()
 class PresenceDetectionMovingCheck:
@@ -200,8 +210,10 @@ class PresenceDetectionKnownPersonCheck:
                 #if getItemState("gOther_Presence_State_Raw") == OFF:
                 if len(getFilteredChildItems("gOther_Presence_State_Raw", ON)) == 0:
                     # only possible if we are present and not sleeping
-                    if presenceState in [PresenceHelper.STATE_MAYBE_PRESENT,PresenceHelper.STATE_PRESENT]:
-                        PresenceCache.setPresenceState(PresenceHelper.STATE_AWAY)
+                    #if presenceState in [PresenceHelper.STATE_MAYBE_PRESENT,PresenceHelper.STATE_PRESENT]:
+                    #    PresenceCache.setPresenceState(PresenceHelper.STATE_AWAY)
+                    if presenceState == PresenceHelper.STATE_PRESENT:
+                        PresenceCache.setPresenceState(PresenceHelper.STATE_MAYBE_PRESENT)
 
     def execute(self, module, input):
         itemName = input['event'].getItemName()

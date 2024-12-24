@@ -1,0 +1,10 @@
+0=Unkalibriert
+1=Abgeschlossen
+2=Wird aufgeschlossen
+3=Aufgeschlossen
+4=Wird abgeschlossen
+5=unlatched
+6=Aufgeschlossen (Lock 'n' go)
+7=unlatching
+254=Motor blockiert
+=Unbekannt

@@ -14,6 +14,7 @@ class WeatherHelper:
     def getTemperatureItemName():
         return "pOutdoor_WeatherStation_Temperature" if getItemState("pOutdoor_WeatherStation_Is_Working") == OnOffType.ON else "pGF_Utilityroom_Heating_Temperature_Outdoor"
 
+    @staticmethod
     def getTemperatureStableItemState(now, checkTimeRange):
         return getStableItemState(now, WeatherHelper.getTemperatureItemName(), checkTimeRange)
 

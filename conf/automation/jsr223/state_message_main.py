@@ -8,7 +8,8 @@ class StateMessageMain:
         self.triggers = [
             CronTrigger("0 */5 * * * ?"),
             ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_State_Message"),
-            ItemStateChangeTrigger("pGF_Livingroom_Humidifier_State_Message")
+            ItemStateChangeTrigger("pGF_Livingroom_Humidifier_State_Message"),
+            ItemStateChangeTrigger("pGF_Corridor_Lock_State_Device_Info")
         ]
 
     def execute(self, module, input):
@@ -23,6 +24,10 @@ class StateMessageMain:
         ventilation_state = getItemState("pGF_Livingroom_Humidifier_State_Message").toString()
         if ventilation_state != "Alles ok":
             active.append(u"Befeuchter {}".format( ventilation_state ))
+
+        maindoor_state = getItemState("pGF_Corridor_Lock_State_Device_Info").toString()
+        if ventilation_state != "Alles ok":
+            active.append(u"Haustür {}".format( ventilation_state ))
 
         if len(active) == 0:
             active.append(u"Alles ok")

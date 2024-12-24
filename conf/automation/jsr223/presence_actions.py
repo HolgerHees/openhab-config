@@ -1,7 +1,7 @@
 from java.time import ZonedDateTime
 import time
 
-from shared.helper import rule, getItemState, getFilteredChildItems, getItemLastUpdate, startTimer, sendCommandIfChanged, getGroupMember, getGroupMemberChangeTrigger, NotificationHelper, UserHelper
+from shared.helper import rule, getItemState, getFilteredChildItems, getItemLastUpdate, startTimer, sendCommand, sendCommandIfChanged, getGroupMember, getGroupMemberChangeTrigger, NotificationHelper, UserHelper
 from shared.triggers import ItemStateChangeTrigger
 from custom.presence import PresenceHelper
 from custom.alexa import AlexaHelper
@@ -154,9 +154,15 @@ class PresenceActionArrivingAction:
         if getItemState("pOther_Automatic_State_Outdoorlights") != ON:
             return
 
-        # switch light on if outdoor motion detector was triggered directly before
-        if getItemLastUpdate("pOutdoor_Streedside_Frontdoor_Motiondetector_State").plusSeconds(60).isAfter(ZonedDateTime.now()):
-            sendCommandIfChanged("pGF_Corridor_Light_Ceiling_Powered",ON)
+        # no outside motion detector event in the last 60 seconds
+        if getItemLastUpdate("pOutdoor_Streedside_Frontdoor_Motiondetector_State").plusSeconds(60).isBefore(ZonedDateTime.now()):
+            return
+
+        # light was already switched on/off during the last 30 seconds
+        if getItemLastUpdate("pGF_Corridor_Light_Ceiling_Powered").plusSeconds(30).isAfter(ZonedDateTime.now()):
+            return
+
+        sendCommandIfChanged("pGF_Corridor_Light_Ceiling_Powered",ON)
 
 @rule()
 class PresenceActionLeavingAction:
@@ -177,6 +183,9 @@ class PresenceActionSleepingAction:
         sendCommandIfChanged("gIndoor_Lights", OFF)
         sendCommandIfChanged("gOutdoor_Terrace_Light_Hue_Color", OFF)
         sendCommandIfChanged("pOutdoor_Light_Automatic_Main_Switch", ON)
+
+        if getItemState("pGF_Corridor_Lock_State").intValue() != 1:
+            sendCommand("pGF_Corridor_Lock_Action", 2)
         
         #sendCommandIfChanged("pGF_Livingroom_Socket_Couch_Powered", OFF)
         #sendCommandIfChanged("pGF_Livingroom_Socket_Fireplace_Powered", OFF)

@@ -238,10 +238,7 @@ class VentilationControlFanLevelRule:
 
         now = ZonedDateTime.now()
 
-        outdoorTemperature = WeatherHelper.getTemperatureStableItemState(now, 15))
-
-        #incomingTemperature = getItemState("pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature").doubleValue()
-        #self.log.info(str(incommingTemperature))
+        outdoorTemperature = WeatherHelper.getTemperatureStableItemState(now, 15)
 
         # antifreeze
         if outdoorTemperature <= -10.0:

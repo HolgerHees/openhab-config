@@ -84,6 +84,7 @@ class SensorWeatherstationMessagesRain:
         self.updateTimer = None
 
     def delayUpdate(self):
+        rainRate = getItemStateWithFallback("pOutdoor_WeatherStation_Rain_Rate",DecimalType(0.0)).doubleValue()
         todayRain = getItemStateWithFallback("pOutdoor_WeatherStation_Rain_Daily",DecimalType(0.0)).doubleValue()
         rainLevel = getItemState("pOutdoor_WeatherStation_Rain_State").intValue()
 
@@ -100,9 +101,10 @@ class SensorWeatherstationMessagesRain:
             
         postUpdateIfChanged("pOutdoor_WeatherStation_Rain_State_Message", u"{} ({})".format(rainState,rainLevel))
       
-        msg = u"";
-        msg = u"{}{}".format(msg,"{} mm, ".format(todayRain) if todayRain > 0 else "" )
-        msg = u"{}{} ({})".format(msg,rainState,rainLevel)
+        if todayRain > 0:
+            msg = u"{} {} ({}) mm".format(rainState, rainRate,todayRain)
+        else:
+            msg = u"{}".format(rainState)
 
         postUpdateIfChanged("pOutdoor_WeatherStation_Rain_Message", msg)
         
@@ -254,12 +256,13 @@ class SensorWeatherstationMessagesAir:
         
     def delayUpdate(self):
         temperature = round(getItemState("pOutdoor_WeatherStation_Temperature").doubleValue(),1)
+        temperature_perceived = round(getItemState("pOutdoor_WeatherStation_Temperature_Perceived").doubleValue(),1)
         humidity = getItemState("pOutdoor_WeatherStation_Humidity").intValue()
         
         self.calculateDewpoint(temperature,humidity)
               
         msg = u"";
-        msg = u"{}{} °C, ".format(msg,temperature)
+        msg = u"{}{} ({}) °C, ".format(msg,temperature, temperature_perceived)
         msg = u"{}{} %".format(msg,humidity)
 
         postUpdateIfChanged("pOutdoor_WeatherStation_Air_Message", msg)
@@ -339,10 +342,22 @@ class SensorWeatherstationPerceivedTemperature:
         headIndexDiff = headIndexTemp - temp
         radiationFactor = 1.2 if solar > 800 else 1.0 + ( solar * 0.2 / 800 )
 
-        calculated = ( temp + windChillDiff + headIndexDiff ) * radiationFactor
+        old_calculated = ( temp + windChillDiff + headIndexDiff ) * radiationFactor
+        #self.log.info("Current: {}, Provider: {}, Calculated: {}, Windchill: {}, Heatindex: {}, Factor: {}".format(temp, provider, calculated, windChillDiff, headIndexDiff, radiationFactor))
+        #postUpdateIfChanged("pOutdoor_WeatherStation_Temperature_Perceived", calculated)
+        #self.log.info("=>: {}".format(calculated))
 
-        self.log.info("Current: {}, Provider: {}, Calculated: {}, Windchill: {}, Heatindex: {}, Factor: {}".format(temp, provider, calculated, windChillDiff, headIndexDiff, radiationFactor))
 
+        # https://de.planetcalc.com/2089/
+
+        Ta = temp
+        e = ( humidity / 100 ) * 6.105 * math.exp( ( 17.27 * temp ) / ( 237.7 + temp ) )
+        ws = (speed * 1000) / (60 * 60)
+        Q = solar
+        calculated = Ta + (0.348 * e) - (0.7 * ws) + ( 0.7 * ( Q / ( ws + 10 ) )) - 4.25
+        _calculated = Ta + (0.348 * e) - (0.7 * ws) - 4.25
+
+        self.log.info(u"TEMP: {}°C, HUMIDITY: {}%, SPEED: {}m/s, Solar: {}w/m², CALCULATED 1: {}°C, CALCULATED 2: {}°C, PROVIDER: {}°C, OLD_CALCULATED: {}°C".format(temp, humidity, ws, solar, calculated, _calculated, provider, old_calculated))
         postUpdateIfChanged("pOutdoor_WeatherStation_Temperature_Perceived", calculated)
 
     def execute(self, module, input):

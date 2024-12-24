@@ -12,9 +12,7 @@ class StateMessageSensors:
             CronTrigger("0 */5 * * * ?"),
             ItemStateChangeTrigger("pOther_Plant_Sensor_State_Watering_Info"),
             ItemStateChangeTrigger("pOther_Plant_Sensor_State_Device_Info"),
-            ItemStateChangeTrigger("pOutdoor_WeatherStation_State_Device_Info"),
-
-
+            ItemStateChangeTrigger("pOutdoor_WeatherStation_State_Device_Info")
         ]
 
     def execute(self, module, input):

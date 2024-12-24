@@ -362,7 +362,7 @@ sitemap haus label="Main Menu"
                     Switch item=pMobile_Socket_2_Powered
                     Switch item=pOutdoor_Streeside_Socket_Powered
                 }
-                Switch item=pOther_Manual_State_Auto_Attic_Light label="Dachboden (d)" mappings=[1="OFF", 2="W", 3="B"]
+
                 Switch item=pMobile_Socket_7_Powered label="Dachboden (Steckdose)" visibility=[pOther_Manual_State_Auto_Attic_Light!=1]
 			}
         }
@@ -409,6 +409,26 @@ sitemap haus label="Main Menu"
             }
             Frame label="Fenster & Türen"
             {
+                Group item=pGF_Corridor_Lock_State icon="selfdoor" label="Haustür [MAP(nuki_state.map):%s]" {
+                    Frame label="Status"
+                    {
+                        Text item=pGF_Corridor_Lock_State
+                        Switch item=pGF_Corridor_Lock_Action label="Aktion" mappings=[2="Abschliessen",1="Aufschliessen",3="Öffnen"]
+                    }
+                    Frame label="Zustand"
+                    {
+                        Text item=pGF_Corridor_Lock_Battery_Charge_State
+                        Text item=pGF_Corridor_Lock_Battery_Critical
+                        Text item=pGF_Corridor_Lock_Battery_Charging
+                    }
+                    Frame label="Sonstiges"
+                    {
+                        Text item=pGF_Corridor_Lock_Name
+                        Text item=pGF_Corridor_Lock_Firmware
+                        Text item=pGF_Corridor_Lock_Connected
+                        Text item=pGF_Corridor_Lock_Server_Connected
+                    }
+                }
                 Group item=gGF_Sensor_Doors label="EG Türen [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
                     Text item=pGF_Corridor_Openingcontact_Door_State label="Haustür"
                     Text item=pGF_Garage_Openingcontact_Door_Streedside_State label="Werkstatt Strassenseite"
@@ -663,10 +683,13 @@ sitemap haus label="Main Menu"
                     Frame label="Wetter" {
                         Group item=pOutdoor_WeatherStation_Air_Message {
                             Frame label="Details" {
-                                Text item=pOutdoor_WeatherStation_Temperature label="Temperature [%.1f °C]"
+                                Text item=pOutdoor_WeatherStation_Temperature label="Temperatur [%.1f °C]"
+                                Text item=pOutdoor_WeatherStation_Temperature_Perceived label="Gefühlt [%.1f °C]"
                                 Text item=pOutdoor_WeatherStation_Humidity label="Luftfeuchtigkeit [%.1f %%]"
                                 Text item=pOutdoor_WeatherStation_Dewpoint
-                                Text item=pGF_Utilityroom_Heating_Temperature_Outdoor label="Garten (Schatten) [%.1f °C]"
+                                Text item=pGF_Utilityroom_Heating_Temperature_Outdoor label="Temperatur (Schatten) [%.1f °C]"
+                            }
+                            Frame label="Vorhersage" {
                                 Text item=pOutdoor_Weather_Forecast_Temperature_4h label="Garten (in 4 Std) [%.1f °C]"
                                 Text item=pOutdoor_Weather_Forecast_Temperature_8h label="Garten (in 8 Std) [%.1f °C]"
                             }
@@ -700,10 +723,13 @@ sitemap haus label="Main Menu"
                         }
                         Group item=pOutdoor_WeatherStation_Wind_Message {
                             Frame label="Details" {
-                                Text item=pOutdoor_WeatherStation_Wind_Speed_1h label="Geschwindigkeit"
-                                Text item=pOutdoor_WeatherStation_Wind_Gust_1h label="Böen"
                                 Text item=pOutdoor_WeatherStation_Wind_Speed label="Aktuell"
+                                Text item=pOutdoor_WeatherStation_Wind_Gust label="Böen"
                                 Text item=pOutdoor_WeatherStation_Wind_Direction_Long
+                            }
+                            Frame label="Details (1h)" {
+                                Text item=pOutdoor_WeatherStation_Wind_Speed_1h label="Aktuell"
+                                Text item=pOutdoor_WeatherStation_Wind_Gust_1h label="Böen"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
