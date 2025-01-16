@@ -106,7 +106,7 @@ class DoorCheck:
         if Cache.getPresenceState() != PresenceHelper.STATE_MAYBE_PRESENT:
             return
 
-        if not PresenceDetectionDoorCheck.isAllClosedAndLocked():
+        if not DoorCheck.isAllClosedAndLocked():
             return
 
         if input is None:
@@ -192,7 +192,7 @@ class KnownPersonCheck:
             else:
                 # we must check child items instead of group item, because group item is updated too late
                 if presence_state == PresenceHelper.STATE_PRESENT and len(ToolboxHelper.getFilteredGroupMember("gOther_Presence_State_Raw", ON)) == 0:
-                    Cache.setPresenceState(PresenceHelper.STATE_AWAY if PresenceDetectionDoorCheck.isAllClosedAndLocked() else PresenceHelper.STATE_MAYBE_PRESENT)
+                    Cache.setPresenceState(PresenceHelper.STATE_AWAY if DoorCheck.isAllClosedAndLocked() else PresenceHelper.STATE_MAYBE_PRESENT)
 
     def execute(self, module, input):
         item_name = input['event'].getItemName()

@@ -380,9 +380,9 @@ class Heating():
         return round( _outdoor_reduction, 2 )
       
     def isNightModeTime(self, offset = None):
-        reference = self.now.plusMinutes( offset ) if offset != None else self.now
+        reference = self.now + timedelta(minutes=offset) if offset != None else self.now
       
-        day    = reference.weekday()
+        day    = reference.weekday() # monday 0 until sunday 6
         hour   = reference.hour
         minute = reference.minute
 
@@ -395,7 +395,7 @@ class Heating():
         # Wakeup
         if _is_morning:
             # Monday - Friday
-            if not _holidays_active and day.getValue() <= 5:
+            if not _holidays_active and day <= 4:
                 if hour < 5:
                 #if hour < 5 or ( hour == 5 and minute <= 30 ):
                     _night_mode_active = True
@@ -407,7 +407,7 @@ class Heating():
         # Evening
         else:
             # Monday - Thursday and Sunday
-            if not _holidays_active and day.getValue() <= 4 or day.getValue() == 7:
+            if not _holidays_active and day <= 3 or day == 6:
                 if hour >= 22:
                 #if hour >= 23 or ( hour == 22 and minute >= 30 ):
                     _night_mode_active = True
@@ -431,7 +431,7 @@ class Heating():
         return False
       
     def possibleColdFloorHeating(self, night_mode_active, last_heating_change):
-        day = self.now.weekday()
+        day = self.now.weekday() # monday 0 until sunday 6
         hour = self.now.hour
         
         _had_today_heating = last_heating_change.weekday() == day
@@ -442,7 +442,7 @@ class Heating():
             return not _had_morning_heating
         
         _presence_state_away = self.getCachedItemState(Heating.precence_status_item_name) == PresenceHelper.STATE_AWAY
-        _evening_start_hours = (17 if day <= 5 and _presence_state_away else 16)
+        _evening_start_hours = (17 if day <= 4 and _presence_state_away else 16)
         is_evening = (hour == _evening_start_hours)
         if is_evening:
             _had_evening_heating = _had_today_heating and last_heating_change.hour >= _evening_start_hours
