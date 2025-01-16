@@ -67,6 +67,9 @@ Number:Illuminance pOutdoor_WeatherStation_Light_Level           "Helligkeit [%d
 
 Number pOutdoor_WeatherStation_UV_Index              "UV Index [%.1f]" <selfsun> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History,gWeatherstationInputValues) ["Measurement"] {channel="fineoffsetweatherstation:gateway:default:uv-index", channel="mqtt:topic:cloud:weatherstation:uvIndex"[profile="system:follow"]}
 
-Number pOutdoor_WeatherStation_Signal                "Signal [%d]" <network> (eOutdoor_WeatherStation) ["Measurement"] {channel="fineoffsetweatherstation:sensor:default:WH90:signal"}
-Number:ElectricPotential pOutdoor_WeatherStation_Battery_Voltage "Spannung [%.2f V]" <selfinfo> (eOutdoor_WeatherStation) ["Measurement"] {channel="fineoffsetweatherstation:sensor:default:WH90:batteryVoltage"}
-Switch pOutdoor_WeatherStation_Battery_Low                "Batterie niedrig [%s]" <selfinfo> (eOutdoor_WeatherStation) ["Measurement"] {channel="fineoffsetweatherstation:sensor:default:WH90:lowBattery"}
+Number pOutdoor_WeatherStation_MainSensor_Signal           "Wetterstation Signal [%d]" <network> (eOutdoor_WeatherStation) ["Measurement"] {channel="fineoffsetweatherstation:sensor:default:WH90:signal"}
+Number:ElectricPotential pOutdoor_WeatherStation_MainSensor_Battery_Voltage "Wetterstation Spannung [%.2f V]" <selfinfo> (eOutdoor_WeatherStation) ["Measurement"] {channel="fineoffsetweatherstation:sensor:default:WH90:batteryVoltage"}
+Switch pOutdoor_WeatherStation_MainSensor_Battery_Low      "Wetterstation Batterie niedrig [%s]" <selfinfo> (eOutdoor_WeatherStation) ["Measurement"] {channel="fineoffsetweatherstation:sensor:default:WH90:lowBattery"}
+
+Number pOutdoor_WeatherStation_TemperatureSensor_Signal      "Temperatursensor Signal [%d]" <network> (eOutdoor_WeatherStation) ["Measurement"] {channel="fineoffsetweatherstation:sensor:default:WH26:signal"}
+Switch pOutdoor_WeatherStation_TemperatureSensor_Battery_Low "Temperatursensor Batterie niedrig [%s]" <selfinfo> (eOutdoor_WeatherStation) ["Measurement"] {channel="fineoffsetweatherstation:sensor:default:WH26:lowBattery"}

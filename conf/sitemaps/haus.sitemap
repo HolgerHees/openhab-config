@@ -214,7 +214,7 @@ sitemap haus label="Main Menu"
 			}
 		}
 		Group label="Geräte [%s]" item=pOther_State_Message_Devices icon="whitegood_coffeemaschine" valuecolor=[=="Alles ok"="#6bc305",!="Alles ok"="#d72a2a"] {
-            Frame label="Haus" {
+            Frame label="Geräte" {
                 Text label="Waschmaschine [%s]" item=pGF_Utilityroom_Washer_Message icon="whitegood_washer" {
                     Frame label="Status" {
                         Text item=pGF_Utilityroom_Washer_OperationState
@@ -294,6 +294,56 @@ sitemap haus label="Main Menu"
                     Frame label="Raw" {
                         Switch item=pGF_Livingroom_Television_Key_POWER label="Power Fernseher"
                         Switch item=pGF_Livingroom_SkyQ_Key_POWER label="Power SkyQ"
+                    }
+                }
+            }
+            Frame label="Luftbefeuchter" {
+                Text label="Erdgeschoss ausgeschaltet" icon="humidifier" visibility=[pGF_Livingroom_Humidifier_Online==OFF]
+                Text label="Erdgeschoss" item=pGF_Livingroom_Humidifier_Speed icon="humidifier" visibility=[pGF_Livingroom_Humidifier_Online==ON]{
+                    Frame label="Steuerung " {
+                        Switch item=pGF_Livingroom_Humidifier_Auto_Mode label="Modus" mappings=[ON="Auto", OFF="Manuell"]
+                        Selection item=pGF_Livingroom_Humidifier_Speed label="Stufe [%s]" mappings=[level_1="1", level_2="2", level_3="3", level_4="Max"]
+                        Switch item=pGF_Livingroom_Humidifier_Power
+                    }
+                    Frame label="Details" icon="selfautomode" {
+                        Selection item=pGF_Livingroom_Humidifier_Target label="Automatik Ziel [%d%%]" mappings=[40="40%", 45="45%", 50="50%", 55="55%", CO="CO"]
+                        Selection item=pGF_Livingroom_Humidifier_Lighting label="Beleuchtung [%d%%]" mappings=[Fully="Voll", Half="Gedimmt", Close="Aus"]
+                        Text item=pGF_Livingroom_Humidifier_Runtime
+                        Text item=pGF_Livingroom_Humidifier_State_Message visibility=[pGF_Livingroom_Humidifier_State_Message=="Alles ok"] valuecolor=[=="Alles ok"="#6bc305"]
+                        Text item=pGF_Livingroom_Humidifier_State_Message visibility=[pGF_Livingroom_Humidifier_State_Message!="Alles ok"] valuecolor=[=="Filter"="#cbcb00",!="Alles ok"="#d72a2a"] {
+                            Text item=pGF_Livingroom_Humidifier_Replace_Filter
+                            Switch item=pGF_Livingroom_Humidifier_Filter_Reset
+                        }
+                        Text item=pGF_Livingroom_Humidifier_Fault
+                    }
+                    Frame label="Sonstiges" icon="selfautomode" {
+                        Text item=pGF_Livingroom_Humidifier_Humidity_Value label="Luftfeuchtigkeit [%d%%]"
+                        Switch item=pGF_Livingroom_Humidifier_Child_Lock
+                        Switch item=pGF_Livingroom_Humidifier_Device_Auto_Mode label="Geräte Automatik"
+                    }
+                }
+                Text label="Obergeschoss ausgeschaltet" icon="humidifier" visibility=[pFF_Bedroom_Humidifier_Online==OFF]
+                Text label="Obergeschoss" item=pFF_Bedroom_Humidifier_Speed icon="humidifier" visibility=[pFF_Bedroom_Humidifier_Online==ON] {
+                    Frame label="Steuerung" {
+                        Switch item=pFF_Bedroom_Humidifier_Auto_Mode label="Modus" mappings=[ON="Auto", OFF="Manuell"]
+                        Selection item=pFF_Bedroom_Humidifier_Speed label="Stufe [%s]" mappings=[level_1="1", level_2="2", level_3="3", level_4="Max"]
+                        Switch item=pFF_Bedroom_Humidifier_Power
+                    }
+                    Frame label="Details" icon="selfautomode" {
+                        Selection item=pFF_Bedroom_Humidifier_Target label="Automatik Ziel [%d%%]" mappings=[40="40%", 45="45%", 50="50%", 55="55%", CO="CO"]
+                        Selection item=pFF_Bedroom_Humidifier_Lighting label="Beleuchtung [%d%%]" mappings=[Fully="Voll", Half="Gedimmt", Close="Aus"]
+                        Text item=pFF_Bedroom_Humidifier_Runtime
+                        Text item=pFF_Bedroom_Humidifier_State_Message visibility=[pFF_Bedroom_Humidifier_State_Message=="Alles ok"] valuecolor=[=="Alles ok"="#6bc305"]
+                        Text item=pFF_Bedroom_Humidifier_State_Message visibility=[pFF_Bedroom_Humidifier_State_Message!="Alles ok"] valuecolor=[=="Filter"="#cbcb00",!="Alles ok"="#d72a2a"] {
+                            Text item=pFF_Bedroom_Humidifier_Replace_Filter
+                            Switch item=pFF_Bedroom_Humidifier_Filter_Reset
+                        }
+                        Text item=pFF_Bedroom_Humidifier_Fault
+                    }
+                    Frame label="Sonstiges" icon="selfautomode" {
+                        Text item=pFF_Bedroom_Humidifier_Humidity_Value label="Luftfeuchtigkeit [%d%%]"
+                        Switch item=pFF_Bedroom_Humidifier_Child_Lock
+                        Switch item=pFF_Bedroom_Humidifier_Device_Auto_Mode label="Geräte Automatik"
                     }
                 }
             }
@@ -427,6 +477,7 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Corridor_Lock_Firmware
                         Text item=pGF_Corridor_Lock_Connected
                         Text item=pGF_Corridor_Lock_Server_Connected
+                        Text item=pGF_Corridor_Lock_Timestamp
                     }
                 }
                 Group item=gGF_Sensor_Doors label="EG Türen [MAP(group_contact.map):%d]" valuecolor=[!=CLOSED="#d72a2a"] {
@@ -773,11 +824,14 @@ sitemap haus label="Main Menu"
                     }
                     Frame label="Sonstiges" {
                         Text item=pOutdoor_WeatherStation_State_Device_Info valuecolor=[=="Alles ok"="#6bc305",!="Alles ok"="#d72a2a"]
-                        Text item=pOutdoor_WeatherStation_Signal
-                        Text item=pOutdoor_WeatherStation_Battery_Low valuecolor=[ON="#d72a2a"]
-                        Text item=pOutdoor_WeatherStation_Battery_Voltage
                         Text item=pOutdoor_WeatherStation_Update_Message visibility=[pOutdoor_WeatherStation_Is_Working!=OFF] valuecolor=[!=""="#6bc305"]
                         Text item=pOutdoor_WeatherStation_Update_Message visibility=[pOutdoor_WeatherStation_Is_Working==OFF] valuecolor=[!=""="#d72a2a"]
+                    }
+                    Frame label="Batterie" {
+                        Text item=pOutdoor_WeatherStation_MainSensor_Signal
+                        Text item=pOutdoor_WeatherStation_MainSensor_Battery_Low valuecolor=[ON="#d72a2a"]
+                        Text item=pOutdoor_WeatherStation_TemperatureSensor_Signal
+                        Text item=pOutdoor_WeatherStation_TemperatureSensor_Battery_Low valuecolor=[ON="#d72a2a"]
                     }
                 }
             }
@@ -854,7 +908,7 @@ sitemap haus label="Main Menu"
 				}
             }
 		}
-		Group label="Technik [%s]" icon="selfhouse" item=pOther_State_Message_Main valuecolor=[=="Alles ok"="#6bc305",=="Lüftung Filter"="#cbcb00",=="Befeuchter Filter"="#cbcb00",!="Alles ok"="#d72a2a"]
+		Group label="Technik [%s]" icon="selfhouse" item=pOther_State_Message_Main valuecolor=[=="Alles ok"="#6bc305",=="Lüftungsanlage Filter"="#cbcb00",!="Alles ok"="#d72a2a"]
 		{
             Frame label="Technik" {
                 Group item=pGF_Utilityroom_Ventilation_Fan_Level label="Lüftung [MAP(level_de.map):%d]" icon="selfairing" {
@@ -926,33 +980,6 @@ sitemap haus label="Main Menu"
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                         Webview url="/static/custom/grafana/heating_overview.html?fromItem=Chart_From" icon="none" height=36
-                    }
-                }
-                Text label="Luftbefeuchter ausgeschaltet" icon="humidifier" visibility=[pGF_Livingroom_Humidifier_Online==OFF]
-                Group item=pGF_Livingroom_Humidifier_Speed label="Luftbefeuchter [MAP(tuya_humidifier_level.map):%s]" icon="humidifier" visibility=[pGF_Livingroom_Humidifier_Online==ON] {
-                    Frame label="Steuerung" {
-                        Switch item=pGF_Livingroom_Humidifier_Auto_Mode label="Modus" mappings=[ON="Auto", OFF="Manuell"]
-                        Selection item=pGF_Livingroom_Humidifier_Speed label="Stufe [%s]" mappings=[level_1="1", level_2="2", level_3="3", level_4="Max"]
-                        Switch item=pGF_Livingroom_Humidifier_Power
-                    }
-                    Frame label="Gerät" {
-                        Text item=pGF_Livingroom_Humidifier_Runtime
-                        Text item=pGF_Livingroom_Humidifier_Humidity_Value label="Luftfeuchtigkeit [%d%%]"
-                        Text item=pGF_Livingroom_Humidifier_State_Message visibility=[pGF_Livingroom_Humidifier_State_Message=="Alles ok"] valuecolor=[=="Alles ok"="#6bc305"]
-                        Text item=pGF_Livingroom_Humidifier_State_Message visibility=[pGF_Livingroom_Humidifier_State_Message!="Alles ok"] valuecolor=[=="Filter"="#cbcb00",!="Alles ok"="#d72a2a"] {
-                            Text item=pGF_Livingroom_Humidifier_Replace_Filter
-                            Switch item=pGF_Livingroom_Humidifier_Filter_Reset
-                            Text item=pGF_Livingroom_Humidifier_Fault
-                        }
-                        Selection item=pGF_Livingroom_Humidifier_Lighting label="Beleuchtung [%d%%]" mappings=[Fully="Voll", Half="Gedimmt", Close="Aus"]
-                        Switch item=pGF_Livingroom_Humidifier_Child_Lock
-                        Text item=pGF_Livingroom_Humidifier_Online
-                        Text item=pGF_Livingroom_Humidifier_Device_Auto_Mode label="Geräte Automatik [%s]" {
-                            Frame label="Sonstiges" {
-                                Switch item=pGF_Livingroom_Humidifier_Device_Auto_Mode label="Geräte Automatik"
-                                Selection item=pGF_Livingroom_Humidifier_Target label="Automatik Ziel [%d%%]" mappings=[40="40%", 45="45%", 50="50%", 55="55%", CO="CO"]
-                            }
-                        }
                     }
                 }
             }

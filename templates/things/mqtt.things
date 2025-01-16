@@ -33,7 +33,7 @@ Bridge mqtt:broker:cloud [ host="cloud_mosquitto", secure=false ]
         Type number : perceivedTemperatureInCelsius "Perceived temperature" [ commandTopic="hhees/weather/station/perceivedTemperatureInCelsius" ]
         Type number : airHumidityInPercent "Air humidity" [ commandTopic="hhees/weather/station/airHumidityInPercent" ]
         Type number : pressureInHectopascals "Pressure" [ commandTopic="hhees/weather/station/pressureInHectopascals" ]
-        Type number : solarPowerInWatt "Solar power" [ commandTopic="hhees/weather/station/solarPowerInWatt" ]
+        Type number : solarRadiationInWatt "Solar power" [ commandTopic="hhees/weather/station/solarRadiationInWatt" ]
         Type number : lightLevelInLux "Light level" [ commandTopic="hhees/weather/station/lightLevelInLux" ]
         Type number : uvIndex "UV index" [ commandTopic="hhees/weather/station/uvIndex" ]
     }
@@ -92,6 +92,8 @@ Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
         Type number : state "Status" [ stateTopic="nuki/43347577/state" ]
         Type number : mode "Modus" [ stateTopic="nuki/43347577/mode" ]
         Type switch : serverConnected "Server verbunden" [ stateTopic="nuki/43347577/serverConnected", on="true", off="false" ]
+
+        Type datetime : timestamp "Zeitstempel" [ stateTopic="nuki/43347577/timestamp" ]
 
         Type number : lockAction "Aktion" [ commandTopic="nuki/43347577/lockAction" ]
     }

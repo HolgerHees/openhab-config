@@ -1,4 +1,4 @@
-Group   eGF_Livingroom_Humidifier                               "Luftbefeuchter"                                <selfinfo>      (lGF_Livingroom)
+Group   eGF_Livingroom_Humidifier                               "Luftbefeuchter EG"                                <selfinfo>      (lGF_Livingroom)
 Switch pGF_Livingroom_Humidifier_Online                         "Online State [%s]"                             <selfinfo>      (eGF_Livingroom_Humidifier) ["Point"]
 String pGF_Livingroom_Humidifier_State_Message                  "Status [%s]"                                   <selfinfo>      (eGF_Livingroom_Humidifier) ["Point"]
 
@@ -8,14 +8,37 @@ Switch pGF_Livingroom_Humidifier_Power                          "Ein/Aus"       
 
 Number:Dimensionless pGF_Livingroom_Humidifier_Humidity_Value   "Luftfeuchtigkeit [%d%%]"                       <humidity>      (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_eg:humidity_current"[profile="system:offset",offset="0.0"] } // , unit="%" }
 
-Number pGF_Livingroom_Humidifier_Fault                          "Fehler [MAP(tuya_humidifier_fault.map):%s]"   <selferror>      (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_eg:fault" }
+Number pGF_Livingroom_Humidifier_Fault                          "Fehler [MAP(tuya_humidifier_fault.map):%d]"   <selferror>      (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_eg:fault" }
 Switch pGF_Livingroom_Humidifier_Filter_Reset                   "Filter Reset"                                  <selfinfo>      (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_eg:filter_reset" }
 Switch pGF_Livingroom_Humidifier_Child_Lock                     "Kinder Sperre"                                 <selfinfo>      (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_eg:child_lock" }
 Number pGF_Livingroom_Humidifier_Runtime                        "Filter Laufzeit [%d%%]"                        <selfruntime>   (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_eg:filter_life" }
 String pGF_Livingroom_Humidifier_Lighting                       "Beleuchtung"                                   <selflight>     (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_eg:backlight_enum" }
-String pGF_Livingroom_Humidifier_Speed                          "Lüftergeschwindigkeit [%s]"                    <selfairing>    (eGF_Livingroom_Humidifier,gPersistance_History) { channel="tuya:tuyaDevice:humidifier_eg:fan_speed_enum" }
+String pGF_Livingroom_Humidifier_Speed                          "Lüftergeschwindigkeit [MAP(tuya_humidifier_level.map):%s]"                    <selfairing>    (eGF_Livingroom_Humidifier,gPersistance_History) { channel="tuya:tuyaDevice:humidifier_eg:fan_speed_enum" }
 Number pGF_Livingroom_Humidifier_Replace_Filter                 "Filter Ersetzen"                               <selfinfo>      (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_eg:replace_filter" }
 
 
 Switch pGF_Livingroom_Humidifier_Device_Auto_Mode               "Automatik"                                     <selfautomode>  (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_eg:auto" }
 String pGF_Livingroom_Humidifier_Target                         "Zielfeuchtigkeit [%s]"                         <humidity>      (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_eg:humidity_target" }
+
+
+Group   eFF_Bedroom_Humidifier                               "Luftbefeuchter OG"                                <selfinfo>      (lFF_Bedroom)
+Switch pFF_Bedroom_Humidifier_Online                         "Online State [%s]"                             <selfinfo>      (eFF_Bedroom_Humidifier) ["Point"]
+String pFF_Bedroom_Humidifier_State_Message                  "Status [%s]"                                   <selfinfo>      (eFF_Bedroom_Humidifier) ["Point"]
+
+Switch pFF_Bedroom_Humidifier_Auto_Mode                      "Modus"                                         <selfautomode>  (eFF_Bedroom_Humidifier) ["Point"]
+
+Switch pFF_Bedroom_Humidifier_Power                          "Ein/Aus"                                       <selfswitch>    (eFF_Bedroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_og:power" }
+
+Number:Dimensionless pFF_Bedroom_Humidifier_Humidity_Value   "Luftfeuchtigkeit [%d%%]"                       <humidity>      (eFF_Bedroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_og:humidity_current"[profile="system:offset",offset="0.0"] } // , unit="%" }
+
+Number pFF_Bedroom_Humidifier_Fault                          "Fehler [MAP(tuya_humidifier_fault.map):%d]"   <selferror>      (eFF_Bedroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_og:fault" }
+Switch pFF_Bedroom_Humidifier_Filter_Reset                   "Filter Reset"                                  <selfinfo>      (eFF_Bedroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_og:filter_reset" }
+Switch pFF_Bedroom_Humidifier_Child_Lock                     "Kinder Sperre"                                 <selfinfo>      (eFF_Bedroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_og:child_lock" }
+Number pFF_Bedroom_Humidifier_Runtime                        "Filter Laufzeit [%d%%]"                        <selfruntime>   (eFF_Bedroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_og:filter_life" }
+String pFF_Bedroom_Humidifier_Lighting                       "Beleuchtung"                                   <selflight>     (eFF_Bedroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_og:backlight_enum" }
+String pFF_Bedroom_Humidifier_Speed                          "Lüftergeschwindigkeit [MAP(tuya_humidifier_level.map):%s]"                    <selfairing>    (eFF_Bedroom_Humidifier,gPersistance_History) { channel="tuya:tuyaDevice:humidifier_og:fan_speed_enum" }
+Number pFF_Bedroom_Humidifier_Replace_Filter                 "Filter Ersetzen"                               <selfinfo>      (eFF_Bedroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_og:replace_filter" }
+
+
+Switch pFF_Bedroom_Humidifier_Device_Auto_Mode               "Automatik"                                     <selfautomode>  (eFF_Bedroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_og:auto" }
+String pFF_Bedroom_Humidifier_Target                         "Zielfeuchtigkeit [%s]"                         <humidity>      (eFF_Bedroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_og:humidity_target" }

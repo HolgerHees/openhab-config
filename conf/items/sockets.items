@@ -76,7 +76,7 @@ Number pMobile_Socket_7_Daily_Consumption	   "Dachboden Tagesverbrauch [%.2f KWh
 
 Group  eMobile_Socket_8                        "Wetterstation"           <selfsocket> (lIndoorOther) ["PowerOutlet"]
 Switch pMobile_Socket_8_Powered                "Wetterstation"           <selfsocket> (eMobile_Socket_8,gAll_Sockets) ["Switch","Power"]              { channel="shelly:shellyplusplug:socket4:relay#output" }
-Number pMobile_Socket_8_Consumption	           "Wetterstation Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_8) ["Messurement","Power"]  { channel="shelly:shellyplusplug:socket4:meter#currentWatts" }
+Number pMobile_Socket_8_Consumption	           "Wetterstation Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_8,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]  { channel="shelly:shellyplusplug:socket4:meter#currentWatts" }
 Number pMobile_Socket_8_Total_Raw 	           "Wetterstation Gesamt Raw [%.2f KWh]"	<selfenergy> (eMobile_Socket_8)  { channel="shelly:shellyplusplug:socket4:meter#totalKWH" }
 Number pMobile_Socket_8_Total_Consumption      "Wetterstation Gesamt [%.2f KWh]"	<selfenergy> (eMobile_Socket_8,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]
 Number pMobile_Socket_8_Daily_Consumption	   "Wetterstation Tagesverbrauch [%.2f KWh]"	<selfenergy> (eMobile_Socket_8) ["Point"]

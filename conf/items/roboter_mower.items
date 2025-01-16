@@ -17,3 +17,5 @@ String   pOutdoor_Mower_ErrorMessage         "Fehlermeldung [%s]"               
 DateTime pOutdoor_Mower_ErrorDate            "Fehlerdatum [%1$td.%1$tm %1$tH:%1$tM]"             <selfcalendar> (eOutdoor_Mower) ["Point"] {channel="robonect:mower:automower:error-date"}
 
 Switch   pOutdoor_Mower_Winter_Mode          "Winter Modus"                                      <selfswitch>   (eOutdoor_Mower) ["Point"]
+
+String   pOutdoor_Mower_State_Message        "Status [%s]" <selfinfo> (eOutdoor_Mower) ["Point"]
