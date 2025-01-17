@@ -22,7 +22,7 @@ class Main:
     def execute(self, module, input):
         if input['event'].getType() == "TimerEvent":
             self.processor = CommandProcessor(ir)
-            self.process(ir)
+            self.test(ir)
             #self.logger.info("{}".format(input))
         else:
             Registry.getItem("VoiceMessage").postUpdate("")

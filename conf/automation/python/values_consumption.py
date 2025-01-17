@@ -77,12 +77,12 @@ def getHistoricReference(logger, item_name, value_time, outdated_time, messure_t
             start_time = _time
             current_time = start_time - timedelta(microseconds=1)
             
-    duration_in_seconds = (start_time - end_time).total_seconds()
+    duration_in_seconds = (end_time - start_time).total_seconds()
     value = ( (end_value - start_value) / duration_in_seconds) * value_time
     if value < 0:
         value = 0
 
-    logger.info( "Consumption {} messured from {} ({}) to {} ({})".format(value, start_value, start_time.isoformat(), end_value, end_time.isoformat()))
+    logger.info( "Consumption {} messured from {} ({}) to {} ({})".format(value, start_value, start_time.strftime("%Y-%m-%dT %H:%M:%SZ"), end_value, end_time.strftime("%Y-%m-%dT %H:%M:%SZ")))
 
     return value
 

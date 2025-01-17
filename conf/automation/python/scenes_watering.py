@@ -152,7 +152,7 @@ class Control():
                 continue
 
             if step["started"] is not None:
-                active_runtime = int((step["started"]- datetime.now().astimezone()).total_seconds() / 60)
+                active_runtime = int((datetime.now().astimezone() - step["started"]).total_seconds() / 60)
                 if active_runtime >= step["duration"]:
                     step["finished"] = datetime.now().astimezone()
                     continue

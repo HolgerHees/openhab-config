@@ -63,7 +63,7 @@ class AwayAlerts:
             self.logger.info("Unerwartes Item Event {} {}".format(item_name, "offen" if isOpen else "geschlossen"))
 
         now = datetime.now().astimezone()
-        if int((self.last_notification - now).total_seconds() / 60) > 5:
+        if int((now - self.last_notification).total_seconds() / 60) > 5:
             if "Motiondetector" in item_name:
                 NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_ALERT, "Alarm", "{}".format(msg))
             else:

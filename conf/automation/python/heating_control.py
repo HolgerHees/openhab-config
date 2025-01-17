@@ -568,7 +568,7 @@ class Main:
             # delay heating request to give circuit some time to open
             if current_heating_demand == OFF and last_circuit_opened_at != None and now - timedelta(minutes=5) < last_circuit_opened_at:
                 #self.logger.info(u"{}".format(last_circuit_opened_at))
-                opened_before_in_minutes = int((last_circuit_opened_at - now).total_seconds() / 60)
+                opened_before_in_minutes = int((now - last_circuit_opened_at).total_seconds() / 60)
                 self.logger.info(u"Demand  : DELAYED • circuit was opened {} min. ago".format(opened_before_in_minutes))
             else:
                 heating_demand = ON if heating_requested else OFF
@@ -576,8 +576,8 @@ class Main:
 
                 endMsg = u" • {} min. to go".format(Heating.visualizeHeatingDemandTime(longest_runetime)) if longest_runetime > 0 else u""
                 last_heating_demand_change = ToolboxHelper.getLastUpdate("pGF_Utilityroom_Heating_Demand") # can be "getLastUpdate" datetime, because it is changed only from heating rule
-                last_change_before_in_minutes = int((last_heating_demand_change - now).total_seconds() / 60)
-                last_heating_change_formatted = last_heating_demand_change.isoformat()
+                last_change_before_in_minutes = int((now - last_heating_demand_change).total_seconds() / 60)
+                last_heating_change_formatted = last_heating_demand_change.strftime("%H:%M")
                 last_change_before_formatted = last_change_before_in_minutes if last_change_before_in_minutes < 60 else '{:02d}:{:02d}'.format(*divmod(last_change_before_in_minutes, 60));
                 self.logger.info(u"Demand  : {} since {} • {} min. ago{}".format(heating_demand, last_heating_change_formatted, last_change_before_formatted,endMsg) )
 
@@ -745,8 +745,8 @@ class Main:
         force_retry_msg = u" • RETRY {} {}".format(self.active_heating_operating_mode,current_operating_mode) if force_retry else u""
         delayed_msg = u""
 
-        last_change_before_in_minutes = int((current_operating_mode_change - now).total_seconds() / 60)
-        last_heating_change_formatted = current_operating_mode_change.isoformat()
+        last_change_before_in_minutes = int((now - current_operating_mode_change).total_seconds() / 60)
+        last_heating_change_formatted = current_operating_mode_change.strftime("%H:%M")
         last_change_before_formatted = last_change_before_in_minutes if last_change_before_in_minutes < 60 else '{:02d}:{:02d}'.format(*divmod(last_change_before_in_minutes, 60));
 
         self.logger.info(u"Active  : {} since {} • {} min. ago".format(Transformation.transform("MAP", "heating_de.map", str(current_operating_mode) ),last_heating_change_formatted,last_change_before_formatted) )

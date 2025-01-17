@@ -145,7 +145,7 @@ class MovingCheck:
             if Registry.getItemState("gIndoor_Lights") == ON:
                 self.timer = Timer.createTimeout(60, self.checkSleeping)
             else:
-                last_update_diff = ( ToolboxHelper.getLastUpdate("gIndoor_Lights") - datetime.now().astimezone() ).total_seconds()
+                last_update_diff = ( datetime.now().astimezone() - ToolboxHelper.getLastUpdate("gIndoor_Lights") ).total_seconds()
                 if last_update_diff >= 600:
                     Cache.setPresenceState(PresenceHelper.STATE_SLEEPING)
                     self.timer = None

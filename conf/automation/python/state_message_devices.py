@@ -19,7 +19,7 @@ class Main:
 
         mower_state = Registry.getItemState("pOutdoor_Mower_State_Message").toString()
         if mower_state != "Alles ok":
-            active.append("Rasenmähroboter {}".format( robot_state ))
+            active.append("Rasenmähroboter {}".format( mower_state ))
 
         eg_humidifier_state = Registry.getItemState("pGF_Livingroom_Humidifier_State_Message").toString()
         if eg_humidifier_state != "Alles ok":

@@ -1016,7 +1016,7 @@ class Heating():
                     # CF heating should not take longer than two time more then expected
                     # Check is needed
                     # - because the operation mode can flip between "Heizen mit WWW" and "Reduziert". So we will never reach needed runtime
-                    if ( demand_started, self.now ).total_seconds() > fh['time'] * 60.0 * 60.0 * 2:
+                    if (demand_started - self.now).total_seconds() > fh['time'] * 60.0 * 60.0 * 2:
                         needed_time = -1
                     else:
                         needed_energy = None

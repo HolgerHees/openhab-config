@@ -46,7 +46,6 @@ Number pOther_Manual_State_Calendar_Event_Notify "Kalenderbenachrichtigung [MAP(
 Switch pOther_Manual_State_Holiday              "Urlaubsmodus"    <selfshield> (eOther_Manual_States) ["Point"] { channel="knx:device:bridge:other:stateHoliday" }
 Number pOther_Manual_State_Heating              "Heizungsmodus"     <selfshield> (eOther_Manual_States) ["Point"]
 
-Number pOther_Manual_State_Lightprogram         "Lichtprogram"    <selfautomode> (eOther_Manual_States) ["Point"]
 Number pOther_Manual_State_Auto_Attic_Light     "Mode [%d]"       <selfautomode> (eOther_Manual_States) ["Point"]
 Switch pOther_Manual_State_Auto_Christmas       "Weihnachtsmodus" <selfautomode> (eOther_Manual_States) ["Point"]
 Switch pOther_Manual_State_Auto_Lighting        "Beleuchtung Automatik" <selfautomode> (eOther_Manual_States) ["Point"]

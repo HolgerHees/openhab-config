@@ -9,7 +9,6 @@ import math
 
 DELAYED_UPDATE_TIMEOUT = 3
 
-
 @rule(
     triggers = [
         GenericCronTrigger("0 * * * * ?")

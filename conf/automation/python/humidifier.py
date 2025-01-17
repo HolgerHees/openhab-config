@@ -27,16 +27,8 @@ class ThingState:
         return triggers
 
     def check(self, thing_uid):
-        thing = Registry.getThing(thing_uid)
-        status = thing.getStatus()
-        info = thing.getStatusInfo()
-
-        if status is not None and info is not None:
-            if status.toString() != "ONLINE":
-                if Registry.getItem(self.thing_uid_map[thing_uid]).postUpdateIfDifferent(OFF):
-                    self.logger.info("Humidifier State Change: {} - {}".format(status.toString(), info.toString()))
-            else:
-                Registry.getItem(self.thing_uid_map[thing_uid]).postUpdateIfDifferent(ON)
+        status = Registry.getThing(thing_uid).getStatus()
+        Registry.getItem(self.thing_uid_map[thing_uid]).postUpdateIfDifferent(ON if status.toString() == "ONLINE" else OFF)
 
     def execute(self, module, input):
         if input['event'].getType() == "StartlevelEvent":

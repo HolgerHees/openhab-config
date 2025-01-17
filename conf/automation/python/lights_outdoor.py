@@ -31,7 +31,7 @@ class MotiondetectorSwitch:
         now = datetime.now().astimezone()
         last = rule_timeouts.get("Motiondetector_Outdoor_Main_Switch",now - timedelta(hours=1))
         
-        if (last - now).total_seconds() > 1:
+        if (now - last).total_seconds() > 1:
             itemState = input["event"].getItemState()
             
             self.logger.info("MotiondetectorOutdoorSwitchRule => last: {}, now: {}, state: {}".format(last,now,itemState))
@@ -99,7 +99,7 @@ class Control:
         last = rule_timeouts.get("Light_Outdoor",now - timedelta(hours=1))
         
         # No Motion Detector related events
-        if (last - now).total_seconds() > 1:
+        if (now - last).total_seconds() > 1:
             item_name = input['event'].getItemName()
             
             self.logger.info("LightOutdoorControlRule => Automatic_Switches => OFF, last: {}, now: {}".format(last,now))

@@ -43,6 +43,7 @@ class ErrorMessage:
 
 @rule(
     triggers = [
+        SystemStartlevelTrigger(80),
         ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Error_Message"),
         ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Filter_Error")
     ]
