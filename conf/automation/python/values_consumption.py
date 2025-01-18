@@ -82,7 +82,7 @@ def getHistoricReference(logger, item_name, value_time, outdated_time, messure_t
     if value < 0:
         value = 0
 
-    logger.info( "Consumption {} messured from {} ({}) to {} ({})".format(value, start_value, start_time.strftime("%Y-%m-%dT %H:%M:%SZ"), end_value, end_time.strftime("%Y-%m-%dT %H:%M:%SZ")))
+    logger.info( "Consumption {} messured from {} ({}) to {} ({})".format(value, start_value, start_time.strftime("%Y-%m-%d %H:%M:%S"), end_value, end_time.strftime("%Y-%m-%d %H:%M:%S")))
 
     return value
 
