@@ -5,6 +5,8 @@ from shared.toolbox import ToolboxHelper
 
 from custom.presence import PresenceHelper
 
+from datetime import datetime, timedelta
+
 
 TARGET_HUMIDITY = 50.0
 

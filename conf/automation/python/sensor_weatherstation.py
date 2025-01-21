@@ -1,5 +1,5 @@
 from openhab import rule, Registry, Timer
-from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
+from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger
 
 from shared.toolbox import ToolboxHelper
 
@@ -73,8 +73,8 @@ class LastUpdate:
 
 @rule(
     triggers = [
-        ItemStateUpdateTrigger("pOutdoor_WeatherStation_Rain_Daily"),
-        ItemStateUpdateTrigger("pOutdoor_WeatherStation_Rain_Rate")
+        ItemStateChangeTrigger("pOutdoor_WeatherStation_Rain_Daily"),
+        ItemStateChangeTrigger("pOutdoor_WeatherStation_Rain_Rate")
     ]
 )
 class Rain:

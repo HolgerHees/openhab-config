@@ -1,4 +1,4 @@
-from openhab import rule, Registry
+from openhab import rule, Registry, logger
 from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger, ItemStateUpdateTrigger
 
 from shared.toolbox import ToolboxHelper
@@ -29,6 +29,7 @@ start_gas_impulse_counter = 0
 #postUpdate("pGF_Utilityroom_Electricity_Total_Supply",value)
 #value = ToolboxHelper.getPersistedState("pGF_Garage_Solar_Inverter_Power_Limitation",datetime.now().astimezone()).intValue()
 #postUpdate("pGF_Garage_Solar_Inverter_Power_Limitation",value)
+
 
 def getHistoricReference(logger, item_name, value_time, outdated_time, messure_time, interval_time):
 

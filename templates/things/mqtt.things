@@ -77,10 +77,6 @@ Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
     Thing topic weatherstation "Wetterstation (Default-MQTT)" {
         Type number : solarRadiation "Sonnentemperatur" [ stateTopic="ecowitt/8813BF4638DF/#", transformationPattern="REGEX:.*solarradiation=([0-9\\.]*).*" ]
     }
-    Thing topic co2sensor "Sensoren CO2" {
-        Type number : boxroom "Kammer" [ stateTopic="co2sensor/kammer" ]
-        Type number : dressingroom "Ankleide" [ stateTopic="co2sensor/ankleide" ]
-    }
     Thing topic nuki "Nuki Türschloss" {
         Type switch : connected "Verbunden" [ stateTopic="nuki/43347577/connected", on="true", off="false" ]
         Type number : deviceType "Device Typ" [ stateTopic="nuki/43347577/deviceType" ]

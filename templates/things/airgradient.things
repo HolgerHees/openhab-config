@@ -1,0 +1,3 @@
+Thing airgradient:airgradient-local:bedroom "AirGradient Schlafzimmer" [ hostname="http://{{custom_airgradient_1_ip}}/measures/current" ]
+Thing airgradient:airgradient-local:livingroom "AirGradient Wohnzimmer" [ hostname="http://{{custom_airgradient_2_ip}}/measures/current" ]
+Thing airgradient:airgradient-local:boxroom "AirGradient Abstellkammer" [ hostname="http://{{custom_airgradient_3_ip}}/measures/current" ]

@@ -8,11 +8,9 @@ from custom.weather import WeatherHelper
 
 from datetime import datetime, timedelta
 
-
 @rule(
     triggers = [
-        GenericCronTrigger("*/5 * * * * ?")
-        #GenericCronTrigger("0 * * * * ?")
+        GenericCronTrigger("0 * * * * ?")
     ]
 )
 class Main:
@@ -23,7 +21,7 @@ class Main:
         light_level = WeatherHelper.getLightLevelItemState().intValue()
         
         automatic_rollershutter_state = Registry.getItemState("pOther_Automatic_State_Rollershutter").intValue()
-        
+
         if automatic_rollershutter_state != SunProtectionHelper.STATE_ROLLERSHUTTER_UP:
             _up_time = Registry.getItemState("pOutdoor_Astro_Sunrise_Time")
             _up_time = _up_time + timedelta(seconds=int( ( cloud_cover * 30.0 / 9.0 ) * 60 ) )

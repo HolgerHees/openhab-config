@@ -8,8 +8,8 @@ from datetime import datetime, timedelta
     triggers = [
         SystemStartlevelTrigger(80),
         GenericCronTrigger("0 */5 * * * ?"),
-        ItemStateChangeTrigger("pGF_Corridor_Lock_Battery_Critical"),
-        ItemStateChangeTrigger("pGF_Corridor_Lock_Timestamp")
+        ItemStateChangeTrigger("pGF_Corridor_Lock_Battery_Critical")
+#        ItemStateChangeTrigger("pGF_Corridor_Lock_Timestamp")
     ]
 )
 class BatteryDetail:
