@@ -1,5 +1,5 @@
 from openhab import rule, logger, Registry, Timer
-from openhab.triggers import ItemCommandTrigger, ItemStateChangeTrigger, ThingStatusChangeTrigger, GenericCronTrigger, SystemStartlevelTrigger
+from openhab.triggers import ItemCommandTrigger, ItemStateChangeTrigger, GroupStateChangeTrigger, ThingStatusChangeTrigger, GenericCronTrigger, SystemStartlevelTrigger
 
 from shared.toolbox import ToolboxHelper
 
@@ -8,6 +8,8 @@ from custom.weather import WeatherHelper
 
 from datetime import datetime, timedelta
 import math
+
+import scope
 
 
 DELAYED_UPDATE_TIMEOUT = 3
@@ -25,8 +27,7 @@ class StateReset:
 @rule(
     triggers = [
         SystemStartlevelTrigger(80),
-        ThingStatusChangeTrigger("comfoair:comfoair:default"),
-        ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Filter_Error")
+        ThingStatusChangeTrigger("comfoair:comfoair:default")
     ]
 )
 class ErrorMessage:
@@ -52,7 +53,7 @@ class StateMessage:
     def execute(self, module, input):
         if Registry.getItemState("pGF_Utilityroom_Ventilation_Error_Message").toString() != "No Errors":
             msg = "Error"
-        elif Registry.getItemState("pGF_Utilityroom_Ventilation_Filter_Error") == ON:
+        elif Registry.getItemState("pGF_Utilityroom_Ventilation_Filter_Error") == scope.ON:
             msg = "Filter"
         else:
             msg = "Alles ok"
@@ -73,13 +74,17 @@ class Efficiency:
     def delayUpdate(self):
         efficiency = 0
 
-        if Registry.getItemState("pGF_Utilityroom_Ventilation_Bypass") == OFF:
-            tempOutIn = Registry.getItemState("pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature").doubleValue()
-            tempInOut = Registry.getItemState("pGF_Utilityroom_Ventilation_Indoor_Outgoing_Temperature").doubleValue()
-            tempInIn = Registry.getItemState("pGF_Utilityroom_Ventilation_Indoor_Incoming_Temperature").doubleValue()
+        if Registry.getItemState("pGF_Utilityroom_Ventilation_Bypass") == scope.OFF:
+            temp_out_in_state = Registry.getItemState("pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature")
+            temp_in_out_state = Registry.getItemState("pGF_Utilityroom_Ventilation_Indoor_Outgoing_Temperature")
+            temp_in_in_state = Registry.getItemState("pGF_Utilityroom_Ventilation_Indoor_Incoming_Temperature")
+            if temp_out_in_state == scope.UNDEF or temp_in_out_state == scope.UNDEF or temp_in_in_state == scope.UNDEF :
+                return
 
-            if tempInOut != tempOutIn:
-                efficiency = ( tempInIn - tempOutIn ) / ( tempInOut - tempOutIn ) * 100
+            temp_out_in = temp_out_in_state.doubleValue()
+            temp_in_out = temp_in_out_state.doubleValue()
+            if temp_in_out != temp_out_in:
+                efficiency = ( temp_in_in_state.doubleValue() - temp_out_in ) / ( temp_in_out - temp_out_in ) * 100
                 efficiency = round( efficiency );
             else:
                 efficiency = 100
@@ -100,7 +105,11 @@ class Efficiency:
 )
 class Runtime:
     def execute(self, module, input):
-        runtime = input['event'].getItemState().doubleValue()
+        runtimeState = input['event'].getItemState()
+        if runtimeState == scope.UNDEF:
+            return
+
+        runtime = runtimeState.doubleValue()
 
         weeks = int(math.floor(runtime / 168.0))
         days = int(math.floor((runtime - (weeks * 168.0)) / 24))
@@ -133,7 +142,12 @@ class OutdoorTemperatureMessage:
         self.update_timer = None
 
     def delayUpdate(self):
-        msg = "→ {}°C, ← {}°C".format(Registry.getItemState("pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature").format("%.1f"),Registry.getItemState("pGF_Utilityroom_Ventilation_Outdoor_Outgoing_Temperature").format("%.1f"))
+        incoming_state = Registry.getItemState("pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature")
+        outgoing_state = Registry.getItemState("pGF_Utilityroom_Ventilation_Outdoor_Outgoing_Temperature")
+        if incoming_state == scope.UNDEF or outgoing_state == scope.UNDEF:
+                return
+
+        msg = "→ {}°C, ← {}°C".format(incoming_state.format("%.1f"), outgoing_state.format("%.1f"))
         Registry.getItem("pGF_Utilityroom_Ventilation_Outdoor_Temperature_Message").postUpdateIfDifferent(msg)
 
         self.update_timer = None
@@ -152,7 +166,12 @@ class IndoorTemperatureMessage:
         self.update_timer = None
 
     def delayUpdate(self):
-        msg = "→ {}°C, ← {}°C".format(Registry.getItemState("pGF_Utilityroom_Ventilation_Indoor_Incoming_Temperature").format("%.1f"),Registry.getItemState("pGF_Utilityroom_Ventilation_Indoor_Outgoing_Temperature").format("%.1f"))
+        incoming_state = Registry.getItemState("pGF_Utilityroom_Ventilation_Indoor_Incoming_Temperature")
+        outgoing_state = Registry.getItemState("pGF_Utilityroom_Ventilation_Indoor_Outgoing_Temperature")
+        if incoming_state == scope.UNDEF or outgoing_state == scope.UNDEF:
+                return
+
+        msg = "→ {}°C, ← {}°C".format(incoming_state.format("%.1f"), outgoing_state.format("%.1f"))
         Registry.getItem("pGF_Utilityroom_Ventilation_Indoor_Temperature_Message").postUpdateIfDifferent(msg)
 
         self.update_timer = None
@@ -171,7 +190,12 @@ class FilterMessage:
         self.update_timer = None
 
     def delayUpdate(self):
-        msg = "→ {}%, ← {}%".format(Registry.getItemState("pGF_Utilityroom_Ventilation_Incoming").toString(),Registry.getItemState("pGF_Utilityroom_Ventilation_Outgoing").toString())
+        incoming_state = Registry.getItemState("pGF_Utilityroom_Ventilation_Incoming")
+        outgoing_state = Registry.getItemState("pGF_Utilityroom_Ventilation_Outgoing")
+        if incoming_state == scope.UNDEF or outgoing_state == scope.UNDEF:
+                return
+
+        msg = "→ {}%, ← {}%".format(incoming_state.toString(),outgoing_state.toString())
         Registry.getItem("pGF_Utilityroom_Ventilation_Fan_Message").postUpdateIfDifferent(msg)
 
         self.update_timer = None
@@ -183,7 +207,7 @@ class FilterMessage:
     triggers = [
         GenericCronTrigger("0 */1 * * * ?"),
         ItemCommandTrigger("pGF_Utilityroom_Ventilation_Fan_Level"),
-        ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Auto_Mode", state="ON"),
+        ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Auto_Mode", state=scope.ON),
         ItemStateChangeTrigger("pOther_Presence_State")
     ]
 )
@@ -197,13 +221,18 @@ class FanLevel:
             if self.auto_change_in_progress:
                 self.auto_change_in_progress = False
             else:
-                Registry.getItem("pGF_Utilityroom_Ventilation_Auto_Mode").postUpdate(OFF)
+                Registry.getItem("pGF_Utilityroom_Ventilation_Auto_Mode").postUpdate(scope.OFF)
             return
 
-        if Registry.getItemState("pGF_Utilityroom_Ventilation_Auto_Mode") == OFF:
+        if Registry.getItemState("pGF_Utilityroom_Ventilation_Auto_Mode") == scope.OFF:
             return
 
-        current_level = Registry.getItemState("pGF_Utilityroom_Ventilation_Fan_Level").intValue()
+        fan_level_state = Registry.getItemState("pGF_Utilityroom_Ventilation_Fan_Level")
+        comfort_temperature_state = Registry.getItemState("pGF_Utilityroom_Ventilation_Comfort_Temperature")
+        if fan_level_state == scope.UNDEF or comfort_temperature_state == scope.UNDEF:
+            return
+
+        current_level = fan_level_state.intValue()
         if self.active_level == -1:
             self.active_level = current_level
 
@@ -216,7 +245,7 @@ class FanLevel:
             new_level = 2    # Level 1
         else:
             indoor_temperature = ToolboxHelper.getStableState("pGF_Livingroom_Air_Sensor_Temperature_Value", 900).doubleValue()
-            target_temperature = Registry.getItemState("pGF_Utilityroom_Ventilation_Comfort_Temperature").doubleValue()
+            target_temperature = comfort_temperature_state.doubleValue()
 
             presence_state = Registry.getItemState("pOther_Presence_State").intValue()
 
@@ -259,11 +288,12 @@ class FanLevel:
                 Registry.getItem("pGF_Utilityroom_Ventilation_Fan_Level").sendCommand(new_level)
                 self.active_level = new_level
 
-@rule()
+@rule(
+    triggers = [
+        GroupStateChangeTrigger("eOther_Target_Temperatures")
+    ]
+)
 class ComfortTemperature:
-    def buildTriggers(self):
-        return ToolboxHelper.getGroupMemberTrigger(ItemStateChangeTrigger, "eOther_Target_Temperatures")
-
     def execute(self, module, input):
         max_temperature = 0.0
         for item in Registry.getItem("eOther_Target_Temperatures").getAllGroupMembers():

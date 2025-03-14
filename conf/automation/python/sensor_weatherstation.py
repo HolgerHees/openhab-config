@@ -6,6 +6,8 @@ from shared.toolbox import ToolboxHelper
 from datetime import datetime, timedelta
 import math
 
+import scope
+
 
 DELAYED_UPDATE_TIMEOUT = 3
 
@@ -56,7 +58,7 @@ class LastUpdate:
         Registry.getItem("pOutdoor_WeatherStation_Update_Message").postUpdateIfDifferent(msg)
 
         is_working = oldest_update_in_minutes <= 60
-        Registry.getItem("pOutdoor_WeatherStation_Is_Working").postUpdateIfDifferent(ON if is_working else OFF)
+        Registry.getItem("pOutdoor_WeatherStation_Is_Working").postUpdateIfDifferent(scope.ON if is_working else scope.OFF)
         Registry.getItem("eOther_Error_WeatherStation_Message").postUpdateIfDifferent("" if is_working else "Keine Updates seit mehr als 60 Minuten")
 
         if oldest_update_in_minutes > 10:
@@ -82,8 +84,8 @@ class Rain:
         self.update_timer = None
 
     def delayUpdate(self):
-        rain_rate = Registry.getItemState("pOutdoor_WeatherStation_Rain_Rate",DecimalType(0.0)).doubleValue()
-        today_rain = Registry.getItemState("pOutdoor_WeatherStation_Rain_Daily",DecimalType(0.0)).doubleValue()
+        rain_rate = Registry.getItemState("pOutdoor_WeatherStation_Rain_Rate",scope.DecimalType(0.0)).doubleValue()
+        today_rain = Registry.getItemState("pOutdoor_WeatherStation_Rain_Daily",scope.DecimalType(0.0)).doubleValue()
         rain_level = Registry.getItemState("pOutdoor_WeatherStation_Rain_State").intValue()
 
         if rain_level == 0:
@@ -108,7 +110,7 @@ class Rain:
         
     def execute(self, module, input):
         if input['event'].getItemName() == "pOutdoor_WeatherStation_Rain_Daily":
-            amount_new = Registry.getItemState("pOutdoor_WeatherStation_Rain_Daily",DecimalType(0.0)).doubleValue()
+            amount_new = Registry.getItemState("pOutdoor_WeatherStation_Rain_Daily",scope.DecimalType(0.0)).doubleValue()
             amount_old = ToolboxHelper.getPersistedState("pOutdoor_WeatherStation_Rain_Daily", datetime.now().astimezone() - timedelta(hours=1)).doubleValue()
             Registry.getItem("pOutdoor_WeatherStation_Rain_Hourly").postUpdateIfDifferent(amount_new - amount_old)
         elif input['event'].getItemName() == "pOutdoor_WeatherStation_Rain_Rate":
@@ -361,7 +363,7 @@ class PerceivedTemperature:
 )
 class BatteryDetail:
     def execute(self, module, input):
-        if input['event'].getItemState() == ON:
+        if input['event'].getItemState() == scope.ON:
             Registry.getItem("pOutdoor_WeatherStation_State_Device_Info").postUpdateIfDifferent("Batterie")
         else:
             Registry.getItem("pOutdoor_WeatherStation_State_Device_Info").postUpdateIfDifferent("Alles ok")

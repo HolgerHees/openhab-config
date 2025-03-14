@@ -1,20 +1,22 @@
 from openhab import rule, logger, Registry
 from openhab.triggers import ItemStateChangeTrigger, ItemStateUpdateTrigger
 
+import scope
+
 
 @rule(
     triggers = [
-        ItemStateChangeTrigger("pFF_Bedroom_Switches_Long_Pressed_Left_State", state="ON"),
-        ItemStateChangeTrigger("pFF_Bedroom_Switches_Long_Pressed_Right_State", state="ON")
+        ItemStateChangeTrigger("pFF_Bedroom_Switches_Long_Pressed_Left_State", state=scope.ON),
+        ItemStateChangeTrigger("pFF_Bedroom_Switches_Long_Pressed_Right_State", state=scope.ON)
     ]
 )
 class Control:
     def execute(self, module, input):
-        Registry.getItem("pOther_Scene4").sendCommand(ON)
+        Registry.getItem("pOther_Scene4").sendCommand(scope.ON)
 
 @rule(
     triggers = [
-        ItemStateUpdateTrigger("pFF_Bedroom_Light_Hue_Left_Switch", state="ON")
+        ItemStateUpdateTrigger("pFF_Bedroom_Light_Hue_Left_Switch", state=scope.ON)
     ]
 )
 class LeftControl:
@@ -26,7 +28,7 @@ class LeftControl:
             
 @rule(
     triggers = [
-        ItemStateUpdateTrigger("pFF_Bedroom_Light_Hue_Right_Switch", state="ON")
+        ItemStateUpdateTrigger("pFF_Bedroom_Light_Hue_Right_Switch", state=scope.ON)
     ]
 )
 class RightControl:

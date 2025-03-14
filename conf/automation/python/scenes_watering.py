@@ -6,6 +6,8 @@ from custom.watering import WateringHelper
 from datetime import datetime, timedelta
 import math
 
+import scope
+
 
      # Water usage,  Runtime usage,   Item [2]
 circuits = [
@@ -29,7 +31,7 @@ def calculateStack():
     for i in range(len(circuits)):
         group = circuits[i]
 
-        if Registry.getItemState(group["item"] + "_Auto") != ON:
+        if Registry.getItemState(group["item"] + "_Auto") != scope.ON:
             continue
 
         step = None
@@ -85,7 +87,7 @@ class Message:
 
         for i in range(len(circuits)):
             group = circuits[i]
-            if Registry.getItemState(group["item"] + "_Auto") == ON:
+            if Registry.getItemState(group["item"] + "_Auto") == scope.ON:
                 factor = WateringHelper.getFactor(group["sensor"]) if AUTO else 1.0
                 duration = int( math.floor( group["duration"] * reference_duration * factor) )
                 Registry.getItem(group["item"] + "_Info").postUpdate("{} min.".format(duration))
@@ -131,7 +133,7 @@ class Control():
             active_items = []
             for i in range(len(circuits)):
                 group = circuits[i]
-                if Registry.getItemState(group["item"] + "_Powered") == ON:
+                if Registry.getItemState(group["item"] + "_Powered") == scope.ON:
                     active_items.append(group["item"])
 
             # restore circuites states
@@ -177,7 +179,7 @@ class Control():
                     if DEBUG:
                         self.logger.info("ON {}".format(group["item"]))
                     else:
-                        Registry.getItem(group["item"] + "_Powered").sendCommandIfDifferent(ON)
+                        Registry.getItem(group["item"] + "_Powered").sendCommandIfDifferent(scope.ON)
                     names.append(group["name"])
 
             for i in range(len(circuits)):
@@ -186,7 +188,7 @@ class Control():
                     if DEBUG:
                         self.logger.info("OFF {}".format(group["item"]))
                     else:
-                        Registry.getItem(group["item"] + "_Powered").sendCommandIfDifferent(OFF)
+                        Registry.getItem(group["item"] + "_Powered").sendCommandIfDifferent(scope.OFF)
 
             remaining_runtime = int( math.floor( active_step["duration"] - active_runtime ) )
 
@@ -212,8 +214,8 @@ class Control():
         if active_program == WateringHelper.STATE_CONTROL_OFF:
             for i in range(len(circuits)):
                 group = circuits[i]
-                if Registry.getItemState(group["item"] + "_Auto") == ON:
-                    Registry.getItem(group["item"] + "_Powered").sendCommandIfDifferent(OFF)
+                if Registry.getItemState(group["item"] + "_Auto") == scope.ON:
+                    Registry.getItem(group["item"] + "_Powered").sendCommandIfDifferent(scope.OFF)
             Registry.getItem("pOutdoor_Watering_Logic_Program_State").postUpdate("läuft nicht")
             return
         elif active_program == WateringHelper.STATE_CONTROL_START_NOW:

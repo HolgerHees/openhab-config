@@ -37,4 +37,3 @@ class Main:
 
         if Registry.getItem("pOther_State_Message_Devices").postUpdateIfDifferent(msg):
             NotificationHelper.sendNotification(priority, "Geräte", msg)
-

@@ -1,2 +1,2 @@
 // log:set TRACE org.openhab.binding.samsungtv
-samsungtv:tv:livingroom "Gerät Fernseher" [ hostName="{{custom_tv_livingroom_ip}}", macAddress="{{custom_tv_livingroom_mac}}", protocol="SecureWebSocket", port=8002, refreshInterval=1000, webSocketToken="{{custom_tv_livingroom_token}}" ]
+samsungtv:tv:livingroom "Gerät Fernseher" [ hostName="{{custom_tv_livingroom_ip}}", macAddress="{{custom_tv_livingroom_mac}}", protocol="SecureWebSocket", port=8002, refreshInterval=1000, webSocketToken="{{custom_tv_livingroom_token}}", subscription=true ]

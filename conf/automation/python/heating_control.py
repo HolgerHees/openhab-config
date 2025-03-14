@@ -1,5 +1,5 @@
 from openhab import rule, Registry, logger
-from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger
+from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger, ItemCommandTrigger
 from openhab.actions import Transformation
 
 from shared.toolbox import ToolboxHelper
@@ -12,17 +12,19 @@ from custom.weather import WeatherHelper
 
 from datetime import datetime, timedelta
 
+import scope
 
-#postUpdate("pGF_Utilityroom_Heating_Demand",OFF)
-#postUpdate("pGF_Guesttoilet_Heating_Demand",OFF)
-#postUpdate("pGF_Livingroom_Heating_Demand",OFF)
-#postUpdate("pGF_Workroom_Heating_Demand",OFF)
-#postUpdate("pGF_Corridor_Heating_Demand",OFF)
-#postUpdate("pFF_Corridor_Heating_Demand",OFF)
-#postUpdate("pFF_Fitnessroom_Heating_Demand",OFF)
-#postUpdate("pFF_Makeuproom_Heating_Demand",OFF)
-#postUpdate("pFF_Bedroom_Heating_Demand",OFF)
-#postUpdate("pFF_Bathroom_Heating_Demand",OFF)
+
+#postUpdate("pGF_Utilityroom_Heating_Demand",scope.OFF)
+#postUpdate("pGF_Guesttoilet_Heating_Demand",scope.OFF)
+#postUpdate("pGF_Livingroom_Heating_Demand",scope.OFF)
+#postUpdate("pGF_Workroom_Heating_Demand",scope.OFF)
+#postUpdate("pGF_Corridor_Heating_Demand",scope.OFF)
+#postUpdate("pFF_Corridor_Heating_Demand",scope.OFF)
+#postUpdate("pFF_Fitnessroom_Heating_Demand",scope.OFF)
+#postUpdate("pFF_Makeuproom_Heating_Demand",scope.OFF)
+#postUpdate("pFF_Bedroom_Heating_Demand",scope.OFF)
+#postUpdate("pFF_Bathroom_Heating_Demand",scope.OFF)
 
 Heating.cloud_cover_fc8_item_name = "pOutdoor_Weather_Forecast_Cloud_Cover_8h"
 Heating.cloud_cover_fc4_item_name = "pOutdoor_Weather_Forecast_Cloud_Cover_4h"
@@ -407,17 +409,17 @@ class Ventile:
 
             if maintainanceModeActive or ToolboxHelper.getLastChange(circuiteItem) < now - timedelta(hours=24):
                 hour = now.hour
-                if hour == 2 or Registry.getItemState(circuiteItem) == OFF:
-                    Registry.getItem(circuiteItem).postUpdateIfDifferent(ON)
+                if hour == 2 or Registry.getItemState(circuiteItem) == scope.OFF:
+                    Registry.getItem(circuiteItem).postUpdateIfDifferent(scope.ON)
                 else:
-                    Registry.getItem(circuiteItem).postUpdateIfDifferent(OFF)
+                    Registry.getItem(circuiteItem).postUpdateIfDifferent(scope.OFF)
 
                 if room.hasAdditionalRadiator():
                     hkItem = Heating.getHeatingHKItemName(room)
-                    if hour == 2 or Registry.getItemState(hkItem) == OFF:
-                        Registry.getItem(hkItem).sendCommandIfDifferent(ON)
+                    if hour == 2 or Registry.getItemState(hkItem) == scope.OFF:
+                        Registry.getItem(hkItem).sendCommandIfDifferent(scope.ON)
                     else:
-                        Registry.getItem(hkItem).sendCommandIfDifferent(OFF)
+                        Registry.getItem(hkItem).sendCommandIfDifferent(scope.OFF)
 
                 if hour == 2:
                     del maintenanceMode[room]
@@ -459,7 +461,7 @@ class Main:
         messured_light_level_short_term = WeatherHelper.getLightLevelStableItemState(30).doubleValue()
         messured_light_level_long_term = WeatherHelper.getLightLevelStableItemState(60).doubleValue()
 
-        cr, cr4, cr8, hhs = heating.calculate(current_heating_demand == ON, messured_radiation_short_term)
+        cr, cr4, cr8, hhs = heating.calculate(current_heating_demand == scope.ON, messured_radiation_short_term)
 
         # **** DEBUG ****
         heating.logCoolingAndRadiations("FC8     ", cr8)
@@ -533,16 +535,16 @@ class Main:
 
                 # *** PERSIST HEATING DEMAND ***
                 if heating_requested and (rhs.getHeatingDemandTime() > 0 or room.getName() not in controllableRooms):
-                    Registry.getItem(Heating.getHeatingDemandItemName(room)).postUpdateIfDifferent(ON)
+                    Registry.getItem(Heating.getHeatingDemandItemName(room)).postUpdateIfDifferent(scope.ON)
                 else:
-                    Registry.getItem(Heating.getHeatingDemandItemName(room)).postUpdateIfDifferent(OFF)
+                    Registry.getItem(Heating.getHeatingDemandItemName(room)).postUpdateIfDifferent(scope.OFF)
 
                 # *** CONTROL CIRCUITS AND HK ***
                 if room.getName() in controllableRooms and room not in maintenanceMode:
                     circuit_item = Heating.getHeatingCircuitItemName(room)
                     if heating_requested and ( rhs.getHeatingDemandTime() > 0 or forced_open_circuit_on_start ):
                         #self.logger.info("ON")
-                        if Registry.getItem(circuit_item).sendCommandIfDifferent(ON):
+                        if Registry.getItem(circuit_item).sendCommandIfDifferent(scope.ON):
                             circuit_last_change = now
                         else:
                             circuit_last_change = ToolboxHelper.getLastChange(circuit_item)
@@ -551,27 +553,27 @@ class Main:
                             last_circuit_opened_at = circuit_last_change
                     else:
                         #self.logger.info("OFF")
-                        Registry.getItem(circuit_item).sendCommandIfDifferent(OFF)
+                        Registry.getItem(circuit_item).sendCommandIfDifferent(scope.OFF)
 
                     # wall radiator
                     if room.hasAdditionalRadiator():
                         # additional radiator should only be enabled in case of CF heating
                         if heating_requested and ( rhs.getForcedInfo() == 'CF' or forced_open_circuit_on_start ):
-                            Registry.getItem(Heating.getHeatingHKItemName(room)).sendCommandIfDifferent(ON)
+                            Registry.getItem(Heating.getHeatingHKItemName(room)).sendCommandIfDifferent(scope.ON)
                         else:
-                            Registry.getItem(Heating.getHeatingHKItemName(room)).sendCommandIfDifferent(OFF)
+                            Registry.getItem(Heating.getHeatingHKItemName(room)).sendCommandIfDifferent(scope.OFF)
             # *************************************************
 
             self.logger.info(u"        : ---" )
 
             # a heating ciruit was opened less then 5 minutes ago.
             # delay heating request to give circuit some time to open
-            if current_heating_demand == OFF and last_circuit_opened_at != None and now - timedelta(minutes=5) < last_circuit_opened_at:
+            if current_heating_demand == scope.OFF and last_circuit_opened_at != None and now - timedelta(minutes=5) < last_circuit_opened_at:
                 #self.logger.info(u"{}".format(last_circuit_opened_at))
                 opened_before_in_minutes = int((now - last_circuit_opened_at).total_seconds() / 60)
                 self.logger.info(u"Demand  : DELAYED • circuit was opened {} min. ago".format(opened_before_in_minutes))
             else:
-                heating_demand = ON if heating_requested else OFF
+                heating_demand = scope.ON if heating_requested else scope.OFF
                 Registry.getItem("pGF_Utilityroom_Heating_Demand").postUpdateIfDifferent(heating_demand)
 
                 endMsg = u" • {} min. to go".format(Heating.visualizeHeatingDemandTime(longest_runetime)) if longest_runetime > 0 else u""
@@ -632,11 +634,10 @@ class Main:
 
         if azimut >= 120 and azimut <= SunRadiation.AZIMUT_NW_LIMIT and elevation >= SunRadiation.getMinElevation(azimut):
             #self.logger.info(u"Sun     : {:.1f} W/min ({:.1f} W/min)".format(effective_radiation_short_term,effective_radiation_long_term))
-
             # glare protection during sandra's workdays
             needed_sunprotection = azimut >= 180 \
                 and messured_light_level_short_term > 15000 and messured_light_level_long_term > 15000 \
-                and now.getDayOfWeek().getValue() <= 5 and Registry.getItemState("pOther_Presence_Sandra_State") == ON
+                and now.weekday() <= 4 and Registry.getItemState("pOther_Presence_Sandra_State") == scope.ON
             if not needed_sunprotection:
                 # hot stone protection
                 needed_sunprotection = effective_radiation_long_term > 8.0 and (current_outdoor_temperature > 26 or current_outdoor_temperature4 > 26)
@@ -669,7 +670,7 @@ class Main:
                     continue
 
                 #if current_outdoor_temperature < target_room_temperature and current_outdoor_temperature4 < target_room_temperature and current_outdoor_temperature8 < target_room_temperature:
-                #    Registry.getItem(transition.getSunProtectionItem()).postUpdateIfDifferent(OFF )
+                #    Registry.getItem(transition.getSunProtectionItem()).postUpdateIfDifferent(scope.OFF )
                 #    continue
 
                 current_room_temperature = rs.getCurrentTemperature()
@@ -678,7 +679,7 @@ class Main:
                 effective_radiation_long_term = effective_south_radiation_long_term if transition.getDirection() == 'south' else effective_west_radiation_long_term
                 effective_radiation_max = effective_south_radiation_max if transition.getDirection() == 'south' else effective_west_radiation_max
 
-                if Registry.getItemState(transition.getSunProtectionItem()) == ON:
+                if Registry.getItemState(transition.getSunProtectionItem()) == scope.ON:
                     radiationTooLow = (effective_radiation_short_term < 2.0 and ( effective_radiation_max < 2.0 or effective_radiation_long_term < 2.0 ))
 
                     roomTemperatureTooCold = current_room_temperature < target_room_temperature - 0.7
@@ -694,7 +695,7 @@ class Main:
 
                     if radiationTooLow or roomTemperatureTooCold or itsGettingColderAndRoomIsNotWarmEnoughForIt:
                         if ToolboxHelper.getLastUpdate(transition.getSunProtectionItem()) < now - timedelta(minutes=60):
-                            Registry.getItem(transition.getSunProtectionItem()).postUpdate(OFF)
+                            Registry.getItem(transition.getSunProtectionItem()).postUpdate(scope.OFF)
                             self.logger.info(u"DEBUG: SP switching OFF • {} {} {} {}".format(room.getName(),effective_radiation_short_term,effective_radiation_long_term,effective_radiation_max))
                         else:
                             self.logger.warn(u"DEBUG: SP skipped OFF • {} {} {} {}".format(room.getName(),effective_radiation_short_term,effective_radiation_long_term,effective_radiation_max))
@@ -707,7 +708,7 @@ class Main:
                     tooWarm = self.isTooWarm(effective_radiation_short_term, current_outdoor_temperature, current_outdoor_temperature4, current_room_temperature, target_room_temperature )
                     if tooWarm:
                         if ToolboxHelper.getLastUpdate(transition.getSunProtectionItem()) < now - timedelta(minutes=30):
-                            Registry.getItem(transition.getSunProtectionItem()).postUpdate(ON)
+                            Registry.getItem(transition.getSunProtectionItem()).postUpdate(scope.ON)
                             self.logger.info(u"DEBUG: SP switching ON • {} {} {} {}".format(room.getName(),effective_radiation_short_term,effective_radiation_long_term,effective_radiation_max))
                         else:
                             self.logger.warn(u"DEBUG: SP skipped ON • {} {} {} {}".format(room.getName(),effective_radiation_short_term,effective_radiation_long_term,effective_radiation_max))
@@ -888,3 +889,15 @@ class Main:
     #    self.logger.info("{} {}".format(ref, zdtInLocalTimeline))
     #    count = self.getBurnerStarts(zdtInLocalTimeline, 5)
     #    self.logger.info(str(count))
+
+@rule(
+    triggers = [
+        ItemCommandTrigger("pGF_Utilityroom_Heating_Operating_Mode")
+    ]
+)
+class CommandHandler():
+    # refresh heating ventile twice per week
+    def execute(self, module, input):
+        command = input["event"].getItemCommand()
+        Registry.getItem("pGF_Utilityroom_Heating_Command").sendCommand("write;0x2323;1;{}".format(command))
+        #self.logger.info("write;0x2323;1;{}".format(command))

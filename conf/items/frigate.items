@@ -1,0 +1,2 @@
+Group  eOutdoor_Cameras               "Kameras"    <camera> (lOutdoor)
+String  pOutdoor_Cameras_Reviews      "Ereignisse" <camera> (eOutdoor_Cameras) { channel="mqtt:topic:mosquitto:frigate:reviews" }

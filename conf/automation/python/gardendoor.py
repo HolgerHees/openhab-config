@@ -3,20 +3,26 @@ from openhab.triggers import ItemStateChangeTrigger
 
 from shared.notification import NotificationHelper
 
+from custom.frigate import FrigateHelper
+
 from datetime import datetime, timedelta
+
+import scope
 
 
 @rule(
     triggers = [
-        ItemStateChangeTrigger("pOutdoor_Streedside_Gardendoor_Bell_State", state="OPEN")
+        ItemStateChangeTrigger("pOutdoor_Streedside_Gardendoor_Bell_State", state=scope.OPEN)
     ]
 )
 class BellNotification:
     def execute(self, module, input):
-        if Registry.getItemState("pOutdoor_Streedside_Gardendoor_Bell_Last_Change") > ( datetime.now().astimezone() - timedelta(seconds=30) ):
-            NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, "Klingel", "Es klingelt", "https://smartmarvin.de/cameraStreedsideImage" )
+        if Registry.getItemState("pOutdoor_Streedside_Gardendoor_Bell_Last_Change") < ( datetime.now().astimezone() - timedelta(seconds=30) ):
+            NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, "Klingel", "Es klingelt", FrigateHelper.getLatestSnapshotUrl("streedside") )
 
         Registry.getItem("pOutdoor_Streedside_Gardendoor_Bell_Last_Change").postUpdate(datetime.now().astimezone())
+
+        FrigateHelper.createEvent("streedside", "bell")
 
 @rule(
     triggers = [
@@ -29,16 +35,16 @@ class OpenerControl:
 
     def callback(self):
         self.timer = None
-        Registry.getItem("pOutdoor_Streedside_Gardendoor_Opener_Timer").postUpdate(OFF)
-        Registry.getItem("pOutdoor_Streedside_Gardendoor_Opener_Powered").sendCommandIfDifferent(OFF)
+        Registry.getItem("pOutdoor_Streedside_Gardendoor_Opener_Timer").postUpdate(scope.OFF)
+        Registry.getItem("pOutdoor_Streedside_Gardendoor_Opener_Powered").sendCommandIfDifferent(scope.OFF)
 
     def execute(self, module, input):
         if self.timer is not None:
             self.timer.cancel()
             self.timer = None
 
-        if input["newState"] == ON:
-            Registry.getItem("pOutdoor_Streedside_Gardendoor_Opener_Powered").sendCommand(ON)
+        if input["newState"] == scope.ON:
+            Registry.getItem("pOutdoor_Streedside_Gardendoor_Opener_Powered").sendCommand(scope.ON)
             self.timer = Timer.createTimeout(3.0, self.callback)
         else:
-            Registry.getItem("pOutdoor_Streedside_Gardendoor_Opener_Powered").sendCommandIfDifferent(OFF)
+            Registry.getItem("pOutdoor_Streedside_Gardendoor_Opener_Powered").sendCommandIfDifferent(scope.OFF)

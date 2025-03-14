@@ -46,7 +46,7 @@
       
   async function load() {
       //console.log("/loki/loki/api/v1/query_range?limit=100&query=" + encodeURI( '{group=~\"openhab\"} |~ \".*HeatingControl.*\"'));
-      const result = await fetch ("/loki/loki/api/v1/query_range?limit=100&query=" + encodeURI( '{group=~\"openhab\"} |~ \".*HeatingControl.*\"' ));
+      const result = await fetch ("/loki/loki/api/v1/query_range?limit=100&query=" + encodeURI( '{group=~\"openhab\"} |~ \".*heating_control.*\"' ));
       let data = await result.text();
       return data;
   }

@@ -1,5 +1,5 @@
 from openhab import rule, Registry, Timer
-from openhab.triggers import ItemStateChangeTrigger
+from openhab.triggers import ItemStateChangeTrigger, GroupStateChangeTrigger
 
 from shared.toolbox import ToolboxHelper
 
@@ -9,6 +9,8 @@ from custom.flags import FlagHelper
 
 from datetime import datetime, timedelta
 import math
+
+import scope
 
 
 configs = [
@@ -54,21 +56,20 @@ class MorningEvening:
         if Registry.getItemState("pOther_Automatic_State_Rollershutter").intValue() == SunProtectionHelper.STATE_ROLLERSHUTTER_DOWN:
             if input['event'].getItemName() == "pOther_Automatic_State_Rollershutter":
                 for config in configs:
-                    if Registry.getItemState(config["contact"]) != CLOSED:
+                    if Registry.getItemState(config["contact"]) != scope.CLOSED:
                         continue
-                    Registry.getItem(config["shutter"]).sendCommand(DOWN)
+                    Registry.getItem(config["shutter"]).sendCommand(scope.DOWN)
         elif Registry.getItemState("pOther_Automatic_State_Rollershutter").intValue() == SunProtectionHelper.STATE_ROLLERSHUTTER_UP:
             if Registry.getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_AWAY:
-                Registry.getItem("gShutters").sendCommand(UP)
+                Registry.getItem("gShutters").sendCommand(scope.UP)
 
-@rule()
+@rule(
+    triggers = [
+        GroupStateChangeTrigger("gGF_Sensor_Window"),
+        GroupStateChangeTrigger("gFF_Sensor_Window")
+    ]
+)
 class WindowContact:
-    def buildTriggers(self):
-        triggers = []
-        triggers += ToolboxHelper.getGroupMemberTrigger(ItemStateChangeTrigger, "gGF_Sensor_Window")
-        triggers += ToolboxHelper.getGroupMemberTrigger(ItemStateChangeTrigger, "gFF_Sensor_Window")
-        return triggers
-
     def execute(self, module, input):
         contact_item_name = input['event'].getItemName()
         if contact_item_name not in contact_map:
@@ -77,28 +78,28 @@ class WindowContact:
         rollershutter_flags = Registry.getItemState("pOther_Manual_State_Auto_Rollershutter").intValue()
         config = contact_map[contact_item_name]
         state = None
-        if input['event'].getItemState() == OPEN:
-            state = UP
+        if input['event'].getItemState() == scope.OPEN:
+            state = scope.UP
         else:
             if FlagHelper.hasFlag( FlagHelper.AUTO_ROLLERSHUTTER_TIME_DEPENDENT, rollershutter_flags ) and Registry.getItemState("pOther_Automatic_State_Rollershutter").intValue() == SunProtectionHelper.STATE_ROLLERSHUTTER_DOWN:
                 #closedShutters = 0
                 for _config in configs:
                     if Registry.getItemState(_config["shutter"]).intValue() == 100:
-                        state = DOWN
+                        state = scope.DOWN
                         break
                         #closedShutters += 1
                 #if closedShutters >= math.floor( len(configs) / 2 ):
                 #state = DOWN if closedShutters >
-            elif (FlagHelper.hasFlag( FlagHelper.AUTO_ROLLERSHUTTER_SHADING, rollershutter_flags ) and "sunprotection" in config and "sunprotectionOnlyIfAway" not in config and Registry.getItemState(config["sunprotection"]) == ON):
-                state = DOWN
+            elif (FlagHelper.hasFlag( FlagHelper.AUTO_ROLLERSHUTTER_SHADING, rollershutter_flags ) and "sunprotection" in config and "sunprotectionOnlyIfAway" not in config and Registry.getItemState(config["sunprotection"]) == scope.ON):
+                state = scope.DOWN
 
         #self.logger.info(str(state))
         #return
 
         if state is None:
             return
-        
-        Registry.getItem(config["shutter"]).sendCommand(state)
+
+        Registry.getItem(config["shutter"]).sendCommandIfDifferent(state)
 
 @rule(
     triggers = [
@@ -115,11 +116,11 @@ class Presence:
             if "sunprotectionOnlyIfAway" not in config:
                 continue
 
-            if state == DOWN:
-                if Registry.getItemState(config["contact"]) != CLOSED:
+            if state == scope.DOWN:
+                if Registry.getItemState(config["contact"]) != scope.CLOSED:
                     continue
 
-                if Registry.getItemState(config["sunprotection"]) != ON:
+                if Registry.getItemState(config["sunprotection"]) != scope.ON:
                     continue
 
             Registry.getItem(config["shutter"]).sendCommandIfDifferent(state)
@@ -140,9 +141,9 @@ class Presence:
             return
     
         if input['event'].getItemState().intValue() == PresenceHelper.STATE_AWAY:
-            self.away_timer = Timer.createTimeout(1800, self.updateCallback, args = [ DOWN ])
+            self.away_timer = Timer.createTimeout(1800, self.updateCallback, args = [ scope.DOWN ])
         elif input['event'].getItemState().intValue() == PresenceHelper.STATE_PRESENT and input['event'].getOldItemState().intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
-            self.updateCallback(UP)
+            self.updateCallback(scope.UP)
 
 @rule()
 class Sunprotection:
@@ -158,19 +159,19 @@ class Sunprotection:
           
         sunprotectionItemName = input['event'].getItemName()
         configs = sunprotection_map[sunprotectionItemName]
-        state = DOWN if input['event'].getItemState() == ON else UP
+        state = scope.DOWN if input['event'].getItemState() == scope.ON else scope.UP
         
         for config in configs:
-            if state == DOWN:
+            if state == scope.DOWN:
                 # shutdown shutters only if the window is closed
-                if Registry.getItemState(config["contact"]) != CLOSED:
+                if Registry.getItemState(config["contact"]) != scope.CLOSED:
                     continue
                 
                 # skip closing shutters if we must be away but we are still present or not long enough away
                 if "sunprotectionOnlyIfAway" in config and (Registry.getItemState("pOther_Presence_State").intValue() != PresenceHelper.STATE_AWAY or ToolboxHelper.getLastChange("pOther_Presence_State") > datetime.now().astimezone() - timedelta(seconds=1800)):
                     continue
           
-            Registry.getItem(config["shutter"]).sendCommand(state)
+            Registry.getItem(config["shutter"]).sendCommandIfDifferent(state)
 
           
 @rule(
@@ -192,16 +193,16 @@ class TerraceAutoSunprotection:
                  or
                  ToolboxHelper.getLastChange("pOther_Presence_State") > datetime.now.astimezone() - timedelta(minutes=120)
                  or
-                 Registry.getItemState("pGF_Livingroom_Openingcontact_Window_Terrace_State") == OPEN
+                 Registry.getItemState("pGF_Livingroom_Openingcontact_Window_Terrace_State") == scope.OPEN
                ):
                 #self.logger.info("down")
-                Registry.getItem("pOutdoor_Terrace_Shading_Left_Control").sendCommand(DOWN)
-                Registry.getItem("pOutdoor_Terrace_Shading_Right_Control").sendCommand(DOWN)
+                Registry.getItem("pOutdoor_Terrace_Shading_Left_Control").sendCommandIfDifferent(scope.DOWN)
+                Registry.getItem("pOutdoor_Terrace_Shading_Right_Control").sendCommandIfDifferent(scope.DOWN)
         else:
             #self.logger.info("up")
             # UP always when sun protection time is over
-            Registry.getItem("pOutdoor_Terrace_Shading_Left_Control").sendCommand(UP)
-            Registry.getItem("pOutdoor_Terrace_Shading_Right_Control").sendCommand(UP)
+            Registry.getItem("pOutdoor_Terrace_Shading_Left_Control").sendCommandIfDifferent(scope.UP)
+            Registry.getItem("pOutdoor_Terrace_Shading_Right_Control").sendCommandIfDifferent(scope.UP)
 
 #sendCommand("pOther_Automatic_State_Sunprotection_Terrace", 0)
 

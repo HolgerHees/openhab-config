@@ -1,6 +1,8 @@
 from openhab import rule, Registry
 from openhab.triggers import ItemCommandTrigger
 
+import scope
+
 
 #@rule()
 ## watch tv
@@ -19,20 +21,20 @@ from openhab.triggers import ItemCommandTrigger
 
 @rule(
     triggers = [
-        ItemCommandTrigger("pOther_Scene5",command="ON")
+        ItemCommandTrigger("pOther_Scene5",command=scope.ON)
     ]
 )
 # go outside
 class ScenesCommon_pOther_Scene5:
     def execute(self, module, input):
-        Registry.getItem("pOutdoor_Carport_Automatic_Switch").sendCommand(OFF)
-        Registry.getItem("pOutdoor_Streedside_Frontdoor_Automatic_Switch").sendCommand(OFF)
-        Registry.getItem("pOutdoor_Terrace_Automatic_Switch").sendCommand(OFF)
-        Registry.getItem("pOutdoor_Streedside_Garage_Automatic_Switch").sendCommand(OFF)
-        Registry.getItem("pOutdoor_Garden_Garage_Automatic_Switch").sendCommand(ON)
-        Registry.getItem("pOutdoor_Toolshed_Right_Automatic_Switch").sendCommand(OFF)
+        Registry.getItem("pOutdoor_Carport_Automatic_Switch").sendCommand(scope.OFF)
+        Registry.getItem("pOutdoor_Streedside_Frontdoor_Automatic_Switch").sendCommand(scope.OFF)
+        Registry.getItem("pOutdoor_Terrace_Automatic_Switch").sendCommand(scope.OFF)
+        Registry.getItem("pOutdoor_Streedside_Garage_Automatic_Switch").sendCommand(scope.OFF)
+        Registry.getItem("pOutdoor_Garden_Garage_Automatic_Switch").sendCommand(scope.ON)
+        Registry.getItem("pOutdoor_Toolshed_Right_Automatic_Switch").sendCommand(scope.OFF)
 
-        #Registry.getItem("pOther_Scene5".postUpdate(OFF)
+        #Registry.getItem("pOther_Scene5".postUpdate(scope.OFF)
 
 #@rule()
 #class ScenesCommon_pOther_Scene6:

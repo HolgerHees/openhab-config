@@ -1,9 +1,7 @@
-import java
 from openhab import Registry
 from shared.toolbox import ToolboxHelper
 
-Java_OnOffType = java.type("org.openhab.core.library.types.OnOffType")
-Java_DecimalType = java.type("org.openhab.core.library.types.DecimalType")
+from org.openhab.core.library.types import OnOffType as Java_OnOffType, DecimalType as Java_DecimalType
 
 
 class WeatherHelper:

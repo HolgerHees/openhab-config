@@ -8,6 +8,9 @@ from custom.weather import WeatherHelper
 
 from datetime import datetime, timedelta
 
+import scope
+
+
 @rule(
     triggers = [
         GenericCronTrigger("0 * * * * ?")
@@ -49,11 +52,11 @@ class Main:
             Registry.getItem("pOther_Automatic_State_Rollershutter_Down").postUpdateIfDifferent(_down_time)
 
         if light_level <= 0 or Registry.getItemState("pOutdoor_Astro_Sunset_Time") < now or Registry.getItemState("pOutdoor_Astro_Sunrise_Time") > now:
-            Registry.getItem("pOther_Automatic_State_Outdoorlights").postUpdateIfDifferent(ON)
+            Registry.getItem("pOther_Automatic_State_Outdoorlights").postUpdateIfDifferent(scope.ON)
         else:
-            Registry.getItem("pOther_Automatic_State_Outdoorlights").postUpdateIfDifferent(OFF)
+            Registry.getItem("pOther_Automatic_State_Outdoorlights").postUpdateIfDifferent(scope.OFF)
             
         if Registry.getItemState("pOutdoor_Astro_Dusk_Time") < now or Registry.getItemState("pOutdoor_Astro_Dawn_Time") > now:
-            Registry.getItem("pOther_Automatic_State_Solar").postUpdateIfDifferent(OFF)
+            Registry.getItem("pOther_Automatic_State_Solar").postUpdateIfDifferent(scope.OFF)
         else:
-            Registry.getItem("pOther_Automatic_State_Solar").postUpdateIfDifferent(ON)
+            Registry.getItem("pOther_Automatic_State_Solar").postUpdateIfDifferent(scope.ON)

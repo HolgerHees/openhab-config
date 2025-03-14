@@ -8,6 +8,8 @@ from custom.alexa import AlexaHelper
 from custom.flags import FlagHelper
 from custom.weather import WeatherHelper
 
+import scope
+
 
 @rule(
 triggers = [
@@ -33,7 +35,7 @@ class Notification:
             if item.getName() in excludedItems:
                 continue
                 
-            if Registry.getItemState(item.getName()) == OPEN:
+            if Registry.getItemState(item.getName()) == scope.OPEN:
                 isOpen = True
                 break
         return isOpen

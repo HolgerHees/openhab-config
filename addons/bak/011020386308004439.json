@@ -1,0 +1,13 @@
+{
+  "haId": "011020386308004439",
+  "type": "Dishwasher",
+  "serialNumber": "011020386308004439",
+  "brand": "SIEMENS",
+  "vib": "SN57YS01CE",
+  "mac": "38-B4-D3-ED-69-F5",
+  "featureMappingFileName": "011020386308004439_FeatureMapping.xml",
+  "deviceDescriptionFileName": "011020386308004439_DeviceDescription.xml",
+  "created": "2025-01-13T19:44:57.381000000+01:00",
+  "connectionType": "TLS",
+  "key": "PxqN3sgSYs7oWscmZbZEGG4yi8ze3VmnMM7NlBJyB1E"
+}

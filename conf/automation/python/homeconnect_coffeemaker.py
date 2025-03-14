@@ -4,6 +4,8 @@ from openhab.triggers import ItemStateChangeTrigger
 from shared.notification import NotificationHelper
 from shared.user import UserHelper
 
+import scope
+
 
 @rule(
     triggers = [
@@ -15,13 +17,13 @@ from shared.user import UserHelper
 class Message:
     def execute(self, module, input):
         power_state = Registry.getItemState("pGF_Kitchen_Coffeemaker_Power_State")
-        if power_state == ON:
+        if power_state == scope.ON:
             mode = Registry.getItemState("pGF_Kitchen_Coffeemaker_Operation_State").toString()
             msg = "{}".format(mode)
             
             if mode != "Inactive":
                 runtime = Registry.getItemState("pGF_Kitchen_Coffeemaker_Program_Progress_State")
-                if runtime != NULL and runtime != UNDEF and runtime.intValue() > 0:
+                if runtime != scope.NULL and runtime != scope.UNDEF and runtime.intValue() > 0:
                     msg = "{}, {} %".format(msg,runtime)
         else:
             msg = "Aus"
@@ -30,7 +32,7 @@ class Message:
 
 @rule(
     triggers = [
-        ItemStateChangeTrigger("pGF_Kitchen_Coffeemaker_Drip_Tray_Full_State",state="ON")
+        ItemStateChangeTrigger("pGF_Kitchen_Coffeemaker_Drip_Tray_Full_State",state=scope.ON)
     ]
 )
 class DripTrayNotification:
@@ -39,7 +41,7 @@ class DripTrayNotification:
 
 @rule(
     triggers = [
-        ItemStateChangeTrigger("pGF_Kitchen_Coffeemaker_Tank_Empty_State",state="ON")
+        ItemStateChangeTrigger("pGF_Kitchen_Coffeemaker_Tank_Empty_State",state=scope.ON)
     ]
 )
 class TankEmptyNotification:
@@ -48,7 +50,7 @@ class TankEmptyNotification:
 
 @rule(
     triggers = [
-        ItemStateChangeTrigger("pGF_Kitchen_Coffeemaker_Bean_Container_Empty_State",state="ON")
+        ItemStateChangeTrigger("pGF_Kitchen_Coffeemaker_Bean_Container_Empty_State",state=scope.ON)
     ]
 )
 class BeansEmptyNotification:

@@ -7,6 +7,8 @@ from custom.presence import PresenceHelper
 
 from datetime import datetime, timedelta
 
+import scope
+
 
 TARGET_HUMIDITY = 50.0
 
@@ -30,7 +32,7 @@ class ThingState:
 
     def check(self, thing_uid):
         status = Registry.getThing(thing_uid).getStatus()
-        Registry.getItem(self.thing_uid_map[thing_uid]).postUpdateIfDifferent(ON if status.toString() == "ONLINE" else OFF)
+        Registry.getItem(self.thing_uid_map[thing_uid]).postUpdateIfDifferent(scope.ON if status.toString() == "ONLINE" else scope.OFF)
 
     def execute(self, module, input):
         if input['event'].getType() == "StartlevelEvent":
@@ -47,7 +49,7 @@ class ThingState:
 )
 class StateReset:
     def execute(self, module, input):
-        Registry.getItem(input['event'].getItemName()).postUpdate(OFF)
+        Registry.getItem(input['event'].getItemName()).postUpdate(scope.OFF)
 
 @rule(
     triggers = [
@@ -55,20 +57,24 @@ class StateReset:
         ItemStateChangeTrigger("pGF_Livingroom_Humidifier_Replace_Filter"),
         ItemStateChangeTrigger("pFF_Bedroom_Humidifier_Replace_Filter"),
         ItemStateChangeTrigger("pGF_Livingroom_Humidifier_Fault"),
-        ItemStateChangeTrigger("pFF_Bedroom_Humidifier_Fault")
+        ItemStateChangeTrigger("pFF_Bedroom_Humidifier_Fault"),
+        ItemStateChangeTrigger("pGF_Livingroom_Humidifier_Online"),
+        ItemStateChangeTrigger("pFF_Bedroom_Humidifier_Online"),
     ]
 )
 class StateMessage:
     def check(self, item_location):
-        filterState = Registry.getItemState("{}_Humidifier_Replace_Filter".format(item_location))
-        faultState = Registry.getItemState("{}_Humidifier_Fault".format(item_location))
-
         msg = []
-        if filterState == ON:
-            msg.append("Filter")
 
-        if faultState.intValue() == 1:
-            msg.append("Wasser")
+        if Registry.getItemState("{}_Humidifier_Online".format(item_location)) == scope.ON:
+            filterState = Registry.getItemState("{}_Humidifier_Replace_Filter".format(item_location))
+            faultState = Registry.getItemState("{}_Humidifier_Fault".format(item_location))
+
+            if filterState == scope.ON:
+                msg.append("Filter")
+
+            if faultState.intValue() == 1:
+                msg.append("Wasser")
 
         if len(msg) == 0:
             msg.append("Alles ok")
@@ -106,10 +112,10 @@ class Level:
             GenericCronTrigger("0 * * * * ?"),
 
             ItemCommandTrigger("pGF_Livingroom_Humidifier_Speed"),
-            ItemStateChangeTrigger("pGF_Livingroom_Humidifier_Auto_Mode", state="ON"),
+            ItemStateChangeTrigger("pGF_Livingroom_Humidifier_Auto_Mode", state=scope.ON),
 
             ItemCommandTrigger("pFF_Bedroom_Humidifier_Speed"),
-            ItemStateChangeTrigger("pFF_Bedroom_Humidifier_Auto_Mode", state="ON"),
+            ItemStateChangeTrigger("pFF_Bedroom_Humidifier_Auto_Mode", state=scope.ON),
 
             ItemStateChangeTrigger("pOther_Presence_State")
         ]
@@ -124,7 +130,7 @@ class Level:
             if self.autoChangeInProgress[item_location]:
                 self.autoChangeInProgress[item_location] = False
             else:
-                Registry.getItem("{}_Humidifier_Auto_Mode".format(item_location)).postUpdate(OFF)
+                Registry.getItem("{}_Humidifier_Auto_Mode".format(item_location)).postUpdate(scope.OFF)
             return
 
         if input['event'].getType() == "TimerEvent" or input['event'].getItemName() == "pOther_Presence_State":
@@ -136,7 +142,7 @@ class Level:
                     Registry.getItem("{}_Humidifier_Target".format(humidifier_location)).sendCommandIfDifferent("CO")
 
                     # sometimes, if humidifier was offline for some seconds, state is powered off
-                    #Registry.getItem("{}_Humidifier_Power".format(humidifier_location)").sendCommandIfDifferent(ON)
+                    #Registry.getItem("{}_Humidifier_Power".format(humidifier_location)").sendCommandIfDifferent(scope.ON)
         else:
             if input['event'].getItemName() in self.sensor_location_map:
                 humidifier_locations = [ self.sensor_location_map[input['event'].getItemName()] ]
@@ -144,10 +150,10 @@ class Level:
                 humidifier_locations = [ "_".join(input['event'].getItemName().split("_")[:2]) ]
 
         for humidifier_location in humidifier_locations:
-            if Registry.getItemState("{}_Humidifier_Auto_Mode".format(humidifier_location)) == OFF:
+            if Registry.getItemState("{}_Humidifier_Auto_Mode".format(humidifier_location)) == scope.OFF:
                 continue
 
-            if Registry.getItemState("{}_Humidifier_Online".format(humidifier_location)) == OFF:
+            if Registry.getItemState("{}_Humidifier_Online".format(humidifier_location)) == scope.OFF:
                 continue
 
             currentLevel = int(Registry.getItemState("{}_Humidifier_Speed".format(humidifier_location)).toString()[-1])

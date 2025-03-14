@@ -1,12 +1,12 @@
 Bridge modbus:tcp:solarGarage 		[ host="{{custom_pv_inverter_garage_ip}}", port=502, id=3, connectTimeoutMillis=5000, timeBetweenReconnectMillis=10000, connectMaxTries=60] {
     Bridge poller earnings "Solar Ertrag" [ start=30513, length=8, type="input", refresh=0] {
-        Thing data total_yield 	"Solar Ertrag Gesamt"	[ readStart="30513", readValueType="uint64", readTransform="JS:solar_fixed3.js"] // 30513 = Energy fed in on the current day all line conductors
+        Thing data total_yield 	"Solar Ertrag Gesamt"	[ readStart="30513", readValueType="uint64", readTransform="PY3:solar_fixed3.py"] // 30513 = Energy fed in on the current day all line conductors
     }
     Bridge poller power "Solar Energy" [ start=30769, length=8, type="input", refresh=0] {
-        Thing data dc_current 	"Solar Energy DC Strom"    [ readStart="30769", readValueType="int32", readTransform="JS:solar_fixed3.js"] // 30769 = DC current input
-        Thing data dc_voltage 	"Solar Energy DC Spannung" [ readStart="30771", readValueType="int32", readTransform="JS:solar_fixed2.js"] // 30771 = DC voltage input
-        Thing data dc_power 	"Solar Energy DC Leistung" [ readStart="30773", readValueType="int32", readTransform="JS:solar_default.js"] // 30773 = DC power input
-        Thing data ac_power     "Solar Energy AC Leistung" [ readStart="30775", readValueType="int32", readTransform="JS:solar_default.js"] // 30775 = AC power output
+        Thing data dc_current 	"Solar Energy DC Strom"    [ readStart="30769", readValueType="int32", readTransform="PY3:solar_fixed3.py"] // 30769 = DC current input
+        Thing data dc_voltage 	"Solar Energy DC Spannung" [ readStart="30771", readValueType="int32", readTransform="PY3:solar_fixed2.py"] // 30771 = DC voltage input
+        Thing data dc_power 	"Solar Energy DC Leistung" [ readStart="30773", readValueType="int32", readTransform="PY3:solar_default.py"] // 30773 = DC power input
+        Thing data ac_power     "Solar Energy AC Leistung" [ readStart="30775", readValueType="int32", readTransform="PY3:solar_default.py"] // 30775 = AC power output
     }
     Bridge poller control "Solar Control" [ start=40016, length=1, type="holding", refresh=0 ] {
         Thing data power_limitation "Solar Control Wirkleistungsbegrenzung" [ writeStart="40016", writeValueType="int16", writeType="holding" ]

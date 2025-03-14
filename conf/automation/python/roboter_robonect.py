@@ -6,6 +6,9 @@ from shared.toolbox import ToolboxHelper
  
 from datetime import datetime, timedelta
 
+import scope
+
+
 @rule(
     triggers = [
         #GenericCronTrigger("*/15 * * * * ?"),
@@ -22,7 +25,7 @@ class State:
         if status is not None and info is not None:
             #self.logger.info("Home Connect bridge status: '{}',  detail: '{}'".format(status.toString(),info.toString()))
             if status.toString() == "ONLINE":
-                Registry.getItem("pOutdoor_Mower_Winter_Mode").postUpdateIfDifferent(OFF)
+                Registry.getItem("pOutdoor_Mower_Winter_Mode").postUpdateIfDifferent(scope.OFF)
 
 @rule(
     triggers = [
@@ -88,13 +91,13 @@ class StateMessages:
     def execute(self, module, input):
         active = []
 
-        if Registry.getItemState("pOutdoor_Mower_Winter_Mode") == OFF:
+        if Registry.getItemState("pOutdoor_Mower_Winter_Mode") == scope.OFF:
             mower_state = Registry.getItemState("pOutdoor_Mower_Status")
-            if mower_state != NULL and ( mower_state.intValue() == 7 or mower_state.intValue() == 8 or mower_state.intValue() == 98 ):
+            if mower_state != scope.NULL and ( mower_state.intValue() == 7 or mower_state.intValue() == 8 or mower_state.intValue() == 98 ):
                 is_deep_sleep = False
                 if mower_state.intValue() == 98:
                     previous_state = ToolboxHelper.getPreviousPersistedState("pOutdoor_Mower_Status")
-                    if previous_state != NULL and previous_state.intValue() == 17:
+                    if previous_state != scope.NULL and previous_state.intValue() == 17:
                         is_deep_sleep = True
                 if not is_deep_sleep:
                     active.append("Fehler")

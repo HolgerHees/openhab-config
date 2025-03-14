@@ -1,5 +1,5 @@
 from openhab import rule, Registry, Timer
-from openhab.triggers import ItemStateChangeTrigger, ItemCommandTrigger
+from openhab.triggers import ItemStateChangeTrigger, ItemCommandTrigger, GroupStateChangeTrigger
 
 from shared.notification import NotificationHelper
 from shared.toolbox import ToolboxHelper
@@ -8,6 +8,8 @@ from custom.presence import PresenceHelper
 
 from datetime import datetime, timedelta
 import threading
+
+import scope
 
 
 @rule(
@@ -71,12 +73,12 @@ class Cache:
 @rule(
     triggers = [
         # arrive
-        ItemStateChangeTrigger("pGF_Corridor_Openingcontact_Door_State",state="OPEN"),
-        ItemStateChangeTrigger("pGF_Garage_Openingcontact_Door_Streedside_State",state="OPEN"),
+        ItemStateChangeTrigger("pGF_Corridor_Openingcontact_Door_State",state=scope.OPEN),
+        ItemStateChangeTrigger("pGF_Garage_Openingcontact_Door_Streedside_State",state=scope.OPEN),
 
         # leave
         ItemStateChangeTrigger("pGF_Corridor_Lock_State",state=1), # door locked
-        ItemStateChangeTrigger("pGF_Garage_Openingcontact_Door_Streedside_State",state="CLOSED")
+        ItemStateChangeTrigger("pGF_Garage_Openingcontact_Door_Streedside_State",state=scope.CLOSED)
     ]
 )
 class DoorCheck:
@@ -86,7 +88,7 @@ class DoorCheck:
     @staticmethod
     def isAllClosedAndLocked():
         # garage door is open
-        if Registry.getItemState("pGF_Garage_Openingcontact_Door_Streedside_State") == OPEN:
+        if Registry.getItemState("pGF_Garage_Openingcontact_Door_Streedside_State") == scope.OPEN:
             return False
 
         # front door is not locked
@@ -123,18 +125,19 @@ class DoorCheck:
             self.timer = None
 
         with Cache.getLock():
-            if input['event'].getItemName() in ["pGF_Corridor_Openingcontact_Door_State", "pGF_Garage_Openingcontact_Door_Streedside_State"] and input['event'].getItemState() == OPEN:
+            if input['event'].getItemName() in ["pGF_Corridor_Openingcontact_Door_State", "pGF_Garage_Openingcontact_Door_Streedside_State"] and input['event'].getItemState() == scope.OPEN:
                 self._checkArrival(input)
             else:
                 self._checkLeaving(input['event'].getItemName())
 
-@rule()
+@rule(
+    triggers = [
+        GroupStateChangeTrigger("gSensor_Indoor")
+    ]
+)
 class MovingCheck:
     def __init__(self):
         self.timer = None
-
-    def buildTriggers(self):
-        return ToolboxHelper.getGroupMemberTrigger(ItemStateChangeTrigger,"gSensor_Indoor")
 
     def checkSleeping(self):
         with Cache.getLock():
@@ -142,7 +145,7 @@ class MovingCheck:
                 self.timer = None
                 return
 
-            if Registry.getItemState("gIndoor_Lights") == ON:
+            if Registry.getItemState("gIndoor_Lights") == scope.ON:
                 self.timer = Timer.createTimeout(60, self.checkSleeping)
             else:
                 last_update_diff = ( datetime.now().astimezone() - ToolboxHelper.getLastUpdate("gIndoor_Lights") ).total_seconds()
@@ -167,17 +170,18 @@ class MovingCheck:
                 # must be decoupled, to release lock
                 self.timer = Timer.createTimeout(1, self.checkSleeping)
 
-@rule()
+@rule(
+    triggers = [
+        GroupStateChangeTrigger("gOther_Presence_State_Raw")
+    ]
+)
 class KnownPersonCheck:
     def __init__(self):
         self.skippedTimer = {}
 
-    def buildTriggers(self):
-        return ToolboxHelper.getGroupMemberTrigger(ItemStateChangeTrigger,"gOther_Presence_State_Raw")
-
     #def test(self):
-    #    Registry.getItem("pOther_Presence_Sandra_State_Raw").postUpdate(ON)
-    #    #self.process("pOther_Presence_Sandra_State_Raw", "pOther_Presence_Sandra_State", OFF)
+    #    Registry.getItem("pOther_Presence_Sandra_State_Raw").postUpdate(scope.ON)
+    #    #self.process("pOther_Presence_Sandra_State_Raw", "pOther_Presence_Sandra_State", scope.OFF)
 
     def process(self, item_name, related_item_name, item_state):
         with Cache.getLock():
@@ -185,13 +189,13 @@ class KnownPersonCheck:
 
             presence_state = Cache.getPresenceState()
 
-            if item_state == ON:
+            if item_state == scope.ON:
                 # only possible if we are away
                 if presence_state in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
                     Cache.setPresenceState(PresenceHelper.STATE_PRESENT)
             else:
                 # we must check child items instead of group item, because group item is updated too late
-                if presence_state == PresenceHelper.STATE_PRESENT and len(ToolboxHelper.getFilteredGroupMember("gOther_Presence_State_Raw", ON)) == 0:
+                if presence_state == PresenceHelper.STATE_PRESENT and len(ToolboxHelper.getFilteredGroupMember("gOther_Presence_State_Raw", scope.ON)) == 0:
                     Cache.setPresenceState(PresenceHelper.STATE_AWAY if DoorCheck.isAllClosedAndLocked() else PresenceHelper.STATE_MAYBE_PRESENT)
 
     def execute(self, module, input):
@@ -207,8 +211,8 @@ class KnownPersonCheck:
             del self.skippedTimer[item_name]
 
         # sometimes, phones are losing wifi connections because of their sleep mode
-        if new_item_state == OFF:
-            if old_item_state == ON:
+        if new_item_state == scope.OFF:
+            if old_item_state == scope.ON:
                 if ToolboxHelper.getLastChange("pGF_Corridor_Openingcontact_Door_State") < datetime.now().astimezone() - timedelta(minutes=60) and Cache.getArriving() > 0:
                     # relatedItem state is still ON
                     #lastChangedState = getItemLastChange(related_item_name)
@@ -217,7 +221,7 @@ class KnownPersonCheck:
                     NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_NOTICE, "System", "Delayed presence processing {} for {}".format(new_item_state,item_name))
                     return
         else:
-            if old_item_state == OFF and item_has_skip_timer:
+            if old_item_state == scope.OFF and item_has_skip_timer:
                 NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_NOTICE, "System", "Cancel presence processing {} for {}".format(new_item_state,item_name))
                 return
 
@@ -226,11 +230,11 @@ class KnownPersonCheck:
     
 @rule(
     triggers = [
-        #ItemStateChangeTrigger("pGF_Corridor_Motiondetector_State",state="OPEN"),
-        #ItemStateChangeTrigger("pGF_Livingroom_Motiondetector_State",state="OPEN"),
-        #ItemStateChangeTrigger("pFF_Corridor_Motiondetector_State",state="OPEN"),
-        ItemStateChangeTrigger("gGF_Lights",state="ON"),
-        ItemStateChangeTrigger("gGF_Shutters",state="UP"),
+        #ItemStateChangeTrigger("pGF_Corridor_Motiondetector_State",state=scope.OPEN),
+        #ItemStateChangeTrigger("pGF_Livingroom_Motiondetector_State",state=scope.OPEN),
+        #ItemStateChangeTrigger("pFF_Corridor_Motiondetector_State",state=scope.OPEN),
+        ItemStateChangeTrigger("gGF_Lights",state=scope.ON),
+        ItemStateChangeTrigger("gGF_Shutters",state=scope.UP),
         ItemStateChangeTrigger("gGF_Shutters",state="0")
     ]
 )
@@ -243,12 +247,12 @@ class Wakeup:
         NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, "System", "Guten Morgen")
 
     def delayedWakeup(self, checkCounter ):
-        if Registry.getItemState("gGF_Lights") == ON:
+        if Registry.getItemState("gGF_Lights") == scope.ON:
             with Cache.getLock():
                 if Cache.getPresenceState() in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
                     lightCount = 0
                     for child in Registry.getItem("gGF_Lights").getAllMembers():
-                        if child.getStateAs(OnOffType) == ON:
+                        if child.getStateAs(scope.OnOffType) == scope.ON:
                             lightCount = lightCount + 1
                     # Signs (in first floor) for wake up are
                     # - a light is ON for more then 10 minutes
@@ -278,7 +282,7 @@ class Wakeup:
 
 @rule(
     triggers = [
-        ItemCommandTrigger("pOther_Scene4",command="ON")
+        ItemCommandTrigger("pOther_Scene4",command=scope.ON)
     ]
 )
 class Sleeping:

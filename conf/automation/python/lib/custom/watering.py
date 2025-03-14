@@ -1,9 +1,8 @@
-import java
 from openhab import Registry
 from openhab.actions import Transformation
 
+from org.openhab.core.library.types import OnOffType as Java_OnOffType
 
-Java_OnOffType = java.type("org.openhab.core.library.types.OnOffType")
 
 class WateringHelper:
     STATE_WATERING_INACTIVE = -1

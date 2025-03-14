@@ -1,6 +1,8 @@
 from openhab import rule, Registry
 from openhab.triggers import ItemStateChangeTrigger
 
+import scope
+
 
 @rule(
     triggers = [
@@ -9,4 +11,4 @@ from openhab.triggers import ItemStateChangeTrigger
 )
 class Main:
     def execute(self, module, input):
-        Registry.getItem("pGF_Livingroom_Socket_Bassbox_Powered").sendCommand(ON if input["newState"] == OPEN else OFF)
+        Registry.getItem("pGF_Livingroom_Socket_Bassbox_Powered").sendCommand(scope.ON if input["newState"] == scope.OPEN else scope.OFF)

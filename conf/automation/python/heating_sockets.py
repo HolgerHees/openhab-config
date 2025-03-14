@@ -3,6 +3,8 @@ from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger
 
 from custom.presence import PresenceHelper
 
+import scope
+
 
 @rule(
     triggers = [
@@ -18,7 +20,7 @@ class LivingroomControl:
 
         if presence_state in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
             if input["event"].getItemName() == "pOther_Presence_State":
-                Registry.getItem("pMobile_Socket_5_Powered").sendCommandIfDifferent(OFF)
+                Registry.getItem("pMobile_Socket_5_Powered").sendCommandIfDifferent(scope.OFF)
             return
 
         temperature_floor = Registry.getItemState("pGF_Corridor_Air_Sensor_Temperature_Value").doubleValue()
@@ -27,9 +29,9 @@ class LivingroomControl:
         diff = temperature_livingroom - temperature_floor
 
         if diff >= 2.0:
-            Registry.getItem("pMobile_Socket_5_Powered").sendCommandIfDifferent(ON)
+            Registry.getItem("pMobile_Socket_5_Powered").sendCommandIfDifferent(scope.ON)
         elif diff <= 1.5:
-            Registry.getItem("pMobile_Socket_5_Powered").sendCommandIfDifferent(OFF)
+            Registry.getItem("pMobile_Socket_5_Powered").sendCommandIfDifferent(scope.OFF)
         #self.logger.info("{} {} {}".format(temperature_floor, temperature_livingroom, diff))
 
 @rule(
@@ -42,7 +44,7 @@ class ToolshedControl:
     def execute(self, module, input):
         value = input["event"].getItemState().doubleValue()
         if value >= 5.7:
-            Registry.getItem("pMobile_Socket_6_Powered").sendCommandIfDifferent(OFF)
+            Registry.getItem("pMobile_Socket_6_Powered").sendCommandIfDifferent(scope.OFF)
         elif value <= 5.3:
-            Registry.getItem("pMobile_Socket_6_Powered").sendCommandIfDifferent(ON)
+            Registry.getItem("pMobile_Socket_6_Powered").sendCommandIfDifferent(scope.ON)
         #self.logger.info("{} {} {}".format(temperature_floor, temperature_livingroom, value))

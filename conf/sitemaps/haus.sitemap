@@ -968,7 +968,7 @@ sitemap haus label="Main Menu"
                 Group item=pGF_Utilityroom_Heating_Operating_Mode label="Heizung [MAP(heating_de.map):%d]" icon="selfheating"{
                     Frame label="Steuerung" {
                         Switch item=pGF_Utilityroom_Heating_Auto_Mode label="Modus" mappings=[1="Auto", 0="Manuell"]
-                        Switch item=pGF_Utilityroom_Heating_Operating_Mode label="Betrieb" mappings=[1.0="WW", 2.0="HZ", 3.0="RD"]  visibility=[pGF_Utilityroom_Heating_Auto_Mode==0]
+                        Switch item=pGF_Utilityroom_Heating_Operating_Mode label="Betrieb" mappings=[1="WW", 2="HZ", 3="RD"]  visibility=[pGF_Utilityroom_Heating_Auto_Mode==0]
                         Text item=pGF_Utilityroom_Heating_Operating_Mode visibility=[pGF_Utilityroom_Heating_Auto_Mode==1]
                         Selection item=pOther_Manual_State_Heating label="Heizungsreduktion" mappings=[0="Normal", 1="-1", 2="-2", 3="-3", 4="-4", 5="-5"]
                     }
@@ -1019,7 +1019,8 @@ sitemap haus label="Main Menu"
                     Frame label="Verbrauch" {
                         Text item=pGF_Utilityroom_Electricity_Current_Daily_Consumption label="Tagesverbrauch [%.2f kWh]"
                         Text item=pGF_Utilityroom_Electricity_Current_Consumption
-                        Text item=pGF_Utilityroom_Electricity_Current_Demand valuecolor=[>=0="#fea400",<0="#6bc305"]
+                        Text item=pGF_Utilityroom_Electricity_Current_Saldo valuecolor=[>=0="#fea400",<0="#6bc305"]
+                        Text item=pGF_Utilityroom_Electricity_Current_Consumption_Ratio_Msg
                     }
                     Frame label="Details" {
                         Group label="Bezug [%.2f kWh]" item=pGF_Utilityroom_Electricity_Current_Daily_Demand {

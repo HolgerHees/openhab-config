@@ -1,8 +1,13 @@
 from openhab import rule, Registry, Timer
 from openhab.triggers import ItemStateChangeTrigger, ItemCommandTrigger
 
+from custom.weather import WeatherHelper
+from custom.frigate import FrigateHelper
+
 from datetime import datetime, timedelta
 import time
+
+import scope
 
 
 manual_mappings = [
@@ -17,6 +22,23 @@ manual_mappings = [
 timer_durations = 60.0
 timer_mappings = {}
 rule_timeouts = {}
+
+@rule(
+    triggers = [
+#        ItemStateChangeTrigger("pOutdoor_Streedside_Frontdoor_Motiondetector_State", scope.OPEN),
+        ItemStateChangeTrigger("pOutdoor_Toolshed_Right_Motiondetector_State", scope.OPEN)
+    ]
+)
+class FrigateNotification:
+    def execute(self, module, input):
+        # only during night
+        if Registry.getItemState("pOutdoor_Astro_Light_Level").intValue() > 0:
+            return
+
+        if input["event"].getItemName() == "pOutdoor_Streedside_Frontdoor_Motiondetector_State":
+            FrigateHelper.createEvent("streedside", "motion")
+        else:
+            FrigateHelper.createEvent("toolshed", "motion")
 
 # Main MotionDetector Switch
 @rule(
@@ -36,11 +58,11 @@ class MotiondetectorSwitch:
             
             self.logger.info("MotiondetectorOutdoorSwitchRule => last: {}, now: {}, state: {}".format(last,now,itemState))
 
-            if itemState == ON:
+            if itemState == scope.ON:
                 rule_timeouts["Light_Outdoor"] = now
 
             for mapping in manual_mappings:
-                Registry.getItem(mapping[0]).sendCommandIfDifferent(OFF if "Powered" in mapping[0] else 0)
+                Registry.getItem(mapping[0]).sendCommandIfDifferent(scope.OFF if "Powered" in mapping[0] else 0)
 
             #rule_timeouts["Motiondetector_Outdoor_Individual_Switches"] = now
             for mapping in manual_mappings:
@@ -70,12 +92,12 @@ class MotiondetectorIndividualSwitch:
         switchState = ON
         for i, entry in enumerate(manual_mappings):
             if entry[1] == item_name:
-                Registry.getItem(entry[0]).sendCommandIfDifferent(OFF)
-                if item_command == OFF:
-                    switchState = OFF
+                Registry.getItem(entry[0]).sendCommandIfDifferent(scope.OFF)
+                if item_command == scope.OFF:
+                    switchState = scope.OFF
             else:
-                if Registry.getItemState(entry[1]) == OFF:
-                    switchState = OFF
+                if Registry.getItemState(entry[1]) == scope.OFF:
+                    switchState = scope.OFF
                     
         # must be a command to inform physical knx switch
         Registry.getItem("pOutdoor_Light_Automatic_Main_Switch").sendCommandIfDifferent(switchState)
@@ -114,11 +136,11 @@ class Control:
                     #rule_timeouts["Motiondetector_Outdoor_Individual_Switches"] = now
 
                     # just an update to avoid triggering => MotiondetectorOutdoorIndividualSwitchRule
-                    if Registry.getItem(entry[1]).postUpdateIfDifferent(OFF):
+                    if Registry.getItem(entry[1]).postUpdateIfDifferent(scope.OFF):
                         rule_timeouts["Motiondetector_Outdoor_Main_Switch"] = now
                         
                         # must be a command to inform physical knx switch
-                        Registry.getItem("pOutdoor_Light_Automatic_Main_Switch").sendCommandIfDifferent(OFF)
+                        Registry.getItem("pOutdoor_Light_Automatic_Main_Switch").sendCommandIfDifferent(scope.OFF)
                     #self.logger.info("{} {}".format(item_name,now-last))
                     break
 
@@ -130,15 +152,15 @@ class MotionDetector:
         self.triggerMappings = {}
         for i, entry in enumerate(manual_mappings):
             for motionDetectorItem in entry[2]:
-                triggers.append(ItemStateChangeTrigger(motionDetectorItem,state="OPEN"))
+                triggers.append(ItemStateChangeTrigger(motionDetectorItem,state=scope.OPEN))
                 self.triggerMappings[motionDetectorItem]=i
         return triggers
 
     def callback(self,entry):
         global timer_mappings
-        if Registry.getItemState(entry[1]) == ON:
+        if Registry.getItemState(entry[1]) == scope.ON:
             for motionDetectorItem in entry[2]:
-                if Registry.getItemState(motionDetectorItem) == OPEN:
+                if Registry.getItemState(motionDetectorItem) == scope.OPEN:
                     timer_mappings[entry[0]] = Timer.createTimeout(timer_durations, self.callback,[entry])
                     return
 
@@ -147,7 +169,7 @@ class MotionDetector:
 
             self.logger.info("MotionDetector: callback for {} => {}".format(entry[0], rule_timeouts["Light_Outdoor"]));
 
-            Registry.getItem(entry[0]).sendCommand(0 if Registry.getItem(entry[0]).getType() == "Dimmer" else OFF )
+            Registry.getItem(entry[0]).sendCommand(0 if Registry.getItem(entry[0]).getType() == "Dimmer" else scope.OFF )
             timer_mappings[entry[0]] = None
         else:
             timer_mappings[entry[0]] = None
@@ -156,7 +178,7 @@ class MotionDetector:
         item_name = input['event'].getItemName()
         
         entry = manual_mappings[self.triggerMappings[item_name]]
-        if Registry.getItemState("pOther_Automatic_State_Outdoorlights") == ON and Registry.getItemState(entry[1]) == ON:
+        if Registry.getItemState("pOther_Automatic_State_Outdoorlights") == scope.ON and Registry.getItemState(entry[1]) == scope.ON:
             timer_mappings[entry[0]] = Timer.createTimeout(timer_durations, self.callback, [entry], old_timer = timer_mappings.get(entry[0]) )
 
             global rule_timeouts
@@ -164,4 +186,4 @@ class MotionDetector:
 
             self.logger.info("MotionDetector: execute for {} => {}".format(entry[0], rule_timeouts["Light_Outdoor"]));
 
-            Registry.getItem(entry[0]).sendCommand(100 if Registry.getItem(entry[0]).getType() == "Dimmer" else ON)
+            Registry.getItem(entry[0]).sendCommand(100 if Registry.getItem(entry[0]).getType() == "Dimmer" else scope.ON)

@@ -5,10 +5,12 @@ from shared.notification import NotificationHelper
 
 from custom.alexa import AlexaHelper
 
+import scope
+
 
 @rule(
     triggers = [
-        ItemStateChangeTrigger("pOther_Smoke_Detector_State",state="OPEN")
+        ItemStateChangeTrigger("pOther_Smoke_Detector_State",state=scope.OPEN)
     ]
 )
 class Main:

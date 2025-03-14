@@ -3,6 +3,8 @@ from openhab.triggers import SystemStartlevelTrigger, GenericCronTrigger, ItemSt
 
 from datetime import datetime, timedelta
 
+import scope
+
 
 @rule(
     triggers = [
@@ -15,7 +17,7 @@ from datetime import datetime, timedelta
 class BatteryDetail:
     def execute(self, module, input):
         msg = []
-        if Registry.getItemState("pGF_Corridor_Lock_Battery_Critical") == ON:
+        if Registry.getItemState("pGF_Corridor_Lock_Battery_Critical") == scope.ON:
             msg.append("Batterie")
 
         if ( Registry.getItemState("pGF_Corridor_Lock_Timestamp") + timedelta(minutes=120) ) < datetime.now().astimezone():

@@ -3,6 +3,8 @@ from openhab.triggers import ItemStateChangeTrigger
 
 from custom.flags import FlagHelper
 
+import scope
+
 
 @rule(
     triggers = [
@@ -17,8 +19,8 @@ from custom.flags import FlagHelper
 )
 class StateMessageAuto:
     def format(self, item_name, shortcut, check = None):
-        return shortcut if ( Registry.getItemState(item_name) == ON if check is None else check ) else "".join( [ "{}\u0336".format(c) for c in shortcut ] )
-        #return shortcut if Registry.getItemState(item_name) == ON else "{}\u0336".format(shortcut)
+        return shortcut if ( Registry.getItemState(item_name) == scope.ON if check is None else check ) else "".join( [ "{}\u0336".format(c) for c in shortcut ] )
+        #return shortcut if Registry.getItemState(item_name) == scope.ON else "{}\u0336".format(shortcut)
 
     def execute(self, module, input):
         active1 = []

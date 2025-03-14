@@ -5,6 +5,8 @@ from shared.toolbox import ToolboxHelper
 
 from datetime import datetime, timedelta
 
+import scope
+
 
 #from org.openhab.core.types.RefreshType import REFRESH
 
@@ -176,10 +178,10 @@ class EnergyCounterSupply:
 )
 class EnergyTotalYieldRefresh:
     def execute(self, module, input):
-        if Registry.getItemState("pOther_Automatic_State_Solar") == ON:
+        if Registry.getItemState("pOther_Automatic_State_Solar") == scope.ON:
             # triggers solar value update
-            Registry.getItem("pGF_Garage_Solar_Inverter_Total_Yield").sendCommand(REFRESH)
-        
+            Registry.getItem("pGF_Garage_Solar_Inverter_Total_Yield").sendCommand(scope.REFRESH)
+
 @rule(
     triggers = [
         ItemStateChangeTrigger("pGF_Utilityroom_Power_Demand_Active"),
@@ -189,19 +191,24 @@ class EnergyTotalYieldRefresh:
 )
 class EnergyCurrentDemandAndConsumption:
     def __init__(self):
-        self.current_demand = self.power_demand = self.power_supply = None
+        self.current_consumption = Registry.getItemState("pGF_Utilityroom_Electricity_Current_Consumption").doubleValue()
+        self.solar_consumption = Registry.getItemState("pGF_Garage_Solar_Inverter_Consumption").doubleValue()
+        self.current_saldo = self.power_demand = self.power_supply = None
         
     def updateConsumption(self,solarPower):
-        consumption = self.current_demand + solarPower
-        
+        self.solar_consumption = solarPower - self.power_supply
+        Registry.getItem("pGF_Garage_Solar_Inverter_Consumption").postUpdateIfDifferent(self.solar_consumption)
+
+        consumption = self.current_saldo + solarPower
         if consumption > 0:
-            Registry.getItem("pGF_Utilityroom_Electricity_Current_Consumption").postUpdateIfDifferent(consumption)
+            self.current_consumption = consumption
+            Registry.getItem("pGF_Utilityroom_Electricity_Current_Consumption").postUpdateIfDifferent(self.current_consumption)
         else:
             self.logger.info("Skip consumption update. power_demand: {}, power_supply: {}, solarPower: {}".format(self.power_demand,self.power_supply,solarPower))
 
     def execute(self, module, input):
         if input["event"].getItemName() == "pGF_Garage_Solar_Inverter_AC_Power":
-            if self.current_demand is not None:
+            if self.current_saldo is not None:
                 self.updateConsumption(input["event"].getItemState().intValue())
         else:
             if input["event"].getItemName() == "pGF_Utilityroom_Power_Demand_Active":
@@ -217,15 +224,15 @@ class EnergyCurrentDemandAndConsumption:
                 if self.power_supply != Registry.getItemState("pGF_Utilityroom_Power_Supply_Active").intValue():
                     self.logger.error("Item supply state differences: {}, item state: {}".format(self.power_supply, Registry.getItemState("pGF_Utilityroom_Power_Supply_Active").intValue()))
 
-            self.current_demand = self.power_demand - self.power_supply
+            self.current_saldo = self.power_demand - self.power_supply
             
             #self.logger.info("{}".format(itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_Total_Yield", datetime.now().astimezone().minusMinutes(15))))
             
             now = datetime.now().astimezone()
-            if Registry.getItemState("pOther_Automatic_State_Solar") == ON:
+            if Registry.getItemState("pOther_Automatic_State_Solar") == scope.ON:
                 if ToolboxHelper.getLastUpdate("pOther_Automatic_State_Solar") < now - timedelta(minutes=60):
                     # solar value update was not successful for a while
-                    #solarActive = Registry.getItemState("pOther_Automatic_State_Solar") == ON
+                    #solarActive = Registry.getItemState("pOther_Automatic_State_Solar") == scope.ON
                     #if itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_Total_Yield", now - timedelta(hours=5) if solarActive else now - timedelta(hours=14)):
                     if ToolboxHelper.getLastUpdate("pGF_Garage_Solar_Inverter_Total_Yield") < now - timedelta(minutes=15) or (ToolboxHelper.getLastUpdate("pGF_Garage_Solar_Inverter_AC_Power") < now - timedelta(minutes=60) and Registry.getItemState("pGF_Garage_Solar_Inverter_AC_Power").intValue() > 0):
                         #(itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_AC_Power", datetime.now().astimezone().minusMinutes(15)) or Registry.getItemState("pGF_Garage_Solar_Inverter_AC_Power").intValue() == 0)):
@@ -239,11 +246,24 @@ class EnergyCurrentDemandAndConsumption:
                         Registry.getItem("eOther_Error_Solar_Inverter_Message").postUpdateIfDifferent("")
 
                 # triggers solar value update
-                Registry.getItem("pGF_Garage_Solar_Inverter_AC_Power").sendCommand(REFRESH)
+                Registry.getItem("pGF_Garage_Solar_Inverter_AC_Power").sendCommand(scope.REFRESH)
             else:
                 self.updateConsumption(0)
                 Registry.getItem("eOther_Error_Solar_Inverter_Message").postUpdateIfDifferent("")
-            Registry.getItem("pGF_Utilityroom_Electricity_Current_Demand").postUpdateIfDifferent(self.current_demand)
+            Registry.getItem("pGF_Utilityroom_Electricity_Current_Saldo").postUpdateIfDifferent(self.current_saldo)
+
+            if self.current_consumption > 0:
+                percent = self.solar_consumption * 100 / self.current_consumption
+                if percent < 0:
+                    percent = 0
+                elif percent > 100:
+                    percent = 100
+                else:
+                    percent = int(round(percent,0))
+                Registry.getItem("pGF_Utilityroom_Electricity_Current_Consumption_Ratio").postUpdateIfDifferent(percent)
+
+                msg = "{} % • {} %".format(percent, Registry.getItemState("pGF_Utilityroom_Electricity_Current_Daily_Consumption_Ratio").doubleValue())
+                Registry.getItem("pGF_Utilityroom_Electricity_Current_Consumption_Ratio_Msg").postUpdateIfDifferent(msg)
 
 @rule(
     triggers = [
@@ -256,11 +276,29 @@ class EnergyCurrentDemandAndConsumption:
 )
 class EnergyDailyConsumption:
     def execute(self, module, input):
-        dailyEnergyDemand = Registry.getItemState("pGF_Utilityroom_Electricity_Current_Daily_Demand").doubleValue()
-        dailyEnergySupply = Registry.getItemState("pGF_Utilityroom_Electricity_Current_Daily_Supply").doubleValue()
         dailySolarSupply = Registry.getItemState("pGF_Garage_Solar_Inverter_Daily_Yield").doubleValue()
 
-        Registry.getItem("pGF_Utilityroom_Electricity_Current_Daily_Consumption").postUpdateIfDifferent(dailyEnergyDemand - dailyEnergySupply + dailySolarSupply)
+
+        dailyEnergyDemand = Registry.getItemState("pGF_Utilityroom_Electricity_Current_Daily_Demand").doubleValue()
+        dailyEnergySupply = Registry.getItemState("pGF_Utilityroom_Electricity_Current_Daily_Supply").doubleValue()
+        current_saldo = dailyEnergyDemand - dailyEnergySupply
+
+        dailyConsumption = dailyEnergyDemand - dailyEnergySupply + dailySolarSupply
+        Registry.getItem("pGF_Utilityroom_Electricity_Current_Daily_Consumption").postUpdateIfDifferent(dailyConsumption)
+
+        if dailyConsumption > 0:
+            solarConsumption = Registry.getItemState("pGF_Garage_Solar_Inverter_Daily_Consumption").doubleValue()
+            percent = solarConsumption * 100 / dailyConsumption
+            if percent < 0:
+                percent = 0
+            elif percent > 100:
+                percent = 100
+            else:
+                percent = int(round(percent,0))
+            Registry.getItem("pGF_Utilityroom_Electricity_Current_Daily_Consumption_Ratio").postUpdateIfDifferent(percent)
+
+            msg = "{} % • {} %".format(Registry.getItemState("pGF_Utilityroom_Electricity_Current_Consumption_Ratio").doubleValue(), percent)
+            Registry.getItem("pGF_Utilityroom_Electricity_Current_Consumption_Ratio_Msg").postUpdateIfDifferent(msg)
 
 @rule(
     triggers = [
@@ -338,7 +376,7 @@ class GasConsumption:
         # Aktueller Zählerstand
         zaehler_stand_current = start_gas_meter_value + ((current_end - start_gas_impulse_counter) * 0.01)
 
-        zaehler_stand_saved = Registry.getItemState("pGF_Utilityroom_Gas_Meter_Current_Count",DecimalType(0.0)).doubleValue()
+        zaehler_stand_saved = Registry.getItemState("pGF_Utilityroom_Gas_Meter_Current_Count",scope.DecimalType(0.0)).doubleValue()
         
         #self.logger.info("{}".format(zaehler_stand_current))
         

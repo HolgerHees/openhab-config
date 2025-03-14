@@ -3,6 +3,8 @@ from openhab.triggers import ItemStateChangeTrigger
 
 from custom.flags import FlagHelper
 
+import scope
+
 
 @rule(
     triggers = [
@@ -15,7 +17,7 @@ class Main:
     def execute(self, module, input):
         active = []
 
-        active.append( "s" if Registry.getItemState("pOther_Manual_State_Security_Notify") == ON else "s\u0336")
+        active.append( "s" if Registry.getItemState("pOther_Manual_State_Security_Notify") == scope.ON else "s\u0336")
 
         flags = Registry.getItemState("pOther_Manual_State_Air_Thoroughly_Notify").intValue()
         if FlagHelper.hasFlag(FlagHelper.NOTIFY_PUSH, flags) and FlagHelper.hasFlag(FlagHelper.NOTIFY_ALEXA, flags):

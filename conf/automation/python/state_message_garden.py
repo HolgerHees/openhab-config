@@ -1,6 +1,8 @@
 from openhab import rule, Registry
 from openhab.triggers import ItemStateChangeTrigger
 
+import scope
+
 
 @rule(
     triggers = [
@@ -13,10 +15,10 @@ class Main:
     def execute(self, module, input):
         active = []
         
-        if Registry.getItemState("gOutdoor_Watering_Circuits") == ON:
+        if Registry.getItemState("gOutdoor_Watering_Circuits") == scope.ON:
             active.append(u"Bewässerung")
 
-        if Registry.getItemState("pOutdoor_Light_Automatic_Main_Switch") != ON:
+        if Registry.getItemState("pOutdoor_Light_Automatic_Main_Switch") != scope.ON:
             active.append(u"Beleuchtung")
 
         if len(active) == 0:

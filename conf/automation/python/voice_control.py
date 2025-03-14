@@ -7,6 +7,8 @@ from custom.semantic_test import Cases
 from custom.alexa import AlexaHelper
 from custom.shuffle import ShuffleHelper
 
+import scope
+
 
 @rule(
     triggers = [
@@ -16,13 +18,13 @@ from custom.shuffle import ShuffleHelper
 )
 class Main:
     def __init__(self):
-        self.processor = CommandProcessor(ir)
+        self.processor = CommandProcessor(scope.ir)
         #self.test(ir)
 
     def execute(self, module, input):
         if input['event'].getType() == "TimerEvent":
-            self.processor = CommandProcessor(ir)
-            self.test(ir)
+            self.processor = CommandProcessor(scope.ir)
+            self.test(scope.ir)
             #self.logger.info("{}".format(input))
         else:
             Registry.getItem("VoiceMessage").postUpdate("")
@@ -100,3 +102,4 @@ class Main:
 
                 self.logger.info("\n\n{}\n\n".format(msg))
                 raise Exception("Wrong detection")
+

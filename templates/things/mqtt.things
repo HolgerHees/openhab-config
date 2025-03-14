@@ -48,31 +48,36 @@ Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
 {% endif %}
 {% endfor %}
     }
+    Thing topic frigate "Frigate" {
+        Type string : reviews "Ereignisse" [ stateTopic="frigate/reviews" ]
+    }
     Thing topic watt_waechter "Watt Wächter" {
         Type number : demand "Bedarf" [ stateTopic="wattwaechter/SENSOR", transformationPattern="JSONPATH:$.LK13BE.total" ]
         Type number : supply "Einspeisung" [ stateTopic="wattwaechter/SENSOR", transformationPattern="JSONPATH:$.LK13BE.total_out" ]
     }
-    Thing topic vcontrol "Heizung" {
-        Type number : operationMode "Betriebsart" [ stateTopic="vcontrol/getBetriebsart", commandTopic="vcontrol/setBetriebsartTo" ]
-        Type number : power "Leistung" [ stateTopic="vcontrol/getLeistungIst" ]
-        Type number : pumpSpeed "Heizkreispumpe" [ stateTopic="vcontrol/getHeizkreisPumpeDrehzahl" ]
-        Type number : targetTemperature "Ziel" [ stateTopic="vcontrol/getTempRaumSoll" ]
-        Type number : outdoorTemperature "Aussen (Ist)" [ stateTopic="vcontrol/getTempAussen" ]
-        Type number : outdoorTemperatureSubdued "Aussen (Ged.)" [ stateTopic="vcontrol/getTempAussenGedaempft" ]
-        Type number : offsetTemperatureTarget "Vorlauf (Soll)" [ stateTopic="vcontrol/getTempVorlaufSoll" ]
-        Type number : offsetTemperature "Vorlauf (Ist)" [ stateTopic="vcontrol/getTempVorlauf" ]
-        Type number : boilerTemperatureTarget "Kessel (Soll)" [ stateTopic="vcontrol/getTempKesselSoll" ]
-        Type number : boilerTemperature "Kessel (Ist)" [ stateTopic="vcontrol/getTempKessel" ]
-        Type number : burnerStarts "Brennerstarts" [ stateTopic="vcontrol/getBrennerStarts" ]
-        Type number : burnerHours "Brennerstunden" [ stateTopic="vcontrol/getBrennerStunden" ]
-        Type number : waterTemperatureStorage "Wasser" [ stateTopic="vcontrol/getTempWasserSpeicher" ]
-        Type number : waterTemperatureSolarCollector "Solar Kollektor" [ stateTopic="vcontrol/getTempSolarKollektor" ]
-        Type number : waterTemperatureSolarStorage "Solar Speicher" [ stateTopic="vcontrol/getTempSolarSpeicher" ]
-        Type number : solarHours "Solar Stunden" [ stateTopic="vcontrol/getSolarStunden" ]
-        Type number : solarPower "Solar Leistung" [ stateTopic="vcontrol/getSolarLeistung" ]
-        Type number : pumpState "Solar Pumpe" [ stateTopic="vcontrol/getSolarPumpeStatus" ]
-        Type number : solarReheatingState "Nachladeunterdrückung" [ stateTopic="vcontrol/getNachladeunterdrueckungStatus" ]
-        Type number : commonFault "Status" [ stateTopic="vcontrol/getSammelstoerung" ]
+    Thing topic optolink "Heizung" {
+        Type string : sendCommand "Befehl absetzen" [ commandTopic="optolink/cmnd" ]
+        Type string : commandResponse "Befehl Ergebnis" [ commandTopic="optolink/resp" ]
+        Type number : operationMode "Betriebsart" [ stateTopic="optolink/getBetriebsart" ]
+        Type number : power "Leistung" [ stateTopic="optolink/getLeistungIst" ]
+        Type number : pumpSpeed "Heizkreispumpe" [ stateTopic="optolink/getHeizkreisPumpeDrehzahl" ]
+        Type number : targetTemperature "Ziel" [ stateTopic="optolink/getTempRaumSoll" ]
+        Type number : outdoorTemperature "Aussen (Ist)" [ stateTopic="optolink/getTempAussen" ]
+        Type number : outdoorTemperatureSubdued "Aussen (Ged.)" [ stateTopic="optolink/getTempAussenGedaempft" ]
+        Type number : offsetTemperatureTarget "Vorlauf (Soll)" [ stateTopic="optolink/getTempVorlaufSoll" ]
+        Type number : offsetTemperature "Vorlauf (Ist)" [ stateTopic="optolink/getTempVorlauf" ]
+        Type number : boilerTemperatureTarget "Kessel (Soll)" [ stateTopic="optolink/getTempKesselSoll" ]
+        Type number : boilerTemperature "Kessel (Ist)" [ stateTopic="optolink/getTempKessel" ]
+        Type number : burnerStarts "Brennerstarts" [ stateTopic="optolink/getBrennerStarts" ]
+        Type number : burnerHours "Brennerstunden" [ stateTopic="optolink/getBrennerStunden" ]
+        Type number : waterTemperatureStorage "Wasser" [ stateTopic="optolink/getTempWasserSpeicher" ]
+        Type number : waterTemperatureSolarCollector "Solar Kollektor" [ stateTopic="optolink/getTempSolarKollektor" ]
+        Type number : waterTemperatureSolarStorage "Solar Speicher" [ stateTopic="optolink/getTempSolarSpeicher" ]
+        Type number : solarHours "Solar Stunden" [ stateTopic="optolink/getSolarStunden" ]
+        Type number : solarPower "Solar Leistung" [ stateTopic="optolink/getSolarLeistung" ]
+        Type number : pumpState "Solar Pumpe" [ stateTopic="optolink/getSolarPumpeStatus" ]
+        Type number : solarReheatingState "Nachladeunterdrückung" [ stateTopic="optolink/getNachladeunterdrueckungStatus" ]
+        Type number : commonFault "Status" [ stateTopic="optolink/getSammelstoerung" ]
     }    
     Thing topic weatherstation "Wetterstation (Default-MQTT)" {
         Type number : solarRadiation "Sonnentemperatur" [ stateTopic="ecowitt/8813BF4638DF/#", transformationPattern="REGEX:.*solarradiation=([0-9\\.]*).*" ]
@@ -94,3 +99,4 @@ Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
         Type number : lockAction "Aktion" [ commandTopic="nuki/43347577/lockAction" ]
     }
 }
+
