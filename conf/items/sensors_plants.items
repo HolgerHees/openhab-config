@@ -1,5 +1,5 @@
-Group eOther_Plant_Sensor_Devices "Bodensensoren" <selfinfo> (lOther) ["Sensor"]
-Group eOther_Sensor_State "Bodensensoren Status" <selfinfo> (lOther) ["Sensor"]
+Group eOther_Plant_Sensor_Devices "Bodensensoren" <selfinfo> (lOther)
+Group eOther_Sensor_State "Bodensensoren Status" <selfinfo> (lOther)
 Number pOther_Plant_Sensor_State_Watering_Info  "Pflanzen Bewässerung [MAP(gardena_state.map):%s]" <selfplant> (eOther_Sensor_State) ["Point"]
 String pOther_Plant_Sensor_State_Device_Info    "Sensor Status [%s]" <selfplant> (eOther_Sensor_State) ["Point"]
 

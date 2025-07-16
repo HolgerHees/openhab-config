@@ -34,7 +34,7 @@ class UnknownPerson:
         user_fullnames = []
         ref = datetime.now().astimezone() - timedelta(seconds=5)
         for user_name, stateItem in UserHelper.getPresentUserData().items():
-            if ToolboxHelper.getLastUpdate(stateItem) < ref:
+            if stateItem.getLastStateUpdate() < ref:
                 continue
             user_fullnames.append(UserHelper.getName(user_name))
 
@@ -109,7 +109,7 @@ class AlexaWelcome:
     def getArrivedUser(self, arrived_state_count):
         arrived_user = []
         for user_name, stateItem in UserHelper.getPresentUserData().items():
-            last_change = ToolboxHelper.getLastUpdate(stateItem)
+            last_change = stateItem.getLastStateUpdate()
 
             # already confirmed
             if last_change <= self.arrived_user[user_name]:
@@ -127,7 +127,7 @@ class AlexaWelcome:
     def isNewGuestArrived(self):
         state = Registry.getItemState("pOther_Presence_State").intValue()
         if state == PresenceHelper.STATE_MAYBE_PRESENT:
-            last_update = ToolboxHelper.getLastUpdate("pOther_Presence_State")
+            last_update = Registry.getItem("pOther_Presence_State").getLastStateUpdate()
             if last_update <= self.guest_user:
                 return False
             self.guest_user = last_update
@@ -161,11 +161,11 @@ class ArrivingAction:
             return
 
         # no outside motion detector event in the last 60 seconds
-        if ToolboxHelper.getLastUpdate("pOutdoor_Streedside_Frontdoor_Motiondetector_State") + timedelta(seconds=60) < datetime.now().astimezone():
+        if Registry.getItem("pOutdoor_Streedside_Frontdoor_Motiondetector_State").getLastStateUpdate() + timedelta(seconds=60) < datetime.now().astimezone():
             return
 
         # light was already switched on/off during the last 30 seconds
-        if ToolboxHelper.getLastUpdate("pGF_Corridor_Light_Ceiling_Powered") + timedelta(seconds=30) > datetime.now().astimezone():
+        if Registry.getItem("pGF_Corridor_Light_Ceiling_Powered").getLastStateUpdate() + timedelta(seconds=30) > datetime.now().astimezone():
             return
 
         Registry.getItem("pGF_Corridor_Light_Ceiling_Powered").sendCommandIfDifferent(scope.ON)

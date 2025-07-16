@@ -89,7 +89,7 @@ class MotiondetectorIndividualSwitch:
         item_name = input['event'].getItemName()
         item_command = input['event'].getItemCommand()
         
-        switchState = ON
+        switchState = scope.ON
         for i, entry in enumerate(manual_mappings):
             if entry[1] == item_name:
                 Registry.getItem(entry[0]).sendCommandIfDifferent(scope.OFF)

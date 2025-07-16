@@ -26,19 +26,18 @@ class LastUpdate:
         states = {}
         
         for item in items:
-            _update = ToolboxHelper.getLastUpdate(item)
-            if _update.year == 1970:
+            last_update = item.getLastStateUpdate()
+            if last_update.year == 1970:
                 continue
 
-            if newest_update is None or _update > newest_update:
-                newest_update = _update
+            if newest_update is None or last_update > newest_update:
+                newest_update = last_update
 
-            if oldest_update is None or _update < oldest_update:
-                oldest_update = _update
+            if oldest_update is None or last_update < oldest_update:
+                oldest_update = last_update
                 
-            last_update = ToolboxHelper.getLastUpdate(item)
             minutes = (last_update - now).total_seconds()
-            states[item.getName()] = [minutes,"{:.0f} min: {} ({})".format(minutes,item.getName(),ToolboxHelper.getLastUpdate(item))]
+            states[item.getName()] = [minutes,"{:.0f} min: {} ({})".format(minutes,item.getName(),last_update)]
         
         if newest_update is None or oldest_update is None:
             self.logger.error("Update time calculation has a problem")
@@ -110,8 +109,12 @@ class Rain:
         
     def execute(self, module, input):
         if input['event'].getItemName() == "pOutdoor_WeatherStation_Rain_Daily":
+            end = datetime.now().astimezone()
+            start = end - timedelta(hours=1)
+
             amount_new = Registry.getItemState("pOutdoor_WeatherStation_Rain_Daily",scope.DecimalType(0.0)).doubleValue()
-            amount_old = ToolboxHelper.getPersistedState("pOutdoor_WeatherStation_Rain_Daily", datetime.now().astimezone() - timedelta(hours=1)).doubleValue()
+            amount_old = 0 if start.hour > end.hour else ToolboxHelper.getPersistedState("pOutdoor_WeatherStation_Rain_Daily", start).doubleValue()
+
             Registry.getItem("pOutdoor_WeatherStation_Rain_Hourly").postUpdateIfDifferent(amount_new - amount_old)
         elif input['event'].getItemName() == "pOutdoor_WeatherStation_Rain_Rate":
             rate = input['event'].getItemState().doubleValue()
@@ -349,11 +352,12 @@ class PerceivedTemperature:
         e = ( humidity / 100 ) * 6.105 * math.exp( ( 17.27 * temp ) / ( 237.7 + temp ) )
         ws = (speed * 1000) / (60 * 60)
         Q = solar
-        calculated = Ta + (0.348 * e) - (0.7 * ws) + ( 0.7 * ( Q / ( ws + 10 ) )) - 4.25
-        _calculated = Ta + (0.348 * e) - (0.7 * ws) - 4.25
+        calculated1 = Ta + (0.348 * e) - (0.7 * ws) + ( 0.7 * ( Q / ( ws + 10 ) )) - 4.25
+        calculated2 = Ta + (0.348 * e) - (0.7 * ws) - 4.25
 
-        self.logger.info("TEMP: {}°C, HUMIDITY: {}%, SPEED: {}m/s, Solar: {}w/m², CALCULATED 1: {}°C, CALCULATED 2: {}°C, PROVIDER: {}°C, OLD_CALCULATED: {}°C".format(temp, humidity, ws, solar, calculated, _calculated, provider, old_calculated))
-        Registry.getItem("pOutdoor_WeatherStation_Temperature_Perceived").postUpdateIfDifferent(calculated)
+        self.logger.info("TEMP: {}°C, HUMIDITY: {}%, SPEED: {}m/s, Solar: {}w/m², CALCULATED 1: {}°C, CALCULATED 2: {}°C, PROVIDER: {}°C, OLD_CALCULATED: {}°C".format(temp, humidity, ws, solar, calculated1, calculated2, provider, old_calculated))
+
+        Registry.getItem("pOutdoor_WeatherStation_Temperature_Perceived").postUpdateIfDifferent(calculated2)
 
 @rule(
     triggers = [

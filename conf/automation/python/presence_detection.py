@@ -148,7 +148,7 @@ class MovingCheck:
             if Registry.getItemState("gIndoor_Lights") == scope.ON:
                 self.timer = Timer.createTimeout(60, self.checkSleeping)
             else:
-                last_update_diff = ( datetime.now().astimezone() - ToolboxHelper.getLastUpdate("gIndoor_Lights") ).total_seconds()
+                last_update_diff = ( datetime.now().astimezone() - Registry.getItem("gIndoor_Lights").getLastStateUpdate() ).total_seconds()
                 if last_update_diff >= 600:
                     Cache.setPresenceState(PresenceHelper.STATE_SLEEPING)
                     self.timer = None
@@ -213,7 +213,7 @@ class KnownPersonCheck:
         # sometimes, phones are losing wifi connections because of their sleep mode
         if new_item_state == scope.OFF:
             if old_item_state == scope.ON:
-                if ToolboxHelper.getLastChange("pGF_Corridor_Openingcontact_Door_State") < datetime.now().astimezone() - timedelta(minutes=60) and Cache.getArriving() > 0:
+                if Registry.getItem("pGF_Corridor_Openingcontact_Door_State").getLastStateChange() < datetime.now().astimezone() - timedelta(minutes=60) and Cache.getArriving() > 0:
                     # relatedItem state is still ON
                     #lastChangedState = getItemLastChange(related_item_name)
                     #if itemLastChangeNewerThen("pGF_Corridor_Openingcontact_Door_State",lastChangedState.minusMinutes(15)):
@@ -273,7 +273,6 @@ class Wakeup:
         with Cache.getLock():
             if Cache.getPresenceState() in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
                 # sometimes the "gGF_Lights" state switches back and forth for a couple of milliseconds when set "gGF_Lights" state to OFF
-                #if ToolboxHelper.getLastChange("pOther_Presence_State",datetime.now().astimezone().minusSeconds(5)):
                 if input['event'].getItemName() == "gGF_Shutters":
                     self.wakeup()
                 else:

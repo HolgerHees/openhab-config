@@ -1,12 +1,10 @@
-from openhab import rule, Registry
+from openhab import rule, Registry, logger
 from openhab.triggers import ItemStateChangeTrigger
 from openhab.actions import Transformation
 
 from shared.notification import NotificationHelper
 
 import scope
-
-mode = Transformation.transform("PY3", "homeconnect_runtime.py", "1" )
 
 
 @rule(
@@ -32,7 +30,7 @@ class Message:
         msg = "{}".format(mode)
 
         if current_runtime != scope.NULL and current_runtime != scope.UNDEF and current_runtime.intValue() > 0 and current_mode.toString() in ['Paused','Delayed','Run']:
-            msg = "{}, {}".format(msg, Transformation.transform("PY3", "homeconnect_runtime.py", "{}".format(current_runtime.intValue()) ))
+            msg = "{}, {}".format(msg, Transformation.transform("PY", "homeconnect_runtime.py", "{}".format(current_runtime.intValue()) ))
 
         Registry.getItem("pGF_Utilityroom_Washer_Message").postUpdateIfDifferent(msg)
 

@@ -1,7 +1,6 @@
 from openhab import rule, Registry
 from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger
 
-from shared.toolbox import ToolboxHelper
 from shared.notification import NotificationHelper
 
 from custom.watering import WateringHelper
@@ -62,19 +61,19 @@ class Sensors:
 
         for sensor_item in Registry.getItem("gRoom_CO2_Sensors").getAllMembers():
             sensor_item_name = sensor_item.getName()
-            if ToolboxHelper.getLastUpdate(sensor_item_name) < last_hour:
-                #self.logger.info("CO2 Sensor: {}, lastUpdate: {}".format(sensor_item_name, ToolboxHelper.getLastUpdate(sensor_item_name)))
+            if Registry.getItem(sensor_item_name).getLastStateUpdate() < last_hour:
+                #self.logger.info("CO2 Sensor: {}, lastUpdate: {}".format(sensor_item_name, Registry.getItem(sensor_item_name).getLastStateUpdate()))
                 #co2_error_states.append("CO2 Update")
                 co2_error_states.append(sensor_item_name)
 
         for sensor_item in Registry.getItem("gRoom_Temperatur_Sensors").getAllMembers():
             sensor_item_name = sensor_item.getName()
-            if ToolboxHelper.getLastUpdate(sensor_item_name) < last_hour:
-                #self.logger.info("T/F Sensor: {}, lastUpdate: {}".format(sensor_item_name, ToolboxHelper.getLastUpdate(sensor_item_name)))
+            if Registry.getItem(sensor_item_name).getLastStateUpdate() < last_hour:
+                #self.logger.info("T/F Sensor: {}, lastUpdate: {}".format(sensor_item_name, Registry.getItem(sensor_item_name).getLastStateUpdate()))
                 #tf_error_states.append("T/F Sensor")
                 tf_error_states.append(sensor_item_name)
 
-            #self.logger.info("SENSOR: {} {}".format(sensor_item_name,ToolboxHelper.getLastUpdate(sensor_item_name)))
+            #self.logger.info("SENSOR: {} {}".format(sensor_item_name,Registry.getItem(sensor_item_name).getLastStateUpdate()))
 
         if len(co2_error_states) > 0:
             Registry.getItem("eOther_Error_CO2_Sensor_Message").postUpdateIfDifferent("Keine Updates mehr seit mehr als 60 Minuten: {}".format(", ".join(co2_error_states)))

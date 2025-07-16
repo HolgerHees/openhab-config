@@ -412,7 +412,8 @@ sitemap haus label="Main Menu"
                     Switch item=pOutdoor_Streeside_Socket_Powered
                 }
 
-                Switch item=pMobile_Socket_7_Powered label="Dachboden (Steckdose)" visibility=[pOther_Manual_State_Auto_Attic_Light!=1]
+                Selection item=pOther_Manual_State_Auto_Attic_Light label="Dachbodensteuerung" mappings=[0="Aus", 1="Wachstum", 2="Blüte"]
+                Switch item=pMobile_Socket_7_Powered label="Dachboden (Steckdose)" visibility=[pOther_Manual_State_Auto_Attic_Light!=0]
 			}
         }
 		Group label="Sicherheit [%s]" icon="selfsecurity" item=pOther_State_Message_Security valuecolor=[=="Alles geschlossen"="#6bc305",!="Alles geschlossen"="#d72a2a"]

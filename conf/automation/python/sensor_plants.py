@@ -91,7 +91,7 @@ class MessagesDetail:
             else:
                 state_msg = WateringHelper.getStateInfo(state_level)
 
-                temperatur_value = RegistrygetItemState("p" + device_name  + "_Soil_Temperature").intValue()
+                temperatur_value = Registry.getItemState("p" + device_name  + "_Soil_Temperature").intValue()
                 info_msg = "{}, {}, {}°C, {}%".format( self.getInfo(humidity_value), state_msg, temperatur_value, humidity_value)
 
         Registry.getItem("p" + device_name  + "_State").postUpdateIfDifferent(state_level)

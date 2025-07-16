@@ -5,6 +5,7 @@ from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger, ThingSt
 from shared.toolbox import ToolboxHelper
  
 from datetime import datetime, timedelta
+import math
 
 import scope
 
@@ -38,22 +39,22 @@ class Action:
     def execute(self, module, input):
         moverStatus = Registry.getItemState("pOutdoor_Mower_Status").toString()
 
-        if ToolboxHelper.getLastUpdate("pOutdoor_Mower_WlanSignal") < datetime.now().astimezone() - timedelta(minutes=60):
+        if Registry.getItem("pOutdoor_Mower_WlanSignal").getLastStateUpdate() < datetime.now().astimezone() - timedelta(minutes=60):
             if moverStatus != "98":
                 #postUpdate("pOutdoor_Mower_Status", 98)
                 Registry.getItem("pOutdoor_Mower_StatusFormatted").postUpdate(Transformation.transform("MAP", "robonect_status.map", "98"))
         else:
             seconds =  Registry.getItemState("pOutdoor_Mower_Duration").intValue()
-            hours = seconds / (60 * 60)
-            seconds = seconds % (60 * 60)
-            minutes = seconds / 60
+            hours = math.floor(seconds / (60 * 60))
+            seconds = math.floor(seconds % (60 * 60))
+            minutes = math.floor(seconds / 60)
             #seconds = seconds % 60
 
             msg = "{} seit ".format(Transformation.transform("MAP", "robonect_status.map", moverStatus))
             if hours < 10: msg = "{}0".format(msg)
             msg = "{}{}:".format(msg,hours)
             if minutes < 10: msg = "{}0".format(msg)
-            msg = "{}{}:".format(msg,minutes)
+            msg = "{}{}".format(msg,minutes)
 
             Registry.getItem("pOutdoor_Mower_StatusFormatted").postUpdateIfDifferent(msg)
 
@@ -72,10 +73,10 @@ class Timer:
         if timerStatus != "STANDBY":
             msg = "{}{}".format( msg, Transformation.transform("MAP", "robonect_timer_status.map", timerStatus) )
         else:
-            if ToolboxHelper.getLastUpdate("pOutdoor_Mower_NextTimer") > datetime.now().astimezone() + timedelta(hours=24 * 4):
-                msg = "{}Starte am {}".format(msg, Registry.getItemState("pOutdoor_Mower_NextTimer").format("%1$td.%1$tm %1$tH:%1$tM"))
+            if Registry.getItem("pOutdoor_Mower_NextTimer").getLastStateUpdate() > datetime.now().astimezone() + timedelta(hours=24 * 4):
+                msg = "{}Starte am {}".format(msg, Registry.getItemState("pOutdoor_Mower_NextTimer").strftime("%d.%m %H:%M"))
             else:
-                msg = "{}Starte {}".format(msg, Registry.getItemState("pOutdoor_Mower_NextTimer").format("%1$tA %1$tH:%1$tM"))
+                msg = "{}Starte {}".format(msg, Registry.getItemState("pOutdoor_Mower_NextTimer").strftime("%A %H:%M"))
 
         Registry.getItem("pOutdoor_Mower_TimerStatusFormatted").postUpdateIfDifferent(msg)
 

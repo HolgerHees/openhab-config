@@ -18,7 +18,8 @@ start_electricity_meter_demand_offset = 0.0
 start_electricity_meter_supply_offset = 0.0
 
 # offset values for gas meter (total value at the time when knx based impulse counter was resettet)
-start_gas_meter_value = 10405.39
+start_gas_meter_value = 12770.69
+#start_gas_meter_value = 10405.39
 start_gas_impulse_counter = 0
 
 #dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
@@ -32,15 +33,14 @@ start_gas_impulse_counter = 0
 #value = ToolboxHelper.getPersistedState("pGF_Garage_Solar_Inverter_Power_Limitation",datetime.now().astimezone()).intValue()
 #postUpdate("pGF_Garage_Solar_Inverter_Power_Limitation",value)
 
-
 def getHistoricReference(logger, item_name, value_time, outdated_time, messure_time, interval_time):
 
     item = Registry.getItem(item_name)
-    end_time = ToolboxHelper.getLastChange(item)
+    end_time = item.getLastStateChange()
 
     now = datetime.now().astimezone()
  
-    if end_time < now - timedelta(seconds=outdated_time):
+    if end_time == None or end_time < now - timedelta(seconds=outdated_time):
         logger.info( "No consumption. Last value is too old." )
         return 0
 
@@ -230,11 +230,11 @@ class EnergyCurrentDemandAndConsumption:
             
             now = datetime.now().astimezone()
             if Registry.getItemState("pOther_Automatic_State_Solar") == scope.ON:
-                if ToolboxHelper.getLastUpdate("pOther_Automatic_State_Solar") < now - timedelta(minutes=60):
+                if Registry.getItem("pOther_Automatic_State_Solar").getLastStateUpdate() < now - timedelta(minutes=60):
                     # solar value update was not successful for a while
                     #solarActive = Registry.getItemState("pOther_Automatic_State_Solar") == scope.ON
                     #if itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_Total_Yield", now - timedelta(hours=5) if solarActive else now - timedelta(hours=14)):
-                    if ToolboxHelper.getLastUpdate("pGF_Garage_Solar_Inverter_Total_Yield") < now - timedelta(minutes=15) or (ToolboxHelper.getLastUpdate("pGF_Garage_Solar_Inverter_AC_Power") < now - timedelta(minutes=60) and Registry.getItemState("pGF_Garage_Solar_Inverter_AC_Power").intValue() > 0):
+                    if Registry.getItem("pGF_Garage_Solar_Inverter_Total_Yield").getLastStateUpdate() < now - timedelta(minutes=15) or (Registry.getItem("pGF_Garage_Solar_Inverter_AC_Power").getLastStateUpdate() < now - timedelta(minutes=60) and Registry.getItemState("pGF_Garage_Solar_Inverter_AC_Power").intValue() > 0):
                         #(itemLastUpdateOlderThen("pGF_Garage_Solar_Inverter_AC_Power", datetime.now().astimezone().minusMinutes(15)) or Registry.getItemState("pGF_Garage_Solar_Inverter_AC_Power").intValue() == 0)):
                         if Registry.getItem("eOther_Error_Solar_Inverter_Message").postUpdateIfDifferent("Keine Updates mehr seit mehr als 60 Minuten"):
                             Registry.getItem("pGF_Garage_Solar_Inverter_AC_Power").postUpdate(0)

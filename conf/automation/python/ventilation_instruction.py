@@ -1,19 +1,23 @@
-from openhab import rule, Registry
+from openhab import rule, Registry, Timer
 from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger
 
+from shared.notification import NotificationHelper
 from shared.toolbox import ToolboxHelper
+from shared.user import UserHelper
 
 from custom.presence import PresenceHelper
 from custom.alexa import AlexaHelper
 from custom.flags import FlagHelper
 from custom.weather import WeatherHelper
 
+from datetime import datetime, timedelta
+
 import scope
 
 
 @rule(
 triggers = [
-        GenericCronTrigger("0 */1 * * * ?"),
+        GenericCronTrigger("0 * * * * ?"),
         ItemStateChangeTrigger("pOther_Presence_Arrive_State",state="1")
     ]
 )
@@ -26,7 +30,7 @@ class Notification:
         self.timer = None
 
         #self.process(None, 3)
-        #AlexaHelper.sendTTSTest(self.log,"test", header = "Lüftungshinweiss")
+        #AlexaHelper.sendTTSTest(self.logger,"test", header = "Lüftungshinweiss")
         
     def getOpenState(self,window_group_item_name,excludedItems=[]):
         isOpen = False
@@ -40,8 +44,8 @@ class Notification:
                 break
         return isOpen
       
-    def getOpenRequest(self,gardenTemp,gardenTempMax,direction,refTempItemName,lastState):
-        refTemp = round(ToolboxHelper.getStableState(refTempItemName, 15),1)
+    def getOpenRequest(self,gardenTemp, gardenTempMax, direction, refTempItemName, lastState):
+        refTemp = round(ToolboxHelper.getStableState(refTempItemName, 15).doubleValue(), 1)
         
         self.logger.info("ROOM - {}: {}".format(refTempItemName,refTemp))
               
@@ -77,14 +81,17 @@ class Notification:
         #    self.logger.info("PRECONDITION not fit ({} {} {})".format(weatherAvgTemperature,room1Temperature,room2Temperature))
         #    return
 
-        now = datetime.now().astimezoned()
-        gardenTemp0 = ToolboxHelper.getStableState("pOutdoor_WeatherStation_Temperature", 900).doubleValue()
+        now = datetime.now().astimezone()
+        gardenTemp0, _, gardenTemp0Max = ToolboxHelper.getStableMinMaxState("pOutdoor_WeatherStation_Temperature", 900)
+        gardenTemp0 = gardenTemp0.doubleValue()
+        gardenTemp0Max = gardenTemp0Max.doubleValue()
+
         gardenTemp15  = ToolboxHelper.getStableState("pOutdoor_WeatherStation_Temperature", 1800, now - timedelta(minutes=15)).doubleValue()
         gardenTemp45  = ToolboxHelper.getStableState("pOutdoor_WeatherStation_Temperature", 1800, now - timedelta(minutes=45)).doubleValue()
 
-        gardenTemp0 = round(gardenTemp0,1)
-        gardenTemp15 = round(gardenTemp15,1)
-        gardenTemp45 = round(gardenTemp45,1)
+        gardenTemp0 = round(gardenTemp0, 1)
+        gardenTemp15 = round(gardenTemp15, 1)
+        gardenTemp45 = round(gardenTemp45, 1)
 
         if gardenTemp0 > gardenTemp15 > gardenTemp45:
             direction = 1
@@ -102,7 +109,7 @@ class Notification:
             else:
                 direction = 0
 
-        self.logger.info("GARDEN - Temp0: {}, Temp0Max: {}, Temp15: {}, Temp45: {}".format(gardenTemp0,gardenTemp0Max,gardenTemp15,gardenTemp45))
+        self.logger.info("GARDEN - Temp0: {}, Temp0Max: {}, Temp15: {}, Temp45: {}".format(gardenTemp0, gardenTemp0Max, gardenTemp15, gardenTemp45))
 
         gfShouldOpen = self.getOpenRequest(gardenTemp0, gardenTemp0Max, direction,"pGF_Livingroom_Air_Sensor_Temperature_Value", self.lastGFShouldOpen)
         gfIsOpen = self.getOpenState("gGF_Sensor_Window",["pGF_Livingroom_Openingcontact_Window_Terrace_State"])
@@ -113,8 +120,8 @@ class Notification:
         if (self.lastGFShouldOpen!=gfShouldOpen and gfShouldOpen!=gfIsOpen) or (self.lastFFShouldOpen!=ffShouldOpen and ffShouldOpen!=ffIsOpen):
             recipients = UserHelper.getPresentUser()
             
-        self.logger.info("STATE - gfShouldOpen: {}, gfIsOpen: {}, ffShouldOpen: {}, ffIsOpen: {}, direction: {}".format(gfShouldOpen,gfIsOpen,ffShouldOpen,ffIsOpen,direction))
-        
+        self.logger.info("STATE - gfShouldOpen: {}, gfIsOpen: {}, ffShouldOpen: {}, ffIsOpen: {}, direction: {}".format(gfShouldOpen, gfIsOpen, ffShouldOpen, ffIsOpen, direction))
+
         if recipients is not None:
             actions = {"OPEN":[],"CLOSE":[]}
             if gfShouldOpen != gfIsOpen:
@@ -134,15 +141,15 @@ class Notification:
                 push_msg.append("Alle Fenster auf")
                 alexa_msg.append("Alle Fenster auf")
             elif len(actions["CLOSE"]) == 2:
-                push_msg.append("Alle Fenster z")
-                alexa_msg.append("Alle Fenster z")
+                push_msg.append("Alle Fenster zu")
+                alexa_msg.append("Alle Fenster zu")
             else:
                 if len(actions["OPEN"]) == 1:
                     push_msg.append("{} Fenster auf".format(actions["OPEN"][0]))
                     alexa_msg.append("Fenster im {} auf".format("Obergeschoss" if actions["OPEN"][0] == "OG" else "Erdgeschoss"))
                 if len(actions["CLOSE"]) == 1:
                     push_msg.append("{} Fenster z".format(actions["CLOSE"][0]))
-                    alexa_msg.append("Fenster im {} z".format("Obergeschoss" if actions["CLOSE"][0] == "OG" else "Erdgeschoss"))
+                    alexa_msg.append("Fenster im {} zu".format("Obergeschoss" if actions["CLOSE"][0] == "OG" else "Erdgeschoss"))
 
             # we have messages and we are not sleeping
             if len(push_msg) > 0 and Registry.getItemState("pOther_Presence_State").intValue() not in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
@@ -181,7 +188,7 @@ class Notification:
                 self.timer = None
 
             # delayed notification to give all devices the chance to be detected as present
-            self.timer = startTimer(self.log, 300, self.process, args = [ UserHelper.getPresentUser(), flags ]) # 5 min
+            self.timer = Timer.createTimeout(300, self.process, args = [ UserHelper.getPresentUser(), flags ]) # 5 min
         else:
             # we are away
             if Registry.getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:

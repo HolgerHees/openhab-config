@@ -16,7 +16,6 @@ BRIGHTNESS_MAX = int(BRIGHTNESS_LIMIT * 1.00)
 BRIGHTNESS_MID = int(BRIGHTNESS_LIMIT * 0.66)
 BRIGHTNESS_MIN = int(BRIGHTNESS_LIMIT * 0.33)
 
-
 @rule(
     triggers = [
         SystemStartlevelTrigger(80),

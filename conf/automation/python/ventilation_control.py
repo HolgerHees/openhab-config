@@ -255,7 +255,7 @@ class FanLevel:
                 default_level = 2    # Level 1
                 cooling_level = 2    # Level 1
             # Away since 60 minutes
-            elif presence_state == [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT] and ToolboxHelper.getLastChange("pOther_Presence_State") < ( datetime.now().astimezone() - timedelta(minutes=60) ):
+            elif presence_state == [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT] and Registry.getItem("pOther_Presence_State").getLastStateChange() < ( datetime.now().astimezone() - timedelta(minutes=60) ):
                 reduced_level = 1    # Level A
                 default_level = 2    # Level 1
                 cooling_level = 3    # Level 2
@@ -282,7 +282,7 @@ class FanLevel:
             # 2. 'event' in input.keys() is an presence or auto mode change
             # 3. is cron triggered event
             # => .getLastChange check to prevent level flapping on temperature changes
-            if self.active_level != current_level or input['event'].getType() != "TimerEvent" or ToolboxHelper.getLastChange("pGF_Utilityroom_Ventilation_Fan_Level") < ( datetime.now().astimezone() - timedelta(minutes=15) ):
+            if self.active_level != current_level or input['event'].getType() != "TimerEvent" or Registry.getItem("pGF_Utilityroom_Ventilation_Fan_Level").getLastStateChange() < ( datetime.now().astimezone() - timedelta(minutes=15) ):
                 self.auto_change_in_progress = True
 
                 Registry.getItem("pGF_Utilityroom_Ventilation_Fan_Level").sendCommand(new_level)

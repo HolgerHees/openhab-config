@@ -15,14 +15,14 @@ import scope
 class Main:
     def execute(self, module, input):
         state = Registry.getItemState("pOther_Manual_State_Auto_Attic_Light").intValue();
-        if state not in [2,3]:
+        if state not in [1,2]:
             return
 
         hour = datetime.now().astimezone().hour
 
-        if state == 2:
-            state = scope.ON if hour >= 5 and hour <= 23 else scope.OFF
+        if state == 1:
+            state = scope.ON if hour >= 5 and hour <= 22 else scope.OFF # 05:00 - 22:59 (18 Stunden)
         else:
-            state = scope.ON if hour >= 8 and hour <= 20 else scope.OFF
+            state = scope.ON if hour >= 8 and hour <= 19 else scope.OFF # 08:00 - 19:59 (12 Stunden)
 
         Registry.getItem("pMobile_Socket_7_Powered").sendCommandIfDifferent(state)

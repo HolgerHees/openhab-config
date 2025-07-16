@@ -1,18 +1,28 @@
-import java
-from openhab import logger
-from openhab.actions import Transformation
+from datetime import datetime, timedelta
 
-mode = Transformation.transform("PY3", "test.py", "xyz" )
-print(mode)
+from openhab import Registry
 
 
+result = Registry.getItem("pGF_Utilityroom_Heating_Circuit_Pump_Speed").getLastStateChange()
+print(result)
 
-from org.openhab.core import OpenHAB
+location = Registry.getItem("pGF_Kitchen_Light_Ceiling_Brightness").getSemantic().getLocation()
+print(str(location))
 
-logger.info(java.type("org.openhab.core.OpenHAB").getVersion())
-logger.info(OpenHAB.getVersion())
+endDate = datetime.now()
+startDate = endDate - timedelta(days=2)
 
-logger.info(str(globals().keys()))
+print(startDate)
+
+data = Registry.getItem("pGF_Livingroom_Air_Sensor_Temperature_Value").getPersistence().getAllStatesBetween(startDate, endDate)
+print(str(data[0].getTimestamp()))
+
+data = Registry.getItem("pGF_Livingroom_Air_Sensor_Temperature_Value").getPersistence().getAllStatesBetween(startDate.astimezone(), endDate.astimezone())
+print(str(data[0].getTimestamp()))
+#members = Registry.getItem("gIndoor_Lights").getAllMembers()
+#for member in members:
+#    print(str(member))
+
 
 
 

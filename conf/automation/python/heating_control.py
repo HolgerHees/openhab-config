@@ -384,7 +384,7 @@ maintenanceMode = {}
 class ErrorMessage:
     def execute(self, module, input):
         if input['event'].getType() != "TimerEvent":
-            if ToolboxHelper.getLastUpdate("pGF_Utilityroom_Heating_Common_Fault") < datetime.now().astimezone() - timedelta(minutes=10):
+            if Registry.getItem("pGF_Utilityroom_Heating_Common_Fault").getLastStateUpdate() < datetime.now().astimezone() - timedelta(minutes=10):
                 Registry.getItem("eOther_Error_Heating_Message").postUpdateIfDifferent("Keine Updates mehr seit mehr als 10 Minuten")
                 return
         elif Registry.getItemState("pGF_Utilityroom_Heating_Common_Fault").intValue() > 0:
@@ -407,7 +407,7 @@ class Ventile:
             circuiteItem = Heating.getHeatingCircuitItemName(room)
             maintainanceModeActive = room in maintenanceMode
 
-            if maintainanceModeActive or ToolboxHelper.getLastChange(circuiteItem) < now - timedelta(hours=24):
+            if maintainanceModeActive or Registry.getItem(circuiteItem).getLastStateChange() < now - timedelta(hours=24):
                 hour = now.hour
                 if hour == 2 or Registry.getItemState(circuiteItem) == scope.OFF:
                     Registry.getItem(circuiteItem).postUpdateIfDifferent(scope.ON)
@@ -425,6 +425,7 @@ class Ventile:
                     del maintenanceMode[room]
                 elif not maintainanceModeActive:
                     maintenanceMode[room] = True
+
 
 @rule(
     triggers = [
@@ -449,7 +450,7 @@ class Main:
         now = datetime.now().astimezone()
         auto_mode_enabled = Registry.getItemState("pGF_Utilityroom_Heating_Auto_Mode").intValue() == 1
 
-        current_operating_mode_change = ToolboxHelper.getLastChange("pGF_Utilityroom_Heating_Operating_Mode")
+        current_operating_mode_change = Registry.getItem("pGF_Utilityroom_Heating_Operating_Mode").getLastStateChange()
         current_operating_mode = Registry.getItemState("pGF_Utilityroom_Heating_Operating_Mode").intValue()
 
         current_heating_demand = Registry.getItemState("pGF_Utilityroom_Heating_Demand")
@@ -547,7 +548,7 @@ class Main:
                         if Registry.getItem(circuit_item).sendCommandIfDifferent(scope.ON):
                             circuit_last_change = now
                         else:
-                            circuit_last_change = ToolboxHelper.getLastChange(circuit_item)
+                            circuit_last_change = Registry.getItem(circuit_item).getLastStateChange()
 
                         if last_circuit_opened_at == None or last_circuit_opened_at < circuit_last_change:
                             last_circuit_opened_at = circuit_last_change
@@ -577,7 +578,7 @@ class Main:
                 Registry.getItem("pGF_Utilityroom_Heating_Demand").postUpdateIfDifferent(heating_demand)
 
                 endMsg = u" • {} min. to go".format(Heating.visualizeHeatingDemandTime(longest_runetime)) if longest_runetime > 0 else u""
-                last_heating_demand_change = ToolboxHelper.getLastUpdate("pGF_Utilityroom_Heating_Demand") # can be "getLastUpdate" datetime, because it is changed only from heating rule
+                last_heating_demand_change = Registry.getItem("pGF_Utilityroom_Heating_Demand").getLastStateUpdate() # can be "getLastStateUpdate" datetime, because it is changed only from heating rule
                 last_change_before_in_minutes = int((now - last_heating_demand_change).total_seconds() / 60)
                 last_heating_change_formatted = last_heating_demand_change.strftime("%H:%M")
                 last_change_before_formatted = last_change_before_in_minutes if last_change_before_in_minutes < 60 else '{:02d}:{:02d}'.format(*divmod(last_change_before_in_minutes, 60));
@@ -694,11 +695,11 @@ class Main:
                     )
 
                     if radiationTooLow or roomTemperatureTooCold or itsGettingColderAndRoomIsNotWarmEnoughForIt:
-                        if ToolboxHelper.getLastUpdate(transition.getSunProtectionItem()) < now - timedelta(minutes=60):
+                        if Registry.getItem(transition.getSunProtectionItem()).getLastStateUpdate() < now - timedelta(minutes=60):
                             Registry.getItem(transition.getSunProtectionItem()).postUpdate(scope.OFF)
                             self.logger.info(u"DEBUG: SP switching OFF • {} {} {} {}".format(room.getName(),effective_radiation_short_term,effective_radiation_long_term,effective_radiation_max))
                         else:
-                            self.logger.warn(u"DEBUG: SP skipped OFF • {} {} {} {}".format(room.getName(),effective_radiation_short_term,effective_radiation_long_term,effective_radiation_max))
+                            self.logger.info(u"DEBUG: SP skipped OFF • {} {} {} {}".format(room.getName(),effective_radiation_short_term,effective_radiation_long_term,effective_radiation_max))
                 else:
                     #self.logger.info(u"{} {}".format(room.getName(),effective_radiation_short_term))
                     #self.logger.info(u"{} {}".format(radiation_too_high,room_temperature_too_warm))
@@ -707,11 +708,11 @@ class Main:
 
                     tooWarm = self.isTooWarm(effective_radiation_short_term, current_outdoor_temperature, current_outdoor_temperature4, current_room_temperature, target_room_temperature )
                     if tooWarm:
-                        if ToolboxHelper.getLastUpdate(transition.getSunProtectionItem()) < now - timedelta(minutes=30):
+                        if Registry.getItem(transition.getSunProtectionItem()).getLastStateUpdate() < now - timedelta(minutes=30):
                             Registry.getItem(transition.getSunProtectionItem()).postUpdate(scope.ON)
                             self.logger.info(u"DEBUG: SP switching ON • {} {} {} {}".format(room.getName(),effective_radiation_short_term,effective_radiation_long_term,effective_radiation_max))
                         else:
-                            self.logger.warn(u"DEBUG: SP skipped ON • {} {} {} {}".format(room.getName(),effective_radiation_short_term,effective_radiation_long_term,effective_radiation_max))
+                            self.logger.info(u"DEBUG: SP skipped ON • {} {} {} {}".format(room.getName(),effective_radiation_short_term,effective_radiation_long_term,effective_radiation_max))
 
     def isTooWarm( self, effective_radiation_short_term, current_outdoor_temperature, current_outdoor_temperature4, current_room_temperature, target_room_temperature ):
         if current_outdoor_temperature <= 18 and current_outdoor_temperature4 <= 18:
@@ -756,7 +757,7 @@ class Main:
         if current_operating_mode == 1:
             # Temperatur sollte seit XX min nicht OK sein und 'Nur WW' sollte mindestens XX min aktiv sein um 'flattern' zu vermeiden
             if is_heating_requested:
-                is_running_long_enough = ToolboxHelper.getLastChange("pGF_Utilityroom_Heating_Operating_Mode") < now - timedelta(minutes=Heating.MIN_ONLY_WW_TIME)
+                is_running_long_enough = Registry.getItem("pGF_Utilityroom_Heating_Operating_Mode").getLastStateChange() < now - timedelta(minutes=Heating.MIN_ONLY_WW_TIME)
 
                 if force_retry or is_running_long_enough:
                     self.active_heating_operating_mode = 2
@@ -780,7 +781,7 @@ class Main:
             #if Heating_Circuit_Pump_Speed.state > 0:
             # Temperatur sollte seit XX min OK sein und Brenner sollte entweder nicht laufen oder mindestens XX min am Stück gelaufen sein
             if not is_heating_requested:
-                is_running_long_enough = ToolboxHelper.getLastChange("pGF_Utilityroom_Heating_Operating_Mode") < now - timedelta(minutes=Heating.MIN_HEATING_TIME)
+                is_running_long_enough = Registry.getItem("pGF_Utilityroom_Heating_Operating_Mode").getLastStateChange() < now - timedelta(minutes=Heating.MIN_HEATING_TIME)
 
                 if current_power_state == 0 or force_retry or is_running_long_enough:
                     self.active_heating_operating_mode = 1
@@ -798,7 +799,7 @@ class Main:
 
                 # No burner starts since 10 minutes
                 waiting_time = now - timedelta(minutes=10)
-                if ToolboxHelper.getLastChange("pGF_Utilityroom_Heating_Power") < waiting_time and ToolboxHelper.getLastChange("pGF_Utilityroom_Heating_Operating_Mode") < waiting_time:
+                if Registry.getItem("pGF_Utilityroom_Heating_Power").getLastStateChange() < waiting_time and Registry.getItem("pGF_Utilityroom_Heating_Operating_Mode").getLastStateChange() < waiting_time:
                     force_reduced_msg = u" • No burner starts"
                 else:
                     burner_starts = self.getBurnerStarts(now, 5)
@@ -828,7 +829,7 @@ class Main:
                         else:
                             self.logger.info(u"Paused  : For unkown reason")
                 # reset reduced counter after 5 minutes of heating
-                elif self.active_reduced_time_in_minutes != -1 and ToolboxHelper.getLastChange("pGF_Utilityroom_Heating_Operating_Mode") < now - timedelta(minutes=5):
+                elif self.active_reduced_time_in_minutes != -1 and Registry.getItem("pGF_Utilityroom_Heating_Operating_Mode").getLastStateChange() < now - timedelta(minutes=5):
                     self.active_reduced_time_in_minutes = -1
 
         # Reduziert
@@ -843,7 +844,7 @@ class Main:
                 target_reduced_time_in_minutes = self.active_reduced_time_in_minutes if self.active_reduced_time_in_minutes != -1 else Heating.MIN_REDUCED_TIME
                 #self.logger.info("{}".format(self.active_reduced_time_in_minutes))
                 #self.logger.info("{}".format(target_reduced_time_in_minutes))
-                if force_retry or ToolboxHelper.getLastChange("pGF_Utilityroom_Heating_Operating_Mode") < now - timedelta(minutes=target_reduced_time_in_minutes):
+                if force_retry or Registry.getItem("pGF_Utilityroom_Heating_Operating_Mode").getLastStateChange() < now - timedelta(minutes=target_reduced_time_in_minutes):
                     self.active_heating_operating_mode = 2
                     Registry.getItem("pGF_Utilityroom_Heating_Operating_Mode").sendCommand(self.active_heating_operating_mode)
                 elif not force_retry:

@@ -26,7 +26,7 @@ class Message:
             #self.logger.info("{}".format(runtime))
 
             if runtime != scope.NULL and runtime != scope.UNDEF and runtime.intValue() > 0 and operation.toString() in ['Paused','Delayed','Run']:
-                runtime = Transformation.transform("PY3", "homeconnect_runtime.py", "{}".format(runtime.intValue()) )
+                runtime = Transformation.transform("PY", "homeconnect_runtime.py", "{}".format(runtime.intValue()) )
                 msg = "{}, {}".format(msg,runtime)
 
             Registry.getItem("pGF_Kitchen_Dishwasher_Message").postUpdateIfDifferent(msg)

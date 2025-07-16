@@ -1,8 +1,6 @@
 from openhab import rule, Registry
 from openhab.triggers import ItemCommandTrigger, ItemStateChangeTrigger, ThingStatusChangeTrigger, SystemStartlevelTrigger, GenericCronTrigger
 
-from shared.toolbox import ToolboxHelper
-
 from custom.presence import PresenceHelper
 
 from datetime import datetime, timedelta
@@ -163,7 +161,7 @@ class Level:
             if presenceState in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
                 maxLevel = MAX_SLEEPING_LEVEL
             # Away since 60 minutes
-            elif presenceState == [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT] and ToolboxHelper.getLastChange("pOther_Presence_State") < ( datetime.now().astimezone() - timedelta(minutes=60) ):
+            elif presenceState == [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT] and Registry.getItem("pOther_Presence_State").getLastStateChange() < ( datetime.now().astimezone() - timedelta(minutes=60) ):
                 maxLevel = MAX_AWAY_LEVEL
             else:
                 maxLevel = MAX_PRESENT_LEVEL
@@ -197,7 +195,7 @@ class Level:
                 # 1. input['event'].getType() != "TimerEvent" is an presence or auto mode change
                 # 2. is cron triggered event
                 # => .getLastChange check to prevent level flapping on humidity changes
-                if input['event'].getType() != "TimerEvent" or ToolboxHelper.getLastChange("{}_Humidifier_Speed".format(humidifier_location)) < ( datetime.now().astimezone() - timedelta(minutes=15) ):
+                if input['event'].getType() != "TimerEvent" or Registry.getItem("{}_Humidifier_Speed".format(humidifier_location)).getLastStateChange() < ( datetime.now().astimezone() - timedelta(minutes=15) ):
                     self.autoChangeInProgress[humidifier_location] = True
 
                     Registry.getItem("{}_Humidifier_Speed".format(humidifier_location)).sendCommand("level_{}".format(newLevel))

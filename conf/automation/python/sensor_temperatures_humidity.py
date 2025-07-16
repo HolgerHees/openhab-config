@@ -21,6 +21,7 @@ info_config = [
     ["pToolshed_Sensor_Message", "pToolshed_Sensor_Temperature_Value", "pToolshed_Sensor_Humidity_Value", None, None]
 ]
 
+
 @rule()
 class Main:
     def __init__(self):

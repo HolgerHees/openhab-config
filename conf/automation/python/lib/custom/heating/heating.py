@@ -175,7 +175,7 @@ class Heating():
     def cachedItemLastChangeOlderThen(self, item_name, minutes):
         key = u"update-{}-{}".format(item_name,minutes)
         if key not in self.cache:
-            self.cache[key] = ToolboxHelper.getLastChange(item_name) < self.now - timedelta(minutes=minutes)
+            self.cache[key] = Registry.getItem(item_name).getLastStateChange() < self.now - timedelta(minutes=minutes)
         return self.cache[key]
 
     def getVentilationEnergy(self, temp_diff_offset):
@@ -644,7 +644,7 @@ class Heating():
                 if self.getCachedItemState(transition.getContactItem()) == Java_OpenClosedType.OPEN:
                     # *** register open window if it is open long enough
                     if transition.getContactItem() not in Heating._open_window_contacts:
-                        open_since = ToolboxHelper.getLastChange(transition.getContactItem())
+                        open_since = Registry.getItem(transition.getContactItem()).getLastStateChange()
                         open_duration_in_seconds = (open_since - self.now).total_seconds()
                         if open_duration_in_seconds > Heating.OPEN_WINDOW_START_DURATION * 60:
                             Heating._open_window_contacts[transition.getContactItem()] = open_since
@@ -655,7 +655,7 @@ class Heating():
                 # *** if the window was open
                 elif transition.getContactItem() in Heating._open_window_contacts:
                     # *** check if it is closed long enough to unregister it
-                    closed_since = ToolboxHelper.getLastChange(transition.getContactItem())
+                    closed_since = Registry.getItem(transition.getContactItem()).getLastStateChange()
                     closed_duration_in_seconds = (closed_since - self.now).total_seconds()
                     open_duration_in_seconds = (Heating._open_window_contacts[transition.getContactItem()] - closed_since).total_seconds()
                     ending_treshold = open_duration_in_seconds * 2.0
@@ -937,7 +937,7 @@ class Heating():
                 
     def calculate(self, is_heating_active, sun_radiation):
         # handle outdated ventilation values
-        if ToolboxHelper.getLastUpdate(self.ventilation_filter_runtime_item_name) < self.now - timedelta(minutes=120):
+        if Registry.getItem(self.ventilation_filter_runtime_item_name).getLastStateUpdate() < self.now - timedelta(minutes=120):
             self.cache[self.ventilation_level_item_name] = Java_DecimalType(3)
             self.cache[self.ventilation_outgoing_temperature_item_name] = Java_DecimalType(0.0)
             self.cache[self.ventilation_incomming_temperature_item_name] = Java_DecimalType(0.0)
@@ -946,7 +946,7 @@ class Heating():
             self.getCachedItemState(self.ventilation_level_item_name)
 
         # handle outdated forecast values
-        if ToolboxHelper.getLastUpdate(self.temperature_garden_fc4_item_name) < self.now - timedelta(minutes=360):
+        if Registry.getItem(self.temperature_garden_fc4_item_name).getLastStateUpdate() < self.now - timedelta(minutes=360):
             self.cache[self.temperature_garden_fc4_item_name] = self.getCachedItemState(self.temperatureGardenItemName)
             self.cache[self.temperature_garden_fc8_item_name] = self.getCachedItemState(self.temperatureGardenItemName)
             self.cache[self.cloud_cover_fc4_item_name] = Java_DecimalType(9)
@@ -993,7 +993,7 @@ class Heating():
 
             # *** HEATING STATE ***
 
-            last_heating_change = ToolboxHelper.getLastUpdate(Heating.getHeatingDemandItemName(room)) # can be "getLastUpdate" datetime, because it is changed only from heating rule
+            last_heating_change = Registry.getItem(Heating.getHeatingDemandItemName(room)).getLastStateUpdate() # can be "getLastUpdate" datetime, because it is changed only from heating rule
 
             rhs = None
             # *** CLEAN OR RESTORE FORCED HEATING ***

@@ -1,8 +1,6 @@
 from openhab import rule, Registry, Timer
 from openhab.triggers import ItemStateChangeTrigger, GroupStateChangeTrigger
 
-from shared.toolbox import ToolboxHelper
-
 from custom.presence import PresenceHelper
 from custom.sunprotection import SunProtectionHelper
 from custom.flags import FlagHelper
@@ -168,7 +166,7 @@ class Sunprotection:
                     continue
                 
                 # skip closing shutters if we must be away but we are still present or not long enough away
-                if "sunprotectionOnlyIfAway" in config and (Registry.getItemState("pOther_Presence_State").intValue() != PresenceHelper.STATE_AWAY or ToolboxHelper.getLastChange("pOther_Presence_State") > datetime.now().astimezone() - timedelta(seconds=1800)):
+                if "sunprotectionOnlyIfAway" in config and (Registry.getItemState("pOther_Presence_State").intValue() != PresenceHelper.STATE_AWAY or Registry.getItem("pOther_Presence_State").getLastStateChange() > datetime.now().astimezone() - timedelta(seconds=1800)):
                     continue
           
             Registry.getItem(config["shutter"]).sendCommandIfDifferent(state)
@@ -191,7 +189,7 @@ class TerraceAutoSunprotection:
             if (
                  Registry.getItemState("pOther_Presence_State").intValue() not in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]
                  or
-                 ToolboxHelper.getLastChange("pOther_Presence_State") > datetime.now.astimezone() - timedelta(minutes=120)
+                 Registry.getItem("pOther_Presence_State").getLastStateChange() > datetime.now().astimezone() - timedelta(minutes=120)
                  or
                  Registry.getItemState("pGF_Livingroom_Openingcontact_Window_Terrace_State") == scope.OPEN
                ):

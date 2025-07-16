@@ -11,7 +11,7 @@ import scope
 
      # Water usage,  Runtime usage,   Item [2]
 circuits = [
-    { "usage": 1.0,  "duration": 0.6, "sensor": "Outdoor_Plant_Sensor_Lawn_Streedside", "item": 'pOutdoor_Streetside_Lawn_Watering',    "name": "Rasen vorne" },
+    { "usage": 1.0,  "duration": 1.0, "sensor": "Outdoor_Plant_Sensor_Lawn_Streedside", "item": 'pOutdoor_Streetside_Lawn_Watering',    "name": "Rasen vorne" },
     { "usage": 0.33, "duration": 0.5, "sensor": "Outdoor_Plant_Sensor_Hedge_Street",    "item": 'pOutdoor_Streetside_Beds_Watering',    "name": "Beete vorne" },
     { "usage": 0.33, "duration": 0.5, "sensor": "Outdoor_Plant_Sensor_Terrace",         "item": 'pOutdoor_Terrace_Watering',            "name": "Terassenbeete" },
     { "usage": 0.33, "duration": 0.5, "sensor": "Outdoor_Plant_Sensor_Blackberries",    "item": 'pOutdoor_Garden_Back_Watering',        "name": "Brombeeren" },
@@ -139,7 +139,7 @@ class Control():
             # restore circuites states
             if len(active_items) > 0:
                 for step in stack:
-                    lastChange = Registry.getItemLastChange(step["items"][0] + "_Powered")
+                    lastChange = Registry.getItem(step["items"][0] + "_Powered").getLastStateChange()
                     step["started"] = lastChange
                     if set(step["items"]) != set(active_items):
                         step["finished"] = lastChange
@@ -224,7 +224,7 @@ class Control():
 
         total_duration = input['event'].getItemState().intValue() if input is not None and input['event'].getItemName() == "pOutdoor_Watering_Logic_Runtime" else Registry.getItemState("pOutdoor_Watering_Logic_Runtime").intValue()
 
-        now = datetime-now().astimezone()
+        now = datetime.now().astimezone()
         if active_program == WateringHelper.STATE_CONTROL_START_MORNING:
             next_start = now.replace(hour=8,minute=0,second=0)
         elif active_program == WateringHelper.STATE_CONTROL_START_EVENING:
@@ -235,7 +235,7 @@ class Control():
         while next_start < now:
             next_start = next_start + timedelta(hours=24)
 
-        time_span = (now - next_start).total_seconds() if next_start > now else 0
+        time_span = (next_start - now).total_seconds()
 
         self.program_timer = Timer.createTimeout(time_span, self.triggerProgramStart)
         self.program_timer_start = next_start
@@ -246,9 +246,9 @@ class Control():
         diff = self.program_timer_start.timetuple().tm_yday - datetime.now().astimezone().timetuple().tm_yday
         if diff <= 1:
             offset = "Heute" if diff == 0 else "Morgen"
-            msg = "{}, {}".format(offset, self.program_timer_start.strftime("HH:mm"))
+            msg = "{}, {}".format(offset, self.program_timer_start.strftime("%H:%M"))
         else:
-            msg = "Startet {}".format(self.program_timer_start.strftime("dd.MM - HH:mm"))
+            msg = "Startet {}".format(self.program_timer_start.strftime("%d.%m - %H:%M"))
         Registry.getItem("pOutdoor_Watering_Logic_Program_State").postUpdate(msg)
 
     def triggerProgramStart(self):
