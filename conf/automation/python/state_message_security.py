@@ -1,20 +1,24 @@
 from openhab import rule, Registry
-from openhab.triggers import ItemStateChangeTrigger, GroupStateChangeTrigger
+from openhab.triggers import ItemStateChangeTrigger
 
 from shared.toolbox import ToolboxHelper
 
 import scope
 
 
-@rule(
-    triggers = [
-        GroupStateChangeTrigger("gGF_Sensor_Doors"),
-        GroupStateChangeTrigger("gGF_Sensor_Window"),
-        GroupStateChangeTrigger("gFF_Sensor_Window"),
-        ItemStateChangeTrigger("pToolshed_Openingcontact_Door_State")
-    ]
-)
+@rule
 class Main:
+    def buildTriggers(self):
+        triggers = []
+        for item in Registry.getItem("gGF_Sensor_Doors").getAllMembers():
+            triggers.append(ItemStateChangeTrigger(item.getName()))
+        for item in Registry.getItem("gGF_Sensor_Window").getAllMembers():
+            triggers.append(ItemStateChangeTrigger(item.getName()))
+        for item in Registry.getItem("gFF_Sensor_Window").getAllMembers():
+            triggers.append(ItemStateChangeTrigger(item.getName()))
+        triggers.append(ItemStateChangeTrigger("pToolshed_Openingcontact_Door_State"))
+        return triggers
+
     def execute(self, module, input):
         active = []
 

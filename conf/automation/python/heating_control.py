@@ -373,7 +373,6 @@ controllableRooms = {
   'lFF_Bedroom': True,
   'lFF_Bathroom': True
 }
-maintenanceMode = {}
 
 @rule(
     triggers = [
@@ -395,37 +394,35 @@ class ErrorMessage:
 
 @rule(
     triggers = [
+        #GenericCronTrigger("*/15 * * * * ?"),
         GenericCronTrigger("0 */10 1 ? * MON,FRI"),
         GenericCronTrigger("0 0 2 ? * MON,FRI")
     ]
 )
 class Ventile:
+    maintenanceMode = {}
+
     # refresh heating ventile twice per week
     def execute(self, module, input):
+        # **** DEBUG ****
+        #for room in filter( lambda room: room.getHeatingVolume() != None and room.getName() in controllableRooms,Heating.getRooms()):
+        #    circuiteItem = Heating.getHeatingCircuitItemName(room)
+        #    self.logger.info(circuiteItem + " " + str(Registry.getItem(circuiteItem).getLastStateChange()))
+        # **** DEBUG ****
+
         now = datetime.now().astimezone()
         for room in filter( lambda room: room.getHeatingVolume() != None and room.getName() in controllableRooms,Heating.getRooms()):
             circuiteItem = Heating.getHeatingCircuitItemName(room)
-            maintainanceModeActive = room in maintenanceMode
-
-            if maintainanceModeActive or Registry.getItem(circuiteItem).getLastStateChange() < now - timedelta(hours=24):
-                hour = now.hour
-                if hour == 2 or Registry.getItemState(circuiteItem) == scope.OFF:
-                    Registry.getItem(circuiteItem).postUpdateIfDifferent(scope.ON)
-                else:
-                    Registry.getItem(circuiteItem).postUpdateIfDifferent(scope.OFF)
-
-                if room.hasAdditionalRadiator():
-                    hkItem = Heating.getHeatingHKItemName(room)
-                    if hour == 2 or Registry.getItemState(hkItem) == scope.OFF:
-                        Registry.getItem(hkItem).sendCommandIfDifferent(scope.ON)
-                    else:
-                        Registry.getItem(hkItem).sendCommandIfDifferent(scope.OFF)
-
-                if hour == 2:
-                    del maintenanceMode[room]
-                elif not maintainanceModeActive:
-                    maintenanceMode[room] = True
-
+            if now.hour == 2:
+                if room not in Ventile.maintenanceMode:
+                    continue
+                #self.logger.info("STOP " + room.getName() + " " + str(scope.ON if Registry.getItemState(circuiteItem) == scope.OFF else scope.OFF))
+                Registry.getItem(circuiteItem).sendCommand(scope.ON if Registry.getItemState(circuiteItem) == scope.OFF else scope.OFF)
+                del Ventile.maintenanceMode[room]
+            elif Registry.getItem(circuiteItem).getLastStateChange() < now - timedelta(hours=24):
+                #self.logger.info("START " + room.getName() + " " + str(scope.ON if Registry.getItemState(circuiteItem) == scope.OFF else scope.OFF))
+                Registry.getItem(circuiteItem).sendCommand(scope.ON if Registry.getItemState(circuiteItem) == scope.OFF else scope.OFF)
+                Ventile.maintenanceMode[room] = True
 
 @rule(
     triggers = [
@@ -541,7 +538,7 @@ class Main:
                     Registry.getItem(Heating.getHeatingDemandItemName(room)).postUpdateIfDifferent(scope.OFF)
 
                 # *** CONTROL CIRCUITS AND HK ***
-                if room.getName() in controllableRooms and room not in maintenanceMode:
+                if room.getName() in controllableRooms and room not in Ventile.maintenanceMode:
                     circuit_item = Heating.getHeatingCircuitItemName(room)
                     if heating_requested and ( rhs.getHeatingDemandTime() > 0 or forced_open_circuit_on_start ):
                         #self.logger.info("ON")

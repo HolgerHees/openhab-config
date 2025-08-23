@@ -3,3 +3,7 @@ Thing shelly:shellyplugs:socket2 "Steckdose Frostwächter" [deviceIp="{{custom_s
 Thing shelly:shellyplusplug:socket3 "Steckdose Dachboden" [deviceIp="{{custom_shelly_socket_3_ip}}"]
 Thing shelly:shellyplusplug:socket4 "Steckdose Wetterstation" [deviceIp="{{custom_shelly_socket_4_ip}}"]
 Thing shelly:shellyplusplug:socket5 "Steckdose Server" [deviceIp="{{custom_shelly_socket_5_ip}}"]
+Thing shelly:shellyplusplug:socket6 "Steckdose Mobile 3" [deviceIp="{{custom_shelly_socket_6_ip}}"]
+Thing shelly:shellyplusplug:socket7 "Steckdose Mobile 4" [deviceIp="{{custom_shelly_socket_7_ip}}"]
+Thing shelly:shellyplusplug:socket8 "Steckdose Mobile 1" [deviceIp="{{custom_shelly_socket_8_ip}}"]
+Thing shelly:shellyplusplug:socket9 "Steckdose Mobile 2" [deviceIp="{{custom_shelly_socket_9_ip}}"]

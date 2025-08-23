@@ -1,7 +1,8 @@
-from openhab import rule, logger, Registry, Timer
-from openhab.triggers import ItemCommandTrigger, ItemStateChangeTrigger, GroupStateChangeTrigger, ThingStatusChangeTrigger, GenericCronTrigger, SystemStartlevelTrigger
+from openhab import rule, logger, Registry
+from openhab.triggers import ItemCommandTrigger, ItemStateChangeTrigger, ThingStatusChangeTrigger, GenericCronTrigger, SystemStartlevelTrigger
 
 from shared.toolbox import ToolboxHelper
+from shared.timer import Timer
 
 from custom.presence import PresenceHelper
 from custom.weather import WeatherHelper
@@ -288,15 +289,17 @@ class FanLevel:
                 Registry.getItem("pGF_Utilityroom_Ventilation_Fan_Level").sendCommand(new_level)
                 self.active_level = new_level
 
-@rule(
-    triggers = [
-        GroupStateChangeTrigger("eOther_Target_Temperatures")
-    ]
-)
+@rule
 class ComfortTemperature:
+    def buildTriggers(self):
+        triggers = []
+        for item in Registry.getItem("eOther_Target_Temperatures").getAllMembers():
+            triggers.append(ItemStateChangeTrigger(item.getName()))
+        return triggers
+
     def execute(self, module, input):
         max_temperature = 0.0
-        for item in Registry.getItem("eOther_Target_Temperatures").getAllGroupMembers():
+        for item in Registry.getItem("eOther_Target_Temperatures").getAllMembers():
             temperature = item.getState().floatValue()
             if temperature > max_temperature:
                 max_temperature = temperature

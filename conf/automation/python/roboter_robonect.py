@@ -74,9 +74,9 @@ class Timer:
             msg = "{}{}".format( msg, Transformation.transform("MAP", "robonect_timer_status.map", timerStatus) )
         else:
             if Registry.getItem("pOutdoor_Mower_NextTimer").getLastStateUpdate() > datetime.now().astimezone() + timedelta(hours=24 * 4):
-                msg = "{}Starte am {}".format(msg, Registry.getItemState("pOutdoor_Mower_NextTimer").strftime("%d.%m %H:%M"))
+                msg = "{}Starte am {}".format(msg, Registry.getItemState("pOutdoor_Mower_NextTimer").getZonedDateTime().strftime("%d.%m %H:%M"))
             else:
-                msg = "{}Starte {}".format(msg, Registry.getItemState("pOutdoor_Mower_NextTimer").strftime("%A %H:%M"))
+                msg = "{}Starte {}".format(msg, Registry.getItemState("pOutdoor_Mower_NextTimer").getZonedDateTime().strftime("%A %H:%M"))
 
         Registry.getItem("pOutdoor_Mower_TimerStatusFormatted").postUpdateIfDifferent(msg)
 

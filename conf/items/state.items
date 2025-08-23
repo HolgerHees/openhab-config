@@ -1,7 +1,7 @@
 // **** PRESENCE ****
 Group  eOther_Presence                          "Präsenz"         <selfinfo> (lOther) ["Sensor"]
 
-Number pOther_Presence_State                    "Präsenz"         <selfinfo> (eOther_Presence,gPersistance_History) ["Status"]
+Number pOther_Presence_State                    "Präsenz"         <selfinfo> (eOther_Presence) ["Status"]
 Number pOther_Presence_Arrive_State             "Ankunft"         <selfinfo> (eOther_Presence) ["Status"]
 
 Group:Switch:OR(ON, OFF) gOther_Presence_State_Raw "Präsenz"      <selflight>
@@ -9,8 +9,8 @@ Switch pOther_Presence_Holger_State_Raw         "Holger anwesend (RAW)" <selfinf
 Switch pOther_Presence_Sandra_State_Raw         "Sandra anwesend (RAW)" <selfinfo> (gOther_Presence_State_Raw) { channel="mqtt:topic:mosquitto:system_service:phone_sandra", expire="20m,state=OFF" }
 
 Group:Switch:OR(ON, OFF) gOther_Presence_State  "Präsenz"         <selflight>
-Switch pOther_Presence_Holger_State             "Holger anwesend" <selfinfo> (eOther_Presence,gOther_Presence_State,gPersistance_History) ["Status","Presence"]
-Switch pOther_Presence_Sandra_State             "Sandra anwesend" <selfinfo> (eOther_Presence,gOther_Presence_State,gPersistance_History) ["Status","Presence"]
+Switch pOther_Presence_Holger_State             "Holger anwesend" <selfinfo> (eOther_Presence,gOther_Presence_State) ["Status","Presence"]
+Switch pOther_Presence_Sandra_State             "Sandra anwesend" <selfinfo> (eOther_Presence,gOther_Presence_State) ["Status","Presence"]
 
 // **** GARDEN DOOR ****
 Group  eOutdoor_Streedside_Gardendoor           "Gartentür"       <selfinfo> (lOutdoor_Streedside) ["Gate"]

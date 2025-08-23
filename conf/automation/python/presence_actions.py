@@ -1,5 +1,5 @@
-from openhab import rule, Registry, Timer
-from openhab.triggers import ItemStateChangeTrigger, GroupStateChangeTrigger
+from openhab import rule, Registry
+from openhab.triggers import ItemStateChangeTrigger
 
 from shared.notification import NotificationHelper
 from shared.user import UserHelper
@@ -13,12 +13,9 @@ from custom.frigate import FrigateHelper
 
 from datetime import datetime, timedelta
 import time
+import threading
 
 import scope
-
-
-
-
 
 
 @rule(
@@ -67,14 +64,17 @@ class UnknownPerson:
             if old_presence_state == PresenceHelper.STATE_MAYBE_PRESENT:
                 # lastChange Date is comming from database which can be updated too late
                 # thats why I add a async task with a delay of 2 seconds here
-                self.timer = Timer.createTimeout( 2, self.checkArriving, args = [] )
+                self.timer = threading.Timer( 2, self.checkArriving )
+                self.timer.start()
 
-@rule(
-    triggers = [
-        GroupStateChangeTrigger("gOther_Presence_State")
-    ]
-)
+@rule
 class KnownPerson:
+    def buildTriggers(self):
+        triggers = []
+        for item in Registry.getItem("gOther_Presence_State").getAllMembers():
+            triggers.append(ItemStateChangeTrigger(item.getName()))
+        return triggers
+
     def execute(self, module, input):
         item_name = input['event'].getItemName()
         item_state = input['event'].getItemState()

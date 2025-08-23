@@ -1,4 +1,4 @@
-from openhab import rule, Registry, Timer
+from openhab import rule, Registry
 from openhab.actions import HTTP
 from openhab.triggers import ItemStateChangeTrigger, ItemCommandTrigger, SystemStartlevelTrigger
 
@@ -7,6 +7,7 @@ from custom.weather import WeatherHelper
 
 from configuration import customConfigs
 
+import threading
 import time
 import json
 
@@ -124,7 +125,7 @@ class TabletScreen:
             self.logger.info("Tablet: screen change in progress")
         else:
             self.logger.info("Tablet: try switching to {}".format(requested_action))
-            Timer.createTimeout(0, self._processScreenState, args=[requested_action])
+            threading.Timer(0, self._processScreenState, args=[requested_action]).start()
 
         self.screenStateRequested = requested_action
         return True
@@ -165,15 +166,16 @@ class TabletScreen:
             if screenBrightness > self.screenBrightnessRequested:
                 if screenBrightness != self.screenBrightnessActive:
                     self.screenBrightnessInProgress = True
-                    Timer.createTimeout(0, self._processScreenBrightness, args=[screenBrightness, "immediately", True])
+                    threading.Timer(0, self._processScreenBrightness, args=[screenBrightness, "immediately", True]).start()
 
             elif screenBrightness < self.screenBrightnessRequested:
                 # process already delayed brightness reduction
                 if self.screenBrightnessRequested < self.screenBrightnessActive:
-                    Timer.createTimeout(0, self._processScreenBrightness, args=[screenBrightness, "immediately", False])
+                    threading.Timer(0, self._processScreenBrightness, args=[screenBrightness, "immediately", False]).start()
 
                 if screenBrightness != self.screenBrightnessActive:
-                    self.screenBrightnessTimer = Timer.createTimeout(300,self._processScreenBrightness, args=[screenBrightness, "delayed", True])
+                    self.screenBrightnessTimer = threading.Timer(300,self._processScreenBrightness, args=[screenBrightness, "delayed", True])
+                    self.screenBrightnessTimer.start()
 
         self.screenBrightnessRequested = screenBrightness
 
@@ -190,7 +192,7 @@ class TabletScreen:
                     self.processScreenBrightness(self.getRequestedScreenBrightness())
             else:
                 self.logger.error("Tablet: Got empty result. Retrigger in 15 seconds.")
-                Timer.createTimeout(15, self.initDeviceStateAndBrightness)
+                threading.Timer(15, self.initDeviceStateAndBrightness).start()
         except Exception as e:
             self.logger.error("{}: {}".format(e.__class__, str(e)))
             self.logger.error("Tablet: Can't reach tablet")

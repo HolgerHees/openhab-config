@@ -1,5 +1,5 @@
 from openhab import rule, Registry
-from openhab.triggers import ItemStateChangeTrigger, GroupStateChangeTrigger
+from openhab.triggers import ItemStateChangeTrigger
 
 from shared.toolbox import ToolboxHelper
 from shared.notification import NotificationHelper
@@ -12,15 +12,18 @@ from datetime import datetime
 import scope
 
 
-@rule(
-    triggers = [
-        GroupStateChangeTrigger("gOpeningcontacts"),
-        GroupStateChangeTrigger("gSensor_Indoor")
-    ]
-)
+@rule
 class AwayAlerts:
     def __init__(self):
         self.last_notification = datetime.now().astimezone()
+
+    def buildTriggers(self):
+        triggers = []
+        for item in Registry.getItem("gOpeningcontacts").getAllMembers():
+            triggers.append(ItemStateChangeTrigger(item.getName()))
+        for item in Registry.getItem("gSensor_Indoor").getAllMembers():
+            triggers.append(ItemStateChangeTrigger(item.getName()))
+        return triggers
 
     def execute(self, module, input):
         if Registry.getItemState("pOther_Manual_State_Security_Notify") != scope.ON:
@@ -71,12 +74,14 @@ class AwayAlerts:
                 NotificationHelper.sendNotification(NotificationHelper.PRIORITY_ALERT, "Alarm", "{}".format(msg))
             self.last_notification = now
 
-@rule(
-    triggers = [
-        GroupStateChangeTrigger("gOpeningcontacts", state = scope.OPEN)
-    ]
-)
+@rule
 class SleepAlerts:
+    def buildTriggers(self):
+        triggers = []
+        for item in Registry.getItem("gOpeningcontacts").getAllMembers():
+            triggers.append(ItemStateChangeTrigger(item.getName(), state = scope.OPEN))
+        return triggers
+
     def execute(self, module, input):
         state = Registry.getItemState("pOther_Presence_State").intValue()
         if state != PresenceHelper.STATE_SLEEPING:

@@ -1,4 +1,4 @@
-from openhab import rule, Registry, Timer
+from openhab import rule, Registry
 from openhab.triggers import ItemStateChangeTrigger, ItemCommandTrigger
 
 from custom.weather import WeatherHelper
@@ -6,11 +6,12 @@ from custom.frigate import FrigateHelper
 
 from datetime import datetime, timedelta
 import time
+import threading
 
 import scope
 
 
-manual_mappings = [
+LIGHT_SETUP = [
     ["pOutdoor_Streedside_Frontdoor_Light_Powered", "pOutdoor_Streedside_Frontdoor_Automatic_Switch", [ "pOutdoor_Streedside_Frontdoor_Motiondetector_State" ] ],
     ["pOutdoor_Carport_Light_Powered"             , "pOutdoor_Carport_Automatic_Switch"             , [ "pOutdoor_Carport_Motiondetector_State" ] ],
     ["pOutdoor_Terrace_Light_Brightness"          , "pOutdoor_Terrace_Automatic_Switch"             , [ "pOutdoor_Terrace_Motiondetector_State1", "pOutdoor_Terrace_Motiondetector_State2" ] ],
@@ -19,9 +20,11 @@ manual_mappings = [
     ["pOutdoor_Toolshed_Right_Light_Powered"      , "pOutdoor_Toolshed_Right_Automatic_Switch"      , [ "pOutdoor_Toolshed_Right_Motiondetector_State" ] ]
 ]
 
-timer_durations = 60.0
-timer_mappings = {}
-rule_timeouts = {}
+TIMER_DURATIONS = 60.0
+
+class LightState:
+    timerMappings = {}
+    ruleTimeouts = {}
 
 @rule(
     triggers = [
@@ -49,23 +52,22 @@ class FrigateNotification:
 )
 class MotiondetectorSwitch:
     def execute(self, module, input):
-        global rule_timeouts
         now = datetime.now().astimezone()
-        last = rule_timeouts.get("Motiondetector_Outdoor_Main_Switch",now - timedelta(hours=1))
+        last = LightState.ruleTimeouts.get("Motiondetector_Outdoor_Main_Switch",now - timedelta(hours=1))
         
+        # No Motion Detector related events
         if (now - last).total_seconds() > 1:
             itemState = input["event"].getItemState()
             
             self.logger.info("MotiondetectorOutdoorSwitchRule => last: {}, now: {}, state: {}".format(last,now,itemState))
 
             if itemState == scope.ON:
-                rule_timeouts["Light_Outdoor"] = now
+                LightState.ruleTimeouts["Light_Outdoor"] = now
 
-            for mapping in manual_mappings:
+            for mapping in LIGHT_SETUP:
                 Registry.getItem(mapping[0]).sendCommandIfDifferent(scope.OFF if "Powered" in mapping[0] else 0)
 
-            #rule_timeouts["Motiondetector_Outdoor_Individual_Switches"] = now
-            for mapping in manual_mappings:
+            for mapping in LIGHT_SETUP:
                 Registry.getItem(mapping[1]).postUpdateIfDifferent(itemState)
 
 # Individual MotionDetector Switchs
@@ -73,24 +75,21 @@ class MotiondetectorSwitch:
 class MotiondetectorIndividualSwitch:
     def buildTriggers(self):
         triggers = []
-        for mapping in manual_mappings:
+        for mapping in LIGHT_SETUP:
             triggers.append(ItemCommandTrigger(mapping[1]))
         return triggers
 
     def execute(self, module, input):
-        global rule_timeouts
         now = datetime.now().astimezone()
         
-        #last = rule_timeouts.get("Motiondetector_Outdoor_Individual_Switches",0)
-        #if now - last > 1000:
-        rule_timeouts["Motiondetector_Outdoor_Main_Switch"] = now
-        rule_timeouts["Light_Outdoor"] = now
+        LightState.ruleTimeouts["Motiondetector_Outdoor_Main_Switch"] = now
+        LightState.ruleTimeouts["Light_Outdoor"] = now
 
         item_name = input['event'].getItemName()
         item_command = input['event'].getItemCommand()
         
         switchState = scope.ON
-        for i, entry in enumerate(manual_mappings):
+        for i, entry in enumerate(LIGHT_SETUP):
             if entry[1] == item_name:
                 Registry.getItem(entry[0]).sendCommandIfDifferent(scope.OFF)
                 if item_command == scope.OFF:
@@ -101,47 +100,41 @@ class MotiondetectorIndividualSwitch:
                     
         # must be a command to inform physical knx switch
         Registry.getItem("pOutdoor_Light_Automatic_Main_Switch").sendCommandIfDifferent(switchState)
-
-        #self.logger.info("{} {} {} {} {} ".format(gs,f,c,t,gg))
         
 # Light Control Events
 @rule()
 class Control:
     def buildTriggers(self):
         triggers = []
-        for mapping in manual_mappings:
+        for mapping in LIGHT_SETUP:
             triggers.append(ItemStateChangeTrigger(mapping[0]))
         return triggers
 
     def execute(self, module, input):
-        #self.logger.info("{}".format(input))
-        
-        global rule_timeouts
         now = datetime.now().astimezone()
-        last = rule_timeouts.get("Light_Outdoor",now - timedelta(hours=1))
-        
+        last = LightState.ruleTimeouts.get("Light_Outdoor",now - timedelta(hours=1))
+
         # No Motion Detector related events
         if (now - last).total_seconds() > 1:
             item_name = input['event'].getItemName()
-            
+
             self.logger.info("LightOutdoorControlRule => Automatic_Switches => OFF, last: {}, now: {}".format(last,now))
-        
-            global timer_mappings
-            timer = timer_mappings.get(item_name)
+
+            timer = LightState.timerMappings.get(item_name)
             if timer is not None:
                 timer.cancel()
-            
-            for i, entry in enumerate(manual_mappings):
+                LightState.timerMappings[entry[0]] = None
+
+            for i, entry in enumerate(LIGHT_SETUP):
                 if entry[0] == item_name:
-                    #rule_timeouts["Motiondetector_Outdoor_Individual_Switches"] = now
+                    #LightState.ruleTimeouts["Motiondetector_Outdoor_Individual_Switches"] = now
 
                     # just an update to avoid triggering => MotiondetectorOutdoorIndividualSwitchRule
                     if Registry.getItem(entry[1]).postUpdateIfDifferent(scope.OFF):
-                        rule_timeouts["Motiondetector_Outdoor_Main_Switch"] = now
-                        
+                        LightState.ruleTimeouts["Motiondetector_Outdoor_Main_Switch"] = now
+
                         # must be a command to inform physical knx switch
                         Registry.getItem("pOutdoor_Light_Automatic_Main_Switch").sendCommandIfDifferent(scope.OFF)
-                    #self.logger.info("{} {}".format(item_name,now-last))
                     break
 
 # Motion Detector Events
@@ -150,40 +143,40 @@ class MotionDetector:
     def buildTriggers(self):
         triggers = []
         self.triggerMappings = {}
-        for i, entry in enumerate(manual_mappings):
+        for i, entry in enumerate(LIGHT_SETUP):
             for motionDetectorItem in entry[2]:
                 triggers.append(ItemStateChangeTrigger(motionDetectorItem,state=scope.OPEN))
                 self.triggerMappings[motionDetectorItem]=i
         return triggers
 
     def callback(self,entry):
-        global timer_mappings
         if Registry.getItemState(entry[1]) == scope.ON:
             for motionDetectorItem in entry[2]:
                 if Registry.getItemState(motionDetectorItem) == scope.OPEN:
-                    timer_mappings[entry[0]] = Timer.createTimeout(timer_durations, self.callback,[entry])
+                    LightState.timerMappings[entry[0]] = threading.Timer(TIMER_DURATIONS, self.callback, [entry])
+                    LightState.timerMappings[entry[0]].start()
                     return
 
-            global rule_timeouts
-            rule_timeouts["Light_Outdoor"] = datetime.now().astimezone()
+            LightState.ruleTimeouts["Light_Outdoor"] = datetime.now().astimezone()
 
-            self.logger.info("MotionDetector: callback for {} => {}".format(entry[0], rule_timeouts["Light_Outdoor"]));
+            self.logger.info("MotionDetector: callback for {} => {}".format(entry[0], LightState.ruleTimeouts["Light_Outdoor"]));
 
             Registry.getItem(entry[0]).sendCommand(0 if Registry.getItem(entry[0]).getType() == "Dimmer" else scope.OFF )
-            timer_mappings[entry[0]] = None
-        else:
-            timer_mappings[entry[0]] = None
+        LightState.timerMappings[entry[0]] = None
 
     def execute(self, module, input):
         item_name = input['event'].getItemName()
-        
-        entry = manual_mappings[self.triggerMappings[item_name]]
+
+        entry = LIGHT_SETUP[self.triggerMappings[item_name]]
         if Registry.getItemState("pOther_Automatic_State_Outdoorlights") == scope.ON and Registry.getItemState(entry[1]) == scope.ON:
-            timer_mappings[entry[0]] = Timer.createTimeout(timer_durations, self.callback, [entry], old_timer = timer_mappings.get(entry[0]) )
+            timer = LightState.timerMappings.get(item_name)
+            if timer is not None:
+                timer.cancel()
+            LightState.timerMappings[entry[0]] = threading.Timer(TIMER_DURATIONS, self.callback, [entry])
+            LightState.timerMappings[entry[0]].start()
 
-            global rule_timeouts
-            rule_timeouts["Light_Outdoor"] = datetime.now().astimezone()
+            LightState.ruleTimeouts["Light_Outdoor"] = datetime.now().astimezone()
 
-            self.logger.info("MotionDetector: execute for {} => {}".format(entry[0], rule_timeouts["Light_Outdoor"]));
+            self.logger.info("MotionDetector: execute for {} => {}".format(entry[0], LightState.ruleTimeouts["Light_Outdoor"]));
 
             Registry.getItem(entry[0]).sendCommand(100 if Registry.getItem(entry[0]).getType() == "Dimmer" else scope.ON)

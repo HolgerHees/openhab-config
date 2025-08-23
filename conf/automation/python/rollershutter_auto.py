@@ -1,5 +1,5 @@
-from openhab import rule, Registry, Timer
-from openhab.triggers import ItemStateChangeTrigger, GroupStateChangeTrigger
+from openhab import rule, Registry
+from openhab.triggers import ItemStateChangeTrigger
 
 from custom.presence import PresenceHelper
 from custom.sunprotection import SunProtectionHelper
@@ -7,6 +7,7 @@ from custom.flags import FlagHelper
 
 from datetime import datetime, timedelta
 import math
+import threading
 
 import scope
 
@@ -61,13 +62,16 @@ class MorningEvening:
             if Registry.getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_AWAY:
                 Registry.getItem("gShutters").sendCommand(scope.UP)
 
-@rule(
-    triggers = [
-        GroupStateChangeTrigger("gGF_Sensor_Window"),
-        GroupStateChangeTrigger("gFF_Sensor_Window")
-    ]
-)
+@rule
 class WindowContact:
+    def buildTriggers(self):
+        triggers = []
+        for item in Registry.getItem("gGF_Sensor_Window").getAllMembers():
+            triggers.append(ItemStateChangeTrigger(item.getName()))
+        for item in Registry.getItem("gFF_Sensor_Window").getAllMembers():
+            triggers.append(ItemStateChangeTrigger(item.getName()))
+        return triggers
+
     def execute(self, module, input):
         contact_item_name = input['event'].getItemName()
         if contact_item_name not in contact_map:
@@ -139,7 +143,8 @@ class Presence:
             return
     
         if input['event'].getItemState().intValue() == PresenceHelper.STATE_AWAY:
-            self.away_timer = Timer.createTimeout(1800, self.updateCallback, args = [ scope.DOWN ])
+            self.away_timer = threading.Timer(1800, self.updateCallback, args = [ scope.DOWN ])
+            self.away_timer.start()
         elif input['event'].getItemState().intValue() == PresenceHelper.STATE_PRESENT and input['event'].getOldItemState().intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:
             self.updateCallback(scope.UP)
 

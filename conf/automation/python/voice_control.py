@@ -38,6 +38,7 @@ class Main:
 
             #for action in actions:
             #    for item_action in action.item_actions:
+            #        print(str(item_action))
             #        self.logger.info("{} {}".format(item_action.item,item_action.cmd_value))
 
             msg, is_valid = self.processor.applyActions(actions,voice_command,False)

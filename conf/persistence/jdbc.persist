@@ -11,6 +11,4 @@ Strategies {
  */
 Items {
 	gPersistance_History* : strategy = everyChange
-	gGF_Sensor_Window* : strategy = everyChange
-	gFF_Sensor_Window* : strategy = everyChange
 }

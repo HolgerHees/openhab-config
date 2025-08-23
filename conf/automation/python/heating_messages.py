@@ -1,7 +1,8 @@
-from openhab import rule, Registry, Timer
+from openhab import rule, Registry
 from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger
 
 from shared.toolbox import ToolboxHelper
+from shared.timer import Timer
 
 from datetime import datetime
 

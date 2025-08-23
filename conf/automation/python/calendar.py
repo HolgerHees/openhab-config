@@ -34,15 +34,15 @@ class Notification:
         active = []
         now = datetime.now().astimezone()
 
-        begin = Registry.getItemState("pGF_Corridor_Garbage_Appointments_Begin_0")
+        begin = Registry.getItemState("pGF_Corridor_Garbage_Appointments_Begin_0").getZonedDateTime()
         if begin > now and begin < ( now + timedelta(hours=12) ):
             self.append(active,Registry.getItemState("pGF_Corridor_Garbage_Appointments_Info_0").toString().strip())
 
-        begin = Registry.getItemState("pGF_Corridor_Garbage_Appointments_Begin_1")
+        begin = Registry.getItemState("pGF_Corridor_Garbage_Appointments_Begin_1").getZonedDateTime()
         if begin > now and begin < ( now + timedelta(hours=12) ):
             self.append(active,Registry.getItemState("pGF_Corridor_Garbage_Appointments_Info_1").toString().strip())
 
-        begin = Registry.getItemState("pGF_Corridor_Garbage_Appointments_Begin_2")
+        begin = Registry.getItemState("pGF_Corridor_Garbage_Appointments_Begin_2").getZonedDateTime()
         if begin > now and begin < ( now + timedelta(hours=12) ):
             self.append(active,Registry.getItemState("pGF_Corridor_Garbage_Appointments_Info_2").toString().strip())
 

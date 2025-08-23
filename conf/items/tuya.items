@@ -13,7 +13,7 @@ Switch pGF_Livingroom_Humidifier_Filter_Reset                   "Filter Reset"  
 Switch pGF_Livingroom_Humidifier_Child_Lock                     "Kinder Sperre"                                 <selfinfo>      (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_eg:child_lock" }
 Number pGF_Livingroom_Humidifier_Runtime                        "Filter Laufzeit [%d%%]"                        <selfruntime>   (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_eg:filter_life" }
 String pGF_Livingroom_Humidifier_Lighting                       "Beleuchtung"                                   <selflight>     (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_eg:backlight_enum" }
-String pGF_Livingroom_Humidifier_Speed                          "Lüftergeschwindigkeit [MAP(tuya_humidifier_level.map):%s]"                    <selfairing>    (eGF_Livingroom_Humidifier,gPersistance_History) { channel="tuya:tuyaDevice:humidifier_eg:fan_speed_enum" }
+String pGF_Livingroom_Humidifier_Speed                          "Lüftergeschwindigkeit [MAP(tuya_humidifier_level.map):%s]" <selfairing> (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_eg:fan_speed_enum" }
 Number pGF_Livingroom_Humidifier_Replace_Filter                 "Filter Ersetzen"                               <selfinfo>      (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_eg:replace_filter" }
 
 
@@ -36,7 +36,7 @@ Switch pFF_Bedroom_Humidifier_Filter_Reset                   "Filter Reset"     
 Switch pFF_Bedroom_Humidifier_Child_Lock                     "Kinder Sperre"                                 <selfinfo>      (eFF_Bedroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_og:child_lock" }
 Number pFF_Bedroom_Humidifier_Runtime                        "Filter Laufzeit [%d%%]"                        <selfruntime>   (eFF_Bedroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_og:filter_life" }
 String pFF_Bedroom_Humidifier_Lighting                       "Beleuchtung"                                   <selflight>     (eFF_Bedroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_og:backlight_enum" }
-String pFF_Bedroom_Humidifier_Speed                          "Lüftergeschwindigkeit [MAP(tuya_humidifier_level.map):%s]"                    <selfairing>    (eFF_Bedroom_Humidifier,gPersistance_History) { channel="tuya:tuyaDevice:humidifier_og:fan_speed_enum" }
+String pFF_Bedroom_Humidifier_Speed                          "Lüftergeschwindigkeit [MAP(tuya_humidifier_level.map):%s]" <selfairing> (eFF_Bedroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_og:fan_speed_enum" }
 Number pFF_Bedroom_Humidifier_Replace_Filter                 "Filter Ersetzen"                               <selfinfo>      (eFF_Bedroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_og:replace_filter" }
 
 

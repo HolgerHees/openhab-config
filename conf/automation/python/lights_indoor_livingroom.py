@@ -1,4 +1,4 @@
-from openhab import rule, Registry, Timer
+from openhab import rule, Registry
 from openhab.triggers import ItemStateChangeTrigger, ItemCommandTrigger
 
 from datetime import datetime

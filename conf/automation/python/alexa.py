@@ -14,3 +14,6 @@ class StateMessage:
 
         msg = "Thing: {}".format(thing.getStatusInfo().toString()) if thing.getStatus().toString() != "ONLINE" else ""
         Registry.getItem("eOther_Error_Alexa_Message").postUpdateIfDifferent(msg)
+
+
+

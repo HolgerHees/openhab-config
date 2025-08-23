@@ -3,6 +3,7 @@
 .env*
 .vscode*
 conf/html/shared*
+conf/automation/python/typings*
 conf/automation/python/lib/openhab*
 conf/automation/python/lib/shared*
 conf/automation/python/lib/configuration*

@@ -1,4 +1,4 @@
-from openhab import rule, Registry, Timer
+from openhab import rule, Registry
 from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger
 
 from shared.notification import NotificationHelper
@@ -11,6 +11,7 @@ from custom.flags import FlagHelper
 from custom.weather import WeatherHelper
 
 from datetime import datetime, timedelta
+import threading
 
 import scope
 
@@ -148,7 +149,7 @@ class Notification:
                     push_msg.append("{} Fenster auf".format(actions["OPEN"][0]))
                     alexa_msg.append("Fenster im {} auf".format("Obergeschoss" if actions["OPEN"][0] == "OG" else "Erdgeschoss"))
                 if len(actions["CLOSE"]) == 1:
-                    push_msg.append("{} Fenster z".format(actions["CLOSE"][0]))
+                    push_msg.append("{} Fenster zu".format(actions["CLOSE"][0]))
                     alexa_msg.append("Fenster im {} zu".format("Obergeschoss" if actions["CLOSE"][0] == "OG" else "Erdgeschoss"))
 
             # we have messages and we are not sleeping
@@ -188,7 +189,8 @@ class Notification:
                 self.timer = None
 
             # delayed notification to give all devices the chance to be detected as present
-            self.timer = Timer.createTimeout(300, self.process, args = [ UserHelper.getPresentUser(), flags ]) # 5 min
+            self.timer = threading.Timer(300, self.process, args = [ UserHelper.getPresentUser(), flags ]) # 5 min
+            self.timer.start()
         else:
             # we are away
             if Registry.getItemState("pOther_Presence_State").intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]:

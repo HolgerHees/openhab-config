@@ -1,5 +1,7 @@
-from openhab import rule, Registry, Timer
+from openhab import rule, Registry
 from openhab.triggers import ItemStateChangeTrigger
+
+from shared.timer import Timer
 
 
 info_config = [

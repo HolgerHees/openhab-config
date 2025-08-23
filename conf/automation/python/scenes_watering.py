@@ -1,10 +1,11 @@
-from openhab import rule, Registry, Timer
+from openhab import rule, Registry
 from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger, ItemCommandTrigger, SystemStartlevelTrigger
 
 from custom.watering import WateringHelper
 
 from datetime import datetime, timedelta
 import math
+import threading
 
 import scope
 
@@ -207,7 +208,8 @@ class Control():
 
             Registry.getItem("pOutdoor_Watering_Logic_Program_State").postUpdate(msg)
 
-            self.progress_timer = Timer.createTimeout(60.0, self.callbackProgress, args = [stack])
+            self.progress_timer = threading.Timer(60.0, self.callbackProgress, args = [stack])
+            self.progress_timer.start()
 
     def initProgram(self, input = None):
         active_program = input['command'].intValue() if input is not None and input['event'].getItemName() == "pOutdoor_Watering_Logic_Program_Start" else Registry.getItemState("pOutdoor_Watering_Logic_Program_Start").intValue()
@@ -237,7 +239,8 @@ class Control():
 
         time_span = (next_start - now).total_seconds()
 
-        self.program_timer = Timer.createTimeout(time_span, self.triggerProgramStart)
+        self.program_timer = threading.Timer(time_span, self.triggerProgramStart)
+        self.program_timer.start()
         self.program_timer_start = next_start
 
         self.updateProgramTimerMsg()

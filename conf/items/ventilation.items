@@ -2,7 +2,7 @@
 Group  eGF_Utilityroom_Ventilation                              "Lüftungsanlage"                <selfinfo> (lGF_Utilityroom) ["Fan"]
 Switch pGF_Utilityroom_Ventilation_Control                      "Steuerung"                     <selfsettings> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:bindingControl#activate"}
 Switch pGF_Utilityroom_Ventilation_Auto_Mode                    "Modus"                         <selfautomode> (eGF_Utilityroom_Ventilation) ["Point"]
-Number pGF_Utilityroom_Ventilation_Fan_Level                    "Stufe"                         <selfairing> (eGF_Utilityroom_Ventilation,gPersistance_History) ["Point"] {channel="comfoair:comfoair:default:ventilation#fanLevel"}
+Number pGF_Utilityroom_Ventilation_Fan_Level                    "Stufe"                         <selfairing> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:ventilation#fanLevel"}
 Number pGF_Utilityroom_Ventilation_Comfort_Temperature          "Ziel [%.1f °C]"                <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:temperatures#targetTemperature"}
 Switch pGF_Utilityroom_Ventilation_Bypass                       "Bypass [MAP(ventilation_bypass_de.map):%s]" <selfbypass> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:menuP9#bypassState"}
 Number pGF_Utilityroom_Ventilation_Bypass_Efficiency            "Effizienz [%d %%]"             <selfbypass> (eGF_Utilityroom_Ventilation) ["Point"]

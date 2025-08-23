@@ -8,65 +8,65 @@ Group:Contact:OR(OPEN, CLOSED) gFF_Sensor_Window           "OG Fenster [%d]" <se
 
 // **** GF CORRIDOR ****
 Group   eGF_Corridor_Openingcontact_Door                   "Öffnungssensor" <selfinfo> (lGF_Corridor) ["FrontDoor"]
-Contact pGF_Corridor_Openingcontact_Door_State             "Öffnungssensor [MAP(de.map):%s]" <selfdoor> (eGF_Corridor_Openingcontact_Door,gPersistance_History,gGF_Sensor_Doors) ["OpenState"] { channel="knx:device:bridge:contacts_door:main" }
+Contact pGF_Corridor_Openingcontact_Door_State             "Öffnungssensor [MAP(de.map):%s]" <selfdoor> (eGF_Corridor_Openingcontact_Door,gGF_Sensor_Doors) ["OpenState"] { channel="knx:device:bridge:contacts_door:main" }
 
 // **** GF GUESTTOILET ****
 Group   eGF_Guesttoilet_Openingcontact_Window              "Öffnungssensor" <selfinfo> (lGF_Guesttoilet) ["Window"]
-Contact pGF_Guesttoilet_Openingcontact_Window_State        "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eGF_Guesttoilet_Openingcontact_Window,gPersistance_History,gGF_Sensor_Window)    ["OpenState"] { channel="knx:device:bridge:contacts_window_ff:guestWC" }
+Contact pGF_Guesttoilet_Openingcontact_Window_State        "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eGF_Guesttoilet_Openingcontact_Window,gGF_Sensor_Window)    ["OpenState"] { channel="knx:device:bridge:contacts_window_ff:guestWC" }
 
 // **** GF LIVINGROOM ****
 Group   eGF_Livingroom_Openingcontact_Window_Terrace       "Terassen-Öffnungssensor" <selfinfo> (lGF_Livingroom) ["Window"] {synonyms="Terasse"}
-Contact pGF_Livingroom_Openingcontact_Window_Terrace_State "Terassen-Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eGF_Livingroom_Openingcontact_Window_Terrace,gPersistance_History,gGF_Sensor_Window) ["OpenState"] { channel="knx:device:bridge:contacts_window_ff:livingroomTerrace" }
+Contact pGF_Livingroom_Openingcontact_Window_Terrace_State "Terassen-Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eGF_Livingroom_Openingcontact_Window_Terrace,gGF_Sensor_Window) ["OpenState"] { channel="knx:device:bridge:contacts_window_ff:livingroomTerrace" }
 
 Group   eGF_Livingroom_Openingcontact_Window_Couch         "Couch-Öffnungssensor" <selfinfo> (lGF_Livingroom) ["Window"] {synonyms="Couch"}
-Contact pGF_Livingroom_Openingcontact_Window_Couch_State   "Couch-Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eGF_Livingroom_Openingcontact_Window_Couch,gPersistance_History,gGF_Sensor_Window) ["OpenState"]    { channel="knx:device:bridge:contacts_window_ff:livingroomCouch" }
+Contact pGF_Livingroom_Openingcontact_Window_Couch_State   "Couch-Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eGF_Livingroom_Openingcontact_Window_Couch,gGF_Sensor_Window) ["OpenState"]    { channel="knx:device:bridge:contacts_window_ff:livingroomCouch" }
 
 // **** GF KITCHEN ****
 Group   eGF_Kitchen_Openingcontact_Window                  "Öffnungssensor" <selfinfo> (lGF_Kitchen) ["Window"]
-Contact pGF_Kitchen_Openingcontact_Window_State            "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eGF_Kitchen_Openingcontact_Window,gPersistance_History,gGF_Sensor_Window)    ["OpenState"] { channel="knx:device:bridge:contacts_window_ff:kitchen" }
+Contact pGF_Kitchen_Openingcontact_Window_State            "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eGF_Kitchen_Openingcontact_Window,gGF_Sensor_Window)    ["OpenState"] { channel="knx:device:bridge:contacts_window_ff:kitchen" }
 
 // **** GF WORKROOM ****
 Group   eGF_Workroom_Openingcontact_Window                "Öffnungssensor" <selfinfo> (lGF_Workroom) ["Window"]
-Contact pGF_Workroom_Openingcontact_Window_State          "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eGF_Workroom_Openingcontact_Window,gPersistance_History,gGF_Sensor_Window) ["OpenState"] { channel="knx:device:bridge:contacts_window_ff:workroom" }
+Contact pGF_Workroom_Openingcontact_Window_State          "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eGF_Workroom_Openingcontact_Window,gGF_Sensor_Window) ["OpenState"] { channel="knx:device:bridge:contacts_window_ff:workroom" }
 
 // **** GF GARAGE ****
 Group   eGF_Garage_Openingcontact_Door_Streedside          "Strassen-Öffnungssensor" <selfinfo> (lGF_Garage) ["GarageDoor"]
-Contact pGF_Garage_Openingcontact_Door_Streedside_State    "Strassen-Öffnungssensor [MAP(de.map):%s]" <selfdoor> (eGF_Garage_Openingcontact_Door_Streedside,gPersistance_History,gGF_Sensor_Doors) ["OpenState"] { channel="knx:device:bridge:contacts_door:garageStreedside" }
+Contact pGF_Garage_Openingcontact_Door_Streedside_State    "Strassen-Öffnungssensor [MAP(de.map):%s]" <selfdoor> (eGF_Garage_Openingcontact_Door_Streedside,gGF_Sensor_Doors) ["OpenState"] { channel="knx:device:bridge:contacts_door:garageStreedside" }
 
 Group   eGF_Garage_Openingcontact_Door_Garden              "Garten-Öffnungssensor" <selfinfo> (lGF_Garage) ["GarageDoor"]
-Contact pGF_Garage_Openingcontact_Door_Garden_State        "Garten-Öffnungssensor [MAP(de.map):%s]" <selfdoor> (eGF_Garage_Openingcontact_Door_Garden,gPersistance_History,gGF_Sensor_Doors) ["OpenState"] { channel="knx:device:bridge:contacts_door:garageGardenside" }
+Contact pGF_Garage_Openingcontact_Door_Garden_State        "Garten-Öffnungssensor [MAP(de.map):%s]" <selfdoor> (eGF_Garage_Openingcontact_Door_Garden,gGF_Sensor_Doors) ["OpenState"] { channel="knx:device:bridge:contacts_door:garageGardenside" }
 
 Group   eGF_Garage_Openingcontact_Window_Garden            "Öffnungssensor" <selfinfo> (lGF_Garage) ["Window"]
-Contact pGF_Garage_Openingcontact_Window_Garden_State      "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eGF_Garage_Openingcontact_Window_Garden,gPersistance_History,gGF_Sensor_Window) ["OpenState"] { channel="knx:device:bridge:contacts_window_ff:garage" }
+Contact pGF_Garage_Openingcontact_Window_Garden_State      "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eGF_Garage_Openingcontact_Window_Garden,gGF_Sensor_Window) ["OpenState"] { channel="knx:device:bridge:contacts_window_ff:garage" }
 
 // **** FF BATHROOM ****
 Group   eFF_Bathroom_Openingcontact_Window                 "Öffnungssensor" <selfinfo> (lFF_Bathroom) ["Window"]
-Contact pFF_Bathroom_Openingcontact_Window_State           "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eFF_Bathroom_Openingcontact_Window,gPersistance_History,gFF_Sensor_Window) ["OpenState"]{ channel="knx:device:bridge:contacts_window_sf:bathroom" }
+Contact pFF_Bathroom_Openingcontact_Window_State           "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eFF_Bathroom_Openingcontact_Window,gFF_Sensor_Window) ["OpenState"]{ channel="knx:device:bridge:contacts_window_sf:bathroom" }
 
 // **** FF DRESSINGROOM ****
 Group   eFF_Dressingroom_Openingcontact_Window             "Öffnungssensor" <selfinfo> (lFF_Dressingroom) ["Window"]
-Contact pFF_Dressingroom_Openingcontact_Window_State       "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eFF_Dressingroom_Openingcontact_Window,gPersistance_History,gFF_Sensor_Window) ["OpenState"] { channel="knx:device:bridge:contacts_window_sf:dressingroom" }
+Contact pFF_Dressingroom_Openingcontact_Window_State       "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eFF_Dressingroom_Openingcontact_Window,gFF_Sensor_Window) ["OpenState"] { channel="knx:device:bridge:contacts_window_sf:dressingroom" }
 
 // **** FF BEDROOM ****
 Group   eFF_Bedroom_Openingcontact_Window                  "Öffnungssensor" <selfinfo> (lFF_Bedroom) ["Window"]
-Contact pFF_Bedroom_Openingcontact_Window_State            "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eFF_Bedroom_Openingcontact_Window,gPersistance_History,gFF_Sensor_Window) ["OpenState"] { channel="knx:device:bridge:contacts_window_sf:bedroom" }
+Contact pFF_Bedroom_Openingcontact_Window_State            "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eFF_Bedroom_Openingcontact_Window,gFF_Sensor_Window) ["OpenState"] { channel="knx:device:bridge:contacts_window_sf:bedroom" }
 
 // **** FF CHILD 1 ****
 Group   eFF_Fitnessroom_Openingcontact_Window                   "Öffnungssensor" <selfinfo> (lFF_Fitnessroom) ["Window"]
-Contact pFF_Fitnessroom_Openingcontact_Window_State             "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eFF_Fitnessroom_Openingcontact_Window,gPersistance_History,gFF_Sensor_Window) ["OpenState"] { channel="knx:device:bridge:contacts_window_sf:child1" }
+Contact pFF_Fitnessroom_Openingcontact_Window_State             "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eFF_Fitnessroom_Openingcontact_Window,gFF_Sensor_Window) ["OpenState"] { channel="knx:device:bridge:contacts_window_sf:child1" }
 
 // **** FF CHILD 2 ****
 Group   eFF_Makeuproom_Openingcontact_Window                   "Öffnungssensor" <selfinfo> (lFF_Makeuproom) ["Window"]
-Contact pFF_Makeuproom_Openingcontact_Window_State             "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eFF_Makeuproom_Openingcontact_Window,gPersistance_History,gFF_Sensor_Window) ["OpenState"] { channel="knx:device:bridge:contacts_window_sf:child2" }
+Contact pFF_Makeuproom_Openingcontact_Window_State             "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eFF_Makeuproom_Openingcontact_Window,gFF_Sensor_Window) ["OpenState"] { channel="knx:device:bridge:contacts_window_sf:child2" }
 
 // **** FF ATTIC ****
 Group   eFF_Attic_Openingcontact_Window                    "Öffnungssensor" <selfinfo> (lFF_Attic) ["Window"]
-Contact pFF_Attic_Openingcontact_Window_State              "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eFF_Attic_Openingcontact_Window,gPersistance_History,gFF_Sensor_Window) ["OpenState"] { channel="knx:device:bridge:contacts_window_sf:attic" }
+Contact pFF_Attic_Openingcontact_Window_State              "Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eFF_Attic_Openingcontact_Window,gFF_Sensor_Window) ["OpenState"] { channel="knx:device:bridge:contacts_window_sf:attic" }
 
 // **** Toolshed Door ****
 Group   eToolshed_Openingcontact_Door                   "Tür-Öffnungssensor" <selfinfo> (lToolshed) ["GarageDoor"] {synonyms="Tür"}
-Contact pToolshed_Openingcontact_Door_State             "Tür-Öffnungssensor [MAP(de.map):%s]" <selfdoor> (eToolshed_Openingcontact_Door,gPersistance_History,gOpeningcontacts,gOpeningcontactsSecurityRelevant) ["OpenState"]    { channel="knx:device:bridge:contacts_toolshed:door" }
+Contact pToolshed_Openingcontact_Door_State             "Tür-Öffnungssensor [MAP(de.map):%s]" <selfdoor> (eToolshed_Openingcontact_Door,gOpeningcontacts,gOpeningcontactsSecurityRelevant) ["OpenState"]    { channel="knx:device:bridge:contacts_toolshed:door" }
 
 // **** Toolshed Window ****
 Group   eToolshed_Openingcontact_Window                 "Fenster-Öffnungssensor" <selfinfo> (lToolshed) ["Window"] {synonyms="Fenster"}
-Contact pToolshed_Openingcontact_Window_State           "Fenster-Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eToolshed_Openingcontact_Window,gPersistance_History,gOpeningcontacts) ["OpenState"]    { channel="knx:device:bridge:contacts_toolshed:window" }
+Contact pToolshed_Openingcontact_Window_State           "Fenster-Öffnungssensor [MAP(de.map):%s]" <selfwindow> (eToolshed_Openingcontact_Window,gOpeningcontacts) ["OpenState"]    { channel="knx:device:bridge:contacts_toolshed:window" }

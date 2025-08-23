@@ -18,7 +18,8 @@ start_electricity_meter_demand_offset = 0.0
 start_electricity_meter_supply_offset = 0.0
 
 # offset values for gas meter (total value at the time when knx based impulse counter was resettet)
-start_gas_meter_value = 12770.69
+start_gas_meter_value = 12849.42
+#start_gas_meter_value = 12770.69
 #start_gas_meter_value = 10405.39
 start_gas_impulse_counter = 0
 

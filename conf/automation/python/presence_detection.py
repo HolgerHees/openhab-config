@@ -1,5 +1,5 @@
-from openhab import rule, Registry, Timer
-from openhab.triggers import ItemStateChangeTrigger, ItemCommandTrigger, GroupStateChangeTrigger
+from openhab import rule, Registry
+from openhab.triggers import ItemStateChangeTrigger, ItemCommandTrigger
 
 from shared.notification import NotificationHelper
 from shared.toolbox import ToolboxHelper
@@ -117,7 +117,8 @@ class DoorCheck:
             # Lets wait for 60 seconds if another event happens, like front or garage door opened
             # 1. 'leaving' was triggered by closing garage door.
             # 1. 'leaving' was triggered by door lock event.
-            self.timer = Timer.createTimeout(60, self._checkLeaving)
+            self.timer = threading.Timer(60, self._checkLeaving)
+            self.timer.start()
 
     def execute(self, module, input):
         if self.timer != None:
@@ -130,14 +131,16 @@ class DoorCheck:
             else:
                 self._checkLeaving(input['event'].getItemName())
 
-@rule(
-    triggers = [
-        GroupStateChangeTrigger("gSensor_Indoor")
-    ]
-)
+@rule
 class MovingCheck:
     def __init__(self):
         self.timer = None
+
+    def buildTriggers(self):
+        triggers = []
+        for item in Registry.getItem("gSensor_Indoor").getAllMembers():
+            triggers.append(ItemStateChangeTrigger(item.getName()))
+        return triggers
 
     def checkSleeping(self):
         with Cache.getLock():
@@ -146,14 +149,16 @@ class MovingCheck:
                 return
 
             if Registry.getItemState("gIndoor_Lights") == scope.ON:
-                self.timer = Timer.createTimeout(60, self.checkSleeping)
+                self.timer = threading.Timer(60, self.checkSleeping)
+                self.timer.start()
             else:
                 last_update_diff = ( datetime.now().astimezone() - Registry.getItem("gIndoor_Lights").getLastStateUpdate() ).total_seconds()
                 if last_update_diff >= 600:
                     Cache.setPresenceState(PresenceHelper.STATE_SLEEPING)
                     self.timer = None
                 else:
-                    self.timer = Timer.createTimeout(60, self.checkSleeping)
+                    self.timer = threading.Timer(60, self.checkSleeping)
+                    self.timer.start()
 
     def execute(self, module, input):
         if self.timer != None:
@@ -168,16 +173,19 @@ class MovingCheck:
                 Cache.setPresenceState(PresenceHelper.STATE_MAYBE_SLEEPING)
 
                 # must be decoupled, to release lock
-                self.timer = Timer.createTimeout(1, self.checkSleeping)
+                self.timer = threading.Timer(1, self.checkSleeping)
+                self.timer.start()
 
-@rule(
-    triggers = [
-        GroupStateChangeTrigger("gOther_Presence_State_Raw")
-    ]
-)
+@rule
 class KnownPersonCheck:
     def __init__(self):
         self.skippedTimer = {}
+
+    def buildTriggers(self):
+        triggers = []
+        for item in Registry.getItem("gOther_Presence_State_Raw").getAllMembers():
+            triggers.append(ItemStateChangeTrigger(item.getName()))
+        return triggers
 
     #def test(self):
     #    Registry.getItem("pOther_Presence_Sandra_State_Raw").postUpdate(scope.ON)
@@ -217,7 +225,8 @@ class KnownPersonCheck:
                     # relatedItem state is still ON
                     #lastChangedState = getItemLastChange(related_item_name)
                     #if itemLastChangeNewerThen("pGF_Corridor_Openingcontact_Door_State",lastChangedState.minusMinutes(15)):
-                    self.skippedTimer[item_name] = Timer.createTimeout(7200, self.process, args = [ item_name, related_item_name, new_item_state ]) # 1 hour
+                    self.skippedTimer[item_name] = threading.Timer(7200, self.process, args = [ item_name, related_item_name, new_item_state ]) # 1 hour
+                    self.skippedTimer[item_name].start()
                     NotificationHelper.sendNotificationToAllAdmins(NotificationHelper.PRIORITY_NOTICE, "System", "Delayed presence processing {} for {}".format(new_item_state,item_name))
                     return
         else:
@@ -261,7 +270,8 @@ class Wakeup:
                         self.wakeup()
                         self.timer = None
                     else:
-                        self.timer = Timer.createTimeout(30, self.delayedWakeup, args = [ checkCounter + 1 ])
+                        self.timer = threading.Timer(30, self.delayedWakeup, args = [ checkCounter + 1 ])
+                        self.timer.start()
         else:
             self.timer = None
         
@@ -276,7 +286,8 @@ class Wakeup:
                 if input['event'].getItemName() == "gGF_Shutters":
                     self.wakeup()
                 else:
-                    self.timer = Timer.createTimeout(30, self.delayedWakeup, args = [ 0 ])
+                    self.timer = threading.Timer(30, self.delayedWakeup, args = [ 0 ])
+                    self.timer.start()
 
 
 @rule(

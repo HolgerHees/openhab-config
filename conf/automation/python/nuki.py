@@ -20,7 +20,7 @@ class BatteryDetail:
         if Registry.getItemState("pGF_Corridor_Lock_Battery_Critical") == scope.ON:
             msg.append("Batterie")
 
-        if ( Registry.getItemState("pGF_Corridor_Lock_Timestamp") + timedelta(minutes=120) ) < datetime.now().astimezone():
+        if ( Registry.getItemState("pGF_Corridor_Lock_Timestamp").getZonedDateTime() + timedelta(minutes=120) ) < datetime.now().astimezone():
             msg.append("Verbindung")
 
         if len(msg) == 0:
