@@ -3,6 +3,10 @@ from openhab.triggers import GenericCronTrigger
 
 import scope
 
+items = Registry.getItem("eOther_Error").getAllMembers()
+for item in items:
+    if item.getState() != scope.NULL and len(item.getState().toString()) > 0:
+        print(str(item))
 
 @rule(
     triggers = [

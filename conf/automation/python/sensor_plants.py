@@ -17,6 +17,7 @@ class State:
 
         Registry.getItem("eOther_Error_Gardena_Message").postUpdateIfDifferent("Thing: {}".format(thing.getStatusInfo().toString()) if status.toString() != "ONLINE" else "")
 
+
 @rule()
 class BatteryDetail:
     def __init__(self):

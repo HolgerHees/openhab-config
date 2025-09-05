@@ -12,12 +12,10 @@ from datetime import datetime, timedelta
 from functools import reduce
 import math
 import json
-import java
 
-Java_OnOffType = java.type("org.openhab.core.library.types.OnOffType")
-Java_OpenClosedType = java.type("org.openhab.core.library.types.OpenClosedType")
-Java_PercentType = java.type("org.openhab.core.library.types.PercentType")
-Java_DecimalType = java.type("org.openhab.core.library.types.DecimalType")
+from org.openhab.core.library.types import DecimalType as Java_DecimalType
+
+import scope
 
 
 class Heating():
@@ -180,22 +178,26 @@ class Heating():
 
     def getVentilationEnergy(self, temp_diff_offset):
         # *** Calculate power loss by ventilation ***
-        _ventilationLevel = self.getCachedItemState(self.ventilation_level_item_name).intValue()
-        _ventilation_temp_diff = self.getCachedItemFloat(self.ventilation_outgoing_temperature_item_name) - self.getCachedItemFloat(self.ventilation_incomming_temperature_item_name)
-        
-        # apply outdoor temperature changes to ventilation in / out difference
-        if temp_diff_offset != 0:
-            ventilation_diff = temp_diff_offset / 4
-            if _ventilation_temp_diff + ventilation_diff > 0:
-                _ventilation_temp_diff = _ventilation_temp_diff + ventilation_diff
-                    
-        # Ventilation Energy
-        # 15% => 40m/h		XX => ?
-        # 100% => 350m/h		85 => 310
-        _ventilation_volume = ( ( ( _ventilationLevel - 15.0 ) * 310.0 ) / 85.0 ) + 40.0
-        _ventilation_u_value = _ventilation_volume * self.DENSITY_AIR * self.C_AIR
-        _ventilation_energy_in_kj = _ventilation_u_value * _ventilation_temp_diff
-        return _ventilation_energy_in_kj * -1 if _ventilation_energy_in_kj != 0 else 0.0
+        _ventilationLevel = self.getCachedItemState(self.ventilation_level_item_name)
+        if _ventilationLevel != scope.UNDEF:
+            _ventilation_temp_diff = self.getCachedItemFloat(self.ventilation_outgoing_temperature_item_name) - self.getCachedItemFloat(self.ventilation_incomming_temperature_item_name)
+
+            # apply outdoor temperature changes to ventilation in / out difference
+            if temp_diff_offset != 0:
+                ventilation_diff = temp_diff_offset / 4
+                if _ventilation_temp_diff + ventilation_diff > 0:
+                    _ventilation_temp_diff = _ventilation_temp_diff + ventilation_diff
+
+            # Ventilation Energy
+            # 15% => 40m/h		XX => ?
+            # 100% => 350m/h		85 => 310
+            _ventilation_volume = ( ( ( _ventilationLevel.intValue() - 15.0 ) * 310.0 ) / 85.0 ) + 40.0
+            _ventilation_u_value = _ventilation_volume * self.DENSITY_AIR * self.C_AIR
+            _ventilation_energy_in_kj = _ventilation_u_value * _ventilation_temp_diff
+
+            return _ventilation_energy_in_kj * -1 if _ventilation_energy_in_kj != 0 else 0.0
+        else:
+            return 0.0
     
     def getLeakingEnergy(self, volume, current_temperature, outdoor_temperature):
         _leaking_temperature_diff = current_temperature - outdoor_temperature
@@ -242,12 +244,12 @@ class Heating():
             cooling = self.getCoolingEnergy(transition.getArea(),current_temperature,transition.getType(),transition.getBound())
             closed_window_energy = closed_window_energy + cooling
 
-            if transition.getContactItem() != None and self.getCachedItemState(transition.getContactItem()) == Java_OpenClosedType.OPEN:
+            if transition.getContactItem() != None and self.getCachedItemState(transition.getContactItem()) == scope.OPEN:
                 if self.cachedItemLastChangeOlderThen(transition.getContactItem(), 10 if is_forecast else 2):
                     open_window_count = open_window_count + 1
 
             if isinstance(transition,Window) and transition.getRadiationArea() != None:
-                _shutterOpen = (is_forecast or transition.getShutterItem() == None or self.getCachedItemState(transition.getShutterItem()) == Java_PercentType.ZERO)
+                _shutterOpen = (is_forecast or transition.getShutterItem() == None or self.getCachedItemState(transition.getShutterItem()).intValue() == 0)
                 if _shutterOpen:
                     if transition.getDirection() == 'south':
                         window_radiation = window_radiation + SunRadiation.getWindowSunPowerPerHour(transition.getRadiationArea(), sun_south_radiation)
@@ -261,7 +263,7 @@ class Heating():
     def calculatePossibleHeatingEnergy(self, is_forecast):
         temperatures = []
         for room in filter( lambda room: room.getHeatingVolume() != None,Heating.rooms):
-            if is_forecast or room.getHeatingVolume() == None or self.getCachedItemState( Heating.getHeatingCircuitItemName(room) ) == Java_OnOffType.ON:
+            if is_forecast or room.getHeatingVolume() == None or self.getCachedItemState( Heating.getHeatingCircuitItemName(room) ) == scope.ON:
                 temperatures.append( self.getCachedStableItemFloat( Heating.getTemperatureSensorItemName(room) ) )
         
         if len(temperatures) == 0:
@@ -302,8 +304,8 @@ class Heating():
         return circulation_diff, pump_speed
     
     def calculateHeatingEnergy(self, is_forecast):
-        power = self.getCachedItemState(self.heatingPower).intValue()
-        pump_speed = self.getCachedItemState(self.heating_circuit_pump_speed_item_name).intValue()
+        power = self.getCachedItemInt(self.heatingPower)
+        pump_speed = self.getCachedItemInt(self.heating_circuit_pump_speed_item_name)
         if power == 0 or pump_speed == 0 or is_forecast:
             circulation_diff = 0
             pump_speed = 0
@@ -337,7 +339,7 @@ class Heating():
             active_heating_volume = 0
         
             for room in filter( lambda room: room.getHeatingVolume() != None,Heating.rooms):
-                if self.getCachedItemState( Heating.getHeatingCircuitItemName(room) ) == Java_OnOffType.ON:
+                if self.getCachedItemState( Heating.getHeatingCircuitItemName(room) ) == scope.ON:
                     active_heating_volume = active_heating_volume + room.getHeatingVolume()
                 
             if active_heating_volume > 0:
@@ -388,7 +390,7 @@ class Heating():
 
         _night_mode_active = False
         
-        _holidays_active = self.getCachedItemState(self.holiday_status_item_name) == Java_OnOffType.ON
+        _holidays_active = self.getCachedItemState(self.holiday_status_item_name) == scope.ON
         
         _is_morning = True if hour < 12 else False
         
@@ -533,7 +535,7 @@ class Heating():
             
             if room.getHeatingVolume() != None:
                 # *** HEATING RADIATION ***
-                if heating_pump_speed == 0 or self.getCachedItemState( Heating.getHeatingCircuitItemName(room) ) != Java_OnOffType.ON:
+                if heating_pump_speed == 0 or self.getCachedItemState( Heating.getHeatingCircuitItemName(room) ) != scope.ON:
                     heating_volume, heating_radiation = 0.0, 0.0
                 else:
                     heating_volume, heating_radiation = self.calculateHeatingRadiation(heating_volume_factor, room.getHeatingVolume(), heating_circulation_diff, heating_pump_speed)
@@ -641,7 +643,7 @@ class Heating():
                 open_duration_in_seconds = None
                 closed_duration_in_seconds = None
                 # *** check open state
-                if self.getCachedItemState(transition.getContactItem()) == Java_OpenClosedType.OPEN:
+                if self.getCachedItemState(transition.getContactItem()) == scope.OPEN:
                     # *** register open window if it is open long enough
                     if transition.getContactItem() not in Heating._open_window_contacts:
                         open_since = Registry.getItem(transition.getContactItem()).getLastStateChange()

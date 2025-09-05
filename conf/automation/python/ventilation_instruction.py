@@ -30,6 +30,8 @@ class Notification:
         
         self.timer = None
 
+        self.debug = False
+
         #self.process(None, 3)
         #AlexaHelper.sendTTSTest(self.logger,"test", header = "Lüftungshinweiss")
         
@@ -48,7 +50,8 @@ class Notification:
     def getOpenRequest(self,gardenTemp, gardenTempMax, direction, refTempItemName, lastState):
         refTemp = round(ToolboxHelper.getStableState(refTempItemName, 15).doubleValue(), 1)
         
-        self.logger.info("ROOM - {}: {}".format(refTempItemName,refTemp))
+        if self.debug:
+            self.logger.info("ROOM - {}: {}".format(refTempItemName,refTemp))
               
         # outside is getting warmer
         if direction > 0:
@@ -110,7 +113,8 @@ class Notification:
             else:
                 direction = 0
 
-        self.logger.info("GARDEN - Temp0: {}, Temp0Max: {}, Temp15: {}, Temp45: {}".format(gardenTemp0, gardenTemp0Max, gardenTemp15, gardenTemp45))
+        if self.debug:
+            self.logger.info("GARDEN - Temp0: {}, Temp0Max: {}, Temp15: {}, Temp45: {}".format(gardenTemp0, gardenTemp0Max, gardenTemp15, gardenTemp45))
 
         gfShouldOpen = self.getOpenRequest(gardenTemp0, gardenTemp0Max, direction,"pGF_Livingroom_Air_Sensor_Temperature_Value", self.lastGFShouldOpen)
         gfIsOpen = self.getOpenState("gGF_Sensor_Window",["pGF_Livingroom_Openingcontact_Window_Terrace_State"])
@@ -121,7 +125,8 @@ class Notification:
         if (self.lastGFShouldOpen!=gfShouldOpen and gfShouldOpen!=gfIsOpen) or (self.lastFFShouldOpen!=ffShouldOpen and ffShouldOpen!=ffIsOpen):
             recipients = UserHelper.getPresentUser()
             
-        self.logger.info("STATE - gfShouldOpen: {}, gfIsOpen: {}, ffShouldOpen: {}, ffIsOpen: {}, direction: {}".format(gfShouldOpen, gfIsOpen, ffShouldOpen, ffIsOpen, direction))
+        if self.debug:
+            self.logger.info("STATE - gfShouldOpen: {}, gfIsOpen: {}, ffShouldOpen: {}, ffIsOpen: {}, direction: {}".format(gfShouldOpen, gfIsOpen, ffShouldOpen, ffIsOpen, direction))
 
         if recipients is not None:
             actions = {"OPEN":[],"CLOSE":[]}

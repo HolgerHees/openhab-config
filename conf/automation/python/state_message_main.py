@@ -8,6 +8,7 @@ from shared.notification import NotificationHelper
     triggers = [
         GenericCronTrigger("0 */5 * * * ?"),
         ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_State_Message"),
+        ItemStateChangeTrigger("pGF_Utilityroom_Electricity_State_Message"),
         ItemStateChangeTrigger("pGF_Corridor_Lock_State_Device_Info")
     ]
 )
@@ -21,6 +22,10 @@ class Main:
         if ventilation_state != "Alles ok":
             active.append("Lüftungsanlage {}".format( ventilation_state ))
 
+        electricity_state = Registry.getItemState("pGF_Utilityroom_Electricity_State_Message").toString()
+        if electricity_state != "Alles ok":
+            active.append("Solaranlage {}".format( electricity_state ))
+
         maindoor_state = Registry.getItemState("pGF_Corridor_Lock_State_Device_Info").toString()
         if maindoor_state != "Alles ok":
             active.append("Haustür (Nuki) {}".format( maindoor_state ))
@@ -32,9 +37,12 @@ class Main:
 
         msg = ", ".join(active)
 
-        if msg == "Filter":
+        if msg == "Lüftungsanlage Filter":
             group = "Info"
             priority = NotificationHelper.PRIORITY_NOTICE
+        elif msg == "Solaranlage Stromausfall":
+            group = "Alarm"
+            priority = NotificationHelper.PRIORITY_ALERT
 
         if Registry.getItem("pOther_State_Message_Main").postUpdateIfDifferent(msg):
             NotificationHelper.sendNotification(priority, "Haustechnik " + group, msg)

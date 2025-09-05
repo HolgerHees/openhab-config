@@ -55,8 +55,3 @@ class Main:
             Registry.getItem("pOther_Automatic_State_Outdoorlights").postUpdateIfDifferent(scope.ON)
         else:
             Registry.getItem("pOther_Automatic_State_Outdoorlights").postUpdateIfDifferent(scope.OFF)
-            
-        if Registry.getItemState("pOutdoor_Astro_Dusk_Time").getZonedDateTime() < now or Registry.getItemState("pOutdoor_Astro_Dawn_Time").getZonedDateTime() > now:
-            Registry.getItem("pOther_Automatic_State_Solar").postUpdateIfDifferent(scope.OFF)
-        else:
-            Registry.getItem("pOther_Automatic_State_Solar").postUpdateIfDifferent(scope.ON)

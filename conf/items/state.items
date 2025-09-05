@@ -53,7 +53,6 @@ Number pOther_Manual_State_Auto_Rollershutter   "Rollläden Automatik [MAP(state
 
 //####### AUTOMATIC STATE FLAGS #######
 Group  eOther_Automatic_States                  "Auto Features"   <selfinfo> (lOther) ["Equipment"]
-Switch pOther_Automatic_State_Solar             "Solar Aktiv"     <selfsun> (eOther_Automatic_States) ["Point"]
 Switch pOther_Automatic_State_Outdoorlights     "Aussenbeleuchtung Aktiv" <selflight> (eOther_Automatic_States) ["Point"]
 Number pOther_Automatic_State_Rollershutter     "Rollläden geschlossen [MAP(state_auto_rollershutter.map):%s]" <selfrollershutter> (eOther_Automatic_States) ["Point"]
 DateTime pOther_Automatic_State_Rollershutter_Up "Rollläden hoch [%1$tH:%1$tM]" <selfrollershutter> (eOther_Automatic_States) ["Point"]

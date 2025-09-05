@@ -1,4 +1,4 @@
-from openhab import rule, Registry
+from openhab import rule, Registry, logger
 from openhab.triggers import GenericCronTrigger, ItemStateUpdateTrigger
 
 from shared.semantic.command_processor import CommandProcessor
@@ -19,7 +19,7 @@ import scope
 class Main:
     def __init__(self):
         self.processor = CommandProcessor(scope.ir)
-        #self.test(ir)
+        self.test(logger, scope.ir)
 
     def execute(self, module, input):
         if input['event'].getType() == "TimerEvent":
@@ -47,7 +47,7 @@ class Main:
 
             Registry.getItem("VoiceMessage").postUpdate(msg)
 
-    def test(self,ir):
+    def test(self,logger, ir):
         for case in Cases['enabled']:
             if "client_id" in case:
                 voice_command, client_id = self.processor.parseData("{}|{}".format(case['phrase'],case['client_id']))
@@ -84,15 +84,15 @@ class Main:
 
             if excpected_result \
                 and len(item_actions_skipped) == 0 and len(item_actions_applied) == len(case["items"]):
-                self.logger.info("OK  - Input: '{}' - MSG: '{}'".format(voice_command,msg))
+                logger.info("OK  - Input: '{}' - MSG: '{}'".format(voice_command,msg))
             else:
-                self.logger.info("ERR - Input: '{}' - MSG: '{}'".format(voice_command,msg))
+                logger.info("ERR - Input: '{}' - MSG: '{}'".format(voice_command,msg))
                 for case_action in case_actions_excpected:
-                    self.logger.info("       MISSING     => {} => {}".format(case_action[0],case_action[1]))
+                    logger.info("       MISSING     => {} => {}".format(case_action[0],case_action[1]))
                 for item_action in item_actions_skipped:
-                    self.logger.info("       UNEXCPECTED => {} => {}".format(item_action.item.getName(),item_action.cmd_value))
+                    logger.info("       UNEXCPECTED => {} => {}".format(item_action.item.getName(),item_action.cmd_value))
                 for item_action in item_actions_applied:
-                    self.logger.info("       MATCH       => {} => {}".format(item_action.item.getName(),item_action.cmd_value))
+                    logger.info("       MATCH       => {} => {}".format(item_action.item.getName(),item_action.cmd_value))
 
                 items = []
                 for item_action in item_actions_skipped:
@@ -101,6 +101,6 @@ class Main:
                     items.append("[\"{}\",\"{}\"]".format(item_action.item.getName(),item_action.cmd_value))
                 msg = "[{}]".format(",".join(items))
 
-                self.logger.info("\n\n{}\n\n".format(msg))
+                logger.info("\n\n{}\n\n".format(msg))
                 raise Exception("Wrong detection")
 

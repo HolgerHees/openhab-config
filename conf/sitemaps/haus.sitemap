@@ -1016,71 +1016,88 @@ sitemap haus label="Main Menu"
                 }
             }
             Frame label="Versorgung" {
-                Group item=pGF_Utilityroom_Electricity_Current_Daily_Consumption label="Strom [%.2f kWh]"{
-                    Frame label="Verbrauch" {
-                        Text item=pGF_Utilityroom_Electricity_Current_Daily_Consumption label="Tagesverbrauch [%.2f kWh]"
-                        Text item=pGF_Utilityroom_Electricity_Current_Consumption
-                        Text item=pGF_Utilityroom_Electricity_Current_Saldo valuecolor=[>=0="#fea400",<0="#6bc305"]
-                        Text item=pGF_Utilityroom_Electricity_Current_Consumption_Ratio_Msg
+                Group item=pGF_Utilityroom_Electricity_State_Daily_Consumption label="Strom [%.1f kWh]"{
+                    Frame label="Status" {
+                        Text item=pGF_Utilityroom_Electricity_State_Consumption_Msg label="Verbrauch [%s]"
+                        Text item=pGF_Utilityroom_Electricity_State_Autarky
+                        Text item=pGF_Utilityroom_Electricity_State_Ratio
                     }
                     Frame label="Details" {
-                        Group label="Bezug [%.2f kWh]" item=pGF_Utilityroom_Electricity_Current_Daily_Demand {
+                        Group item=pGF_Utilityroom_Electricity_State_Demand_Msg {
                             Frame label="Daten" {
-                                Text item=pGF_Utilityroom_Electricity_Current_Daily_Demand label="Heute [%.2f kWh]"
-                                Text item=pGF_Utilityroom_Electricity_Current_Annual_Demand label="Periode [%.2f kWh]"
-                                Text item=pGF_Utilityroom_Electricity_Meter_Demand label="Zählerstand [%.2f kWh]"
-                                Text item=pGF_Utilityroom_Electricity_Current_Annual_Demand_Forecast label="Hochrechnung [%s]"
+                                Text item=pGF_Garage_Solar_Inverter_BuyFromGridPower label="Aktuell [%d W]"
+                                Text item=pGF_Utilityroom_Electricity_State_Daily_Demand label="Heute [%.1f kWh]"
+                                Text item=pGF_Utilityroom_Electricity_State_Annual_Demand_Current label="Dieses Jahr [%.1f kWh]"
+                                Text item=pGF_Utilityroom_Electricity_State_Annual_Demand_Last label="Letztes Jahr [%.1f kWh]"
+                                Text item=pGF_Utilityroom_Electricity_State_Annual_Demand_Forecast label="Hochrechnung [%.1f kWh]"
                             }
-                            Frame label="Raw" {
-                                Text item=pGF_Utilityroom_Power_Demand_Active
-                                Text item=pGF_Utilityroom_Energy_Demand_Active
+                            Frame label="Zähler" {
+                                Text item=pGF_Utilityroom_Electricity_Meter_Demand label="Zählerstand [%.1f kWh]"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                                 Webview url="/static/custom/grafana/energy_demand.html?fromItem=Chart_From" icon="none" height=18
                             }
                         }
-                        Group label="Lieferung [%.2f kWh]" item=pGF_Utilityroom_Electricity_Current_Daily_Supply {
+                        Group item=pGF_Utilityroom_Electricity_State_Supply_Msg {
                             Frame label="Daten" {
-                                Text item=pGF_Utilityroom_Electricity_Current_Daily_Supply label="Heute [%.2f kWh]"
-                                Text item=pGF_Utilityroom_Electricity_Current_Annual_Supply label="Periode [%.2f kWh]"
-                                Text item=pGF_Utilityroom_Electricity_Meter_Supply label="Zählerstand [%.2f kWh]"
-                                Text item=pGF_Utilityroom_Electricity_Current_Annual_Supply_Forecast label="Hochrechnung [%s]"
+                                Text item=pGF_Garage_Solar_Inverter_SellToGridPower label="Aktuell [%d W]"
+                                Text item=pGF_Utilityroom_Electricity_State_Daily_Supply label="Heute [%.1f kWh]"
+                                Text item=pGF_Utilityroom_Electricity_State_Annual_Supply_Current label="Dieses Jahr [%.1f kWh]"
+                                Text item=pGF_Utilityroom_Electricity_State_Annual_Supply_Last label="Letztes Jahr [%.1f kWh]"
+                                Text item=pGF_Utilityroom_Electricity_State_Annual_Supply_Forecast label="Hochrechnung [%.1f kWh]"
                             }
-                            Frame label="Raw" {
-                                Text item=pGF_Utilityroom_Power_Supply_Active
-                                Text item=pGF_Utilityroom_Energy_Supply_Active
+                            Frame label="Zähler" {
+                                Text item=pGF_Utilityroom_Electricity_Meter_Supply label="Zählerstand [%.1f kWh]"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                                 Webview url="/static/custom/grafana/energy_supply.html?fromItem=Chart_From" icon="none" height=18
                             }
                         }
-                        Group label="Solar [%.2f kWh]" item=pGF_Garage_Solar_Inverter_Daily_Yield {
-                            Frame label="Solar" {
-                                Text item=pGF_Garage_Solar_Inverter_Daily_Yield
-                                Text item=pGF_Garage_Solar_Inverter_AC_Power
-                                Text item=pGF_Garage_Solar_Inverter_DC_Power
-                                Text item=pGF_Garage_Solar_Inverter_DC_Voltage
-                                Text item=pGF_Garage_Solar_Inverter_DC_Current
-                                Text item=pGF_Garage_Solar_Inverter_Total_Yield
-                                Text item=pGF_Garage_Solar_Inverter_Power_Limitation
+                        Group item=pGF_Utilityroom_Electricity_State_Production_Msg {
+                            Frame label="Gesamt" {
+                                Text item=pGF_Garage_Solar_Inverter_ProductionActivePower label="Aktuell [%d W]"
+                                Text item=pGF_Utilityroom_Electricity_State_Daily_Production label="Heute [%.1f kWh]"
+                            }
+                            Frame label="Ost (Strasse)" {
+                                Text item=pGF_Garage_Solar_Inverter_ChargerEastActualPower label="Aktuell [%d W]"
+                                Text item=pGF_Utilityroom_Electricity_State_Daily_East_Production label="Heute [%.1f kWh]"
+                            }
+                            Frame label="Süd (Garage)" {
+                                Text item=pGF_Garage_Solar_Inverter_ChargerSouthActualPower label="Aktuell [%d W]"
+                                Text item=pGF_Utilityroom_Electricity_State_Daily_South_Production label="Heute [%.1f kWh]"
+                            }
+                            Frame label="West (Garten)" {
+                                Text item=pGF_Garage_Solar_Inverter_ChargerWestActualPower label="Aktuell [%d W]"
+                                Text item=pGF_Utilityroom_Electricity_State_Daily_West_Production label="Heute [%.1f kWh]"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/custom/grafana/solar_energy.html?fromItem=Chart_From" icon="none" height=18
+                                Webview url="/static/custom/grafana/solar_energy.html?fromItem=Chart_From" icon="none" height=12
                             }
                         }
-                        Group label="Eigenverbrauch [%.2f kWh]" item=pGF_Garage_Solar_Inverter_Daily_Consumption {
+                        Group item=pGF_Utilityroom_Electricity_State_Battery_Msg {
                             Frame label="Daten" {
-                                Text item=pGF_Garage_Solar_Inverter_Daily_Consumption
-                                Text item=pGF_Garage_Solar_Inverter_Annual_Consumption
+                                Text item=pGF_Garage_Solar_Storage_ChargerPower
+                                Text item=pGF_Garage_Solar_Storage_DischargerPower
+                                Text item=pGF_Garage_Solar_Storage_EssSoc
+                                Text item=pGF_Garage_Solar_Storage_EnergySoc
                             }
-                            Frame label="Auswertung" {
-                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/custom/grafana/solar_consumption.html?fromItem=Chart_From" icon="none" height=18
+                            Frame label="Details" {
+                                Text item=pGF_Garage_Solar_Storage_BattTowerVoltage
+                                Text item=pGF_Garage_Solar_Storage_BattTowerCurrent
+                                Text item=pGF_Garage_Solar_Storage_BattSoh
+                                Text item=pGF_Garage_Solar_Storage_Capacity
                             }
                         }
+                    }
+                    Frame label="Wechselrichter" {
+                        Text item=pGF_Utilityroom_Electricity_State_Message valuecolor=[=="Alles ok"="#6bc305",!="Alles ok"="#d72a2a"]
+                        Text item=pGF_Garage_Solar_Inverter_FemsVersion
+                        Text item=pGF_Garage_Solar_Inverter_InverterAirTemp
+                        Text item=pGF_Garage_Solar_Inverter_BmsBoxTemp
+                        Text item=pGF_Garage_Solar_Inverter_LastFeneconUpdate
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]

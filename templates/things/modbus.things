@@ -1,0 +1,16 @@
+Bridge modbus:tcp:solarGarage "Wechselrichter (Modbus)" [ host="{{custom_pv_inverter_garage_ip}}", port=502, id=1, connectTimeoutMillis=5000, timeBetweenReconnectMillis=10000, connectMaxTries=60] {
+    //Bridge poller state [ refresh=60000, start=222, length=2, type="input" ] {
+    //    Thing data state                        "Wechselrichter State"                        [ readStart="222", readValueType="int16"]
+    //}
+    Bridge poller sum [ refresh=15000, start=300, length=118, type="input" ] {
+        Thing data grid_active_power            "Wechselrichter GridActivePower"            [ readStart="315", readValueType="float32"]
+        Thing data production_active_power      "Wechselrichter ProductionActivePower"      [ readStart="327", readValueType="float32"]
+        Thing data production_active_energy     "Wechselrichter ProductionActiveEnergy"     [ readStart="367", readValueType="int64", readTransform="PY:modbus_float64.py"]
+        Thing data ess_active_power             "Wechselrichter EssDischargePower"          [ readStart="415", readValueType="float32"]
+        Thing data grid_mode                    "Wechselrichter GridMode"                   [ readStart="417", readValueType="int16"]
+    }
+    Bridge poller ess [ refresh=60000, start=300, length=122, type="input" ] {
+        Thing data ess_soc                      "Wechselrichter EssSoc"                     [ readStart="302", readValueType="uint16"]
+        Thing data ess_capacity                 "Wechselrichter EssCapacity"                [ readStart="420", readValueType="float32"]
+    }
+}

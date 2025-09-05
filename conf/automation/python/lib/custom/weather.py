@@ -1,18 +1,20 @@
 from openhab import Registry
 from shared.toolbox import ToolboxHelper
 
-from org.openhab.core.library.types import OnOffType as Java_OnOffType, DecimalType as Java_DecimalType
+from org.openhab.core.library.types import DecimalType as Java_DecimalType
+
+import scope
 
 
 class WeatherHelper:
     @staticmethod
     def isWorking():
-        return Registry.getItemState("pOutdoor_WeatherStation_Is_Working") == Java_OnOffType.ON
+        return Registry.getItemState("pOutdoor_WeatherStation_Is_Working") == scope.ON
 
     # *** TEMPERATURE ***
     @staticmethod
     def getTemperatureItemName():
-        return "pOutdoor_WeatherStation_Temperature" if Registry.getItemState("pOutdoor_WeatherStation_Is_Working") == Java_OnOffType.ON else "pGF_Utilityroom_Heating_Temperature_Outdoor"
+        return "pOutdoor_WeatherStation_Temperature" if Registry.getItemState("pOutdoor_WeatherStation_Is_Working") == scope.ON else "pGF_Utilityroom_Heating_Temperature_Outdoor"
 
     @staticmethod
     def getTemperatureStableItemState(time_slot):
@@ -25,7 +27,7 @@ class WeatherHelper:
     # *** SOLAR_POWER ***
     @staticmethod
     def _getSolarPowerItemName():
-        is_working = Registry.getItemState("pOutdoor_WeatherStation_Is_Working") == Java_OnOffType.ON
+        is_working = Registry.getItemState("pOutdoor_WeatherStation_Is_Working") == scope.ON
         return [ not is_working, "pOutdoor_WeatherStation_Solar_Power" if is_working else "pOutdoor_Astro_Total_Radiation" ]
 
     @staticmethod
@@ -40,7 +42,7 @@ class WeatherHelper:
     # *** LIGHT_LEVEL ***
     @staticmethod
     def _getLightLevelItemName():
-        is_working = Registry.getItemState("pOutdoor_WeatherStation_Is_Working") == Java_OnOffType.ON
+        is_working = Registry.getItemState("pOutdoor_WeatherStation_Is_Working") == scope.ON
         return [ not is_working, "pOutdoor_WeatherStation_Light_Level" if is_working else "pOutdoor_Astro_Light_Level" ]
 
     @staticmethod
@@ -64,4 +66,4 @@ class WeatherHelper:
     # *** CLOUD_COVER ***
     @staticmethod
     def getCloudCoverItemState():
-        return Registry.getItemState("pOutdoor_WeatherStation_Cloud_Cover") if Registry.getItemState("pOutdoor_WeatherStation_Is_Working") == Java_OnOffType.ON else Registry.getItemState("pOutdoor_Weather_Current_Cloud_Cover")
+        return Registry.getItemState("pOutdoor_WeatherStation_Cloud_Cover") if Registry.getItemState("pOutdoor_WeatherStation_Is_Working") == scope.ON else Registry.getItemState("pOutdoor_Weather_Current_Cloud_Cover")

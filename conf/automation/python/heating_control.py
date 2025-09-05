@@ -412,16 +412,17 @@ class Ventile:
 
         now = datetime.now().astimezone()
         for room in filter( lambda room: room.getHeatingVolume() != None and room.getName() in controllableRooms,Heating.getRooms()):
-            circuiteItem = Heating.getHeatingCircuitItemName(room)
+            circuiteItemName = Heating.getHeatingCircuitItemName(room)
+            circuiteItem = Registry.getItem(circuiteItemName)
             if now.hour == 2:
                 if room not in Ventile.maintenanceMode:
                     continue
-                #self.logger.info("STOP " + room.getName() + " " + str(scope.ON if Registry.getItemState(circuiteItem) == scope.OFF else scope.OFF))
-                Registry.getItem(circuiteItem).sendCommand(scope.ON if Registry.getItemState(circuiteItem) == scope.OFF else scope.OFF)
+                #self.logger.info("STOP " + room.getName() + " " + str(scope.ON if circuiteItem.getState() == scope.OFF else scope.OFF))
+                circuiteItem.sendCommand(scope.ON if circuiteItem.getState() == scope.OFF else scope.OFF)
                 del Ventile.maintenanceMode[room]
-            elif Registry.getItem(circuiteItem).getLastStateChange() < now - timedelta(hours=24):
-                #self.logger.info("START " + room.getName() + " " + str(scope.ON if Registry.getItemState(circuiteItem) == scope.OFF else scope.OFF))
-                Registry.getItem(circuiteItem).sendCommand(scope.ON if Registry.getItemState(circuiteItem) == scope.OFF else scope.OFF)
+            elif circuiteItem.getLastStateChange() is None or circuiteItem.getLastStateChange() < now - timedelta(hours=24):
+                #self.logger.info("START " + room.getName() + " " + str(scope.ON if circuiteItem.getState() == scope.OFF else scope.OFF))
+                circuiteItem.sendCommand(scope.ON if circuiteItem.getState() == scope.OFF else scope.OFF)
                 Ventile.maintenanceMode[room] = True
 
 @rule(

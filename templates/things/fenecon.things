@@ -1,0 +1,1 @@
+Thing fenecon:home-device:local "Wechselrichter (Fenecon)" [hostname="{{custom_pv_inverter_garage_ip}}", port=80, refreshInterval=60]

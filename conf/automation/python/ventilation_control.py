@@ -25,6 +25,7 @@ class StateReset:
     def execute(self, module, input):
         Registry.getItem(input['event'].getItemName()).postUpdateIfDifferent(0)
 
+
 @rule(
     triggers = [
         SystemStartlevelTrigger(80),
@@ -58,7 +59,6 @@ class StateMessage:
             msg = "Filter"
         else:
             msg = "Alles ok"
-
         Registry.getItem("pGF_Utilityroom_Ventilation_State_Message").postUpdateIfDifferent(msg)
 
 @rule(

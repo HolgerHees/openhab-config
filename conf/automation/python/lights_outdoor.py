@@ -123,7 +123,7 @@ class Control:
             timer = LightState.timerMappings.get(item_name)
             if timer is not None:
                 timer.cancel()
-                LightState.timerMappings[entry[0]] = None
+                LightState.timerMappings[item_name] = None
 
             for i, entry in enumerate(LIGHT_SETUP):
                 if entry[0] == item_name:
