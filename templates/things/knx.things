@@ -11,10 +11,13 @@ Bridge knx:ip:bridge "Bridge KNX Gateway" [
 ] {
     Thing device other "Sonstiges"
     {
-        Type    number  :       energyDemandActive      "Wirkenergie Bezug"          [ ga="13.010:0/4/10" ]
-        Type    number  :       energySupplyActive      "Wirkenergie Lieferung"      [ ga="13.010:0/4/11" ]
-        Type    number  :       powerDemandActive       "Wirkleistung Bezug"         [ ga="14.056:0/4/12" ]
-        Type    number  :       powerSupplyActive       "Wirkleistung Lieferung"     [ ga="14.056:0/4/13" ]
+        //Type    number  :       energyDemandActive      "Wirkenergie Bezug"          [ ga="13.010:0/4/10" ]
+        //Type    number  :       energySupplyActive      "Wirkenergie Lieferung"      [ ga="13.010:0/4/11" ]
+        //Type    number  :       powerDemandActive       "Wirkleistung Bezug"         [ ga="14.056:0/4/12" ]
+        //Type    number  :       powerSupplyActive       "Wirkleistung Lieferung"     [ ga="14.056:0/4/13" ]
+        //Type    number  :       powerSupplyActiveL1       "Wirkleistung Bezug L1"     [ ga="14.056:0/4/15" ]
+        //Type    number  :       powerSupplyActiveL2       "Wirkleistung Bezug L2"     [ ga="14.056:0/4/16" ]
+        //Type    number  :       powerSupplyActiveL3       "Wirkleistung Bezug L3"     [ ga="14.056:0/4/17" ]
 
         Type    switch  :       stateNotify             "Benachrichtigen"            [ ga="<0/4/1" ]
         Type    switch  :       switchDooropener        "Türöffner"                  [ ga="0/4/4" ]

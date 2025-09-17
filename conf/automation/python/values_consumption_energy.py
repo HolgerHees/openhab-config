@@ -12,7 +12,7 @@ import scope
 # offset values for electricity meter demand and supply (total values at the time when new electricity meter was changed)
 start_electricity_meter_demand_offset = 22223.717
 start_electricity_meter_supply_offset = 0.0
-start_electricity_meter_consumption_offset = 25559.396
+start_electricity_meter_consumption_offset = 52933.754 #25559.396
 start_electricity_meter_production_offset = 16260.991
 
 @rule(
@@ -41,7 +41,7 @@ class StateMessage:
         if Registry.getItemState("pGF_Garage_Solar_Inverter_State").toString() != "Ok":
             active.append(Registry.getItemState("pGF_Garage_Solar_Inverter_State").toString())
 
-        if Registry.getItemState("pGF_Garage_Solar_Inverter_GridEnabled") == scope.OFF:
+        if Registry.getItemState("pGF_Garage_Solar_Inverter_GridEnabled").intValue() == 2:
             active.append("Stromausfall")
 
         if len(active) == 0:
@@ -61,7 +61,8 @@ class EnergyCounterDemand:
         zaehler_stand_saved = Registry.getItemState("pGF_Utilityroom_Electricity_Meter_Demand",scope.DecimalType(0.0)).doubleValue()
         zaehler_stand_current = Registry.getItemState("pGF_Utilityroom_Electricity_Meter_Demand").doubleValue() + start_electricity_meter_demand_offset
         if zaehler_stand_current < zaehler_stand_saved:
-            self.logger.error("pGF_Utilityroom_Electricity_Meter_Demand: Calculation '{}' is wrong. Set 'start_electricity_meter_demand_offset' to '{}'".format(zaehler_stand_current, zaehler_stand_saved))
+            new_offset = zaehler_stand_saved - ( zaehler_stand_current - start_electricity_meter_demand_offset)
+            self.logger.error("pGF_Utilityroom_Electricity_Meter_Demand: Calculation is wrong ('{}' < '{}'). Set 'start_electricity_meter_demand_offset' to '{}'".format(zaehler_stand_current, zaehler_stand_saved, new_offset ))
             return
 
         Registry.getItem("pGF_Utilityroom_Electricity_State_Total_Demand").postUpdateIfDifferent(zaehler_stand_current)
@@ -102,7 +103,8 @@ class EnergyCounterSupply:
         zaehler_stand_saved = Registry.getItemState("pGF_Utilityroom_Electricity_Meter_Supply",scope.DecimalType(0.0)).doubleValue()
         zaehler_stand_current = Registry.getItemState("pGF_Utilityroom_Electricity_Meter_Supply").doubleValue() + start_electricity_meter_supply_offset
         if zaehler_stand_current < zaehler_stand_saved:
-            self.logger.error("pGF_Utilityroom_Electricity_Meter_Supply: Calculation '{}' is wrong. Set 'start_electricity_meter_supply_offset' to '{}'".format(zaehler_stand_current, zaehler_stand_saved))
+            new_offset = zaehler_stand_saved - ( zaehler_stand_current - start_electricity_meter_supply_offset)
+            self.logger.error("pGF_Utilityroom_Electricity_Meter_Supply: Calculation is wrong ('{}' < '{}'). Set 'start_electricity_meter_supply_offset' to '{}'".format(zaehler_stand_current, zaehler_stand_saved, new_offset ))
             return
 
         Registry.getItem("pGF_Utilityroom_Electricity_State_Total_Supply").postUpdateIfDifferent(zaehler_stand_current)
@@ -133,39 +135,32 @@ class EnergyCounterSupply:
             vorjahres_supply = int( round( zaehler_stand_old - zaehler_stand_old_one_year_before ) )
             Registry.getItem("pGF_Utilityroom_Electricity_State_Annual_Supply_Last").postUpdateIfDifferent(vorjahres_supply)
 
+
+#start_of_the_day = datetime.now().astimezone().replace(hour=0, minute=0, second=0, microsecond=0)
+#zaehler_stand_current = Registry.getItemState("pGF_Utilityroom_Electricity_State_Total_Consumption").doubleValue()
+#zaehler_stand_old = ToolboxHelper.getPersistedState("pGF_Utilityroom_Electricity_State_Total_Consumption", start_of_the_day).doubleValue()
+#logger.info("CONSUMPTION: {} => {}, SUM: {}".format(zaehler_stand_old, zaehler_stand_current, zaehler_stand_current - zaehler_stand_old))
+
 @rule(
     triggers = [
-      ItemStateChangeTrigger("pGF_Utilityroom_Electricity_Meter_Consumption_Total")
+      ItemStateChangeTrigger("pGF_Garage_Solar_Inverter_ConsumptionTotalEnergy")
     ]
 )
 class EnergyDailyConsumptionTotalCalculation:
     def execute(self, module, input):
         zaehler_stand_saved = Registry.getItemState("pGF_Utilityroom_Electricity_State_Total_Consumption",scope.DecimalType(0.0)).doubleValue()
-        zaehler_stand_current = round((Registry.getItemState("pGF_Utilityroom_Electricity_Meter_Consumption_Total").intValue() / 1000) + start_electricity_meter_consumption_offset, 3)
+        zaehler_stand_current = round((Registry.getItemState("pGF_Garage_Solar_Inverter_ConsumptionTotalEnergy").intValue() / 1000) + start_electricity_meter_consumption_offset, 3)
         if zaehler_stand_current < zaehler_stand_saved:
-            self.logger.error("pGF_Utilityroom_Electricity_State_Total_Consumption: Calculation '{}' is wrong. Set 'start_electricity_meter_consumption_offset' to '{}'".format(zaehler_stand_current, zaehler_stand_saved))
+            new_offset = zaehler_stand_saved - ( zaehler_stand_current - start_electricity_meter_consumption_offset)
+            self.logger.error("pGF_Utilityroom_Electricity_State_Total_Consumption: Calculation is wrong ('{}' < '{}'). Set 'start_electricity_meter_consumption_offset' to '{}'".format(zaehler_stand_current, zaehler_stand_saved, new_offset ))
             return
 
         Registry.getItem("pGF_Utilityroom_Electricity_State_Total_Consumption").postUpdateIfDifferent(zaehler_stand_current)
 
         start_of_the_day = datetime.now().astimezone().replace(hour=0, minute=0, second=0, microsecond=0)
-        zaehler_stand_old = ToolboxHelper.getPersistedState("pGF_Utilityroom_Electricity_State_Total_Consumption", start_of_the_day).intValue()
+        zaehler_stand_old = ToolboxHelper.getPersistedState("pGF_Utilityroom_Electricity_State_Total_Consumption", start_of_the_day).doubleValue()
         current_consumption = zaehler_stand_current - zaehler_stand_old
         Registry.getItem("pGF_Utilityroom_Electricity_State_Daily_Consumption").postUpdateIfDifferent(current_consumption);
-
-        # DONE
-        # pGF_Utilityroom_Electricity_State_Total_Consumption
-        # pGF_Utilityroom_Electricity_State_Total_Production
-        # pGF_Utilityroom_Electricity_State_Total_East_Production
-        # pGF_Utilityroom_Electricity_State_Total_South_Production
-        # pGF_Utilityroom_Electricity_State_Total_West_Production
-        # Strom => Stromverbrauch from DAILY to TOTAL DIFF
-        # Solar => Ertrag from DAILY to TOTAL DIFF
-        # UPDATE dashoards
-        # RENAME pGF_Utilityroom_Electricity_Consumption_Total => pGF_Utilityroom_Electricity_Meter_Consumption_Total
-        # RENAME pGF_Utilityroom_Electricity_Consumption_Active => pGF_Utilityroom_Electricity_Meter_Consumption_Active
-
-        # Fill Demand < 2023 with Consumption
 
 @rule(
     triggers = [
@@ -177,19 +172,16 @@ class EnergyDailyProductionTotalCalculation:
         zaehler_stand_saved = Registry.getItemState("pGF_Utilityroom_Electricity_State_Total_Production",scope.DecimalType(0.0)).doubleValue()
         zaehler_stand_current = round((Registry.getItemState("pGF_Garage_Solar_Inverter_ProductionTotalEnergy").intValue() / 1000) + start_electricity_meter_production_offset, 3)
         if zaehler_stand_current < zaehler_stand_saved:
-            self.logger.error("pGF_Utilityroom_Electricity_State_Total_Production: Calculation '{}' is wrong. Set 'start_electricity_meter_production_offset' to '{}'".format(zaehler_stand_current, zaehler_stand_saved))
+            new_offset = zaehler_stand_saved - ( zaehler_stand_current - start_electricity_meter_production_offset)
+            self.logger.error("pGF_Utilityroom_Electricity_State_Total_Production: Calculation is wrong ('{}' < '{}'). Set 'start_electricity_meter_production_offset' to '{}'".format(zaehler_stand_current, zaehler_stand_saved, new_offset ))
             return
 
         Registry.getItem("pGF_Utilityroom_Electricity_State_Total_Production").postUpdateIfDifferent(zaehler_stand_current)
 
         start_of_the_day = datetime.now().astimezone().replace(hour=0, minute=0, second=0, microsecond=0)
-        zaehler_stand_old = ToolboxHelper.getPersistedState("pGF_Utilityroom_Electricity_State_Total_Production", start_of_the_day).intValue()
+        zaehler_stand_old = ToolboxHelper.getPersistedState("pGF_Utilityroom_Electricity_State_Total_Production", start_of_the_day).doubleValue()
         current_production = zaehler_stand_current - zaehler_stand_old
         Registry.getItem("pGF_Utilityroom_Electricity_State_Daily_Production").postUpdateIfDifferent(current_production);
-
-#Registry.getItem("pGF_Utilityroom_Electricity_State_Total_South_Production").postUpdate(47.605)  # 1,3kw, Item446
-#Registry.getItem("pGF_Utilityroom_Electricity_State_Total_West_Production").postUpdate(35.955)   # 1,6kw, Item445
-#Registry.getItem("pGF_Utilityroom_Electricity_State_Total_East_Production").postUpdate(73.585)   # 3,3kw, Item444
 
 @rule
 class EnergyDailyProductionChargerCalculation:
@@ -228,13 +220,13 @@ class EnergyDailyProductionChargerCalculation:
         Registry.getItem(total_target).postUpdateIfDifferent(zaehler_stand_current)
 
         start_of_the_day = datetime.now().astimezone().replace(hour=0, minute=0, second=0, microsecond=0)
-        zaehler_stand_old = ToolboxHelper.getPersistedState(total_target, start_of_the_day).intValue()
+        zaehler_stand_old = ToolboxHelper.getPersistedState(total_target, start_of_the_day).doubleValue()
         current_production = zaehler_stand_current - zaehler_stand_old
         Registry.getItem(daily_target).postUpdateIfDifferent(current_production);
 
 @rule(
     triggers = [
-      ItemStateChangeTrigger("pGF_Utilityroom_Electricity_Meter_Consumption_Active"),
+      ItemStateChangeTrigger("pGF_Garage_Solar_Inverter_ConsumptionActivePower"),
       ItemStateChangeTrigger("pGF_Garage_Solar_Inverter_ProductionActivePower"),
       ItemStateChangeTrigger("pGF_Garage_Solar_Storage_ChargerPower"),
       ItemStateChangeTrigger("pGF_Garage_Solar_Storage_DischargerPower")
@@ -242,7 +234,7 @@ class EnergyDailyProductionChargerCalculation:
 )
 class EnergyRatioCalculation:
     def execute(self, module, input):
-        current_demand = Registry.getItemState("pGF_Utilityroom_Electricity_Meter_Consumption_Active").intValue()
+        current_demand = Registry.getItemState("pGF_Garage_Solar_Inverter_ConsumptionActivePower").intValue()
         current_production = Registry.getItemState("pGF_Garage_Solar_Inverter_ProductionActivePower").intValue()
         current_charge = Registry.getItemState("pGF_Garage_Solar_Storage_ChargerPower").intValue()
         current_discharge = Registry.getItemState("pGF_Garage_Solar_Storage_DischargerPower").intValue()
@@ -307,9 +299,9 @@ class EnergyStorageCalculation:
             energy_soc = percent * capacity / 100
             Registry.getItem("pGF_Garage_Solar_Storage_EnergySoc").postUpdate(percent * capacity / 100)
         else:
-            energy_soc = Registry.getItemState("pGF_Garage_Solar_Storage_EnergySoc").floatValue() / 1000
+            energy_soc = Registry.getItemState("pGF_Garage_Solar_Storage_EnergySoc").floatValue()
 
-        Registry.getItem("pGF_Utilityroom_Electricity_State_Battery_Msg").postUpdate(u"{} W ({} % • {:.1f} kWh)".format(power, percent, energy_soc))
+        Registry.getItem("pGF_Utilityroom_Electricity_State_Battery_Msg").postUpdate(u"{} W ({} % • {:.1f} kWh)".format(power, percent, energy_soc / 1000))
 
 @rule
 class EnergyMsg:
@@ -318,7 +310,7 @@ class EnergyMsg:
             "FromGrid": [ 'pGF_Garage_Solar_Inverter_BuyFromGridPower', 'pGF_Utilityroom_Electricity_State_Daily_Demand', 'pGF_Utilityroom_Electricity_State_Demand_Msg'],
             "ToGrid": [ 'pGF_Garage_Solar_Inverter_SellToGridPower', 'pGF_Utilityroom_Electricity_State_Daily_Supply', 'pGF_Utilityroom_Electricity_State_Supply_Msg'],
             "production": [ 'pGF_Garage_Solar_Inverter_ProductionActivePower', 'pGF_Utilityroom_Electricity_State_Daily_Production', 'pGF_Utilityroom_Electricity_State_Production_Msg'],
-            "consumption": [ 'pGF_Utilityroom_Electricity_Meter_Consumption_Active', 'pGF_Utilityroom_Electricity_State_Daily_Consumption', 'pGF_Utilityroom_Electricity_State_Consumption_Msg'],
+            "consumption": [ 'pGF_Garage_Solar_Inverter_ConsumptionActivePower', 'pGF_Utilityroom_Electricity_State_Daily_Consumption', 'pGF_Utilityroom_Electricity_State_Consumption_Msg'],
         }
 
         self.lookupMap = {}

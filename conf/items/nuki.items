@@ -1,4 +1,4 @@
-Group  eGF_Corridor_Lock                        "Haustürschloss"    <selflight> (lGF_Corridor)
+Group  eGF_Corridor_Lock                        "Haustürschloss"    <selflight> (lGF_Corridor) ["FrontDoor"]
 
 String pGF_Corridor_Lock_State_Device_Info      "Device Status [%s]" <selfplant> (eGF_Corridor_Lock) ["Point"]
 DateTime pGF_Corridor_Lock_Timestamp            "Zeitstempel [%1$td. %1$tB %1$tH:%1$tM Uhr]" <selfplant> (eGF_Corridor_Lock) ["Point"] { channel="mqtt:topic:mosquitto:nuki:timestamp" }

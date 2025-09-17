@@ -943,7 +943,7 @@ sitemap haus label="Main Menu"
 		Group label="Technik [%s]" icon="selfhouse" item=pOther_State_Message_Main valuecolor=[=="Alles ok"="#6bc305",=="Lüftungsanlage Filter"="#cbcb00",!="Alles ok"="#d72a2a"]
 		{
             Frame label="Technik" {
-                Group item=pGF_Utilityroom_Ventilation_Fan_Level label="Lüftung [MAP(level_de.map):%d]" icon="selfairing" {
+                Group item=pGF_Utilityroom_Ventilation_Fan_Level label="Lüftung [MAP(level_de.map):%s]" icon="selfairing" {
                     Frame label="Steuerung" {
                         Switch item=pGF_Utilityroom_Ventilation_Auto_Mode label="Modus" mappings=[ON="Auto", OFF="Manuell"]
                         Switch item=pGF_Utilityroom_Ventilation_Fan_Level label="Stufe" mappings=[1="A", 2="1", 3="2", 4="3"]
@@ -1017,10 +1017,25 @@ sitemap haus label="Main Menu"
             }
             Frame label="Versorgung" {
                 Group item=pGF_Utilityroom_Electricity_State_Daily_Consumption label="Strom [%.1f kWh]"{
-                    Frame label="Status" {
-                        Text item=pGF_Utilityroom_Electricity_State_Consumption_Msg label="Verbrauch [%s]"
+                    Frame label="Verbrauch" {
                         Text item=pGF_Utilityroom_Electricity_State_Autarky
                         Text item=pGF_Utilityroom_Electricity_State_Ratio
+                        Group item=pGF_Utilityroom_Electricity_State_Consumption_Msg {
+                            Frame label="Daten" {
+                                Text item=pGF_Garage_Solar_Inverter_ConsumptionActivePower label="Aktuell [%d W]"
+                                Text item=pGF_Utilityroom_Electricity_State_Daily_Consumption label="Heute [%.1f kWh]"
+
+                            }
+                            Frame label="Details" {
+                                Text item=pGF_Garage_Solar_Inverter_ConsumptionActivePowerL1 label="Aktuell L1 [%d W]"
+                                Text item=pGF_Garage_Solar_Inverter_ConsumptionActivePowerL2 label="Aktuell L2 [%d W]"
+                                Text item=pGF_Garage_Solar_Inverter_ConsumptionActivePowerL3 label="Aktuell L3 [%d W]"
+                            }
+                            Frame label="Auswertung" {
+                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/custom/grafana/energy_consumption.html?fromItem=Chart_From" icon="none" height=18
+                            }
+                        }
                     }
                     Frame label="Details" {
                         Group item=pGF_Utilityroom_Electricity_State_Demand_Msg {
@@ -1057,24 +1072,30 @@ sitemap haus label="Main Menu"
                         }
                         Group item=pGF_Utilityroom_Electricity_State_Production_Msg {
                             Frame label="Gesamt" {
-                                Text item=pGF_Garage_Solar_Inverter_ProductionActivePower label="Aktuell [%d W]"
-                                Text item=pGF_Utilityroom_Electricity_State_Daily_Production label="Heute [%.1f kWh]"
+                                Text item=pGF_Garage_Solar_Inverter_ProductionActivePower label="Leistung [%d W]"
+                                Text item=pGF_Utilityroom_Electricity_State_Daily_Production label="Erzeugung (Heute) [%.1f kWh]"
                             }
                             Frame label="Ost (Strasse)" {
-                                Text item=pGF_Garage_Solar_Inverter_ChargerEastActualPower label="Aktuell [%d W]"
-                                Text item=pGF_Utilityroom_Electricity_State_Daily_East_Production label="Heute [%.1f kWh]"
+                                Text item=pGF_Garage_Solar_Inverter_ChargerEastActualPower label="Leistung [%d W]"
+                                Text item=pGF_Utilityroom_Electricity_State_Daily_East_Production label="Erzeugung (Heute) [%.1f kWh]"
+                                Text item=pGF_Garage_Solar_Inverter_ChargerEastVoltage
+                                Text item=pGF_Garage_Solar_Inverter_ChargerEastCurrent
                             }
                             Frame label="Süd (Garage)" {
-                                Text item=pGF_Garage_Solar_Inverter_ChargerSouthActualPower label="Aktuell [%d W]"
-                                Text item=pGF_Utilityroom_Electricity_State_Daily_South_Production label="Heute [%.1f kWh]"
+                                Text item=pGF_Garage_Solar_Inverter_ChargerSouthActualPower label="Leistung [%d W]"
+                                Text item=pGF_Utilityroom_Electricity_State_Daily_South_Production label="Erzeugung (Heute) [%.1f kWh]"
+                                Text item=pGF_Garage_Solar_Inverter_ChargerSouthVoltage
+                                Text item=pGF_Garage_Solar_Inverter_ChargerSouthCurrent
                             }
                             Frame label="West (Garten)" {
-                                Text item=pGF_Garage_Solar_Inverter_ChargerWestActualPower label="Aktuell [%d W]"
-                                Text item=pGF_Utilityroom_Electricity_State_Daily_West_Production label="Heute [%.1f kWh]"
+                                Text item=pGF_Garage_Solar_Inverter_ChargerWestActualPower label="Leistung [%d W]"
+                                Text item=pGF_Utilityroom_Electricity_State_Daily_West_Production label="Erzeugung (Heute) [%.1f kWh]"
+                                Text item=pGF_Garage_Solar_Inverter_ChargerWestVoltage
+                                Text item=pGF_Garage_Solar_Inverter_ChargerWestCurrent
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/custom/grafana/solar_energy.html?fromItem=Chart_From" icon="none" height=12
+                                Webview url="/static/custom/grafana/solar_energy.html?fromItem=Chart_From" icon="none" height=24
                             }
                         }
                         Group item=pGF_Utilityroom_Electricity_State_Battery_Msg {
@@ -1094,14 +1115,11 @@ sitemap haus label="Main Menu"
                     }
                     Frame label="Wechselrichter" {
                         Text item=pGF_Utilityroom_Electricity_State_Message valuecolor=[=="Alles ok"="#6bc305",!="Alles ok"="#d72a2a"]
+                        Text item=pGF_Garage_Solar_Inverter_GridEnabled valuecolor=[!="2"="#6bc305",=="2"="#d72a2a"]
                         Text item=pGF_Garage_Solar_Inverter_FemsVersion
                         Text item=pGF_Garage_Solar_Inverter_InverterAirTemp
                         Text item=pGF_Garage_Solar_Inverter_BmsBoxTemp
                         Text item=pGF_Garage_Solar_Inverter_LastFeneconUpdate
-                    }
-                    Frame label="Auswertung" {
-                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/custom/grafana/energy_consumption.html?fromItem=Chart_From" icon="none" height=18
                     }
                 }
                 Group item=pGF_Utilityroom_Gas_Current_Daily_Consumption label="Gas [%.2f m³]" {

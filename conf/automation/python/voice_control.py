@@ -24,7 +24,7 @@ class Main:
     def execute(self, module, input):
         if input['event'].getType() == "TimerEvent":
             self.processor = CommandProcessor(scope.ir)
-            self.test(scope.ir)
+            self.test(self.logger, scope.ir)
             #self.logger.info("{}".format(input))
         else:
             Registry.getItem("VoiceMessage").postUpdate("")

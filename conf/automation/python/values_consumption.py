@@ -9,7 +9,8 @@ import scope
 
 
 # offset values for gas meter (total value at the time when knx based impulse counter was resettet)
-start_gas_meter_value = 12852.13
+start_gas_meter_value = 12855.08
+#start_gas_meter_value = 12854.82
 #start_gas_meter_value = 12849.42
 #start_gas_meter_value = 12770.69
 #start_gas_meter_value = 10405.39
@@ -121,7 +122,8 @@ class GasConsumption:
         #self.logger.info("{}".format(zaehler_stand_current))
         
         if zaehler_stand_current < zaehler_stand_saved:
-            self.logger.error("Consumption: Calculation '{}' is wrong. Set 'start_gas_impulse_counter' to '{}'".format(zaehler_stand_current, zaehler_stand_saved))
+            new_offset = zaehler_stand_saved - ( zaehler_stand_current - start_gas_meter_value )
+            self.logger.error("pGF_Utilityroom_Gas_Meter_Current_Count: Calculation is wrong ('{}' < '{}'). Set 'start_gas_meter_value' to '{}'".format(zaehler_stand_current, zaehler_stand_saved, new_offset ))
             return
 
         if zaehler_stand_current > zaehler_stand_saved:

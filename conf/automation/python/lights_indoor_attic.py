@@ -6,9 +6,12 @@ from datetime import datetime, timedelta
 import scope
 
 
+hour = datetime.now().astimezone().hour
+print(hour)
+
 @rule(
     triggers = [
-        GenericCronTrigger("0 1 * * * ?"),
+        GenericCronTrigger("0 0 * * * ?"),
         ItemStateChangeTrigger("pOther_Manual_State_Auto_Attic_Light")
     ]
 )

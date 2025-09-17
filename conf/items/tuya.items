@@ -1,4 +1,4 @@
-Group   eGF_Livingroom_Humidifier                               "Luftbefeuchter EG"                                <selfinfo>      (lGF_Livingroom)
+Group   eGF_Livingroom_Humidifier                               "Luftbefeuchter EG"                                <selfinfo>      (lGF_Livingroom) ["Humidifier"]
 Switch pGF_Livingroom_Humidifier_Online                         "Online State [%s]"                             <selfinfo>      (eGF_Livingroom_Humidifier) ["Point"]
 String pGF_Livingroom_Humidifier_State_Message                  "Status [%s]"                                   <selfinfo>      (eGF_Livingroom_Humidifier) ["Point"]
 
@@ -21,7 +21,7 @@ Switch pGF_Livingroom_Humidifier_Device_Auto_Mode               "Automatik"     
 String pGF_Livingroom_Humidifier_Target                         "Zielfeuchtigkeit [%s]"                         <humidity>      (eGF_Livingroom_Humidifier) { channel="tuya:tuyaDevice:humidifier_eg:humidity_target" }
 
 
-Group   eFF_Bedroom_Humidifier                               "Luftbefeuchter OG"                                <selfinfo>      (lFF_Bedroom)
+Group   eFF_Bedroom_Humidifier                               "Luftbefeuchter OG"                                <selfinfo>      (lFF_Bedroom) ["Humidifier"]
 Switch pFF_Bedroom_Humidifier_Online                         "Online State [%s]"                             <selfinfo>      (eFF_Bedroom_Humidifier) ["Point"]
 String pFF_Bedroom_Humidifier_State_Message                  "Status [%s]"                                   <selfinfo>      (eFF_Bedroom_Humidifier) ["Point"]
 
