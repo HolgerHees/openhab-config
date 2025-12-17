@@ -26,12 +26,11 @@ import scope
 #postUpdate("pFF_Bedroom_Heating_Demand",scope.OFF)
 #postUpdate("pFF_Bathroom_Heating_Demand",scope.OFF)
 
-Heating.cloud_cover_fc8_item_name = "pOutdoor_Weather_Forecast_Cloud_Cover_8h"
-Heating.cloud_cover_fc4_item_name = "pOutdoor_Weather_Forecast_Cloud_Cover_4h"
-Heating.cloud_cover_item_name = "pOutdoor_Weather_Current_Cloud_Cover"
+Heating.forecast_cloud_cover_item_name = "pOutdoor_Weather_Forecast_Cloud_Cover"
+Heating.forecast_temperature_garden_item_name = "pOutdoor_Weather_Forecast_Temperature"
 
-Heating.temperature_garden_fc8_item_name = "pOutdoor_Weather_Forecast_Temperature_8h"
-Heating.temperature_garden_fc4_item_name = "pOutdoor_Weather_Forecast_Temperature_4h"
+Heating.current_cloud_cover_item_name = "pOutdoor_Weather_Current_Cloud_Cover"
+Heating.current_temperature_garden_item_name = WeatherHelper.getTemperatureItemName()
 
 Heating.ventilation_filter_runtime_item_name = "pGF_Utilityroom_Ventilation_Filter_Runtime"
 
@@ -453,7 +452,7 @@ class Main:
 
         current_heating_demand = Registry.getItemState("pGF_Utilityroom_Heating_Demand")
 
-        heating = Heating(self.logger, WeatherHelper.getTemperatureItemName())
+        heating = Heating(self.logger)
 
         messured_radiation_short_term = WeatherHelper.getSolarPowerStableItemState(10).doubleValue()
         messured_radiation_long_term = WeatherHelper.getSolarPowerStableItemState(30).doubleValue()
@@ -661,8 +660,6 @@ class Main:
             rs = cr.getRoomState(room.getName())
 
             target_room_temperature = fallback_target_temperature if room.getHeatingVolume() == None else hhs.getHeatingState(room.getName()).getHeatingTargetTemperature()
-
-            #weatherAvgTemperature = Registry.getItemState("pOutdoor_Weather_Current_Temperature_Avg").floatValue()
 
             for transition in room.transitions:
                 if not isinstance(transition,Window) or transition.getRadiationArea() == None or transition.getSunProtectionItem() == None:

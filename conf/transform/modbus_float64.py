@@ -1,4 +1,4 @@
-def ieee_754_conversion(n, sgn_len=1, exp_len=11, mant_len=52):
+def calc(n, sgn_len=1, exp_len=11, mant_len=52):
     """
     Converts an arbitrary precision Floating Point number.
     Note: Since the calculations made by python inherently use floats, the accuracy is poor at high precision.
@@ -38,6 +38,4 @@ def ieee_754_conversion(n, sgn_len=1, exp_len=11, mant_len=52):
 
     return sign_mult * (2 ** exponent) * mant_mult
 
-def calc(input):
-    return ieee_754_conversion(int(input))
-calc(input)
+calc(int(input))

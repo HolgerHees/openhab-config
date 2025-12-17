@@ -1,5 +1,5 @@
 from openhab import rule, Registry
-from openhab.triggers import ItemStateChangeTrigger
+from openhab.triggers import ItemStateChangeTrigger, ItemStateCondition
 
 from shared.toolbox import ToolboxHelper
 from shared.notification import NotificationHelper
@@ -12,7 +12,12 @@ from datetime import datetime
 import scope
 
 
-@rule
+@rule(
+    conditions = [
+        ItemStateCondition("pOther_Manual_State_Security_Notify", operator="=", state=scope.ON ),
+        ItemStateCondition("pOther_Presence_State", operator="=", state=PresenceHelper.STATE_AWAY )
+    ]
+)
 class AwayAlerts:
     def __init__(self):
         self.last_notification = datetime.now().astimezone()
@@ -26,13 +31,6 @@ class AwayAlerts:
         return triggers
 
     def execute(self, module, input):
-        if Registry.getItemState("pOther_Manual_State_Security_Notify") != scope.ON:
-            return
-
-        state = Registry.getItemState("pOther_Presence_State").intValue()
-        if state != PresenceHelper.STATE_AWAY:
-            return
-
         item_name = input['event'].getItemName()
 
         # Other main door events are handled inside presence detection.
@@ -74,7 +72,12 @@ class AwayAlerts:
                 NotificationHelper.sendNotification(NotificationHelper.PRIORITY_ALERT, "Alarm", "{}".format(msg))
             self.last_notification = now
 
-@rule
+@rule(
+    conditions = [
+        ItemStateCondition("pOther_Manual_State_Security_Notify", operator="=", state=scope.ON ),
+        ItemStateCondition("pOther_Presence_State", operator="=", state=PresenceHelper.STATE_SLEEPING )
+    ]
+)
 class SleepAlerts:
     def buildTriggers(self):
         triggers = []
@@ -83,10 +86,6 @@ class SleepAlerts:
         return triggers
 
     def execute(self, module, input):
-        state = Registry.getItemState("pOther_Presence_State").intValue()
-        if state != PresenceHelper.STATE_SLEEPING:
-            return
-
         if ToolboxHelper.isMember(input['event'].getItemName(), "gGF_Sensor_Doors"):
             msg = "Die Haustür wurde unerwartet geöffnet"
             AlexaHelper.sendTTS(msg, location = "lFF_Bedroom", priority = NotificationHelper.PRIORITY_ALERT)

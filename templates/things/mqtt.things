@@ -1,45 +1,37 @@
-Bridge mqtt:broker:cloud [ host="cloud_mosquitto", secure=false ]
+Bridge mqtt:broker:cloud "MQTT Broker (Cloud-MQTT)" [ host="cloud_mosquitto", secure=false ]
 {
-    Thing topic weatherforecast "Wettervorhersage (Cloud-MQTT)" {
-        Type number : temperature0 "Temperatur" [ stateTopic="hhees/weather/provider/items/airTemperatureInCelsius/0" ]
-        Type number : cloudcover0 "Bewölkung" [ stateTopic="hhees/weather/provider/items/effectiveCloudCoverInOcta/0" ]
-        Type number : temperature4 "Temperatur 4 Stunden" [ stateTopic="hhees/weather/provider/items/airTemperatureInCelsius/4" ]
-        Type number : cloudcover4 "Bewölkung 4 Stunden" [ stateTopic="hhees/weather/provider/items/effectiveCloudCoverInOcta/4" ]
-        Type number : temperature8 "Temperatur 8 Stunden" [ stateTopic="hhees/weather/provider/items/airTemperatureInCelsius/8" ]
-        Type number : cloudcover8 "Bewölkung 8 Stunden" [ stateTopic="hhees/weather/provider/items/effectiveCloudCoverInOcta/8" ]
-        Type number : temperatureMin "Temperatur Min 24 Stunden" [ stateTopic="hhees/weather/provider/items/airTemperatureInCelsius/min" ]
-        Type number : cloudcoverMin "Bewölkung Min 24 Stunden" [ stateTopic="hhees/weather/provider/items/effectiveCloudCoverInOcta/min" ]
-        Type number : temperatureMax "Temperatur Max 24 Stunden" [ stateTopic="hhees/weather/provider/items/airTemperatureInCelsius/max" ]
-        Type number : cloudcoverMax "Bewölkung Max 24 Stunden" [ stateTopic="hhees/weather/provider/items/effectiveCloudCoverInOcta/max" ]
-        Type number : temperatureAvg "Temperatur Avg 24 Stunden" [ stateTopic="hhees/weather/provider/items/airTemperatureInCelsius/avg" ]
-        Type number : cloudcoverAvg "Bewölkung Avg 24 Stunden" [ stateTopic="hhees/weather/provider/items/effectiveCloudCoverInOcta/avg" ]
-
-        Type number : airTemperatureCurrent "Temperatur" [ stateTopic="hhees/weather/provider/current/airTemperatureInCelsius" ]
-        Type number : perceivedTemperatureCurrent "Temperatur" [ stateTopic="hhees/weather/provider/current/feelsLikeTemperatureInCelsius" ]
-        Type number : effectiveCloudCoverCurrent "Temperatur" [ stateTopic="hhees/weather/provider/current/effectiveCloudCoverInOcta" ]
-        Type number : humidityCurrent "Temperatur" [ stateTopic="hhees/weather/provider/current/relativeHumidityInPercent" ]
-    }
-    Thing topic weatherstation "Wetterstation (Cloud-MQTT)" {
-        Type number : cloudCoverInOcta "Cloud cover" [ commandTopic="hhees/weather/station/cloudCoverInOcta" ]
-        Type number : rainRateInMillimeterPerHour "Rain current" [ commandTopic="hhees/weather/station/rainRateInMillimeterPerHour" ]
-        Type number : rainLastHourInMillimeter "Rain last hour" [ commandTopic="hhees/weather/station/rainLastHourInMillimeter" ]
-        Type number : rainDailyInMillimeter "Rain daily" [ commandTopic="hhees/weather/station/rainDailyInMillimeter" ]
-        Type number : rainLevel "Rain level" [ commandTopic="hhees/weather/station/rainLevel" ]
-        Type number : windSpeedInKilometerPerHour "Wind speed" [ commandTopic="hhees/weather/station/windSpeedInKilometerPerHour" ]
-        Type number : windGustInKilometerPerHour "Wind guest" [ commandTopic="hhees/weather/station/windGustInKilometerPerHour" ]
-        Type number : windDirectionInDegree "Wind direction" [ commandTopic="hhees/weather/station/windDirectionInDegree" ]
-        Type number : dewpointInCelsius "Dewpoint" [ commandTopic="hhees/weather/station/dewpointInCelsius" ]
-        Type number : airTemperatureInCelsius "Air temperature" [ commandTopic="hhees/weather/station/airTemperatureInCelsius" ]
-        Type number : perceivedTemperatureInCelsius "Perceived temperature" [ commandTopic="hhees/weather/station/perceivedTemperatureInCelsius" ]
-        Type number : airHumidityInPercent "Air humidity" [ commandTopic="hhees/weather/station/airHumidityInPercent" ]
-        Type number : pressureInHectopascals "Pressure" [ commandTopic="hhees/weather/station/pressureInHectopascals" ]
-        Type number : solarRadiationInWatt "Solar power" [ commandTopic="hhees/weather/station/solarRadiationInWatt" ]
-        Type number : lightLevelInLux "Light level" [ commandTopic="hhees/weather/station/lightLevelInLux" ]
-        Type number : uvIndex "UV index" [ commandTopic="hhees/weather/station/uvIndex" ]
-    }
+    Channels:
+        Type publishTrigger : weatherforecast_temperature "Temperatur" [ stateTopic="hhees/weather/provider/forecast/airTemperatureInCelsius/#", separator="#" ]
+        Type publishTrigger : weatherforecast_cloudcover "Bewölkung" [ stateTopic="hhees/weather/provider/forecast/effectiveCloudCoverInOcta/#", separator="#" ]
+        Type publishTrigger : weatherforecast_sunshine "Sonnenlicht Dauer" [ stateTopic="hhees/weather/provider/forecast/sunshineDurationInMinutes/#", separator="#" ]
+        Type publishTrigger : weatherforecast_refreshed "Refreshed" [ stateTopic="hhees/weather/provider/forecast/refreshed" ]
+}
+Thing mqtt:topic:cloud:weatherforecast "MQTT Wettervorhersage (Cloud-MQTT)" (mqtt:broker:cloud) {
+    Type number : airTemperatureCurrent "Temperatur" [ stateTopic="hhees/weather/provider/current/airTemperatureInCelsius" ]
+    Type number : perceivedTemperatureCurrent "Temperatur" [ stateTopic="hhees/weather/provider/current/feelsLikeTemperatureInCelsius" ]
+    Type number : effectiveCloudCoverCurrent "Temperatur" [ stateTopic="hhees/weather/provider/current/effectiveCloudCoverInOcta" ]
+    Type number : humidityCurrent "Temperatur" [ stateTopic="hhees/weather/provider/current/relativeHumidityInPercent" ]
+}
+Thing mqtt:topic:cloud:weatherstation "MQTT Wetterstation (Cloud-MQTT)" (mqtt:broker:cloud) {
+    Type number : cloudCoverInOcta "Cloud cover" [ commandTopic="hhees/weather/station/cloudCoverInOcta" ]
+    Type number : rainRateInMillimeterPerHour "Rain current" [ commandTopic="hhees/weather/station/rainRateInMillimeterPerHour" ]
+    Type number : rainLastHourInMillimeter "Rain last hour" [ commandTopic="hhees/weather/station/rainLastHourInMillimeter" ]
+    Type number : rainDailyInMillimeter "Rain daily" [ commandTopic="hhees/weather/station/rainDailyInMillimeter" ]
+    Type number : rainLevel "Rain level" [ commandTopic="hhees/weather/station/rainLevel" ]
+    Type number : windSpeedInKilometerPerHour "Wind speed" [ commandTopic="hhees/weather/station/windSpeedInKilometerPerHour" ]
+    Type number : windGustInKilometerPerHour "Wind guest" [ commandTopic="hhees/weather/station/windGustInKilometerPerHour" ]
+    Type number : windDirectionInDegree "Wind direction" [ commandTopic="hhees/weather/station/windDirectionInDegree" ]
+    Type number : dewpointInCelsius "Dewpoint" [ commandTopic="hhees/weather/station/dewpointInCelsius" ]
+    Type number : airTemperatureInCelsius "Air temperature" [ commandTopic="hhees/weather/station/airTemperatureInCelsius" ]
+    Type number : perceivedTemperatureInCelsius "Perceived temperature" [ commandTopic="hhees/weather/station/perceivedTemperatureInCelsius" ]
+    Type number : airHumidityInPercent "Air humidity" [ commandTopic="hhees/weather/station/airHumidityInPercent" ]
+    Type number : pressureInHectopascals "Pressure" [ commandTopic="hhees/weather/station/pressureInHectopascals" ]
+    Type number : solarRadiationInWatt "Solar power" [ commandTopic="hhees/weather/station/solarRadiationInWatt" ]
+    Type number : lightLevelInLux "Light level" [ commandTopic="hhees/weather/station/lightLevelInLux" ]
+    Type number : uvIndex "UV index" [ commandTopic="hhees/weather/station/uvIndex" ]
 }
 
-Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
+Bridge mqtt:broker:mosquitto "MQTT Broker (Local-MQTT)" [ host="mosquitto", secure=false ]
 {
     Thing topic system_service "System Info" {
 {% for username in userdata %}
@@ -48,14 +40,14 @@ Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
 {% endif %}
 {% endfor %}
     }
-    Thing topic frigate "Frigate" {
+    Thing topic frigate "MQTT Frigate" {
         Type string : reviews "Ereignisse" [ stateTopic="frigate/reviews" ]
     }
-    Thing topic watt_waechter "Watt Wächter" {
+    Thing topic watt_waechter "MQTT Watt Wächter" {
         Type number : demand "Bedarf" [ stateTopic="wattwaechter/SENSOR", transformationPattern="JSONPATH:$.LK13BE.total" ]
         Type number : supply "Einspeisung" [ stateTopic="wattwaechter/SENSOR", transformationPattern="JSONPATH:$.LK13BE.total_out" ]
     }
-    Thing topic optolink "Heizung" {
+    Thing topic optolink "MQTT Heizung" {
         Type string : sendCommand "Befehl absetzen" [ commandTopic="optolink/cmnd" ]
         Type string : commandResponse "Befehl Ergebnis" [ commandTopic="optolink/resp" ]
         Type number : operationMode "Betriebsart" [ stateTopic="optolink/getBetriebsart" ]
@@ -79,10 +71,10 @@ Bridge mqtt:broker:mosquitto [ host="mosquitto", secure=false ]
         Type number : solarReheatingState "Nachladeunterdrückung" [ stateTopic="optolink/getNachladeunterdrueckungStatus" ]
         Type number : commonFault "Status" [ stateTopic="optolink/getSammelstoerung" ]
     }    
-    Thing topic weatherstation "Wetterstation (Default-MQTT)" {
+    Thing topic weatherstation "MQTT Wetterstation (Default-MQTT)" {
         Type number : solarRadiation "Sonnentemperatur" [ stateTopic="ecowitt/8813BF4638DF/#", transformationPattern="REGEX:.*solarradiation=([0-9\\.]*).*" ]
     }
-    Thing topic nuki "Nuki Türschloss" {
+    Thing topic nuki "MQTT Nuki Türschloss" {
         Type switch : connected "Verbunden" [ stateTopic="nuki/43347577/connected", on="true", off="false" ]
         Type number : deviceType "Device Typ" [ stateTopic="nuki/43347577/deviceType" ]
         Type string : name "Name" [ stateTopic="nuki/43347577/name" ]

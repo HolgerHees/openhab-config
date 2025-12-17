@@ -31,8 +31,7 @@ class Power:
 @rule(
     triggers = [
         ItemStateChangeTrigger("pGF_Utilityroom_Heating_Temperature_Outdoor"),
-        ItemStateChangeTrigger("pGF_Utilityroom_Heating_Temperature_Outdoor_Subdued"),
-        ItemStateChangeTrigger("pOutdoor_Weather_Forecast_Temperature_4h")
+        ItemStateChangeTrigger("pGF_Utilityroom_Heating_Temperature_Outdoor_Subdued")
     ]
 )
 class TemperatureOutdoor:
@@ -40,16 +39,13 @@ class TemperatureOutdoor:
         self.update_timer = None
 
     def delayUpdate(self):
-        msg = "({}°C) {}°C, {}°C".format(Registry.getItemState("pOutdoor_Weather_Forecast_Temperature_4h").format("%.1f"),Registry.getItemState("pGF_Utilityroom_Heating_Temperature_Outdoor").format("%.1f"),Registry.getItemState("pGF_Utilityroom_Heating_Temperature_Outdoor_Subdued").format("%.1f"))
+        msg = "{}°C, {}°C".format(Registry.getItemState("pGF_Utilityroom_Heating_Temperature_Outdoor").format("%.1f"),Registry.getItemState("pGF_Utilityroom_Heating_Temperature_Outdoor_Subdued").format("%.1f"))
         Registry.getItem("pGF_Utilityroom_Heating_Temperature_Outdoor_Message").postUpdateIfDifferent(msg)
 
         self.update_timer = None
 
     def execute(self, module, input):
-        if input['event'].getItemName() == "pOutdoor_Weather_Forecast_Temperature_4h":
-            self.delayUpdate()
-        else:
-            self.update_timer = Timer.createTimeout(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, old_timer = self.update_timer, max_count = 2)
+        self.update_timer = Timer.createTimeout(DELAYED_UPDATE_TIMEOUT, self.delayUpdate, old_timer = self.update_timer, max_count = 2)
 
 @rule(
     triggers = [

@@ -1,5 +1,5 @@
 from openhab import rule, Registry
-from openhab.triggers import ItemStateChangeTrigger, ItemCommandTrigger
+from openhab.triggers import ItemStateChangeTrigger, ItemCommandTrigger, ItemStateCondition
 
 from custom.weather import WeatherHelper
 from custom.frigate import FrigateHelper
@@ -30,14 +30,13 @@ class LightState:
     triggers = [
 #        ItemStateChangeTrigger("pOutdoor_Streedside_Frontdoor_Motiondetector_State", scope.OPEN),
         ItemStateChangeTrigger("pOutdoor_Toolshed_Right_Motiondetector_State", scope.OPEN)
+    ],
+    conditions = [
+        ItemStateCondition("pOutdoor_Astro_Light_Level", operator="<=", state="0 lx" ) # only during night
     ]
 )
 class FrigateNotification:
     def execute(self, module, input):
-        # only during night
-        if Registry.getItemState("pOutdoor_Astro_Light_Level").intValue() > 0:
-            return
-
         if input["event"].getItemName() == "pOutdoor_Streedside_Frontdoor_Motiondetector_State":
             FrigateHelper.createEvent("streedside", "motion")
         else:
@@ -138,7 +137,11 @@ class Control:
                     break
 
 # Motion Detector Events
-@rule()
+@rule(
+    conditions = [
+        ItemStateCondition("pOther_Automatic_State_Outdoorlights", operator="=", state=scope.ON )
+    ]
+)
 class MotionDetector:
     def buildTriggers(self):
         triggers = []
@@ -168,7 +171,7 @@ class MotionDetector:
         item_name = input['event'].getItemName()
 
         entry = LIGHT_SETUP[self.triggerMappings[item_name]]
-        if Registry.getItemState("pOther_Automatic_State_Outdoorlights") == scope.ON and Registry.getItemState(entry[1]) == scope.ON:
+        if Registry.getItemState(entry[1]) == scope.ON:
             timer = LightState.timerMappings.get(item_name)
             if timer is not None:
                 timer.cancel()

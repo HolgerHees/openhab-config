@@ -6,9 +6,6 @@ from datetime import datetime, timedelta
 import scope
 
 
-hour = datetime.now().astimezone().hour
-print(hour)
-
 @rule(
     triggers = [
         GenericCronTrigger("0 0 * * * ?"),

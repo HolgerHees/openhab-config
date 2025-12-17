@@ -24,7 +24,7 @@ class StateMessageAuto:
 
     def execute(self, module, input):
         active1 = []
-        active1.append(self.format("pOther_Manual_State_Holiday",""))
+        active1.append(self.format("pOther_Manual_State_Holiday","u"))
 
         heatingMode = Registry.getItemState("pOther_Manual_State_Heating").intValue()
 

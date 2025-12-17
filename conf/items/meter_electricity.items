@@ -45,10 +45,12 @@ Number:ElectricPotential   pGF_Garage_Solar_Inverter_ChargerWestVoltage         
 Number:ElectricCurrent     pGF_Garage_Solar_Inverter_ChargerWestCurrent             "Strom" <selfenergy_solar>       (eGF_Garage_Solar) ["Measurement", "Current"]  {channel="fenecon:home-device:local:charger2-current"}
 
 // **** SOLAR - MODBUS ****
-Number:Dimensionless       pGF_Garage_Solar_Storage_EssSoc                         "Ladestand [%d %%]" <batterylevel> (eGF_Garage_Solar) ["Measurement"]           {unit="%", channel="modbus:data:solarGarage:slow:ess_soc:number"}
+Number:Dimensionless       pGF_Garage_Solar_Storage_EssSoc                         "Ladestand [%d %%]" <batterylevel> (eGF_Garage_Solar,gPersistance_Chart,gPersistance_History) ["Measurement"]           {unit="%", channel="modbus:data:solarGarage:slow:ess_soc:number"}
 Number:Energy              pGF_Garage_Solar_Storage_Capacity                       "Kapazität [%.1f kWh]" <selfenergy>       (eGF_Garage_Solar) ["Measurement", "Current"] {channel="modbus:data:solarGarage:slow:ess_capacity:number",unit="Wh"}
 Number:Energy              pGF_Garage_Solar_Storage_EnergySoc                      "Ladestand [%.1f kWh]" <selfenergy>       (eGF_Garage_Solar) ["Measurement", "Current"] {unit="Wh"}
 
+Number:Power               pGF_Garage_Solar_Storage_RequestedPower                 "Beladung/Entladung [%d W]" <selfenergy> (eGF_Garage_Solar) ["Measurement", "Power"]  { expire="1m,state=-1" } //{channel="modbus:data:solarGarage:fast:ess_active_power:number"}
+Number:Power               pGF_Garage_Solar_Storage_RequestedMaxDischargerPower    "Max Entladung [%d W]" <selfenergy>       (eGF_Garage_Solar) ["Measurement", "Power"]  { expire="1m,state=-1" } //{channel="modbus:data:solarGarage:fast:ess_active_power:number"}
 Number:Power               pGF_Garage_Solar_Storage_ActivePower                    "Beladung [%d W]" <selfenergy>       (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="modbus:data:solarGarage:fast:ess_active_power:number"}
 Number:Power               pGF_Garage_Solar_Storage_ChargerPower                   "Beladung [%d W]" <selfenergy>       (eGF_Garage_Solar) ["Measurement", "Power"]
 Number:Power               pGF_Garage_Solar_Storage_DischargerPower                "Entladung [%d W]" <selfenergy>       (eGF_Garage_Solar) ["Measurement", "Power"]
@@ -109,4 +111,7 @@ String pGF_Utilityroom_Electricity_State_Battery_Msg                "Batterie [%
 
 String pGF_Utilityroom_Electricity_State_Message                    "Status [%s]"                   <selfinfo> (pGF_Utilityroom_Electricity_State) ["Point"]
 
-
+Number:Energy pGF_Utilityroom_Electricity_Storage_Solar_Soc         "Ladestand Solar [%.2f kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_Storage_Grid_Soc          "Ladestand Grid [%.2f kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number pGF_Utilityroom_Electricity_Storage_Price                    "Gridpreis [%.2f €/kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number pGF_Utilityroom_Electricity_Stock_Price                      "Börsenpreis [%.2f €/kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State,gPersistence_Forecast,gPersistance_History) ["Point"]

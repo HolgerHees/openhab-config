@@ -4,7 +4,9 @@ from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger, SystemS
 from shared.toolbox import ToolboxHelper
 from shared.notification import NotificationHelper
 
-from datetime import datetime, timedelta
+from datetime import datetime
+
+from configuration import customConfigs
 
 import scope
 
@@ -12,8 +14,8 @@ import scope
 # offset values for electricity meter demand and supply (total values at the time when new electricity meter was changed)
 start_electricity_meter_demand_offset = 22223.717
 start_electricity_meter_supply_offset = 0.0
-start_electricity_meter_consumption_offset = 52933.754 #25559.396
-start_electricity_meter_production_offset = 16260.991
+start_electricity_meter_consumption_offset = 52933.935 #52933.913 #52933.875 #52933.840 #52933.821 #52933.754 #25559.396
+start_electricity_meter_production_offset = 16261.245 #16261.244 #16260.991
 
 @rule(
     triggers = [
@@ -38,7 +40,7 @@ class ErrorMessage:
 class StateMessage:
     def execute(self, module, input):
         active = []
-        if Registry.getItemState("pGF_Garage_Solar_Inverter_State").toString() != "Ok":
+        if Registry.getItemState("pGF_Garage_Solar_Inverter_State").toString() not in ["Ok","Info"]:
             active.append(Registry.getItemState("pGF_Garage_Solar_Inverter_State").toString())
 
         if Registry.getItemState("pGF_Garage_Solar_Inverter_GridEnabled").intValue() == 2:
@@ -143,6 +145,7 @@ class EnergyCounterSupply:
 
 @rule(
     triggers = [
+      GenericCronTrigger("1 0 0 * * ?"),
       ItemStateChangeTrigger("pGF_Garage_Solar_Inverter_ConsumptionTotalEnergy")
     ]
 )
@@ -164,6 +167,7 @@ class EnergyDailyConsumptionTotalCalculation:
 
 @rule(
     triggers = [
+      GenericCronTrigger("1 0 0 * * ?"),
       ItemStateChangeTrigger("pGF_Garage_Solar_Inverter_ProductionTotalEnergy")
     ]
 )
@@ -257,7 +261,7 @@ class EnergyAutarkyCalculation:
     def execute(self, module, input):
         daily_demand = Registry.getItemState("pGF_Utilityroom_Electricity_State_Daily_Demand").floatValue()
         daily_consumption = Registry.getItemState("pGF_Utilityroom_Electricity_State_Daily_Consumption").floatValue()
-        autarky = 100 - ((daily_demand * 100) / daily_consumption)
+        autarky = (100 - ((daily_demand * 100) / daily_consumption)) if daily_consumption > 0 else 100
         Registry.getItem("pGF_Utilityroom_Electricity_State_Autarky").postUpdate(autarky)
 
 @rule(
@@ -331,4 +335,5 @@ class EnergyMsg:
 
         current = Registry.getItemState(mapping[0]).intValue()
         daily = Registry.getItemState(mapping[1]).floatValue()
+
         Registry.getItem(mapping[2]).postUpdate(u"{} W ({:.1f} kWh)".format(current, daily))

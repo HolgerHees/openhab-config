@@ -33,7 +33,7 @@ def getHistoricReference(logger, item_name, value_time, outdated_time, messure_t
     end_time = item.getLastStateChange()
 
     now = datetime.now().astimezone()
- 
+
     if end_time == None or end_time < now - timedelta(seconds=outdated_time):
         logger.info( "No consumption. Last value is too old." )
         return 0
@@ -73,7 +73,7 @@ def getHistoricReference(logger, item_name, value_time, outdated_time, messure_t
         else:
             start_time = _time
             current_time = start_time - timedelta(microseconds=1)
-            
+
     duration_in_seconds = (end_time - start_time).total_seconds()
     value = ( (end_value - start_value) / duration_in_seconds) * value_time
     if value < 0:
@@ -118,9 +118,9 @@ class GasConsumption:
         zaehler_stand_current = start_gas_meter_value + ((current_end - start_gas_impulse_counter) * 0.01)
 
         zaehler_stand_saved = Registry.getItemState("pGF_Utilityroom_Gas_Meter_Current_Count",scope.DecimalType(0.0)).doubleValue()
-        
+
         #self.logger.info("{}".format(zaehler_stand_current))
-        
+
         if zaehler_stand_current < zaehler_stand_saved:
             new_offset = zaehler_stand_saved - ( zaehler_stand_current - start_gas_meter_value )
             self.logger.error("pGF_Utilityroom_Gas_Meter_Current_Count: Calculation is wrong ('{}' < '{}'). Set 'start_gas_meter_value' to '{}'".format(zaehler_stand_current, zaehler_stand_saved, new_offset ))
@@ -158,40 +158,3 @@ class GasConsumption:
 
         msg = "{} m³, {} m³".format(hochrechnungVerbrauch, round( zaehler_stand_old - zaehler_stand_old_one_year_before ) )
         Registry.getItem("pGF_Utilityroom_Gas_Forecast").postUpdate(msg)
-
-@rule(
-    triggers = [
-        ItemStateChangeTrigger("pMobile_Socket_5_Total_Raw"),
-        ItemStateChangeTrigger("pMobile_Socket_6_Total_Raw"),
-        ItemStateChangeTrigger("pMobile_Socket_7_Total_Raw"),
-        ItemStateChangeTrigger("pMobile_Socket_8_Total_Raw"),
-        ItemStateChangeTrigger("pMobile_Socket_9_Total_Raw")
-    ]
-)
-class SocketConsumption:
-    def execute(self, module, input):
-        now = datetime.now().astimezone()
-
-        raw_item_name = input["event"].getItemName()
-        real_item_name = "{}Consumption".format(raw_item_name[:-3])
-
-        new_item_value = input["event"].getItemState().doubleValue()
-        old_item_value = input["event"].getOldItemState().doubleValue()
-
-        if new_item_value < old_item_value:
-            if abs(new_item_value - old_item_value) <= 0.002:
-                self.logger.info("Item {} ignored. {} => {}".format(raw_item_name, old_item_value, new_item_value))
-                return
-            else:
-                self.logger.info("Item {} resetted. {} => {}".format(raw_item_name, old_item_value, new_item_value))
-                old_item_value = 0
-
-        real_item = Registry.getItem(real_item_name)
-
-        diff = new_item_value - old_item_value
-        real_item_value = real_item.getState().doubleValue() + diff
-        real_item.postUpdate(real_item_value)
-
-        start_of_the_day = now.replace(hour=0, minute=0, second=0, microsecond=0)
-        old_daily_item_value = ToolboxHelper.getPersistedState(real_item, start_of_the_day ).doubleValue()
-        Registry.getItem("{}Daily_Consumption".format(real_item_name[:-17])).postUpdate(real_item_value - old_daily_item_value)

@@ -328,7 +328,6 @@ class PerceivedTemperature:
 
         temp = item_value if item_name == "pOutdoor_WeatherStation_Temperature" else Registry.getItemState("pOutdoor_WeatherStation_Temperature").doubleValue()
         speed = item_value if item_name == "pOutdoor_WeatherStation_Wind_Speed_15Min" else Registry.getItemState("pOutdoor_WeatherStation_Wind_Speed_15Min").doubleValue()
-        #humidity = item_value if item_name == "pOutdoor_Weather_Current_Humidity" else Registry.getItemState("pOutdoor_Weather_Current_Humidity").doubleValue()
         humidity = item_value if item_name == "pOutdoor_WeatherStation_Humidity" else Registry.getItemState("pOutdoor_WeatherStation_Humidity").doubleValue()
         solar = item_value if item_name == "pOutdoor_WeatherStation_Solar_Power" else Registry.getItemState("pOutdoor_WeatherStation_Solar_Power").doubleValue()
         provider = Registry.getItemState("pOutdoor_Weather_Current_Temperature_Perceived").doubleValue()

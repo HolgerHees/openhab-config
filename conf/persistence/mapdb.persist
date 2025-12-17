@@ -1,5 +1,4 @@
 Strategies {
-	default = everyUpdate, restoreOnStartup
 }
 
 Items {

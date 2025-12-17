@@ -46,14 +46,12 @@ class Heating():
     # 1000 l * 4,182 kJ / 3,6kJ = 1161,66666667
     HEATING_REFERENCE_ENERGY = 1162 # per Watt je m³/K
 
-    cloud_cover_fc8_item_name = None
-    cloud_cover_fc4_item_name = None
-    cloud_cover_item_name = None
-    
-    temperature_garden_fc8_item_name = None
-    temperature_garden_fc4_item_name = None
-    temperatureGardenItemName = None
-    
+    forecast_cloud_cover_item_name = None
+    forecast_temperature_garden_item_name = None
+
+    current_cloud_cover_item_name = None
+    current_temperature_garden_item_name = None
+
     ventilation_filter_runtime_item_name = None
     ventilation_level_item_name = None
     ventilation_outgoing_temperature_item_name = None
@@ -140,10 +138,8 @@ class Heating():
     def getHeatingDemandItemName(room):
         return Heating.heating_demand_item_name_placeholder.format(room.getName()[1:])
 
-    def __init__(self,logger,outdoor_temperatureItem):
+    def __init__(self,logger):
         self.logger = logger
-        Heating.temperatureGardenItemName = outdoor_temperatureItem
-         
         self.cache = {}
         self.now = datetime.now().astimezone()
 
@@ -208,7 +204,7 @@ class Heating():
 
     def getCoolingEnergy(self, area, current_temperature, type, bound):
         if type.getUValue() != None:
-            referenced_temperatur_item = Heating.getTemperatureSensorItemName(Heating.getRoom(bound)) if bound != None else Heating.temperatureGardenItemName
+            referenced_temperatur_item = Heating.getTemperatureSensorItemName(Heating.getRoom(bound)) if bound != None else Heating.current_temperature_garden_item_name
             reference_temperature = self.getCachedStableItemFloat(referenced_temperatur_item)
             temperature_difference = current_temperature - reference_temperature
             cooling_per_kelvin =( type.getUValue() + type.getUOffset() ) * area * type.getFactor()
@@ -278,7 +274,7 @@ class Heating():
         # 20° => 37°                => 0 => 0°
         # -20^ => 60°               => 40 => 23°
         
-        current_outdoor_temp = self.getCachedItemFloat( self.temperatureGardenItemName )
+        current_outdoor_temp = self.getCachedItemFloat( self.current_temperature_garden_item_name )
         
         if current_outdoor_temp > 20.0:
             temperature_pipe_out = 37.0
@@ -403,7 +399,7 @@ class Heating():
                     _night_mode_active = True
             # Saturday and Sunday
             else:
-                if hour < 8:
+                if hour < 7:
                 #if hour < 8 or ( hour == 8 and minute <= 30 ):
                     _night_mode_active = True
         # Evening
@@ -415,7 +411,7 @@ class Heating():
                     _night_mode_active = True
             # Friday and Saturday
             else:
-                if hour >= 24:
+                if hour >= 23:
                     _night_mode_active = True
 
         return _night_mode_active
@@ -469,39 +465,18 @@ class Heating():
     
         return ( maxMinutes * multiplier ) / 60.0
 
-    def getCoolingAndRadiations(self, hours, sun_radiation=None):
-        is_forecast = hours != 0
-        
+    def getCoolingAndRadiations(self, ref_garden_temperature, garden_temperature, cloud_cover, sun_radiation=None):
         time = self.now
-        temp_diff_offset = 0
-        
-        if hours == 4:
-            time = time + timedelta(minutes=240)
-            # fill cache with forecast values
-            self.cache[self.cloud_cover_item_name] = self.getCachedItemState(self.cloud_cover_fc4_item_name)
-            self.cache[self.temperatureGardenItemName] = self.getCachedItemState(self.temperature_garden_fc4_item_name)
-            temp_diff_offset = self.cache[u"org_{}".format(self.temperatureGardenItemName)].floatValue() - self.getCachedItemFloat(self.temperature_garden_fc4_item_name)
-        elif hours == 8:
-            time = time + timedelta(minutes=480)
-            # fill cache with forecast values
-            self.cache[self.cloud_cover_item_name] = self.getCachedItemState(self.cloud_cover_fc8_item_name)
-            self.cache[self.temperatureGardenItemName] = self.getCachedItemState(self.temperature_garden_fc8_item_name)
-            temp_diff_offset = self.cache[u"org_{}".format(self.temperatureGardenItemName)].floatValue() - self.getCachedItemFloat(self.temperature_garden_fc8_item_name)
-        else:
-            # fill cache with real values
-            self.cache[self.cloud_cover_item_name] = self.cache[u"org_{}".format(self.cloud_cover_item_name)]
-            self.cache[self.temperatureGardenItemName] = self.cache[u"org_{}".format(self.temperatureGardenItemName)]
 
-        self.cache[self.getCachedStableItemKey(self.temperatureGardenItemName)] = self.cache[self.temperatureGardenItemName]
-            
+        is_forecast = ref_garden_temperature != garden_temperature
+        temp_diff_offset = ref_garden_temperature - garden_temperature
+
         possible_heating_circulation_diff, possible_heating_pump_speed = self.calculatePossibleHeatingEnergy(is_forecast)
         heating_circulation_diff, heating_pump_speed, heating_debug_info = self.calculateHeatingEnergy(is_forecast)
         heating_volume_factor = self.calculateHeatingVolumeFactor(is_forecast)
         
-        cloudCover = round(self.getCachedItemFloat(self.cloud_cover_item_name),1)
-        
         current_total_ventilation_energy = self.getVentilationEnergy(temp_diff_offset) / 3.6 # converting kj into watt
-        sun_south_radiation, sun_west_radiation, sun_radiation, sun_debug_info = SunRadiation.getSunPowerPerHour(time, cloudCover, sun_radiation)
+        sun_south_radiation, sun_west_radiation, sun_radiation, sun_debug_info = SunRadiation.getSunPowerPerHour(time, cloud_cover, sun_radiation)
         sun_south_radiationMax, sun_west_radiationMax, sun_radiation_max, sun_max_debug_info = SunRadiation.getSunPowerPerHour(time, 0)
         
         total_open_window_count = 0
@@ -550,7 +525,7 @@ class Heating():
 
             # *** VENTILATION COOLING ***
             ventilation_energy = room.getVolume() * current_total_ventilation_energy / Heating.total_volume
-            leak_energy = self.getLeakingEnergy(room.getVolume(), current_temperature, self.getCachedItemFloat(self.temperatureGardenItemName)) / 3.6 # converting kj into watt
+            leak_energy = self.getLeakingEnergy(room.getVolume(), current_temperature, garden_temperature) / 3.6 # converting kj into watt
             
             #self.logger.info(u"{} {} {}".format(room.getName(),ventilation_energy,leak_energy))
                 
@@ -597,7 +572,7 @@ class Heating():
         # set house values
         house_state = HouseState()
         house_state.setRoomStates(states)
-        house_state.setReferenceTemperature(self.getCachedItemFloat(self.temperatureGardenItemName))
+        house_state.setReferenceTemperature(garden_temperature)
 
         house_state.setOpenWindowCount(total_open_window_count)
 
@@ -619,7 +594,7 @@ class Heating():
         house_state.setHeatingVolumeFactor(heating_volume_factor)
         house_state.setHeatingDebugInfo(heating_debug_info)
 
-        house_state.setCloudCover(cloudCover)
+        house_state.setCloudCover(cloud_cover)
         house_state.setSunRadiation(sun_radiation)
         house_state.setSunRadiationMax(sun_radiation_max)
         house_state.setSunSouthRadiation(sun_south_radiation)
@@ -947,23 +922,35 @@ class Heating():
             # init ventilation level and check if it is undefined (communication problem)
             self.getCachedItemState(self.ventilation_level_item_name)
 
-        # handle outdated forecast values
-        if Registry.getItem(self.temperature_garden_fc4_item_name).getLastStateUpdate() < self.now - timedelta(minutes=360):
-            self.cache[self.temperature_garden_fc4_item_name] = self.getCachedItemState(self.temperatureGardenItemName)
-            self.cache[self.temperature_garden_fc8_item_name] = self.getCachedItemState(self.temperatureGardenItemName)
-            self.cache[self.cloud_cover_fc4_item_name] = Java_DecimalType(9)
-            self.cache[self.cloud_cover_fc8_item_name] = Java_DecimalType(9)
-            self.cache[self.cloud_cover_item_name] = Java_DecimalType(9)
+        now_4 = self.now + timedelta(minutes=240)
+        now_8 = self.now + timedelta(minutes=480)
 
-        self.cache[u"org_{}".format(self.cloud_cover_item_name)] = self.getCachedItemState(self.cloud_cover_item_name)
-        self.cache[u"org_{}".format(self.temperatureGardenItemName)] = self.getCachedStableItemState(self.temperatureGardenItemName)
+        temperature_forecast = Registry.resolveItem(self.forecast_temperature_garden_item_name).getPersistence("jdbc")
+        temperature = self.getCachedItemState(self.current_temperature_garden_item_name).floatValue()
+        temperature_4 = temperature_forecast.persistedState(now_4)
+        temperature_8 = temperature_forecast.persistedState(now_8)
+
+        cloud_forecast = Registry.resolveItem(self.forecast_cloud_cover_item_name).getPersistence("jdbc")
+        cloud_cover = self.getCachedItemState(self.current_cloud_cover_item_name)
+        cloud_cover_4 = cloud_forecast.persistedState(now_4)
+        cloud_cover_8 = cloud_forecast.persistedState(now_8)
+
+        # handle outdated forecast values
+        if temperature_4 is None or temperature_8 is None or cloud_cover_4 is None or cloud_cover_8 is None:
+            temperature_4 = temperature_8 = temperature
+            cloud_cover = cloud_cover_4 = cloud_cover_8 = Java_DecimalType(9)
+        else:
+            temperature_4 = temperature_4.getState().floatValue()
+            temperature_8 = temperature_8.getState().floatValue()
+            cloud_cover_4 = cloud_cover_4.getState().floatValue()
+            cloud_cover_8 = cloud_cover_8.getState().floatValue()
 
         # *** 8 HOUR FORECAST ***
-        cr8 = self.getCoolingAndRadiations(8)
+        cr8 = self.getCoolingAndRadiations(temperature, temperature_8, cloud_cover_8)
         # *** 4 HOUR FORECAST ***
-        cr4 = self.getCoolingAndRadiations(4)
+        cr4 = self.getCoolingAndRadiations(temperature, temperature_4, cloud_cover_4)
         # *** CURRENT ***
-        cr = self.getCoolingAndRadiations(0,sun_radiation)
+        cr = self.getCoolingAndRadiations(temperature, temperature, cloud_cover, sun_radiation)
 
         # *** NIGHT MODE DETECTION ***
         night_mode_active = self.isNightMode(is_heating_active)

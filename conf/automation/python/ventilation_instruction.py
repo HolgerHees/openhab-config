@@ -75,16 +75,6 @@ class Notification:
             return False
           
     def process(self,recipients, flags):
-        #weatherAvgTemperature = Registry.getItemState("pOutdoor_Weather_Current_Temperature_Avg").floatValue()
-
-        #room1Temperature = Registry.getItemState("pGF_Livingroom_Air_Sensor_Temperature_Value").floatValue()
-        #room2Temperature = Registry.getItemState("pFF_Bedroom_Air_Sensor_Temperature_Value").floatValue()
-        
-        # if temperature difference
-        #if weatherAvgTemperature <= room1Temperature or weatherAvgTemperature <= room2Temperature:
-        #    self.logger.info("PRECONDITION not fit ({} {} {})".format(weatherAvgTemperature,room1Temperature,room2Temperature))
-        #    return
-
         now = datetime.now().astimezone()
         gardenTemp0, _, gardenTemp0Max = ToolboxHelper.getStableMinMaxState("pOutdoor_WeatherStation_Temperature", 900)
         gardenTemp0 = gardenTemp0.doubleValue()

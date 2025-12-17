@@ -29,8 +29,10 @@ class ThingState:
         return triggers
 
     def check(self, thing_uid):
-        status = Registry.getThing(thing_uid).getStatus()
-        Registry.getItem(self.thing_uid_map[thing_uid]).postUpdateIfDifferent(scope.ON if status.toString() == "ONLINE" else scope.OFF)
+        thing = Registry.getThing(thing_uid)
+        status = thing.getStatus()
+        info = thing.getStatusInfo().toString()
+        Registry.getItem(self.thing_uid_map[thing_uid]).postUpdateIfDifferent(scope.ON if status.toString() == "ONLINE" and "wait-for-device" not in info else scope.OFF)
 
     def execute(self, module, input):
         if input['event'].getType() == "StartlevelEvent":

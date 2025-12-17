@@ -412,7 +412,7 @@ sitemap haus label="Main Menu"
                     Switch item=pOutdoor_Streeside_Socket_Powered
                 }
 
-                Selection item=pOther_Manual_State_Auto_Attic_Light label="Dachbodensteuerung" mappings=[0="Aus", 1="Wachstum", 2="Blüte"]
+                Selection item=pOther_Manual_State_Auto_Attic_Light label="Dachbodensteuerung (d)" mappings=[0="Aus", 1="Wachstum", 2="Blüte"]
                 Switch item=pMobile_Socket_7_Powered label="Dachboden (Steckdose)" visibility=[pOther_Manual_State_Auto_Attic_Light!=0]
 			}
         }
@@ -772,10 +772,6 @@ sitemap haus label="Main Menu"
                                 Text item=pOutdoor_WeatherStation_Dewpoint
                                 Text item=pGF_Utilityroom_Heating_Temperature_Outdoor label="Temperatur (Schatten) [%.1f °C]"
                             }
-                            Frame label="Vorhersage" {
-                                Text item=pOutdoor_Weather_Forecast_Temperature_4h label="Garten (in 4 Std) [%.1f °C]"
-                                Text item=pOutdoor_Weather_Forecast_Temperature_8h label="Garten (in 8 Std) [%.1f °C]"
-                            }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
                                 Webview url="/static/custom/grafana/weatherstation_temperatures.html?fromItem=Chart_From" icon="none" height=18
@@ -1105,11 +1101,23 @@ sitemap haus label="Main Menu"
                                 Text item=pGF_Garage_Solar_Storage_EssSoc
                                 Text item=pGF_Garage_Solar_Storage_EnergySoc
                             }
+                            Frame label="Grid Control" {
+                                Text item=pGF_Utilityroom_Electricity_Storage_Solar_Soc
+                                Text item=pGF_Utilityroom_Electricity_Storage_Grid_Soc
+                                Text item=pGF_Utilityroom_Electricity_Storage_Price
+                                Text item=pGF_Utilityroom_Electricity_Stock_Price
+                                Text item=pGF_Garage_Solar_Storage_RequestedPower
+                                Text item=pGF_Garage_Solar_Storage_RequestedMaxDischargerPower
+                            }
                             Frame label="Details" {
                                 Text item=pGF_Garage_Solar_Storage_BattTowerVoltage
                                 Text item=pGF_Garage_Solar_Storage_BattTowerCurrent
                                 Text item=pGF_Garage_Solar_Storage_BattSoh
                                 Text item=pGF_Garage_Solar_Storage_Capacity
+                            }
+                            Frame label="Auswertung" {
+                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/custom/grafana/solar_battery.html?fromItem=Chart_From" icon="none" height=12
                             }
                         }
                     }
