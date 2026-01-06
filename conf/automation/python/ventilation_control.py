@@ -256,7 +256,7 @@ class FanLevel:
                 default_level = 2    # Level 1
                 cooling_level = 2    # Level 1
             # Away since 60 minutes
-            elif presence_state == [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT] and Registry.getItem("pOther_Presence_State").getLastStateChange() < ( datetime.now().astimezone() - timedelta(minutes=60) ):
+            elif presence_state in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT] and Registry.getItem("pOther_Presence_State").getLastStateChange() < ( datetime.now().astimezone() - timedelta(minutes=60) ):
                 reduced_level = 1    # Level A
                 default_level = 2    # Level 1
                 cooling_level = 3    # Level 2

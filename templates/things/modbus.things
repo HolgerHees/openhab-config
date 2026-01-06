@@ -14,6 +14,8 @@ Bridge modbus:tcp:solarGarage "Wechselrichter (Modbus)" [ host="{{custom_pv_inve
     }
     Bridge poller slow [ refresh=60000, start=300, length=122, type="input" ] {
         Thing data ess_soc                      "Wechselrichter EssSoc"                     [ readStart="302", readValueType="uint16"]
+        Thing data demand_active_energy         "Wechselrichter DemandActiveEnergy"         [ readStart="359", readValueType="uint64", readTransform="PY:modbus_float64.py"]
+        Thing data supply_active_energy         "Wechselrichter SupplyActiveEnergy"         [ readStart="363", readValueType="uint64", readTransform="PY:modbus_float64.py"]
         Thing data production_active_energy     "Wechselrichter ProductionActiveEnergy"     [ readStart="367", readValueType="uint64", readTransform="PY:modbus_float64.py"]
         Thing data consumption_active_energy    "Wechselrichter ConsumtionActiveEnergy"     [ readStart="379", readValueType="uint64", readTransform="PY:modbus_float64.py"]
         Thing data ess_capacity                 "Wechselrichter EssCapacity"                [ readStart="420", readValueType="float32"]

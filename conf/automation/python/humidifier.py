@@ -163,7 +163,7 @@ class Level:
             if presenceState in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
                 maxLevel = MAX_SLEEPING_LEVEL
             # Away since 60 minutes
-            elif presenceState == [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT] and Registry.getItem("pOther_Presence_State").getLastStateChange() < ( datetime.now().astimezone() - timedelta(minutes=60) ):
+            elif presenceState in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT] and Registry.getItem("pOther_Presence_State").getLastStateChange() < ( datetime.now().astimezone() - timedelta(minutes=60) ):
                 maxLevel = MAX_AWAY_LEVEL
             else:
                 maxLevel = MAX_PRESENT_LEVEL

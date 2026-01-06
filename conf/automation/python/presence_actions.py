@@ -139,6 +139,7 @@ class AlexaWelcome:
             welcome_msg = ShuffleHelper.getRandomSynonym("Willkommen zu Hause", len(arrived_user) > 1)
             AlexaHelper.sendTTS("Hallo {}, {}".format(" und Hallo ".join(arrived_user), welcome_msg), location = "lGF_Corridor")
         elif self.isNewGuestArrived():
+            #AlexaHelper.sendTTS("Hallo, Oskar. Ein gesundes neues Jahr. Caspar freut sich schon.", location = "lGF_Corridor")
             AlexaHelper.sendTTS("Hallo, unbekannter Gast. Die Hausbewohner wurden über Ihre Ankunft benachrichtigt.", location = "lGF_Corridor")
 
     def execute(self, module, input):

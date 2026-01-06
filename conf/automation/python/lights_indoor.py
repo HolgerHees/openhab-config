@@ -22,8 +22,8 @@ import scope
 class AwayEvening:
     def execute(self, module, input):
         now = datetime.now().astimezone()
-        end_time = now.replace(hour=21, minute=30)
-        if end_time < now:
+        end_time = now.replace(hour=22, minute=0, second=0)
+        if now < end_time:
             Registry.getItem("pGF_Corridor_Light_Hue_Color").sendCommand(30)
             Registry.getItem("pGF_Livingroom_Light_Hue4_Color").sendCommand(30)
 

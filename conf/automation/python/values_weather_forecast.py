@@ -35,8 +35,8 @@ class WeatherForecastListener:
             Registry.getItem(self.mapping[field]).getPersistence("jdbc").persist(date, value)
             self.count += 1
 
-state = Registry.getItem("pOutdoor_Weather_Forecast_Temperature").getState()
-print(state)
+#state = Registry.getItem("pOutdoor_Weather_Forecast_Temperature").getState()
+#print(state)
 
-state = Registry.getItem("pOutdoor_Weather_Forecast_Temperature").getPersistence("jdbc").persistedState(datetime.now())
-print(state)
+#state = Registry.getItem("pOutdoor_Weather_Forecast_Temperature").getPersistence("jdbc").persistedState(datetime.now())
+#print(state)

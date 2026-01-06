@@ -57,6 +57,9 @@ Number:Power               pGF_Garage_Solar_Storage_DischargerPower             
 
 Number:Dimensionless       pGF_Garage_Solar_Inverter_GridEnabled                    "Grid Aktiv  [MAP(solar_grid_mode.map):%s]" <selfinfo>       (eGF_Garage_Solar) ["Switch"] {channel="modbus:data:solarGarage:fast:grid_mode:number"}
 
+Number:Energy              pGF_Garage_Solar_Inverter_DemandTotalEnergy              "Bezug Total [%.1f kWh]" <selfenergy_solar>       (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="modbus:data:solarGarage:slow:demand_active_energy:number",unit="Wh"}
+Number:Energy              pGF_Garage_Solar_Inverter_SupplyTotalEnergy              "Lieferung Total [%.1f kWh]" <selfenergy_solar>       (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="modbus:data:solarGarage:slow:supply_active_energy:number",unit="Wh"}
+
 Number:Energy              pGF_Garage_Solar_Inverter_ProductionTotalEnergy          "Erzeugung Total [%.1f kWh]" <selfenergy_solar>       (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="modbus:data:solarGarage:slow:production_active_energy:number",unit="Wh"}
 Number:Power               pGF_Garage_Solar_Inverter_ProductionActivePower          "Erzeugung Aktuell [%d W]" <selfenergy_solar>       (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="modbus:data:solarGarage:fast:production_active_power:number"}
 
@@ -115,3 +118,7 @@ Number:Energy pGF_Utilityroom_Electricity_Storage_Solar_Soc         "Ladestand S
 Number:Energy pGF_Utilityroom_Electricity_Storage_Grid_Soc          "Ladestand Grid [%.2f kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
 Number pGF_Utilityroom_Electricity_Storage_Price                    "Gridpreis [%.2f €/kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
 Number pGF_Utilityroom_Electricity_Stock_Price                      "Börsenpreis [%.2f €/kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State,gPersistence_Forecast,gPersistance_History) ["Point"]
+
+Number:Energy pGF_Utilityroom_Electricity_Expected_Solar_East       "Ertrag Ost [%.2f €/kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State,gPersistence_Forecast,gPersistance_History) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_Expected_Solar_South      "Ertrag Süd [%.2f €/kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State,gPersistence_Forecast,gPersistance_History) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_Expected_Solar_West       "Ertrag West [%.2f €/kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State,gPersistence_Forecast,gPersistance_History) ["Point"]
