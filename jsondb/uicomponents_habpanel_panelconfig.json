@@ -8,7 +8,7 @@
         "parameters": [],
         "parameterGroups": []
       },
-      "timestamp": "Nov 12, 2025, 3:39:20 PM",
+      "timestamp": "Jan 18, 2026, 10:34:43 AM",
       "component": "panelconfiguration",
       "config": {
         "default": true,
@@ -556,7 +556,7 @@
                   "config": {
                     "col": 17.0,
                     "config": {
-                      "itemGroup": "gOutdoor_Motiondetector_Counter",
+                      "itemGroup": "gOutdoor_Automatic_Switch_Counter",
                       "mainItem": "pOutdoor_Light_Automatic_Main_Switch",
                       "sceneItem": "pOther_Scene5",
                       "title": "L. Auto."

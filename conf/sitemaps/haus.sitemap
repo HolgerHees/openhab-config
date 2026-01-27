@@ -133,7 +133,7 @@ sitemap haus label="Main Menu"
 			}
 			Frame label="Licht Bewegungsmelder" {
 				Switch item=pOutdoor_Light_Automatic_Main_Switch label="Aktiv"
-				Group item=gOutdoor_Motiondetector_Counter label="Einstellungen" {
+				Group item=gOutdoor_Automatic_Switch_Counter label="Einstellungen" {
                     Switch item=pOutdoor_Streedside_Garage_Automatic_Switch label="Werkstatt Strassenseite"
                     Switch item=pOutdoor_Streedside_Frontdoor_Automatic_Switch label="Haustür"
                     Switch item=pOutdoor_Carport_Automatic_Switch label="Carport"

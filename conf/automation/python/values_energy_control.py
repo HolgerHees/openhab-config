@@ -1,4 +1,5 @@
 import math
+import json
 
 from datetime import datetime, timedelta
 
@@ -22,19 +23,20 @@ VAT_COST = 1.19 # %
 #print(( Registry.getItem("pGF_Garage_Solar_Storage_Capacity").getState().doubleValue() ) / 1000.0)
 STORAGE_MAX_CAPACITY = 25.2
 STORAGE_EMERGENCY_ENERGY_SOC = STORAGE_MAX_CAPACITY * 0.2
+STORAGE_MIN_CHARGING_POWER = 1.0
 
 STORAGE_POWER_MAP = {
-    0.10: 2.0, # -0.7
-    0.09: 2.7, # -0.7
-    0.08: 3.4, # -0.7
-    0.07: 4.1, # -0.7
-    0.06: 4.8, # -0.7
-    0.05: 5.5, # -0.7
-    0.04: 6.2, # -0.7
-    0.03: 6.9, # -0.7
-    0.02: 7.6, # -0.7
-    0.01: 8.3, # -0.7
-    0.00: 9.0, #
+    0.10: 3.0, #
+    0.09: 3.2, # +0.2
+    0.08: 3.5, # +0.3
+    0.07: 3.9, # +0.4
+    0.06: 4.4, # +0.5
+    0.05: 5.0, # +0.6
+    0.04: 5.7, # +0.7
+    0.03: 6.5, # +0.8
+    0.02: 7.4, # +0.9
+    0.01: 8.4, # +1.0
+    0.00: 9.5, # +1.1
 }
 
 CAR_POWER_MAP = {
@@ -52,7 +54,8 @@ CAR_POWER_MAP = {
 }
 
 MAX_CONSUMPTION_PER_DAY = 25.0
-BASE_CONSUMPTION_PER_HOUR = 0.5
+BASE_NIGHT_CONSUMPTION_PER_HOUR = 0.5
+BASE_DAY_CONSUMPTION_PER_HOUR = 1.0
 
 # 13.16°C => 2,0m² (26.09.2025)
 # -4.54°C => 9,5m² (17.02.2025)
@@ -68,102 +71,127 @@ HEATING_MIN_TEMPERATURE = -20.0
 HEATING_MAX_TEMPERATURE_DIFF = HEATING_MIN_TEMPERATURE - HEATING_MAX_TEMPERATURE
 HEATING_MAX_ENERGY = ( 16.05 * 11.0 ) / 4.0
 
+#HOUSE_HEATING_MAP = {
+#    -6.0: 10.0,
+#    -4.0:  6.0,
+#}
+
 FROST_GUARD_HEATING_MAP = {
-   -9.0: 18.0,
-   -8.0: 16.5,
-   -7.0: 15.0,
-   -6.0: 13.5,
-   -5.0: 12.0,
-   -4.0: 10.5,
-   -3.0:  9.0,
-   -2.0:  7.5,
-   -1.0:  6.0,
-    0.0:  4.5,
-    1.0:  3.0,
-    2.0:  2.0,
+   -9.0: 13.0,
+   -8.0: 11.5,
+   -7.0: 10.0,
+   -6.0:  8.5,
+   -5.0:  7.3,
+   -4.0:  6.0,
+   -3.0:  5.0,
+   -2.0:  4.0,
+   -1.0:  3.0,
+    0.0:  2.5,
+    1.0:  2.0,
+    2.0:  1.5,
     3.0:  1.1,
     4.0:  0.5,
     5.0:  0.0
 }
 
-#end = datetime.now().astimezone()
-#start = end - timedelta(hours=1)
-#price = Registry.getItem("pGF_Utilityroom_Electricity_Stock_Price").getPersistence("jdbc").averageBetween(start, end).doubleValue()
-#print(price)
-#prices = Registry.getItem("pGF_Utilityroom_Electricity_Stock_Price").getPersistence("jdbc").getAllStatesBetween(start, end + timedelta(seconds=1))
-#_price = 0
-#for price in prices:
-#    _price += price.getState().doubleValue()
-#print(str(_price/4))
-
-#print(Registry.getItemState("pGF_Utilityroom_Electricity_Stock_Price"),Registry.getItem("pGF_Utilityroom_Electricity_Stock_Price").getLastStateChange())
-#print(Registry.getItem("pGF_Utilityroom_Electricity_Stock_Price").getPersistence("jdbc").persistedState(datetime.now().astimezone()))
-#print(Registry.getItem("pGF_Utilityroom_Electricity_Stock_Price").getPersistence("jdbc").nextState())
 
 @rule(
     triggers = [
 #      GenericCronTrigger("0 0 * * * ?")
 #      GenericCronTrigger("*/30 * * * * ?") # 30 seconds, because of 60 seconds watchdoc for fenecon
 #        GenericCronTrigger("*/5 * * * * ?"),
-        ItemStateChangeTrigger("pGF_Garage_Solar_Storage_EssSoc")
+        ItemStateChangeTrigger("pGF_Garage_Solar_Storage_EnergySoc")
     ]
 #    , profile_code=True
 )
 class StorageInfo:
     def __init__(self):
-        self.demand = self.getEnergyValue("pGF_Garage_Solar_Inverter_DemandTotalEnergy")
-        self.supply = self.getEnergyValue("pGF_Garage_Solar_Inverter_SupplyTotalEnergy")
-        self.production = self.getEnergyValue("pGF_Garage_Solar_Inverter_ProductionTotalEnergy")
-        self.consumption = self.getEnergyValue("pGF_Garage_Solar_Inverter_ConsumptionTotalEnergy")
+        state = Registry.getItemState("pGF_Utilityroom_Electricity_Cached_Inverter_Energy_State").toString()
+        state = json.loads(state)
+        self.demand = state["demand"]
+        self.supply = state["supply"]
+        self.production = state["production"]
+        self.consumption = state["consumption"]
+        self.last_change = datetime.fromisoformat(state["last_change"])
 
-        self.last_change = Registry.getItem("pGF_Garage_Solar_Storage_EssSoc").getLastStateChange()
+    def getEnergyDiff(self):
+        demand = self.getEnergyValue("pGF_Garage_Solar_Inverter_DemandTotalEnergy")
+        demand_diff = demand - self.demand
 
-        #self.calculate(Registry.getItemState("pGF_Garage_Solar_Storage_EssSoc").doubleValue())
+        supply = self.getEnergyValue("pGF_Garage_Solar_Inverter_SupplyTotalEnergy")
+        supply_diff = supply - self.supply
+
+        production = self.getEnergyValue("pGF_Garage_Solar_Inverter_ProductionTotalEnergy")
+        production_diff = production - self.production
+
+        consumption = self.getEnergyValue("pGF_Garage_Solar_Inverter_ConsumptionTotalEnergy")
+        consumption_diff = consumption - self.consumption
+
+        last_change = Registry.getItem("pGF_Garage_Solar_Storage_EnergySoc").getLastStateChange()
+
+        state = { "demand": demand, "supply": supply, "production": production, "consumption": consumption, "last_change": last_change.isoformat() }
+        Registry.getItem("pGF_Utilityroom_Electricity_Cached_Inverter_Energy_State").postUpdate(json.dumps(state))
+
+        self.logger.info("CHANGED demand from {} to {}, diff {}".format(self.demand, demand, demand_diff))
+        self.logger.info("CHANGED supply from {} to {}, diff {}".format(self.supply, supply, supply_diff))
+        self.logger.info("CHANGED production from {} to {}, diff {}".format(self.production, production, production_diff))
+        self.logger.info("CHANGED consumption from {} to {}, diff {}".format(self.consumption, consumption, consumption_diff))
+        self.logger.info("LAST_CHANGE: {}".format(self.last_change))
+
+        self.demand = demand
+        self.supply = supply
+        self.production = production
+        self.consumption = consumption
+
+        previous_change = self.last_change
+        self.last_change = last_change
+
+        return [demand_diff, supply_diff, production_diff, consumption_diff, previous_change]
 
     def getEnergyValue(self, item_name):
         return Registry.getItem(item_name).getState().doubleValue() / 1000.0
 
-    def calculate(self, current_battery_percent_soc = None):
-        current_battery_energy_soc = current_battery_percent_soc * STORAGE_MAX_CAPACITY / 100.0
+    def calculate(self, current_battery_energy_soc):
         current_battery_price = Registry.getItem("pGF_Utilityroom_Electricity_Storage_Price").getState().doubleValue()
-
-        demand = self.getEnergyValue("pGF_Garage_Solar_Inverter_DemandTotalEnergy")
-        demand_diff = demand - self.demand
-        supply = self.getEnergyValue("pGF_Garage_Solar_Inverter_SupplyTotalEnergy")
-        supply_diff = supply - self.supply
-        production = self.getEnergyValue("pGF_Garage_Solar_Inverter_ProductionTotalEnergy")
-        production_diff = production - self.production
-        consumption = self.getEnergyValue("pGF_Garage_Solar_Inverter_ConsumptionTotalEnergy")
-        consumption_diff = consumption - self.consumption
 
         current_solar_energy_soc = Registry.getItem("pGF_Utilityroom_Electricity_Storage_Solar_Soc").getState().doubleValue()
         current_grid_energy_soc = Registry.getItem("pGF_Utilityroom_Electricity_Storage_Grid_Soc").getState().doubleValue()
 
+        demand_diff, supply_diff, production_diff, consumption_diff, previous_change  = self.getEnergyDiff()
+
         # *** STEP 1: calculate solar charge ***
         total_charge = (production_diff + demand_diff) - ( supply_diff + consumption_diff )
-        print("CALCULATION: total_charge: {}, production: {}, demand: {}, supply: {}, consumption: {}".format(total_charge, production_diff, demand_diff, supply_diff, consumption_diff))
-
         if total_charge > 0:
-            solar_charge = production_diff - ( supply_diff + consumption_diff - demand_diff )
-            if solar_charge > 0:
-                print("SOLAR: solar_charge: {}".format(solar_charge))
+            if demand_diff < consumption_diff:
+                self.logger.info("SOLAR ONLY CHARGE • TOTAL: {}".format(total_charge))
+                new_solar_energy_soc = current_battery_energy_soc - current_grid_energy_soc
+            elif production_diff < 0.01: # smaller then 10 Watt
+                self.logger.info("GRID ONLY CHARGE • TOTAL: {}".format(total_charge))
+                new_solar_energy_soc = current_solar_energy_soc
+            else:
+                solar_charge = production_diff if production_diff < total_charge else total_charge
+                self.logger.info("MIXED SOLAR CHARGE • TOTAL: {} • SOLAR: {}".format(total_charge, solar_charge))
                 new_solar_energy_soc = current_solar_energy_soc + ( solar_charge * 0.97 ) # 3% loss
                 if new_solar_energy_soc > STORAGE_MAX_CAPACITY:
                     new_solar_energy_soc = STORAGE_MAX_CAPACITY
         else:
+            self.logger.info("DISCHARGE • TOTAL: {}".format(total_charge))
             new_solar_energy_soc = current_solar_energy_soc + ( total_charge * 1.03 ) # 3% loss
-            if new_solar_energy_soc < 0:
-                new_solar_energy_soc = 0
+
+        if new_solar_energy_soc < 0:
+            new_solar_energy_soc = 0
+        elif new_solar_energy_soc > STORAGE_MAX_CAPACITY - STORAGE_EMERGENCY_ENERGY_SOC:
+            new_solar_energy_soc = STORAGE_MAX_CAPACITY - STORAGE_EMERGENCY_ENERGY_SOC
 
         # *** STEP 2: rest is grid charge ***
         new_grid_energy_soc = current_battery_energy_soc - new_solar_energy_soc
-        print("NEW_SOC: new_solar_energy_soc: {}, new_grid_energy_soc: {}".format(new_solar_energy_soc, new_grid_energy_soc))
+        self.logger.info("NEW_SOC: total_energy_soc: {}, solar_energy_soc: {}, grid_energy_soc: {}".format(current_battery_energy_soc, new_solar_energy_soc, new_grid_energy_soc))
 
         # *** STEP 3: grid charge is never smaller then emergency energy level ***
-        if new_grid_energy_soc < STORAGE_EMERGENCY_ENERGY_SOC:
-            new_grid_energy_soc = STORAGE_EMERGENCY_ENERGY_SOC if current_battery_energy_soc >=STORAGE_EMERGENCY_ENERGY_SOC else current_battery_energy_soc
-            new_solar_energy_soc = current_battery_energy_soc - new_grid_energy_soc
-            print("ADJUSTED: new_solar_energy_soc: {}, new_grid_energy_soc: {}".format(new_solar_energy_soc, new_grid_energy_soc))
+        #if new_grid_energy_soc < STORAGE_EMERGENCY_ENERGY_SOC:
+        #    new_grid_energy_soc = STORAGE_EMERGENCY_ENERGY_SOC if current_battery_energy_soc >=STORAGE_EMERGENCY_ENERGY_SOC else current_battery_energy_soc
+        #    new_solar_energy_soc = current_battery_energy_soc - new_grid_energy_soc
+        #    self.logger.info("ADJUSTED: new_solar_energy_soc: {}, new_grid_energy_soc: {}".format(new_solar_energy_soc, new_grid_energy_soc))
 
         # *** STEP 4: Update values and calculate new grid price
         if current_solar_energy_soc != new_solar_energy_soc:
@@ -174,8 +202,8 @@ class StorageInfo:
             if new_grid_energy_soc > current_grid_energy_soc:
                 grid_charge = new_grid_energy_soc - current_grid_energy_soc
                 ratio = grid_charge  / new_grid_energy_soc
-                current_stock_price = Registry.getItem("pGF_Utilityroom_Electricity_Stock_Price").getPersistence("jdbc").averageSince(self.last_change).doubleValue()
-                print("STOCK PRICE: JDBC: {} DIRECT: {}".format(current_stock_price, Registry.getItem("pGF_Utilityroom_Electricity_Stock_Price").getState().doubleValue()))
+                current_stock_price = Registry.getItem("pGF_Utilityroom_Electricity_Stock_Price").getPersistence("jdbc").averageSince(previous_change).doubleValue()
+                self.logger.info("STOCK PRICE: JDBC: {} DIRECT: {}".format(current_stock_price, Registry.getItem("pGF_Utilityroom_Electricity_Stock_Price").getState().doubleValue()))
 
                 new_battery_price = ( current_battery_price * (1 - ratio) ) + ( current_stock_price * ratio )
                 if current_battery_price != new_battery_price:
@@ -183,15 +211,11 @@ class StorageInfo:
 
             Registry.getItem("pGF_Utilityroom_Electricity_Storage_Grid_Soc").postUpdate(new_grid_energy_soc)
 
-        # *** STEP 5: confirm values
-        self.demand = demand
-        self.supply = supply
-        self.production = production
-        self.consumption = consumption
-        self.last_change = Registry.getItem("pGF_Garage_Solar_Storage_EssSoc").getLastStateChange()
-
     def execute(self, module, input):
-        self.calculate(input['event'].getItemState().doubleValue())
+        self.calculate(input['event'].getItemState().doubleValue() / 1000.0)
+
+#Registry.getItem("pGF_Utilityroom_Electricity_Storage_Solar_Soc").postUpdate(0.0)
+#Registry.getItem("pGF_Utilityroom_Electricity_Storage_Grid_Soc").postUpdate(5.04)
 
 @rule(
     triggers = [
@@ -203,143 +227,79 @@ class StorageInfo:
 )
 class StoragePower:
     def __init__(self):
-        self.last_price_datetime = None
+        self.last_price_day = -1
         self.price_map = None
 
-        self.last_forecast_datetime = None
-        self.expected_solar = None
-        self.effective_solar = None
+        self.last_solar_hour = -1
+        self.today_solar_forceast = None
+        self.tomorrow_solar_forceast = None
 
-        self.total_consumption = None
-        self.house_heating_consumption = None
+        self.last_heating_hour = -1
+        self.house_heating_forecast = None
+        self.frost_guard_heating_forecast = None
 
-        self.target_battery_energy_soc = None
-
-    def initPrices(self, charging_start, charging_end):
-        # *** CALCULATE PRICES
-        last_price = Registry.getItem("pGF_Utilityroom_Electricity_Stock_Price").getPersistence("jdbc").persistedState(charging_end)
-        if charging_end.day != last_price.getTimestamp().day:
-            self.price_map = None
-            return
-
-        if self.last_price_datetime != last_price.getTimestamp():
-            prices = Registry.getItem("pGF_Utilityroom_Electricity_Stock_Price").getPersistence("jdbc").getAllStatesBetween(charging_start, charging_end)
-            self.price_map = self.mapPrices(prices)
-            self.last_price_datetime = last_price.getTimestamp()
-
-    def mapPrices(self, prices):
-        price_map = {}
-        for price in prices:
-            price_date = price.getTimestamp()
-            #if price_date > sunrise and price_date < sunset:
-            #    continue
-
-            value = price.getState().doubleValue()
-            if value not in price_map:
-                price_map[value] = []
-
-            price_map[value].append({"start": price_date, "end": price_date + timedelta(minutes=15)})
-
-        for price, slots in price_map.items():
-            slots.sort(key=lambda x: x["start"].timestamp(), reverse=True)
-
-        return dict(sorted(price_map.items(), key=lambda item: item[0]))
-
-    def calculateSlots(self, requested_date, missing_energy, price_map, power_map):
-        _charging_power_list = list(power_map.values())
-        min_battery_charge_per_slot = _charging_power_list[0] / 4
-        max_battery_charge_per_slot = _charging_power_list[-1] / 4
-
-        charge_level_per_slot = 0
-        available_prices = list(price_map.keys())
-        used_slots = []
-        min_price = max_price = available_prices[0]
-        for i in range(0, len(available_prices)):
-            price = max_price = available_prices[i]
-            for slot in price_map[price]:
-                used_slots.append([price,slot])
-                if slot["end"] <= requested_date:
-                    continue
-
-            charge_level_per_slot = missing_energy / len(used_slots)
-            if charge_level_per_slot < max_battery_charge_per_slot:
-                current_min_charging_speed_per_slot = ( power_map[price] if price in power_map else min_battery_charge_per_slot ) / 4
-                #print(charge_level_per_slot,price,min_charging_speed_per_slot)
-                if charge_level_per_slot > current_min_charging_speed_per_slot and len(available_prices) > i + 1 and available_prices[i+1] in power_map:
-                    continue
-                break
-
-        total_price = 0
-        for slot in used_slots:
-            total_price += price * charge_level_per_slot
-
-        requested_power = charge_level_per_slot * 4
-
-        used_slots.sort(key=lambda item: item[1]["start"].timestamp()) # sort by timestamp for performance reason
-
-        price_msg = "{:.2f}-{:.2f}".format(min_price, max_price) if min_price != max_price else "{:.2f}".format(min_price)
-        self.logger.info("Charging: Between {} and {} with {:.2f}kWh for {}€ in {} slots".format(used_slots[0][1]["start"].strftime('%H:%M'), used_slots[-1][1]["end"].strftime('%H:%M'), requested_power, price_msg, len(used_slots)))
-
-        real_total_price = ( total_price + ENERGY_TRAFFIC_COST_PER_KWH * missing_energy ) * VAT_COST
-        self.logger.info("        : Price for {:.2f}kWh is {:.2f}€ • {:.2f}€/kWh (Taxes included)".format(missing_energy, real_total_price, real_total_price / missing_energy))
-
-        return [min_price, max_price, total_price, used_slots, requested_power]
-
-    def selectActiveSlot(self, used_slots, requested_date, requested_power, current_price, min_price, max_price, total_price, missing_energy, state, state_msg):
-        #print(requested_date)
-        active_slot = None
-        next_slot = None
-        for price, slot in used_slots:
-            if active_slot is None and requested_date > slot["start"] and requested_date < slot["end"]:
-                active_slot = [price, slot]
-
-            if next_slot is None and requested_date < slot["start"]:
-                next_slot = [price, slot]
-
-            if active_slot is not None and next_slot is not None:
-                break
-
-            #print(price, slot)
-
-        if active_slot is not None:
-            is_ending = ( next_slot is None or next_slot[1]["start"] != active_slot[1]["end"] ) and requested_date >= active_slot[1]["end"] - timedelta(minutes=1)
-            state = "Ending  " if is_ending else "Active  "
-            state_msg = "With {:.2f}kWh for {}€".format(requested_power, current_price)
-            if is_ending:
-                requested_power = None
-        else:
-            state_msg = "No slot matches"
-            requested_power = None
-
-        if next_slot is not None:
-            state_msg = "{} • Next slot at {} with {}€".format(state_msg, next_slot[1]["start"].strftime('%H:%M'), next_slot[0])
-
-        return [state, state_msg, requested_power]
-
-    def calculateRequestedPower(self, current_price, requested_date, missing_energy, state_suffix = ""):
-        requested_power = None
-
-        state = "Inactive"
-        state_msg = ""
-
-        if missing_energy <= 0:
-            state_msg = "No charging needed"
-        else:
+    def initPrices(self, start, end):
+        if self.last_price_day != end.day:
+            #print("initPrices")
             # *** CALCULATE PRICES
-            if not self.price_map:
-                state_msg = "Prices are not available yet"
-            else:
-                # *** CALCULATE SLOTS
-                min_price, max_price, total_price, used_slots, requested_power = self.calculateSlots(requested_date, missing_energy, self.price_map, STORAGE_POWER_MAP)
-                self.logger.info("        : --")
+            last_price = Registry.getItem("pGF_Utilityroom_Electricity_Stock_Price").getPersistence("jdbc").persistedState(end)
+            if end.day != last_price.getTimestamp().day:
+                self.price_map = None
+                return
 
-                state, state_msg, requested_power = self.selectActiveSlot(used_slots, requested_date, requested_power, current_price, min_price, max_price, total_price, missing_energy, state, state_msg)
+            _mapped_prices = list(STORAGE_POWER_MAP.keys())
+            _first_mapped_price = _mapped_prices[0]
+            _first_mapped_power = STORAGE_POWER_MAP[_first_mapped_price]
+            _last_mapped_price = _mapped_prices[-1]
+            _last_mapped_power = STORAGE_POWER_MAP[_last_mapped_price]
 
-        self.logger.info("{}: {}{}".format(state, state_msg, state_suffix))
+            prices = Registry.getItem("pGF_Utilityroom_Electricity_Stock_Price").getPersistence("jdbc").getAllStatesBetween(start, end)
+            price_map = {}
+            for price in prices:
+                value = price.getState().doubleValue()
 
-        return requested_power
+                if value not in price_map:
+                    price_map[value] = []
 
-    def findValueFromMap(self, key, values):
+                charging_power = STORAGE_POWER_MAP[value] if value in STORAGE_POWER_MAP else (_first_mapped_power if value > _first_mapped_price else _last_mapped_power)
+                price_date = price.getTimestamp()
+                price_map[value].append({"start": price_date, "end": price_date + timedelta(minutes=15), "charging_power": charging_power})
+
+            for price, slots in price_map.items():
+                slots.sort(key=lambda x: x["start"].timestamp(), reverse=True)
+
+            self.price_map = dict(sorted(price_map.items(), key=lambda item: item[0]))
+            self.last_price_day = last_price.getTimestamp().day
+
+    def initSolarForecast(self, now, start, end):
+        if self.last_solar_hour != now.hour:
+            #print("initSolarForecast")
+            self.today_solar_forceast = self.tomorrow_solar_forceast = 0
+
+            dumped_states = Registry.getItem("pGF_Utilityroom_Electricity_Expected_Dumped_Solar_East").getPersistence("jdbc").getAllStatesBetween(start, end)
+            for dumped_state in dumped_states:
+                if dumped_state.getTimestamp().day == now.day:
+                    self.today_solar_forceast += dumped_state.getState().doubleValue()
+                else:
+                    self.tomorrow_solar_forceast += dumped_state.getState().doubleValue()
+
+            dumped_states = Registry.getItem("pGF_Utilityroom_Electricity_Expected_Dumped_Solar_South").getPersistence("jdbc").getAllStatesBetween(start, end)
+            for dumped_state in dumped_states:
+                if dumped_state.getTimestamp().day == now.day:
+                    self.today_solar_forceast += dumped_state.getState().doubleValue()
+                else:
+                    self.tomorrow_solar_forceast += dumped_state.getState().doubleValue()
+
+            dumped_states = Registry.getItem("pGF_Utilityroom_Electricity_Expected_Dumped_Solar_West").getPersistence("jdbc").getAllStatesBetween(start, end)
+            for dumped_state in dumped_states:
+                if dumped_state.getTimestamp().day == now.day:
+                    self.today_solar_forceast += dumped_state.getState().doubleValue()
+                else:
+                    self.tomorrow_solar_forceast += dumped_state.getState().doubleValue()
+
+            self.last_solar_hour = now.hour
+
+    def _findValueFromMap(self, key, values):
         slot_key = None
         slot_value = None
         for _slot_key, _slot_value in values.items():
@@ -356,127 +316,183 @@ class StoragePower:
                 break
         return slot_value
 
-    def getSolarForecast(self, start, end):
-        _start = ( datetime.now() - timedelta(days=1) ).replace(hour=0, minute=0, second=0, microsecond=0)
-        _end = _start + timedelta(days=1)
-        sunshine_radiations = Registry.getItem("pOutdoor_Astro_Total_Radiation").getPersistence("jdbc").getAllStatesBetween(_start, _end) # must be yesterday
-        sunshine_duration_max = int( ( sunshine_radiations[-1].getTimestamp() - sunshine_radiations[0].getTimestamp() ).total_seconds() / 60 )
+    def initHeatingForecast(self, now, start, end):
+        if self.last_heating_hour != now.hour:
+            #print("initHeatingForecast")
+            avg_value = Registry.getItem("pOutdoor_Weather_Forecast_Temperature").getPersistence("jdbc").averageBetween(start,end).doubleValue()
 
-        sunshine_duration_today = Registry.getItem("pOutdoor_Weather_Forecast_Sunshine_Duration").getPersistence("jdbc").sumBetween(start, end).doubleValue()
-        sunshine_ratio = round(sunshine_duration_today * 100 / sunshine_duration_max, 0)
+            if avg_value > HEATING_MAX_TEMPERATURE:
+                house_heating = 0
+            elif avg_value < HEATING_MIN_TEMPERATURE:
+                house_heating = HEATING_MAX_ENERGY
+            else:
+                house_heating = ( avg_value - HEATING_MAX_TEMPERATURE ) * HEATING_MAX_ENERGY / HEATING_MAX_TEMPERATURE_DIFF
 
-        values = {
-            start.replace(day=1, month=2).timetuple().tm_yday: 10.0,
-            start.replace(day=1, month=3).timetuple().tm_yday: 15.0,
-            start.replace(day=1, month=4).timetuple().tm_yday: 25.0,
-            start.replace(day=1, month=5).timetuple().tm_yday: 60.0,
-            start.replace(day=1, month=9).timetuple().tm_yday: 60.0,
-            start.replace(day=30, month=9).timetuple().tm_yday: 25.0,
-            start.replace(day=31, month=10).timetuple().tm_yday: 15.0,
-            start.replace(day=30, month=11).timetuple().tm_yday: 10.0
-        }
+            frost_guard_heating = self._findValueFromMap(avg_value, FROST_GUARD_HEATING_MAP)
 
-        solar = self.findValueFromMap(start.timetuple().tm_yday, values)
+            self.house_heating_forecast = house_heating
+            self.frost_guard_heating_forecast = frost_guard_heating
+            self.last_heating_hour = now.hour
 
-        #cloud_cover = Registry.getItem("pOutdoor_Weather_Forecast_Cloud_Cover").getPersistence("jdbc").averageBetween(start, end).doubleValue()
-        # more timerealistic
-        #if cloud_cover > 8:
-        #    solar = solar * 0.3
-        #elif cloud_cover > 6:
-        #    solar = solar * 0.6
-        #elif cloud_cover > 5:
-        #    solar = solar * 0.8
-        #elif cloud_cover > 4:
-        #    solar = solar * 0.9
+    def calculateRemainingSlots(self, now, consumption_start, missing_energy, price_map):
+        used_slots_start = (now if now < consumption_start else consumption_start).timestamp()
+        used_slots_charged_energy = remaining_slots_charged_energy = 0
+        remaining_slots = []
 
-        return solar * sunshine_ratio / 100
+        for price in list(price_map.keys()):
+            for slot in price_map[price]:
+                if slot["end"].timestamp() <= used_slots_start: # used slots are calculated between charging start and charging end and are reduced until consumption start (midnight)
+                    continue
 
-    def getHeatingForecast(self, start, end):
-        avg_value = Registry.getItem("pOutdoor_Weather_Forecast_Temperature").getPersistence("jdbc").averageBetween(start,end).doubleValue()
+                used_slots_charged_energy += slot["charging_power"] / 4
 
-        if avg_value > HEATING_MAX_TEMPERATURE:
-            house_heating = 0
-        elif avg_value < HEATING_MIN_TEMPERATURE:
-            house_heating = HEATING_MAX_ENERGY
+                if slot["end"].timestamp() > now.timestamp(): # remaining slots are calculated across all used slots between now until charging end
+                    remaining_slots_charged_energy += slot["charging_power"] / 4
+                    remaining_slots.append({ "price": price, "charging_power": slot["charging_power"], "start": slot["start"], "end": slot["end"]})
+
+            if used_slots_charged_energy >= missing_energy:
+                break
+
+        active_slot = next_slot = None
+        if len(remaining_slots) > 0:
+            min_power = remaining_slots[-1]["charging_power"]
+            max_power = remaining_slots[0]["charging_power"]
+            min_price = remaining_slots[0]["price"]
+            max_price = remaining_slots[-1]["price"]
+
+            if remaining_slots_charged_energy >= missing_energy:
+                # If price is does not matter, distribute the load across all remaining slots with "fixed" power
+                override_power = round(min_power - ( remaining_slots_charged_energy - missing_energy ) / len(price_map[max_price]), 2)
+                if override_power < STORAGE_MIN_CHARGING_POWER:
+                    override_power = STORAGE_MIN_CHARGING_POWER
+                if min_power == max_power:
+                    max_power = override_power
+                min_power = override_power
+                override_price = max_price
+                charged_enery = missing_energy
+            else:
+                override_price = override_power = None
+                charged_enery = remaining_slots_charged_energy
+
+            remaining_slots.sort(key=lambda item: item["start"].timestamp()) # sort by timestamp for performance reason
+
+            hours, remainder = divmod(len(remaining_slots) * 900, 3600)
+            minutes, _ = divmod(remainder, 60)
+
+            power_msg = "{:.2f}-{:.2f}".format(min_power, max_power) if min_power != max_power else "{:.2f}".format(min_power)
+            price_msg = "{:.2f}-{:.2f}".format(min_price, max_price) if min_price != max_price else "{:.2f}".format(min_price)
+            self.logger.info("Charging: 🔋 Total {:.2f}kWh ⚡ Power {}kW 💰 Price {}€/kWh 🕐 Between {} and {} • Duration {:02d}:{:02d} ({} slots)".format(charged_enery, power_msg, price_msg, remaining_slots[0]["start"].strftime('%H:%M'), remaining_slots[-1]["end"].strftime('%H:%M'), hours, minutes, len(remaining_slots)))
+            self.logger.info("        : --")
+
+            next_slot = remaining_slots[0] if len(remaining_slots) > 0 else None
+            active_slot = next_slot if next_slot is not None and now >= next_slot["start"] else None
+            if active_slot is not None:
+                next_slot = remaining_slots[1] if len(remaining_slots) > 1 else None
+                if override_price  is not None and override_price == active_slot["price"]:
+                    active_slot["charging_power"] = override_power
+
+            if next_slot is not None and override_price  is not None and override_price == next_slot["price"]:
+                next_slot["charging_power"] = override_power
+
+        return [active_slot, next_slot]
+
+    def calculateRequestedPower(self, now, consumption_start, missing_energy, state_suffix = ""):
+        requested_power = None
+        state = "Inactive"
+
+        if missing_energy <= 0:
+            state_msg = "No charging needed"
+        elif self.price_map is None:
+            state_msg = "Prices are not available yet"
         else:
-            house_heating = ( avg_value - HEATING_MAX_TEMPERATURE ) * HEATING_MAX_ENERGY / HEATING_MAX_TEMPERATURE_DIFF
+            active_slot, next_slot = self.calculateRemainingSlots(now, consumption_start, missing_energy, self.price_map)
+            if active_slot is not None:
+                requested_power = active_slot["charging_power"]
+                if ( next_slot is None or next_slot["start"] != active_slot["end"] ) and now >= active_slot["end"] - timedelta(minutes=1):
+                    state = "Ending  "
+                    requested_power = None # if it ends in one minute, reset the requested power to trigger the inverter's watchdog timer within one minute
+                else:
+                    state = "Active  "
+                state_msg = "With {:.2f}kWh for {:.2f}€/kWh".format(active_slot["charging_power"], active_slot["price"])
+            else:
+                state_msg = "No slot matches"
 
-        frost_guard_heating = self.findValueFromMap(avg_value, FROST_GUARD_HEATING_MAP)
+            if next_slot is not None:
+                state_msg = "{} • Next slot at {} with {:.2f}kWh for {:.2f}€/kWh".format(state_msg, next_slot["start"].strftime('%H:%M'), next_slot["charging_power"], next_slot["price"])
+        self.logger.info("{}: {}{}".format(state, state_msg, state_suffix))
 
-        return [house_heating, frost_guard_heating]
+        return requested_power
 
-    def calculateStorageChargeLevel(self, requested_date, consumption_start, consumption_end, sunrise, sunset):
-        # *** CALCULATE AND CACHE SOLAR AND HEATING
-        if self.last_forecast_datetime is None or self.last_forecast_datetime.hour != requested_date.hour:
-            self.expected_solar = self.getSolarForecast(consumption_start, consumption_end)
-
-            self.house_heating_consumption, self.frost_guard_heating_consumption = self.getHeatingForecast(consumption_start, consumption_end)
-
-            sunshine_in_hours = math.floor((sunset - sunrise).total_seconds() / 60.0 / 60.0)
-            solar_direct_consumption = sunshine_in_hours * BASE_CONSUMPTION_PER_HOUR
-            self.total_consumption = STORAGE_EMERGENCY_ENERGY_SOC + MAX_CONSUMPTION_PER_DAY + self.house_heating_consumption + self.frost_guard_heating_consumption
-
-            midnight = sunrise.replace(hour=0, minute=0, second=0)
-            night_in_hours = math.floor((sunrise - midnight).total_seconds() / 60.0 / 60.0)
-            night_base_consumption = night_in_hours * BASE_CONSUMPTION_PER_HOUR
-
-            self.effective_solar = self.expected_solar - solar_direct_consumption if self.expected_solar > solar_direct_consumption else 0.0
-            effective_total_consuption = self.total_consumption - solar_direct_consumption
-
-            self.target_battery_energy_soc = STORAGE_MAX_CAPACITY - self.effective_solar if effective_total_consuption + self.effective_solar > STORAGE_MAX_CAPACITY else effective_total_consuption
-            if self.target_battery_energy_soc < STORAGE_EMERGENCY_ENERGY_SOC + night_base_consumption:
-                self.target_battery_energy_soc = STORAGE_EMERGENCY_ENERGY_SOC + night_base_consumption
-
-            self.last_forecast_datetime = requested_date
-
+    def calculateStorageChargeLevel(self, now, consumption_start, consumption_end, sunrise, sunset):
         price_persistance = Registry.getItem("pGF_Utilityroom_Electricity_Stock_Price").getPersistence("jdbc")
-        current_price = price_persistance.persistedState(requested_date).getState().doubleValue()
+        current_price = price_persistance.persistedState(now).getState().doubleValue()
         battery_price = Registry.getItem("pGF_Utilityroom_Electricity_Storage_Price").getState().doubleValue()
 
         solar_battery_soc = Registry.getItem("pGF_Utilityroom_Electricity_Storage_Solar_Soc").getState().doubleValue()
         grid_battery_soc = Registry.getItem("pGF_Utilityroom_Electricity_Storage_Grid_Soc").getState().doubleValue()
         current_battery_soc = ( Registry.getItem("pGF_Garage_Solar_Storage_EnergySoc").getState().doubleValue() ) / 1000.0
+        current_battery_percent = Registry.getItem("pGF_Garage_Solar_Storage_EssSoc").getState().intValue()
 
-        requested_max_discharger_power = None
+        today_consumption = Registry.getItem("pGF_Utilityroom_Electricity_State_Daily_Consumption").getState().doubleValue()
+        today_production = Registry.getItem("pGF_Utilityroom_Electricity_State_Daily_Production").getState().doubleValue()
+
+        # *** CALCULATE AND CACHE SOLAR AND HEATING
+        already_consumed = today_consumption if now >= consumption_start else 0.0
+
+        expected_total_consumption = MAX_CONSUMPTION_PER_DAY + self.house_heating_forecast + self.frost_guard_heating_forecast
+        expected_solar_production = self.today_solar_forceast if now >= consumption_start else self.tomorrow_solar_forceast
+
+        _sunshine_in_hours = math.floor((sunset - sunrise).total_seconds() / 60.0 / 60.0)
+        expected_consumption_during_sunshine = _sunshine_in_hours * BASE_DAY_CONSUMPTION_PER_HOUR
+
+        _midnight = sunrise.replace(hour=0, minute=0, second=0)
+        _night_in_hours = math.floor((sunrise - _midnight).total_seconds() / 60.0 / 60.0)
+        expected_consumption_during_night = _night_in_hours * BASE_NIGHT_CONSUMPTION_PER_HOUR
+
+        soc_relevant_solar = expected_solar_production - expected_consumption_during_sunshine if expected_solar_production > expected_consumption_during_sunshine else 0.0
+        soc_relevant_consumption = expected_total_consumption - expected_consumption_during_sunshine - already_consumed
+
+        is_too_much = STORAGE_EMERGENCY_ENERGY_SOC + soc_relevant_consumption + soc_relevant_solar > STORAGE_MAX_CAPACITY
+        target_battery_energy_soc = STORAGE_MAX_CAPACITY - soc_relevant_solar if is_too_much else STORAGE_EMERGENCY_ENERGY_SOC + soc_relevant_consumption
+        if target_battery_energy_soc < STORAGE_EMERGENCY_ENERGY_SOC + expected_consumption_during_night:
+            target_battery_energy_soc = STORAGE_EMERGENCY_ENERGY_SOC + expected_consumption_during_night
+        target_percent = target_battery_energy_soc * 100 / STORAGE_MAX_CAPACITY
+
+        self.logger.info("Forecast: 🏠 Base {:.2f}kWh 🔥 Heating {:.2f}kWh 🌳 Plants {:.2f}kWh 🌞 Solar {:.2f}kWh (soc relevant {:.2f}kWh)".format(MAX_CONSUMPTION_PER_DAY, self.house_heating_forecast, self.frost_guard_heating_forecast, expected_solar_production, soc_relevant_solar))
+        self.logger.info("        : 🏠 Total demand {:.2f}kWh 🔋 Battery target {:.2f}kWh ({:.0f}%) ({})".format(expected_total_consumption, target_battery_energy_soc, target_percent, "max capacity - soc relevant solar" if is_too_much else "emergency + consumption"))
+        self.logger.info("        : --")
+
+        self.logger.info("Current : 🔋 Battery {:.2f}kWh ({:.0f}%) • {:.2f}kWh ({:.2f}€/kWh) • {:.2f}kWh (0.00€/kWh)".format(current_battery_soc, current_battery_percent, grid_battery_soc, battery_price, solar_battery_soc))
+        self.logger.info("        : 💰 Spot price {:.2f}€/kWh 🏠 Consumption {:.2f}kWh 🌞 Solar {:.2f}kWh (expected {:.2f}kWh)".format(current_price, today_consumption, today_production, self.today_solar_forceast))
+        self.logger.info("        : --")
+
+        # *** CALCULATE MISSING CHARGING
+        missing_energy = target_battery_energy_soc - current_battery_soc
 
         # *** CALCULATE POSSIBLE DISCHARGING
-        state_suffix = ""
+        requested_max_discharger_power = None
         if current_battery_soc > STORAGE_EMERGENCY_ENERGY_SOC:
             # nicht entladen, wenn aktueller Strompreis gleich dem max Ladestrompreis ist.
             if Registry.getItem("pGF_Utilityroom_Electricity_Storage_Solar_Soc").getState().doubleValue() <= 0:
-                reference_price = current_price if Registry.getItem("pGF_Garage_Solar_Storage_RequestedMaxDischargerPower").getState().intValue() == -1 else price_persistance.persistedState(requested_date + timedelta(minutes=1)).getState().doubleValue()
+                reference_price = current_price if Registry.getItem("pGF_Garage_Solar_Storage_RequestedMaxDischargerPower").getState().intValue() == -1 else price_persistance.persistedState(now + timedelta(minutes=1)).getState().doubleValue()
                 if reference_price <= battery_price:
                     requested_max_discharger_power = 0
                     state_suffix = " • {}".format("Limit discharging • Stock price cheaper")
                 else:
                     state_suffix = " • {}".format("Discharging allowed • Storage price cheaper")
-                #print(reference_price, battery_price)
             else:
                 state_suffix = " • {}".format("Discharging allowed • Solar energy available")
+        else:
+            state_suffix = " • {}".format("Limit discharging • No energy available")
 
-        self.logger.info("Forecast: Emergency {:.2f}kWh • Base {:.2f}kWh, Heating {:.2f}kWh • Plants {:.2f}kWh".format(STORAGE_EMERGENCY_ENERGY_SOC, MAX_CONSUMPTION_PER_DAY, self.house_heating_consumption, self.frost_guard_heating_consumption))
-        self.logger.info("        : Total {:.2f}kWh • Battery Target {:.2f}kWh, Expected Solar {:.2f}kWh ({:.2f}kWh)".format(self.total_consumption, self.target_battery_energy_soc, self.effective_solar, self.expected_solar))
+        return [ self.calculateRequestedPower(now, consumption_start, missing_energy, state_suffix), requested_max_discharger_power]
 
-
-
-        self.logger.info("        : --")
-        self.logger.info("Storage : Total {:.2f}kWh • Spot price {:.2f}€/kWh".format(current_battery_soc, current_price))
-        self.logger.info("        : Grid {:.2f}kWh ({:.2f}€/kWh) • Solar {:.2f}kWh".format(grid_battery_soc, battery_price, solar_battery_soc))
-        #self.logger.info("State   : Spot price {:.2f}€ • Grid storage price {:.2f}€ • Solar storage price 0.00€".format(current_price, battery_price))
-        #self.logger.info("        : Total storage {:.2f}kWh • Grid storage {:.2f}kWh • Solar storage {:.2f}kWh".format(current_battery_soc, grid_battery_soc, solar_battery_soc))
-        self.logger.info("        : --")
-
-        # *** CALCULATE MISSING CHARGING
-        today_consumption = 0.0 if requested_date > sunrise else Registry.getItem("pGF_Utilityroom_Electricity_State_Daily_Consumption").getState().doubleValue()
-        missing_energy = self.target_battery_energy_soc - current_battery_soc - today_consumption
-
-        return [ self.calculateRequestedPower(current_price, requested_date, missing_energy, state_suffix), requested_max_discharger_power]
-
-    def calculateCarChargeLevel(self, requested_date):
+    def calculateCarChargeLevel(self, now, consumption_start):
         current_battery_soc = 0.0
         max_battery_soc = 50.0
 
-        current_price = Registry.getItem("pGF_Utilityroom_Electricity_Stock_Price").getPersistence("jdbc").persistedState(requested_date).getState().doubleValue()
+        current_price = Registry.getItem("pGF_Utilityroom_Electricity_Stock_Price").getPersistence("jdbc").persistedState(now).getState().doubleValue()
+
 
         self.logger.info("Storage : Total {:.2f}kWh • Max {:.2f}kWh".format(current_battery_soc,max_battery_soc))
         self.logger.info("        : --")
@@ -484,41 +500,46 @@ class StoragePower:
         # *** CALCULATE MISSING CHARGING
         missing_energy = max_battery_soc - current_battery_soc
 
-        return self.calculateRequestedPower(current_price, requested_date, missing_energy)
+        return self.calculateRequestedPower(now, consumption_start, missing_energy)
 
     def execute(self, module, input):
         self.logger.info("--------: >>>")
 
         # *** INIT DATES
-        now = datetime.now().astimezone()
-        requested_date = now #.replace(day=11)
+        now = datetime.now().astimezone() #.replace(hour=2, minute=30) # - timedelta(days=1)
+
+        today_morning = now.replace(hour=0, minute=0, second=0, microsecond=0)
 
         sunrise = Registry.getItem("pOutdoor_Astro_Sunrise_Time").getState().getZonedDateTime()
-        sunrise = sunrise.replace(day=requested_date.day, month=requested_date.month, year=requested_date.year)
+        sunrise = sunrise.replace(day=now.day, month=now.month, year=now.year)
 
         sunset = Registry.getItem("pOutdoor_Astro_Sunset_Time").getState().getZonedDateTime()
-        sunset = sunset.replace(day=requested_date.day, month=requested_date.month, year=requested_date.year)
+        sunset = sunset.replace(day=now.day, month=now.month, year=now.year)
 
         # calculate for tomorrow
-        if requested_date > sunrise:
+        if now > sunrise:
             charging_start = sunset                                                                                         # charging starts today sunset
             charging_end = sunrise + timedelta(days=1)                                                                      # charging ends tomorrow sunrise
 
-            consumption_start = (requested_date + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)     # consumptions starts tomorrow 00:00
-            consumption_end = consumption_start + timedelta(days=1)                                                         # consumptions starts tomorrow 23:59
+            consumption_start = today_morning + timedelta(days=1)                                                           # consumptions starts tomorrow 00:00
         # calculate for today
         else:
             charging_start = sunset - timedelta(days=1)                                                                     # charging starts yesterday sunset
             charging_end = sunrise                                                                                          # charging ends today sunrise
 
-            consumption_start = requested_date.replace(hour=0, minute=0, second=0, microsecond=0)                           # consumptions starts today 00:00
-            consumption_end = consumption_start + timedelta(days=1)                                                         # consumptions starts today 23:59
+            consumption_start = today_morning                                                                               # consumptions starts today 00:00
 
-        # *** INIT PRICES
+        consumption_end = consumption_start + timedelta(days=1)                                                             # consumptions ends
+
+        #print(now, charging_start, charging_end)
+
+        # *** INIT
         self.initPrices(charging_start, charging_end)
+        self.initSolarForecast(now, today_morning, today_morning + timedelta(days=2))
+        self.initHeatingForecast(now, consumption_start, consumption_end)
 
         #self.logger.info("--- BATTERY CHARGING ---")
-        requested_power, requested_max_discharger_power = self.calculateStorageChargeLevel(requested_date, consumption_start, consumption_end, sunrise, sunset)
+        requested_power, requested_max_discharger_power = self.calculateStorageChargeLevel(now, consumption_start, consumption_end, sunrise, sunset)
 
         if requested_power is not None:
             # START/REFRESH CHARGING => Fenecon Watchdog
@@ -531,10 +552,8 @@ class StoragePower:
 
         #self.logger.info("")
         #self.logger.info("--- CAR CHARGING ---")
-        #requested_power = self.calculateCarChargeLevel(requested_date)
+        #requested_power = self.calculateCarChargeLevel(now, consumption_start)
         #if requested_power is not None:
         #    pass
 
         self.logger.info("--------: <<<")
-
-# TODO mindestens 2.52KW (10%) Platz für Solar

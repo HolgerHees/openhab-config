@@ -97,26 +97,33 @@ class DoorCheck:
 
         return True
 
-    def _checkArrival(self, input):
-        if input['event'].getItemName() == "pGF_Corridor_Openingcontact_Door_State":
-            Cache.setPossibleArrive(True)
-
+    def _checkArrival(self, input_name):
         if Cache.getPresenceState() == PresenceHelper.STATE_AWAY:
             Cache.setPresenceState(PresenceHelper.STATE_MAYBE_PRESENT)
 
-    def _checkLeaving(self, input = None):
+        if input_name == "pGF_Corridor_Openingcontact_Door_State":
+            Cache.setPossibleArrive(True)
+
+            if Cache.getPresenceState() == PresenceHelper.STATE_MAYBE_PRESENT and Registry.getItemState("pGF_Corridor_Lock_State").intValue() == 1:
+                self.logger.error("UNLOCKED CHECK")
+                # Lets wait for 60 seconds to check if e.g. door was unlocked.
+                # Sometimes, if you unlock and open the door for just <10 seconds, the unlock/lock event will not be reported to openhab. It stays on locked
+                self.timer = threading.Timer(60, self._checkLeaving)
+                self.timer.start()
+
+    def _checkLeaving(self, input_name = None):
         if Cache.getPresenceState() != PresenceHelper.STATE_MAYBE_PRESENT:
             return
 
         if not DoorCheck.isAllClosedAndLocked():
             return
 
-        if input is None:
+        if input_name is None:
             Cache.setPresenceState(PresenceHelper.STATE_AWAY)
         else:
             # Lets wait for 60 seconds if another event happens, like front or garage door opened
             # 1. 'leaving' was triggered by closing garage door.
-            # 1. 'leaving' was triggered by door lock event.
+            # 2. 'leaving' was triggered by door lock event.
             self.timer = threading.Timer(60, self._checkLeaving)
             self.timer.start()
 
@@ -127,7 +134,7 @@ class DoorCheck:
 
         with Cache.getLock():
             if input['event'].getItemName() in ["pGF_Corridor_Openingcontact_Door_State", "pGF_Garage_Openingcontact_Door_Streedside_State"] and input['event'].getItemState() == scope.OPEN:
-                self._checkArrival(input)
+                self._checkArrival(input['event'].getItemName())
             else:
                 self._checkLeaving(input['event'].getItemName())
 

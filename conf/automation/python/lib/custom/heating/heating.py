@@ -811,7 +811,7 @@ class Heating():
         
         lazy_radiation_msg = u" (∾ {})".format( round(sun_radiation_lazy / 60.0, 1) ) if sun_radiation_lazy != None else ""
         light_level_msg = u", {} lux".format( int(sun_light_level) ) if sun_light_level != None else ""
-        debug_info = u"Az {}° • El {}{}° • Clouds {} ⊗ • Sun {}{} W/min{}{}".format(sdi["azimut"], sdi["elevation"], sdi["min_elevation"], cr.getCloudCover(), sdi["effective_radiation"], lazy_radiation_msg, light_level_msg, sdi["active"])
+        debug_info = u"🌍 Az {}° • El {}{}° ⛅ Clouds {:.1f} 🌞 Sun {}{} W/min{}{}".format(sdi["azimut"], sdi["elevation"], sdi["min_elevation"], cr.getCloudCover(), sdi["effective_radiation"], lazy_radiation_msg, light_level_msg, sdi["active"])
 
         self.logger.info(u"{}: {}".format(prefix, debug_info))
         
@@ -824,7 +824,7 @@ class Heating():
             self.formatEnergy(cr.getWindowRadiation())
         ))
         msg = u"{} W/min".format(self.formatEnergy(cr.getHeatingRadiation())) if cr.getHeatingRadiation() > 0 else u"{} W/min (FC)".format(self.formatEnergy(cr.getPossibleHeatingRadiation()))
-        self.logger.info(u"        : ↑↓ {} W/min ({}°C) • HU {}".format(self.formatEnergy(cr.getPassiveSaldo()),round(cr.getReferenceTemperature(),1), msg ))
+        self.logger.info(u"        : 🏠 ↑↓ {} W/min ({}°C) 🔥 HU {}".format(self.formatEnergy(cr.getPassiveSaldo()),round(cr.getReferenceTemperature(),1), msg ))
         self.logger.info(u"        : ---")
                   
     def logHeatingStates(self, cr, hhs):
@@ -931,7 +931,7 @@ class Heating():
         temperature_8 = temperature_forecast.persistedState(now_8)
 
         cloud_forecast = Registry.resolveItem(self.forecast_cloud_cover_item_name).getPersistence("jdbc")
-        cloud_cover = self.getCachedItemState(self.current_cloud_cover_item_name)
+        cloud_cover = self.getCachedItemState(self.current_cloud_cover_item_name).floatValue()
         cloud_cover_4 = cloud_forecast.persistedState(now_4)
         cloud_cover_8 = cloud_forecast.persistedState(now_8)
 

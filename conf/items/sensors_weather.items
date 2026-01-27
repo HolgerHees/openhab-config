@@ -6,9 +6,9 @@ Number pOutdoor_Weather_Current_Cloud_Cover     "Wolken [%.1f]"                 
 Number pOutdoor_Weather_Current_Humidity        "Luftfeuchtigkeit [%.1f %%]"        <selftemperature> (eOutdoor_Weather_Forecast,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:cloud:weatherforecast:humidityCurrent" }
 Number pOutdoor_Weather_Current_Temperature_Perceived     "Gefühlt [%.1f] °C"       <selftemperature> (eOutdoor_Weather_Forecast) ["Point"] {channel="mqtt:topic:cloud:weatherforecast:perceivedTemperatureCurrent" }
 
-Number pOutdoor_Weather_Forecast_Temperature    "Garten (Vorhersage) [%.1f °C]" <selftemperature> (eOutdoor_Weather_Forecast,gPersistence_Forecast,gPersistance_Chart,gPersistance_History) ["Point"]
-Number pOutdoor_Weather_Forecast_Cloud_Cover    "Wolken (Vorhersage) [%.1f]"     <selftemperature> (eOutdoor_Weather_Forecast,gPersistence_Forecast,gPersistance_History) ["Point"]
-Number pOutdoor_Weather_Forecast_Sunshine_Duration "Sonnenlicht Dauer (Vorhersage) [%.1f]"     <selftemperature> (eOutdoor_Weather_Forecast,gPersistence_Forecast,gPersistance_History) ["Point"]
+Number pOutdoor_Weather_Forecast_Temperature    "Garten (Vorhersage) [%.1f °C]" <selftemperature> (eOutdoor_Weather_Forecast,gPersistence_Forecast,gPersistance_Chart) ["Point"]
+Number pOutdoor_Weather_Forecast_Cloud_Cover    "Wolken (Vorhersage) [%.1f]"     <selftemperature> (eOutdoor_Weather_Forecast,gPersistence_Forecast) ["Point"]
+Number pOutdoor_Weather_Forecast_Sunshine_Duration "Sonnenlicht Dauer (Vorhersage) [%.1f]"     <selftemperature> (eOutdoor_Weather_Forecast,gPersistence_Forecast) ["Point"]
 
 // **** WEATHERSTATION ****
 Group gWeatherstationInputValues                     "Wetterstation Input" {autoupdate="false"}

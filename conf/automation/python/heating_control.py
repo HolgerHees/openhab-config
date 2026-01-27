@@ -624,35 +624,31 @@ class Main:
         effective_radiation_long_term = messured_radiation_long_term / 60.0
 
         # use same azimut and elevation as heating calculation
-        elevation, azimut = SunRadiation._getSunData( now )
-        #azimut = Registry.getItemState("pOutdoor_Astro_Sun_Azimuth").doubleValue()
-        #elevation = Registry.getItemState("pOutdoor_Astro_Sun_Elevation").doubleValue()
-
-        #self.logger.info(u"{} {} {}".format(azimut,elevation,SunRadiation.getMinElevation(azimut)))
-
-        if azimut >= 120 and azimut <= SunRadiation.AZIMUT_NW_LIMIT and elevation >= SunRadiation.getMinElevation(azimut):
-            #self.logger.info(u"Sun     : {:.1f} W/min ({:.1f} W/min)".format(effective_radiation_short_term,effective_radiation_long_term))
-            # glare protection during sandra's workdays
-            needed_sunprotection = azimut >= 180 \
-                and messured_light_level_short_term > 15000 and messured_light_level_long_term > 15000 \
-                and now.weekday() <= 4 and Registry.getItemState("pOther_Presence_Sandra_State") == scope.ON
-            if not needed_sunprotection:
-                # hot stone protection
-                needed_sunprotection = effective_radiation_long_term > 8.0 and (current_outdoor_temperature > 26 or current_outdoor_temperature4 > 26)
+        azimut, elevation, min_elevation, _ = SunRadiation.getSunData( now )
+        if elevation >= min_elevation:
+            if azimut >= 120:
+                #self.logger.info(u"Sun     : {:.1f} W/min ({:.1f} W/min)".format(effective_radiation_short_term,effective_radiation_long_term))
+                # glare protection during sandra's workdays
+                needed_sunprotection = azimut >= 180 \
+                    and messured_light_level_short_term > 15000 and messured_light_level_long_term > 15000 \
+                    and now.weekday() <= 4 and Registry.getItemState("pOther_Presence_Sandra_State") == scope.ON
                 if not needed_sunprotection:
-                    # hot room protection (only above 18°C)
-                    target_room_temperature = hhs.getHeatingState("lGF_Livingroom").getHeatingTargetTemperature()
-                    current_room_temperature = cr.getRoomState("lGF_Livingroom").getCurrentTemperature()
-                    needed_sunprotection = self.isTooWarm(effective_radiation_short_term, current_outdoor_temperature, current_outdoor_temperature4, current_room_temperature, target_room_temperature )
+                    # hot stone protection
+                    needed_sunprotection = effective_radiation_long_term > 8.0 and (current_outdoor_temperature > 26 or current_outdoor_temperature4 > 26)
+                    if not needed_sunprotection:
+                        # hot room protection (only above 18°C)
+                        target_room_temperature = hhs.getHeatingState("lGF_Livingroom").getHeatingTargetTemperature()
+                        current_room_temperature = cr.getRoomState("lGF_Livingroom").getCurrentTemperature()
+                        needed_sunprotection = self.isTooWarm(effective_radiation_short_term, current_outdoor_temperature, current_outdoor_temperature4, current_room_temperature, target_room_temperature )
 
-            if needed_sunprotection:
-                if Registry.getItem("pOther_Automatic_State_Sunprotection_Terrace").postUpdateIfDifferent(SunProtectionHelper.STATE_TERRACE_CLOSED):
-                    self.logger.info(u"DEBUG: SP switching 2 • {} • {} ({}) W/m² • {} ({}) lux".format("Terrace",round(effective_radiation_short_term,1),round(effective_radiation_long_term,1),int(messured_light_level_short_term), int(messured_light_level_long_term)))
-            elif Registry.getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == 0:
-                Registry.getItem("pOther_Automatic_State_Sunprotection_Terrace").postUpdate(SunProtectionHelper.STATE_TERRACE_MAYBE_CLOSED)
-                self.logger.info(u"DEBUG: SP switching 1 • {} • {} ({}) W/m² • {} ({}) lux".format("Terrace",round(effective_radiation_short_term,1),round(effective_radiation_long_term,1),int(messured_light_level_short_term), int(messured_light_level_long_term)))
-        else:
-            #if Registry.getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == 2:
+                if needed_sunprotection:
+                    if Registry.getItem("pOther_Automatic_State_Sunprotection_Terrace").postUpdateIfDifferent(SunProtectionHelper.STATE_TERRACE_CLOSED):
+                        self.logger.info(u"DEBUG: SP switching 2 • {} • {} ({}) W/m² • {} ({}) lux".format("Terrace",round(effective_radiation_short_term,1),round(effective_radiation_long_term,1),int(messured_light_level_short_term), int(messured_light_level_long_term)))
+                elif Registry.getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == SunProtectionHelper.STATE_TERRACE_OPEN:
+                    Registry.getItem("pOther_Automatic_State_Sunprotection_Terrace").postUpdate(SunProtectionHelper.STATE_TERRACE_MAYBE_CLOSED)
+                    self.logger.info(u"DEBUG: SP switching 1 • {} • {} ({}) W/m² • {} ({}) lux".format("Terrace",round(effective_radiation_short_term,1),round(effective_radiation_long_term,1),int(messured_light_level_short_term), int(messured_light_level_long_term)))
+        elif azimut > 260.00:
+            #if Registry.getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == SunProtectionHelper.STATE_TERRACE_OPEN:
             if Registry.getItem("pOther_Automatic_State_Sunprotection_Terrace").postUpdateIfDifferent(SunProtectionHelper.STATE_TERRACE_OPEN):
                 self.logger.info(u"DEBUG: SP switching 0 • {}".format("Terrace"))
 
