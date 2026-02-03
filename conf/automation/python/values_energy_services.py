@@ -68,7 +68,7 @@ class ExpectedSolar:
         response = HTTP.sendHttpGetRequest(url, {}, 30000)
 
         if response is None:
-            logger.error("Expected '{}' solar response is not available".format(name))
+            logger.error("Expected '{}{}' solar response is not available".format(direction[0].upper(), direction[1:]))
             return
 
         try:
@@ -77,7 +77,7 @@ class ExpectedSolar:
             data = None
 
         if data is None or "forecasts" not in data:
-            logger.error("Expected '{}' solar response is not valid".format(name))
+            logger.error("Expected '{}{}' solar response is not valid".format(direction[0].upper(), direction[1:]))
             logger.error(url)
             logger.error(response)
             return

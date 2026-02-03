@@ -184,6 +184,7 @@ class MotionDetector:
         if Registry.getItemState(entry[1]) == scope.ON:
             for motionDetectorItem in entry[2]:
                 if Registry.getItemState(motionDetectorItem) == scope.OPEN:
+                    self.logger.info(">>> MotionDetector: refresh => still open")
                     LightState.timerMappings[entry[0]] = threading.Timer(TIMER_DURATIONS, self.callback, [entry])
                     LightState.timerMappings[entry[0]].start()
                     return
@@ -198,8 +199,9 @@ class MotionDetector:
 
         entry = LIGHT_SETUP[self.triggerMappings[item_name]]
         if Registry.getItemState(entry[1]) == scope.ON:
-            timer = LightState.timerMappings.get(item_name)
+            timer = LightState.timerMappings.get(entry[0])
             if timer is not None:
+                self.logger.info(">>> MotionDetector: refresh => triggered event")
                 timer.cancel()
             LightState.timerMappings[entry[0]] = threading.Timer(TIMER_DURATIONS, self.callback, [entry])
             LightState.timerMappings[entry[0]].start()
