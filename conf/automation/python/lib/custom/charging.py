@@ -90,9 +90,8 @@ class ChargingHelper:
 
             remaining_slots.sort(key=lambda item: item["start"].timestamp()) # sort by timestamp for performance reason
 
-            override_power = None
             # If slot count does not matter (like for the highest price which is not fully used), distribute the load across all remaining slots with "fixed" power
-            if remaining_slots_charged_energy >= missing_energy:
+            if remaining_slots_charged_energy > missing_energy:
                 # remove "unneeded" leading slots, if they are from the same price as we use for "override_power"
                 while remaining_slots[0]["price"] == max_price:
                     if remaining_slots_charged_energy - max_charging_power / 4 < missing_energy:
@@ -106,10 +105,8 @@ class ChargingHelper:
                     override_power = min_charging_power
                 charged_enery = missing_energy
             else:
+                override_power = None
                 charged_enery = remaining_slots_charged_energy
-
-            hours, remainder = divmod(len(remaining_slots) * 900, 3600)
-            minutes, _ = divmod(remainder, 60)
 
             next_slot = remaining_slots[0]
             active_slot = next_slot if next_slot is not None and current_time >= next_slot["start"] else None
@@ -118,6 +115,11 @@ class ChargingHelper:
                 active_slot["charging_power"] = override_power if override_power is not None and max_price == active_slot["price"] and charging_power > override_power else charging_power
                 next_slot = remaining_slots[1] if len(remaining_slots) > 1 else None
 
+            if next_slot is not None:
+                charging_power = charging_callback(current_energy_soc + ( active_slot["charging_power"] / 4 if active_slot is not None else 0 ))
+                next_slot["charging_power"] = override_power if override_power is not None and max_price == next_slot["price"] and charging_power > override_power else charging_power
+
+            #print(remaining_slots_charged_energy, missing_energy)
             #charging_power = charging_callback(current_energy_soc)
             #energy = 0.0
             #print("CHARGIN POWER", charging_power, override_power)
@@ -127,9 +129,8 @@ class ChargingHelper:
             #    energy += _charging_power / 4
             #print(energy)
 
-            if next_slot is not None:
-                charging_power = charging_callback(current_energy_soc + ( active_slot["charging_power"] / 4 if active_slot is not None else 0 ))
-                next_slot["charging_power"] = override_power if override_power is not None and max_price == next_slot["price"] and charging_power > override_power else charging_power
+            hours, remainder = divmod(len(remaining_slots) * 900, 3600)
+            minutes, _ = divmod(remainder, 60)
 
             price_msg = "{:.2f}-{:.2f}".format(min_price, max_price) if min_price != max_price else "{:.2f}".format(min_price)
             between_msg = "{} and {}".format(remaining_slots[0]["start"].strftime('%H:%M'), remaining_slots[-1]["end"].strftime('%H:%M'))

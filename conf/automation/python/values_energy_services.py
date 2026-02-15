@@ -5,6 +5,8 @@ import subprocess
 
 from datetime import datetime, timedelta
 
+from org.openhab.core.types import TimeSeries
+
 from openhab import rule, Registry, logger
 from openhab.actions import HTTP
 from openhab.triggers import GenericCronTrigger
@@ -13,16 +15,63 @@ from custom.suncalculation import SunRadiation
 
 from configuration import customConfigs
 
+from scope import actions
+
+astroAction = actions.get("astro","astro:sun:local")
+
+solar_map = {
+    SunRadiation.DIRECTION_EAST: { "power": 8.90, "azimut": 90.0, "elevation": 45.0 },
+    SunRadiation.DIRECTION_SOUTH: { "power": 5.44, "azimut": 180.0, "elevation": 25.0 },
+    SunRadiation.DIRECTION_WEST: { "power": 4.45, "azimut": 270.0, "elevation": 45.0 }
+}
+
+# https://www-solisinverters-com.translate.goog/global/documentation/Influence_of_Azimuth_and_Tilt_on_Yield_of_PV_System_11281117.html?_x_tr_sl=en&_x_tr_tl=de&_x_tr_hl=de&_x_tr_pto=rq
+azimut_diff_reduction_map = {
+     0: 0.0,
+    15: 0.7,
+    30: 2.8,
+    45: 6.2,
+    60: 10.4,
+    75: 15.6,
+    90: 21.3
+}
+
+elevation_reduction_map = {
+    0: 15.2,
+    10: 8.2,
+    20: 3.4,
+    30: 0.6,
+    40: 0.1,
+    50: 1.9,
+    60: 5.8,
+    70: 11.9,
+    80: 19.8,
+    90: 29.4
+}
+
+okta_reduction_map = {
+    0:  0.0,
+    1: 10.0,
+    2: 20.0,
+    3: 30.0,
+    4: 40.0,
+    5: 50.0,
+    6: 60.0,
+    7: 70.0,
+    8: 80.0,
+    9: 90.0
+}
+
 
 @rule(
     triggers = [
-      GenericCronTrigger("0 0 */3 * * ?")
+      GenericCronTrigger("0 0 * * * ?")
 #      GenericCronTrigger("*/15 * * * * ?")
     ]
 )
 class ExpectedSolar:
     def __init__(self):
-        #self.check(logger)
+        self.check(logger)
         #self.fetch(logger)
         pass
 
@@ -31,76 +80,115 @@ class ExpectedSolar:
 
         rebuild = False
         if rebuild:
-            states = Registry.getItem("pGF_Utilityroom_Electricity_Expected_Solar_West").getPersistence("jdbc").getAllStatesBetween(now.replace(year=2026,month=1,day=1),now + timedelta(days=4))
-            start = states[0].getTimestamp()
-            end = states[-1].getTimestamp()
+            start = now.replace(day=1, month=1)
+            end = now + timedelta(days=2)
         else:
-            start = now # - timedelta(days=1)
-            end = start + timedelta(days=1)
-        #start = now
-        #end = now + timedelta(days=2) #timedelta(days=3)
+            start = now
+            end = now + timedelta(days=1)
 
-        self.checkSide(rebuild, logger, start, end, SunRadiation.DIRECTION_EAST, "pGF_Utilityroom_Electricity_Expected_Solar_East", "pGF_Utilityroom_Electricity_Expected_Dumped_Solar_East")
-        self.checkSide(rebuild, logger, start, end, SunRadiation.DIRECTION_SOUTH, "pGF_Utilityroom_Electricity_Expected_Solar_South", "pGF_Utilityroom_Electricity_Expected_Dumped_Solar_South")
-        self.checkSide(rebuild, logger, start, end, SunRadiation.DIRECTION_WEST, "pGF_Utilityroom_Electricity_Expected_Solar_West", "pGF_Utilityroom_Electricity_Expected_Dumped_Solar_West")
+        self.calculateDumpedValues(rebuild, logger, start, end)
 
-    def checkSide(self, rebuild, logger, start, end, direction, item_name, dumped_item_name):
-        total_org = 0
-        total_damped = 0
+    def getIntersectionValue(self, value_map, current_value):
+        range_start = None
+        range_end = None
+        for item in value_map.items():
+            if item[0] <= current_value:
+                range_start = item
+            else:
+                range_end = item
+                break
+        if range_end is None:
+            range_end = range_start
 
-        expectedSolarStates = Registry.getItem(item_name).getPersistence("jdbc").getAllStatesBetween(start,end)
-        for expectedSolarState in expectedSolarStates:
-            timeslot = expectedSolarState.getTimestamp()
-            energy = expectedSolarState.getState().doubleValue()
-            factor = SunRadiation.getElevationFactor(timeslot, direction)
+        current_value_ratio = (current_value - range_start[0]) * 100 / (range_end[0] - range_start[0]) if range_end[0] != range_start[0] else 0
+        current_factor = range_start[1] + ((range_end[1] - range_start[1]) * current_value_ratio / 100)
 
-            if rebuild:
-                Registry.getItem(dumped_item_name).getPersistence("jdbc").persist(timeslot.astimezone(), energy * factor)
+        return (100 - current_factor) / 100
 
-            total_org += energy
-            total_damped += energy * factor
-            #print(timeslot, energy, factor)
+    def calculateExpectedValue(self, direction, start_time, end_time, sunshine_duration, cloud_okta, max_radiation):
+        duration = (end_time - start_time).total_seconds()
+        mid_time = start_time + timedelta(seconds=int(duration/2))
 
-        logger.info("{}{}: {} {}".format(direction[0].upper(), direction[1:], total_org, total_damped))
+        elevation_factor, azimut = SunRadiation.getElevationFactor(mid_time, direction)
 
-    def fetchSide(self, logger, direction, item_name, dumped_item_name, ressource_id, token):
-        url = "https://api.solcast.com.au/rooftop_sites/{}/forecasts?format=json&api_key={}".format(ressource_id, token)
-        response = HTTP.sendHttpGetRequest(url, {}, 30000)
+        current_max_radiation = astroAction.getTotalRadiation(mid_time).doubleValue()
+        current_max_radiation_factor = ( current_max_radiation * 100 / max_radiation ) / 100    # is the ration between max radiation (1000W/m²) and today max radiation
 
-        if response is None:
-            logger.error("Expected '{}{}' solar response is not available".format(direction[0].upper(), direction[1:]))
-            return
+        current_possible_power = solar_map[direction]["power"] * current_max_radiation_factor   # max solar power * max radiation factor
+        current_possible_power = current_possible_power * duration / 3600                       # convert current_possible_power (hour based) to current_possible_power (duration based)
 
-        try:
-            data = json.loads(response)
-        except ValueError:
-            data = None
+        elevation_reduction_factor = self.getIntersectionValue(elevation_reduction_map, solar_map[direction]["elevation"])
+        current_possible_power = current_possible_power * elevation_reduction_factor            # reduction based on non optimal panel elevation
 
-        if data is None or "forecasts" not in data:
-            logger.error("Expected '{}{}' solar response is not valid".format(direction[0].upper(), direction[1:]))
-            logger.error(url)
-            logger.error(response)
-            return
+        azimut_reduction_factor = self.getIntersectionValue(azimut_diff_reduction_map, abs(solar_map[direction]["azimut"] - azimut))
+        current_possible_power = current_possible_power * azimut_reduction_factor               # reduction based on diff between sun azimut and panel azimut
 
-        # {"pv_estimate":0,"pv_estimate10":0,"pv_estimate90":0,"period_end":"2026-01-04T21:00:00.0000000Z","period":"PT30M"}
-        for forecast in data["forecasts"]:
-            timeslot = datetime.fromisoformat(forecast["period_end"]).astimezone().replace(second=0, microsecond=0) - timedelta(minutes=30)
-            energy = forecast["pv_estimate"]
-            Registry.getItem(item_name).getPersistence("jdbc").persist(timeslot, energy)
+        current_power = current_possible_power
 
-            factor = SunRadiation.getElevationFactor(timeslot, direction)
-            Registry.getItem(dumped_item_name).getPersistence("jdbc").persist(timeslot, energy * factor)
+        current_power = current_power * elevation_factor                                        # reduction based on horizon
 
-        logger.info("Expected '{}{}' solar updated. COUNT: {}".format(direction[0].upper(), direction[1:], len(data["forecasts"])))
+        sunshine_ratio = (( sunshine_duration * 100 / 60 ) / 100)
+        current_solar_power = current_power * sunshine_ratio                                    # current_power only during sunshine
 
-    def fetch(self, logger):
-        logger.info("Expected solar fetching started")
-        self.fetchSide(logger, SunRadiation.DIRECTION_EAST, "pGF_Utilityroom_Electricity_Expected_Solar_East", "pGF_Utilityroom_Electricity_Expected_Dumped_Solar_East", customConfigs["solcast_api"]["east"]["ressource_id"],customConfigs["solcast_api"]["east"]["token"])
-        self.fetchSide(logger, SunRadiation.DIRECTION_SOUTH, "pGF_Utilityroom_Electricity_Expected_Solar_South", "pGF_Utilityroom_Electricity_Expected_Dumped_Solar_South", customConfigs["solcast_api"]["south"]["ressource_id"],customConfigs["solcast_api"]["south"]["token"])
-        self.fetchSide(logger, SunRadiation.DIRECTION_WEST, "pGF_Utilityroom_Electricity_Expected_Solar_West", "pGF_Utilityroom_Electricity_Expected_Dumped_Solar_West", customConfigs["solcast_api"]["west"]["ressource_id"],customConfigs["solcast_api"]["west"]["token"])
+        cloud_reduction_factor = self.getIntersectionValue(okta_reduction_map, cloud_okta)
+        possible_cloud_power = (current_power - current_solar_power) * cloud_reduction_factor   # rest is calulated on cloud factor
+
+        # TODO
+        # schauen ob man radiation vom wetterbericht bekommt
+
+        # DONE
+        # remove solcast
+        # ausserhalb der sonnenscheindauer den wolkenstand berücksichtigen
+        # 15 min slots benutzen
+        # reduction_factor anteilsmäßig berechnen
+
+        return current_solar_power + possible_cloud_power
+
+    def calculateDumpedValues(self, persist, logger, start, end):
+        total_expected = 0
+
+        max_radiation = astroAction.getTotalRadiation(start.replace(day=21, month=6, hour=13, minute=0, second=0)).doubleValue()
+
+        sunshine_states = Registry.getItem("pOutdoor_WeatherService_Sunshine_Duration").getPersistence("jdbc").getAllStatesBetween(start,end)
+        cloud_states = Registry.getItem("pOutdoor_WeatherService_Cloud_Cover").getPersistence("jdbc").getAllStatesBetween(start,end)
+
+        states = {"east": TimeSeries(TimeSeries.Policy.ADD), "south": TimeSeries(TimeSeries.Policy.ADD), "west": TimeSeries(TimeSeries.Policy.ADD)}
+        for i in range(0, len(sunshine_states)):
+            sunshine_state = sunshine_states[i]
+            cloud_state = cloud_states[i]
+
+            timeslot = sunshine_state.getTimestamp()
+            sunshine_duration = sunshine_state.getState().doubleValue()
+            cloud_okta = cloud_state.getState().doubleValue()
+            #print(cloud_state.getTimestamp(), cloud_okta)
+
+            for i in [0, 15, 30, 45]:
+                start_time = timeslot + timedelta(minutes=i)
+                if start_time > end:
+                    continue
+                end_time = start_time + timedelta(minutes=15)
+
+                east_expected = self.calculateExpectedValue( SunRadiation.DIRECTION_EAST, start_time, end_time, sunshine_duration, cloud_okta, max_radiation)
+                states["east"].add(start_time, east_expected)
+                south_expected = self.calculateExpectedValue(SunRadiation.DIRECTION_SOUTH, start_time, end_time, sunshine_duration, cloud_okta, max_radiation)
+                states["south"].add(start_time, south_expected)
+                west_expected = self.calculateExpectedValue(SunRadiation.DIRECTION_WEST, start_time, end_time, sunshine_duration, cloud_okta, max_radiation)
+                states["west"].add(start_time, west_expected)
+
+                total_expected += east_expected + south_expected + west_expected
+
+        if persist:
+            Registry.getItem("pGF_Utilityroom_Electricity_Expected_Solar_East").getPersistence("jdbc").persist(states["east"])
+            Registry.getItem("pGF_Utilityroom_Electricity_Expected_Solar_South").getPersistence("jdbc").persist(states["south"])
+            Registry.getItem("pGF_Utilityroom_Electricity_Expected_Solar_West").getPersistence("jdbc").persist(states["west"])
+
+        logger.info("TOTAL EXPECTED: {} - START: {}, END: {}".format(total_expected, start, end))
 
     def execute(self, module, input):
-        threading.Thread(target=self.fetch, args=(self.logger,)).start()
+        start = datetime.now().astimezone()
+        end = start + timedelta(days=2)
+
+        self.calculateDumpedValues(True, logger, start, end)
 
 @rule(
     triggers = [

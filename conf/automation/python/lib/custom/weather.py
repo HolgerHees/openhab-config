@@ -35,7 +35,7 @@ class WeatherHelper:
         is_fallback, item_name = WeatherHelper._getSolarPowerItemName()
         value = ToolboxHelper.getStableState(item_name, time_slot)
         if is_fallback:
-            octa = Registry.getItemState("pOutdoor_Weather_Current_Cloud_Cover").intValue()
+            octa = Registry.getItemState("pOutdoor_WeatherService_Cloud_Cover").intValue()
             value = Java_DecimalType(value.doubleValue() * ( 1.0 / octa ))
         return value
 
@@ -50,7 +50,7 @@ class WeatherHelper:
         is_fallback, item_name = WeatherHelper._getLightLevelItemName()
         value = ToolboxHelper.getStableState(item_name, time_slot)
         if is_fallback:
-            octa = Registry.getItemState("pOutdoor_Weather_Current_Cloud_Cover").intValue()
+            octa = Registry.getItemState("pOutdoor_WeatherService_Cloud_Cover").intValue()
             value = Java_DecimalType(value.doubleValue() * ( 1.0 / octa ))
         return value
 
@@ -59,11 +59,11 @@ class WeatherHelper:
         is_fallback, item_name = WeatherHelper._getLightLevelItemName()
         value = Registry.getItemState(item_name)
         if is_fallback:
-            octa = Registry.getItemState("pOutdoor_Weather_Current_Cloud_Cover").intValue()
+            octa = Registry.getItemState("pOutdoor_WeatherService_Cloud_Cover").intValue()
             value = Java_DecimalType(value.intValue() * ( 1.0 / octa ))
         return value
 
     # *** CLOUD_COVER ***
     @staticmethod
     def getCloudCoverItemState():
-        return Registry.getItemState("pOutdoor_WeatherStation_Cloud_Cover") if Registry.getItemState("pOutdoor_WeatherStation_Is_Working") == scope.ON else Registry.getItemState("pOutdoor_Weather_Current_Cloud_Cover")
+        return Registry.getItemState("pOutdoor_WeatherStation_Cloud_Cover") if Registry.getItemState("pOutdoor_WeatherStation_Is_Working") == scope.ON else Registry.getItemState("pOutdoor_WeatherService_Cloud_Cover")

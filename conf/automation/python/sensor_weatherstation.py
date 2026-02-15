@@ -289,7 +289,7 @@ class CloudCover:
     def execute(self, module, input):
         max_lux = Registry.getItemState("pOutdoor_Astro_Light_Level").doubleValue()
 
-        octa = Registry.getItemState("pOutdoor_Weather_Current_Cloud_Cover").doubleValue()
+        octa = Registry.getItemState("pOutdoor_WeatherService_Cloud_Cover").doubleValue()
         if max_lux > 10000:
             lux = ToolboxHelper.getStableState("pOutdoor_WeatherStation_Light_Level", 10).doubleValue()
             if lux < max_lux:
@@ -330,7 +330,7 @@ class PerceivedTemperature:
         speed = item_value if item_name == "pOutdoor_WeatherStation_Wind_Speed_15Min" else Registry.getItemState("pOutdoor_WeatherStation_Wind_Speed_15Min").doubleValue()
         humidity = item_value if item_name == "pOutdoor_WeatherStation_Humidity" else Registry.getItemState("pOutdoor_WeatherStation_Humidity").doubleValue()
         solar = item_value if item_name == "pOutdoor_WeatherStation_Solar_Power" else Registry.getItemState("pOutdoor_WeatherStation_Solar_Power").doubleValue()
-        provider = Registry.getItemState("pOutdoor_Weather_Current_Temperature_Perceived").doubleValue()
+        provider = Registry.getItemState("pOutdoor_WeatherService_Temperature_Perceived").doubleValue()
 
         wind_chill_temp = self.getWindchill(temp, speed) if temp <= 10 and speed >= 5 else temp
         head_index_temp = self.getHeatindex(temp, humidity) if temp >= 22 else temp

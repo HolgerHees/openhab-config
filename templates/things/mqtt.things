@@ -1,16 +1,12 @@
 Bridge mqtt:broker:cloud "MQTT Broker (Cloud-MQTT)" [ host="cloud_mosquitto", secure=false ]
 {
     Channels:
-        Type publishTrigger : weatherforecast_temperature "Temperatur" [ stateTopic="hhees/weather/provider/forecast/airTemperatureInCelsius/#", separator="#" ]
-        Type publishTrigger : weatherforecast_cloudcover "Bewölkung" [ stateTopic="hhees/weather/provider/forecast/effectiveCloudCoverInOcta/#", separator="#" ]
+        Type publishTrigger : weatherforecast_air_temperature "Temperatur" [ stateTopic="hhees/weather/provider/forecast/airTemperatureInCelsius/#", separator="#" ]
+        Type publishTrigger : weatherforecast_feels_like_temperature "Temperatur" [ stateTopic="hhees/weather/provider/forecast/feelsLikeTemperatureInCelsius/#", separator="#" ]
+        Type publishTrigger : weatherforecast_humidity "Luftfeuchtigkeit" [ stateTopic="hhees/weather/provider/forecast/relativeHumidityInPercent/#", separator="#" ]
         Type publishTrigger : weatherforecast_sunshine "Sonnenlicht Dauer" [ stateTopic="hhees/weather/provider/forecast/sunshineDurationInMinutes/#", separator="#" ]
+        Type publishTrigger : weatherforecast_cloudcover "Bewölkung" [ stateTopic="hhees/weather/provider/forecast/effectiveCloudCoverInOcta/#", separator="#" ]
         Type publishTrigger : weatherforecast_refreshed "Refreshed" [ stateTopic="hhees/weather/provider/forecast/refreshed" ]
-}
-Thing mqtt:topic:cloud:weatherforecast "MQTT Wettervorhersage (Cloud-MQTT)" (mqtt:broker:cloud) {
-    Type number : airTemperatureCurrent "Temperatur" [ stateTopic="hhees/weather/provider/current/airTemperatureInCelsius" ]
-    Type number : perceivedTemperatureCurrent "Temperatur" [ stateTopic="hhees/weather/provider/current/feelsLikeTemperatureInCelsius" ]
-    Type number : effectiveCloudCoverCurrent "Temperatur" [ stateTopic="hhees/weather/provider/current/effectiveCloudCoverInOcta" ]
-    Type number : humidityCurrent "Temperatur" [ stateTopic="hhees/weather/provider/current/relativeHumidityInPercent" ]
 }
 Thing mqtt:topic:cloud:weatherstation "MQTT Wetterstation (Cloud-MQTT)" (mqtt:broker:cloud) {
     Type number : cloudCoverInOcta "Cloud cover" [ commandTopic="hhees/weather/station/cloudCoverInOcta" ]

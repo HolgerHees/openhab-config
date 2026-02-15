@@ -47,7 +47,7 @@ class Heating():
     HEATING_REFERENCE_ENERGY = 1162 # per Watt je m³/K
 
     forecast_cloud_cover_item_name = None
-    forecast_temperature_garden_item_name = None
+    forecast_temperature_item_name = None
 
     current_cloud_cover_item_name = None
     current_temperature_garden_item_name = None
@@ -808,7 +808,7 @@ class Heating():
     def logCoolingAndRadiations(self,prefix, cr, sun_radiation_lazy = None, sun_light_level = None):
         
         sdi = cr.getSunDebugInfo()
-        
+
         lazy_radiation_msg = u" (∾ {})".format( round(sun_radiation_lazy / 60.0, 1) ) if sun_radiation_lazy != None else ""
         light_level_msg = u", {} lux".format( int(sun_light_level) ) if sun_light_level != None else ""
         debug_info = u"🌍 Az {}° • El {}{}° ⛅ Clouds {:.1f} 🌞 Sun {}{} W/min{}{}".format(sdi["azimut"], sdi["elevation"], sdi["min_elevation"], cr.getCloudCover(), sdi["effective_radiation"], lazy_radiation_msg, light_level_msg, sdi["active"])
@@ -925,13 +925,13 @@ class Heating():
         now_4 = self.now + timedelta(minutes=240)
         now_8 = self.now + timedelta(minutes=480)
 
-        temperature_forecast = Registry.resolveItem(self.forecast_temperature_garden_item_name).getPersistence("jdbc")
+        temperature_forecast = Registry.resolveItem(self.forecast_temperature_item_name).getPersistence("jdbc")
         temperature = self.getCachedItemState(self.current_temperature_garden_item_name).floatValue()
         temperature_4 = temperature_forecast.persistedState(now_4)
         temperature_8 = temperature_forecast.persistedState(now_8)
 
         cloud_forecast = Registry.resolveItem(self.forecast_cloud_cover_item_name).getPersistence("jdbc")
-        cloud_cover = self.getCachedItemState(self.current_cloud_cover_item_name).floatValue()
+        cloud_cover = cloud_forecast.persistedState(self.now)
         cloud_cover_4 = cloud_forecast.persistedState(now_4)
         cloud_cover_8 = cloud_forecast.persistedState(now_8)
 
@@ -942,6 +942,7 @@ class Heating():
         else:
             temperature_4 = temperature_4.getState().floatValue()
             temperature_8 = temperature_8.getState().floatValue()
+            cloud_cover = cloud_cover.getState().floatValue()
             cloud_cover_4 = cloud_cover_4.getState().floatValue()
             cloud_cover_8 = cloud_cover_8.getState().floatValue()
 

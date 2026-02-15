@@ -22,7 +22,7 @@ ENERGY_TRAFFIC_COST_PER_KWH = 0.12 + 0.00446 + 0.00941 + 0.01559
 VAT_COST = 1.19 # %
 
 #print(( Registry.getItem("pGF_Garage_Solar_Storage_Capacity").getState().doubleValue() ) / 1000.0)
-STORAGE_MAX_CAPACITY = 25.2
+STORAGE_MAX_CAPACITY = 50.4
 STORAGE_EMERGENCY_ENERGY_SOC = STORAGE_MAX_CAPACITY * 0.2
 
 STORAGE_MAX_CHARGING_POWER = STORAGE_MAX_CAPACITY * 0.2
@@ -81,7 +81,6 @@ FROST_GUARD_HEATING_MAP = {
     4.0:  0.5,
     5.0:  0.0
 }
-
 
 @rule(
     triggers = [
@@ -207,7 +206,6 @@ class StorageInfo:
     def execute(self, module, input):
         self.calculate(input['event'].getItemState().doubleValue() / 1000.0)
 
-
 @rule(
     triggers = [
       GenericCronTrigger("*/30 * * * * ?") # 30 seconds, because of 60 seconds watchdoc for fenecon
@@ -229,16 +227,12 @@ class StoragePower:
 
     def initSolarForecast(self, now, start, end):
         if self.last_solar_hour != now.hour:
-            end = datetime.now().astimezone()
-            start = end - timedelta(hours=24)
-            temperature_past = Registry.getItem("pOutdoor_WeatherStation_Temperature").getPersistence("jdbc").maximumBetween(start, end).getState().doubleValue()
-            temperature_future = Registry.getItem("pOutdoor_Weather_Forecast_Temperature").getPersistence("jdbc").maximumBetween(end, end+timedelta(hours=24)).getState().doubleValue()
+            temperature_past = Registry.getItem("pOutdoor_WeatherStation_Temperature").getPersistence("jdbc").maximumBetween(now - timedelta(hours=24), now).getState().doubleValue()
+            temperature_future = Registry.getItem("pOutdoor_WeatherService_Temperature").getPersistence("jdbc").maximumBetween(now, now+timedelta(hours=24)).getState().doubleValue()
 
             east = Registry.getItem("pGF_Utilityroom_Electricity_State_Total_East_Production").getPersistence("jdbc").deltaBetween(start, end).doubleValue()
             south = Registry.getItem("pGF_Utilityroom_Electricity_State_Total_South_Production").getPersistence("jdbc").deltaBetween(start, end).doubleValue()
             west = Registry.getItem("pGF_Utilityroom_Electricity_State_Total_West_Production").getPersistence("jdbc").deltaBetween(start, end).doubleValue()
-
-            #solarpower = Registry.getItem("pOutdoor_WeatherStation_Solar_Power").getPersistence("jdbc").maximumBetween(start, end).getState().doubleValue()
 
             if temperature_past < 0 and temperature_future < 0 and east < 2.0 and south < 1.2 and west < 1.6:
                 # SNOW active
@@ -247,21 +241,21 @@ class StoragePower:
                 #print("initSolarForecast")
                 self.today_solar_forceast = self.tomorrow_solar_forceast = 0
 
-                dumped_states = Registry.getItem("pGF_Utilityroom_Electricity_Expected_Dumped_Solar_East").getPersistence("jdbc").getAllStatesBetween(start, end)
+                dumped_states = Registry.getItem("pGF_Utilityroom_Electricity_Expected_Solar_East").getPersistence("jdbc").getAllStatesBetween(start, end)
                 for dumped_state in dumped_states:
                     if dumped_state.getTimestamp().day == now.day:
                         self.today_solar_forceast += dumped_state.getState().doubleValue()
                     else:
                         self.tomorrow_solar_forceast += dumped_state.getState().doubleValue()
 
-                dumped_states = Registry.getItem("pGF_Utilityroom_Electricity_Expected_Dumped_Solar_South").getPersistence("jdbc").getAllStatesBetween(start, end)
+                dumped_states = Registry.getItem("pGF_Utilityroom_Electricity_Expected_Solar_South").getPersistence("jdbc").getAllStatesBetween(start, end)
                 for dumped_state in dumped_states:
                     if dumped_state.getTimestamp().day == now.day:
                         self.today_solar_forceast += dumped_state.getState().doubleValue()
                     else:
                         self.tomorrow_solar_forceast += dumped_state.getState().doubleValue()
 
-                dumped_states = Registry.getItem("pGF_Utilityroom_Electricity_Expected_Dumped_Solar_West").getPersistence("jdbc").getAllStatesBetween(start, end)
+                dumped_states = Registry.getItem("pGF_Utilityroom_Electricity_Expected_Solar_West").getPersistence("jdbc").getAllStatesBetween(start, end)
                 for dumped_state in dumped_states:
                     if dumped_state.getTimestamp().day == now.day:
                         self.today_solar_forceast += dumped_state.getState().doubleValue()
@@ -273,7 +267,7 @@ class StoragePower:
     def initHeatingForecast(self, now, start, end):
         if self.last_heating_hour != now.hour:
             #print("initHeatingForecast")
-            avg_value = Registry.getItem("pOutdoor_Weather_Forecast_Temperature").getPersistence("jdbc").averageBetween(start,end).doubleValue()
+            avg_value = Registry.getItem("pOutdoor_WeatherService_Temperature").getPersistence("jdbc").averageBetween(start,end).doubleValue()
 
             if avg_value > HEATING_MAX_TEMPERATURE:
                 house_heating = 0
@@ -288,13 +282,13 @@ class StoragePower:
             self.frost_guard_heating_forecast = frost_guard_heating
             self.last_heating_hour = now.hour
 
-    def calculateStorageDischargePower(self, now, current_battery_soc, current_price, battery_price):
+    def calculateStorageDischargePower(self, now, current_battery_soc, current_price, current_price_1min, battery_price):
         requested_max_discharger_power = None
         if self.charging_helper.isGridMode():
             if current_battery_soc > STORAGE_EMERGENCY_ENERGY_SOC:
                 # nicht entladen, wenn aktueller Strompreis gleich dem max Ladestrompreis ist.
                 if Registry.getItem("pGF_Utilityroom_Electricity_Storage_Solar_Soc").getState().doubleValue() <= 0:
-                    reference_price = current_price if Registry.getItem("pGF_Garage_Solar_Storage_RequestedMaxDischargerPower").getState().intValue() == -1 else price_persistance.persistedState(now + timedelta(minutes=1)).getState().doubleValue()
+                    reference_price = current_price if Registry.getItem("pGF_Garage_Solar_Storage_RequestedMaxDischargerPower").getState().intValue() == -1 else current_price_1min
                     if reference_price <= battery_price:
                         requested_max_discharger_power = 0
                         discharge_msg = " • {}".format("Discharging refused • Stock price cheaper")
@@ -322,7 +316,9 @@ class StoragePower:
         return STORAGE_PERCENT_TO_CHARING_POWER_MAP[battery_percent]
 
     def calculateStorageChargeLevel(self, now, charging_start, charging_end, consumption_start, consumption_end, sunrise, sunset):
-        current_price = Registry.getItem("pGF_Utilityroom_Electricity_Stock_Price").getPersistence("jdbc").persistedState(now).getState().doubleValue()
+        pricePersistence = Registry.getItem("pGF_Utilityroom_Electricity_Stock_Price").getPersistence("jdbc")
+        current_price = pricePersistence.persistedState(now).getState().doubleValue()
+        current_price_1min = pricePersistence.persistedState(now + timedelta(minutes=1)).getState().doubleValue()
         battery_price = Registry.getItemState("pGF_Utilityroom_Electricity_Storage_Price").doubleValue()
 
         solar_battery_soc = Registry.getItemState("pGF_Utilityroom_Electricity_Storage_Solar_Soc").doubleValue()
@@ -365,6 +361,7 @@ class StoragePower:
 
         if target_battery_soc < STORAGE_EMERGENCY_ENERGY_SOC + expected_consumption_during_night:
             target_battery_soc = STORAGE_EMERGENCY_ENERGY_SOC + expected_consumption_during_night
+            battery_target_msg = "emergency + night consumption"
         target_battery_percent = target_battery_soc * 100 / STORAGE_MAX_CAPACITY
 
         self.logger.info("Forecast: 🏠 Base {:.2f}kWh 🔥 Heating {:.2f}kWh 🌳 Plants {:.2f}kWh 🌞 Solar {}".format(MAX_CONSUMPTION_PER_DAY, self.house_heating_forecast, self.frost_guard_heating_forecast, solar_forecast_msg))
@@ -372,7 +369,7 @@ class StoragePower:
         self.logger.info("        : --")
 
         # *** CALCULATE POSSIBLE DISCHARGING
-        requested_max_discharger_power, discharge_msg = self.calculateStorageDischargePower(now, current_battery_soc, current_price, battery_price)
+        requested_max_discharger_power, discharge_msg = self.calculateStorageDischargePower(now, current_battery_soc, current_price, current_price_1min, battery_price)
 
         self.logger.info("Current : 🔋 Battery {:.2f}kWh ({:.0f}%) • {:.2f}kWh ({:.2f}€/kWh) • {:.2f}kWh (0.00€/kWh)".format(current_battery_soc, current_battery_percent, grid_battery_soc, battery_price, solar_battery_soc))
         self.logger.info("        : 💰 Spot price {:.2f}€/kWh 🏠 Consumption {:.2f}kWh 🌞 Solar {}".format(current_price, today_consumption, solar_current_msg))
@@ -461,7 +458,7 @@ class StoragePower:
 
             if requested_power is not None:
                 # START/REFRESH CHARGING => Fenecon Watchdog
-                Registry.getItem("pGF_Garage_Solar_Storage_RequestedPower").sendCommand(int(round(requested_power * 1000.0)))
+                Registry.getItem("pGF_Garage_Solar_Storage_RequestedPower").sendCommand(int(round(requested_power * -1000.0))) # negative is charging
 
             if requested_max_discharger_power is not None:
                 # START/REFRESH CHARGING => Fenecon Watchdog

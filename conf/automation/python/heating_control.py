@@ -26,10 +26,9 @@ import scope
 #postUpdate("pFF_Bedroom_Heating_Demand",scope.OFF)
 #postUpdate("pFF_Bathroom_Heating_Demand",scope.OFF)
 
-Heating.forecast_cloud_cover_item_name = "pOutdoor_Weather_Forecast_Cloud_Cover"
-Heating.forecast_temperature_garden_item_name = "pOutdoor_Weather_Forecast_Temperature"
+Heating.forecast_cloud_cover_item_name = "pOutdoor_WeatherService_Cloud_Cover"
+Heating.forecast_temperature_item_name = "pOutdoor_WeatherService_Temperature"
 
-Heating.current_cloud_cover_item_name = "pOutdoor_Weather_Current_Cloud_Cover"
 Heating.current_temperature_garden_item_name = WeatherHelper.getTemperatureItemName()
 
 Heating.ventilation_filter_runtime_item_name = "pGF_Utilityroom_Ventilation_Filter_Runtime"

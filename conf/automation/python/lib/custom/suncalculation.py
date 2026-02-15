@@ -7,28 +7,52 @@ astroAction = actions.get("astro","astro:sun:local")
 # https://azimut.polka-umwelt.de/
 # https://www.sonnenverlauf.de/
 horizon_slots = [
-    { "azimut":   0.00,  "elevation_map": { 30.0: 0.2 } },   # Nachbar 1 (geradezu)
-    { "azimut":  14.00,  "elevation_map": { 11.0: 0.2 } },   # Lücke - 8.0°
-    { "azimut":  24.50,  "elevation_map": { 12.0: 0.2 } },   # Nachbar 2
-    { "azimut":  36.00,  "elevation_map": { 11.0: 0.2 } },   # Lücke - 8.0°
-    { "azimut":  44.00,  "elevation_map": { 12.0: 0.2 } },   # Nachbar 3
-    { "azimut":  52.00,  "elevation_map": { 11.0: 0.2 } },   # Lücke - 8.0°
-    { "azimut":  56.00,  "elevation_map": { 19.2: 0.2 } },   # Erster Großer Baum
-    { "azimut":  65.00,  "elevation_map": { 16.0: 0.2 } },   # Strasse (9°)
-    { "azimut":  72.00,  "elevation_map": { 22.0: 0.2 } },   # Baumreihe bei Fam. Marder
-    { "azimut":  86.00,  "elevation_map": { 27.5: 0.2 } },   # Zweiter Teil der Baumreihe bei Fam. Marder
-    { "azimut":  99.00,  "elevation_map": { 16.5: 0.2 } },   # Lücke - 10.0°
-    { "azimut": 102.00,  "elevation_map": { 16.5: 0.2 } },   # Lücke - 13.5°
-    { "azimut": 111.50,  "elevation_map": { 15.5: 0.2 } },   # Lücke - 12.5°
-    { "azimut": 120.50,  "elevation_map": { 13.0: 0.2 } },   # Lücke - 10.0°
-    { "azimut": 126.00,  "elevation_map": { 13.0: 0.2 } },   # Lücke - 8.0°
-    { "azimut": 131.00,  "elevation_map": { 13.0: 0.2 } },   # Lücke - 10.0°
-    { "azimut": 137.50,  "elevation_map": { 13.0: 0.2 } },   # Lücke - 8.0°
-    { "azimut": 152.00,  "elevation_map": { 15.5: 0.2 } },   # Große Tanne links von Brendel - 12.5°
-    { "azimut": 159.00,  "elevation_map": { 15.5: 0.2 } },   # Nachbar (Brendel) - 10.0°
-    { "azimut": 173.00,  "elevation_map": { 15.5: 0.2 } },   # Nachbar (hinten) - 12.5°
-    { "azimut": 192.00,  "elevation_map": { 20.0: 0.2 } },   # Große Tanne hinten rechts
-    { "azimut": 203.00,  "elevation_map": { 15.5: 0.2 } }
+    { "azimut":   0.00,  "elevation_map": { 30.0: { 'all': 0.2 }                            } },   # Nachbar 1 (geradezu) - 15.0°
+    { "azimut":  14.00,  "elevation_map": {  8.0: { 'all': 0.2 }, 11.0: { 'all': 0.3 }      } },   # Lücke - 8.0°
+    { "azimut":  24.50,  "elevation_map": { 11.0: { 'all': 0.2 }                            } },   # Nachbar 2 - 11.0°
+    { "azimut":  36.00,  "elevation_map": {  8.0: { 'all': 0.2 }, 11.0: { 'all': 0.3 }      } },   # Lücke - 8.0°
+    { "azimut":  44.00,  "elevation_map": { 11.0: { 'all': 0.2 }                            } },   # Nachbar 3 - 11.0°
+    { "azimut":  52.00,  "elevation_map": {  8.0: { 'all': 0.2 }, 11.0: { 'all': 0.3 }      } },   # Lücke - 8.0°
+    { "azimut":  56.00,  "elevation_map": { 17.0: { 'all': 0.2 }                            } },   # Erster Großer Baum - 17.0
+    { "azimut":  65.00,  "elevation_map": {  9.0: { 'all': 0.2 }, 17.0: { 'all': 0.3 }      } },   # Strasse - 9°
+    { "azimut":  72.00,  "elevation_map": { 17.0: { 'all': 0.2 }                            } },   # Baumreihe bei Fam. Marder - 17.0°
+    { "azimut":  84.00,  "elevation_map": { 17.0: { 'all': 0.2 }, 25.5: { 'all': 0.3, 'east': 0.7 } } },   # Zweiter Teil der Baumreihe bei Fam. Marder - 25.5°
+    { "azimut":  99.00,  "elevation_map": { 10.0: { 'all': 0.2 }, 12.0: { 'all': 0.3 }      } },   # Lücke - 10.0°
+    { "azimut": 102.00,  "elevation_map": { 12.0: { 'all': 0.2 }                            } },   # Lücke - 13.5°
+    { "azimut": 111.50,  "elevation_map": { 12.0: { 'all': 0.2 }                            } },   # Lücke - 12.5°
+    { "azimut": 120.50,  "elevation_map": { 10.0: { 'all': 0.2 }                            } },   # Lücke - 10.0°
+    { "azimut": 126.00,  "elevation_map": {  8.0: { 'all': 0.2 }, 10.0: { 'all': 0.3 }      } },   # Lücke - 8.0°
+    { "azimut": 131.00,  "elevation_map": { 10.0: { 'all': 0.2 }                            } },   # Lücke - 10.0°
+    { "azimut": 137.50,  "elevation_map": {  8.0: { 'all': 0.2 }, 10.0: { 'all': 0.3 }      } },   # Lücke - 8.0°
+    { "azimut": 152.00,  "elevation_map": { 12.5: { 'all': 0.2 }                            } },   # Große Tanne links von Brendel - 12.5°
+    { "azimut": 159.00,  "elevation_map": { 10.0: { 'all': 0.2 }, 12.5: { 'all': 0.3 }      } },   # Nachbar (Brendel) - 10.0°
+    { "azimut": 173.00,  "elevation_map": { 12.5: { 'all': 0.2 }                            } },   # Nachbar (hinten) - 12.5°
+    { "azimut": 192.00,  "elevation_map": { 18.0: { 'all': 0.2 }                            } },   # Große Tanne hinten rechts - 18.0°
+    { "azimut": 203.00,  "elevation_map": { 15.5: { 'all': 0.2 }                            } }    # 10.5°
+
+    # { "azimut":   0.00,  "elevation_map": { 30.0: 0.2               } },   # Nachbar 1 (geradezu) - 15.0°
+    # { "azimut":  14.00,  "elevation_map": {  8.0: 0.2, 11.0: 0.3    } },   # Lücke - 8.0°
+    # { "azimut":  24.50,  "elevation_map": { 11.0: 0.2               } },   # Nachbar 2 - 11.0°
+    # { "azimut":  36.00,  "elevation_map": {  8.0: 0.2, 11.0: 0.3    } },   # Lücke - 8.0°
+    # { "azimut":  44.00,  "elevation_map": { 11.0: 0.2               } },   # Nachbar 3 - 11.0°
+    # { "azimut":  52.00,  "elevation_map": {  8.0: 0.2, 11.0: 0.3    } },   # Lücke - 8.0°
+    # { "azimut":  56.00,  "elevation_map": { 17.0: 0.2               } },   # Erster Großer Baum - 17.0
+    # { "azimut":  65.00,  "elevation_map": {  9.0: 0.2, 17.0: 0.3    } },   # Strasse - 9°
+    # { "azimut":  72.00,  "elevation_map": { 17.0: 0.2               } },   # Baumreihe bei Fam. Marder - 17.0°
+    # { "azimut":  86.00,  "elevation_map": { 17.0: 0.2, 25.5: 0.4    } },   # Zweiter Teil der Baumreihe bei Fam. Marder - 25.5°
+    # { "azimut":  99.00,  "elevation_map": { 10.0: 0.2, 12.0: 0.3    } },   # Lücke - 10.0°
+    # { "azimut": 102.00,  "elevation_map": { 12.0: 0.2               } },   # Lücke - 13.5°
+    # { "azimut": 111.50,  "elevation_map": { 12.0: 0.2               } },   # Lücke - 12.5°
+    # { "azimut": 120.50,  "elevation_map": { 10.0: 0.2               } },   # Lücke - 10.0°
+    # { "azimut": 126.00,  "elevation_map": {  8.0: 0.2, 10.0: 0.3    } },   # Lücke - 8.0°
+    # { "azimut": 131.00,  "elevation_map": { 10.0: 0.2               } },   # Lücke - 10.0°
+    # { "azimut": 137.50,  "elevation_map": {  8.0: 0.2, 10.0: 0.3    } },   # Lücke - 8.0°
+    # { "azimut": 152.00,  "elevation_map": { 12.5: 0.2               } },   # Große Tanne links von Brendel - 12.5°
+    # { "azimut": 159.00,  "elevation_map": { 10.0: 0.2, 12.5: 0.3    } },   # Nachbar (Brendel) - 10.0°
+    # { "azimut": 173.00,  "elevation_map": { 12.5: 0.2               } },   # Nachbar (hinten) - 12.5°
+    # { "azimut": 192.00,  "elevation_map": { 18.0: 0.2               } },   # Große Tanne hinten rechts - 18.0°
+    # { "azimut": 203.00,  "elevation_map": { 15.5: 0.2               } }    # 10.5°
+
 #    { "azimut":   0.00,  "elevation_map": { 15.0: 0.0, 30.0: 0.5 } },   # Nachbar 1 (geradezu)
 #    { "azimut":  14.00,  "elevation_map": {  6.0: 0.0,  8.0: 0.1, 12.0: 0.2 } },
 #    { "azimut":  24.50,  "elevation_map": { 11.0: 0.0, 12.0: 0.1 } },   # Nachbar 2
@@ -72,7 +96,7 @@ class SunRadiation():
     @staticmethod
     def getElevationFactor( time, direction = None ):
         azimut, elevation, min_elevation, min_factor = SunRadiation.getSunData(time, direction)
-        return min_factor if elevation <= min_elevation else 1.0
+        return [min_factor if elevation <= min_elevation else 1.0, azimut]
 
     @staticmethod
     def getSunData( time, direction = None ):
@@ -85,7 +109,9 @@ class SunRadiation():
             active_horizon_slot = horizon_slot
 
         elevation_slot = [0,0]
-        for _elevation, _factor in active_horizon_slot["elevation_map"].items():
+        for _elevation, _factor_map in active_horizon_slot["elevation_map"].items():
+            _factor = _factor_map[direction] if direction in _factor_map else _factor_map['all']
+
             if direction is not None and direction == SunRadiation.DIRECTION_SOUTH:
                 _elevation += 3.0
                 _factor = _factor * 0.5

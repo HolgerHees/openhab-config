@@ -20,7 +20,7 @@ Bridge modbus:tcp:solarGarage "Wechselrichter (Modbus)" [ host="{{custom_pv_inve
         Thing data consumption_active_energy    "Wechselrichter ConsumtionActiveEnergy"     [ readStart="379", readValueType="uint64", readTransform="PY:modbus_float64.py"]
         Thing data ess_capacity                 "Wechselrichter EssCapacity"                [ readStart="420", readValueType="float32"]
     }
-    Bridge poller write [ refresh=0, start=700, length=18 ] {
+    Bridge poller write [ refresh=0, start=700, length=18, type="holding" ] {
         Thing data active_power_equals          "Wechselrichter Vorgabe Be- bzw. Entladeleistung"  [ writeStart="706", writeType="holding", writeValueType="float32"]
         Thing data active_power_less_or_equals  "Wechselrichter Vorgabe maximaler Entladeleistung" [ writeStart="710", writeType="holding", writeValueType="float32"]
         //Thing data active_power_greater_or_equals  "Wechselrichter Vorgabe maximaler Beladeleistung" [ writeStart="714", writeType="holding", writeValueType="float32"]
