@@ -73,7 +73,7 @@ class AutomaticMainControl:
                 Registry.getItem(mapping[1]).sendCommandIfDifferent(scope.ON)
 
     def execute(self, module, input):
-        self.logger.info(">>> AutomaticMainControl: {} {}".format(input['event'].getSource(),input['event'].getType()))
+        #self.logger.info(">>> AutomaticMainControl: {} {}".format(input['event'].getSource(),input['event'].getType()))
 
         if Registry.getItemState("pOutdoor_Light_Automatic_Main_Switch") == scope.ON:
             return
@@ -94,7 +94,7 @@ class AutomaticMainControl:
 )
 class AutomaticMainSwitch:
     def execute(self, module, input):
-        self.logger.info(">>> AutomaticMainSwitch: {} {}".format(input['event'].getSource(),input['event'].getType()))
+        #self.logger.info(">>> AutomaticMainSwitch: {} {}".format(input['event'].getSource(),input['event'].getType()))
 
         if LightState.isUnrelatedEventSource(input['event']):
             return
@@ -114,7 +114,7 @@ class AutomaticIndividualSwitch:
         return triggers
 
     def execute(self, module, input):
-        self.logger.info(">>> AutomaticIndividualSwitch: {} {}".format(input['event'].getSource(),input['event'].getType()))
+        #self.logger.info(">>> AutomaticIndividualSwitch: {} {}".format(input['event'].getSource(),input['event'].getType()))
 
         if LightState.isUnrelatedEventSource(input['event']):
             return
@@ -145,7 +145,7 @@ class LightControl:
         return triggers
 
     def execute(self, module, input):
-        self.logger.info(">>> LightControl: {} {}".format(input['event'].getSource(),input['event'].getType()))
+        #self.logger.info(">>> LightControl: {} {}".format(input['event'].getSource(),input['event'].getType()))
 
         if LightState.isUnrelatedEventSource(input['event']):
             return
@@ -193,7 +193,7 @@ class MotionDetector:
         LightState.timerMappings[entry[0]] = None
 
     def execute(self, module, input):
-        self.logger.info(">>> MotionDetector: {}".format(input['event'].getSource()))
+        #self.logger.info(">>> MotionDetector: {}".format(input['event'].getSource()))
 
         item_name = input['event'].getItemName()
 

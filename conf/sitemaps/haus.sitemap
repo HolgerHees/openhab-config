@@ -1109,11 +1109,17 @@ sitemap haus label="Main Menu"
                                 Text item=pGF_Garage_Solar_Storage_RequestedPower
                                 Text item=pGF_Garage_Solar_Storage_RequestedMaxDischargerPower
                             }
-                            Frame label="Details" {
+                            Frame label="Batterie Turm" {
                                 Text item=pGF_Garage_Solar_Storage_BattTowerVoltage
                                 Text item=pGF_Garage_Solar_Storage_BattTowerCurrent
                                 Text item=pGF_Garage_Solar_Storage_BattSoh
                                 Text item=pGF_Garage_Solar_Storage_Capacity
+                            }
+                            Frame label="Batterie Zellen" {
+                                Text item=pGF_Garage_Solar_Storage_MinEssVoltage
+                                Text item=pGF_Garage_Solar_Storage_MaxEssVoltage
+                                Text item=pGF_Garage_Solar_Storage_MinEssTemperature
+                                Text item=pGF_Garage_Solar_Storage_MaxEssTemperature
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]

@@ -14,8 +14,8 @@ import scope
 # offset values for electricity meter demand and supply (total values at the time when new electricity meter was changed)
 start_electricity_meter_demand_offset = 22223.717
 start_electricity_meter_supply_offset = 0.0
-start_electricity_meter_consumption_offset = 52933.991 #52933.980 #52933.973 #52933.935 #52933.913 #52933.875 #52933.840 #52933.821 #52933.754 #25559.396
-start_electricity_meter_production_offset = 16261.303 #16261.281 #16261.268 #16261.245 #16261.244 #16260.991
+start_electricity_meter_consumption_offset = 52934.064 # 52934.018 #52933.991 #52933.980 #52933.973 #52933.935 #52933.913 #52933.875 #52933.840 #52933.821 #52933.754 #25559.396
+start_electricity_meter_production_offset = 16261.620 #16261.303 #16261.281 #16261.268 #16261.245 #16261.244 #16260.991
 
 @rule(
     triggers = [
@@ -40,7 +40,7 @@ class ErrorMessage:
 class StateMessage:
     def execute(self, module, input):
         active = []
-        if Registry.getItemState("pGF_Garage_Solar_Inverter_State").toString() not in ["Ok","Info"]:
+        if Registry.getItemState("pGF_Garage_Solar_Inverter_State").toString() not in ["Ok","Info","Warning"]:
             active.append(Registry.getItemState("pGF_Garage_Solar_Inverter_State").toString())
 
         if Registry.getItemState("pGF_Garage_Solar_Inverter_GridEnabled").intValue() == 2:

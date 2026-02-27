@@ -144,9 +144,9 @@ class ChargingHelper:
 
         if self.is_grid_mode:
             if target_energy_soc <= current_energy_soc:
-                state_msg = "No charging needed"
+                state_msg = "No grid charging needed"
             elif self.date_map[-1]["end"] < end_time:
-                state_msg = "Prices are not available yet"
+                state_msg = "No grid charging calculation possible (prices are not available)"
             else:
                 active_slot, next_slot, charge_msg = self.calculateRemainingSlots(start_time, end_time, current_time, current_energy_soc, target_energy_soc, min_charging_power, max_charging_power, charging_callback)
                 if active_slot is not None:
@@ -163,6 +163,6 @@ class ChargingHelper:
                 if next_slot is not None:
                     state_msg = "{} • Next slot at {} with {:.2f}kWh for {:.2f}€/kWh".format(state_msg, next_slot["start"].strftime('%H:%M'), next_slot["charging_power"], next_slot["price"])
         else:
-            state_msg = "No charging possible"
+            state_msg = "No grid charging possible (grid is offline)"
 
         return [requested_power, state, state_msg, charge_msg]

@@ -20,9 +20,9 @@ from scope import actions
 astroAction = actions.get("astro","astro:sun:local")
 
 solar_map = {
-    SunRadiation.DIRECTION_EAST: { "power": 8.90, "azimut": 90.0, "elevation": 45.0 },
-    SunRadiation.DIRECTION_SOUTH: { "power": 5.44, "azimut": 180.0, "elevation": 25.0 },
-    SunRadiation.DIRECTION_WEST: { "power": 4.45, "azimut": 270.0, "elevation": 45.0 }
+    SunRadiation.DIRECTION_EAST: { "power": 8.90, "azimut": 90.0, "elevation": 45.0, "coefficient": 0.29 },
+    SunRadiation.DIRECTION_SOUTH: { "power": 5.44, "azimut": 180.0, "elevation": 25.0, "coefficient": 0.38 }, # 12 x 0.41 & 4 x 0.29
+    SunRadiation.DIRECTION_WEST: { "power": 4.45, "azimut": 270.0, "elevation": 45.0, "coefficient": 0.29 }
 }
 
 # https://www-solisinverters-com.translate.goog/global/documentation/Influence_of_Azimuth_and_Tilt_on_Yield_of_PV_System_11281117.html?_x_tr_sl=en&_x_tr_tl=de&_x_tr_hl=de&_x_tr_pto=rq
@@ -49,23 +49,22 @@ elevation_reduction_map = {
     90: 29.4
 }
 
-okta_reduction_map = {
+"""okta_reduction_map = {
     0:  0.0,
-    1: 10.0,
-    2: 20.0,
-    3: 30.0,
-    4: 40.0,
-    5: 50.0,
-    6: 60.0,
-    7: 70.0,
-    8: 80.0,
-    9: 90.0
-}
-
+    1:  5.0,  # 10.0,
+    2: 17.0,  # 20.0,
+    3: 20.0,  # 30.0,
+    4: 29.0,  # 40.0,
+    5: 39.0,  # 50.0,
+    6: 50.0,  # 60.0,
+    7: 62.0,  # 70.0,
+    8: 75.0,  # 80.0,
+    9: 90.0   # 90.0,
+}"""
 
 @rule(
     triggers = [
-      GenericCronTrigger("0 0 * * * ?")
+      GenericCronTrigger("0 6 * * * ?") # weather data are fetched every hour at 5 past
 #      GenericCronTrigger("*/15 * * * * ?")
     ]
 )
@@ -83,10 +82,18 @@ class ExpectedSolar:
             start = now.replace(day=1, month=1)
             end = now + timedelta(days=2)
         else:
+            #now = now - timedelta(days=1)
             start = now
             end = now + timedelta(days=1)
 
         self.calculateDumpedValues(rebuild, logger, start, end)
+
+        #total = 0
+        #dumped_states = Registry.getItem("pGF_Utilityroom_Electricity_Expected_Solar_East").getPersistence("jdbc").getAllStatesBetween(start, end)
+        #for dumped_state in dumped_states:
+        #    total += dumped_state.getState().doubleValue()
+        #    print(dumped_state.getTimestamp(), dumped_state.getState().doubleValue())
+        #print(total)
 
     def getIntersectionValue(self, value_map, current_value):
         range_start = None
@@ -105,62 +112,94 @@ class ExpectedSolar:
 
         return (100 - current_factor) / 100
 
-    def calculateExpectedValue(self, direction, start_time, end_time, sunshine_duration, cloud_okta, max_radiation):
+    def calculateExpectedValue(self, direction, start_time, end_time, direct_radiation, diffuse_radiation, temperature):
         duration = (end_time - start_time).total_seconds()
         mid_time = start_time + timedelta(seconds=int(duration/2))
 
+        # *** EFFICIENCE BASED ON TEMPERATURE ***
+        efficienceInPercent = (25.0 - temperature) * solar_map[direction]["coefficient"]
+        efficienceFactor = 1 + efficienceInPercent / 100
+
+        # *** DIRECT RADIATION ***
+        direct_max_power = solar_map[direction]["power"] * direct_radiation / 984       # is the ration between max radiation (984W/m²) and today direct radiation => https://www.sonnenverlauf.de/#/52.3547,13.6254,14/2026.06.21/12:59/1/3
+        direct_max_power = direct_max_power * duration / 3600                           # convert direct_max_power (hour based) to direct_max_power (duration based)
+
         elevation_factor, azimut = SunRadiation.getElevationFactor(mid_time, direction)
 
-        current_max_radiation = astroAction.getTotalRadiation(mid_time).doubleValue()
+        elevation_reduction_factor = self.getIntersectionValue(elevation_reduction_map, solar_map[direction]["elevation"])
+        azimut_reduction_factor = self.getIntersectionValue(azimut_diff_reduction_map, abs(solar_map[direction]["azimut"] - azimut))
+
+        active_direct_radiation = direct_max_power * elevation_reduction_factor * azimut_reduction_factor * elevation_factor * efficienceFactor
+
+        # *** DIFFUSE RADIATION ***
+        diffuse_max_power = solar_map[direction]["power"] * diffuse_radiation / 984     # max solar power * max radiation factor
+        diffuse_max_power = diffuse_max_power * duration / 3600                         # convert diffuse_max_power (hour based) to diffuse_max_power (duration based)
+
+        active_diffuse_radiation = diffuse_max_power * efficienceFactor
+
+        return active_direct_radiation + active_diffuse_radiation
+
+        """current_max_radiation = astroAction.getTotalRadiation(mid_time).doubleValue()
         current_max_radiation_factor = ( current_max_radiation * 100 / max_radiation ) / 100    # is the ration between max radiation (1000W/m²) and today max radiation
 
-        current_possible_power = solar_map[direction]["power"] * current_max_radiation_factor   # max solar power * max radiation factor
-        current_possible_power = current_possible_power * duration / 3600                       # convert current_possible_power (hour based) to current_possible_power (duration based)
+        # *** SUN CALCULATION
+        current_max_power = solar_map[direction]["power"] * current_max_radiation_factor   # max solar power * max radiation factor
+        current_max_power = current_max_power * duration / 3600                       # convert current_max_power (hour based) to current_max_power (duration based)
 
         elevation_reduction_factor = self.getIntersectionValue(elevation_reduction_map, solar_map[direction]["elevation"])
-        current_possible_power = current_possible_power * elevation_reduction_factor            # reduction based on non optimal panel elevation
+        current_max_power = current_max_power * elevation_reduction_factor            # reduction based on non optimal panel elevation
 
         azimut_reduction_factor = self.getIntersectionValue(azimut_diff_reduction_map, abs(solar_map[direction]["azimut"] - azimut))
-        current_possible_power = current_possible_power * azimut_reduction_factor               # reduction based on diff between sun azimut and panel azimut
+        current_max_power = current_max_power * azimut_reduction_factor               # reduction based on diff between sun azimut and panel azimut
 
-        current_power = current_possible_power
+        current_max_power = current_max_power * elevation_factor                      # reduction based on horizon
 
-        current_power = current_power * elevation_factor                                        # reduction based on horizon
+        sunshine_ratio = sunshine_duration / 60
+        current_solar_power = current_max_power * sunshine_ratio                      # current_power only during sunshine
 
-        sunshine_ratio = (( sunshine_duration * 100 / 60 ) / 100)
-        current_solar_power = current_power * sunshine_ratio                                    # current_power only during sunshine
+        # *** CLOUD CALCULATION
+        current_max_power = solar_map[direction]["power"] * current_max_radiation_factor  # max solar power * max radiation factor
+        current_max_power = current_max_power * duration / 3600                       # convert current_max_power (hour based) to current_max_power (duration based)
 
         cloud_reduction_factor = self.getIntersectionValue(okta_reduction_map, cloud_okta)
-        possible_cloud_power = (current_power - current_solar_power) * cloud_reduction_factor   # rest is calulated on cloud factor
+        current_cloud_power = current_max_power * cloud_reduction_factor     # current_power only during sunshine
+        #if ( weather_code not in [91,92,93,94,95,96,97,98,99]            # Gewitter
+        #     or weather_code not in [90,81,82,83,84,85,86,87,88,89,90]   # Schauer
+        #     or weather_code not in [70,71,72,73,74,75,76,77,78,79]      # Schnee
+        #     or weather_code not in [61,62,63,64,65,66,67,68,69]         # Regen (excl. 60)
+        #     or weather_code not in [51,52,53,54,55,56,57,58,59]         # Sprühregen (excl. 50)
+        #     or weather_code not in [40,41,42,43,44,45,46,47,48,49]      # Nebel
+        #     or weather_code not in [30,31,32,33,34,35,36,37,38,39]      # Staubsturm, Sandsturm, Schneefegen
+        #     or weather_code not in [20,21,22,23,24,25,26,27,28,29]      # nach Sprühregen, Rege, Schnee etc.
+        #     or weather_code not in [10,11,12]                           # Trockenereignisse (excl. 13,14,15,16,17,18,19
+        #     or weather_code not in [4,5,6,7,8,9]                        # Dunst, Rauch, Staub oder Sand (excl. 0,1,2,3,4)
+        #   ):
 
-        # TODO
-        # schauen ob man radiation vom wetterbericht bekommt
-
-        # DONE
-        # remove solcast
-        # ausserhalb der sonnenscheindauer den wolkenstand berücksichtigen
-        # 15 min slots benutzen
-        # reduction_factor anteilsmäßig berechnen
-
-        return current_solar_power + possible_cloud_power
+        return current_solar_power + current_cloud_power"""
 
     def calculateDumpedValues(self, persist, logger, start, end):
         total_expected = 0
 
-        max_radiation = astroAction.getTotalRadiation(start.replace(day=21, month=6, hour=13, minute=0, second=0)).doubleValue()
+        #max_radiation = astroAction.getTotalRadiation(start.replace(day=21, month=6, hour=13, minute=0, second=0)).doubleValue()
 
-        sunshine_states = Registry.getItem("pOutdoor_WeatherService_Sunshine_Duration").getPersistence("jdbc").getAllStatesBetween(start,end)
-        cloud_states = Registry.getItem("pOutdoor_WeatherService_Cloud_Cover").getPersistence("jdbc").getAllStatesBetween(start,end)
+        #sunshine_states = Registry.getItem("pOutdoor_WeatherService_Sunshine_Duration").getPersistence("jdbc").getAllStatesBetween(start,end)
+        #cloud_states = Registry.getItem("pOutdoor_WeatherService_Cloud_Cover").getPersistence("jdbc").getAllStatesBetween(start,end)
+
+        end = end - timedelta(microseconds=1) # needed to exclude ending slot from the upcomming day
+
+        direct_radiation_states = Registry.getItem("pOutdoor_WeatherService_Direct_Radiation").getPersistence("jdbc").getAllStatesBetween(start,end)
+        diffuse_radiation_states = Registry.getItem("pOutdoor_WeatherService_Diffuse_Radiation").getPersistence("jdbc").getAllStatesBetween(start,end)
+        temperature_states = Registry.getItem("pOutdoor_WeatherService_Temperature").getPersistence("jdbc").getAllStatesBetween(start,end)
 
         states = {"east": TimeSeries(TimeSeries.Policy.ADD), "south": TimeSeries(TimeSeries.Policy.ADD), "west": TimeSeries(TimeSeries.Policy.ADD)}
-        for i in range(0, len(sunshine_states)):
-            sunshine_state = sunshine_states[i]
-            cloud_state = cloud_states[i]
-
-            timeslot = sunshine_state.getTimestamp()
-            sunshine_duration = sunshine_state.getState().doubleValue()
-            cloud_okta = cloud_state.getState().doubleValue()
-            #print(cloud_state.getTimestamp(), cloud_okta)
+        for i in range(0, len(direct_radiation_states)):
+            #sunshine_state = sunshine_states[i]
+            #sunshine_duration = sunshine_state.getState().doubleValue()
+            #cloud_okta = cloud_states[i].getState().doubleValue()
+            timeslot = direct_radiation_states[i].getTimestamp()
+            direct_radiation = direct_radiation_states[i].getState().intValue()
+            diffuse_radiation = diffuse_radiation_states[i].getState().intValue()
+            temperature = temperature_states[i].getState().doubleValue()
 
             for i in [0, 15, 30, 45]:
                 start_time = timeslot + timedelta(minutes=i)
@@ -168,11 +207,11 @@ class ExpectedSolar:
                     continue
                 end_time = start_time + timedelta(minutes=15)
 
-                east_expected = self.calculateExpectedValue( SunRadiation.DIRECTION_EAST, start_time, end_time, sunshine_duration, cloud_okta, max_radiation)
+                east_expected = self.calculateExpectedValue( SunRadiation.DIRECTION_EAST, start_time, end_time, direct_radiation, diffuse_radiation, temperature)
                 states["east"].add(start_time, east_expected)
-                south_expected = self.calculateExpectedValue(SunRadiation.DIRECTION_SOUTH, start_time, end_time, sunshine_duration, cloud_okta, max_radiation)
+                south_expected = self.calculateExpectedValue(SunRadiation.DIRECTION_SOUTH, start_time, end_time, direct_radiation, diffuse_radiation, temperature)
                 states["south"].add(start_time, south_expected)
-                west_expected = self.calculateExpectedValue(SunRadiation.DIRECTION_WEST, start_time, end_time, sunshine_duration, cloud_okta, max_radiation)
+                west_expected = self.calculateExpectedValue(SunRadiation.DIRECTION_WEST, start_time, end_time, direct_radiation, diffuse_radiation, temperature)
                 states["west"].add(start_time, west_expected)
 
                 total_expected += east_expected + south_expected + west_expected
@@ -185,7 +224,7 @@ class ExpectedSolar:
         logger.info("TOTAL EXPECTED: {} - START: {}, END: {}".format(total_expected, start, end))
 
     def execute(self, module, input):
-        start = datetime.now().astimezone()
+        start = datetime.now().astimezone().replace(minute=0, second=0, microsecond=0)
         end = start + timedelta(days=2)
 
         self.calculateDumpedValues(True, logger, start, end)

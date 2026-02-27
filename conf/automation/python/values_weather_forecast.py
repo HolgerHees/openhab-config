@@ -4,15 +4,18 @@ from openhab import rule, Registry
 from openhab.actions import HTTP
 from openhab.triggers import ChannelEventTrigger, ItemStateUpdateTrigger
 
-rule(
+@rule(
     runtime_measurement = False,
     triggers = [
       ChannelEventTrigger("mqtt:broker:cloud:weatherforecast_air_temperature"),
       ChannelEventTrigger("mqtt:broker:cloud:weatherforecast_feels_like_temperature"),
       ChannelEventTrigger("mqtt:broker:cloud:weatherforecast_humidity"),
       ChannelEventTrigger("mqtt:broker:cloud:weatherforecast_sunshine"),
+      ChannelEventTrigger("mqtt:broker:cloud:weatherforecast_direct_radiation"),
+      ChannelEventTrigger("mqtt:broker:cloud:weatherforecast_diffuse_radiation"),
       ChannelEventTrigger("mqtt:broker:cloud:weatherforecast_cloudcover"),
-      ChannelEventTrigger("mqtt:broker:cloud:weatherforecast_refreshed"),
+      ChannelEventTrigger("mqtt:broker:cloud:weatherforecast_weather_code"),
+      ChannelEventTrigger("mqtt:broker:cloud:weatherforecast_refreshed")
     ]
 )
 class WeatherForecastListener:
@@ -22,7 +25,10 @@ class WeatherForecastListener:
             "feelsLikeTemperatureInCelsius": "pOutdoor_WeatherService_Temperature_Perceived",
             "relativeHumidityInPercent": "pOutdoor_WeatherService_Humidity",
             "sunshineDurationInMinutes": "pOutdoor_WeatherService_Sunshine_Duration",
-            "effectiveCloudCoverInOcta": "pOutdoor_WeatherService_Cloud_Cover"
+            "directRadiationInWatt": "pOutdoor_WeatherService_Direct_Radiation",
+            "diffuseRadiationInWatt": "pOutdoor_WeatherService_Diffuse_Radiation",
+            "cloudCoverInOcta": "pOutdoor_WeatherService_Cloud_Cover",
+            "weatherCode": "pOutdoor_WeatherService_Weather_Code"
         }
         self.count = 0
 
@@ -36,3 +42,4 @@ class WeatherForecastListener:
             date = datetime.fromtimestamp(int(timestamp))
             Registry.getItem(self.mapping[field]).getPersistence("jdbc").persist(date, value)
             self.count += 1
+
