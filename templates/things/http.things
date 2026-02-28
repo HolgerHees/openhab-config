@@ -1,0 +1,57 @@
+Thing http:url:fenecon-slow "Wechselrichter (Slow)" [baseURL="http://{{custom_pv_inverter_garage_ip}}/rest/channel/.*/.*", ignoreSSLErrors=true, authMode="BASIC_PREEMPTIVE", refresh=60, username="{{custom_pv_inverter_garage_username}}", password="{{custom_pv_inverter_garage_password}}"] {
+    Channels:
+        Type number : state                             "State"                         [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='_sum/State')].value)"]
+        Type number : ess-soc                           "Ess Soc"                       [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='_sum/EssSoc')].value)"]
+        Type number : ess-capacity                      "Ess Capacity"                  [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='_sum/EssCapacity')].value)"]
+        Type number : demand-active-energy              "Demand Active Energy"          [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='_sum/GridBuyActiveEnergy')].value)"]
+        Type number : supply-active-energy              "Supply Active Energy"          [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='_sum/GridSellActiveEnergy')].value)"]
+        Type number : production-active-energy          "Production Active Energy"      [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='_sum/ProductionActiveEnergy')].value)"]
+        Type number : consumption-active-energy         "Consumtion Active Energy"      [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='_sum/ConsumptionActiveEnergy')].value)"]
+
+        Type number : min-cell-voltage                  "Min Cell Voltage"              [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='ess0/MinCellVoltage')].value)"]
+        Type number : max-cell-voltage                  "Max Cell Voltage"              [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='ess0/MaxCellVoltage')].value)"]
+        Type number : min-cell-temperature              "Min Cell Temperature"          [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='ess0/MinCellTemperature')].value)"]
+        Type number : max-cell-temperature              "Min Cell Temperature"          [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='ess0/MaxCellTemperature')].value)"]
+
+        Type string : fems-version                      "FEMS Version"                  [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='_meta/Version')].value)"]
+
+        Type number : batt-tower-soh                    "Zustand"                       [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='battery0/Soh')].value)"]
+        Type number : batt-tower-voltage                "Spannung"                      [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='battery0/Tower0PackVoltage')].value)","PY(|int(input)/1000.0)"]
+        Type number : batt-tower-current                "Strom"                         [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='battery0/Current')].value)","PY(|int(input)/1000.0)"]
+
+        Type number : inverter-air-temperature          "Luft Temperatur"               [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='batteryInverter0/AirTemperature')].value)"]
+        Type number : inverter-radiator-temperature     "Wechselrichter Temperatur"     [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='batteryInverter0/RadiatorTemperature')].value)"]
+        Type number : bms-pack-temperature              "BMS Box Temperatur"            [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='batteryInverter0/BmsPackTemperature')].value)"]
+
+        Type number : charger0-actual-power             "Charger 0 Leistung"            [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='charger0/ActualPower')].value)"]
+        Type number : charger0-voltage                  "Charger 0 Spannung"            [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='charger0/Voltage')].value)","PY(|int(input)/1000.0)"]
+        Type number : charger0-current                  "Charger 0 Strom"               [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='charger0/Current')].value)","PY(|int(input)/1000.0)"]
+
+        Type number : charger1-actual-power             "Charger 1 Leistung"            [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='charger1/ActualPower')].value)"]
+        Type number : charger1-voltage                  "Charger 1 Spannung"            [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='charger1/Voltage')].value)","PY(|int(input)/1000.0)"]
+        Type number : charger1-current                  "Charger 1 Strom"               [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='charger1/Current')].value)","PY(|int(input)/1000.0)"]
+
+        Type number : charger2-actual-power             "Charger 2 Leistung"            [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='charger2/ActualPower')].value)"]
+        Type number : charger2-voltage                  "Charger 2 Spannung"            [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='charger2/Voltage')].value)","PY(|int(input)/1000.0)"]
+        Type number : charger2-current                  "Charger 2 Strom"               [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='charger2/Current')].value)","PY(|int(input)/1000.0)"]
+}
+
+Thing http:url:fenecon-fast "Wechselrichter (Fast)" [baseURL="http://{{custom_pv_inverter_garage_ip}}/rest/channel/_sum/.*", ignoreSSLErrors=true, authMode="BASIC_PREEMPTIVE", refresh=15, username="{{custom_pv_inverter_garage_username}}", password="{{custom_pv_inverter_garage_password}}"] {
+    Channels:
+        Type number : grid-active-power                 "GridActivePower"               [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='_sum/GridActivePower')].value)"]
+        Type number : production-active-power           "ProductionActivePower"         [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='_sum/ProductionActivePower')].value)"]
+        Type number : consumption-active-power          "ConsumptionActivePower"        [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='_sum/ConsumptionActivePower')].value)"]
+        Type number : consumption-active-power-l1       "ConsumptionActivePowerL1"      [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='_sum/ConsumptionActivePowerL1')].value)"]
+        Type number : consumption-active-power-l2       "ConsumptionActivePowerL2"      [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='_sum/ConsumptionActivePowerL2')].value)"]
+        Type number : consumption-active-power-l3       "ConsumptionActivePowerL3"      [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='_sum/ConsumptionActivePowerL3')].value)"]
+        Type number : ess-active-power                  "EssDischargePower"             [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='_sum/EssDischargePower')].value)"]
+        Type number : grid-mode                         "GridMode"                      [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='_sum/GridMode')].value)"]
+}
+
+Thing http:url:fenecon-control "Wechselrichter (Control)" [baseURL="http://{{custom_pv_inverter_garage_ip}}/rest/channel/", ignoreSSLErrors=true, authMode="BASIC_PREEMPTIVE", refresh="3600", commandMethod="POST", username="{{custom_pv_inverter_garage_username}}", password="{{custom_pv_inverter_garage_password}}"] {
+    Channels:
+        Type number : dummy                             "Dummy"                         [mode="READONLY",stateExtension="_sum/State"]
+        Type number : active-power-equals               "ActivePowerEquals"             [mode="WRITEONLY",commandTransformation="PY(|\"{'value': \" + str(input) + \"}\")",commandExtension="_ess0/SetActivePowerEquals"]
+        Type number : active-power-less-or-equals       "ActivePowerLessOrEquals"       [mode="WRITEONLY",commandTransformation="PY(|\"{'value': \" + str(input) + \"}\")",commandExtension="_ess0/SetActivePowerLessOrEquals"]
+        Type number : active-power-greater-or-equals    "ActivePowerGreaterOrEquals"    [mode="WRITEONLY",commandTransformation="PY(|\"{'value': \" + str(input) + \"}\")",commandExtension="_ess0/SetActivePowerGreaterOrEquals"]
+}

@@ -1106,14 +1106,17 @@ sitemap haus label="Main Menu"
                                 Text item=pGF_Utilityroom_Electricity_Storage_Grid_Soc
                                 Text item=pGF_Utilityroom_Electricity_Storage_Price
                                 Text item=pGF_Utilityroom_Electricity_Stock_Price
-                                Text item=pGF_Garage_Solar_Storage_RequestedPower
-                                Text item=pGF_Garage_Solar_Storage_RequestedMaxDischargerPower
                             }
                             Frame label="Batterie Turm" {
                                 Text item=pGF_Garage_Solar_Storage_BattTowerVoltage
                                 Text item=pGF_Garage_Solar_Storage_BattTowerCurrent
                                 Text item=pGF_Garage_Solar_Storage_BattSoh
                                 Text item=pGF_Garage_Solar_Storage_Capacity
+                            }
+                            Frame label="Battery Control" {
+                                Text item=pGF_Garage_Solar_Storage_RequestedPowerLessOrEqual
+                                Text item=pGF_Garage_Solar_Storage_RequestedPowerGreaterOrEqual
+                                Text item=pGF_Garage_Solar_Storage_RequestedPower
                             }
                             Frame label="Batterie Zellen" {
                                 Text item=pGF_Garage_Solar_Storage_MinEssVoltage

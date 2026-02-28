@@ -1,35 +1,32 @@
-Bridge modbus:tcp:solarGarage "Wechselrichter (Modbus)" [ host="{{custom_pv_inverter_garage_ip}}", port=502, id=1, connectTimeoutMillis=5000, timeBetweenReconnectMillis=10000, connectMaxTries=60] {
-    //Bridge poller state [ refresh=60000, start=222, length=2, type="input" ] {
-    //    Thing data state                        "Wechselrichter State"                        [ readStart="222", readValueType="int16"]
-    //}
-    Bridge poller fast [ refresh=15000, start=300, length=118, type="input" ] {
-        Thing data grid_active_power            "Wechselrichter GridActivePower"            [ readStart="315", readValueType="float32"]
-        Thing data production_active_power      "Wechselrichter ProductionActivePower"      [ readStart="327", readValueType="float32"]
-        Thing data consumption_active_power     "Wechselrichter ConsumptionActivePower"     [ readStart="343", readValueType="float32"]
-        Thing data consumption_active_power_l1  "Wechselrichter ConsumptionActivePowerL1"   [ readStart="409", readValueType="float32"]
-        Thing data consumption_active_power_l2  "Wechselrichter ConsumptionActivePowerL2"   [ readStart="411", readValueType="float32"]
-        Thing data consumption_active_power_l3  "Wechselrichter ConsumptionActivePowerL3"   [ readStart="413", readValueType="float32"]
-        Thing data ess_active_power             "Wechselrichter EssDischargePower"          [ readStart="415", readValueType="float32"]
-        Thing data grid_mode                    "Wechselrichter GridMode"                   [ readStart="417", readValueType="int16"]
-    }
-    Bridge poller core [ refresh=60000, start=300, length=122, type="input" ] {
-        Thing data ess_soc                      "Wechselrichter EssSoc"                     [ readStart="302", readValueType="uint16"]
-        Thing data demand_active_energy         "Wechselrichter DemandActiveEnergy"         [ readStart="359", readValueType="uint64", readTransform="PY:modbus_float64.py"]
-        Thing data supply_active_energy         "Wechselrichter SupplyActiveEnergy"         [ readStart="363", readValueType="uint64", readTransform="PY:modbus_float64.py"]
-        Thing data production_active_energy     "Wechselrichter ProductionActiveEnergy"     [ readStart="367", readValueType="uint64", readTransform="PY:modbus_float64.py"]
-        Thing data consumption_active_energy    "Wechselrichter ConsumtionActiveEnergy"     [ readStart="379", readValueType="uint64", readTransform="PY:modbus_float64.py"]
-        Thing data ess_capacity                 "Wechselrichter EssCapacity"                [ readStart="420", readValueType="float32"]
-    }
-    Bridge poller storage [ refresh=60000, start=600, length=16, type="input" ] {
-        //Thing data ess_soc                      "Wechselrichter EssSoc"                     [ readStart="602", readValueType="uint16"]
-        Thing data min_cell_voltage             "Wechselrichter MinEssCellVoltage"          [ readStart="608", readValueType="float32"]
-        Thing data max_cell_voltage             "Wechselrichter MaxEssCellVoltage"          [ readStart="610", readValueType="float32"]
-        Thing data min_cell_temperature         "Wechselrichter MinEssCellTemperature"      [ readStart="612", readValueType="float32"]
-        Thing data max_cell_temperature         "Wechselrichter MaxEssCellTemperature"      [ readStart="614", readValueType="float32"]
-    }
-    Bridge poller write [ refresh=0, start=700, length=18, type="holding" ] {
-        Thing data active_power_equals          "Wechselrichter Vorgabe Be- bzw. Entladeleistung"  [ writeStart="706", writeType="holding", writeValueType="float32"]
-        Thing data active_power_less_or_equals  "Wechselrichter Vorgabe maximaler Entladeleistung" [ writeStart="710", writeType="holding", writeValueType="float32"]
-        Thing data active_power_greater_or_equals "Wechselrichter Vorgabe maximaler Beladeleistung" [ writeStart="714", writeType="holding", writeValueType="float32"]
-    }
-}
+//Bridge modbus:tcp:solarGarage "Wechselrichter (Modbus)" [ host="192.168.0.68", port=502, id=1, connectTimeoutMillis=5000, timeBetweenReconnectMillis=10000, connectMaxTries=60] {
+//    Bridge poller fast [ refresh=15000, start=300, length=118, type="input" ] {
+//        Thing data grid_active_power            "Wechselrichter GridActivePower"            [ readStart="315", readValueType="float32"]
+//        Thing data production_active_power      "Wechselrichter ProductionActivePower"      [ readStart="327", readValueType="float32"]
+//        Thing data consumption_active_power     "Wechselrichter ConsumptionActivePower"     [ readStart="343", readValueType="float32"]
+//        Thing data consumption_active_power_l1  "Wechselrichter ConsumptionActivePowerL1"   [ readStart="409", readValueType="float32"]
+//        Thing data consumption_active_power_l2  "Wechselrichter ConsumptionActivePowerL2"   [ readStart="411", readValueType="float32"]
+//        Thing data consumption_active_power_l3  "Wechselrichter ConsumptionActivePowerL3"   [ readStart="413", readValueType="float32"]
+//        Thing data ess_active_power             "Wechselrichter EssDischargePower"          [ readStart="415", readValueType="float32"]
+//        Thing data grid_mode                    "Wechselrichter GridMode"                   [ readStart="417", readValueType="int16"]
+//    }
+//    Bridge poller core [ refresh=60000, start=300, length=122, type="input" ] {
+//        Thing data ess_soc                      "Wechselrichter EssSoc"                     [ readStart="302", readValueType="uint16"]
+//        Thing data demand_active_energy         "Wechselrichter DemandActiveEnergy"         [ readStart="359", readValueType="uint64", readTransform="PY:modbus_float64.py"]
+//        Thing data supply_active_energy         "Wechselrichter SupplyActiveEnergy"         [ readStart="363", readValueType="uint64", readTransform="PY:modbus_float64.py"]
+//        Thing data production_active_energy     "Wechselrichter ProductionActiveEnergy"     [ readStart="367", readValueType="uint64", readTransform="PY:modbus_float64.py"]
+//        Thing data consumption_active_energy    "Wechselrichter ConsumtionActiveEnergy"     [ readStart="379", readValueType="uint64", readTransform="PY:modbus_float64.py"]
+//        Thing data ess_capacity                 "Wechselrichter EssCapacity"                [ readStart="420", readValueType="float32"]
+//    }
+//    Bridge poller storage [ refresh=60000, start=600, length=16, type="input" ] {
+//        //Thing data ess_soc                      "Wechselrichter EssSoc"                     [ readStart="602", readValueType="uint16"]
+//        Thing data min_cell_voltage             "Wechselrichter MinEssCellVoltage"          [ readStart="608", readValueType="float32"]
+//        Thing data max_cell_voltage             "Wechselrichter MaxEssCellVoltage"          [ readStart="610", readValueType="float32"]
+//        Thing data min_cell_temperature         "Wechselrichter MinEssCellTemperature"      [ readStart="612", readValueType="float32"]
+//        Thing data max_cell_temperature         "Wechselrichter MaxEssCellTemperature"      [ readStart="614", readValueType="float32"]
+//    }
+//    Bridge poller write [ refresh=0, start=700, length=18, type="holding" ] {
+//        Thing data active_power_equals          "Wechselrichter Vorgabe Be- bzw. Entladeleistung"  [ writeStart="706", writeType="holding", writeValueType="float32"]
+//        Thing data active_power_less_or_equals  "Wechselrichter Vorgabe maximaler Entladeleistung" [ writeStart="710", writeType="holding", writeValueType="float32"]
+//        Thing data active_power_greater_or_equals "Wechselrichter Vorgabe maximaler Beladeleistung" [ writeStart="714", writeType="holding", writeValueType="float32"]
+//    }
+//}

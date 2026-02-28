@@ -20,12 +20,12 @@ start_electricity_meter_production_offset = 16261.620 #16261.303 #16261.281 #162
 @rule(
     triggers = [
         SystemStartlevelTrigger(80),
-        ThingStatusChangeTrigger("fenecon:home-device:local")
+        ThingStatusChangeTrigger("http:url:fenecon-slow")
     ]
 )
 class ErrorMessage:
     def execute(self, module, input):
-        thing = Registry.getThing("fenecon:home-device:local")
+        thing = Registry.getThing("http:url:fenecon-slow")
 
         msg = "Thing: {}".format(thing.getStatusInfo().toString()) if thing.getStatus().toString() != "ONLINE" else ""
         Registry.getItem("eOther_Error_Solar_Inverter_Message").postUpdateIfDifferent(msg)
@@ -40,8 +40,8 @@ class ErrorMessage:
 class StateMessage:
     def execute(self, module, input):
         active = []
-        if Registry.getItemState("pGF_Garage_Solar_Inverter_State").toString() not in ["Ok","Info","Warning"]:
-            active.append(Registry.getItemState("pGF_Garage_Solar_Inverter_State").toString())
+        if Registry.getItemState("pGF_Garage_Solar_Inverter_State").toString() not in ["0","1","2"]:
+            active.append("Error")
 
         if Registry.getItemState("pGF_Garage_Solar_Inverter_GridEnabled").intValue() == 2:
             active.append("Stromausfall")

@@ -13,7 +13,7 @@ from custom.charging import ChargingHelper
 from configuration import customConfigs
 
 import scope
-
+from scope import cache
 
 #KWKG-Umlage: 0,446 ct/kWh
 #Offshore-Netzumlage: 0,941 ct/kWh
@@ -25,7 +25,7 @@ VAT_COST = 1.19 # %
 STORAGE_MAX_CAPACITY = 50.4
 STORAGE_EMERGENCY_ENERGY_SOC = STORAGE_MAX_CAPACITY * 0.2
 
-STORAGE_MAX_CHARGING_POWER = STORAGE_MAX_CAPACITY * 0.2
+STORAGE_MAX_CHARGING_POWER = STORAGE_MAX_CAPACITY * 0.2 # 100000W AC => DC, 14973W DC => DC
 STORAGE_MIN_CHARGING_POWER = 1.0
 STORAGE_PERCENT_TO_CHARING_POWER_MAP = {
     95: STORAGE_MAX_CHARGING_POWER * 1.0,
@@ -84,6 +84,10 @@ FROST_GUARD_HEATING_MAP = {
     5.0:  0.0
 }
 
+#value = cache.sharedCache.get('test')
+#print(value)
+#cache.sharedCache.put('test', 2)
+
 @rule(
     triggers = [
 #        GenericCronTrigger("*/5 * * * * ?"),
@@ -93,31 +97,37 @@ FROST_GUARD_HEATING_MAP = {
 )
 class StorageInfo:
     def __init__(self):
-        state = Registry.getItemState("pGF_Utilityroom_Electricity_Cached_Inverter_Energy_State").toString()
-        state = json.loads(state)
-        self.demand = state["demand"]
-        self.supply = state["supply"]
-        self.production = state["production"]
-        self.consumption = state["consumption"]
-        self.last_change = datetime.fromisoformat(state["last_change"])
+        state = json.loads(Registry.getItemState("pGF_Utilityroom_Electricity_Cached_Inverter_Energy_State").toString())
+        #state = cache.sharedCache.get("Inverter_Energy_State")
+        if not state:
+            self.demand, self.supply, self.production, self.consumption, self.last_change = self.dumpState()
+        else:
+            self.demand = state["demand"]
+            self.supply = state["supply"]
+            self.production = state["production"]
+            self.consumption = state["consumption"]
+            self.last_change = datetime.fromisoformat(state["last_change"])
 
-    def getEnergyDiff(self):
+    def dumpState(self):
         demand = self.getEnergyValue("pGF_Garage_Solar_Inverter_DemandTotalEnergy")
-        demand_diff = demand - self.demand
-
         supply = self.getEnergyValue("pGF_Garage_Solar_Inverter_SupplyTotalEnergy")
-        supply_diff = supply - self.supply
-
         production = self.getEnergyValue("pGF_Garage_Solar_Inverter_ProductionTotalEnergy")
-        production_diff = production - self.production
-
         consumption = self.getEnergyValue("pGF_Garage_Solar_Inverter_ConsumptionTotalEnergy")
-        consumption_diff = consumption - self.consumption
-
         last_change = Registry.getItem("pGF_Garage_Solar_Storage_EnergySoc").getLastStateChange()
 
         state = { "demand": demand, "supply": supply, "production": production, "consumption": consumption, "last_change": last_change.isoformat() }
+        #cache.sharedCache.put("Inverter_Energy_State", state)
         Registry.getItem("pGF_Utilityroom_Electricity_Cached_Inverter_Energy_State").postUpdate(json.dumps(state))
+
+        return [demand, supply, production, consumption, last_change]
+
+    def getEnergyDiff(self):
+        demand, supply, production, consumption, last_change = self.dumpState()
+
+        demand_diff = demand - self.demand
+        supply_diff = supply - self.supply
+        production_diff = production - self.production
+        consumption_diff = consumption - self.consumption
 
         self.logger.info("CHANGED demand from {} to {}, diff {}".format(self.demand, demand, demand_diff))
         self.logger.info("CHANGED supply from {} to {}, diff {}".format(self.supply, supply, supply_diff))
@@ -210,11 +220,12 @@ class StorageInfo:
 
 #Registry.getItem("pGF_Utilityroom_Electricity_Storage_Grid_Soc").postUpdate(STORAGE_EMERGENCY_ENERGY_SOC)
 #Registry.getItem("pGF_Utilityroom_Electricity_Storage_Solar_Soc").postUpdate(Registry.getItemState("pGF_Garage_Solar_Storage_EnergySoc").doubleValue() / 1000.0 - Registry.getItemState("pGF_Utilityroom_Electricity_Storage_Grid_Soc").doubleValue())
+#Registry.getItem("pGF_Utilityroom_Electricity_Storage_Price").postUpdate(0.08)
 
 @rule(
     triggers = [
        GenericCronTrigger("*/30 * * * * ?") # 30 seconds, because of 60 seconds watchdoc for fenecon
-#      GenericCronTrigger("*/15 * * * * ?")
+#       GenericCronTrigger("*/15 * * * * ?")
     ]
 #    , profile_code=True
 )
@@ -322,14 +333,14 @@ class StoragePower:
                     reference_price = current_price if Registry.getItem("pGF_Garage_Solar_Storage_RequestedMaxDischargerPower").getState().intValue() == -1 else current_price_1min
                     if reference_price <= battery_price:
                         requested_max_soc_discharge_power = 0
-                        discharging_msg = " • Discharging refused (stock price cheaper)"
+                        discharging_msg = " • Discharging refused (grid cheaper)"
                     else:
-                        discharging_msg = " • Discharging allowed (storage price cheaper)"
+                        discharging_msg = " • Discharging allowed (storage cheaper)"
                 else:
-                    discharging_msg = " • Discharging allowed (solar energy available)"
+                    discharging_msg = " • Discharging allowed (free energy)"
             else:
                 # requested_max_soc_discharge_power = 0 => Not needed. Is handled by FEMS emergency limit
-                discharging_msg = " • Discharging refused (FEMS) (no energy available)"
+                discharging_msg = " • Discharging refused (FEMS) (no energy)"
         else:
             discharging_msg = " • Discharging allowed (FEMS) (emergency mode)"
 
@@ -353,79 +364,85 @@ class StoragePower:
                 solar_slots_used = []
                 for timestamp, value in self.today_solar_forceast.values():
                     if timestamp >= now:
-                        solar_slots_used.append([timestamp, value])
+                        solar_slots_used.append({"timestamp": timestamp, "value": value, "limit": None})
 
                     _solar_power_used += value
                     if _solar_power_used >= _solar_production_limit:
                         break
 
-                if len(solar_slots_used) < 0:
+                if len(solar_slots_used) <= 0:
                     max_power_msg = " • Charging not limited (end time reached)"
                 else:
-                    _remaining_production_total = sum([value for _, value in solar_slots_used])
+                    _remaining_production_total = sum([slot["value"] for slot in solar_slots_used])
                     if _remaining_production_total < _charge_power_missing:  # more then 2% missing
                         max_power_msg = " • Charging not limited (not enough solar)"
                     else:
-                        _solar_power_max = max([value for _, value in solar_slots_used])
+                        _solar_power_max = max([slot["value"] for slot in solar_slots_used])
 
                         # *** COLLECT SLOTS with hightes min power, but still enough for a full charge
                         # with each iteration, we increase min power and check if it is still enough
                         # HINT => this loop just excludes early low power productions => It does not limit the power
                         min_power_limit = min(_solar_power_max * 0.66, STORAGE_MAX_CHARGING_POWER * 0.66)
                         _charging_min_power = 0
+                        _solar_slots_used = []
                         while _charging_min_power < _solar_power_max:
                             _charging_total = 0
-                            _solar_slots_used = []
-                            for timestamp, value in solar_slots_used:
-                                if value >= _charging_min_power or len(_solar_slots_used) > 0:
-                                    _solar_slots_used.append([timestamp, value])
-                                    _charging_total += value
+                            __solar_slots_used = []
+                            for slot in solar_slots_used:
+                                if slot["value"] >= _charging_min_power or len(__solar_slots_used) > 0:
+                                    __solar_slots_used.append(slot)
+                                    _charging_total += slot["value"]
 
                             # 1. _charging_total not enough means min power is too high, keep the previous one
                             # 2. _charging_min_power is higher then min limit
                             if _charging_total < _charge_power_missing or _charging_min_power > min_power_limit:
                                 break
 
-                            solar_slots_used = _solar_slots_used
+                            _solar_slots_used = __solar_slots_used
                             _charging_min_power += 0.1 / 4 # increase 0.1 per hour => 0.025 per 15 min
+                        solar_slots_used = _solar_slots_used
 
-                        # *** CALCULATE MAX POWER
-                        # with each iteration, we decrease max power and check if it is still enough
+                        #print("---AAAA")
+                        #for timestamp, value in solar_slots_used:
+                        #    print(timestamp.strftime('%H:%M'), value)
+
+                        # *** COLLECT SLOTS
+                        # with each iteration, we decrease power factor and check if it is still enough
                         # HINT => this loop simulates active power limitation
-                        charging_max_power = _charging_max_power = _solar_power_max
-                        while _charging_max_power > 0:
+                        _solar_power_min = min([slot["value"] for slot in solar_slots_used])
+                        _charging_power_factor = 1
+                        _solar_slots_used = []
+                        while _charging_power_factor > 0:
                             _charging_total = 0
-                            for _, value in solar_slots_used:
-                                _charging_total += value if value < _charging_max_power else _charging_max_power
+                            __solar_slots_used = []
+                            for slot in solar_slots_used:
+                                #_value = (value - _solar_power_min) * _charging_power_factor #_solar_power_min * _charging_power_factor + (value - _solar_power_min)
+                                _value = _solar_power_min * _charging_power_factor + (slot["value"] - _solar_power_min) * _charging_power_factor ** _charging_power_factor
+                                if _value < STORAGE_MIN_CHARGING_POWER / 4:
+                                    _value = STORAGE_MIN_CHARGING_POWER / 4
+                                slot["limit"] = _value
 
-                            # 1. _charging_total not enough means max power is too low, keep the previous one
-                            # 2. _charging_max_power is lower then min charging speed
-                            if _charging_total < _charge_power_missing or _charging_max_power < STORAGE_MIN_CHARGING_POWER / 4:
+                                __solar_slots_used.append(slot)
+                                _charging_total += _value
+
+                            # _charging_total not enough means max power is too low, keep the previous one
+                            if _charging_total < _charge_power_missing:
                                 break
 
-                            charging_max_power = _charging_max_power
-                            _charging_max_power -= 0.1 / 4
+                            _solar_slots_used = __solar_slots_used
+                            _charging_power_factor -= 0.05
+                        solar_slots_used = _solar_slots_used
 
-                        # *** COLLECTS REVERSE SLOTS
-                        # collect slots from the end until it is enough
-                        _charging_total = 0
-                        _charging_slots = []
-                        for timestamp, value in reversed(solar_slots_used):
-                             _charging_slots.append([timestamp, value])
-                             _charging_total += value if value < charging_max_power else charging_max_power
+                        #print("---BBBB")
+                        #for slot in solar_slots_used:
+                        #    print("TIME: {}, FROM {:.2f}, CHARGE {:.2f}, GRID {:.2f}".format(slot["timestamp"].strftime('%H:%M'), slot["value"], slot["limit"], slot["value"] - slot["limit"]))
 
-                             if _charging_total > _charge_power_missing:
-                                 break
-
-                        #for timestamp, value in _charging_slots:
-                        #    print(timestamp.strftime('%H:%M'), value, value if value < charging_max_power else charging_max_power)
-
-                        if now < _charging_slots[-1][0]:
+                        if now < solar_slots_used[0]["timestamp"]:
                             requested_max_power = 0
-                            max_power_msg = " • Charging delayed until {}".format(_charging_slots[-1][0].strftime('%H:%M'))
+                            max_power_msg = " • Charging delayed until {}".format(solar_slots_used[0]["timestamp"].strftime('%H:%M'))
                         else:
-                            requested_max_power = charging_max_power * 4
-                            max_power_msg = " • Charging limited to {:.2f}kWh until {}".format(requested_max_power, _charging_slots[0][0].strftime('%H:%M'))
+                            requested_max_power = solar_slots_used[0]["limit"] * 4
+                            max_power_msg = " • Charging limited to {:.2f}kWh until {}".format(requested_max_power, solar_slots_used[-1]["timestamp"].strftime('%H:%M'))
 
         return [requested_max_power, max_power_msg]
 
@@ -631,3 +648,12 @@ class StoragePower:
 #Registry.getItem("pGF_Outdoor_Car_EnergySoc").postUpdate(0)
 #Registry.getItem("pGF_Outdoor_Car_EssSoc").postUpdate(0)
 #Registry.getItem("pGF_Outdoor_Car_IsConnected").postUpdate(scope.OFF)
+
+Registry.getItem("pGF_Garage_Solar_Storage_RequestedPowerGreaterOrEqual").sendCommand(0)
+
+
+
+
+
+
+
