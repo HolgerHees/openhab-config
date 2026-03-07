@@ -133,52 +133,52 @@ Switch pToolshed_Light_Ceiling_Powered    "Deckenlicht"        <selflight> (eToo
 Group:Number:SUM gOutdoor_Automatic_Switch_Counter "Automatik [MAP(motiondetector_counter_de.map):%s]" <selflightInfo> {autoupdate="false"}
 
 // **** OUTDOOR GARAGE STREEDSIDE ****
-Group  eOutdoor_Streedside_Garage_Light         "Lampe"              <selflight> (lOutdoor_Streedside)                                  ["Lightbulb"] {synonyms="Schuppen"}
+Group  eOutdoor_Streedside_Garage_Light         "Lampe"              <selflight> (lOutdoor)                                             ["Lightbulb"] {synonyms="Schuppen", ia_description="Die Lampe befindet sich im Garten an der Werkstatt zur Strassenseite"}
 Switch pOutdoor_Streedside_Garage_Light_Powered "Licht"              <selflight> (eOutdoor_Streedside_Garage_Light,gOutdoor_Lights)     ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:garageStreedside" }
 Switch pOutdoor_Streedside_Garage_Automatic_Switch	"Automatik"      <selflight> (eOutdoor_Streedside_Garage_Light,gOutdoor_Automatic_Switch_Counter) ["Point"]
 
 // **** OUTDOOR FRONT ****
-Group  eOutdoor_Streedside_Frontdoor_Light      "Lampe"              <selflight> (lOutdoor_Streedside)                                  ["Lightbulb"] {synonyms="Haustür"}
+Group  eOutdoor_Streedside_Frontdoor_Light      "Lampe"              <selflight> (lOutdoor)                                  ["Lightbulb"] {synonyms="Haustür", ia_description="Die Lampe befindet sich im Garten an der Haustür"}
 Switch pOutdoor_Streedside_Frontdoor_Light_Powered "Licht"           <selflight> (eOutdoor_Streedside_Frontdoor_Light,gOutdoor_Lights)  ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:frontdoor" }
 Switch pOutdoor_Streedside_Frontdoor_Automatic_Switch "Automatik"    <selflight> (eOutdoor_Streedside_Frontdoor_Light,gOutdoor_Automatic_Switch_Counter) ["Point"]
 
 // **** OUTDOOR CARPORT ****
-Group  eOutdoor_Carport_Light                   "Lampe"              <selflight> (lOutdoor_Carport)                                     ["Lightbulb"]
+Group  eOutdoor_Carport_Light                   "Lampe"              <selflight> (lOutdoor)                                     ["Lightbulb"] {ia_description="Die Lampe befindet sich im Garten am Carport"}
 Switch pOutdoor_Carport_Light_Powered           "Licht"              <selflight> (eOutdoor_Carport_Light,gOutdoor_Lights)               ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:carport" }
 Switch pOutdoor_Carport_Automatic_Switch        "Automatik"          <selflight> (eOutdoor_Carport_Light,gOutdoor_Automatic_Switch_Counter) ["Point"]
 
 // **** OUTDOOR TERRACE ****
-Group  eOutdoor_Terrace_Light            "Lampen"             <selflight> (lOutdoor_Terrace)                                     ["Lightbulb"]
+Group  eOutdoor_Terrace_Light            "Lampen"             <selflight> (lOutdoor)                                     ["Lightbulb"] {ia_description="Die Lampe befindet sich im Garten an der Terasse"}
 Dimmer pOutdoor_Terrace_Light_Brightness "Licht"              <selflight> (eOutdoor_Terrace_Light,gOutdoor_Lights)        ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:outdoorTerrace"}
 Switch pOutdoor_Terrace_Automatic_Switch "Automatik"          <selflight> (eOutdoor_Terrace_Light,gOutdoor_Automatic_Switch_Counter) ["Point"]
 
 Group:Color:MAX  gOutdoor_Terrace_Light_Hue_Color "Farbe"              <colorwheel> {autoupdate="false"}
 
-Group  eOutdoor_Terrace_Light_Hue_Left               "HUE Lampe links"    <selflight> (lOutdoor_Terrace)                    ["Lightbulb"] { synonyms="Indirekt" }
-Color  pOutdoor_Terrace_Light_Hue_Left_Color         "Farbe"              <colorwheel> (eOutdoor_Terrace_Light_Hue_Left,gOutdoor_Terrace_Light_Hue_Color,lOutdoor_Terrace,gOutdoor_Lights) ["Control","Light"] { channel="hue:device:default:lamp8:color"}
+Group  eOutdoor_Terrace_Light_Hue_Left               "HUE Lampe links"    <selflight> (lOutdoor)                    ["Lightbulb"] { synonyms="Indirekt", ia_description="Die HUE Lampe befindet sich im Garten an der linken Seite der Terasse" }
+Color  pOutdoor_Terrace_Light_Hue_Left_Color         "Farbe"              <colorwheel> (eOutdoor_Terrace_Light_Hue_Left,gOutdoor_Terrace_Light_Hue_Color,gOutdoor_Lights) ["Control","Light"] { channel="hue:device:default:lamp8:color"}
 Dimmer pOutdoor_Terrace_Light_Hue_Left_Temperature   "Farbtemperatur"     <selflight> (eOutdoor_Terrace_Light_Hue_Left)      ["Setpoint","ColorTemperature"] { channel="hue:device:default:lamp8:color-temperature"}
 
-Group  eOutdoor_Terrace_Light_Hue_Right              "HUE Lampe rechts"   <selflight> (lOutdoor_Terrace)                    ["Lightbulb"] { synonyms="Indirekt" }
-Color  pOutdoor_Terrace_Light_Hue_Right_Color        "Farbe"              <colorwheel> (eOutdoor_Terrace_Light_Hue_Right,gOutdoor_Terrace_Light_Hue_Color,lOutdoor_Terrace,gOutdoor_Lights) ["Control","Light"] { channel="hue:device:default:lamp7:color"}
+Group  eOutdoor_Terrace_Light_Hue_Right              "HUE Lampe rechts"   <selflight> (lOutdoor)                    ["Lightbulb"] { synonyms="Indirekt", ia_description="Die HUE Lampe befindet sich im Garten an rechten Seite der Terasse" }
+Color  pOutdoor_Terrace_Light_Hue_Right_Color        "Farbe"              <colorwheel> (eOutdoor_Terrace_Light_Hue_Right,gOutdoor_Terrace_Light_Hue_Color,gOutdoor_Lights) ["Control","Light"] { channel="hue:device:default:lamp7:color"}
 Dimmer pOutdoor_Terrace_Light_Hue_Right_Temperature  "Farbtemperatur"     <selflight> (eOutdoor_Terrace_Light_Hue_Right)      ["Setpoint","ColorTemperature"] { channel="hue:device:default:lamp7:color-temperature"}
 
 // **** OUTDOOR GARAGE GARDEN ****
-Group  eOutdoor_Garden_Garage_Light             "Lampe"              <selflight> (lOutdoor_Garden)                                      ["Lightbulb"] {synonyms="Schuppen"}
+Group  eOutdoor_Garden_Garage_Light             "Lampe"              <selflight> (lOutdoor)                                      ["Lightbulb"] {synonyms="Schuppen", ia_description="Die Lampe befindet sich im Garten an der Werkstatt zur Terassenseite"}
 Switch pOutdoor_Garden_Garage_Light_Powered     "Licht"              <selflight> (eOutdoor_Garden_Garage_Light,gOutdoor_Lights)         ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:garageGardenside" }
 Switch pOutdoor_Garden_Garage_Automatic_Switch	"Automatik"          <selflight> (eOutdoor_Garden_Garage_Light,gOutdoor_Automatic_Switch_Counter) ["Point"]
 
 // **** OUTDOOR GARDENHOUSE ****
-Group  eOutdoor_Toolshed_Right_Light             "Lampe"           <selflight> (lOutdoor_Toolshed)                                            ["Lightbulb"]
+Group  eOutdoor_Toolshed_Right_Light             "Lampe"           <selflight> (lOutdoor)                                            ["Lightbulb"] {ia_description="Die Lampe befindet sich im Garten am hinterem Schuppen an der rechten Seite"}
 Switch pOutdoor_Toolshed_Right_Light_Powered     "Licht"           <selflight> (eOutdoor_Toolshed_Right_Light,gOutdoor_Lights)                 ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:toolshedRight" }
 Switch pOutdoor_Toolshed_Right_Automatic_Switch  "Automatik"       <selflight> (eOutdoor_Toolshed_Right_Light,gOutdoor_Automatic_Switch_Counter) ["Point"]
 
 // **** OUTDOOR GARDENHOUSE ****
-//Group  eOutdoor_Toolshed_Behind_Light             "Lampe"           <selflight> (lOutdoor_Toolshede)                                            ["Lightbulb"]
+//Group  eOutdoor_Toolshed_Behind_Light             "Lampe"           <selflight> (lOutdoor)                                            ["Lightbulb"] {ia_description="Die Lampe befindet sich im Garten am hinterem Schuppen an der hinteren Seite"}
 //Switch pOutdoor_Toolshed_Behind_Light_Powered     "Licht"           <selflight> (eOutdoor_Toolshed_Behind_Light,gOutdoor_Lights)                 ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:toolshedBehind" }
 //Switch pOutdoor_Toolshed_Behind_Automatic_Switch  "Automatik"       <selflight> (eOutdoor_Toolshed_Behind_Light,gOutdoor_Automatic_Switch_Counter) ["Point"]
 
 // **** OUTDOOR GARDENHOUSE ****
-//Group  eOutdoor_Toolshed_Left_Light             "Lampe"           <selflight> (lOutdoor_Toolshede)                                            ["Lightbulb"]
+//Group  eOutdoor_Toolshed_Left_Light             "Lampe"           <selflight> (lOutdoor)                                            ["Lightbulb"] {ia_description="Die Lampe befindet sich im Garten am hinterem Schuppen an der linken Seite"}
 //Switch pOutdoor_Toolshed_Left_Light_Powered     "Licht"           <selflight> (eOutdoor_Toolshed_Left_Light,gOutdoor_Lights)                 ["Control","Light"] { channel="knx:device:bridge:lights_outdoor:toolshedLeft" }
 //Switch pOutdoor_Toolshed_Left_Automatic_Switch  "Automatik"       <selflight> (eOutdoor_Toolshed_Left_Light,gOutdoor_Automatic_Switch_Counter) ["Point"]
 

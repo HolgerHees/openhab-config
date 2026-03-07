@@ -1,5 +1,5 @@
 // **** WEATHER FORECAST ****
-Group eOutdoor_WeatherService                 "Wettervorhersage"                  <selfinfo> (lOutdoorOther) ["Sensor"]
+Group eOutdoor_WeatherService                 "Wettervorhersage"                  <selfinfo> (lOutdoor) ["Sensor"]
 
 Number pOutdoor_WeatherService_Temperature    "Garten (Vorhersage) [%.1f °C]" <selftemperature> (eOutdoor_WeatherService,gPersistence_Forecast,gPersistance_Chart) ["Point"]
 Number pOutdoor_WeatherService_Temperature_Perceived     "Gefühlt [%.1f] °C"       <selftemperature> (eOutdoor_WeatherService,gPersistence_Forecast) ["Point"]
@@ -13,7 +13,7 @@ Number pOutdoor_WeatherService_Weather_Code     "Wetter Code (Vorhersage) [%.1f]
 // **** WEATHERSTATION ****
 Group gWeatherstationInputValues                     "Wetterstation Input" {autoupdate="false"}
 
-Group eOutdoor_WeatherStation                        "Wetterstation" <selfinfo> (lOutdoorOther) ["Sensor"]
+Group eOutdoor_WeatherStation                        "Wetterstation" <selfinfo> (lOutdoor) ["Sensor"]
 
 String pOutdoor_WeatherStation_State_Device_Info     "Device Status [%s]" <selfplant> (eOutdoor_WeatherStation) ["Point"]
 

@@ -74,7 +74,7 @@ class ChargingHelper:
         remaining_slots = []
         for price in list(self.price_map.keys()):
             for slot in self.price_map[price]:
-                if slot["end"].timestamp() < start_time.timestamp() or slot["end"].timestamp() > end_time.timestamp():
+                if slot["end"].timestamp() < start_time.timestamp() or slot["end"].timestamp() > end_time.timestamp(): # cmp by timestamp for performance reason
                     continue
 
                 remaining_slots_charged_energy += max_charging_power / 4
@@ -140,8 +140,6 @@ class ChargingHelper:
 
     def calculateRequestedPower(self, start_time, end_time, current_time, current_energy_soc, target_energy_soc, min_charging_power, max_charging_power, charging_callback):
         requested_power = charge_msg = None
-        state = "Inactive"
-
         if self.is_grid_mode:
             if target_energy_soc <= current_energy_soc:
                 state_msg = "No grid charging needed"
@@ -151,11 +149,6 @@ class ChargingHelper:
                 active_slot, next_slot, charge_msg = self.calculateRemainingSlots(start_time, end_time, current_time, current_energy_soc, target_energy_soc, min_charging_power, max_charging_power, charging_callback)
                 if active_slot is not None:
                     requested_power = active_slot["charging_power"]
-                    if ( next_slot is None or next_slot["start"] != active_slot["end"] ) and start_time >= active_slot["end"] - timedelta(minutes=1):
-                        state = "Ending"
-                        requested_power = None # if it ends in one minute, reset the requested power to trigger the inverter's watchdog timer within one minute
-                    else:
-                        state = "Active"
                     state_msg = "With {:.2f}kWh for {:.2f}€/kWh".format(active_slot["charging_power"], active_slot["price"])
                 else:
                     state_msg = "No slot matches"
@@ -165,4 +158,4 @@ class ChargingHelper:
         else:
             state_msg = "No grid charging possible (grid is offline)"
 
-        return [requested_power, state, state_msg, charge_msg]
+        return [requested_power, state_msg, charge_msg]

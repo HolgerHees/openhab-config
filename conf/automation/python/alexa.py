@@ -16,4 +16,3 @@ class StateMessage:
         Registry.getItem("eOther_Error_Alexa_Message").postUpdateIfDifferent(msg)
 
 
-

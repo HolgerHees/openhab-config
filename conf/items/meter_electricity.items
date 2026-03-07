@@ -7,13 +7,17 @@ Number:Energy pGF_Utilityroom_Electricity_Meter_Supply				"Zählerstand Lieferun
 Group  eGF_Garage_Solar                     "Solaranlage"             <selfinfo> (lGF_Garage) ["Sensor"]
 
 // **** SOLAR - REST ****
-Number:Dimensionless       pGF_Garage_Solar_Storage_BattSoh                        "Zustand  [%d %%]"       <batterylevel>              (eGF_Garage_Solar) ["Measurement"]           {unit="%", channel="http:url:fenecon-slow:batt-tower-soh"}
+Number                     pGF_Garage_Solar_Storage_BattSoh                        "Zustand  [%d %%]"       <selfinfo>                  (eGF_Garage_Solar) ["Measurement"]            {channel="http:url:fenecon-slow:batt-tower-soh"}
 Number:ElectricPotential   pGF_Garage_Solar_Storage_BattTowerVoltage               "Spannung [%.2f V]"      <selfenergy>                (eGF_Garage_Solar) ["Measurement", "Voltage"] {channel="http:url:fenecon-slow:batt-tower-voltage"}
 Number:ElectricCurrent     pGF_Garage_Solar_Storage_BattTowerCurrent               "Strom [%.2f A]"         <selfenergy>                (eGF_Garage_Solar) ["Measurement", "Current"] {channel="http:url:fenecon-slow:batt-tower-current"}
 
+Number                     pGF_Garage_Solar_Storage_BattTower1Soh                  "Zustand (Turm links) [%d %%]" <selfinfo>            (eGF_Garage_Solar) ["Measurement"]           {channel="http:url:fenecon-slow:batt-tower0-soh"}
+Number                     pGF_Garage_Solar_Storage_BattTower1Cycles               "Ladezyklen (Turm links) [%d]" <selfinfo>            (eGF_Garage_Solar) ["Point"]                 {channel="http:url:fenecon-slow:batt-tower0-no-of-cycles"}
+Number                     pGF_Garage_Solar_Storage_BattTower2Soh                  "Zustand (Turm rechts) [%d %%]" <selfinfo>           (eGF_Garage_Solar) ["Measurement"]           {channel="http:url:fenecon-slow:batt-tower1-soh"}
+Number                     pGF_Garage_Solar_Storage_BattTower2Cycles               "Ladezyklen (Turm rechts) [%d]" <selfinfo>           (eGF_Garage_Solar) ["Point"]                 {channel="http:url:fenecon-slow:batt-tower1-no-of-cycles"}
+
 Number                     pGF_Garage_Solar_Inverter_State                          "Status [%s]"           <selfinfo>                  (eGF_Garage_Solar) ["Status"]                {channel="http:url:fenecon-slow:state"}
 String                     pGF_Garage_Solar_Inverter_FemsVersion                    "Version [%s]"          <selfinfo>                  (eGF_Garage_Solar) ["Status"]                {channel="http:url:fenecon-slow:fems-version"}
-DateTime                   pGF_Garage_Solar_Inverter_LastFeneconUpdate              "Letzte Änderung [%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS]" <selfclock>         (eGF_Garage_Solar) ["Status"] {channel="http:url:fenecon-slow:last-success"}
 
 Number:Temperature         pGF_Garage_Solar_Inverter_InverterAirTemp                "Wechselrichter"        <temperature>               (eGF_Garage_Solar) ["Measurement"] {channel="http:url:fenecon-slow:inverter-air-temperature"}
 Number:Temperature         pGF_Garage_Solar_Inverter_InverterRadiatorTemp                                   <temperature>               (eGF_Garage_Solar) ["Measurement"] {channel="http:url:fenecon-slow:inverter-radiator-temperature"}
@@ -30,31 +34,35 @@ Number:ElectricPotential   pGF_Garage_Solar_Inverter_ChargerWestVoltage         
 Number:ElectricCurrent     pGF_Garage_Solar_Inverter_ChargerWestCurrent             "Strom [%.2f A]"        <selfenergy_solar>          (eGF_Garage_Solar) ["Measurement", "Current"]  {channel="http:url:fenecon-slow:charger2-current"}
 
 // **** SOLAR - MODBUS ****
-Number:Dimensionless       pGF_Garage_Solar_Storage_EssSoc                         "Ladestand [%d %%]"      <batterylevel>              (eGF_Garage_Solar,gPersistance_Chart,gPersistance_History) ["Measurement"] {unit="%", channel="http:url:fenecon-slow:ess-soc"}
-Number:Energy              pGF_Garage_Solar_Storage_Capacity                       "Kapazität [%.1f kWh]"   <selfenergy>                (eGF_Garage_Solar) ["Measurement", "Current"]  {channel="http:url:fenecon-slow:ess-capacity",unit="Wh"}
-Number:Energy              pGF_Garage_Solar_Storage_EnergySoc                      "Ladestand [%.1f kWh]"   <selfenergy>                (eGF_Garage_Solar) ["Measurement", "Current"]  {unit="Wh"}
+Number                     pGF_Garage_Solar_Storage_EssSoc                         "Ladestand [%d %%]"      <batterylevel>              (eGF_Garage_Solar,gPersistance_Chart,gPersistance_History) ["Measurement"] {channel="http:url:fenecon-slow:ess-soc"}
+Number:Energy              pGF_Garage_Solar_Storage_Capacity                       "Kapazität [%.1f kWh]"   <selfenergy>                (eGF_Garage_Solar) ["Measurement", "Current"]  {channel="http:url:fenecon-slow:ess-capacity"}
+Number:Energy              pGF_Garage_Solar_Storage_EnergySoc                      "Ladestand [%.1f kWh]"   <selfenergy>                (eGF_Garage_Solar) ["Measurement", "Current"]
 
-Number:Power               pGF_Garage_Solar_Storage_RequestedPower                 "Speicher Beladung [%d W]" <selfenergy>              (eGF_Garage_Solar) ["Measurement", "Power"]    { expire="1m,state=-1" } //, channel="http:url:fenecon-control:active-power-equals"}
-Number:Power               pGF_Garage_Solar_Storage_RequestedPowerLessOrEqual      "Max Entlade Leistung [%d W]" <selfenergy> (eGF_Garage_Solar) ["Measurement", "Power"]    { expire="1m,state=-1" } //, channel="http:url:fenecon-control:active-power-less-or-equals"}
-Number:Power               pGF_Garage_Solar_Storage_RequestedPowerGreaterOrEqual   "Max Belade Leistung [%d W]" <selfenergy> (eGF_Garage_Solar) ["Measurement", "Power"]    { expire="1m,state=-1" } //, channel="http:url:fenecon-control:active-power-greater-or-equals"}
+Number:Power               pGF_Garage_Solar_Storage_ActivePowerEqual               "Entlade/Belade Leistung (Active) [MAP(solar_energy_control.map):%d W]" <selfenergy>        (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-control:active-power-equals"}
+Number:Power               pGF_Garage_Solar_Storage_ActivePowerLessOrEqual         "Max Entlade Leistung (Active) [MAP(solar_energy_control.map):%d W]" <selfenergy>           (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-control:active-power-less-or-equals"}
+Number:Power               pGF_Garage_Solar_Storage_ActivePowerGreaterOrEqual      "Max Belade Leistung (Active) [MAP(solar_energy_control.map):%d W]" <selfenergy>            (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-control:active-power-greater-or-equals"}
 
-Number:Power               pGF_Garage_Solar_Storage_ActivePower                    "Beladung [%d W]"        <selfenergy>                (eGF_Garage_Solar) ["Measurement", "Power"]    {channel="http:url:fenecon-fast:ess-active-power"}
+Number:Power               pGF_Garage_Solar_Storage_Requested_Power                "Belade Leistung (Vorgabe) [MAP(solar_energy_control.map):%d W]" <selfenergy>                (eGF_Garage_Solar) ["Measurement", "Power"]
+Number:Power               pGF_Garage_Solar_Storage_Requested_Max_Power            "Max Belade Leistung (Vorgabe) [MAP(solar_energy_control.map):%d W]" <selfenergy>            (eGF_Garage_Solar) ["Measurement", "Power"]
+Switch                     pGF_Garage_Solar_Storage_Discharged_Allowed             "Entladung erlaubt (Vorgabe) [%s]"                                  <selfenergy>                (eGF_Garage_Solar) ["Measurement", "Power"]
+
+Number:Power               pGF_Garage_Solar_Storage_ActivePower                    "Beladung [%d W]"        <selfenergy>                (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-fast:ess-active-power"}
 Number:Power               pGF_Garage_Solar_Storage_ChargerPower                   "Beladung [%d W]"        <selfenergy>                (eGF_Garage_Solar) ["Measurement", "Power"]
 Number:Power               pGF_Garage_Solar_Storage_DischargerPower                "Entladung [%d W]"       <selfenergy>                (eGF_Garage_Solar) ["Measurement", "Power"]
-Number:ElectricPotential   pGF_Garage_Solar_Storage_MinEssVoltage                  "Min Ess Spannung [%.2f V]" <selfenergy>             (eGF_Garage_Solar) ["Measurement", "Voltage"] {channel="http:url:fenecon-slow:min-cell-voltage",unit="mV"}
-Number:ElectricPotential   pGF_Garage_Solar_Storage_MaxEssVoltage                  "Max Ess Spannung [%.2f V]" <selfenergy>             (eGF_Garage_Solar) ["Measurement", "Voltage"] {channel="http:url:fenecon-slow:max-cell-voltage",unit="mV"}
+Number:ElectricPotential   pGF_Garage_Solar_Storage_MinEssVoltage                  "Min Ess Spannung [%.2f V]" <selfenergy>             (eGF_Garage_Solar) ["Measurement", "Voltage"] {channel="http:url:fenecon-slow:min-cell-voltage"}
+Number:ElectricPotential   pGF_Garage_Solar_Storage_MaxEssVoltage                  "Max Ess Spannung [%.2f V]" <selfenergy>             (eGF_Garage_Solar) ["Measurement", "Voltage"] {channel="http:url:fenecon-slow:max-cell-voltage"}
 Number:Temperature         pGF_Garage_Solar_Storage_MinEssTemperature              "Min Ess Temperature [%d °C]" <temperature>          (eGF_Garage_Solar) ["Measurement"] {channel="http:url:fenecon-slow:min-cell-temperature"}
 Number:Temperature         pGF_Garage_Solar_Storage_MaxEssTemperature              "Max Ess Temperature [%d °C]" <temperature>          (eGF_Garage_Solar) ["Measurement"] {channel="http:url:fenecon-slow:max-cell-temperature"}
 
 Number:Dimensionless       pGF_Garage_Solar_Inverter_GridEnabled                    "Grid Aktiv  [MAP(solar_grid_mode.map):%s]" <selfinfo> (eGF_Garage_Solar) ["Switch"] {channel="http:url:fenecon-fast:grid-mode"}
 
-Number:Energy              pGF_Garage_Solar_Inverter_DemandTotalEnergy              "Bezug Total [%.1f kWh]" <selfenergy_solar>         (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-slow:demand-active-energy",unit="Wh"}
-Number:Energy              pGF_Garage_Solar_Inverter_SupplyTotalEnergy              "Lieferung Total [%.1f kWh]" <selfenergy_solar>     (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-fast:supply-active-energy",unit="Wh"}
+Number:Energy              pGF_Garage_Solar_Inverter_DemandTotalEnergy              "Bezug Total [%.1f kWh]" <selfenergy_solar>         (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-slow:demand-active-energy"}
+Number:Energy              pGF_Garage_Solar_Inverter_SupplyTotalEnergy              "Lieferung Total [%.1f kWh]" <selfenergy_solar>     (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-slow:supply-active-energy"}
 
-Number:Energy              pGF_Garage_Solar_Inverter_ProductionTotalEnergy          "Erzeugung Total [%.1f kWh]" <selfenergy_solar>     (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-slow:production-active-energy",unit="Wh"}
+Number:Energy              pGF_Garage_Solar_Inverter_ProductionTotalEnergy          "Erzeugung Total [%.1f kWh]" <selfenergy_solar>     (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-slow:production-active-energy"}
 Number:Power               pGF_Garage_Solar_Inverter_ProductionActivePower          "Erzeugung Aktuell [%d W]" <selfenergy_solar>       (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-fast:production-active-power"}
 
-Number:Energy              pGF_Garage_Solar_Inverter_ConsumptionTotalEnergy         "Verbrauch Total [%.1f kWh]" <selfenergy_solar>     (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-slow:consumption-active-energy",unit="Wh"}
+Number:Energy              pGF_Garage_Solar_Inverter_ConsumptionTotalEnergy         "Verbrauch Total [%.1f kWh]" <selfenergy_solar>     (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-slow:consumption-active-energy"}
 Number:Power               pGF_Garage_Solar_Inverter_ConsumptionActivePower         "Verbrauch Aktuell [%d W]" <selfenergy_solar>       (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-fast:consumption-active-power"}
 Number:Power               pGF_Garage_Solar_Inverter_ConsumptionActivePowerL1       "Verbrauch Aktuell L1 [%d W]" <selfenergy_solar>    (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-fast:consumption-active-power-l1"}
 Number:Power               pGF_Garage_Solar_Inverter_ConsumptionActivePowerL2       "Verbrauch Aktuell L2 [%d W]" <selfenergy_solar>    (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-fast:consumption-active-power-l2"}
@@ -69,10 +77,10 @@ Switch                     pGF_Garage_Solar_Inverter_Charge_Control             
 
 // **** CAR - MODBUS ****
 Group  eGF_Outdoor_Car                                                              "Auto"                  <selfinfo>                  (lOutdoorOther) ["Sensor"]
-Number:Power               pGF_Outdoor_Car_RequestedPower                           "Beladung [%d W]"       <selfenergy>                (eGF_Outdoor_Car) ["Measurement", "Power"]  { expire="1m,state=-1" }
+Number:Power               pGF_Outdoor_Car_RequestedPower                           "Beladung [%d W]"       <selfenergy>                (eGF_Outdoor_Car) ["Measurement", "Power"]  { expire="1m,state=999999999" }
 Number:Dimensionless       pGF_Outdoor_Car_EssSoc                                   "Ladestand [%d %%]"     <batterylevel>              (eGF_Outdoor_Car,gPersistance_Chart,gPersistance_History) ["Measurement"]
-Number:Energy              pGF_Outdoor_Car_Capacity                                 "Kapazität [%.1f kWh]"  <selfenergy>                (eGF_Outdoor_Car) ["Measurement", "Current"] {unit="Wh"}
-Number:Energy              pGF_Outdoor_Car_EnergySoc                                "Ladestand [%.1f kWh]"  <selfenergy>                (eGF_Outdoor_Car) ["Measurement", "Current"] {unit="Wh"}
+Number:Energy              pGF_Outdoor_Car_Capacity                                 "Kapazität [%.1f kWh]"  <selfenergy>                (eGF_Outdoor_Car) ["Measurement", "Current"]
+Number:Energy              pGF_Outdoor_Car_EnergySoc                                "Ladestand [%.1f kWh]"  <selfenergy>                (eGF_Outdoor_Car) ["Measurement", "Current"]
 Switch                     pGF_Outdoor_Car_IsConnected                              "Angeschlossen"                                     (eGF_Outdoor_Car)
 
 Switch                     pGF_Outdoor_Car_Charge_Control                           "Steuerung"                                         (eGF_Outdoor_Car)
@@ -128,4 +136,5 @@ String pGF_Utilityroom_Electricity_Cached_Inverter_Energy_State     "Status [%.2
 Number:Energy pGF_Utilityroom_Electricity_Expected_Solar_East       "Ertrag Ost [%.2f €/kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State,gPersistence_Forecast) ["Point"]
 Number:Energy pGF_Utilityroom_Electricity_Expected_Solar_South      "Ertrag Süd [%.2f €/kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State,gPersistence_Forecast) ["Point"]
 Number:Energy pGF_Utilityroom_Electricity_Expected_Solar_West       "Ertrag West [%.2f €/kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State,gPersistence_Forecast) ["Point"]
+
 

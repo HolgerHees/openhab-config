@@ -152,7 +152,7 @@ class EnergyCounterSupply:
 class EnergyDailyConsumptionTotalCalculation:
     def execute(self, module, input):
         zaehler_stand_saved = Registry.getItemState("pGF_Utilityroom_Electricity_State_Total_Consumption",scope.DecimalType(0.0)).doubleValue()
-        zaehler_stand_current = round((Registry.getItemState("pGF_Garage_Solar_Inverter_ConsumptionTotalEnergy").intValue() / 1000) + start_electricity_meter_consumption_offset, 3)
+        zaehler_stand_current = round(Registry.getItemState("pGF_Garage_Solar_Inverter_ConsumptionTotalEnergy").intValue() + start_electricity_meter_consumption_offset, 3)
         if zaehler_stand_current < zaehler_stand_saved:
             new_offset = zaehler_stand_saved - ( zaehler_stand_current - start_electricity_meter_consumption_offset)
             self.logger.error("pGF_Utilityroom_Electricity_State_Total_Consumption: Calculation is wrong ('{}' < '{}'). Set 'start_electricity_meter_consumption_offset' to '{}'".format(zaehler_stand_current, zaehler_stand_saved, new_offset ))
@@ -174,7 +174,7 @@ class EnergyDailyConsumptionTotalCalculation:
 class EnergyDailyProductionTotalCalculation:
     def execute(self, module, input):
         zaehler_stand_saved = Registry.getItemState("pGF_Utilityroom_Electricity_State_Total_Production",scope.DecimalType(0.0)).doubleValue()
-        zaehler_stand_current = round((Registry.getItemState("pGF_Garage_Solar_Inverter_ProductionTotalEnergy").intValue() / 1000) + start_electricity_meter_production_offset, 3)
+        zaehler_stand_current = round(Registry.getItemState("pGF_Garage_Solar_Inverter_ProductionTotalEnergy").intValue() + start_electricity_meter_production_offset, 3)
         if zaehler_stand_current < zaehler_stand_saved:
             new_offset = zaehler_stand_saved - ( zaehler_stand_current - start_electricity_meter_production_offset)
             self.logger.error("pGF_Utilityroom_Electricity_State_Total_Production: Calculation is wrong ('{}' < '{}'). Set 'start_electricity_meter_production_offset' to '{}'".format(zaehler_stand_current, zaehler_stand_saved, new_offset ))
@@ -210,7 +210,7 @@ class EnergyDailyProductionChargerCalculation:
         source = input['event'].getItemName()
         total_target, daily_target = self.mapping[source]
         time = Registry.getItem(source).getLastStateChange()
-        value = input['event'].getItemState().intValue() / 1000
+        value = input['event'].getItemState().intValue() / 1000.0
 
         ref_value, ref_time = self.total_value[source]
 
@@ -308,7 +308,7 @@ class EnergyStorageCalculation:
         else:
             energy_soc = Registry.getItemState("pGF_Garage_Solar_Storage_EnergySoc").floatValue()
 
-        Registry.getItem("pGF_Utilityroom_Electricity_State_Battery_Msg").postUpdate(u"{} W ({} % • {:.1f} kWh)".format(power, percent, energy_soc / 1000))
+        Registry.getItem("pGF_Utilityroom_Electricity_State_Battery_Msg").postUpdate(u"{} W ({} % • {:.1f} kWh)".format(power, percent, energy_soc))
 
 @rule
 class EnergyMsg:

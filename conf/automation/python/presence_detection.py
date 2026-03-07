@@ -105,7 +105,6 @@ class DoorCheck:
             Cache.setPossibleArrive(True)
 
             if Cache.getPresenceState() == PresenceHelper.STATE_MAYBE_PRESENT and Registry.getItemState("pGF_Corridor_Lock_State").intValue() == 1:
-                self.logger.error("UNLOCKED CHECK")
                 # Lets wait for 60 seconds to check if e.g. door was unlocked.
                 # Sometimes, if you unlock and open the door for just <10 seconds, the unlock/lock event will not be reported to openhab. It stays on locked
                 self.timer = threading.Timer(60, self._checkLeaving)

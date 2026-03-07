@@ -13,7 +13,7 @@ Switch pOther_Presence_Holger_State             "Holger anwesend" <selfinfo> (eO
 Switch pOther_Presence_Sandra_State             "Sandra anwesend" <selfinfo> (eOther_Presence,gOther_Presence_State) ["Status","Presence"]
 
 // **** GARDEN DOOR ****
-Group  eOutdoor_Streedside_Gardendoor           "Gartentür"       <selfinfo> (lOutdoor_Streedside) ["Gate"]
+Group  eOutdoor_Streedside_Gardendoor           "Gartentür"       <selfinfo> (lOutdoor) ["Gate"] {ia_description="Der Türöffner ist für das Gartentor zur Strasse"}
 Contact pOutdoor_Streedside_Gardendoor_Bell_State                                                              (eOutdoor_Streedside_Gardendoor) ["Status"]                                                                                                  { channel="knx:device:bridge:other:switchBell" }
 DateTime pOutdoor_Streedside_Gardendoor_Bell_Last_Change "Klingel [%1$tH:%1$tM:%1$tS, %1$td.%1$tm]"    <selfbell> (eOutdoor_Streedside_Gardendoor) ["Point"]
 Switch   pOutdoor_Streedside_Gardendoor_Opener_Powered "Türöffner"                                 <selfdoor> (eOutdoor_Streedside_Gardendoor) ["Point"] { channel="knx:device:bridge:other:switchDooropener" }

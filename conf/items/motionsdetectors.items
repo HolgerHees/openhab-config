@@ -15,34 +15,34 @@ Group  eFF_Corridor_Motiondetector                          "Bewegungsmelder" <s
 Contact pFF_Corridor_Motiondetector_State                   "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eFF_Corridor_Motiondetector,gPersistance_History,gSensor_Indoor) ["Alarm"] { channel="knx:device:bridge:motion_indoor:sfFloor" }
 
 // **** OUTDOOR GARAGE STREEDSIDE ****
-Group  eOutdoor_Streedside_Garage_Motiondetector            "Bewegungsmelder" <selfinfo> (lOutdoor_Streedside) ["MotionDetector"] {synonyms="Schuppen"}
+Group  eOutdoor_Streedside_Garage_Motiondetector            "Bewegungsmelder" <selfinfo> (lOutdoor) ["MotionDetector"] {synonyms="Schuppen", ia_description="Der Bewegungsmelder befindet sich im Garten an der Werkstatt zur Strassenseite"}
 Contact pOutdoor_Streedside_Garage_Motiondetector_State     "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eOutdoor_Streedside_Garage_Motiondetector, gSensor_Outdoor) ["Alarm"] { channel="knx:device:bridge:motion_outdoor:garageStreetside" }
 
 // **** OUTDOOR FRONTDOOR ****
-Group  eOutdoor_Streedside_Frontdoor_Motiondetector         "Bewegungsmelder" <selfinfo> (lOutdoor_Streedside) ["MotionDetector"] {synonyms="Haustür"}
+Group  eOutdoor_Streedside_Frontdoor_Motiondetector         "Bewegungsmelder" <selfinfo> (lOutdoor) ["MotionDetector"] {synonyms="Haustür", ia_description="Der Bewegungsmelder befindet sich im Garten an der Haustür"}
 Contact pOutdoor_Streedside_Frontdoor_Motiondetector_State  "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eOutdoor_Streedside_Frontdoor_Motiondetector, gSensor_Outdoor)  ["Alarm"] { channel="knx:device:bridge:motion_outdoor:frontdoor" }
 
 // **** OUTDOOR CARPORT ****
-Group  eOutdoor_Carport_Motiondetector                      "Bewegungsmelder" <selfinfo> (lOutdoor_Carport) ["MotionDetector"]
+Group  eOutdoor_Carport_Motiondetector                      "Bewegungsmelder" <selfinfo> (lOutdoor) ["MotionDetector"] {ia_description="Der Bewegungsmelder befindet sich im Garten am Carport"}
 Contact pOutdoor_Carport_Motiondetector_State               "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eOutdoor_Carport_Motiondetector, gSensor_Outdoor)  ["Alarm"] { channel="knx:device:bridge:motion_outdoor:carport" }
 
 // **** OUTDOOR TERRACE ****
-Group  eOutdoor_Terrace_Motiondetector                      "Bewegungsmelder" <selfinfo> (lOutdoor_Terrace) ["MotionDetector"]
+Group  eOutdoor_Terrace_Motiondetector                      "Bewegungsmelder" <selfinfo> (lOutdoor) ["MotionDetector"] {ia_description="Der Bewegungsmelder befindet sich im Garten an der Terasse" }
 Contact pOutdoor_Terrace_Motiondetector_State1              "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eOutdoor_Terrace_Motiondetector, gSensor_Outdoor) ["Alarm"] { channel="knx:device:bridge:motion_outdoor:terrace1" }
 Contact pOutdoor_Terrace_Motiondetector_State2              "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eOutdoor_Terrace_Motiondetector, gSensor_Outdoor) ["Alarm"] { channel="knx:device:bridge:motion_outdoor:terrace2" }
 
 // **** OUTDOOR GARAGE GARDENSIDE ****
-Group  eOutdoor_Garden_Garage_Motiondetector                "Bewegungsmelder" <selfinfo> (lOutdoor_Garden) ["MotionDetector"] {synonyms="Werkstatt"}
+Group  eOutdoor_Garden_Garage_Motiondetector                "Bewegungsmelder" <selfinfo> (lOutdoor) ["MotionDetector"] {synonyms="Werkstatt", ia_description="Der Bewegungsmelder befindet sich im Garten an der Werkstatt zur Terassenseite"}
 Contact pOutdoor_Garden_Garage_Motiondetector_State         "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eOutdoor_Garden_Garage_Motiondetector, gSensor_Outdoor)  ["Alarm"] { channel="knx:device:bridge:motion_outdoor:garageGardenside" }
 
 // **** OUTDOOR GARDENHOUSE RIGHT ****
-Group  eOutdoor_Toolshed_Right_Motiondetector            "Bewegungsmelder" <selfinfo> (lOutdoor_Toolshed) ["MotionDetector"] {synonyms="Geräteschuppen"}
+Group  eOutdoor_Toolshed_Right_Motiondetector            "Bewegungsmelder" <selfinfo> (lOutdoor) ["MotionDetector"] {synonyms="Geräteschuppen", ia_description="Der Bewegungsmelder befindet sich im Garten am hinterem Schuppen an der rechten Seite"}
 Contact pOutdoor_Toolshed_Right_Motiondetector_State     "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eOutdoor_Toolshed_Right_Motiondetector, gSensor_Outdoor)  ["Alarm"] { channel="knx:device:bridge:motion_outdoor:toolshedRight" }
 
 // **** OUTDOOR GARDENHOUSE BEHIND ****
-//Group  eOutdoor_Toolshed_Behind_Motiondetector            "Bewegungsmelder" <selfinfo> (lOutdoor_Toolshed) ["MotionDetector"] {synonyms="Gartenhaus"}
+//Group  eOutdoor_Toolshed_Behind_Motiondetector            "Bewegungsmelder" <selfinfo> (lOutdoor) ["MotionDetector"] {synonyms="Gartenhaus"}
 //Contact pOutdoor_Toolshed_Behind_Motiondetector_State     "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eOutdoor_Toolshed_Behind_Motiondetector, gSensor_Outdoor)  ["Alarm"] { channel="knx:device:bridge:motion_outdoor:toolshedBehind" }
 
 // **** OUTDOOR GARDENHOUSE LEFT ****
-//Group  eOutdoor_Toolshed_Left_Motiondetector            "Bewegungsmelder" <selfinfo> (lOutdoor_Toolshed) ["MotionDetector"] {synonyms="Gartenhaus"}
+//Group  eOutdoor_Toolshed_Left_Motiondetector            "Bewegungsmelder" <selfinfo> (lOutdoor) ["MotionDetector"] {synonyms="Gartenhaus"}
 //Contact pOutdoor_Toolshed_Left_Motiondetector_State     "Bewegungsmelder [MAP(motion_de.map):%s]" <selfmotion> (eOutdoor_Toolshed_Left_Motiondetector, gSensor_Outdoor)  ["Alarm"] { channel="knx:device:bridge:motion_outdoor:toolshedLeft" }

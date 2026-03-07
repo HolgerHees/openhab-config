@@ -1112,11 +1112,8 @@ sitemap haus label="Main Menu"
                                 Text item=pGF_Garage_Solar_Storage_BattTowerCurrent
                                 Text item=pGF_Garage_Solar_Storage_BattSoh
                                 Text item=pGF_Garage_Solar_Storage_Capacity
-                            }
-                            Frame label="Battery Control" {
-                                Text item=pGF_Garage_Solar_Storage_RequestedPowerLessOrEqual
-                                Text item=pGF_Garage_Solar_Storage_RequestedPowerGreaterOrEqual
-                                Text item=pGF_Garage_Solar_Storage_RequestedPower
+                                Text item=pGF_Garage_Solar_Storage_BattTower1Cycles
+                                Text item=pGF_Garage_Solar_Storage_BattTower2Cycles
                             }
                             Frame label="Batterie Zellen" {
                                 Text item=pGF_Garage_Solar_Storage_MinEssVoltage
@@ -1133,10 +1130,14 @@ sitemap haus label="Main Menu"
                     Frame label="Wechselrichter" {
                         Text item=pGF_Utilityroom_Electricity_State_Message valuecolor=[=="Alles ok"="#6bc305",!="Alles ok"="#d72a2a"]
                         Text item=pGF_Garage_Solar_Inverter_GridEnabled valuecolor=[!="2"="#6bc305",=="2"="#d72a2a"]
-                        Text item=pGF_Garage_Solar_Inverter_FemsVersion
                         Text item=pGF_Garage_Solar_Inverter_InverterAirTemp
                         Text item=pGF_Garage_Solar_Inverter_BmsBoxTemp
-                        Text item=pGF_Garage_Solar_Inverter_LastFeneconUpdate
+                    }
+                    Frame label="Energy Control" {
+                        Text item=pGF_Garage_Solar_Storage_Requested_Power
+                        Text item=pGF_Garage_Solar_Storage_Requested_Max_Power
+                        Text item=pGF_Garage_Solar_Storage_Discharged_Allowed
+                        Text item=pGF_Garage_Solar_Storage_ActivePowerEqual
                     }
                 }
                 Group item=pGF_Utilityroom_Gas_Current_Daily_Consumption label="Gas [%.2f m³]" {

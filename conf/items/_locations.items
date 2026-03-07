@@ -1,38 +1,30 @@
-Group lIndoor           "Haus"       <group>                           ["Indoor"]          { synonyms="drinnen,innen,überall,komplett,alle" }
+Group lIndoor           "Haus"       <group>                           ["House"]        { synonyms="drinnen,innen,überall,komplett,alle" ,ai_gender="feminin", ai_description="Das Haus ist ein Gebäude und befindet sich im forderem Teil des Gartens."}
 
-Group lGroundFloor      "Erdgeschoss"   <groundfloor>   (lIndoor)      ["GroundFloor"]  { synonyms="Untergeschoss" }
-Group lGF_Guesttoilet   "Gäste WC"      <bath>          (lGroundFloor) ["Room"]         { synonyms="Gäste Toilette,Gäste Bad,Gästeklo" }
-Group lGF_Utilityroom   "HWR"           <energy>        (lGroundFloor) ["LaundryRoom"]  { synonyms="Hauswirtschaft" }
-Group lGF_Boxroom       "Abstellkammer" <office>        (lGroundFloor) ["Room"]         { synonyms="Kammer,Vorrat" }
-Group lGF_Kitchen       "Küche"         <kitchen>       (lGroundFloor) ["Kitchen"]
-Group lGF_Livingroom    "Wohnzimmer"    <sofa>          (lGroundFloor) ["LivingRoom"]
-Group lGF_Workroom      "Büro"          <office>        (lGroundFloor) ["Room"]         { synonyms="Bastelzimmer, Gästezimmer" }
-Group lGF_Corridor      "Flur"          <corridor>      (lGroundFloor) ["Corridor"]     { synonyms="unten" }
-Group lGF_Garage        "Werkstatt"     <corridor>      (lGroundFloor) ["Garage"]       { synonyms="Garage, Schuppen" }
+Group lGroundFloor      "Erdgeschoss"   <groundfloor>   (lIndoor)      ["GroundFloor"]  { synonyms="Untergeschoss"                       ,ai_gender="neutrum", ai_description="Das Erdgeschoss ist ein Bereich und befindet sich unten im Haus unter dem Obergeschoss." }
+Group lGF_Guesttoilet   "Gäste WC"      <bath>          (lGroundFloor) ["Room"]         { synonyms="Gäste Toilette,Gäste Bad,Gästeklo"   ,ai_gender="neutrum", ai_description="Das Gäste WC ist ein Raum und befindet sich im Erdgeschoss und ist über den Flur zu erreichen." }
+Group lGF_Utilityroom   "HWR"           <energy>        (lGroundFloor) ["Room"]         { synonyms="Hauswirtschaft"                      ,ai_gender="masculin", ai_description="Der HWR, auch Hauswirtschaftsraum genannt, ist ein Raum und befindet sich im Erdgeschoss und ist über den Flur zu erreichen." }
+Group lGF_Boxroom       "Abstellkammer" <office>        (lGroundFloor) ["Room"]         { synonyms="Kammer,Vorrat"                       ,ai_gender="feminin", ai_description="Die Abstellkammer ist ein Raum und befindet sich im Erdgeschoss und ist über die Küche zu erreichen." }
+Group lGF_Kitchen       "Küche"         <kitchen>       (lGroundFloor) ["Kitchen"]                                                      { ai_gender="feminin", ai_description="Die Küche ist ein Raum und befindet sich im Erdgeschoss und ist über das Wohnzimmer zu erreichen." }
+Group lGF_Livingroom    "Wohnzimmer"    <sofa>          (lGroundFloor) ["LivingRoom"]                                                   { ai_gender="neutrum", ai_description="Das Wohnzimmer ist ein Raum und befindet sich im Erdgeschoss und ist über den Flur zu erreichen." }
+Group lGF_Workroom      "Büro"          <office>        (lGroundFloor) ["Office"]       { synonyms="Bastelzimmer, Gästezimmer"           ,ai_gender="neutrum", ai_description="Das Büro, Bastelzimmer oder auch Holgers Zimmer genannt, ist ein Raum und befindet sich im Erdgeschoss und ist über den Flur zu erreichen." }
+Group lGF_Corridor      "Flur"          <corridor>      (lGroundFloor) ["Corridor"]     { synonyms="unten"                               ,ai_gender="masculin", ai_description="Der untere Flur ist ein Raum und befindet sich im Erdgeschoss und ist Teil des Eingangsbereiches der sich über beide Etagen bzw. Geschosse erstreckt." }
+Group lGF_Garage        "Werkstatt"     <corridor>      (lGroundFloor) ["Room"]         { synonyms="Schuppen"                            ,ai_gender="feminin", ai_description="Die Werkstatt ist ein Raum und befindet sich im Erdgeschoss und ist über den Garten oder durch den Hauswirtschaftsraum zu erreichen." }
 
-Group lIndoorOther      "Sonstiges"     <group>         (lIndoor)       ["Equipment"]
+Group lIndoorOther      "Sonstiges"     <group>         (lIndoor)      ["Room"]                                                         { ai_gender="feminin", ai_description="Sonstiges (Im Haus) ist eine Sammelgruppe welche dem Haus, aber keinem speziellem Raum oder Bereich zugeordnet ist." }
 
-Group lFirstFloor       "Obergeschoss"  <firstfloor>    (lIndoor)      ["FirstFloor"]
-Group lFF_Bathroom      "Badezimmer"    <bath>          (lFirstFloor)  ["Bathroom"]     { synonyms="Bad" }
-Group lFF_Dressingroom  "Ankleide"      <wardrobe>      (lFirstFloor)  ["Room"]
-Group lFF_Bedroom       "Schlafzimmer"  <bedroom>       (lFirstFloor)  ["Bedroom"]
-Group lFF_Fitnessroom   "Sportzimmer"   <boy_2>         (lFirstFloor)  ["Room"]         { synonyms="Sportraum,Sport,Kind 1" }
-Group lFF_Makeuproom    "Schminkzimmer" <girl_3>        (lFirstFloor)  ["Room"]         { synonyms="Trocken,Schmink,Kind 2" }
-Group lFF_Corridor      "Flur"          <corridor>      (lFirstFloor)  ["Corridor"]     { synonyms="oben" }
-Group lFF_Attic         "Dachboden"     <attic>         (lFirstFloor)  ["Attic"]
+Group lFirstFloor       "Obergeschoss"  <firstfloor>    (lIndoor)      ["FirstFloor"]                                                   { ai_gender="neutrum", ai_description="Das Obergeschoss ist ein Bereich und befindet sich oben im Haus über dem Erdgeschoss und unter dem Dachboden." }
+Group lFF_Bathroom      "Badezimmer"    <bath>          (lFirstFloor)  ["Bathroom"]     { synonyms="Bad"                                 ,ai_gender="neutrum", ai_description="Das Badezimmer ist ein Raum und befindet sich im Obergeschoss und ist über den Flur zu erreichen." }
+Group lFF_Dressingroom  "Ankleide"      <wardrobe>      (lFirstFloor)  ["Room"]                                                         { ai_gender="feminin", ai_description="Die Ankleide ist ein Raum und befindet sich im Obergeschoss und ist über das Schlafzimmer zu erreichen." }
+Group lFF_Bedroom       "Schlafzimmer"  <bedroom>       (lFirstFloor)  ["Bedroom"]                                                      { ai_gender="neutrum", ai_description="Das Schlafzimmer ist ein Raum und befindet sich im Obergeschoss und ist über den Flur zu erreichen." }
+Group lFF_Fitnessroom   "Sportzimmer"   <boy_2>         (lFirstFloor)  ["Room"]         { synonyms="Sportraum,Sport,Kind 1"              ,ai_gender="neutrum", ai_description="Das Sportzimmer ist ein Raum und befindet sich im Obergeschoss und ist über den Flur zu erreichen." }
+Group lFF_Makeuproom    "Schminkzimmer" <girl_3>        (lFirstFloor)  ["Room"]         { synonyms="Trocken,Schmink,Kind 2"              ,ai_gender="neutrum", ai_description="Das Schminkzimmer oder auch Sandras Zimmer genannt, ist ein Raum und befindet sich im Obergeschoss und ist über den Flur zu erreichen." }
+Group lFF_Corridor      "Flur"          <corridor>      (lFirstFloor)  ["Corridor"]     { synonyms="oben"                                ,ai_gender="masculin", ai_description="Der obere Flur ist ein Raum und befindet sich im Obergeschoss und ist Teil des Eingangsbereiches der sich über beide Etagen bzw. Geschosse erstreckt." }
+Group lFF_Attic         "Dachboden"     <attic>         (lFirstFloor)  ["Attic"]                                                        { ai_gender="masculin", ai_description="Der Dachboden ist ein Raum und befindet sich oben im Haus über dem Obergeschoss." }
 
-Group lToolshed         "Geräteschuppen" <group>                       ["Building"]     { synonyms="Gartenlaube, Gartenhaus" }
+Group lToolshed         "Geräteschuppen" <group>        (lOutdoor)     ["Shed"]         { synonyms="Gartenlaube, Gartenhaus"             ,ai_gender="masculin", ai_description="Der Geräteschuppen ist ein kleines Gebäude befindet sich im hinterem Teil des Gartens."}
 
-Group lOutdoor          "Garten"      <garden>                         ["Outdoor"]      { synonyms="draussen,aussen" }
-Group lOutdoor_Streedside "Vorgarten"   <garden>        (lOutdoor)     ["Garden"]       { synonyms="Strassenseite, vorne" }
-Group lOutdoor_Carport  "Carport"       <garden>        (lOutdoor)     ["Carport"]
-Group lOutdoor_Garden   "Hintergarten"  <garden>        (lOutdoor)     ["Garden"]       { synonyms="hinten" }
-Group lOutdoor_Terrace  "Terasse" <garden>              (lOutdoor)     ["Terrace"]      { synonyms="hinten" }
-Group lOutdoor_Toolshed "Geräteschuppenbereich" <garden> (lOutdoor)     ["Garden"]
+Group lOutdoor          "Garten"      <garden>                         ["Garden"]       { synonyms="draussen,aussen"                     ,ai_gender="masculin", ai_description="Der Garten ist das Grundstück auf dem das Haus steht." }
 
-Group lOutdoorOther     "Sonstiges"     <group>        (lOutdoor)      ["Equipment"]
+Group lOutdoorOther     "Sonstiges"     <group>         (lOutdoor)     ["Room"]                                                         { ai_gender="masculin", ai_description="Sonstiges (Im Garten) ist eine Sammelgruppe welche dem Garten, aber keinem speziellem Bereich zugeordnet ist." }
 
-Group lOther            "Sonstiges"     <group>                        ["Equipment"]
-
-//Group lTestFloor1     "Erdgeschoss"   <groundfloor>   (lIndoor)      ["GroundFloor"]  { synonyms="testflur" }
-//Group lTestFloor3     "Erdgeschoss"   <groundfloor>   (lTestFloor2)  ["GroundFloor"]  { synonyms="testflur" }
+Group lOther            "Sonstiges"     <group>                        ["Room"]                                                         { ai_gender="masculin", ai_description="Sonstiges (Allgemein) ist eine Sammelgruppe welche weder dem Haus noch dem Garten zugeordnet ist." }
