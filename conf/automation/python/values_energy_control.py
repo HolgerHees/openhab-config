@@ -1,5 +1,6 @@
 import math
 import json
+import threading
 
 from datetime import datetime, timedelta
 
@@ -649,53 +650,57 @@ class StorageControl:
         self.last_active_power = Registry.getItemState("pGF_Garage_Solar_Storage_ActivePowerEqual").intValue()
         self.last_trigger = 0
 
+        self.lock = threading.Lock()
+
     def execute(self, module, input):
-        active_power = Registry.getItemState("pGF_Garage_Solar_Storage_ActivePowerEqual").intValue()
+        with self.lock:
+            #active_power = Registry.getItemState("pGF_Garage_Solar_Storage_ActivePowerEqual").intValue()
+            requested_power = Registry.getItemState("pGF_Garage_Solar_Storage_Requested_Power").intValue()
+            requested_max_power = Registry.getItemState("pGF_Garage_Solar_Storage_Requested_Max_Power").intValue()
+            is_discharging_allowed = Registry.getItemState("pGF_Garage_Solar_Storage_Discharged_Allowed") == scope.ON
 
-        requested_power = Registry.getItemState("pGF_Garage_Solar_Storage_Requested_Power").intValue()
-        requested_max_power = Registry.getItemState("pGF_Garage_Solar_Storage_Requested_Max_Power").intValue()
-        is_discharging_allowed = Registry.getItemState("pGF_Garage_Solar_Storage_Discharged_Allowed") == scope.ON
+            trigger_msg = None
 
-        trigger_msg = None
+            if requested_power == REST_API_NULL_VALUE and requested_max_power == REST_API_NULL_VALUE and is_discharging_allowed:
+                if self.last_active_power != REST_API_NULL_VALUE:
+                    last_active_power_msg = self.last_active_power if self.last_active_power != REST_API_NULL_VALUE else "off"
 
-        if requested_power == REST_API_NULL_VALUE and requested_max_power == REST_API_NULL_VALUE and is_discharging_allowed:
-            if active_power != REST_API_NULL_VALUE:
-                last_active_power_msg = self.last_active_power if self.last_active_power != REST_API_NULL_VALUE else "off"
+                    trigger_msg = "{} => off • Nothing requested".format(last_active_power_msg)
+                    Registry.getItem("pGF_Garage_Solar_Storage_ActivePowerEqual").sendCommand(REST_API_NULL_VALUE)
 
-                trigger_msg = "{} => off • Nothing requested".format(last_active_power_msg)
-                Registry.getItem("pGF_Garage_Solar_Storage_ActivePowerEqual").sendCommand(REST_API_NULL_VALUE)
-        else:
-            production_power = Registry.getItemState("pGF_Garage_Solar_Inverter_ProductionActivePower").intValue()
-            consumption_power = Registry.getItemState("pGF_Garage_Solar_Inverter_ConsumptionActivePower").intValue()
+                    self.last_active_power = REST_API_NULL_VALUE
+            else:
+                production_power = Registry.getItemState("pGF_Garage_Solar_Inverter_ProductionActivePower").intValue()
+                consumption_power = Registry.getItemState("pGF_Garage_Solar_Inverter_ConsumptionActivePower").intValue()
 
-            _active_power = REST_API_NULL_VALUE
+                _active_power = REST_API_NULL_VALUE
 
-            # Request Fixed Charging
-            if requested_power != REST_API_NULL_VALUE:
-                _active_power = production_power - requested_power
-            # Prevent discharging
-            elif not is_discharging_allowed and consumption_power > production_power:
-                _active_power = production_power
-            # Limit Charging
-            elif requested_max_power != REST_API_NULL_VALUE and production_power - consumption_power > requested_max_power:
-                _active_power = production_power - requested_max_power
+                # Request Fixed Charging
+                if requested_power != REST_API_NULL_VALUE:
+                    _active_power = production_power - requested_power
+                # Prevent discharging
+                elif not is_discharging_allowed and consumption_power > production_power:
+                    _active_power = production_power
+                # Limit Charging
+                elif requested_max_power != REST_API_NULL_VALUE and production_power - consumption_power > requested_max_power:
+                    _active_power = production_power - requested_max_power
 
-            now = datetime.now().astimezone().timestamp()
+                now = datetime.now().astimezone().timestamp()
 
-            # trigger on changes or latest after 20 seconds of inactivity. This can result in an interval of 49 seconds. (30 seconds + 19 seconds)
-            if self.last_active_power != _active_power or now - self.last_trigger > 20:
-                last_active_power_msg = self.last_active_power if self.last_active_power != REST_API_NULL_VALUE else "off"
-                active_power_msg = _active_power if _active_power != REST_API_NULL_VALUE else "off"
-                requested_power_msg = requested_power if requested_power != REST_API_NULL_VALUE else "off"
-                requested_max_power_msg = requested_max_power if requested_max_power != REST_API_NULL_VALUE else "off"
+                # trigger on changes or latest after 20 seconds of inactivity. This can result in an interval of 49 seconds. (30 seconds + 19 seconds)
+                if self.last_active_power != _active_power or (_active_power != REST_API_NULL_VALUE and now - self.last_trigger > 20):
+                    last_active_power_msg = self.last_active_power if self.last_active_power != REST_API_NULL_VALUE else "off"
+                    active_power_msg = _active_power if _active_power != REST_API_NULL_VALUE else "off"
+                    requested_power_msg = requested_power if requested_power != REST_API_NULL_VALUE else "off"
+                    requested_max_power_msg = requested_max_power if requested_max_power != REST_API_NULL_VALUE else "off"
 
-                trigger_msg = "{} => {} • Requested power: {} (max {}), Discharging allowed: {}, Production: {}, Consumption: {}".format(last_active_power_msg, active_power_msg, requested_power_msg, requested_max_power_msg, is_discharging_allowed, production_power, consumption_power)
-                Registry.getItem("pGF_Garage_Solar_Storage_ActivePowerEqual").sendCommand(_active_power)
+                    trigger_msg = "{} => {} • Requested power: {} (max {}), Discharging allowed: {}, Production: {}, Consumption: {}".format(last_active_power_msg, active_power_msg, requested_power_msg, requested_max_power_msg, is_discharging_allowed, production_power, consumption_power)
+                    Registry.getItem("pGF_Garage_Solar_Storage_ActivePowerEqual").sendCommand(_active_power)
 
-                self.last_active_power = _active_power
-                self.last_trigger = now
+                    self.last_active_power = _active_power
+                    self.last_trigger = now
 
-        if trigger_msg is not None:
-            self.logger.info("--------: >>>")
-            self.logger.info("Control : 🔋 Active Power: {}".format(trigger_msg))
-            self.logger.info("--------: <<<")
+            if trigger_msg is not None:
+                self.logger.info("--------: >>>")
+                self.logger.info("Control : 🔋 Active Power: {}".format(trigger_msg))
+                self.logger.info("--------: <<<")
