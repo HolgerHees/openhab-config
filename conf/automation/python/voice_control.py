@@ -19,7 +19,7 @@ import scope
 class Main:
     def __init__(self):
         self.processor = CommandProcessor(scope.ir)
-        self.test(logger, scope.ir)
+        #self.test(logger, scope.ir)
 
     def execute(self, module, input):
         if input['event'].getType() == "TimerEvent":

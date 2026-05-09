@@ -330,7 +330,6 @@ class PerceivedTemperature:
         speed = item_value if item_name == "pOutdoor_WeatherStation_Wind_Speed_15Min" else Registry.getItemState("pOutdoor_WeatherStation_Wind_Speed_15Min").doubleValue()
         humidity = item_value if item_name == "pOutdoor_WeatherStation_Humidity" else Registry.getItemState("pOutdoor_WeatherStation_Humidity").doubleValue()
         solar = item_value if item_name == "pOutdoor_WeatherStation_Solar_Power" else Registry.getItemState("pOutdoor_WeatherStation_Solar_Power").doubleValue()
-        provider = Registry.getItemState("pOutdoor_WeatherService_Temperature_Perceived").doubleValue()
 
         wind_chill_temp = self.getWindchill(temp, speed) if temp <= 10 and speed >= 5 else temp
         head_index_temp = self.getHeatindex(temp, humidity) if temp >= 22 else temp
@@ -341,7 +340,7 @@ class PerceivedTemperature:
         radiation_factor = 1.2 if solar > 800 else 1.0 + ( solar * 0.2 / 800 )
 
         old_calculated = ( temp + wind_chill_diff + head_index_diff ) * radiation_factor
-        #self.logger.info("Current: {}, Provider: {}, Calculated: {}, Windchill: {}, Heatindex: {}, Factor: {}".format(temp, provider, calculated, wind_chill_diff, head_index_diff, radiation_factor))
+        #self.logger.info("Current: {}, Calculated: {}, Windchill: {}, Heatindex: {}, Factor: {}".format(temp, calculated, wind_chill_diff, head_index_diff, radiation_factor))
         #postUpdateIfDifferent("pOutdoor_WeatherStation_Temperature_Perceived", calculated)
         #self.logger.info("=>: {}".format(calculated))
 
@@ -355,7 +354,7 @@ class PerceivedTemperature:
         calculated1 = Ta + (0.348 * e) - (0.7 * ws) + ( 0.7 * ( Q / ( ws + 10 ) )) - 4.25
         calculated2 = Ta + (0.348 * e) - (0.7 * ws) - 4.25
 
-        self.logger.info("TEMP: {}°C, HUMIDITY: {}%, SPEED: {}m/s, Solar: {}w/m², CALCULATED 1: {}°C, CALCULATED 2: {}°C, PROVIDER: {}°C, OLD_CALCULATED: {}°C".format(temp, humidity, ws, solar, calculated1, calculated2, provider, old_calculated))
+        #self.logger.info("TEMP: {}°C, HUMIDITY: {}%, SPEED: {}m/s, Solar: {}w/m², CALCULATED 1: {}°C, CALCULATED 2: {}°C,  OLD_CALCULATED: {}°C".format(temp, humidity, ws, solar, calculated1, calculated2, old_calculated))
 
         Registry.getItem("pOutdoor_WeatherStation_Temperature_Perceived").postUpdateIfDifferent(calculated2)
 

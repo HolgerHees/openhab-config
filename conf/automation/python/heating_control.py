@@ -15,7 +15,7 @@ from datetime import datetime, timedelta
 import scope
 
 
-#postUpdate("pGF_Utilityroom_Heating_Demand",scope.OFF)
+#postUpdate("pGF_Utilityroom_Heatpump_HK2_Demand",scope.OFF)
 #postUpdate("pGF_Guesttoilet_Heating_Demand",scope.OFF)
 #postUpdate("pGF_Livingroom_Heating_Demand",scope.OFF)
 #postUpdate("pGF_Workroom_Heating_Demand",scope.OFF)
@@ -31,14 +31,11 @@ Heating.forecast_temperature_item_name = "pOutdoor_WeatherService_Temperature"
 
 Heating.current_temperature_garden_item_name = WeatherHelper.getTemperatureItemName()
 
-Heating.ventilation_filter_runtime_item_name = "pGF_Utilityroom_Ventilation_Filter_Runtime"
-
 Heating.ventilation_level_item_name = "pGF_Utilityroom_Ventilation_Outgoing"
 Heating.ventilation_outgoing_temperature_item_name = "pGF_Utilityroom_Ventilation_Outdoor_Outgoing_Temperature"
 Heating.ventilation_incomming_temperature_item_name = "pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature"
 
-Heating.heatingPower = "pGF_Utilityroom_Heating_Power"
-Heating.heating_circuit_pump_speed_item_name = "pGF_Utilityroom_Heating_Circuit_Pump_Speed"
+Heating.heating_state_item_name = "pGF_Utilityroom_Heatpump_HK2_State"
 Heating.heating_temperature_pipe_out_item_name = "pGF_Utilityroom_Heating_Temperature_Pipe_Out"
 Heating.heating_temperature_pipe_in_item_name = "pGF_Utilityroom_Heating_Temperature_Pipe_In"
 
@@ -46,7 +43,14 @@ Heating.heating_mode_item_name = "pOther_Manual_State_Heating"
 Heating.holiday_status_item_name = "pOther_Manual_State_Holiday"
 Heating.precence_status_item_name = "pOther_Presence_State"
 
-Heating.forced_states_item_name = "pGF_Utilityroom_Heating_Force_States"
+Heating.temperature_sensor_item_name_placeholder = u"p{}_Air_Sensor_Temperature_Value"
+Heating.temperature_target_item_name_placeholder = u"p{}_Temperature_Desired"
+
+Heating.heating_hk_item_name_placeholder = u"p{}_Heating_HK"
+Heating.heating_circuit_item_name_placeholder = u"p{}_Heating_Circuit"
+Heating.heating_buffer_item_name_placeholder = u"p{}_Heating_Charged"
+Heating.heating_demand_item_name_placeholder = u"p{}_Heating_Demand"
+Heating.heating_target_temperature_item_name_placeholder = u"p{}_Heating_Temperature_Target"
 
 _ground_floor = ThermalStorageType( capacity=164.0, uValue=0.320, uOffset=0.08, factor=0.60 )
 _ground_ceiling = ThermalStorageType( capacity=308.0, uValue=0.610, uOffset=0.1, factor=1.0 )
@@ -103,7 +107,7 @@ rooms = [
     Room(
         name='lGF_Guesttoilet',
         additionalRadiator=True,
-        heatingVolume=29.63,
+        heatingVolume=35.47, # these and all following volume flow rates are based on calculations of the hydraulic balancing calculation.
         volume=4.92445 * _first_floor_height,
         walls=[
             Wall(direction='floor', area=6.29125, type=_ground_floor),
@@ -148,7 +152,7 @@ rooms = [
     ),
     Room(
         name='lGF_Livingroom',
-        heatingVolume=84.20 + 84.20 + 49.90,
+        heatingVolume=100.79 + 100.79 + 59.73,
         volume=37.9957 * _first_floor_height + 10.7406 * _first_floor_height,
         walls=[
             # Kitchen
@@ -180,7 +184,7 @@ rooms = [
     ),
     Room(
         name='lGF_Workroom',
-        heatingVolume=60.19,
+        heatingVolume=72.05,
         volume=11.53445 * _first_floor_height,
         walls=[
             Wall(direction='floor', area=13.5891, type=_ground_floor),
@@ -196,7 +200,7 @@ rooms = [
     ),
     Room(
         name='lGF_Corridor',
-        heatingVolume=40.93,
+        heatingVolume=48.99,
         volume=11.3076 * _first_floor_height,
         walls=[
             Wall(direction='floor', area=12.9843, type=_ground_floor),
@@ -217,7 +221,7 @@ rooms = [
     ),
     Room(
         name='lFF_Corridor',
-        heatingVolume=38.45,
+        heatingVolume=46.02,
         volume=18.1926 * _second_floor_height - 4.3968,
         walls=[
             Wall(direction='floor', area=4.61578125, type=_first_floor, bound="lGF_Livingroom"),
@@ -241,7 +245,7 @@ rooms = [
     ),
     Room(
         name='lFF_Fitnessroom',
-        heatingVolume=39.61,
+        heatingVolume=47.07,
         volume=13.036325 * _second_floor_height - 4.6016,
         walls=[
             Wall(direction='floor', area=4.0, type=_first_floor, bound="lGF_Livingroom"),
@@ -259,7 +263,7 @@ rooms = [
     ),
     Room(
         name='lFF_Makeuproom',
-        heatingVolume=41.32,
+        heatingVolume=47.42,
         volume=14.99575 * _second_floor_height - 4.6016,
         walls=[
             Wall(direction='floor', area=17.07625, type=_first_floor, bound="lGF_Livingroom"),
@@ -277,7 +281,7 @@ rooms = [
     ),
     Room(
         name='lFF_Bedroom',
-        heatingVolume=35.87 + 39.33,
+        heatingVolume=42.94 + 47.07,
         volume=(14.3929 * _second_floor_height) + (14.88435 * _second_floor_height - 4.6016),
         walls=[
             # Bedroom
@@ -324,7 +328,7 @@ rooms = [
     Room(
         name='lFF_Bathroom',
         additionalRadiator=True,
-        heatingVolume=35.31,
+        heatingVolume=42.26,
         volume=12.51273 * _second_floor_height - 2.5884,
         walls=[
             Wall(direction='floor', area=5.482375, type=_first_floor, bound="lGF_Guesttoilet"),
@@ -360,38 +364,9 @@ rooms = [
 
 Heating.init(rooms)
 
-controllableRooms = {
-  'lGF_Livingroom': True,
-  'lGF_Corridor': True,
-  'lGF_Workroom': True,
-  'lGF_Guesttoilet': True,
-  'lFF_Corridor': True,
-  'lFF_Fitnessroom': True,
-  'lFF_Makeuproom': True,
-  'lFF_Bedroom': True,
-  'lFF_Bathroom': True
-}
-
 @rule(
     triggers = [
-        GenericCronTrigger("0 */5 * * * ?"),
-        ItemStateChangeTrigger("pGF_Utilityroom_Heating_Common_Fault")
-    ]
-)
-class ErrorMessage:
-    def execute(self, module, input):
-        if input['event'].getType() != "TimerEvent":
-            if Registry.getItem("pGF_Utilityroom_Heating_Common_Fault").getLastStateUpdate() < datetime.now().astimezone() - timedelta(minutes=10):
-                Registry.getItem("eOther_Error_Heating_Message").postUpdateIfDifferent("Keine Updates mehr seit mehr als 10 Minuten")
-                return
-        elif Registry.getItemState("pGF_Utilityroom_Heating_Common_Fault").intValue() > 0:
-            Registry.getItem("eOther_Error_Heating_Message").postUpdateIfDifferent(Transformation.transform("MAP", "heating_state_de.map", Registry.getItemState("pGF_Utilityroom_Heating_Common_Fault").toString() ))
-            return
-
-        Registry.getItem("eOther_Error_Heating_Message").postUpdateIfDifferent("")
-
-@rule(
-    triggers = [
+        # refresh heating ventile twice per week
         #GenericCronTrigger("*/15 * * * * ?"),
         GenericCronTrigger("0 */10 1 ? * MON,FRI"),
         GenericCronTrigger("0 0 2 ? * MON,FRI")
@@ -400,33 +375,30 @@ class ErrorMessage:
 class Ventile:
     maintenanceMode = {}
 
-    # refresh heating ventile twice per week
-    def execute(self, module, input):
-        # **** DEBUG ****
-        #for room in filter( lambda room: room.getHeatingVolume() != None and room.getName() in controllableRooms,Heating.getRooms()):
-        #    circuiteItem = Heating.getHeatingCircuitItemName(room)
-        #    self.logger.info(circuiteItem + " " + str(Registry.getItem(circuiteItem).getLastStateChange()))
-        # **** DEBUG ****
+    def checkCircuite(self, now, ciruiteName):
+        circuiteItem = Registry.getItem(ciruiteName)
+        if now.hour == 2:
+            if ciruiteName not in Ventile.maintenanceMode:
+                return
+            circuiteItem.sendCommand(scope.ON if circuiteItem.getState() == scope.OFF else scope.OFF)
+            del Ventile.maintenanceMode[ciruiteName]
+        elif circuiteItem.getLastStateChange() is None or circuiteItem.getLastStateChange() < now - timedelta(hours=24):
+            circuiteItem.sendCommand(scope.ON if circuiteItem.getState() == scope.OFF else scope.OFF)
+            Ventile.maintenanceMode[ciruiteName] = True
 
+    def execute(self, module, input):
         now = datetime.now().astimezone()
-        for room in filter( lambda room: room.getHeatingVolume() != None and room.getName() in controllableRooms,Heating.getRooms()):
-            circuiteItemName = Heating.getHeatingCircuitItemName(room)
-            circuiteItem = Registry.getItem(circuiteItemName)
-            if now.hour == 2:
-                if room not in Ventile.maintenanceMode:
-                    continue
-                #self.logger.info("STOP " + room.getName() + " " + str(scope.ON if circuiteItem.getState() == scope.OFF else scope.OFF))
-                circuiteItem.sendCommand(scope.ON if circuiteItem.getState() == scope.OFF else scope.OFF)
-                del Ventile.maintenanceMode[room]
-            elif circuiteItem.getLastStateChange() is None or circuiteItem.getLastStateChange() < now - timedelta(hours=24):
-                #self.logger.info("START " + room.getName() + " " + str(scope.ON if circuiteItem.getState() == scope.OFF else scope.OFF))
-                circuiteItem.sendCommand(scope.ON if circuiteItem.getState() == scope.OFF else scope.OFF)
-                Ventile.maintenanceMode[room] = True
+        for room in filter( lambda room: room.getHeatingVolume() != None,Heating.getRooms()):
+            self.checkCircuite(now, Heating.getHeatingCircuitItemName(room))
+            if room.hasAdditionalRadiator():
+                self.checkCircuite(now, Heating.getHeatingHKItemName(room))
 
 @rule(
     triggers = [
-        ItemStateChangeTrigger("pGF_Utilityroom_Heating_Auto_Mode"),
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_Auto_Mode"),
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_HK2_State"),
         GenericCronTrigger("15 * * * * ?")
+#        GenericCronTrigger("*/15 * * * * ?")
     ]
 )
 class Main:
@@ -436,159 +408,172 @@ class Main:
 
         #self.test()
 
+        #self.time = datetime.now().astimezone().replace(hour=5, minute=30, second=0, microsecond=0)
+        #Registry.getItem("pGF_Utilityroom_Heatpump_HK2_Demand").postUpdate(scope.OFF)
+
     def execute(self, module, input):
         self.logger.info(u"--------: >>>" )
 
-        if input['event'].getType() != "TimerEvent" and input['event'].getItemName() == 'pGF_Utilityroom_Heating_Auto_Mode':
+        if input['event'].getType() != "TimerEvent" and input['event'].getItemName() == 'pGF_Utilityroom_Heatpump_Auto_Mode':
             self.active_heating_operating_mode = -1
             self.active_reduced_time_in_minutes = -1
 
         now = datetime.now().astimezone()
-        auto_mode_enabled = Registry.getItemState("pGF_Utilityroom_Heating_Auto_Mode").intValue() == 1
+        auto_mode_enabled = Registry.getItemState("pGF_Utilityroom_Heatpump_Auto_Mode").intValue() == 1
+        heatpump_is_sleeping = Registry.getItemState("pGF_Utilityroom_Heatpump_S_Systembetriebsart").intValue() == 3
+        #current_heating_reduced = Registry.getItemState("pGF_Utilityroom_Heatpump_HK2_Betriebsart").intValue() == 3
+        current_heating_active = Registry.getItemState("pGF_Utilityroom_Heatpump_HK2_State") == scope.ON
+        current_heating_demand = Registry.getItemState("pGF_Utilityroom_Heatpump_HK2_Demand")
 
-        current_operating_mode_change = Registry.getItem("pGF_Utilityroom_Heating_Operating_Mode").getLastStateChange()
-        current_operating_mode = Registry.getItemState("pGF_Utilityroom_Heating_Operating_Mode").intValue()
-
-        current_heating_demand = Registry.getItemState("pGF_Utilityroom_Heating_Demand")
-
-        heating = Heating(self.logger)
+        heating = Heating(self.logger, datetime.now().astimezone() ) #self.time )
 
         messured_radiation_short_term = WeatherHelper.getSolarPowerStableItemState(10).doubleValue()
         messured_radiation_long_term = WeatherHelper.getSolarPowerStableItemState(30).doubleValue()
         messured_light_level_short_term = WeatherHelper.getLightLevelStableItemState(30).doubleValue()
         messured_light_level_long_term = WeatherHelper.getLightLevelStableItemState(60).doubleValue()
 
-        cr, cr4, cr8, hhs = heating.calculate(current_heating_demand == scope.ON, messured_radiation_short_term)
+        cr, cr4, cr8 = heating.calculate(heatpump_is_sleeping, current_heating_demand == scope.ON, messured_radiation_short_term)
 
         # **** DEBUG ****
         heating.logCoolingAndRadiations("FC8     ", cr8)
         heating.logCoolingAndRadiations("FC4     ", cr4)
         heating.logCoolingAndRadiations("Current ", cr, messured_radiation_long_term, messured_light_level_long_term)
 
-        heating.logHeatingStates(cr, hhs )
+        heating.logHeatingStates(cr)
+
+        #Registry.getItem("pGF_Utilityroom_Heatpump_HK2_Demand").postUpdate(scope.ON)
+        #self.time = self.time + timedelta(minutes=1)
+        #print(self.time)
+        #return
+
         # ***************
 
         if auto_mode_enabled:
-            heating_requested = hhs.isHeatingRequested()
-
-            # *** CHECK OPEN WINDOWS AND MIN HEATING VOLUME ***
-            disabled_heating_demand_count = 0
-            requested_possible_heating_volume = 0.0
-            for room in filter( lambda room: room.getHeatingVolume() != None,Heating.getRooms()):
-
-                rs = cr.getRoomState(room.getName())
-                rhs = hhs.getHeatingState(room.getName())
-
-                # *** CHECKED HEATING DEMAND ***
-                if rhs.hasLongOpenWindow():
-                    disabled_heating_demand_count = disabled_heating_demand_count + 1
-
-                if rhs.getHeatingDemandTime() != None and rhs.getHeatingDemandTime() > 0.0:
-                    requested_possible_heating_volume = requested_possible_heating_volume + rs.getPossibleHeatingVolume()
-
-            if heating_requested:
-                # *** FORCED HEATING OFF ***
-                if disabled_heating_demand_count >= 3:
-                    heating_requested = False
-                    self.logger.info(u"        : ---")
-                    self.logger.info(u"        : Heating OFF • too many open windows")
-
-                # *** FORCED HEATING OFF IF ONLY 20%***
-                if requested_possible_heating_volume < Heating.total_heating_volume * 0.2:
-                    heating_requested = False
-                    activeHeatingVolume = round(requested_possible_heating_volume / 1000.0,3)
-                    possibleHeatingVolume = round(Heating.total_heating_volume / 1000.0,3)
-                    self.logger.info(u"        : ---")
-                    self.logger.info(u"        : Heating OFF • only {}m² of {}m² active".format(activeHeatingVolume,possibleHeatingVolume))
-                # *************************************************
-
-
-            # *** PERSIST AND CIRCUITS ************************
-            # forced open circuits are needed during burner startup phase to avoid burner start/stops
-            forced_open_circuit_on_start = ( # nur WW or Reduziert
-                                         # Forced circuits should stay open when burner is inactive
-                                         current_operating_mode != 2
-                                         or
-                                         # Heizen mit WW
-                                         # Forced circuits should stay open until burner is active for 5 min.
-                                         (current_operating_mode == 2 and now - timedelta(minutes=5) < current_operating_mode_change)
-                                       )
+            # *** CHECK OPEN WINDOWS AND NIGHT MODE ***
             longest_runetime = 0
-            last_circuit_opened_at = None
+            requested_possible_heating_volume = 0.0
+            night_mode_possible = False
             for room in filter( lambda room: room.getHeatingVolume() != None,Heating.getRooms()):
-
                 rs = cr.getRoomState(room.getName())
-                rhs = hhs.getHeatingState(room.getName())
+                hs = rs.getHeatingState()
 
-                # *** PERSIST HEATING CHARGE LEVEL ***
-                total_charge_level = rs.getChargedBuffer()
-                Registry.getItem(Heating.getHeatingBufferItemName(room)).postUpdateIfDifferent(total_charge_level)
+                if rs.getNightMode():
+                    night_mode_possible = True
 
-                # *** PERSIST HEATING TARGET TEMPERATURE ***
-                Registry.getItem(Heating.getHeatingTargetTemperatureItemName(room)).postUpdateIfDifferent(rhs.getHeatingTargetTemperature() )
+                if hs.getDemandTime() != None and hs.getDemandTime() > 0.0 and not hs.hasLongOpenWindow():
+                    requested_possible_heating_volume = requested_possible_heating_volume + rs.getPossibleHeatingVolume()
+                    if hs.getDemandTime() > longest_runetime:
+                        longest_runetime = hs.getDemandTime()
 
-                if heating_requested and rhs.getHeatingDemandTime() > longest_runetime:
-                    longest_runetime = rhs.getHeatingDemandTime()
+            # *** FORCED HEATING OFF IF ONLY 20% AND NIGHT MODE ***
+            last_circuit_opened_at = None
+            if heatpump_is_sleeping and requested_possible_heating_volume > 0 and requested_possible_heating_volume < Heating.total_heating_volume * 0.2:
+                activeHeatingVolume = round(requested_possible_heating_volume / 1000.0,3)
+                possibleHeatingVolume = round(Heating.total_heating_volume / 1000.0,3)
+                self.logger.info(u"        : ---")
+                self.logger.info(u"        : Heating OFF • only {}m² of {}m² active".format(activeHeatingVolume,possibleHeatingVolume))
+                requested_possible_heating_volume = longest_runetime = 0
+            else:
+                for room in filter( lambda room: room.getHeatingVolume() != None,Heating.getRooms()):
+                    rs = cr.getRoomState(room.getName())
+                    hs = rs.getHeatingState()
 
-                # *** PERSIST HEATING DEMAND ***
-                if heating_requested and (rhs.getHeatingDemandTime() > 0 or room.getName() not in controllableRooms):
-                    Registry.getItem(Heating.getHeatingDemandItemName(room)).postUpdateIfDifferent(scope.ON)
-                else:
-                    Registry.getItem(Heating.getHeatingDemandItemName(room)).postUpdateIfDifferent(scope.OFF)
+                    room_heating_demand = hs.getDemandTime() > 0 and not hs.hasLongOpenWindow()
 
-                # *** CONTROL CIRCUITS AND HK ***
-                if room.getName() in controllableRooms and room not in Ventile.maintenanceMode:
+                    # *** PERSIST HEATING CHARGE LEVEL ***
+                    Registry.getItem(Heating.getHeatingBufferItemName(room)).postUpdateIfDifferent(rs.getHeatingChargedBuffer())
+
+                    # *** PERSIST HEATING TARGET TEMPERATURE ***
+                    Registry.getItem(Heating.getHeatingTargetTemperatureItemName(room)).postUpdateIfDifferent(rs.getHeatingTargetTemperature() )
+
+                    # *** PERSIST HEATING DEMAND ***
+                    Registry.getItem(Heating.getHeatingDemandItemName(room)).postUpdateIfDifferent(scope.ON if room_heating_demand else scope.OFF)
+
+                    # *** CONTROL CIRCUITS AND HK ***
                     circuit_item = Heating.getHeatingCircuitItemName(room)
-                    if heating_requested and ( rhs.getHeatingDemandTime() > 0 or forced_open_circuit_on_start ):
-                        #self.logger.info("ON")
-                        if Registry.getItem(circuit_item).sendCommandIfDifferent(scope.ON):
-                            circuit_last_change = now
-                        else:
-                            circuit_last_change = Registry.getItem(circuit_item).getLastStateChange()
+                    if circuit_item not in Ventile.maintenanceMode:
+                        if room_heating_demand:
+                            #self.logger.info("ON")
+                            if Registry.getItem(circuit_item).sendCommandIfDifferent(scope.ON):
+                                circuit_last_change = now
+                            else:
+                                circuit_last_change = Registry.getItem(circuit_item).getLastStateChange()
 
-                        if last_circuit_opened_at == None or last_circuit_opened_at < circuit_last_change:
-                            last_circuit_opened_at = circuit_last_change
-                    else:
-                        #self.logger.info("OFF")
-                        Registry.getItem(circuit_item).sendCommandIfDifferent(scope.OFF)
-
-                    # wall radiator
-                    if room.hasAdditionalRadiator():
-                        # additional radiator should only be enabled in case of CF heating
-                        if heating_requested and ( rhs.getForcedInfo() == 'CF' or forced_open_circuit_on_start ):
-                            Registry.getItem(Heating.getHeatingHKItemName(room)).sendCommandIfDifferent(scope.ON)
+                            if last_circuit_opened_at == None or last_circuit_opened_at < circuit_last_change:
+                                last_circuit_opened_at = circuit_last_change
                         else:
-                            Registry.getItem(Heating.getHeatingHKItemName(room)).sendCommandIfDifferent(scope.OFF)
+                            Registry.getItem(circuit_item).sendCommandIfDifferent(scope.OFF)
+
+                    if room.hasAdditionalRadiator() and hs.getForcedInfo() == 'CF':
+                        circuit_item = Heating.getHeatingHKItemName(room)
+                        if circuit_item not in Ventile.maintenanceMode:
+                            Registry.getItem(circuit_item).sendCommandIfDifferent(scope.ON if room_heating_demand else scope.OFF)
             # *************************************************
 
             self.logger.info(u"        : ---" )
 
             # a heating ciruit was opened less then 5 minutes ago.
             # delay heating request to give circuit some time to open
-            if current_heating_demand == scope.OFF and last_circuit_opened_at != None and now - timedelta(minutes=5) < last_circuit_opened_at:
+            if heatpump_is_sleeping and last_circuit_opened_at != None and now - timedelta(minutes=5) < last_circuit_opened_at:
                 #self.logger.info(u"{}".format(last_circuit_opened_at))
                 opened_before_in_minutes = int((now - last_circuit_opened_at).total_seconds() / 60)
                 self.logger.info(u"Demand  : DELAYED • circuit was opened {} min. ago".format(opened_before_in_minutes))
+                volume = 0
             else:
+                heating_requested = requested_possible_heating_volume > 0
                 heating_demand = scope.ON if heating_requested else scope.OFF
-                Registry.getItem("pGF_Utilityroom_Heating_Demand").postUpdateIfDifferent(heating_demand)
+                Registry.getItem("pGF_Utilityroom_Heatpump_HK2_Demand").postUpdateIfDifferent(heating_demand)
 
-                endMsg = u" • {} min. to go".format(Heating.visualizeHeatingDemandTime(longest_runetime)) if longest_runetime > 0 else u""
-                last_heating_demand_change = Registry.getItem("pGF_Utilityroom_Heating_Demand").getLastStateUpdate() # can be "getLastStateUpdate" datetime, because it is changed only from heating rule
+                last_heating_demand_change = Registry.getItem("pGF_Utilityroom_Heatpump_S_Systembetriebsart" if heatpump_is_sleeping else "pGF_Utilityroom_Heatpump_HK2_Demand").getLastStateChange() # can be "getLastStateUpdate" datetime, because it is changed only from heating rule
                 last_change_before_in_minutes = int((now - last_heating_demand_change).total_seconds() / 60)
-                last_heating_change_formatted = last_heating_demand_change.strftime("%H:%M")
-                last_change_before_formatted = last_change_before_in_minutes if last_change_before_in_minutes < 60 else '{:02d}:{:02d}'.format(*divmod(last_change_before_in_minutes, 60));
-                self.logger.info(u"Demand  : {} since {} • {} min. ago{}".format(heating_demand, last_heating_change_formatted, last_change_before_formatted,endMsg) )
 
-                self.controlHeating(now,current_operating_mode,current_operating_mode_change,heating_requested)
+                if last_change_before_in_minutes < 60 * 24:
+                    last_heating_change_formatted = last_heating_demand_change.strftime("%H:%M")
+
+                    hours, minutes = divmod(last_change_before_in_minutes, 60)
+                    last_change_before_formatted = "{} hours and {} minutes".format(hours, minutes)
+                else:
+                    last_heating_change_formatted = last_heating_demand_change.strftime("%d.%m. %H:%M")
+
+                    days, minutes = divmod(last_change_before_in_minutes, 60 * 24)
+                    hours, minutes = divmod(minutes, 60)
+                    last_change_before_formatted = "{} days and {} hours".format(days, hours)
+
+                if heatpump_is_sleeping and not heating_requested:
+                    self.logger.info(u"Demand  : Summer mode since {} ago ({})".format(last_change_before_formatted, last_heating_change_formatted) )
+                else:
+                    endMsg = u" • {} min. to go".format(Heating.visualizeHeatingDemandTime(longest_runetime)) if longest_runetime > 0 else u""
+                    self.logger.info(u"Demand  : {} since {} ago ({}){}".format(heating_demand, last_change_before_formatted, last_heating_change_formatted, endMsg) )
+
+                if heatpump_is_sleeping:
+                    if heating_requested:
+                        if now.hour < 19:
+                            #Registry.getItem("pGF_Utilityroom_Heatpump_HK2_Betriebsart").sendCommand(1)
+                            Registry.getItem("pGF_Utilityroom_Heatpump_S_Systembetriebsart").sendCommand(1)
+                            self.logger.info(u"Heatpump: Switch to 'Heizen'")
+                        else:
+                            self.logger.error("Heatpump: FLAPPING HEATING MODE CHANGE (Heizen)")
+                else:
+                    if not heating_requested and night_mode_possible:
+                        if now.hour >= 19:
+                            #Registry.getItem("pGF_Utilityroom_Heatpump_HK2_Betriebsart").sendCommand(3)
+                            Registry.getItem("pGF_Utilityroom_Heatpump_S_Systembetriebsart").sendCommand(3)
+                            self.logger.info(u"Heatpump: Switch to 'Sommer'")
+                        else:
+                            self.logger.error("Heatpump: FLAPPING HEATING MODE CHANGE (Sommer)")
+
+                volume = requested_possible_heating_volume / 60 if heating_requested and current_heating_active else 0
         else:
             self.logger.info(u"Demand  : SKIPPED • MANUAL MODE ACTIVE")
+            volume = 0
 
-        self.setSunStates(now, cr, cr4, cr8, hhs, messured_radiation_long_term, messured_light_level_short_term, messured_light_level_long_term)
+        Registry.getItem("pGF_Utilityroom_Heatpump_HK2_Volumenstrom").postUpdateIfDifferent(volume)
+
+        self.setSunStates(now, cr, cr4, cr8, messured_radiation_long_term, messured_light_level_short_term, messured_light_level_long_term)
 
         self.logger.info(u"--------: <<<" )
 
-    def setSunStates(self, now, cr, cr4, cr8, hhs, messured_radiation_long_term, messured_light_level_short_term, messured_light_level_long_term):
+    def setSunStates(self, now, cr, cr4, cr8, messured_radiation_long_term, messured_light_level_short_term, messured_light_level_long_term):
         cloud_cover = cr.getCloudCover()
 
         messured_radiation_short_term = cr.getSunRadiation()
@@ -614,7 +599,7 @@ class Main:
         current_outdoor_temperature4 = cr4.getReferenceTemperature()
         current_outdoor_temperature8 = cr8.getReferenceTemperature()
 
-        fallback_target_temperature = hhs.getHeatingState("lGF_Livingroom").getHeatingTargetTemperature()
+        fallback_target_temperature = cr.getRoomState("lGF_Livingroom").getHeatingTargetTemperature()
 
         #self.logger.info(u"{} {}".format(messured_radiation_short_term,messured_radiation_long_term))
 
@@ -636,7 +621,7 @@ class Main:
                     needed_sunprotection = effective_radiation_long_term > 8.0 and (current_outdoor_temperature > 26 or current_outdoor_temperature4 > 26)
                     if not needed_sunprotection:
                         # hot room protection (only above 18°C)
-                        target_room_temperature = hhs.getHeatingState("lGF_Livingroom").getHeatingTargetTemperature()
+                        target_room_temperature = fallback_target_temperature
                         current_room_temperature = cr.getRoomState("lGF_Livingroom").getCurrentTemperature()
                         needed_sunprotection = self.isTooWarm(effective_radiation_short_term, current_outdoor_temperature, current_outdoor_temperature4, current_room_temperature, target_room_temperature )
 
@@ -654,7 +639,7 @@ class Main:
         for room in Heating.getRooms():
             rs = cr.getRoomState(room.getName())
 
-            target_room_temperature = fallback_target_temperature if room.getHeatingVolume() == None else hhs.getHeatingState(room.getName()).getHeatingTargetTemperature()
+            target_room_temperature = fallback_target_temperature if room.getHeatingVolume() == None else cr.getRoomState(room.getName()).getHeatingTargetTemperature()
 
             for transition in room.transitions:
                 if not isinstance(transition,Window) or transition.getRadiationArea() == None or transition.getSunProtectionItem() == None:
@@ -721,174 +706,3 @@ class Main:
             current_room_temperature > target_room_temperature + ( 2.0 if not radiation_way_too_high else 1.0 ) \
         )
         return radiation_too_high and room_temperature_too_warm and its_getting_warmer_or_room_is_way_too_warm
-
-    def controlHeating( self, now, current_operating_mode, current_operating_mode_change, is_heating_requested ):
-
-        # 0 - Abschalten
-        # 1 - Nur WW
-        # 2 - Heizen mit WW
-        # 3 - Reduziert
-        # 4 - Normal
-
-        if self.active_heating_operating_mode == -1:
-            self.active_heating_operating_mode = current_operating_mode
-
-        force_retry = self.active_heating_operating_mode != current_operating_mode
-        force_retry_msg = u" • RETRY {} {}".format(self.active_heating_operating_mode,current_operating_mode) if force_retry else u""
-        delayed_msg = u""
-
-        last_change_before_in_minutes = int((now - current_operating_mode_change).total_seconds() / 60)
-        last_heating_change_formatted = current_operating_mode_change.strftime("%H:%M")
-        last_change_before_formatted = last_change_before_in_minutes if last_change_before_in_minutes < 60 else '{:02d}:{:02d}'.format(*divmod(last_change_before_in_minutes, 60));
-
-        self.logger.info(u"Active  : {} since {} • {} min. ago".format(Transformation.transform("MAP", "heating_de.map", str(current_operating_mode) ),last_heating_change_formatted,last_change_before_formatted) )
-
-        # Nur WW
-        if current_operating_mode == 1:
-            # Temperatur sollte seit XX min nicht OK sein und 'Nur WW' sollte mindestens XX min aktiv sein um 'flattern' zu vermeiden
-            if is_heating_requested:
-                is_running_long_enough = Registry.getItem("pGF_Utilityroom_Heating_Operating_Mode").getLastStateChange() < now - timedelta(minutes=Heating.MIN_ONLY_WW_TIME)
-
-                if force_retry or is_running_long_enough:
-                    self.active_heating_operating_mode = 2
-                    Registry.getItem("pGF_Utilityroom_Heating_Operating_Mode").sendCommand(self.active_heating_operating_mode)
-                else:
-                    runtime_to_go = Heating.MIN_ONLY_WW_TIME - last_change_before_in_minutes
-                    delayed_msg = u" in {} min.".format(runtime_to_go)
-
-                self.logger.info(u"Switch  : Heizen mit WW{}{}".format(delayed_msg,force_retry_msg))
-            self.active_reduced_time_in_minutes = -1
-
-        # Heizen mit WW
-        elif current_operating_mode == 2:
-            current_power_state = Registry.getItemState("pGF_Utilityroom_Heating_Power").intValue()
-
-            if current_power_state == 0 and last_change_before_in_minutes < 1:
-                self.logger.info(u"Delayed : Give the heating system more time to react")
-                return
-
-            # Wenn Heizkreispumpe auf 0 dann ist Heizen zur Zeit komplett deaktiviert (zu warm draussen) oder Brauchwasser wird aufgeheizt
-            #if Heating_Circuit_Pump_Speed.state > 0:
-            # Temperatur sollte seit XX min OK sein und Brenner sollte entweder nicht laufen oder mindestens XX min am Stück gelaufen sein
-            if not is_heating_requested:
-                is_running_long_enough = Registry.getItem("pGF_Utilityroom_Heating_Operating_Mode").getLastStateChange() < now - timedelta(minutes=Heating.MIN_HEATING_TIME)
-
-                if current_power_state == 0 or force_retry or is_running_long_enough:
-                    self.active_heating_operating_mode = 1
-                    Registry.getItem("pGF_Utilityroom_Heating_Operating_Mode").sendCommand(self.active_heating_operating_mode)
-                else:
-                    runtime_to_go = Heating.MIN_HEATING_TIME - last_change_before_in_minutes
-                    delayed_msg = u" in {} min.".format(runtime_to_go)
-
-                self.logger.info(u"Switch  : Nur WW{}{}".format(delayed_msg,force_retry_msg))
-                self.active_reduced_time_in_minutes = -1
-
-            # Brenner läuft nicht
-            elif current_power_state == 0:
-                force_reduced_msg = None
-
-                # No burner starts since 10 minutes
-                waiting_time = now - timedelta(minutes=10)
-                if Registry.getItem("pGF_Utilityroom_Heating_Power").getLastStateChange() < waiting_time and Registry.getItem("pGF_Utilityroom_Heating_Operating_Mode").getLastStateChange() < waiting_time:
-                    force_reduced_msg = u" • No burner starts"
-                else:
-                    burner_starts = self.getBurnerStarts(now, 5)
-                    is_water_heating = self.is_water_heating(now, 5)
-                    # if burnder starts during last 5 minutes > 1 and no water heating (diff < 1°)
-                    if burner_starts > 1 and not is_water_heating:
-                        force_reduced_msg = u" • Too many burner starts • Heating system tried to start {} times".format(burner_starts)
-
-                if force_reduced_msg != None:
-                    self.active_reduced_time_in_minutes = Heating.MIN_REDUCED_TIME if self.active_reduced_time_in_minutes == -1 else min( self.active_reduced_time_in_minutes * 2, Heating.MAX_REDUCED_TIME )
-                    self.active_heating_operating_mode = 3
-
-                    Registry.getItem("pGF_Utilityroom_Heating_Operating_Mode").sendCommand(self.active_heating_operating_mode)
-                    self.logger.info(u"Switch  : Reduziert{}{}".format(force_reduced_msg,force_retry_msg))
-                elif is_water_heating:
-                    self.logger.info(u"Delayed : Heating system heats water")
-                else:
-                    self.logger.info(u"Delayed : Heating system tried to start {} times".format(burner_starts))
-
-            else:
-                if Registry.getItemState("pGF_Utilityroom_Heating_Circuit_Pump_Speed").intValue() == 0:
-                    if self.is_water_heating(now, 5):
-                        self.logger.info(u"Paused  : Heating system heats water")
-                    else:
-                        if Registry.getItemState("pGF_Utilityroom_Heating_Temperature_Boiler_Target").doubleValue() >= 55:
-                            self.logger.info(u"Paused  : Heating system heats boiler")
-                        else:
-                            self.logger.info(u"Paused  : For unkown reason")
-                # reset reduced counter after 5 minutes of heating
-                elif self.active_reduced_time_in_minutes != -1 and Registry.getItem("pGF_Utilityroom_Heating_Operating_Mode").getLastStateChange() < now - timedelta(minutes=5):
-                    self.active_reduced_time_in_minutes = -1
-
-        # Reduziert
-        elif current_operating_mode == 3:
-            # Wenn Temperatur seit XX min OK ist und der brenner sowieso aus ist kann gleich in 'Nur WW' gewechselt werden
-            if not is_heating_requested:
-                self.active_heating_operating_mode = 1
-                Registry.getItem("pGF_Utilityroom_Heating_Operating_Mode").sendCommand(self.active_heating_operating_mode)
-                self.logger.info(u"Switch  : Nur WW because heating is not needed anymore{}".format(force_retry_msg))
-            else:
-                # Dauernd reduziert läuft seit mindestens XX Minuten
-                target_reduced_time_in_minutes = self.active_reduced_time_in_minutes if self.active_reduced_time_in_minutes != -1 else Heating.MIN_REDUCED_TIME
-                #self.logger.info("{}".format(self.active_reduced_time_in_minutes))
-                #self.logger.info("{}".format(target_reduced_time_in_minutes))
-                if force_retry or Registry.getItem("pGF_Utilityroom_Heating_Operating_Mode").getLastStateChange() < now - timedelta(minutes=target_reduced_time_in_minutes):
-                    self.active_heating_operating_mode = 2
-                    Registry.getItem("pGF_Utilityroom_Heating_Operating_Mode").sendCommand(self.active_heating_operating_mode)
-                elif not force_retry:
-                    runtime_to_go = target_reduced_time_in_minutes - last_change_before_in_minutes
-                    delayed_msg = u" in {} min.".format(runtime_to_go)
-
-                self.logger.info(u"Switch  : Heizen mit WW{}{}".format(delayed_msg,force_retry_msg))
-
-    def is_water_heating(self, now, limit_minutes):
-        return ( Registry.getItemState("pGF_Utilityroom_Heating_Temperature_Water_Storage").doubleValue() - ToolboxHelper.getMinimumSince("pGF_Utilityroom_Heating_Temperature_Water_Storage", now - timedelta(minutes=limit_minutes)).doubleValue() ) >= 1
-
-    def getBurnerStarts( self, now, limit_minutes ):
-        min_time = ToolboxHelper.getPersistedEntry("pGF_Utilityroom_Heating_Operating_Mode", now).getTimestamp()
-        _min_time = now - timedelta(minutes=limit_minutes)
-        if min_time < _min_time:
-            min_time = _min_time
-
-        current_time = now
-        last_is_heating = False
-
-        # check for new burner starts during this time periode
-        # "pGF_Utilityroom_Heating_Burner_Starts" is not useable because of wather heating
-        burner_starts = 0
-        while current_time > min_time:
-            current_item_entry = ToolboxHelper.getPersistedEntry("pGF_Utilityroom_Heating_Power", current_time)
-            current_is_heating = ( current_item_entry.getState().doubleValue() != 0.0 )
-
-            # count only heating events
-            if current_is_heating != last_is_heating and current_is_heating:
-                burner_starts = burner_starts + 1
-
-            current_time = current_item_entry.getTimestamp() - timedelta(microseconds=1)
-            last_is_heating = current_is_heating
-
-        return burner_starts
-
-    #def test(self):
-    #    formatter  = DateTimeFormatter.ISO_OFFSET_DATE_TIME
-    #    zdtWithZoneOffset = ZonedDateTime.parse("2024-02-13T07:58:15+01:00", formatter)
-    #    zdtInLocalTimeline = zdtWithZoneOffset.withZoneSameInstant(ZoneId.systemDefault())
-
-    #    ref = ZonedDateTime.now()
-    #    self.logger.info("{} {}".format(ref, zdtInLocalTimeline))
-    #    count = self.getBurnerStarts(zdtInLocalTimeline, 5)
-    #    self.logger.info(str(count))
-
-@rule(
-    triggers = [
-        ItemCommandTrigger("pGF_Utilityroom_Heating_Operating_Mode")
-    ]
-)
-class CommandHandler():
-    # refresh heating ventile twice per week
-    def execute(self, module, input):
-        command = input["event"].getItemCommand()
-        Registry.getItem("pGF_Utilityroom_Heating_Command").sendCommand("write;0x2323;1;{}".format(command))
-        #self.logger.info("write;0x2323;1;{}".format(command))

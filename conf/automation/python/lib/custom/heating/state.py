@@ -1,69 +1,57 @@
 class State(object):
-    def setBufferCapacity(self,value):
-        self.bufferCapacity = value
+    def __init__(self, buffer_capacity, indoor_wall_energy, outdoor_wall_energy, outdoor_wall_radiation, ventilation_energy, leak_energy, window_energy, window_radiation, open_window_count, heating_volume, heating_radiation, possible_heating_volume, possible_heating_radiation):
+        self.buffer_capacity = buffer_capacity
+        self.indoor_wall_energy = indoor_wall_energy
+        self.outdoor_wall_energy = outdoor_wall_energy
+        self.outdoor_wall_radiation = outdoor_wall_radiation
+        self.ventilation_energy = ventilation_energy
+        self.leak_energy = leak_energy
+        self.window_energy = window_energy
+        self.window_radiation = window_radiation
+        self.open_window_count = open_window_count
+        self.heating_volume = heating_volume
+        self.heating_radiation = heating_radiation
+        self.possible_heating_volume = possible_heating_volume
+        self.possible_heating_radiation = possible_heating_radiation
 
     def getBufferCapacity(self):
-        return self.bufferCapacity
+        return self.buffer_capacity
 
     def getBufferSlotCapacity(self):
-        return self.bufferCapacity * 0.1
+        return self.buffer_capacity * 0.1
 
-    def setOutdoorWallEnergy(self,value):
-        self.outdoorWallEnergy = value
-        
-    def getOutdoorWallEnergy(self):
-        return self.outdoorWallEnergy
-        
-    def setIndoorWallEnergy(self,value):
-        self.indoorWallEnergy = value
-        
     def getIndoorWallEnergy(self):
-        return self.indoorWallEnergy
+        return self.indoor_wall_energy
 
-    def getWallEnergy(self):
-        return self.outdoorWallEnergy + self.indoorWallEnergy
-
-    def setOutdoorWallRadiation(self,value):
-        self.wallRadiation = value
+    def getOutdoorWallEnergy(self):
+        return self.outdoor_wall_energy
         
+    def getWallEnergy(self):
+        return self.indoor_wall_energy + self.outdoor_wall_energy
+
     def getOutdoorWallRadiation(self):
-        return self.wallRadiation
+        return self.outdoor_wall_radiation
 
     def getWallRadiation(self):
-        return self.wallRadiation
+        return self.outdoor_wall_radiation
 
-    def setVentilationEnergy(self,value):
-        self.ventilationEnergy = value
-        
     def getVentilationEnergy(self):
-        return self.ventilationEnergy
+        return self.ventilation_energy
 
-    def setLeakEnergy(self,value):
-        self.leakEnergy = value
-        
     def getLeakEnergy(self):
-        return self.leakEnergy
+        return self.leak_energy
 
-    def setWindowEnergy(self,value):
-        self.windowEnergy = value
-        
     def getWindowEnergy(self):
-        return self.windowEnergy
-
-    def setWindowRadiation(self,value):
-        self.windowRadiation = value
+        return self.window_energy
 
     def getWindowRadiation(self):
-        return self.windowRadiation
-
-    def setOpenWindowCount(self,count):
-        self.openWindowCount = count
+        return self.window_radiation
 
     def getOpenWindowCount(self):
-        return self.openWindowCount
+        return self.open_window_count
 
     def getPassiveSaldo(self):
-        return self.outdoorWallEnergy+self.indoorWallEnergy+self.wallRadiation+self.ventilationEnergy+self.leakEnergy+self.windowEnergy+self.windowRadiation
+        return self.outdoor_wall_energy + self.indoor_wall_energy + self.outdoor_wall_radiation + self.ventilation_energy + self.leak_energy + self.window_energy + self.window_radiation
       
     def getActiveSaldo(self):
         return self.getPassiveSaldo() + self.getHeatingRadiation()
@@ -71,216 +59,211 @@ class State(object):
     def getActivePossibleSaldo(self):
         return self.getPassiveSaldo() + self.getPossibleHeatingRadiation()
 
-    def setHeatingRadiation(self,value):
-        self.heatingRadiation = value
+    def getHeatingVolume(self):
+        return self.heating_volume
 
     def getHeatingRadiation(self):
-        return self.heatingRadiation
-
-    def setHeatingVolume(self,value):
-        self.heatingVolume = value
-
-    def getHeatingVolume(self):
-        return self.heatingVolume
-
-    def setPossibleHeatingRadiation(self,value):
-        self.possibleHeatingRadiation = value
+        return self.heating_radiation
 
     def getPossibleHeatingRadiation(self):
-        return self.possibleHeatingRadiation
-
-    def setPossibleHeatingVolume(self,value):
-        self.possibleHeatingVolume = value
+        return self.possible_heating_radiation
 
     def getPossibleHeatingVolume(self):
-        return self.possibleHeatingVolume
-
-class RoomState(State):
-    def __init__(self):
-        self.targetTemperature = None
-    
-    def setName(self,name):
-        self.name = name
-
-    def getName(self):
-        return self.name
-
-    def setCurrentTemperature(self,value):
-        self.temperature = value
-
-    def getCurrentTemperature(self):
-        return self.temperature
-
-    def setChargedBuffer(self,value):
-        self.chargedBuffer = value
-
-    def getChargedBuffer(self):
-        return self.chargedBuffer
+        return self.possible_heating_volume
 
 class HouseState(State):
-    def setRoomStates(self,values):
-        self.roomStates = values
-        
+    def __init__(self,
+            room_states, reference_temperature, heating_pump_speed, heating_volume_factor, heating_debug_info,
+            cloud_cover, sun_radiation, sun_radiation_max, sun_south_radiation, sun_south_radiation_max, sun_west_radiation, sun_west_radiation_max, sun_debug_info
+        ):
+
+        indoor_wall_energy = outdoor_wall_energy = outdoor_wall_radiation = ventilation_energy = leak_energy = window_energy = window_radiation = 0
+        heating_volume = heating_radiation = possible_heating_volume = possible_heating_radiation = 0
+        open_window_count = buffer_capacity = 0
+
+        for room_state in room_states.values():
+            # summarize room values
+            #indoor_wall_energy += room_state.getIndoorWallEnergy() # Not needed. A hous has no inner walls. Just outdoor walls.
+            outdoor_wall_energy += room_state.getOutdoorWallEnergy()
+            outdoor_wall_radiation += room_state.getOutdoorWallRadiation()
+            ventilation_energy += room_state.getVentilationEnergy()
+            leak_energy += room_state.getLeakEnergy()
+            window_energy += room_state.getWindowEnergy()
+            window_radiation += room_state.getWindowRadiation()
+            open_window_count += room_state.getOpenWindowCount()
+
+            heating_volume += room_state.getHeatingVolume()
+            heating_radiation += room_state.getHeatingRadiation()
+            possible_heating_volume += room_state.getPossibleHeatingVolume()
+            possible_heating_radiation += room_state.getPossibleHeatingRadiation()
+
+            buffer_capacity += room_state.getBufferCapacity()
+
+
+        super().__init__(
+            buffer_capacity = buffer_capacity,
+            indoor_wall_energy = indoor_wall_energy,
+            outdoor_wall_energy = outdoor_wall_energy,
+            outdoor_wall_radiation = outdoor_wall_radiation,
+            ventilation_energy = ventilation_energy,
+            leak_energy = leak_energy,
+            open_window_count = open_window_count,
+            window_energy = window_energy,
+            window_radiation = window_radiation,
+            heating_volume = heating_volume,
+            heating_radiation = heating_radiation,
+            possible_heating_volume = possible_heating_volume,
+            possible_heating_radiation = possible_heating_radiation
+        )
+
+        self.room_states = room_states
+        self.reference_temperature = reference_temperature
+        self.heating_pump_speed = heating_pump_speed
+        self.heating_volume_factor = heating_volume_factor
+        self.heating_debug_info = heating_debug_info
+        self.cloud_cover = cloud_cover
+        self.sun_radiation = sun_radiation
+        self.sun_radiation_max = sun_radiation_max
+        self.sun_south_radiation = sun_south_radiation
+        self.sun_south_radiation_max = sun_south_radiation_max
+        self.sun_west_radiation = sun_west_radiation
+        self.sun_west_radiation_max = sun_west_radiation_max
+        self.sun_debug_info = sun_debug_info
+
     def getRoomStates(self):
-        return self.roomStates
+        return self.room_states
 
     def getRoomState(self,roomName):
-        return self.roomStates[roomName]
-
-    def setHeatingPumpSpeed(self,value):
-        self.heatingPumpSpeed = value
-        
-    def getHeatingPumpSpeed(self):
-        return self.heatingPumpSpeed
-
-    def setHeatingVolumeFactor(self,value):
-        self.heatingVolumeFactor = value
-        
-    def getHeatingVolumeFactor(self):
-        return self.heatingVolumeFactor
-
-    def setHeatingDebugInfo(self,value):
-        self.heatingDebugInfo = value
-        
-    def getHeatingDebugInfo(self):
-        return self.heatingDebugInfo
-
-    def setReferenceTemperature(self,value):
-        self.referenceTemperature = value
+        return self.room_states[roomName]
 
     def getReferenceTemperature(self):
-        return self.referenceTemperature
-      
-    def setCloudCover(self,value):
-        self.cloudCover = value
+        return self.reference_temperature
+
+    def getHeatingPumpSpeed(self):
+        return self.heating_pump_speed
+
+    def getHeatingVolumeFactor(self):
+        return self.heating_volume_factor
+
+    def getHeatingDebugInfo(self):
+        return self.heating_debug_info
 
     def getCloudCover(self):
-        return self.cloudCover
+        return self.cloud_cover
 
-    def setSunRadiation(self,value):
-        self.sunRadiation = value
-        
     def getSunRadiation(self):
-        return self.sunRadiation
+        return self.sun_radiation
 
-    def setSunRadiationMax(self,value):
-        self.sunRadiationMax = value
-        
     def getSunRadiationMax(self):
-        return self.sunRadiationMax
+        return self.sun_radiation_max
 
-    def setSunSouthRadiation(self,value):
-        self.sunSouthRadiation = value
-        
     def getSunSouthRadiation(self):
-        return self.sunSouthRadiation
+        return self.sun_south_radiation
 
-    def setSunSouthRadiationMax(self,value):
-        self.sunSouthRadiationMax = value
-        
     def getSunSouthRadiationMax(self):
-        return self.sunSouthRadiationMax
-
-    def setSunWestRadiation(self,value):
-        self.sunWestRadiation = value
+        return self.sun_south_radiation_max
 
     def getSunWestRadiation(self):
-        return self.sunWestRadiation
-
-    def setSunWestRadiationMax(self,value):
-        self.sunWestRadiationMax = value
+        return self.sun_west_radiation
 
     def getSunWestRadiationMax(self):
-        return self.sunWestRadiationMax
+        return self.sun_west_radiation_max
 
-    def setSunDebugInfo(self,value):
-        self.sunDebugInfo = value
-        
     def getSunDebugInfo(self):
-        return self.sunDebugInfo
+        return self.sun_debug_info
 
-class RoomHeatingState():
-    def __init__(self):
-        self.lazyReduction = 0
-        self.outdoorReduction = 0
-        self.nightReduction = 0
-        self.forcedReduction = 0
-        self.heatingDemandEnergy = 0
-        self.heatingDemandTime = 0
-        self.reserveBuffer = 0
-        self.adjustedChargedBuffer = None
-        self.forcedInfo = None
-        self.debugInfo = None
-        self.openWindowState = 0
+    def setChargeLevelDebugInfos(self, value):
+        self.charge_level_debug_infos = value
 
-    def setName(self,name):
+    def getChargeLevelDebugInfos(self):
+        return self.charge_level_debug_infos
+
+class RoomState(State):
+    def __init__(self,
+                 name, current_temperature, target_temperature, heating_target_temperature, heating_circuit_state, heating_last_changed,
+                 buffer_capacity, indoor_wall_energy, outdoor_wall_energy, outdoor_wall_radiation, ventilation_energy, leak_energy, window_energy, window_radiation, open_window_count, heating_volume, heating_radiation, possible_heating_volume, possible_heating_radiation):
+        super().__init__(
+            buffer_capacity = buffer_capacity,
+            indoor_wall_energy = indoor_wall_energy,
+            outdoor_wall_energy = outdoor_wall_energy,
+            outdoor_wall_radiation = outdoor_wall_radiation,
+            ventilation_energy = ventilation_energy,
+            leak_energy = leak_energy,
+            window_energy = window_energy,
+            window_radiation = window_radiation,
+            open_window_count = open_window_count,
+            heating_volume = heating_volume,
+            heating_radiation = heating_radiation,
+            possible_heating_volume = possible_heating_volume,
+            possible_heating_radiation = possible_heating_radiation
+        )
+
         self.name = name
+
+        self.current_temperature = current_temperature
+        self.target_temperature = target_temperature
+
+        self.heating_target_temperature = heating_target_temperature
+        self.heating_circuit_state = heating_circuit_state
+        self.heating_last_changed = heating_last_changed
+
+        self.heating_charged_buffer = 0
+        self.heating_state = None
 
     def getName(self):
         return self.name
 
-    def setLazyReduction(self,value):
-        self.lazyReduction = value
+    def getCurrentTemperature(self):
+        return self.current_temperature
 
-    def getLazyReduction(self):
-        return self.lazyReduction
+    def getTargetTemperature(self):
+        return self.target_temperature
 
-    def setOutdoorReduction(self,value):
-        self.outdoorReduction = value
-
-    def getOutdoorReduction(self):
-        return self.outdoorReduction
-
-    def setNightReduction(self,value):
-        self.nightReduction = value
-
-    def getNightReduction(self):
-        return self.nightReduction
-
-    def setForcedReduction(self,value):
-        self.forcedReduction = value
-
-    def getForcedReduction(self):
-        return self.forcedReduction
-
-    def setHeatingTargetTemperature(self,value):
-        self.heatingTargetTemperature = value
+    def getHeatingCircuitState(self):
+        return self.heating_circuit_state
 
     def getHeatingTargetTemperature(self):
-        return self.heatingTargetTemperature
+        return self.heating_target_temperature
 
-    def setHeatingDemandEnergy(self,value):
-        self.heatingDemandEnergy = value
+    def getHeatingLastChanged(self):
+        return self.heating_last_changed
 
-    def getHeatingDemandEnergy(self):
-        return self.heatingDemandEnergy
+    def setHeatingChargedBuffer(self, value):
+        self.charged_buffer = value
 
-    def setHeatingDemandTime(self,value):
-        self.heatingDemandTime = value
+    def getHeatingChargedBuffer(self):
+        return self.charged_buffer
 
-    def getHeatingDemandTime(self):
-        return self.heatingDemandTime
+    def getHeatingState(self):
+        return self.heating_state
 
-    def setAdjustedChargedBuffer(self,value):
-        self.adjustedChargedBuffer = value
+    def setHeatingState(self, state, heating_target_temperature):
+        self.heating_state = state
+        self.heating_target_temperature = heating_target_temperature
 
-    def getAdjustedChargedBuffer(self):
-        return self.adjustedChargedBuffer
+    def setNightMode(self, night_mode_active):
+        self.night_mode_active = night_mode_active
 
-    def setChargedReserveBuffer(self,value):
-        self.chargedReserveBuffer = value
+    def getNightMode(self):
+        return self.night_mode_active
 
-    def getChargedReserveBuffer(self):
-        return self.chargedReserveBuffer
+class HeatingState(State):
+    def __init__(self, night_reduction, outdoor_reduction, forced_reduction):
+        self.nightReduction = night_reduction
+        self.outdoorReduction = outdoor_reduction
+        self.forcedReduction = forced_reduction
 
-    def setOpenWindowState(self,state):
-        self.openWindowState = state
-    
-    def hasOpenWindow(self):
-        return self.openWindowState > 0
+        self.info = None
+        self.forcedInfo = None
+        self.debugInfo = None
+        self.demandEnergy = 0
+        self.demandTime = 0
+        self.openWindowState = 0
+        self.lazyReduction = 0
 
-    def hasLongOpenWindow(self):
-        return self.openWindowState > 1
+        #self.reserveBuffer = None
+        self.adjusted_charged_buffer = None
+        self.charged_reserve_buffer = None
 
     def setInfo(self,value):
         self.info = value
@@ -300,24 +283,50 @@ class RoomHeatingState():
     def getDebugInfo(self):
         return self.debugInfo
 
-class HouseHeatingState():
-    def __init__(self):
-        self.heatingStates = {}
-        
-    def setHeatingState(self,roomName,state):
-        self.heatingStates[roomName]=state
+    def setDemandEnergy(self,value):
+        self.demandEnergy = value
 
-    def getHeatingState(self,roomName):
-        return self.heatingStates[roomName]
-    
-    def setHeatingRequested(self,value):
-        self.heatingRequested=value
+    def getDemandEnergy(self):
+        return self.demandEnergy
 
-    def isHeatingRequested(self):
-        return self.heatingRequested
+    def setDemandTime(self,value):
+        self.demandTime = value
 
-    def setChargeLevelDebugInfos(self,value):
-        self.chargeLevelDebugInfos=value
+    def getDemandTime(self):
+        return self.demandTime
 
-    def getChargeLevelDebugInfos(self):
-        return self.chargeLevelDebugInfos
+    def setOpenWindowState(self,state):
+        self.openWindowState = state
+
+    def hasOpenWindow(self):
+        return self.openWindowState > 0
+
+    def hasLongOpenWindow(self):
+        return self.openWindowState > 1
+
+    def setLazyReduction(self,value):
+        self.lazyReduction = value
+
+    def getLazyReduction(self):
+        return self.lazyReduction
+
+    def getOutdoorReduction(self):
+        return self.outdoorReduction
+
+    def getNightReduction(self):
+        return self.nightReduction
+
+    def getForcedReduction(self):
+        return self.forcedReduction
+
+    def setAdjustedChargedBuffer(self, value):
+        self.adjusted_charged_buffer = value
+
+    def getAdjustedChargedBuffer(self):
+        return self.adjusted_charged_buffer
+
+    def setChargedReserveBuffer(self, value):
+        self.charged_reserve_buffer = value
+
+    def getChargedReserveBuffer(self):
+        return self.charged_reserve_buffer

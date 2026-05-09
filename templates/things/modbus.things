@@ -1,32 +1,105 @@
-//Bridge modbus:tcp:solarGarage "Wechselrichter (Modbus)" [ host="192.168.0.68", port=502, id=1, connectTimeoutMillis=5000, timeBetweenReconnectMillis=10000, connectMaxTries=60] {
-//    Bridge poller fast [ refresh=15000, start=300, length=118, type="input" ] {
-//        Thing data grid_active_power            "Wechselrichter GridActivePower"            [ readStart="315", readValueType="float32"]
-//        Thing data production_active_power      "Wechselrichter ProductionActivePower"      [ readStart="327", readValueType="float32"]
-//        Thing data consumption_active_power     "Wechselrichter ConsumptionActivePower"     [ readStart="343", readValueType="float32"]
-//        Thing data consumption_active_power_l1  "Wechselrichter ConsumptionActivePowerL1"   [ readStart="409", readValueType="float32"]
-//        Thing data consumption_active_power_l2  "Wechselrichter ConsumptionActivePowerL2"   [ readStart="411", readValueType="float32"]
-//        Thing data consumption_active_power_l3  "Wechselrichter ConsumptionActivePowerL3"   [ readStart="413", readValueType="float32"]
-//        Thing data ess_active_power             "Wechselrichter EssDischargePower"          [ readStart="415", readValueType="float32"]
-//        Thing data grid_mode                    "Wechselrichter GridMode"                   [ readStart="417", readValueType="int16"]
-//    }
-//    Bridge poller core [ refresh=60000, start=300, length=122, type="input" ] {
-//        Thing data ess_soc                      "Wechselrichter EssSoc"                     [ readStart="302", readValueType="uint16"]
-//        Thing data demand_active_energy         "Wechselrichter DemandActiveEnergy"         [ readStart="359", readValueType="uint64", readTransform="PY:modbus_float64.py"]
-//        Thing data supply_active_energy         "Wechselrichter SupplyActiveEnergy"         [ readStart="363", readValueType="uint64", readTransform="PY:modbus_float64.py"]
-//        Thing data production_active_energy     "Wechselrichter ProductionActiveEnergy"     [ readStart="367", readValueType="uint64", readTransform="PY:modbus_float64.py"]
-//        Thing data consumption_active_energy    "Wechselrichter ConsumtionActiveEnergy"     [ readStart="379", readValueType="uint64", readTransform="PY:modbus_float64.py"]
-//        Thing data ess_capacity                 "Wechselrichter EssCapacity"                [ readStart="420", readValueType="float32"]
-//    }
-//    Bridge poller storage [ refresh=60000, start=600, length=16, type="input" ] {
-//        //Thing data ess_soc                      "Wechselrichter EssSoc"                     [ readStart="602", readValueType="uint16"]
-//        Thing data min_cell_voltage             "Wechselrichter MinEssCellVoltage"          [ readStart="608", readValueType="float32"]
-//        Thing data max_cell_voltage             "Wechselrichter MaxEssCellVoltage"          [ readStart="610", readValueType="float32"]
-//        Thing data min_cell_temperature         "Wechselrichter MinEssCellTemperature"      [ readStart="612", readValueType="float32"]
-//        Thing data max_cell_temperature         "Wechselrichter MaxEssCellTemperature"      [ readStart="614", readValueType="float32"]
-//    }
-//    Bridge poller write [ refresh=0, start=700, length=18, type="holding" ] {
-//        Thing data active_power_equals          "Wechselrichter Vorgabe Be- bzw. Entladeleistung"  [ writeStart="706", writeType="holding", writeValueType="float32"]
-//        Thing data active_power_less_or_equals  "Wechselrichter Vorgabe maximaler Entladeleistung" [ writeStart="710", writeType="holding", writeValueType="float32"]
-//        Thing data active_power_greater_or_equals "Wechselrichter Vorgabe maximaler Beladeleistung" [ writeStart="714", writeType="holding", writeValueType="float32"]
-//    }
-//}
+Bridge modbus:tcp:heatpump "Wärmepumpe Bridge" [ host="{{custom_heatpump_ip}}", port=502, id=1 ] {
+    Bridge poller heatpump_system_input                     "Wärmepumpe System"                     [ start="30001", length="6", refresh="60000", type="input" ] {
+        Thing data System_Aussentemperatur                  "Wärmepumpe System Außentemperatur"     [ readStart="30001", readValueType="int16" ]
+        Thing data System_Fehler                            "Wärmepumpe System Fehler"              [ readStart="30003", readValueType="uint16" ]
+        Thing data System_Warnung                           "Wärmepumpe System Warnung"             [ readStart="30004", readValueType="uint16" ]
+        Thing data System_Fehlerfrei                        "Wärmepumpe System Fehlerfrei"          [ readStart="30005", readValueType="int16" ]
+        Thing data System_Betriebstatusanzeige              "Wärmepumpe System Betriebstatusanzeige" [ readStart="30006", readValueType="int16" ]   // Codierung
+    }
+    Bridge poller heatpump_system_holding                   "Wärmepumpe System"                     [ start="40001", length="1", refresh="60000", type="holding" ] {
+        Thing data System_Systembetriebsart                 "Wärmepumpe System Systembetriebsart"   [ readStart="40001", readValueType="int16", writeStart="40001", writeValueType="int16", writeType="holding" ]
+    }
+    Bridge poller heatpump_wp_input                         "Wärmepumpe WP"                         [ start="33101", length="11", refresh="60000", type="input" ] {
+        Thing data WP_Betrieb                               "Wärmepumpe WP Betrieb"                 [ readStart="33101", readValueType="uint16" ]
+        Thing data WP_Stoermeldung                          "Wärmepumpe WP Störmeldung"             [ readStart="33102", readValueType="int16" ]
+        Thing data WP_Leistungsanforderung                  "Wärmepumpe WP Leistungsanforderung"    [ readStart="33103", readValueType="int16" ]
+        //Thing data WP_Vorlauftemperatur                   "Wärmepumpe WP Vorlauftemperatur"       [ readStart="33104", readValueType="int16" ]
+        Thing data WP_Ruecklauftemperatur                   "Wärmepumpe WP Rücklauftemperatur"      [ readStart="33105", readValueType="int16" ]
+
+        Thing data WP_Verdampfungstemperatur                "Wärmepumpe WP Verdampfer"              [ readStart="33106", readValueType="int16" ]
+        Thing data WP_Verdichtersauggastemp                 "Wärmepumpe WP Verdichter"              [ readStart="33107", readValueType="int16" ]
+        Thing data WP_Weichentemperatur                     "Wärmepumpe WP Weiche"                  [ readStart="33108", readValueType="int16" ]
+        //Thing data WP_Regenerativtemperatur                 "Wärmepumpe WP Regenerativ"             [ readStart="33109", readValueType="int16" ] // always 32768
+        Thing data WP_Puffertemperatur                      "Wärmepumpe WP Puffer"                  [ readStart="33110", readValueType="int16" ]
+
+        Thing data WP_Vorlauftemperatur                     "Wärmepumpe WP Vorlauftemperatur"       [ readStart="33111", readValueType="int16" ]
+    }
+    Bridge poller heatpump_wp_holding                       "Wärmepumpe WP"                         [ start="43101", length="9", refresh="60000", type="holding" ] {
+        Thing data WP_Konfiguration_Ruhemodus               "Wärmepumpe WP Konfiguration/Ruhemodus" [ readStart="43101", readValueType="int16" ]
+        Thing data WP_PumpeEinschaltart                     "Wärmepumpe WP Pumpe Einschaltart"      [ readStart="43102", readValueType="int16" ]
+        Thing data WP_PumpeLeistungHeizen                   "Wärmepumpe WP Pumpe Leistung Heizen"   [ readStart="43103", readValueType="int16" ]
+        Thing data WP_PumpeLeistungWarmwasser               "Wärmepumpe WP Pumpe Leistung Warmwasser" [ readStart="43105", readValueType="int16" ]
+        Thing data WP_PumpeLeistungAbtaubetrieb             "Wärmepumpe WP Pumpe Leistung Abtaubetrieb" [ readStart="43106", readValueType="int16" ]
+        Thing data WP_VolumenstromHeizen                    "Wärmepumpe WP Volumenstrom Heizen"     [ readStart="43107", readValueType="int16" ]
+        Thing data WP_VolumenstromWarmwasser                "Wärmepumpe WP Volumenstrom Warmwasser" [ readStart="43109", readValueType="int16" ]
+    }
+    Bridge poller heatpump_2wez_input                       "Wärmepumpe 2WEZ"                       [ start="34101", length="7", refresh="60000", type="input" ] {
+        Thing data WEZ2_Status2WEZ                          "Wärmepumpe 2WEZ Status 2. WEZ"         [ readStart="34101", readValueType="int16" ]
+        Thing data WEZ2_Betriebsstunden2WEZ                 "Wärmepumpe 2WEZ Betriebsstunden 2WEZ"  [ readStart="34102", readValueType="uint16" ]
+        Thing data WEZ2_Schaltspiele2WEZ                    "Wärmepumpe 2WEZ Schaltspiele 2WEZ"     [ readStart="34103", readValueType="uint16" ]
+        Thing data WEZ2_StatusEHeizung1                     "Wärmepumpe 2WEZ Status EHeizung 1"     [ readStart="34104", readValueType="int16" ]
+        Thing data WEZ2_StatusEHeizung2                     "Wärmepumpe 2WEZ Status EHeizung 2"     [ readStart="34105", readValueType="int16" ]
+        Thing data WEZ2_BetriebsstundenE1                   "Wärmepumpe 2WEZ Betriebsstunden E1"    [ readStart="34106", readValueType="uint16" ]
+        Thing data WEZ2_BetriebsstundenE2                   "Wärmepumpe 2WEZ Betriebsstunden E2"    [ readStart="34107", readValueType="uint16" ]
+    }
+    Bridge poller heatpump_2wez_holding                     "Wärmepumpe 2WEZ"                       [ start="44101", length="4", refresh="60000", type="holding" ] {
+        Thing data WEZ2_Konfiguration                       "Wärmepumpe 2WEZ Konfiguration"         [ readStart="44101", readValueType="int16" ]
+        Thing data WEZ2_Grenztemperatur                     "Wärmepumpe 2WEZ Grenztemperatur"       [ readStart="44102", readValueType="int16" ]
+        Thing data WEZ2_Bivalenztemperatur                  "Wärmepumpe 2WEZ Bivalenztemperatur"    [ readStart="44103", readValueType="int16" ]
+        Thing data WEZ2_BivalenztemperaturWW                "Wärmepumpe 2WEZ Bivalenztemperatur WW" [ readStart="44104", readValueType="int16" ]
+    }
+    Bridge poller heatpump_hk2_input                        "Wärmepumpe HK2"                        [ start="31201", length="6", refresh="60000", type="input" ] {
+        Thing data HK2_Raumsolltemperatur                   "Wärmepumpe HK2 Raumsolltemperatur"     [ readStart="31201", readValueType="int16" ]
+        Thing data HK2_Vorlaufsolltemperatur                "Wärmepumpe HK2 Vorlaufsolltemperatur"  [ readStart="31204", readValueType="int16" ]
+        Thing data HK2_Vorlauftemperatur                    "Wärmepumpe HK2 Vorlauftemperatur"      [ readStart="31205", readValueType="int16" ]
+        //Thing data HK2_Test                                 "Wärmepumpe HK2 Test"                   [ readStart="31206", readValueType="int16" ]
+    }
+    Bridge poller heatpump_hk2_holding                      "Wärmepumpe HK2"                        [ start="41201", length="12", refresh="60000", type="holding" ] {
+        Thing data HK2_Konfiguration                        "Wärmepumpe HK2 Konfiguration"          [ readStart="41201", readValueType="int16" ]
+        Thing data HK2_AnforderungTyp                       "Wärmepumpe HK2 Anforderung Typ"        [ readStart="41202", readValueType="int16" ]
+        Thing data HK2_Betriebsart                          "Wärmepumpe HK2 Betriebsart"            [ readStart="41203", readValueType="int16", writeStart="41203", writeValueType="int16", writeType="holding" ]
+        Thing data HK2_PauseParty                           "Wärmepumpe HK2 Pause / Party"          [ readStart="41204", readValueType="int16", writeStart="41204", writeValueType="int16", writeType="holding" ]
+        Thing data HK2_RaumsolltemperaturKomfort            "Wärmepumpe HK2 Raumsolltemperatur Komfort" [ readStart="41205", readValueType="int16" ]
+        Thing data HK2_RaumsolltemperaturNormal             "Wärmepumpe HK2 Raumsolltemperatur Normal" [ readStart="41206", readValueType="int16" ]
+        Thing data HK2_RaumsolltemperaturAbsenk             "Wärmepumpe HK2 Raumsolltemperatur Absenk" [ readStart="41207", readValueType="int16" ]
+        Thing data HK2_Heizkennlinie                        "Wärmepumpe HK2 Heizkennlinie"          [ readStart="41208", readValueType="int16" ]
+        Thing data HK2_SommerWinterUmschaltung              "Wärmepumpe HK2 Sommer Winter Umschaltung" [ readStart="41209", readValueType="int16" ]
+        Thing data HK2_HeizenKonstanttemperatur             "Wärmepumpe HK2 Heizen Konstanttemperatur" [ readStart="41210", readValueType="int16" ]
+        Thing data HK2_HeizenKonstanttempAbsenk             "Wärmepumpe HK2 Heizen Konstanttemp Absenk" [ readStart="41211", readValueType="int16" ]
+    }
+    Bridge poller heatpump_ww_input                         "Wärmepumpe WW"                         [ start="32101", length="2", refresh="60000", type="input" ] {
+        Thing data WW_Warmwassersolltemperatur              "Wärmepumpe WW Warmwassersolltemperatur" [ readStart="32101", readValueType="int16" ]
+        Thing data WW_Warmwassertemperatur                  "Wärmepumpe WW Warmwassertemperatur"    [ readStart="32102", readValueType="int16" ]
+    }
+    Bridge poller heatpump_ww_holding                       "Wärmepumpe WW"                         [ start="42101", length="5", refresh="60000", type="holding" ] {
+        Thing data WW_Konfiguration                         "Wärmepumpe WW Konfiguration"           [ readStart="42101", readValueType="int16" ]
+        Thing data WW_WarmwasserPush                        "Wärmepumpe WW Push"                    [ readStart="42102", readValueType="int16", writeStart="42102", writeValueType="int16", writeType="holding" ]
+        Thing data WW_WarmwasserNormal                      "Wärmepumpe WW Normal"                  [ readStart="42103", readValueType="int16" ]
+        Thing data WW_WarmwasserAbsenk                      "Wärmepumpe WW Absenk"                  [ readStart="42104", readValueType="int16" ]
+        Thing data WW_SGReadyAnhebung                       "Wärmepumpe WW SG Ready Anhebung"       [ readStart="42105", readValueType="int16" ]
+    }
+    Bridge poller heatpump_stats_gesamt                     "Wärmepumpe Stats Gesamt"               [ start="36101", length="4", refresh="60000", type="input" ] {
+        Thing data Statistik_Gesamt_heute                   "Wärmepumpe Stats Gesamt heute"         [ readStart="36101", readValueType="uint16" ]
+        Thing data Statistik_Gesamt_gestern                 "Wärmepumpe Stats Gesamt gestern"       [ readStart="36102", readValueType="uint16" ]
+        Thing data Statistik_Gesamt_monat                   "Wärmepumpe Stats Gesamt monat"         [ readStart="36103", readValueType="uint16" ]
+        Thing data Statistik_Gesamt_jahr                    "Wärmepumpe Stats Gesamt jahr"          [ readStart="36104", readValueType="uint16" ]
+    }
+    Bridge poller heatpump_stats_heizen                     "Wärmepumpe Stats Heizen"               [ start="36201", length="4", refresh="60000", type="input" ] {
+        Thing data Statistik_Heizen_heute                   "Wärmepumpe Stats Heizen heute"         [ readStart="36201", readValueType="uint16" ]
+        Thing data Statistik_Heizen_gestern                 "Wärmepumpe Stats Heizen gestern"       [ readStart="36202", readValueType="uint16" ]
+        Thing data Statistik_Heizen_monat                   "Wärmepumpe Stats Heizen monat"         [ readStart="36203", readValueType="uint16" ]
+        Thing data Statistik_Heizen_jahr                    "Wärmepumpe Stats Heizen jahr"          [ readStart="36204", readValueType="uint16" ]
+    }
+    Bridge poller heatpump_stats_ww                         "Wärmepumpe Stats WW"                   [ start="36301", length="4", refresh="60000", type="input" ] {
+        Thing data Statistik_WW_heute                       "Wärmepumpe Stats WW heute"             [ readStart="36301", readValueType="uint16" ]
+        Thing data Statistik_WW_gestern                     "Wärmepumpe Stats WW gestern"           [ readStart="36302", readValueType="uint16" ]
+        Thing data Statistik_WW_monat                       "Wärmepumpe Stats WW monat"             [ readStart="36303", readValueType="uint16" ]
+        Thing data Statistik_WW_jahr                        "Wärmepumpe Stats WW jahr"              [ readStart="36304", readValueType="uint16" ]
+    }
+    Bridge poller heatpump_stats_electro                    "Wärmepumpe Stats (Elektrisch)"         [ start="36701", length="4", refresh="60000", type="input" ] {
+        Thing data Statistik_Elektro_heute                  "Wärmepumpe Stats Elektro heute"        [ readStart="36701", readValueType="uint16" ]
+        Thing data Statistik_Elektro_gestern                "Wärmepumpe Stats Elektro gestern"      [ readStart="36702", readValueType="uint16" ]
+        Thing data Statistik_Elektro_monat                  "Wärmepumpe Stats Elektro monat"        [ readStart="36703", readValueType="uint16" ]
+        Thing data Statistik_Elektro_jahr                   "Wärmepumpe Stats Elektro jahr"         [ readStart="36704", readValueType="uint16" ]
+    }
+}

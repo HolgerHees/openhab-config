@@ -42,9 +42,11 @@ Thing http:url:fenecon-slow "Wechselrichter (Slow)" [baseURL="http://{{custom_pv
         Type number : charger2-actual-power             "Charger 2 Leistung"            [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='charger2/ActualPower')].value)"]
         Type number : charger2-voltage                  "Charger 2 Spannung"            [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='charger2/Voltage')].value)","PY(|int(input)/1000.0)"]
         Type number : charger2-current                  "Charger 2 Strom"               [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='charger2/Current')].value)","PY(|int(input)/1000.0)"]
+
+        Type number : grid-mode                         "GridMode"                      [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='_sum/GridMode')].value)"]
 }
 
-Thing http:url:fenecon-fast "Wechselrichter (Fast)" [baseURL="http://{{custom_pv_inverter_garage_ip}}/rest/channel/_sum/.*", ignoreSSLErrors=true, authMode="BASIC_PREEMPTIVE", refresh=15, username="{{custom_pv_inverter_garage_username}}", password="{{custom_pv_inverter_garage_password}}"] {
+Thing http:url:fenecon-fast "Wechselrichter (Fast)" [baseURL="http://{{custom_pv_inverter_garage_ip}}/rest/channel/_sum/.*Power.*", ignoreSSLErrors=true, authMode="BASIC_PREEMPTIVE", refresh=5, username="{{custom_pv_inverter_garage_username}}", password="{{custom_pv_inverter_garage_password}}"] {
     Channels:
         Type number : grid-active-power                 "GridActivePower"               [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='_sum/GridActivePower')].value)"]
         Type number : production-active-power           "ProductionActivePower"         [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='_sum/ProductionActivePower')].value)"]
@@ -53,7 +55,6 @@ Thing http:url:fenecon-fast "Wechselrichter (Fast)" [baseURL="http://{{custom_pv
         Type number : consumption-active-power-l2       "ConsumptionActivePowerL2"      [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='_sum/ConsumptionActivePowerL2')].value)"]
         Type number : consumption-active-power-l3       "ConsumptionActivePowerL3"      [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='_sum/ConsumptionActivePowerL3')].value)"]
         Type number : ess-active-power                  "EssDischargePower"             [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='_sum/EssDischargePower')].value)"]
-        Type number : grid-mode                         "GridMode"                      [mode="READONLY",stateTransformation="JSONPATH($..[?(@.address=='_sum/GridMode')].value)"]
 }
 
 Thing http:url:fenecon-control "Wechselrichter (Control)" [baseURL="http://{{custom_pv_inverter_garage_ip}}/rest/channel/", ignoreSSLErrors=true, authMode="BASIC_PREEMPTIVE", refresh="3600", commandMethod="POST", username="{{custom_pv_inverter_garage_username}}", password="{{custom_pv_inverter_garage_password}}"] {

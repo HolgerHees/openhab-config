@@ -962,15 +962,26 @@ sitemap haus label="Main Menu"
                         }
                     }
                 }
-                Group item=pGF_Utilityroom_Heating_Operating_Mode label="Heizung [MAP(heating_de.map):%d]" icon="selfheating"{
-                    Frame label="Steuerung" {
-                        Switch item=pGF_Utilityroom_Heating_Auto_Mode label="Modus" mappings=[1="Auto", 0="Manuell"]
-                        Switch item=pGF_Utilityroom_Heating_Operating_Mode label="Betrieb" mappings=[1="WW", 2="HZ", 3="RD"]  visibility=[pGF_Utilityroom_Heating_Auto_Mode==0]
-                        Text item=pGF_Utilityroom_Heating_Operating_Mode visibility=[pGF_Utilityroom_Heating_Auto_Mode==1]
-                        Selection item=pOther_Manual_State_Heating label="Heizungsreduktion" mappings=[0="Normal", 1="-1", 2="-2", 3="-3", 4="-4", 5="-5"]
-                    }
+                Group item=pGF_Utilityroom_Heatpump_S_Betriebstatusanzeige label="Heizung [MAP(heatpump_betriebstatusanzeige.map):%s]" icon="selfheating"{
                     Frame label="Laufzeitdaten" {
-                        Text label="Heizkreise" icon="selfheating"{
+                        Switch item=pGF_Utilityroom_Heatpump_Auto_Mode label="Modus" mappings=[1="Auto", 0="Manuell"]
+                        Selection item=pOther_Manual_State_Heating label="Heizungsreduktion" mappings=[0="Normal", 1="-1", 2="-2", 3="-3", 4="-4", 5="-5"]
+
+                        Switch item=pGF_Utilityroom_Heatpump_S_Systembetriebsart label="Systembetriebsart" mappings=[1="Heizen",3="Sommer",4="Standby",5="2. WEZ"]  visibility=[pGF_Utilityroom_Heatpump_Auto_Mode==0]
+                        Text item=pGF_Utilityroom_Heatpump_S_Systembetriebsart visibility=[pGF_Utilityroom_Heatpump_Auto_Mode==1]
+
+                        Switch item=pGF_Utilityroom_Heatpump_HK2_Betriebsart label="Betriebsart" mappings=[1="Komfort",3="Absenkbetrieb"]  visibility=[pGF_Utilityroom_Heatpump_Auto_Mode==0]
+                        Text item=pGF_Utilityroom_Heatpump_HK2_Betriebsart visibility=[pGF_Utilityroom_Heatpump_Auto_Mode==1]
+
+                        Text item=pGF_Utilityroom_Heatpump_S_Betriebstatusanzeige
+                        Text item=pGF_Utilityroom_Heatpump_S_Fehlerfrei valuecolor=[==1="#6bc305",!=1="#d72a2a"] {
+                            Text item=pGF_Utilityroom_Heatpump_S_Fehler
+                            Text item=pGF_Utilityroom_Heatpump_S_Warnung
+                        }
+                    }
+
+                    Frame label="Heizkreis" {
+                        Text item=pGF_Utilityroom_Heatpump_HK2_Info label="Heizkreise [%s]" icon="selfheating" {
                             Switch item=pGF_Livingroom_Heating_Circuit label="WZ Kreis"
                             Switch item=pGF_Corridor_Heating_Circuit label="Flur unten Kreis"
                             Switch item=pGF_Workroom_Heating_Circuit label="Arbeitszimmer Kreis"
@@ -983,49 +994,142 @@ sitemap haus label="Main Menu"
                             Switch item=pFF_Bathroom_Heating_Circuit label="Badezimmer Kreis"
                             Switch item=pFF_Bathroom_Heating_HK label="Badezimmer HK"
                         }
-                        Text item=pGF_Utilityroom_Heating_Demand label="Berechnungsdetails [MAP(yes_no_de.map):%d]" icon="selfheating"{
-                            Frame {
-                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                                Webview url="/static/custom/grafana/heating_details.html?fromItem=Chart_From" icon="none" height=27
-                            }
+                        Text item=pGF_Utilityroom_Heatpump_HK2_Demand label="Heizbedarf [MAP(yes_no_de.map):%d]" icon="selfheating"{
                             Frame {
                                 Webview url="/static/custom/logs/heating.html" icon="none" height=36
                             }
                         }
+                        Text item=pGF_Utilityroom_Heatpump_HK2_Vorlauf_Info
+                        Text item=pGF_Utilityroom_Heating_Temperature_Pipe_In label="Rücklauf Sensor [%.1f °C]"
+                        Text item=pGF_Utilityroom_Heatpump_WP_Weichentemperatur label="Weiche (Speicher) [%.1f °C]"
+                        Text item=pGF_Utilityroom_Heatpump_HW_State label="Wärmezufuhr [%s]" {
+                            Text item=pGF_Utilityroom_Heatpump_HK2_Raumsolltemperatur
+                            Text item=pGF_Utilityroom_Heatpump_HK2_Vorlaufsolltemperatur
+                            Text item=pGF_Utilityroom_Heatpump_HK2_Vorlauftemperatur
+                            Text item=pGF_Utilityroom_Heatpump_HK2_Konfiguration
+                            Text item=pGF_Utilityroom_Heatpump_HK2_AnforderungTyp
+                            Text item=pGF_Utilityroom_Heatpump_HK2_Betriebsart
+                            Text item=pGF_Utilityroom_Heatpump_HK2_PauseParty
+                            Text item=pGF_Utilityroom_Heatpump_HK2_RaumsolltemperaturKomfort
+                            Text item=pGF_Utilityroom_Heatpump_HK2_RaumsolltemperaturNormal
+                            Text item=pGF_Utilityroom_Heatpump_HK2_RaumsolltemperaturAbsenk
+                            Text item=pGF_Utilityroom_Heatpump_HK2_Heizkennlinie
+                            Text item=pGF_Utilityroom_Heatpump_HK2_SommerWinterUmschaltung
+                            Text item=pGF_Utilityroom_Heatpump_HK2_HeizenKonstanttemperatur
+                            Text item=pGF_Utilityroom_Heatpump_HK2_HeizenKonstanttempAbsenk
+                        }
                     }
-                    Frame label="Sensordaten" {
-                        Text item=pGF_Utilityroom_Heating_Temperature_Room_Target
-                        Text item=pGF_Utilityroom_Heating_Power_Message
-                        Text item=pGF_Utilityroom_Heating_Temperature_Outdoor_Message
-                        Text item=pGF_Utilityroom_Heating_Temperature_Offset_Message
-                        Text item=pGF_Utilityroom_Heating_Temperature_Boiler_Message
-                        Text item=pGF_Utilityroom_Heating_Temperature_Water_Storage
-                        Text item=pGF_Utilityroom_Heating_Temperature_Pipe_Out
-                        Text item=pGF_Utilityroom_Heating_Temperature_Pipe_In
-                        Text item=pGF_Utilityroom_Heating_Burner_Starts_Message
-                        Text item=pGF_Utilityroom_Heating_Burner_Hours_Message
+                    Frame label="Warmwasser" {
+                        Text item=pGF_Utilityroom_Heatpump_WW_Info
+                        Text item=pGF_Utilityroom_Heatpump_WW_State label="Wärmezufuhr [%s]" {
+                            Text item=pGF_Utilityroom_Heatpump_WW_Warmwassersolltemperatur
+                            Text item=pGF_Utilityroom_Heatpump_WW_Warmwassertemperatur
+                            Text item=pGF_Utilityroom_Heatpump_WW_Konfiguration
+                            Text item=pGF_Utilityroom_Heatpump_WW_WarmwasserPush
+                            Text item=pGF_Utilityroom_Heatpump_WW_WarmwasserNormal
+                            Text item=pGF_Utilityroom_Heatpump_WW_WarmwasserAbsenk
+                            Text item=eGF_Utilityroom_Heatpump_WW_SGReadyAnhebung
+                        }
+                    }
+                    Frame label="Wärmequelle" {
+                        Text item=pGF_Utilityroom_Heatpump_WP_Vorlauftemperatur
+                        Text item=pGF_Utilityroom_Heatpump_WP_Ruecklauftemperatur
+
+                        Text item=pGF_Utilityroom_Heatpump_WP_Leistungsanforderung label="Wärmepumpe [%d %%]" {
+                            Text item=pGF_Utilityroom_Heatpump_WP_Betrieb
+                            Text item=pGF_Utilityroom_Heatpump_WP_Stoermeldung
+                            Text item=pGF_Utilityroom_Heatpump_WP_Leistungsanforderung
+                            Text item=pGF_Utilityroom_Heatpump_WP_Vorlauftemperatur
+                            Text item=pGF_Utilityroom_Heatpump_WP_Ruecklauftemperatur
+                            Text item=pGF_Utilityroom_Heatpump_WP_Verdampfungstemperatur
+                            Text item=pGF_Utilityroom_Heatpump_WP_Verdichtersauggastemp
+                            Text item=pGF_Utilityroom_Heatpump_WP_Weichentemperatur
+                            Text item=pGF_Utilityroom_Heatpump_WP_Puffertemperatur
+                            Text item=pGF_Utilityroom_Heatpump_WP_Konfiguration_Ruhemodus
+                            Text item=pGF_Utilityroom_Heatpump_WP_PumpeEinschaltart
+                            Text item=pGF_Utilityroom_Heatpump_WP_PumpeLeistungHeizen
+                            Text item=pGF_Utilityroom_Heatpump_WP_PumpeLeistungWarmwasser
+                            Text item=pGF_Utilityroom_Heatpump_WP_PumpeLeistungAbtaubetrieb
+                            Text item=pGF_Utilityroom_Heatpump_WP_VolumenstromHeizen
+                            Text item=pGF_Utilityroom_Heatpump_WP_VolumenstromWarmwasser
+                        }
+                        Text item=pGF_Utilityroom_Heatpump_Solar_Power label="Solarthermie [%.1f KW]" icon="selfsun"{
+                            Frame label="Daten" {
+                                Text item=pGF_Utilityroom_Heatpump_Solar_Temperature_Collector
+                                Text item=pGF_Utilityroom_Heatpump_Solar_Temperature_Storage
+                                Text item=pGF_Utilityroom_Heatpump_Solar_Temperature_Vorlauf
+                                Text item=pGF_Utilityroom_Heatpump_Solar_Pump_State
+                                Text item=pGF_Utilityroom_Heatpump_Solar_Power
+                            }
+                            Frame label="Auswertung" {
+                                Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                                Webview url="/static/custom/grafana/solar_heating.html?fromItem=Chart_From" icon="none" height=27
+                            }
+
+                        }
+                        Text item=pGF_Utilityroom_Heatpump_WEZ2_Status label="Elektroheizung [%s]" {
+                            Text item=pGF_Utilityroom_Heatpump_WEZ2_Status
+                            Text item=pGF_Utilityroom_Heatpump_WEZ2_Betriebsstunden2WEZ
+                            Text item=pGF_Utilityroom_Heatpump_WEZ2_Schaltspiele2WEZ
+                            Text item=pGF_Utilityroom_Heatpump_WEZ2_StatusEHeizung1
+                            Text item=pGF_Utilityroom_Heatpump_WEZ2_StatusEHeizung2
+                            Text item=pGF_Utilityroom_Heatpump_WEZ2_BetriebsstundenE1
+                            Text item=pGF_Utilityroom_Heatpump_WEZ2_BetriebsstundenE2
+                            Text item=pGF_Utilityroom_Heatpump_WEZ2_Konfiguration
+                            Text item=pGF_Utilityroom_Heatpump_WEZ2_Grenztemperatur
+                            Text item=pGF_Utilityroom_Heatpump_WEZ2_Bivalenztemperatur
+                            Text item=pGF_Utilityroom_Heatpump_WEZ2_BivalenztemperaturWW
+                        }
+                        Group item=eGF_Utilityroom_Heatpump_Stats label="Statistik"
                     }
                     Frame label="Auswertung" {
                         Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/custom/grafana/heating_overview.html?fromItem=Chart_From" icon="none" height=36
+                        Webview url="/static/custom/grafana/heating_overview.html?fromItem=Chart_From" icon="none" height=48
                     }
                 }
             }
             Frame label="Versorgung" {
-                Group item=pGF_Utilityroom_Electricity_State_Daily_Consumption label="Strom [%.1f kWh]"{
+                Group item=pGF_Utilityroom_Electricity_State_Daily_Consumption label="Strom [%.1f kWh]" icon=selfenergy {
                     Frame label="Verbrauch" {
                         Text item=pGF_Utilityroom_Electricity_State_Autarky
                         Text item=pGF_Utilityroom_Electricity_State_Ratio
                         Group item=pGF_Utilityroom_Electricity_State_Consumption_Msg {
-                            Frame label="Daten" {
-                                Text item=pGF_Garage_Solar_Inverter_ConsumptionActivePower label="Aktuell [%d W]"
+                            Frame label="Gesamt" {
+                                Text item=pGF_Garage_Solar_Inverter_ConsumptionActivePower label="Aktuell [%d W]" {
+                                    Frame label="Details" {
+                                        Text item=pGF_Garage_Solar_Inverter_ConsumptionActivePowerL1 label="Aktuell L1 [%d W]"
+                                        Text item=pGF_Garage_Solar_Inverter_ConsumptionActivePowerL2 label="Aktuell L2 [%d W]"
+                                        Text item=pGF_Garage_Solar_Inverter_ConsumptionActivePowerL3 label="Aktuell L3 [%d W]"
+                                    }
+                                }
                                 Text item=pGF_Utilityroom_Electricity_State_Daily_Consumption label="Heute [%.1f kWh]"
-
                             }
-                            Frame label="Details" {
-                                Text item=pGF_Garage_Solar_Inverter_ConsumptionActivePowerL1 label="Aktuell L1 [%d W]"
-                                Text item=pGF_Garage_Solar_Inverter_ConsumptionActivePowerL2 label="Aktuell L2 [%d W]"
-                                Text item=pGF_Garage_Solar_Inverter_ConsumptionActivePowerL3 label="Aktuell L3 [%d W]"
+                            Frame label="Haus" {
+                                Text item=pGF_Utilityroom_Electricity_State_House_ActivePower label="Aktuell [%d W]"
+                                Text item=pGF_Utilityroom_Electricity_State_House_Daily_Consumption label="Heute [%.1f kWh]"
+                            }
+                            Frame label="Wärmepumpe" {
+                                Text item=pGF_Utilityroom_Electricity_State_Heatpump_ActivePower label="Aktuell [%d W]" {
+                                    Frame label="Details Kompressor" {
+                                        Text item=pGF_Utilityroom_Electricity_Heatpump_Compressor_ActivePower_1 label="Aktuell L1 [%d W]"
+                                        Text item=pGF_Utilityroom_Electricity_Heatpump_Compressor_ActivePower_2 label="Aktuell L2 [%d W]"
+                                        Text item=pGF_Utilityroom_Electricity_Heatpump_Compressor_ActivePower_3 label="Aktuell L3 [%d W]"
+                                    }
+                                    Frame label="Details Elektroheizung" {
+                                        Text item=pGF_Utilityroom_Electricity_Heatpump_Electric_ActivePower_1 label="Aktuell L1 [%d W]"
+                                        Text item=pGF_Utilityroom_Electricity_Heatpump_Electric_ActivePower_2 label="Aktuell L2 [%d W]"
+                                        Text item=pGF_Utilityroom_Electricity_Heatpump_Electric_ActivePower_3 label="Aktuell L3 [%d W]"
+                                    }
+                                }
+                                Text item=pGF_Utilityroom_Electricity_State_Heatpump_Daily_Consumption label="Heute [%.1f kWh]"
+                            }
+                            Frame label="Heizen" {
+                                Text item=pGF_Utilityroom_Electricity_State_Heatpump_Heating_Total_Consumption label="Gesamt [%.1f kWh]"
+                                Text item=pGF_Utilityroom_Electricity_State_Heatpump_Heating_Daily_Consumption label="Heute [%.1f kWh]"
+                            }
+                            Frame label="Warmwasser" {
+                                Text item=pGF_Utilityroom_Electricity_State_Heatpump_Water_Total_Consumption label="Gesamt [%.1f kWh]"
+                                Text item=pGF_Utilityroom_Electricity_State_Heatpump_Water_Daily_Consumption label="Heute [%.1f kWh]"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
@@ -1134,42 +1238,12 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Garage_Solar_Inverter_BmsBoxTemp
                     }
                     Frame label="Energy Control" {
-                        Text item=pGF_Garage_Solar_Storage_Requested_Power
-                        Text item=pGF_Garage_Solar_Storage_Requested_Max_Power
-                        Text item=pGF_Garage_Solar_Storage_Discharged_Allowed
+                        Text item=pGF_Garage_Solar_Storage_Requested_Grid_Message
+                        Text item=pGF_Garage_Solar_Storage_Requested_Max_Solar_Message
+                        Text item=pGF_Garage_Solar_Storage_Discharged_Message
                         Text item=pGF_Garage_Solar_Storage_ActivePowerEqual
                     }
                 }
-                Group item=pGF_Utilityroom_Gas_Current_Daily_Consumption label="Gas [%.2f m³]" {
-                    Frame label="Daten" {
-                        Text item=pGF_Utilityroom_Gas_Current_Daily_Consumption
-                        Text item=pGF_Utilityroom_Gas_Current_Consumption
-                        Text item=pGF_Utilityroom_Gas_Annual_Consumption
-                        Text item=pGF_Utilityroom_Gas_Meter_Current_Count
-                        Text item=pGF_Utilityroom_Gas_Forecast
-                    }
-                    Frame label="Auswertung" {
-                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/custom/grafana/gas_consumption.html?fromItem=Chart_From" icon="none" height=18
-                    }
-                }
-                Group item=pGF_Utilityroom_Heating_Solar_Power_Current_Daily label="Wasser [%.1f KW]" icon="selfwater"{
-                    Frame label="Daten" {
-                        Text item=pGF_Utilityroom_Heating_Solar_State_Message
-                        Text item=pGF_Utilityroom_Heating_Temperature_Solar_Message
-                        Text item=pGF_Utilityroom_Heating_Temperature_Water_Storage
-                        Text item=pGF_Utilityroom_Heating_Solar_Hours_Message
-                        Text item=pGF_Utilityroom_Heating_Solar_Power_Message
-                        Text item=pGF_Utilityroom_Heating_Solar_Reheating_State
-                    }
-                    Frame label="Auswertung" {
-                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
-                        Webview url="/static/custom/grafana/solar_heating.html?fromItem=Chart_From" icon="none" height=27
-                    }
-                
-                }
-            }
-            Frame label="Sonstiges" {
                 Group label="Schalten (RAW) [MAP(group_socket.map):%d]" icon="selfsocket" item=gAll_Sockets {
                     Frame label="Wohnen" {
                         Switch item=pGF_Livingroom_Socket_Bassbox_Powered label="Bassbox"
@@ -1260,6 +1334,19 @@ sitemap haus label="Main Menu"
                         Text item=VoiceCommand
                         Text item=VoiceMessage
                         Text item=Alexa_Last_TTS
+                    }
+                }
+                Group item=pGF_Utilityroom_Gas_Current_Daily_Consumption label="Gas Alt [%.2f m³]" {
+                    Frame label="Daten" {
+                        Text item=pGF_Utilityroom_Gas_Current_Daily_Consumption
+                        Text item=pGF_Utilityroom_Gas_Current_Consumption
+                        Text item=pGF_Utilityroom_Gas_Annual_Consumption
+                        Text item=pGF_Utilityroom_Gas_Meter_Current_Count
+                        Text item=pGF_Utilityroom_Gas_Forecast
+                    }
+                    Frame label="Auswertung" {
+                        Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
+                        Webview url="/static/custom/grafana/gas_consumption.html?fromItem=Chart_From" icon="none" height=18
                     }
                 }
             }

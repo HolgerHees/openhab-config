@@ -1,112 +1,191 @@
 // **** GF CORRIDOR ****
 Group  eGF_Corridor_Heating                         "Heizung"              <selfinfo>     (lGF_Corridor) ["RadiatorControl"]
-Switch pGF_Corridor_Heating_Circuit                 "Kreis"                <selfsettings> (eGF_Corridor_Heating) ["Point"] { channel="knx:device:bridge:heating_ff:floorCircuit" }
+Switch pGF_Corridor_Heating_Circuit                 "Kreis"                <selfsettings> (eGF_Corridor_Heating,gPersistance_Chart,gPersistance_History) ["Point"] { channel="knx:device:bridge:heating_ff:floorCircuit" }
 Switch pGF_Corridor_Heating_Demand                  "Bedarf [%d]"          <selfsettings> (eGF_Corridor_Heating) ["Point"]
 Number pGF_Corridor_Heating_Charged                 "Geladen"              <selfsettings> (eGF_Corridor_Heating) ["Point"]
 Number pGF_Corridor_Heating_Temperature_Target      "Ziel - aktiv"         <selfsettings> (eGF_Corridor_Heating) ["Point"]
 
 // **** GF GUESTTOILET ****
 Group  eGF_Guesttoilet_Heating                      "Heizung"              <selfinfo>     (lGF_Guesttoilet) ["RadiatorControl"]
-Switch pGF_Guesttoilet_Heating_Circuit              "Kreis"                <selfsettings> (eGF_Guesttoilet_Heating) { channel="knx:device:bridge:heating_ff:guestWCCircuit" }
-Switch pGF_Guesttoilet_Heating_HK                   "HK"                   <selfsettings> (eGF_Guesttoilet_Heating) { channel="knx:device:bridge:heating_ff:guestWCHK" }
+Switch pGF_Guesttoilet_Heating_Circuit              "Kreis"                <selfsettings> (eGF_Guesttoilet_Heating,gPersistance_Chart,gPersistance_History) { channel="knx:device:bridge:heating_ff:guestWCCircuit" }
+Switch pGF_Guesttoilet_Heating_HK                   "HK"                   <selfsettings> (eGF_Guesttoilet_Heating,gPersistance_Chart,gPersistance_History) { channel="knx:device:bridge:heating_ff:guestWCHK" }
 Switch pGF_Guesttoilet_Heating_Demand               "Bedarf"               <selfsettings> (eGF_Guesttoilet_Heating) ["Point"]
 Number pGF_Guesttoilet_Heating_Charged              "Geladen"              <selfsettings> (eGF_Guesttoilet_Heating) ["Point"]
 Number pGF_Guesttoilet_Heating_Temperature_Target   "Ziel - aktiv"         <selfsettings> (eGF_Guesttoilet_Heating) ["Point"]
 
 // **** GF LIVINGROOM ****
 Group  eGF_Livingroom_Heating                       "Heizung"              <selfinfo>     (lGF_Livingroom) ["RadiatorControl"]
-Switch pGF_Livingroom_Heating_Circuit               "Kreis"                <selfsettings> (eGF_Livingroom_Heating) ["Point"] { channel="knx:device:bridge:heating_ff:livingroomCircuit" }
+Switch pGF_Livingroom_Heating_Circuit               "Kreis"                <selfsettings> (eGF_Livingroom_Heating,gPersistance_Chart,gPersistance_History) ["Point"] { channel="knx:device:bridge:heating_ff:livingroomCircuit" }
 Switch pGF_Livingroom_Heating_Demand                "Bedarf [%d]"          <selfsettings> (eGF_Livingroom_Heating) ["Point"]
 Number pGF_Livingroom_Heating_Charged               "Geladen"              <selfsettings> (eGF_Livingroom_Heating) ["Point"]
 Number pGF_Livingroom_Heating_Temperature_Target    "Ziel - aktiv"         <selfsettings> (eGF_Livingroom_Heating) ["Point"]
 
 // **** GF WORKROOM ****
-Group  eGF_Workroom_Heating                        "Heizung"              <selfinfo>     (lGF_Workroom) ["RadiatorControl"]
-Switch pGF_Workroom_Heating_Circuit                "Gästezimmer Kreis"    <selfsettings> (eGF_Workroom_Heating) ["Point"] { channel="knx:device:bridge:heating_ff:workroomCircuit" }
-Switch pGF_Workroom_Heating_Demand                 "Bedarf [%d]"          <selfsettings> (eGF_Workroom_Heating) ["Point"]
-Number pGF_Workroom_Heating_Charged                "Gästezimmer Geladen"  <selfsettings> (eGF_Workroom_Heating) ["Point"]
-Number pGF_Workroom_Heating_Temperature_Target     "Ziel - aktiv"         <selfsettings> (eGF_Workroom_Heating) ["Point"]
+Group  eGF_Workroom_Heating                         "Heizung"              <selfinfo>     (lGF_Workroom) ["RadiatorControl"]
+Switch pGF_Workroom_Heating_Circuit                 "Gästezimmer Kreis"    <selfsettings> (eGF_Workroom_Heating,gPersistance_Chart,gPersistance_History) ["Point"] { channel="knx:device:bridge:heating_ff:workroomCircuit" }
+Switch pGF_Workroom_Heating_Demand                  "Bedarf [%d]"          <selfsettings> (eGF_Workroom_Heating) ["Point"]
+Number pGF_Workroom_Heating_Charged                 "Gästezimmer Geladen"  <selfsettings> (eGF_Workroom_Heating) ["Point"]
+Number pGF_Workroom_Heating_Temperature_Target      "Ziel - aktiv"         <selfsettings> (eGF_Workroom_Heating) ["Point"]
 
 // **** FF CORRIDOR ****
 Group  eFF_Corridor_Heating                         "Heizung"              <selfinfo>     (lFF_Corridor) ["RadiatorControl"]
-Switch pFF_Corridor_Heating_Circuit                 "Kreis"                <selfsettings> (eFF_Corridor_Heating) { channel="knx:device:bridge:heating_sf:floorCircuit" }
+Switch pFF_Corridor_Heating_Circuit                 "Kreis"                <selfsettings> (eFF_Corridor_Heating,gPersistance_Chart,gPersistance_History) { channel="knx:device:bridge:heating_sf:floorCircuit" }
 Switch pFF_Corridor_Heating_Demand                  "Bedarf [%d]"          <selfsettings> (eFF_Corridor_Heating) ["Point"]
 Number pFF_Corridor_Heating_Charged                 "Geladen"              <selfsettings> (eFF_Corridor_Heating) ["Point"]
 Number pFF_Corridor_Heating_Temperature_Target      "Ziel - aktiv"         <selfsettings> (eFF_Corridor_Heating) ["Point"]
 
 // **** FF BATHROOM ****
 Group  eFF_Bathroom_Heating                         "Heizung"              <selfinfo>     (lFF_Bathroom) ["RadiatorControl"]
-Switch pFF_Bathroom_Heating_Circuit                 "Kreis"                <selfsettings> (eFF_Bathroom_Heating) { channel="knx:device:bridge:heating_sf:bathroomCircuit" }
-Switch pFF_Bathroom_Heating_HK                      "HK"                   <selfsettings> (eFF_Bathroom_Heating) { channel="knx:device:bridge:heating_sf:bathroomHK" }
+Switch pFF_Bathroom_Heating_Circuit                 "Kreis"                <selfsettings> (eFF_Bathroom_Heating,gPersistance_Chart,gPersistance_History) { channel="knx:device:bridge:heating_sf:bathroomCircuit" }
+Switch pFF_Bathroom_Heating_HK                      "HK"                   <selfsettings> (eFF_Bathroom_Heating,gPersistance_Chart,gPersistance_History) { channel="knx:device:bridge:heating_sf:bathroomHK" }
 Switch pFF_Bathroom_Heating_Demand                  "Bedarf [%d]"          <selfsettings> (eFF_Bathroom_Heating) ["Point"]
 Number pFF_Bathroom_Heating_Charged                 "Geladen"              <selfsettings> (eFF_Bathroom_Heating) ["Point"]
 Number pFF_Bathroom_Heating_Temperature_Target      "Ziel - aktiv"         <selfsettings> (eFF_Bathroom_Heating) ["Point"]
 
 // **** FF BEDROOM ****
 Group  eFF_Bedroom_Heating                          "Heizung"              <selfinfo>     (lFF_Bedroom) ["RadiatorControl"]
-Switch pFF_Bedroom_Heating_Circuit                  "Kreis"                <selfsettings> (eFF_Bedroom_Heating) { channel="knx:device:bridge:heating_sf:bedroomCircuit" }
+Switch pFF_Bedroom_Heating_Circuit                  "Kreis"                <selfsettings> (eFF_Bedroom_Heating,gPersistance_Chart,gPersistance_History) { channel="knx:device:bridge:heating_sf:bedroomCircuit" }
 Switch pFF_Bedroom_Heating_Demand                   "Bedarf [%d]"          <selfsettings> (eFF_Bedroom_Heating) ["Point"]
 Number pFF_Bedroom_Heating_Charged                  "Geladen"              <selfsettings> (eFF_Bedroom_Heating) ["Point"]
 Number pFF_Bedroom_Heating_Temperature_Target       "Ziel - aktiv"         <selfsettings> (eFF_Bedroom_Heating) ["Point"]
 
 // **** FF CHILD 1 ****
-Group  eFF_Fitnessroom_Heating                           "Heizung"              <selfinfo>     (lFF_Fitnessroom) ["RadiatorControl"]
-Switch pFF_Fitnessroom_Heating_Circuit                   "Kreis"                <selfsettings> (eFF_Fitnessroom_Heating) { channel="knx:device:bridge:heating_sf:child1Circuit" }
-Switch pFF_Fitnessroom_Heating_Demand                    "Bedarf [%d]"          <selfsettings> (eFF_Fitnessroom_Heating) ["Point"]
-Number pFF_Fitnessroom_Heating_Charged                   "Geladen"              <selfsettings> (eFF_Fitnessroom_Heating) ["Point"]
-Number pFF_Fitnessroom_Heating_Temperature_Target        "Ziel - aktiv"         <selfsettings> (eFF_Fitnessroom_Heating) ["Point"]
+Group  eFF_Fitnessroom_Heating                      "Heizung"              <selfinfo>     (lFF_Fitnessroom) ["RadiatorControl"]
+Switch pFF_Fitnessroom_Heating_Circuit              "Kreis"                <selfsettings> (eFF_Fitnessroom_Heating,gPersistance_Chart,gPersistance_History) { channel="knx:device:bridge:heating_sf:child1Circuit" }
+Switch pFF_Fitnessroom_Heating_Demand               "Bedarf [%d]"          <selfsettings> (eFF_Fitnessroom_Heating) ["Point"]
+Number pFF_Fitnessroom_Heating_Charged              "Geladen"              <selfsettings> (eFF_Fitnessroom_Heating) ["Point"]
+Number pFF_Fitnessroom_Heating_Temperature_Target   "Ziel - aktiv"         <selfsettings> (eFF_Fitnessroom_Heating) ["Point"]
 
 // **** FF CHILD 2 ****
-Group  eFF_Makeuproom_Heating                           "Heizung"              <selfinfo>     (lFF_Makeuproom) ["RadiatorControl"]
-Switch pFF_Makeuproom_Heating_Circuit                   "Kreis"                <selfsettings> (eFF_Makeuproom_Heating) { channel="knx:device:bridge:heating_sf:child2Circuit" }
-Switch pFF_Makeuproom_Heating_Demand                    "Bedarf [%d]"          <selfsettings> (eFF_Makeuproom_Heating) ["Point"]
-Number pFF_Makeuproom_Heating_Charged                   "Geladen"              <selfsettings> (eFF_Makeuproom_Heating) ["Point"]
-Number pFF_Makeuproom_Heating_Temperature_Target        "Ziel - aktiv"         <selfsettings> (eFF_Makeuproom_Heating) ["Point"]
+Group  eFF_Makeuproom_Heating                       "Heizung"              <selfinfo>     (lFF_Makeuproom) ["RadiatorControl"]
+Switch pFF_Makeuproom_Heating_Circuit               "Kreis"                <selfsettings> (eFF_Makeuproom_Heating,gPersistance_Chart,gPersistance_History) { channel="knx:device:bridge:heating_sf:child2Circuit" }
+Switch pFF_Makeuproom_Heating_Demand                "Bedarf [%d]"          <selfsettings> (eFF_Makeuproom_Heating) ["Point"]
+Number pFF_Makeuproom_Heating_Charged               "Geladen"              <selfsettings> (eFF_Makeuproom_Heating) ["Point"]
+Number pFF_Makeuproom_Heating_Temperature_Target    "Ziel - aktiv"         <selfsettings> (eFF_Makeuproom_Heating) ["Point"]
 
 // **** HEATING DEVICE ****
-Group  eGF_Utilityroom_Heating_Boiler                               "Heizterme"                         <selfinfo> (lGF_Utilityroom) ["HVAC"]
+Group  eGF_Utilityroom_Heatpump                     "Wärmepumpe"           <selfinfo> (lGF_Utilityroom) ["HVAC"]
 
-Switch pGF_Utilityroom_Heating_Demand                               "Heizung [%d]"                      <selfsettings> (eGF_Utilityroom_Heating_Boiler) ["Point"]
-Number pGF_Utilityroom_Heating_Auto_Mode                            "Modus"                             <selfautomode> (eGF_Utilityroom_Heating_Boiler) ["Point"]
+Number              pGF_Utilityroom_Heatpump_Auto_Mode                      "Modus"                                  <selfautomode> (eGF_Utilityroom_Heatpump) ["Point"]
 
-String pGF_Utilityroom_Heating_Command                              "Befehl absetzen"                <selfsettings> (eGF_Utilityroom_Heating_Boiler) ["Point"] {channel="mqtt:topic:mosquitto:optolink:sendCommand" }
-String pGF_Utilityroom_Heating_Command_Response                     "Befehl Ergebnis"                <selfsettings> (eGF_Utilityroom_Heating_Boiler) ["Point"] {channel="mqtt:topic:mosquitto:optolink:commandResponse" }
-Number pGF_Utilityroom_Heating_Operating_Mode                       "Betriebsart [MAP(heating_de.map):%s]" <selfsettings> (eGF_Utilityroom_Heating_Boiler,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:optolink:operationMode" }
-Number pGF_Utilityroom_Heating_Power                                "Leistung [%.1f %%]"                <selfruntime> (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:optolink:power" }
-Number pGF_Utilityroom_Heating_Circuit_Pump_Speed                   "Heizkreispumpe (Drehzahl) [%.1f %%]" <selfruntime> (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:optolink:pumpSpeed" }
-String pGF_Utilityroom_Heating_Power_Message                        "Brenner, Heizkreis [%s]"           <selffire> (eGF_Utilityroom_Heating_Boiler) ["Point"]
-Number pGF_Utilityroom_Heating_Temperature_Room_Target              "Ziel [%.1f °C]"                    <selftemperature> (eGF_Utilityroom_Heating_Boiler) ["Point"] {channel="mqtt:topic:mosquitto:optolink:targetTemperature" }
-Number pGF_Utilityroom_Heating_Temperature_Outdoor                  "Aussen (Ist) [%.1f °C]"            <selftemperature> (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:optolink:outdoorTemperature" }
-Number pGF_Utilityroom_Heating_Temperature_Outdoor_Subdued          "Aussen (Ged.) [%.1f °C]"           <selftemperature> (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:optolink:outdoorTemperatureSubdued" }
-String pGF_Utilityroom_Heating_Temperature_Outdoor_Message          "Aussen [%s]"                       <selftemperature> (eGF_Utilityroom_Heating_Boiler) ["Point"]    
-Number pGF_Utilityroom_Heating_Temperature_Offset_Target            "Vorlauf (Soll) [%.1f °C]"          <selftemperature> (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:optolink:offsetTemperatureTarget" }
-Number pGF_Utilityroom_Heating_Temperature_Offset                   "Vorlauf (Ist) [%.1f °C]"           <selftemperature> (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:optolink:offsetTemperature" }
-String pGF_Utilityroom_Heating_Temperature_Offset_Message           "Vorlauf [%s]    "                  <selftemperature> (eGF_Utilityroom_Heating_Boiler) ["Point"]    
-Number pGF_Utilityroom_Heating_Temperature_Boiler_Target            "Kessel (Soll) [%.1f °C]"           <selftemperature> (eGF_Utilityroom_Heating_Boiler) ["Point"] {channel="mqtt:topic:mosquitto:optolink:boilerTemperatureTarget" }
-Number pGF_Utilityroom_Heating_Temperature_Boiler                   "Kessel (Ist) [%.1f °C]"            <selftemperature> (eGF_Utilityroom_Heating_Boiler) ["Point"] {channel="mqtt:topic:mosquitto:optolink:boilerTemperature" }
-String pGF_Utilityroom_Heating_Temperature_Boiler_Message           "Kessel [%s]"                       <selftemperature> (eGF_Utilityroom_Heating_Boiler) ["Point"]    
-Number pGF_Utilityroom_Heating_Burner_Starts                        "Brennerstarts [%d]"                <selfsettings>    (eGF_Utilityroom_Heating_Boiler,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:optolink:burnerStarts" }
-Number pGF_Utilityroom_Heating_Burner_Starts_Current_Daily          "Brennerstarts (heute) [%.1f]"      <selfsettings>    (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart) ["Point"]
-String pGF_Utilityroom_Heating_Burner_Starts_Message                "Brennerstarts [%s]"                <selffire>        (eGF_Utilityroom_Heating_Boiler) ["Point"]
-Number pGF_Utilityroom_Heating_Burner_Hours                         "Brennerstunden [%.1f]"             <selfruntime>     (eGF_Utilityroom_Heating_Boiler,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:optolink:burnerHours" }
-Number pGF_Utilityroom_Heating_Burner_Hours_Current_Daily           "Brennerstunden (heute) [%.1f]"     <selfruntime>     (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart) ["Point"]
-String pGF_Utilityroom_Heating_Burner_Hours_Message                 "Brennerstunden [%s]"               <selffire>        (eGF_Utilityroom_Heating_Boiler) ["Point"]
-Number pGF_Utilityroom_Heating_Temperature_Water_Storage           "Wasser [%.1f °C]"                  <selftemperature> (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:optolink:waterTemperatureStorage" }
-Number pGF_Utilityroom_Heating_Temperature_Solar_Collector          "Solar Kollektor [%.1f °C]"         <selftemperature> (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:optolink:waterTemperatureSolarCollector" }
-Number pGF_Utilityroom_Heating_Temperature_Solar_Storage            "Solar Speicher [%.1f °C]"          <selftemperature> (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:optolink:waterTemperatureSolarStorage" }
-String pGF_Utilityroom_Heating_Temperature_Solar_Message            "Kollektor, Speicher [%s]"          <selftemperature> (eGF_Utilityroom_Heating_Boiler) ["Point"]   
-Number pGF_Utilityroom_Heating_Solar_Hours                          "Solar Stunden [%d]"                <selfruntime>     (eGF_Utilityroom_Heating_Boiler,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:optolink:solarHours" }
-String pGF_Utilityroom_Heating_Solar_Hours_Message                  "Solar Stunden [%s]"                <selfruntime>     (eGF_Utilityroom_Heating_Boiler) ["Point"]   
-Number pGF_Utilityroom_Heating_Solar_Power                          "Solar Leistung [%.1f KW]"          <selfsun>         (eGF_Utilityroom_Heating_Boiler,gPersistance_History) ["Point"] {channel="mqtt:topic:mosquitto:optolink:solarPower" }
-Number pGF_Utilityroom_Heating_Solar_Power_Current_Daily            "Solar Leistung (heute) [%.1f KW]"  <selfsun>         (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart) ["Point"]
-Number pGF_Utilityroom_Heating_Solar_Power_Current5Min              "Solar Leistung [%.1f KW]"          <selfsun>         (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart) ["Point"]
-String pGF_Utilityroom_Heating_Solar_Power_Message                  "Solar Leistung [%s]"               <selfsun>         (eGF_Utilityroom_Heating_Boiler) ["Point"] 
-Number pGF_Utilityroom_Heating_Solar_Pump_State                     "Solar Pumpe [MAP(heating_pump_de.map):%s]" <selfruntime> (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) {channel="mqtt:topic:mosquitto:optolink:pumpState" }
-Number pGF_Utilityroom_Heating_Solar_Reheating_State                "Nachladeunterdrückung [MAP(heating_reheating_de.map):%s]" <selfruntime> (eGF_Utilityroom_Heating_Boiler) ["Point"] {channel="mqtt:topic:mosquitto:optolink:solarReheatingState" }
-String pGF_Utilityroom_Heating_Solar_State_Message                  "Pumpe, Nachladeunterdr. [%s]"      <selfsettings>    (eGF_Utilityroom_Heating_Boiler) ["Point"] 
-Number pGF_Utilityroom_Heating_Common_Fault                         "Fehler [MAP(heating_state_de.map):%s]" <selfinfo>    (eGF_Utilityroom_Heating_Boiler) ["Point"] {channel="mqtt:topic:mosquitto:optolink:commonFault" }
+Number              pGF_Utilityroom_Heatpump_HK2_Volumenstrom               "Heizkreis Volumenstrom [%.1f l/min]"    <selfinfo>     (eGF_Utilityroom_Heatpump,gPersistance_Chart,gPersistance_History)
+Switch              pGF_Utilityroom_Heatpump_HK2_Demand                     "Heizkreis Bedarf [%s]"                  <selfsettings> (eGF_Utilityroom_Heatpump,gPersistance_Chart,gPersistance_History) ["Point"]
+Switch              pGF_Utilityroom_Heatpump_HK2_State                      "Heizkreis Aktiv [%s]"                   <selfsettings> (eGF_Utilityroom_Heatpump,gPersistance_Chart,gPersistance_History) ["Point"]
+String              pGF_Utilityroom_Heatpump_HK2_Info                       "Heizkreis Info [%s]"                    <selfsettings> (eGF_Utilityroom_Heatpump) ["Point"]
+String              pGF_Utilityroom_Heatpump_HK2_Vorlauf_Info               "Vorlauf Sensor/WP (Soll) [%s]"          <selftemperature> (eGF_Utilityroom_Heatpump) ["Point"]
 
-String pGF_Utilityroom_Heating_Force_States                          <selfinfo> (eGF_Utilityroom_Heating_Boiler)
+Switch              pGF_Utilityroom_Heatpump_HW_State                       "Heizwasser Aktiv [%s]"                  <selfsettings> (eGF_Utilityroom_Heatpump,gPersistance_Chart,gPersistance_History )  [ "Point" ]
+Switch              pGF_Utilityroom_Heatpump_WW_State                       "Warmwasser Aktiv [%s]"                  <selfsettings> (eGF_Utilityroom_Heatpump,gPersistance_Chart,gPersistance_History )  [ "Point" ]
+String              pGF_Utilityroom_Heatpump_WW_Info                        "Warmwasser WP (Soll) [%s]"                   <selftemperature> (eGF_Utilityroom_Heatpump) ["Point"]
 
-Number pGF_Utilityroom_Heating_Temperature_Pipe_Out                 "Gem. Vorlauf (Ist) [%.1f °C]"      <selftemperature>    (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"] { channel="knx:device:bridge:sensors_ff:heatingPipeOut" }
-Number pGF_Utilityroom_Heating_Temperature_Pipe_In                  "Gem. Rücklauf (Ist) [%.1f °C]"     <selftemperature>    (eGF_Utilityroom_Heating_Boiler,gPersistance_Chart,gPersistance_History) ["Point"] { channel="knx:device:bridge:sensors_ff:heatingPipeIn" }
+Number pGF_Utilityroom_Heating_Temperature_Pipe_Out                         "Vorlauf Heizkreis [%.1f °C]"  <selftemperature>    (eGF_Utilityroom_Heatpump,gPersistance_Chart,gPersistance_History) ["Point"] { channel="knx:device:bridge:sensors_ff:heatingPipeOut" }
+Number pGF_Utilityroom_Heating_Temperature_Pipe_In                          "Rücklauf Heizkreis [%.1f °C]" <selftemperature>    (eGF_Utilityroom_Heatpump,gPersistance_Chart,gPersistance_History) ["Point"] { channel="knx:device:bridge:sensors_ff:heatingPipeIn" }
+
+// **** SYSTEM *****
+Group               eGF_Utilityroom_Heatpump_S                              "System"                                 <selfinfo> ( eGF_Utilityroom_Heatpump )            [ "Equipment" ]
+Number:Temperature  pGF_Utilityroom_Heatpump_S_Aussentemperatur             "Außentemperatur [%.1f %unit%]"          <selftemperature> ( eGF_Utilityroom_Heatpump_S,gPersistance_Chart,gPersistance_History )  [ "Point" ]      { channel="modbus:data:heatpump:heatpump_system_input:System_Aussentemperatur:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }
+Number              pGF_Utilityroom_Heatpump_S_Fehler                       "Fehler [MAP(heatpump_fehlerliste.map):%s]" <selferror> ( eGF_Utilityroom_Heatpump_S )  [ "Point" ]      { channel="modbus:data:heatpump:heatpump_system_input:System_Fehler:number" }
+Number              pGF_Utilityroom_Heatpump_S_Warnung                      "Warnung [MAP(heatpump_fehlerliste.map):%s]" <selferror> ( eGF_Utilityroom_Heatpump_S )  [ "Point" ]      { channel="modbus:data:heatpump:heatpump_system_input:System_Warnung:number" }
+Number              pGF_Utilityroom_Heatpump_S_Fehlerfrei                   "Fehlerfrei [MAP(heatpump_fehlerfrei.map):%s]" <selfinfo> ( eGF_Utilityroom_Heatpump_S )  [ "Point" ]      { channel="modbus:data:heatpump:heatpump_system_input:System_Fehlerfrei:number" }
+Number              pGF_Utilityroom_Heatpump_S_Betriebstatusanzeige         "Betriebstatusanzeige [MAP(heatpump_betriebstatusanzeige.map):%s]" <selfsettings> ( eGF_Utilityroom_Heatpump_S,gPersistance_History )  [ "Point" ]      { channel="modbus:data:heatpump:heatpump_system_input:System_Betriebstatusanzeige:number" }
+Number              pGF_Utilityroom_Heatpump_S_Systembetriebsart            "Systembetriebsart [MAP(heatpump_systembetriebsart.map):%s]" <selfsettings> ( eGF_Utilityroom_Heatpump_S,gPersistance_History )  [ "Point" ]      { channel="modbus:data:heatpump:heatpump_system_holding:System_Systembetriebsart:number" }
+
+// **** WÄRMEPUMPE ****
+Group               eGF_Utilityroom_Heatpump_WP                             "Wärmepumpe"                             <selfinfo> ( eGF_Utilityroom_Heatpump )            [ "Equipment" ]
+Number              pGF_Utilityroom_Heatpump_WP_Betrieb                     "Betrieb [MAP(heatpump_betriebstatusanzeige.map):%s]" ( eGF_Utilityroom_Heatpump_WP )  [ "Point" ]      { channel="modbus:data:heatpump:heatpump_wp_input:WP_Betrieb:number" }    // FormatBetriebsstatusanzeige
+Number              pGF_Utilityroom_Heatpump_WP_Stoermeldung                "Störmeldung [MAP(heatpump_fehlerfrei.map):%s]" ( eGF_Utilityroom_Heatpump_WP )  [ "Point" ]      { channel="modbus:data:heatpump:heatpump_wp_input:WP_Stoermeldung:number" }     // 0 = Störung / 1 = Störungsfrei
+Number              pGF_Utilityroom_Heatpump_WP_Leistungsanforderung        "Leistungsanforderung [%d %%]"           <selfruntime> ( eGF_Utilityroom_Heatpump_WP,gPersistance_Chart,gPersistance_History )  [ "Point" ]      { channel="modbus:data:heatpump:heatpump_wp_input:WP_Leistungsanforderung:number" }     // 0 … 100%
+Number:Temperature  pGF_Utilityroom_Heatpump_WP_Vorlauftemperatur           "Vorlauf (zum Speicher) [%.1f %unit%]"                  <selftemperature> ( eGF_Utilityroom_Heatpump_WP )  [ "Point" ]      { channel="modbus:data:heatpump:heatpump_wp_input:WP_Vorlauftemperatur:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }
+Number:Temperature  pGF_Utilityroom_Heatpump_WP_Ruecklauftemperatur         "Rücklauf (vom Speicher) [%.1f %unit%]"                 <selftemperature> ( eGF_Utilityroom_Heatpump_WP )  [ "Point" ]      { channel="modbus:data:heatpump:heatpump_wp_input:WP_Ruecklauftemperatur:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }
+
+Number:Temperature  pGF_Utilityroom_Heatpump_WP_Verdampfungstemperatur      "Verdampfer [%.1f %unit%]"               <selftemperature> ( eGF_Utilityroom_Heatpump_WP )  [ "Point" ] { channel="modbus:data:heatpump:heatpump_wp_input:WP_Verdampfungstemperatur:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }
+Number:Temperature  pGF_Utilityroom_Heatpump_WP_Verdichtersauggastemp       "Verdichtersauggas [%.1f %unit%]"        <selftemperature> ( eGF_Utilityroom_Heatpump_WP )  [ "Point" ] { channel="modbus:data:heatpump:heatpump_wp_input:WP_Verdichtersauggastemp:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }
+Number:Temperature  pGF_Utilityroom_Heatpump_WP_Weichentemperatur           "Weichentemperatur [%.1f %unit%]"         <selftemperature> ( eGF_Utilityroom_Heatpump_WP,gPersistance_Chart,gPersistance_History )  [ "Point" ] { channel="modbus:data:heatpump:heatpump_wp_input:WP_Weichentemperatur:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }
+Number:Temperature  pGF_Utilityroom_Heatpump_WP_Puffertemperatur            "Puffertemperatur [%.1f %unit%]"         <selftemperature> ( eGF_Utilityroom_Heatpump_WP )  [ "Point" ] { channel="modbus:data:heatpump:heatpump_wp_input:WP_Puffertemperatur:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }
+
+Number              pGF_Utilityroom_Heatpump_WP_Konfiguration_Ruhemodus     "Konfiguration/Ruhemodus [%s]"           <selfsettings> ( eGF_Utilityroom_Heatpump_WP )  [ "Point" ] { channel="modbus:data:heatpump:heatpump_wp_holding:WP_Konfiguration_Ruhemodus:number" }
+Number              pGF_Utilityroom_Heatpump_WP_PumpeEinschaltart           "Pumpe Einschaltart [%s]"                <selfsettings> ( eGF_Utilityroom_Heatpump_WP )  [ "Point" ] { channel="modbus:data:heatpump:heatpump_wp_holding:WP_PumpeEinschaltart:number" }
+Number              pGF_Utilityroom_Heatpump_WP_PumpeLeistungHeizen         "Pumpe Leistung Heizen [%d %%]"          <selfsettings> ( eGF_Utilityroom_Heatpump_WP )  [ "Point" ] { channel="modbus:data:heatpump:heatpump_wp_holding:WP_PumpeLeistungHeizen:number" }
+Number              pGF_Utilityroom_Heatpump_WP_PumpeLeistungWarmwasser     "Pumpe Leistung Warmwasser [%d %%]"      <selfsettings> ( eGF_Utilityroom_Heatpump_WP )  [ "Point" ] { channel="modbus:data:heatpump:heatpump_wp_holding:WP_PumpeLeistungWarmwasser:number" }
+Number              pGF_Utilityroom_Heatpump_WP_PumpeLeistungAbtaubetrieb   "Pumpe Leistung Abtaubetrieb [%d %%]"    <selfsettings> ( eGF_Utilityroom_Heatpump_WP )  [ "Point" ] { channel="modbus:data:heatpump:heatpump_wp_holding:WP_PumpeLeistungAbtaubetrieb:number" }
+Number              pGF_Utilityroom_Heatpump_WP_VolumenstromHeizen          "Volumenstrom Heizen [%s]"               <selfsettings> ( eGF_Utilityroom_Heatpump_WP )  [ "Point" ] { channel="modbus:data:heatpump:heatpump_wp_holding:WP_VolumenstromHeizen:number" }
+Number              pGF_Utilityroom_Heatpump_WP_VolumenstromWarmwasser      "Volumenstrom Warmwasser [%s]"           <selfsettings> ( eGF_Utilityroom_Heatpump_WP )  [ "Point" ] { channel="modbus:data:heatpump:heatpump_wp_holding:WP_VolumenstromWarmwasser:number" }
+
+// **** 2. WZ ****
+Group               eGF_Utilityroom_Heatpump_WEZ2                           "2. WEZ"                                 <selfinfo> ( eGF_Utilityroom_Heatpump )            [ "Equipment" ]
+Number              pGF_Utilityroom_Heatpump_WEZ2_Status                    "Status [%s]"                            <selfsettings> ( eGF_Utilityroom_Heatpump_WEZ2 )  [ "Point" ] { channel="modbus:data:heatpump:heatpump_2wez_input:WEZ2_Status2WEZ:number" }
+Number              pGF_Utilityroom_Heatpump_WEZ2_Betriebsstunden2WEZ       "Betriebsstunden [%s]"                   <selfsettings> ( eGF_Utilityroom_Heatpump_WEZ2 )  [ "Point" ] { channel="modbus:data:heatpump:heatpump_2wez_input:WEZ2_Betriebsstunden2WEZ:number" }
+Number              pGF_Utilityroom_Heatpump_WEZ2_Schaltspiele2WEZ          "Schaltspiele [%s]"                      <selfsettings> ( eGF_Utilityroom_Heatpump_WEZ2 )  [ "Point" ] { channel="modbus:data:heatpump:heatpump_2wez_input:WEZ2_Schaltspiele2WEZ:number" }
+Number              pGF_Utilityroom_Heatpump_WEZ2_StatusEHeizung1           "Status EHeizung 1 [%s]"                 <selfsettings> ( eGF_Utilityroom_Heatpump_WEZ2 )  [ "Point" ] { channel="modbus:data:heatpump:heatpump_2wez_input:WEZ2_StatusEHeizung1:number" }
+Number              pGF_Utilityroom_Heatpump_WEZ2_StatusEHeizung2           "Status EHeizung 2 [%s]"                 <selfsettings> ( eGF_Utilityroom_Heatpump_WEZ2 )  [ "Point" ] { channel="modbus:data:heatpump:heatpump_2wez_input:WEZ2_StatusEHeizung2:number" }
+Number              pGF_Utilityroom_Heatpump_WEZ2_BetriebsstundenE1         "Betriebsstunden E1 [%s]"                <selfsettings> ( eGF_Utilityroom_Heatpump_WEZ2 )  [ "Point" ] { channel="modbus:data:heatpump:heatpump_2wez_input:WEZ2_BetriebsstundenE1:number" }
+Number              pGF_Utilityroom_Heatpump_WEZ2_BetriebsstundenE2         "Betriebsstunden E2 [%s]"                <selfsettings> ( eGF_Utilityroom_Heatpump_WEZ2 )  [ "Point" ] { channel="modbus:data:heatpump:heatpump_2wez_input:WEZ2_BetriebsstundenE2:number" }
+Number              pGF_Utilityroom_Heatpump_WEZ2_Konfiguration             "Konfiguration [%s]"                     <selfsettings>  ( eGF_Utilityroom_Heatpump_WEZ2 )  [ "Point" ] { channel="modbus:data:heatpump:heatpump_2wez_holding:WEZ2_Konfiguration:number" }
+Number:Temperature  pGF_Utilityroom_Heatpump_WEZ2_Grenztemperatur           "Grenztemperatur [%.1f %unit%]"          <selftemperature> ( eGF_Utilityroom_Heatpump_WEZ2 )  [ "Point" ] { channel="modbus:data:heatpump:heatpump_2wez_holding:WEZ2_Grenztemperatur:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }  //
+Number:Temperature  pGF_Utilityroom_Heatpump_WEZ2_Bivalenztemperatur        "Bivalenztemperatur [%.1f %unit%]"       <selftemperature> ( eGF_Utilityroom_Heatpump_WEZ2 )  [ "Point" ] { channel="modbus:data:heatpump:heatpump_2wez_holding:WEZ2_Bivalenztemperatur:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }  //
+Number:Temperature  pGF_Utilityroom_Heatpump_WEZ2_BivalenztemperaturWW      "Bivalenztemperatur WW [%.1f %unit%]"    <selftemperature> ( eGF_Utilityroom_Heatpump_WEZ2 )  [ "Point" ] { channel="modbus:data:heatpump:heatpump_2wez_holding:WEZ2_BivalenztemperaturWW:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }  //
+
+// **** HEIZKREIS 1 ****
+Group               eGF_Utilityroom_Heatpump_HK2                            "Heizkreis"                              <selfinfo> ( eGF_Utilityroom_Heatpump )     [ "Equipment" ]
+Number:Temperature  pGF_Utilityroom_Heatpump_HK2_Raumsolltemperatur         "Raumsolltemperatur [%.1f %unit%]"       <selftemperature> ( eGF_Utilityroom_Heatpump_HK2 ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_hk2_input:HK2_Raumsolltemperatur:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }
+Number:Temperature  pGF_Utilityroom_Heatpump_HK2_Vorlaufsolltemperatur      "Vorlaufsolltemperatur [%.1f %unit%]"    <selftemperature> ( eGF_Utilityroom_Heatpump_HK2,gPersistance_Chart,gPersistance_History ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_hk2_input:HK2_Vorlaufsolltemperatur:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }
+Number:Temperature  pGF_Utilityroom_Heatpump_HK2_Vorlauftemperatur          "Vorlauftemperatur [%.1f %unit%]"        <selftemperature> ( eGF_Utilityroom_Heatpump_HK2,gPersistance_Chart,gPersistance_History ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_hk2_input:HK2_Vorlauftemperatur:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }
+
+Number              pGF_Utilityroom_Heatpump_HK2_Konfiguration              "Konfiguration [MAP(heatpump_hk_konfiguration.map):%s]" <selfsettings> ( eGF_Utilityroom_Heatpump_HK2 ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_hk2_holding:HK2_Konfiguration:number" }
+Number              pGF_Utilityroom_Heatpump_HK2_AnforderungTyp             "Anforderung Typ [MAP(heatpump_hk_anforderung_typ.map):%s]" <selfsettings> ( eGF_Utilityroom_Heatpump_HK2 ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_hk2_holding:HK2_AnforderungTyp:number" }
+Number              pGF_Utilityroom_Heatpump_HK2_Betriebsart                "Betriebsart [MAP(heatpump_hk_betriebsart.map):%s]" <selfsettings> ( eGF_Utilityroom_Heatpump_HK2 ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_hk2_holding:HK2_Betriebsart:number" }
+Number              pGF_Utilityroom_Heatpump_HK2_PauseParty                 "Pause / Party [MAP(heatpump_hk_pause_party.map):%s]" <selfsettings> ( eGF_Utilityroom_Heatpump_HK2 ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_hk2_holding:HK2_PauseParty:number" }
+Number:Temperature  pGF_Utilityroom_Heatpump_HK2_RaumsolltemperaturKomfort  "Raumsolltemperatur Komfort [%.1f %unit%]" <selftemperature> ( eGF_Utilityroom_Heatpump_HK2 ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_hk2_holding:HK2_RaumsolltemperaturKomfort:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }
+Number:Temperature  pGF_Utilityroom_Heatpump_HK2_RaumsolltemperaturNormal   "Raumsolltemperatur Normal [%.1f %unit%]"  <selftemperature> ( eGF_Utilityroom_Heatpump_HK2 ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_hk2_holding:HK2_RaumsolltemperaturNormal:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }
+Number:Temperature  pGF_Utilityroom_Heatpump_HK2_RaumsolltemperaturAbsenk   "Raumsolltemperatur Absenk [%.1f %unit%]"  <selftemperature> ( eGF_Utilityroom_Heatpump_HK2 ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_hk2_holding:HK2_RaumsolltemperaturAbsenk:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }
+Number              pGF_Utilityroom_Heatpump_HK2_Heizkennlinie              "Heizkennlinie [%.2f]"                     <selfsettings> ( eGF_Utilityroom_Heatpump_HK2 ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_hk2_holding:HK2_Heizkennlinie:number" [ profile="modbus:gainOffset", gain="0.01", pre-gain-offset="0" ] }
+Number:Temperature  pGF_Utilityroom_Heatpump_HK2_SommerWinterUmschaltung    "Sommer Winter Umschaltung [%.1f %unit%]"  <selftemperature> ( eGF_Utilityroom_Heatpump_HK2 ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_hk2_holding:HK2_SommerWinterUmschaltung:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }
+Number:Temperature  pGF_Utilityroom_Heatpump_HK2_HeizenKonstanttemperatur   "Heizen Konstanttemperatur [%.1f %unit%]"  <selftemperature> ( eGF_Utilityroom_Heatpump_HK2 ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_hk2_holding:HK2_HeizenKonstanttemperatur:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }
+Number:Temperature  pGF_Utilityroom_Heatpump_HK2_HeizenKonstanttempAbsenk   "Heizen Konstanttemp Absenk [%.1f %unit%]" <selftemperature> ( eGF_Utilityroom_Heatpump_HK2 ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_hk2_holding:HK2_HeizenKonstanttempAbsenk:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }
+
+// **** WARMWASSER ****
+Group               eGF_Utilityroom_Heatpump_WW                             "Warmwasser"                            <selfinfo> ( eGF_Utilityroom_Heatpump )            [ "Equipment" ]
+Number:Temperature  pGF_Utilityroom_Heatpump_WW_Warmwassersolltemperatur    "Warmwassersolltemperatur [%.1f %unit%]" <selftemperature> ( eGF_Utilityroom_Heatpump_WW,gPersistance_Chart,gPersistance_History )  [ "Point" ]      { channel="modbus:data:heatpump:heatpump_ww_input:WW_Warmwassersolltemperatur:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }
+Number:Temperature  pGF_Utilityroom_Heatpump_WW_Warmwassertemperatur        "Warmwassertemperatur [%.1f %unit%]"    <selftemperature> ( eGF_Utilityroom_Heatpump_WW,gPersistance_Chart,gPersistance_History )  [ "Point" ]      { channel="modbus:data:heatpump:heatpump_ww_input:WW_Warmwassertemperatur:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }
+Number              pGF_Utilityroom_Heatpump_WW_Konfiguration               "Konfiguration [MAP(heatpump_ww_konfiguration.map):%s]" <selfsettings> ( eGF_Utilityroom_Heatpump_WW )  [ "Point" ]      { channel="modbus:data:heatpump:heatpump_ww_holding:WW_Konfiguration:number" }
+Number              pGF_Utilityroom_Heatpump_WW_WarmwasserPush              "Warmwasser Push [%d min]"              <selfsettings> ( eGF_Utilityroom_Heatpump_WW )  [ "Point" ]      { channel="modbus:data:heatpump:heatpump_ww_holding:WW_WarmwasserPush:number" }
+Number:Temperature  pGF_Utilityroom_Heatpump_WW_WarmwasserNormal            "Warmwasser Normal [%.1f %unit%]"       <selftemperature> ( eGF_Utilityroom_Heatpump_WW )  [ "Point" ]      { channel="modbus:data:heatpump:heatpump_ww_holding:WW_WarmwasserNormal:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }
+Number:Temperature  pGF_Utilityroom_Heatpump_WW_WarmwasserAbsenk            "Warmwasser Absenk [%.1f %unit%]"       <selftemperature> ( eGF_Utilityroom_Heatpump_WW )  [ "Point" ]      { channel="modbus:data:heatpump:heatpump_ww_holding:WW_WarmwasserAbsenk:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }
+Number:Temperature  eGF_Utilityroom_Heatpump_WW_SGReadyAnhebung             "SG Ready Anhebung [%.1f %unit%]"       <selftemperature> ( eGF_Utilityroom_Heatpump_WW )  [ "Point" ]      { channel="modbus:data:heatpump:heatpump_ww_holding:WW_SGReadyAnhebung:number" [ profile="modbus:gainOffset", gain="0.1 °C", pre-gain-offset="0" ] }
+
+// **** STATS ****
+Group               eGF_Utilityroom_Heatpump_Stats                         "Statistik"                              <selfenergy> ( eGF_Utilityroom_Heatpump )       [ "Equipment" ]
+Number:Energy       pGF_Utilityroom_Heatpump_Statistik_Gesamt_heute        "Gesamt heute [%d %unit%]"               <selfenergy> ( eGF_Utilityroom_Heatpump_Stats ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_stats_gesamt:Statistik_Gesamt_heute:number" [ profile="modbus:gainOffset", gain="1 kWh", pre-gain-offset="0" ] }
+Number:Energy       pGF_Utilityroom_Heatpump_Statistik_Gesamt_gestern      "Gesamt gestern [%d %unit%]"             <selfenergy> ( eGF_Utilityroom_Heatpump_Stats ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_stats_gesamt:Statistik_Gesamt_gestern:number" [ profile="modbus:gainOffset", gain="1 kWh", pre-gain-offset="0" ] }
+Number:Energy       pGF_Utilityroom_Heatpump_Statistik_Gesamt_monat        "Gesamt monat [%d %unit%]"               <selfenergy> ( eGF_Utilityroom_Heatpump_Stats ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_stats_gesamt:Statistik_Gesamt_monat:number" [ profile="modbus:gainOffset", gain="1 kWh", pre-gain-offset="0" ] }
+Number:Energy       pGF_Utilityroom_Heatpump_Statistik_Gesamt_jahr         "Gesamt jahr [%d %unit%]"                <selfenergy> ( eGF_Utilityroom_Heatpump_Stats ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_stats_gesamt:Statistik_Gesamt_jahr:number" [ profile="modbus:gainOffset", gain="1 kWh", pre-gain-offset="0" ] }
+Number:Energy       pGF_Utilityroom_Heatpump_Statistik_Heizen_heute        "Heizen heute [%d %unit%]"               <selfenergy> ( eGF_Utilityroom_Heatpump_Stats ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_stats_heizen:Statistik_Heizen_heute:number" [ profile="modbus:gainOffset", gain="1 kWh", pre-gain-offset="0" ] }
+Number:Energy       pGF_Utilityroom_Heatpump_Statistik_Heizen_gestern      "Heizen gestern [%d %unit%]"             <selfenergy> ( eGF_Utilityroom_Heatpump_Stats ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_stats_heizen:Statistik_Heizen_gestern:number" [ profile="modbus:gainOffset", gain="1 kWh", pre-gain-offset="0" ] }
+Number:Energy       pGF_Utilityroom_Heatpump_Statistik_Heizen_monat        "Heizen monat [%d %unit%]"               <selfenergy> ( eGF_Utilityroom_Heatpump_Stats ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_stats_heizen:Statistik_Heizen_monat:number" [ profile="modbus:gainOffset", gain="1 kWh", pre-gain-offset="0" ] }
+Number:Energy       pGF_Utilityroom_Heatpump_Statistik_Heizen_jahr         "Heizen jahr [%d %unit%]"                <selfenergy> ( eGF_Utilityroom_Heatpump_Stats ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_stats_heizen:Statistik_Heizen_jahr:number" [ profile="modbus:gainOffset", gain="1 kWh", pre-gain-offset="0" ] }
+Number:Energy       pGF_Utilityroom_Heatpump_Statistik_WW_heute            "WW heute [%d %unit%]"                   <selfenergy> ( eGF_Utilityroom_Heatpump_Stats ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_stats_ww:Statistik_WW_heute:number" [ profile="modbus:gainOffset", gain="1 kWh", pre-gain-offset="0" ] }
+Number:Energy       pGF_Utilityroom_Heatpump_Statistik_WW_gestern          "WW gestern [%d %unit%]"                 <selfenergy> ( eGF_Utilityroom_Heatpump_Stats ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_stats_ww:Statistik_WW_gestern:number" [ profile="modbus:gainOffset", gain="1 kWh", pre-gain-offset="0" ] }
+Number:Energy       pGF_Utilityroom_Heatpump_Statistik_WW_monat            "WW monat [%d %unit%]"                   <selfenergy> ( eGF_Utilityroom_Heatpump_Stats ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_stats_ww:Statistik_WW_monat:number" [ profile="modbus:gainOffset", gain="1 kWh", pre-gain-offset="0" ] }
+Number:Energy       pGF_Utilityroom_Heatpump_Statistik_WW_jahr             "WW jahr [%d %unit%]"                    <selfenergy> ( eGF_Utilityroom_Heatpump_Stats ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_stats_ww:Statistik_WW_jahr:number" [ profile="modbus:gainOffset", gain="1 kWh", pre-gain-offset="0" ] }
+Number:Energy       pGF_Utilityroom_Heatpump_Statistik_Elektro_heute       "Elektro heute [%d %unit%]"              <selfenergy> ( eGF_Utilityroom_Heatpump_Stats ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_stats_electro:Statistik_Elektro_heute:number" [ profile="modbus:gainOffset", gain="1 kWh", pre-gain-offset="0" ] }
+Number:Energy       pGF_Utilityroom_Heatpump_Statistik_Elektro_gestern     "Elektro gestern [%d %unit%]"            <selfenergy> ( eGF_Utilityroom_Heatpump_Stats ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_stats_electro:Statistik_Elektro_gestern:number" [ profile="modbus:gainOffset", gain="1 kWh", pre-gain-offset="0" ] }
+Number:Energy       pGF_Utilityroom_Heatpump_Statistik_Elektro_monat       "Elektro monat [%d %unit%]"              <selfenergy> ( eGF_Utilityroom_Heatpump_Stats ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_stats_electro:Statistik_Elektro_monat:number" [ profile="modbus:gainOffset", gain="1 kWh", pre-gain-offset="0" ] }
+Number:Energy       pGF_Utilityroom_Heatpump_Statistik_Elektro_jahr        "Elektro jahr [%d %unit%]"               <selfenergy> ( eGF_Utilityroom_Heatpump_Stats ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_stats_electro:Statistik_Elektro_jahr:number" [ profile="modbus:gainOffset", gain="1 kWh", pre-gain-offset="0" ] }
+
+Group               eGF_Utilityroom_Heatpump_Solar                         "Solar"                                  <selfsun> ( eGF_Utilityroom_Heatpump )       [ "Equipment" ]
+Number:Temperature  pGF_Utilityroom_Heatpump_Solar_Temperature_Vorlauf     "Solar Vorlauf [%.1f %unit%]"            <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History )  [ "Point" ] {channel="mqtt:topic:mosquitto:ebus:tempVorlauf" }
+Number:Temperature  pGF_Utilityroom_Heatpump_Solar_Temperature_Collector   "Solar Kollektor [%.1f %unit%]"          <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History )  [ "Point" ] {channel="mqtt:topic:mosquitto:ebus:tempKollektor" }
+Number:Temperature  pGF_Utilityroom_Heatpump_Solar_Temperature_Storage     "Solar Speicher [%.1f %unit%]"           <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History )  [ "Point" ] {channel="mqtt:topic:mosquitto:ebus:tempSpeicher" }
+Number              pGF_Utilityroom_Heatpump_Solar_Pump_State              "Solar Drehzal Pumpe [%d %unit%]"        <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History )  [ "Point" ] {channel="mqtt:topic:mosquitto:ebus:drehzahlPumpe", unit="%" }
+Number:Energy       pGF_Utilityroom_Heatpump_Solar_Power                   "Solar Aktuell [%.1f %unit%]"            <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History )  [ "Point" ] {channel="mqtt:topic:mosquitto:ebus:ertragAktuell" }
+//Number:Energy       pGF_Utilityroom_Heatpump_Solar_Total                   "Solar Ertrag [%.1f %unit%]"             <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History )  [ "Point" ] {channel="mqtt:topic:mosquitto:ebus:ertragAktuell" }
+
+// Error
+//Number:Temperature  pGF_Utilityroom_Heatpump_Solar_Temperature_Ruecklauf   "Solar Rücklauf (ERROR) [%.1f %unit%]"           <selftemperature> ( eGF_Utilityroom_Heatpump_Solar )  [ "Point" ] {channel="mqtt:topic:mosquitto:ebus:tempRuecklauf" }
+//Number              pGF_Utilityroom_Heatpump_Solar_Flow                    "Solar Volumenstrom (ERROR) [%.1f %unit%]"       <selftemperature> ( eGF_Utilityroom_Heatpump_Solar )  [ "Point" ] {channel="mqtt:topic:mosquitto:ebus:flow" }
+
+// Old
+//Number pGF_Utilityroom_Heating_Solar_Hours                          "Solar Stunden [%d]"                <selfruntime>     (eGF_Utilityroom_Heating_Boiler,gPersistance_History) ["Point"] // {channel="mqtt:topic:mosquitto:optolink:solarHours" }
+//Number pGF_Utilityroom_Heating_Solar_Power                          "Solar Leistung [%.1f KW]"          <selfsun>         (eGF_Utilityroom_Heating_Boiler,gPersistance_History) ["Point"] // {channel="mqtt:topic:mosquitto:optolink:solarPower" }
+
+

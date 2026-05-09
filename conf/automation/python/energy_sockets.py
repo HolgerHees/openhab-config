@@ -15,7 +15,7 @@ from datetime import datetime
         ItemStateChangeTrigger("pMobile_Socket_9_Total_Raw")
     ]
 )
-class SocketConsumption:
+class Consumption:
     def execute(self, module, input):
         now = datetime.now().astimezone()
 

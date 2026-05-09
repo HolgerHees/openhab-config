@@ -2,13 +2,12 @@
 Group eOutdoor_WeatherService                 "Wettervorhersage"                  <selfinfo> (lOutdoor) ["Sensor"]
 
 Number pOutdoor_WeatherService_Temperature    "Garten (Vorhersage) [%.1f °C]" <selftemperature> (eOutdoor_WeatherService,gPersistence_Forecast,gPersistance_Chart) ["Point"]
-Number pOutdoor_WeatherService_Temperature_Perceived     "Gefühlt [%.1f] °C"       <selftemperature> (eOutdoor_WeatherService,gPersistence_Forecast) ["Point"]
+//Number pOutdoor_WeatherService_Temperature_Perceived     "Gefühlt [%.1f] °C"       <selftemperature> (eOutdoor_WeatherService,gPersistence_Forecast) ["Point"]
 Number pOutdoor_WeatherService_Humidity        "Luftfeuchtigkeit [%.1f %%]"        <humidity> (eOutdoor_WeatherService,gPersistence_Forecast,gPersistance_Chart) ["Point"]
 Number pOutdoor_WeatherService_Cloud_Cover    "Wolken (Vorhersage) [%.1f]"     <selfrain> (eOutdoor_WeatherService,gPersistence_Forecast) ["Point"]
 Number pOutdoor_WeatherService_Sunshine_Duration "Sonnenlicht Dauer (Vorhersage) [%.1f]"     <selfruntime> (eOutdoor_WeatherService,gPersistence_Forecast) ["Point"]
 Number pOutdoor_WeatherService_Direct_Radiation "Direkte Sonneneinstrahlung (Vorhersage) [%.1f]"     <selfruntime> (eOutdoor_WeatherService,gPersistence_Forecast) ["Point"]
 Number pOutdoor_WeatherService_Diffuse_Radiation "Diffuse Sonneneinstrahlung (Vorhersage) [%.1f]"     <selfruntime> (eOutdoor_WeatherService,gPersistence_Forecast) ["Point"]
-Number pOutdoor_WeatherService_Weather_Code     "Wetter Code (Vorhersage) [%.1f]"     <selfrain> (eOutdoor_WeatherService,gPersistence_Forecast) ["Point"]
 
 // **** WEATHERSTATION ****
 Group gWeatherstationInputValues                     "Wetterstation Input" {autoupdate="false"}

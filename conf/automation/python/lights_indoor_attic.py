@@ -14,7 +14,7 @@ import scope
 )
 class Main:
     def execute(self, module, input):
-        state = Registry.getItemState("pOther_Manual_State_Auto_Attic_Light").intValue();
+        state = Registry.getItemState("pOther_Manual_State_Auto_Attic_Light").intValue()
         if state not in [1,2]:
             return
 

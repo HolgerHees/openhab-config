@@ -1,7 +1,25 @@
-// **** ELECTRICITY METER ****
+// **** ELECTRICITY METER BASE ****
 Group  eGF_Utilityroom_Electricity_Meter                            "Stromzähler" <selfinfo> (lGF_Utilityroom) ["Sensor"]
 Number:Energy pGF_Utilityroom_Electricity_Meter_Demand				"Zählerstand Bezug [%.1f KWh]"		    <selfenergy_meter> (eGF_Utilityroom_Electricity_Meter) ["Messurement"] { channel="mqtt:topic:mosquitto:watt_waechter:demand" }
 Number:Energy pGF_Utilityroom_Electricity_Meter_Supply				"Zählerstand Lieferung [%.1f KWh]"	    <selfenergy_meter> (eGF_Utilityroom_Electricity_Meter) ["Messurement"] { channel="mqtt:topic:mosquitto:watt_waechter:supply" }
+
+// **** ELECTRICITY METER HEATPUMP ****
+Group  eGF_Utilityroom_Electricity_Heatpump_Meter                               "Stromzähler"                   <selfinfo> (lGF_Utilityroom) ["Sensor"]
+Number:Energy pGF_Utilityroom_Electricity_Heatpump_Compressor_Meter_Consumption   <selfenergy_meter> (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Messurement"]           {channel="shelly:shellypro3em:energy-meter-headpump-compressor:device#totalKWH"}
+//Number:Energy pGF_Utilityroom_Electricity_Heatpump_Compressor_Meter_Consumption_1 <selfenergy_meter> (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Messurement"]           {channel="shelly:shellypro3em:energy-meter-headpump-compressor:meter1#totalKWH"}
+Number:Power  pGF_Utilityroom_Electricity_Heatpump_Compressor_ActivePower_1       <selfenergy>       (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Measurement", "Power"]  {channel="shelly:shellypro3em:energy-meter-headpump-compressor:meter1#currentWatts"}
+//Number:Energy pGF_Utilityroom_Electricity_Heatpump_Compressor_Meter_Consumption_2 <selfenergy_meter> (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Messurement"]           {channel="shelly:shellypro3em:energy-meter-headpump-compressor:meter2#totalKWH"}
+Number:Power  pGF_Utilityroom_Electricity_Heatpump_Compressor_ActivePower_2       <selfenergy>       (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Measurement", "Power"]  {channel="shelly:shellypro3em:energy-meter-headpump-compressor:meter2#currentWatts"}
+//Number:Energy pGF_Utilityroom_Electricity_Heatpump_Compressor_Meter_Consumption_3 <selfenergy_meter> (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Messurement"]           {channel="shelly:shellypro3em:energy-meter-headpump-compressor:meter3#totalKWH"}
+Number:Power  pGF_Utilityroom_Electricity_Heatpump_Compressor_ActivePower_3       <selfenergy>       (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Measurement", "Power"]  {channel="shelly:shellypro3em:energy-meter-headpump-compressor:meter3#currentWatts"}
+
+Number:Energy pGF_Utilityroom_Electricity_Heatpump_Electric_Meter_Consumption   <selfenergy_meter>   (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Messurement"]           {channel="shelly:shellypro3em:energy-meter-headpump-electric:device#totalKWH"}
+//Number:Energy pGF_Utilityroom_Electricity_Heatpump_Electric_Meter_Consumption_1   <selfenergy_meter> (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Messurement"]           {channel="shelly:shellypro3em:energy-meter-headpump-electric:meter1#totalKWH"}
+Number:Power  pGF_Utilityroom_Electricity_Heatpump_Electric_ActivePower_1         <selfenergy>       (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Measurement", "Power"]  {channel="shelly:shellypro3em:energy-meter-headpump-electric:meter1#currentWatts"}
+//Number:Energy pGF_Utilityroom_Electricity_Heatpump_Electric_Meter_Consumption_2   <selfenergy_meter> (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Messurement"]           {channel="shelly:shellypro3em:energy-meter-headpump-electric:meter2#totalKWH"}
+Number:Power  pGF_Utilityroom_Electricity_Heatpump_Electric_ActivePower_2         <selfenergy>       (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Measurement", "Power"]  {channel="shelly:shellypro3em:energy-meter-headpump-electric:meter2#currentWatts"}
+//Number:Energy pGF_Utilityroom_Electricity_Heatpump_Electric_Meter_Consumption_3   <selfenergy_meter> (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Messurement"]           {channel="shelly:shellypro3em:energy-meter-headpump-electric:meter3#totalKWH"}
+Number:Power  pGF_Utilityroom_Electricity_Heatpump_Electric_ActivePower_3         <selfenergy>       (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Measurement", "Power"]  {channel="shelly:shellypro3em:energy-meter-headpump-electric:meter3#currentWatts"}
 
 // **** SOLAR ****
 Group  eGF_Garage_Solar                     "Solaranlage"             <selfinfo> (lGF_Garage) ["Sensor"]
@@ -38,13 +56,16 @@ Number                     pGF_Garage_Solar_Storage_EssSoc                      
 Number:Energy              pGF_Garage_Solar_Storage_Capacity                       "Kapazität [%.1f kWh]"   <selfenergy>                (eGF_Garage_Solar) ["Measurement", "Current"]  {channel="http:url:fenecon-slow:ess-capacity"}
 Number:Energy              pGF_Garage_Solar_Storage_EnergySoc                      "Ladestand [%.1f kWh]"   <selfenergy>                (eGF_Garage_Solar) ["Measurement", "Current"]
 
-Number:Power               pGF_Garage_Solar_Storage_ActivePowerEqual               "Entlade/Belade Leistung (Active) [MAP(solar_energy_control.map):%d W]" <selfenergy>        (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-control:active-power-equals"}
-Number:Power               pGF_Garage_Solar_Storage_ActivePowerLessOrEqual         "Max Entlade Leistung (Active) [MAP(solar_energy_control.map):%d W]" <selfenergy>           (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-control:active-power-less-or-equals"}
-Number:Power               pGF_Garage_Solar_Storage_ActivePowerGreaterOrEqual      "Max Belade Leistung (Active) [MAP(solar_energy_control.map):%d W]" <selfenergy>            (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-control:active-power-greater-or-equals"}
+Number:Power               pGF_Garage_Solar_Storage_ActivePowerEqual               "Inverter (ActivePowerEqual) [MAP(solar_energy_control.map):%d W]" <selfenergy> (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-control:active-power-equals"}
+Number:Power               pGF_Garage_Solar_Storage_ActivePowerLessOrEqual         "Inverter (ActivePowerLessOrEqual) [MAP(solar_energy_control.map):%d W]" <selfenergy> (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-control:active-power-less-or-equals"}
+Number:Power               pGF_Garage_Solar_Storage_ActivePowerGreaterOrEqual      "Inverter (ActivePowerGreaterOrEqual) [MAP(solar_energy_control.map):%d W]" <selfenergy> (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-control:active-power-greater-or-equals"}
 
-Number:Power               pGF_Garage_Solar_Storage_Requested_Power                "Belade Leistung (Vorgabe) [MAP(solar_energy_control.map):%d W]" <selfenergy>                (eGF_Garage_Solar) ["Measurement", "Power"]
-Number:Power               pGF_Garage_Solar_Storage_Requested_Max_Power            "Max Belade Leistung (Vorgabe) [MAP(solar_energy_control.map):%d W]" <selfenergy>            (eGF_Garage_Solar) ["Measurement", "Power"]
-Switch                     pGF_Garage_Solar_Storage_Discharged_Allowed             "Entladung erlaubt (Vorgabe) [%s]"                                  <selfenergy>                (eGF_Garage_Solar) ["Measurement", "Power"]
+Number:Power               pGF_Garage_Solar_Storage_Requested_Grid_Power           "Grid Charge [%d]"       <selfenergy>                (eGF_Garage_Solar)
+String                     pGF_Garage_Solar_Storage_Requested_Grid_Message         "Grid Charge [%s]"       <selfenergy>                (eGF_Garage_Solar)
+Number:Power               pGF_Garage_Solar_Storage_Requested_Max_Solar_Power      "Max Solar Charge [%d W]" <selfenergy>               (eGF_Garage_Solar)
+String                     pGF_Garage_Solar_Storage_Requested_Max_Solar_Message    "Max Solar Charge [%s]"  <selfenergy>                (eGF_Garage_Solar)
+Switch                     pGF_Garage_Solar_Storage_Discharged_Allowed             "Discharge allowed [%s]" <selfenergy>                (eGF_Garage_Solar)
+String                     pGF_Garage_Solar_Storage_Discharged_Message             "Discharge allowed [%s]" <selfenergy>                (eGF_Garage_Solar)
 
 Number:Power               pGF_Garage_Solar_Storage_ActivePower                    "Beladung [%d W]"        <selfenergy>                (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-fast:ess-active-power"}
 Number:Power               pGF_Garage_Solar_Storage_ChargerPower                   "Beladung [%d W]"        <selfenergy>                (eGF_Garage_Solar) ["Measurement", "Power"]
@@ -54,7 +75,7 @@ Number:ElectricPotential   pGF_Garage_Solar_Storage_MaxEssVoltage               
 Number:Temperature         pGF_Garage_Solar_Storage_MinEssTemperature              "Min Ess Temperature [%d °C]" <temperature>          (eGF_Garage_Solar) ["Measurement"] {channel="http:url:fenecon-slow:min-cell-temperature"}
 Number:Temperature         pGF_Garage_Solar_Storage_MaxEssTemperature              "Max Ess Temperature [%d °C]" <temperature>          (eGF_Garage_Solar) ["Measurement"] {channel="http:url:fenecon-slow:max-cell-temperature"}
 
-Number:Dimensionless       pGF_Garage_Solar_Inverter_GridEnabled                    "Grid Aktiv  [MAP(solar_grid_mode.map):%s]" <selfinfo> (eGF_Garage_Solar) ["Switch"] {channel="http:url:fenecon-fast:grid-mode"}
+Number:Dimensionless       pGF_Garage_Solar_Inverter_GridEnabled                    "Grid Aktiv  [MAP(solar_grid_mode.map):%s]" <selfinfo> (eGF_Garage_Solar) ["Switch"] {channel="http:url:fenecon-slow:grid-mode"}
 
 Number:Energy              pGF_Garage_Solar_Inverter_DemandTotalEnergy              "Bezug Total [%.1f kWh]" <selfenergy_solar>         (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-slow:demand-active-energy"}
 Number:Energy              pGF_Garage_Solar_Inverter_SupplyTotalEnergy              "Lieferung Total [%.1f kWh]" <selfenergy_solar>     (eGF_Garage_Solar) ["Measurement", "Power"]  {channel="http:url:fenecon-slow:supply-active-energy"}
@@ -86,7 +107,7 @@ Switch                     pGF_Outdoor_Car_IsConnected                          
 Switch                     pGF_Outdoor_Car_Charge_Control                           "Steuerung"                                         (eGF_Outdoor_Car)
 // ************************************************
 
-Group  pGF_Utilityroom_Electricity_State                            "Stromstatus"             <selfinfo> (lGF_Utilityroom) ["Sensor"]
+Group  pGF_Utilityroom_Electricity_State                                   "Stromstatus"             <selfinfo> (lGF_Utilityroom) ["Sensor"]
 
 Number:Energy pGF_Utilityroom_Electricity_State_Total_Demand               "Zählerstand Bezug [%.1f KWh]"		<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
 Number:Energy pGF_Utilityroom_Electricity_State_Daily_Demand               "Tagesbezug [%.1f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
@@ -100,41 +121,53 @@ Number:Energy pGF_Utilityroom_Electricity_State_Annual_Supply_Current      "Jahr
 Number:Energy pGF_Utilityroom_Electricity_State_Annual_Supply_Forecast     "Jahreslieferung Hochrechnung [%s]"	<selfenergy_grid_out> (pGF_Utilityroom_Electricity_State) ["Point"]
 Number:Energy pGF_Utilityroom_Electricity_State_Annual_Supply_Last         "Jahreslieferung Zuletzt [%s]"	<selfenergy_grid_out> (pGF_Utilityroom_Electricity_State) ["Point"]
 
-Number:Energy pGF_Utilityroom_Electricity_State_Total_Consumption          "Zählerstand Verbrauch [%.1f KWh]"	<selfenergy_grid_out> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
-Number:Energy pGF_Utilityroom_Electricity_State_Daily_Consumption          "Tagesverbrauch [%.2f KWh]"	<selfenergy> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Total_Consumption          "Zählerstand Verbrauch [%.1f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Daily_Consumption          "Tagesverbrauch [%.2f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
 
-Number pGF_Utilityroom_Electricity_State_Total_Production           "Zählerstand Ertrag [%.1f KWh]"	<selfenergy_grid_out> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
-Number pGF_Utilityroom_Electricity_State_Daily_Production           "Tagesertrag [%.1f kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Total_Production           "Zählerstand Ertrag [%.1f KWh]"	<selfenergy_grid_out> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Daily_Production           "Tagesertrag [%.1f kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Total_East_Production      "Zählerstand Ertrag Ost [%.1f KWh]"	<selfenergy_grid_out> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Daily_East_Production      "Tagesertrag Ost [%.1f kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Total_South_Production     "Zählerstand Ertrag Süd [%.1f KWh]"	<selfenergy_grid_out> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Daily_South_Production     "Tagesertrag Süd [%.1f kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Total_West_Production      "Zählerstand Ertrag West [%.1f KWh]"	<selfenergy_grid_out> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Daily_West_Production      "Tagesertrag West [%.1f kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
 
-Number pGF_Utilityroom_Electricity_State_Total_East_Production      "Zählerstand Ertrag Ost [%.1f KWh]"	<selfenergy_grid_out> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
-Number pGF_Utilityroom_Electricity_State_Daily_East_Production      "Tagesertrag Ost [%.1f kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_House_Total_Consumption    "Zählerstand Verbrauch [%.1f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_House_Daily_Consumption    "Tagesverbrauch [%.1f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Power  pGF_Utilityroom_Electricity_State_House_ActivePower          "Verbrauch [%d W]"   <selfenergy>       (pGF_Utilityroom_Electricity_State) ["Measurement", "Power"]
 
-Number pGF_Utilityroom_Electricity_State_Total_South_Production     "Zählerstand Ertrag Süd [%.1f KWh]"	<selfenergy_grid_out> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
-Number pGF_Utilityroom_Electricity_State_Daily_South_Production     "Tagesertrag Süd [%.1f kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Total_Consumption "Zählerstand Verbrauch [%.1f KWh]"		<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Daily_Consumption "Tagesverbrauch [%.1f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Power  pGF_Utilityroom_Electricity_State_Heatpump_ActivePower       "Verbrauch [%d W]"   <selfenergy>       (pGF_Utilityroom_Electricity_State) ["Measurement", "Power"]
+Number:Power  pGF_Utilityroom_Electricity_State_Heatpump_Compressor_ActivePower "Verbrauch [%d W]"   <selfenergy>       (pGF_Utilityroom_Electricity_State) ["Measurement", "Power"]
+Number:Power  pGF_Utilityroom_Electricity_State_Heatpump_Electric_ActivePower "Verbrauch [%d W]"   <selfenergy>       (pGF_Utilityroom_Electricity_State) ["Measurement", "Power"]
 
-Number pGF_Utilityroom_Electricity_State_Total_West_Production      "Zählerstand Ertrag West [%.1f KWh]"	<selfenergy_grid_out> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
-Number pGF_Utilityroom_Electricity_State_Daily_West_Production      "Tagesertrag West [%.1f kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Heating_Total_Consumption "Zählerstand Verbrauch [%.1f KWh]"		<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Heating_Daily_Consumption "Tagesverbrauch [%.1f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
 
-Number pGF_Utilityroom_Electricity_State_Autarky                    "Autarkie [%d %%]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
-Number pGF_Utilityroom_Electricity_State_Ratio                      "Eigenverbrauch [%d %%]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
-
-String pGF_Utilityroom_Electricity_State_Demand_Msg                 "Bezug [%s]" <selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
-String pGF_Utilityroom_Electricity_State_Supply_Msg                 "Einspeisung [%s]" <selfenergy_grid_out> (pGF_Utilityroom_Electricity_State) ["Point"]
-String pGF_Utilityroom_Electricity_State_Production_Msg             "Erzeugung [%s]" <selfenergy_production> (pGF_Utilityroom_Electricity_State) ["Point"]
-String pGF_Utilityroom_Electricity_State_Consumption_Msg            "Verbrauch [%s]" <selfenergy> (pGF_Utilityroom_Electricity_State) ["Point"]
-String pGF_Utilityroom_Electricity_State_Battery_Msg                "Batterie [%s]" <selfbattery-60> (pGF_Utilityroom_Electricity_State) ["Point"]
-
-String pGF_Utilityroom_Electricity_State_Message                    "Status [%s]"                   <selfinfo> (pGF_Utilityroom_Electricity_State) ["Point"]
-
-Number:Energy pGF_Utilityroom_Electricity_Storage_Solar_Soc         "Ladestand Solar [%.2f kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
-Number:Energy pGF_Utilityroom_Electricity_Storage_Grid_Soc          "Ladestand Grid [%.2f kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
-Number pGF_Utilityroom_Electricity_Storage_Price                    "Gridpreis [%.2f €/kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
-Number pGF_Utilityroom_Electricity_Stock_Price                      "Börsenpreis [%.2f €/kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State,gPersistence_Forecast) ["Point"]
-
-String pGF_Utilityroom_Electricity_Cached_Inverter_Energy_State     "Status [%.2f €/kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
-
-Number:Energy pGF_Utilityroom_Electricity_Expected_Solar_East       "Ertrag Ost [%.2f €/kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State,gPersistence_Forecast) ["Point"]
-Number:Energy pGF_Utilityroom_Electricity_Expected_Solar_South      "Ertrag Süd [%.2f €/kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State,gPersistence_Forecast) ["Point"]
-Number:Energy pGF_Utilityroom_Electricity_Expected_Solar_West       "Ertrag West [%.2f €/kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State,gPersistence_Forecast) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Water_Total_Consumption   "Zählerstand Verbrauch [%.1f KWh]"		<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Water_Daily_Consumption   "Tagesverbrauch [%.1f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
 
 
+Number pGF_Utilityroom_Electricity_State_Autarky                           "Autarkie [%d %%]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number pGF_Utilityroom_Electricity_State_Ratio                             "Eigenverbrauch [%d %%]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
+
+String pGF_Utilityroom_Electricity_State_Demand_Msg                        "Bezug [%s]" <selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+String pGF_Utilityroom_Electricity_State_Supply_Msg                        "Einspeisung [%s]" <selfenergy_grid_out> (pGF_Utilityroom_Electricity_State) ["Point"]
+String pGF_Utilityroom_Electricity_State_Production_Msg                    "Erzeugung [%s]" <selfenergy_production> (pGF_Utilityroom_Electricity_State) ["Point"]
+String pGF_Utilityroom_Electricity_State_Consumption_Msg                   "Verbrauch [%s]" <selfenergy> (pGF_Utilityroom_Electricity_State) ["Point"]
+String pGF_Utilityroom_Electricity_State_Battery_Msg                       "Batterie [%s]" <selfbattery-60> (pGF_Utilityroom_Electricity_State) ["Point"]
+
+String pGF_Utilityroom_Electricity_State_Message                           "Status [%s]"                   <selfinfo> (pGF_Utilityroom_Electricity_State) ["Point"]
+
+Number:Energy pGF_Utilityroom_Electricity_Storage_Solar_Soc                "Ladestand Solar [%.2f kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_Storage_Grid_Soc                 "Ladestand Grid [%.2f kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number pGF_Utilityroom_Electricity_Storage_Price                           "Gridpreis [%.2f €/kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number pGF_Utilityroom_Electricity_Stock_Price                             "Börsenpreis [%.2f €/kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State,gPersistence_Forecast) ["Point"]
+
+String pGF_Utilityroom_Electricity_Cached_Inverter_Energy_State            "Status [%.2f €/kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
+
+Number:Energy pGF_Utilityroom_Electricity_Expected_Solar_East              "Ertrag Ost [%.2f €/kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State,gPersistence_Forecast) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_Expected_Solar_South             "Ertrag Süd [%.2f €/kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State,gPersistence_Forecast) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_Expected_Solar_West              "Ertrag West [%.2f €/kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State,gPersistence_Forecast) ["Point"]

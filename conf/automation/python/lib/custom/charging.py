@@ -10,8 +10,6 @@ class ChargingHelper:
         self.price_map = None
         self.date_map = None
 
-        self.is_grid_mode = False
-
     @staticmethod
     def findValueFromMap(key, values):
         slot_key = None
@@ -30,9 +28,7 @@ class ChargingHelper:
                 break
         return slot_value
 
-    def refresh(self, now, is_grid_mode):
-        self.is_grid_mode = is_grid_mode
-
+    def refresh(self, now):
         last_price_date = self.stock_price_persistence.persistedState(now + timedelta(days=2)).getTimestamp()
         if self.last_price_day != last_price_date.day:
             prices = self.stock_price_persistence.getAllStatesBetween(now - timedelta(minutes=15), last_price_date)
@@ -62,9 +58,6 @@ class ChargingHelper:
             self.price_map[self.date_map[0]["price"]].remove(self.date_map[0])
             del self.date_map[0]
 
-    def isGridMode(self):
-        return self.is_grid_mode
-
     def calculateRemainingSlots(self, start_time, end_time, current_time, current_energy_soc, target_energy_soc, min_charging_power, max_charging_power, charging_callback):
         missing_energy = target_energy_soc - current_energy_soc
 
@@ -83,7 +76,7 @@ class ChargingHelper:
             if remaining_slots_charged_energy >= missing_energy:
                 break
 
-        active_slot = next_slot = charge_msg = None
+        active_slot = next_slot = details_msg = None
         if len(remaining_slots) > 0:
             min_price = remaining_slots[0]["price"]
             max_price = remaining_slots[-1]["price"]
@@ -134,28 +127,26 @@ class ChargingHelper:
 
             price_msg = "{:.2f}-{:.2f}".format(min_price, max_price) if min_price != max_price else "{:.2f}".format(min_price)
             between_msg = "{} and {}".format(remaining_slots[0]["start"].strftime('%H:%M'), remaining_slots[-1]["end"].strftime('%H:%M'))
-            charge_msg = "🔋 Total {:.2f}kWh 💰 Price {}€/kWh 🕐 Between {} • Duration {:02d}:{:02d} ({} slots)".format(charged_enery, price_msg, between_msg, hours, minutes, len(remaining_slots))
+            details_msg = "🔋 Total {:.2f}kWh 💰 Price {}€/kWh 🕐 Between {} • Duration {:02d}:{:02d} ({} slots)".format(charged_enery, price_msg, between_msg, hours, minutes, len(remaining_slots))
 
-        return [active_slot, next_slot, charge_msg]
+        return [active_slot, next_slot, details_msg]
 
     def calculateRequestedPower(self, start_time, end_time, current_time, current_energy_soc, target_energy_soc, min_charging_power, max_charging_power, charging_callback):
-        requested_power = charge_msg = None
-        if self.is_grid_mode:
-            if target_energy_soc <= current_energy_soc:
-                state_msg = "No grid charging needed"
-            elif self.date_map[-1]["end"] < end_time:
-                state_msg = "No grid charging calculation possible (prices are not available)"
-            else:
-                active_slot, next_slot, charge_msg = self.calculateRemainingSlots(start_time, end_time, current_time, current_energy_soc, target_energy_soc, min_charging_power, max_charging_power, charging_callback)
-                if active_slot is not None:
-                    requested_power = active_slot["charging_power"]
-                    state_msg = "With {:.2f}kWh for {:.2f}€/kWh".format(active_slot["charging_power"], active_slot["price"])
-                else:
-                    state_msg = "No slot matches"
+        requested_power = details_msg = next_state_msg = None
 
-                if next_slot is not None:
-                    state_msg = "{} • Next slot at {} with {:.2f}kWh for {:.2f}€/kWh".format(state_msg, next_slot["start"].strftime('%H:%M'), next_slot["charging_power"], next_slot["price"])
+        if target_energy_soc <= current_energy_soc:
+            state_msg = "not needed"
+        elif self.date_map[-1]["end"] < end_time:
+            state_msg = "prices are not available"
         else:
-            state_msg = "No grid charging possible (grid is offline)"
+            active_slot, next_slot, details_msg = self.calculateRemainingSlots(start_time, end_time, current_time, current_energy_soc, target_energy_soc, min_charging_power, max_charging_power, charging_callback)
+            if active_slot is not None:
+                requested_power = active_slot["charging_power"]
+                state_msg = "for {:.2f}€/kWh".format(active_slot["price"])
+            else:
+                state_msg = "no slot matches"
 
-        return [requested_power, state_msg, charge_msg]
+            if next_slot is not None:
+                next_state_msg = "next slot at {} with {:.2f}kWh for {:.2f}€/kWh".format(next_slot["start"].strftime('%H:%M'), next_slot["charging_power"], next_slot["price"])
+
+        return [requested_power, state_msg, next_state_msg, details_msg]

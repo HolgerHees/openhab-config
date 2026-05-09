@@ -7,3 +7,5 @@ Thing shelly:shellyplusplug:socket6 "Steckdose Mobile 3" [deviceIp="{{custom_she
 Thing shelly:shellyplusplug:socket7 "Steckdose Mobile 4" [deviceIp="{{custom_shelly_socket_7_ip}}"]
 Thing shelly:shellyplusplug:socket8 "Steckdose Mobile 1" [deviceIp="{{custom_shelly_socket_8_ip}}"]
 Thing shelly:shellyplusplug:socket9 "Steckdose Mobile 2" [deviceIp="{{custom_shelly_socket_9_ip}}"]
+Thing shelly:shellypro3em:energy-meter-headpump-compressor "Wärmepumpe Stromzähler Kompressor" [deviceIp="{{custom_shelly_energy_meter_headpump_compressor_ip}}"]
+Thing shelly:shellypro3em:energy-meter-headpump-electro "Wärmepumpe Stromzähler Elektroheizung" [deviceIp="{{custom_shelly_energy_meter_headpump_electric_ip}}"]
