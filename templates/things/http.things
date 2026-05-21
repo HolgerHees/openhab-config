@@ -60,6 +60,7 @@ Thing http:url:fenecon-fast "Wechselrichter (Fast)" [baseURL="http://{{custom_pv
 Thing http:url:fenecon-control "Wechselrichter (Control)" [baseURL="http://{{custom_pv_inverter_garage_ip}}/rest/channel/", ignoreSSLErrors=true, authMode="BASIC_PREEMPTIVE", refresh="3600", commandMethod="POST", username="{{custom_pv_inverter_garage_username}}", password="{{custom_pv_inverter_garage_password}}"] {
     Channels:
         Type number : dummy                             "Dummy"                         [mode="READONLY",stateExtension="_sum/State"]
+        Type number : active-power-equals               "ActivePowerEquals"             [mode="WRITEONLY",commandTransformation="PY(|\"{'value': \" + (str(input) if input != '999999999' else 'null') + \"}\")",commandExtension="ess0/SetActivePowerEquals"]
         Type number : active-power-less-or-equals       "ActivePowerLessOrEquals"       [mode="WRITEONLY",commandTransformation="PY(|\"{'value': \" + (str(input) if input != '999999999' else 'null') + \"}\")",commandExtension="ess0/SetActivePowerLessOrEquals"]
         Type number : active-power-greater-or-equals    "ActivePowerGreaterOrEquals"    [mode="WRITEONLY",commandTransformation="PY(|\"{'value': \" + (str(input) if input != '999999999' else 'null') + \"}\")",commandExtension="ess0/SetActivePowerGreaterOrEquals"]
 }

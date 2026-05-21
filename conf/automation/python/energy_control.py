@@ -544,7 +544,7 @@ class StoragePower:
             ratio = (ratio * -1) + 4.0 # invert ration
             expected_consumed_solar_factor = (100 - ratio**3) / 100.0
 
-            expected_solar_msg = "{:.2f}kWh (direct {:.2f}kWh * {}, charged {:.2f}kWh)".format(expected_total_solar_production, expected_consumed_solar_production, expected_consumed_solar_factor, expected_chargeable_solar_production)
+            expected_solar_msg = "{:.2f}kWh (direct {:.2f}kWh * {:.2f}, charged {:.2f}kWh)".format(expected_total_solar_production, expected_consumed_solar_production, expected_consumed_solar_factor, expected_chargeable_solar_production)
 
             today_remaining_solar_production = sum(slot["total"] for slot in self.today_solar_forceast.values() if slot["timestamp"] >= now)
             _today_total_solar_production = sum(slot["total"] for slot in self.today_solar_forceast.values())

@@ -20,8 +20,7 @@ start_electricity_meter_offset = 0
 
 @rule(
    triggers = [
-       GenericCronTrigger("1 0 0 * * ?"),
-#       GenericCronTrigger("*/15 * * * * ?"),
+       GenericCronTrigger("0 0 0 * * ?"),
        ItemStateChangeTrigger("pGF_Utilityroom_Electricity_Heatpump_Compressor_Meter_Consumption"),
        ItemStateChangeTrigger("pGF_Utilityroom_Electricity_Heatpump_Electric_Meter_Consumption"),
    ]
@@ -45,21 +44,29 @@ class MeterConsumption:
         consumption_today_morning = ToolboxHelper.getPersistedState("pGF_Utilityroom_Electricity_State_Heatpump_Total_Consumption", datetime.now().astimezone().replace(hour=0, minute=0, second=0, microsecond=0) ).doubleValue()
         Registry.getItem("pGF_Utilityroom_Electricity_State_Heatpump_Daily_Consumption").postUpdateIfDifferent(consumption - consumption_today_morning)
 
-        if Registry.getItemState("pGF_Utilityroom_Heatpump_HW_State") == scope.ON:
-            total_item = "pGF_Utilityroom_Electricity_State_Heatpump_Heating_Total_Consumption"
-            daily_item = "pGF_Utilityroom_Electricity_State_Heatpump_Heating_Daily_Consumption"
-        elif Registry.getItemState("pGF_Utilityroom_Heatpump_WW_State") == scope.ON:
-            total_item = "pGF_Utilityroom_Electricity_State_Heatpump_Water_Total_Consumption"
-            daily_item = "pGF_Utilityroom_Electricity_State_Heatpump_Water_Daily_Consumption"
+        if input['event'].getType() == "TimerEvent":
+            Registry.getItem("pGF_Utilityroom_Electricity_State_Heatpump_Heating_Daily_Consumption").postUpdateIfDifferent(0)
+            Registry.getItem("pGF_Utilityroom_Electricity_State_Heatpump_Water_Daily_Consumption").postUpdateIfDifferent(0)
         else:
-            return
+            if Registry.getItemState("pGF_Utilityroom_Heatpump_HW_State") == scope.ON:
+                total_item = "pGF_Utilityroom_Electricity_State_Heatpump_Heating_Total_Consumption"
+                daily_item = "pGF_Utilityroom_Electricity_State_Heatpump_Heating_Daily_Consumption"
+            elif Registry.getItemState("pGF_Utilityroom_Heatpump_WW_State") == scope.ON:
+                total_item = "pGF_Utilityroom_Electricity_State_Heatpump_Water_Total_Consumption"
+                daily_item = "pGF_Utilityroom_Electricity_State_Heatpump_Water_Daily_Consumption"
+            else:
+                return
 
-        heating_consumption = Registry.getItemState(total_item).doubleValue()
-        heating_consumption += consumption - consumption_saved
-        Registry.getItem(total_item).postUpdateIfDifferent(heating_consumption)
+            heating_consumption = Registry.getItemState(total_item).doubleValue()
+            heating_consumption += consumption - consumption_saved
+            Registry.getItem(total_item).postUpdateIfDifferent(heating_consumption)
 
-        heating_consumption_today_morning = ToolboxHelper.getPersistedState(total_item, datetime.now().astimezone().replace(hour=0, minute=0, second=0, microsecond=0) ).doubleValue()
-        Registry.getItem(daily_item).postUpdateIfDifferent(heating_consumption - heating_consumption_today_morning)
+            heating_consumption_today_morning = ToolboxHelper.getPersistedState(total_item, datetime.now().astimezone().replace(hour=0, minute=0, second=0, microsecond=0) ).doubleValue()
+            Registry.getItem(daily_item).postUpdateIfDifferent(heating_consumption - heating_consumption_today_morning)
+
+heating_consumption = Registry.getItemState("pGF_Utilityroom_Electricity_State_Heatpump_Heating_Total_Consumption").doubleValue()
+heating_consumption_today_morning = ToolboxHelper.getPersistedState("pGF_Utilityroom_Electricity_State_Heatpump_Heating_Total_Consumption", datetime.now().astimezone().replace(hour=0, minute=0, second=0, microsecond=0) ).doubleValue()
+Registry.getItem("pGF_Utilityroom_Electricity_State_Heatpump_Heating_Daily_Consumption").postUpdateIfDifferent(heating_consumption - heating_consumption_today_morning)
 
 @rule(
     triggers = [

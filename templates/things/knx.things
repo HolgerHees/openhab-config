@@ -1,7 +1,7 @@
 Bridge knx:ip:bridge "Bridge KNX Gateway" [
 	type="TUNNEL",
 	ipAddress="{{custom_knx_gateway_ip}}",
-	localIp="{{default_server_ip}}",
+	localIp="{{custom_iot_trusted_server_ip}}",
 	portNumber=3671,
 	readingPause=50,
 	responseTimeout=10,

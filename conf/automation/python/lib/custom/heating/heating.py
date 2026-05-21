@@ -270,19 +270,16 @@ class Heating():
         return circulation_diff, pump_speed
 
     def calculateHeatingEnergy(self, is_forecast):
-        if is_forecast or Registry.getItemState(self.heating_state_item_name) == scope.OFF:
-            pump_speed = 0
-            circulation_diff = 0
-            debug_info = ""
-        else:
+        if not is_forecast and Registry.getItemState(self.heating_state_item_name) == scope.ON:
             temperature_pipe_out = Registry.getItemState(self.heating_temperature_pipe_out_item_name).doubleValue()
             temperature_pipe_in = Registry.getItemState(self.heating_temperature_pipe_in_item_name).doubleValue()
-            pump_speed = 100.0
-            circulation_diff = temperature_pipe_out - temperature_pipe_in
-            #Diff 9.6°C • VL 38.9°C • RL 29.3°C • 85% (0.42 m³)
-            debug_info = u"Diff {}°C • VL {}°C • RL {}°C • {}%".format(round(circulation_diff,1),round(temperature_pipe_out,1),round(temperature_pipe_in,1),pump_speed)
-
-        return circulation_diff, pump_speed, debug_info
+            if temperature_pipe_out - temperature_pipe_in > 1.0:
+                pump_speed = 100.0
+                circulation_diff = temperature_pipe_out - temperature_pipe_in
+                #Diff 9.6°C • VL 38.9°C • RL 29.3°C • 85% (0.42 m³)
+                debug_info = u"Diff {}°C • VL {}°C • RL {}°C • {}%".format(round(circulation_diff,1),round(temperature_pipe_out,1),round(temperature_pipe_in,1),pump_speed)
+                return circulation_diff, pump_speed, debug_info
+        return 0, 0, ""
 
     def calculateHeatingRadiation(self, heating_volume_factor, room_heating_volume, circulation_diff, pump_speed):
         if room_heating_volume != None:

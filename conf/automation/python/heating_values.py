@@ -22,8 +22,8 @@ class ErrorMessage:
 @rule(
     triggers = [
         ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_S_Betriebstatusanzeige"),
-        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_HK2_Vorlaufsolltemperatur"),
-        GenericCronTrigger("0 * * * * ?")
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_WP_Leistungsanforderung"),
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_HK2_Vorlaufsolltemperatur")
     ]
 )
 class HeatpumpState:
@@ -39,10 +39,10 @@ class HeatpumpState:
                 hw_status = scope.ON
 
         if wp_status == 19 and Registry.getItemState("pGF_Utilityroom_Heatpump_HK2_Vorlaufsolltemperatur").doubleValue() > 20.0:
-            temperature_pipe_out = Registry.getItemState("pGF_Utilityroom_Heating_Temperature_Pipe_Out").doubleValue()
-            temperature_pipe_in = Registry.getItemState("pGF_Utilityroom_Heating_Temperature_Pipe_In").doubleValue()
-            if temperature_pipe_out - temperature_pipe_in > 1.0:
-                hk2_status = scope.ON
+            #temperature_pipe_out = Registry.getItemState("pGF_Utilityroom_Heating_Temperature_Pipe_Out").doubleValue()
+            #temperature_pipe_in = Registry.getItemState("pGF_Utilityroom_Heating_Temperature_Pipe_In").doubleValue()
+            #if temperature_pipe_out - temperature_pipe_in > 1.0:
+            hk2_status = scope.ON
 
         Registry.getItem("pGF_Utilityroom_Heatpump_HK2_State").postUpdateIfDifferent(hk2_status)
         Registry.getItem("pGF_Utilityroom_Heatpump_HW_State").postUpdateIfDifferent(hw_status)
@@ -52,7 +52,6 @@ class HeatpumpState:
     triggers = [
         ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_HK2_State"),
         ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_HK2_Volumenstrom"),
-        GenericCronTrigger("0 * * * * ?")
     ]
 )
 class HeatpumpInfo:
