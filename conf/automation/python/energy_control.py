@@ -396,11 +396,11 @@ class StoragePower:
 
         if current_battery_soc < limit_battery_soc * 0.5:
             max_power_msg = "battery low"
-        elif current_battery_soc > STORAGE_MAX_CAPACITY * 0.95:
-            max_power_msg = "battery full"
-        elif current_battery_soc >= limit_battery_soc:
+        elif current_battery_soc >= limit_battery_soc and current_battery_soc < 100:
             requested_max_power = 0
             max_power_msg = "battery health"
+        elif current_battery_soc > STORAGE_MAX_CAPACITY * 0.95:
+            max_power_msg = "battery full"
         else:
             _charge_power_missing = limit_battery_soc - current_battery_soc
 

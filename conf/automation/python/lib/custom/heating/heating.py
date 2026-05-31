@@ -4,7 +4,7 @@ from shared.toolbox import ToolboxHelper
 
 from custom.presence import PresenceHelper
 from custom.flags import FlagHelper
-from custom.heating.house import Window
+from custom.heating.house import Window, ThermalBridgeType
 from custom.heating.state import RoomState, HouseState, HeatingState #, RoomHeatingState, HouseHeatingState
 from custom.suncalculation import SunRadiation
 
