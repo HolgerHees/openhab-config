@@ -1,5 +1,5 @@
 from openhab import rule, Registry
-from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger
+from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger, SystemStartlevelTrigger
 
 from shared.notification import NotificationHelper
 
@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 
 @rule(
     triggers = [
+        SystemStartlevelTrigger(80),
         GenericCronTrigger("0 */5 * * * ?"),
         ItemStateChangeTrigger("pOther_Plant_Sensor_State_Watering_Info"),
         ItemStateChangeTrigger("pOther_Plant_Sensor_State_Device_Info"),

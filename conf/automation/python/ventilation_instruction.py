@@ -6,7 +6,7 @@ from shared.toolbox import ToolboxHelper
 from shared.user import UserHelper
 
 from custom.presence import PresenceHelper
-from custom.alexa import AlexaHelper
+from custom.voice import VoiceAssistentHelper
 from custom.flags import FlagHelper
 from custom.weather import WeatherHelper
 
@@ -33,7 +33,7 @@ class Notification:
         self.debug = False
 
         #self.process(None, 3)
-        #AlexaHelper.sendTTSTest(self.logger,"test", header = "Lüftungshinweiss")
+        #VoiceAssistentHelper.sendTTSTest(self.logger,"test", header = "Lüftungshinweiss")
         
     def getOpenState(self,window_group_item_name,excludedItems=[]):
         isOpen = False
@@ -132,20 +132,20 @@ class Notification:
                     actions["CLOSE"].append("OG")
               
             push_msg = []
-            alexa_msg = []
+            voice_msg = []
             if len(actions["OPEN"]) == 2:
                 push_msg.append("Alle Fenster auf")
-                alexa_msg.append("Alle Fenster auf")
+                voice_msg.append("Alle Fenster auf")
             elif len(actions["CLOSE"]) == 2:
                 push_msg.append("Alle Fenster zu")
-                alexa_msg.append("Alle Fenster zu")
+                voice_msg.append("Alle Fenster zu")
             else:
                 if len(actions["OPEN"]) == 1:
                     push_msg.append("{} Fenster auf".format(actions["OPEN"][0]))
-                    alexa_msg.append("Fenster im {} auf".format("Obergeschoss" if actions["OPEN"][0] == "OG" else "Erdgeschoss"))
+                    voice_msg.append("Fenster im {} auf".format("Obergeschoss" if actions["OPEN"][0] == "OG" else "Erdgeschoss"))
                 if len(actions["CLOSE"]) == 1:
                     push_msg.append("{} Fenster zu".format(actions["CLOSE"][0]))
-                    alexa_msg.append("Fenster im {} zu".format("Obergeschoss" if actions["CLOSE"][0] == "OG" else "Erdgeschoss"))
+                    voice_msg.append("Fenster im {} zu".format("Obergeschoss" if actions["CLOSE"][0] == "OG" else "Erdgeschoss"))
 
             # we have messages and we are not sleeping
             if len(push_msg) > 0 and Registry.getItemState("pOther_Presence_State").intValue() not in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
@@ -156,9 +156,9 @@ class Notification:
                         NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, "Lüften", push_msg, recipients = recipients )
 
                     if FlagHelper.hasFlag(FlagHelper.NOTIFY_ALEXA, flags) and Registry.getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_PRESENT:
-                        alexa_msg = " und ".join(alexa_msg)
+                        voice_msg = " und ".join(voice_msg)
 
-                        AlexaHelper.sendTTS(alexa_msg, header = "Lüftungshinweiss")
+                        VoiceAssistentHelper.sendTTS(voice_msg, header = "Lüftungshinweiss")
                 else:
                     self.logger.info("MSG: {}".format(push_msg))
 

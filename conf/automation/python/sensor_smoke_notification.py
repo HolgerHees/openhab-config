@@ -3,7 +3,7 @@ from openhab.triggers import ItemStateChangeTrigger
 
 from shared.notification import NotificationHelper
 
-from custom.alexa import AlexaHelper
+from custom.voice import VoiceAssistentHelper
 
 import scope
 
@@ -17,4 +17,4 @@ class Main:
     def execute(self, module, input):
         NotificationHelper.sendNotification(NotificationHelper.PRIORITY_ALERT, "Alarm", "Rauchmelder")
 
-        AlexaHelper.sendTTS("Es brennt", priority = NotificationHelper.PRIORITY_ALERT)
+        VoiceAssistentHelper.sendTTS("Es brennt", priority = NotificationHelper.PRIORITY_ALERT)

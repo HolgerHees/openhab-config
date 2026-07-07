@@ -413,6 +413,9 @@ class Main:
         current_hk2_active = Registry.getItemState("pGF_Utilityroom_Heatpump_HK2_State") == scope.ON
         current_hk2_demand = Registry.getItemState("pGF_Utilityroom_Heatpump_HK2_Demand") == scope.ON
 
+        # REFRESH TEMPERATUR ITEM
+        Heating.current_temperature_garden_item_name = WeatherHelper.getTemperatureItemName()
+
         heating = Heating(self.logger, datetime.now().astimezone() ) #self.time )
 
         messured_radiation_short_term = WeatherHelper.getSolarPowerStableItemState(10).doubleValue()

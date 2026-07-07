@@ -1,5 +1,5 @@
 from openhab import rule, Registry
-from openhab.triggers import ItemStateChangeTrigger
+from openhab.triggers import ItemStateChangeTrigger, SystemStartlevelTrigger
 
 from shared.toolbox import ToolboxHelper
 
@@ -10,6 +10,7 @@ import scope
 class Main:
     def buildTriggers(self):
         triggers = []
+        triggers.append(SystemStartlevelTrigger(80))
         for item in Registry.getItem("gGF_Sensor_Doors").getAllMembers():
             triggers.append(ItemStateChangeTrigger(item.getName()))
         for item in Registry.getItem("gGF_Sensor_Window").getAllMembers():

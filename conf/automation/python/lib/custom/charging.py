@@ -28,7 +28,7 @@ class ChargingHelper:
                 break
         return slot_value
 
-    def refresh(self, now):
+    def refresh(self, logger, now):
         last_price_date = self.stock_price_persistence.persistedState(now + timedelta(days=2)).getTimestamp()
         if self.last_price_day != last_price_date.day:
             prices = self.stock_price_persistence.getAllStatesBetween(now - timedelta(minutes=15), last_price_date)
@@ -50,11 +50,18 @@ class ChargingHelper:
             for price, slots in price_map.items():
                 slots.sort(key=lambda x: x["start"].timestamp(), reverse=True)
 
-            self.date_map = date_map
-            self.price_map = dict(sorted(price_map.items(), key=lambda item: item[0]))
-            self.last_price_day = last_price_date.day
+            if len(date_map) == 0:
+                logger.error("NO PRICE MAP AVAILABLE. {} - {}".format(self.last_price_day, last_price_date))
 
-        if self.date_map[0]["end"] < now:
+                self.date_map = None
+                self.price_map = None
+                self.last_price_day = -1
+            else:
+                self.date_map = date_map
+                self.price_map = dict(sorted(price_map.items(), key=lambda item: item[0]))
+                self.last_price_day = last_price_date.day
+
+        if self.date_map is not None and self.date_map[0]["end"] < now:
             self.price_map[self.date_map[0]["price"]].remove(self.date_map[0])
             del self.date_map[0]
 
@@ -136,7 +143,7 @@ class ChargingHelper:
 
         if target_energy_soc <= current_energy_soc:
             state_msg = "not needed"
-        elif self.date_map[-1]["end"] < end_time:
+        elif self.date_map is None or self.date_map[-1]["end"] < end_time:
             state_msg = "prices are not available"
         else:
             active_slot, next_slot, details_msg = self.calculateRemainingSlots(start_time, end_time, current_time, current_energy_soc, target_energy_soc, min_charging_power, max_charging_power, charging_callback)

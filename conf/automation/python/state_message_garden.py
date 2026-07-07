@@ -1,11 +1,12 @@
 from openhab import rule, Registry
-from openhab.triggers import ItemStateChangeTrigger
+from openhab.triggers import ItemStateChangeTrigger, SystemStartlevelTrigger
 
 import scope
 
 
 @rule(
     triggers = [
+        SystemStartlevelTrigger(80),
         ItemStateChangeTrigger("pOutdoor_Watering_Logic_Program_State"),
         ItemStateChangeTrigger("gOutdoor_Watering_Circuits"),
         ItemStateChangeTrigger("pOutdoor_Light_Automatic_Main_Switch")

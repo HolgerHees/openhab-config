@@ -4,7 +4,7 @@ from openhab.triggers import GenericCronTrigger
 from shared.notification import NotificationHelper
 
 from custom.presence import PresenceHelper
-from custom.alexa import AlexaHelper
+from custom.voice import VoiceAssistentHelper
 from custom.flags import FlagHelper
 
 from datetime import datetime, timedelta
@@ -48,10 +48,10 @@ class Notification:
 
         if len(active) > 0:
             push_msg = ", ".join(active)
-            alexa_msg = " und ".join(active)
+            voice_msg = " und ".join(active)
 
             if FlagHelper.hasFlag(FlagHelper.NOTIFY_PUSH, flags):
                 NotificationHelper.sendNotification(NotificationHelper.PRIORITY_NOTICE, "Müllabholung",push_msg)
 
             if FlagHelper.hasFlag(FlagHelper.NOTIFY_ALEXA, flags) and getItemState("pOther_Presence_State").intValue() == PresenceHelper.STATE_PRESENT:
-                AlexaHelper.sendTTS(alexa_msg, header = "Müllabholung")
+                VoiceAssistentHelper.sendTTS(voice_msg, header = "Müllabholung")

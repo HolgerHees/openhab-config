@@ -25,7 +25,6 @@ class StateReset:
     def execute(self, module, input):
         Registry.getItem(input['event'].getItemName()).postUpdateIfDifferent(0)
 
-
 @rule(
     triggers = [
         SystemStartlevelTrigger(80),

@@ -1,11 +1,12 @@
 from openhab import rule, Registry
-from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger
+from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger, SystemStartlevelTrigger
 
 from shared.notification import NotificationHelper
 
 
 @rule(
     triggers = [
+        SystemStartlevelTrigger(80),
         GenericCronTrigger("0 */5 * * * ?"),
         ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_State_Message"),
         ItemStateChangeTrigger("pGF_Utilityroom_Electricity_State_Message"),

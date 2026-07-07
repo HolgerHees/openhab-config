@@ -1,0 +1,4 @@
+Thing gemini:account:smartserver [apiKey="{{custom_gemini_token}}", model="gemini-2.5-flash", temperature=1.0, topP=1.0, maxOutputTokens=2048, requestTimeout=30] {
+  Channels:
+    Type chat : chat "Chat" [model="gemini-2.5-flash", temperature=1.0, topP=1.0, maxOutputTokens=2048"]
+}

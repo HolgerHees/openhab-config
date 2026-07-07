@@ -5,7 +5,7 @@ from shared.toolbox import ToolboxHelper
 from shared.notification import NotificationHelper
 
 from custom.presence import PresenceHelper
-from custom.alexa import AlexaHelper
+from custom.voice import VoiceAssistentHelper
 
 from datetime import datetime
 
@@ -88,23 +88,23 @@ class SleepAlerts:
     def execute(self, module, input):
         if ToolboxHelper.isMember(input['event'].getItemName(), "gGF_Sensor_Doors"):
             msg = "Die Haustür wurde unerwartet geöffnet"
-            AlexaHelper.sendTTS(msg, location = "lFF_Bedroom", priority = NotificationHelper.PRIORITY_ALERT)
+            VoiceAssistentHelper.sendTTS(msg, location = "lFF_Bedroom", priority = NotificationHelper.PRIORITY_ALERT)
         elif ToolboxHelper.isMember(input['event'].getItemName(), "gGF_Sensor_Window"):
             msg = "Es wurde ein Fenster im Ergeschoss unerwartet geöffnet"
-            AlexaHelper.sendTTS(msg, location = "lFF_Bedroom", priority = NotificationHelper.PRIORITY_ALERT)
+            VoiceAssistentHelper.sendTTS(msg, location = "lFF_Bedroom", priority = NotificationHelper.PRIORITY_ALERT)
         elif ToolboxHelper.isMember(input['event'].getItemName(), "gFF_Sensor_Window"):
             msg = "Es wurde ein Fenster im Obergeschoss unerwartet geöffnet"
-            AlexaHelper.sendTTS(msg, location = "lFF_Bedroom", effects = AlexaHelper.EFFECT_WISPER)
+            VoiceAssistentHelper.sendTTS(msg, location = "lFF_Bedroom", effects = VoiceAssistentHelper.EFFECT_WISPER)
 
         elif input['event'].getItemName() == "pToolshed_Openingcontact_Door_State":
             msg = "Es wurde die Tür des Geräteschuppens unerwartet geöffnet"
-            AlexaHelper.sendTTS(msg, location = "lFF_Bedroom", priority = NotificationHelper.PRIORITY_ALERT)
+            VoiceAssistentHelper.sendTTS(msg, location = "lFF_Bedroom", priority = NotificationHelper.PRIORITY_ALERT)
         elif input['event'].getItemName() == "pToolshed_Openingcontact_Window_State":
             msg = "Es wurde das Fenster des Geräteschuppens unerwartet geöffnet"
-            AlexaHelper.sendTTS(msg, location = "lFF_Bedroom", priority = NotificationHelper.PRIORITY_ALERT)
+            VoiceAssistentHelper.sendTTS(msg, location = "lFF_Bedroom", priority = NotificationHelper.PRIORITY_ALERT)
         else:
             msg = "Unbekannter Fenster oder Tür Kontakt unerwartet geöffnet"
-            AlexaHelper.sendTTS(msg, location = "lFF_Bedroom", priority = NotificationHelper.PRIORITY_ALERT)
+            VoiceAssistentHelper.sendTTS(msg, location = "lFF_Bedroom", priority = NotificationHelper.PRIORITY_ALERT)
             self.logger.error(msg)
 
         NotificationHelper.sendNotification(NotificationHelper.PRIORITY_INFO, "Alarm", msg)

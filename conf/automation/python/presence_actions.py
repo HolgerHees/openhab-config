@@ -6,8 +6,7 @@ from shared.user import UserHelper
 from shared.toolbox import ToolboxHelper
 
 from custom.presence import PresenceHelper
-from custom.alexa import AlexaHelper
-from custom.shuffle import ShuffleHelper
+from custom.voice import VoiceAssistentHelper
 
 from custom.frigate import FrigateHelper
 
@@ -97,7 +96,7 @@ class KnownPerson:
         ItemStateChangeTrigger("pOther_Presence_Arrive_State")
     ]
 )
-class AlexaWelcome:
+class VoiceAssistentWelcome:
     def __init__(self):
         self.timer = None
 
@@ -136,11 +135,11 @@ class AlexaWelcome:
     def checkArriving(self, arrived_state_count):
         arrived_user = self.getArrivedUser(arrived_state_count)
         if len(arrived_user) > 0:
-            welcome_msg = ShuffleHelper.getRandomSynonym("Willkommen zu Hause", len(arrived_user) > 1)
-            AlexaHelper.sendTTS("Hallo {}, {}".format(" und Hallo ".join(arrived_user), welcome_msg), location = "lGF_Corridor")
+            welcome_msg = VoiceAssistentHelper.sendMessage("Begrüße {} und sage wie sehr du dich freust das sie wieder zurück sind. Drücke dies mit deinen eigenen Worten aus.".format(" und ".join(arrived_user)), False)
+            VoiceAssistentHelper.sendTTS(welcome_msg, location = "lGF_Corridor")
         elif self.isNewGuestArrived():
-            #AlexaHelper.sendTTS("Hallo, Oskar. Ein gesundes neues Jahr. Caspar freut sich schon.", location = "lGF_Corridor")
-            AlexaHelper.sendTTS("Hallo, unbekannter Gast. Die Hausbewohner wurden über Ihre Ankunft benachrichtigt.", location = "lGF_Corridor")
+            #VoiceAssistentHelper.sendTTS("Hallo, Oskar. Ein gesundes neues Jahr. Caspar freut sich schon.", location = "lGF_Corridor")
+            VoiceAssistentHelper.sendTTS("Hallo, unbekannter Gast. Die Hausbewohner wurden über Ihre Ankunft benachrichtigt.", location = "lGF_Corridor")
 
     def execute(self, module, input):
         if self.timer != None:

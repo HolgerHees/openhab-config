@@ -10,6 +10,7 @@ from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger
 
 from custom.weather import WeatherHelper
 from custom.charging import ChargingHelper
+from custom.watering import WateringHelper
 
 from configuration import customConfigs
 
@@ -63,6 +64,11 @@ HEATING_MIN_TEMPERATURE = -20.0
 HEATING_MAX_TEMPERATURE_DIFF = HEATING_MIN_TEMPERATURE - HEATING_MAX_TEMPERATURE
 HEATING_MAX_ENERGY = ( 16.05 * 11.0 ) / 4.0
 
+COOLING_MAX_TEMPERATURE = 35.00
+COOLING_MIN_TEMPERATURE = 24.00
+COOLING_MAX_TEMPERATURE_DIFF = COOLING_MAX_TEMPERATURE - COOLING_MIN_TEMPERATURE
+COOLING_MAX_ENERGY = 6.0 # KW per day
+
 #HOUSE_HEATING_MAP = {
 #    -6.0: 10.0,
 #    -4.0:  6.0,
@@ -86,7 +92,8 @@ FROST_GUARD_HEATING_MAP = {
     5.0:  0.0
 }
 
-ATTIC_LIGHT_ENERGY_PER_HOUR = 0.2
+ATTIC_LIGHT_ENERGY_PER_HOUR = 0.4 # 0.2
+WATER_PUMP_ENERGY_PER_HOUR = 1.6
 
 REST_API_NULL_VALUE = 999999999
 
@@ -329,7 +336,7 @@ class StoragePower:
             # this is why we recalculate forcecast every hour at 7 past
             self.next_cache_calculation = (now + timedelta(hours=1)).replace(minute=7,second=0, microsecond=0)
 
-    def getExpectedTotalDemand(self):
+    def getExpectedTotalDemand(self, now, charging_start, charging_end, dawn_duration):
         # House and water heating
         if self.avg_expected_temperature > HEATING_MAX_TEMPERATURE:
             house_heating = 0
@@ -338,17 +345,57 @@ class StoragePower:
         else:
             house_heating = ( self.avg_expected_temperature - HEATING_MAX_TEMPERATURE ) * HEATING_MAX_ENERGY / HEATING_MAX_TEMPERATURE_DIFF
 
-        # Garage plants heating
-        plant_energy = ChargingHelper.findValueFromMap(self.avg_expected_temperature, FROST_GUARD_HEATING_MAP)
+        # House cooling
+        if self.avg_expected_temperature < COOLING_MIN_TEMPERATURE:
+            house_cooling = 0
+        elif self.avg_expected_temperature > COOLING_MAX_TEMPERATURE:
+            house_cooling = COOLING_MAX_ENERGY
+        else:
+            house_cooling = ( self.avg_expected_temperature - COOLING_MIN_TEMPERATURE ) * COOLING_MAX_ENERGY / COOLING_MAX_TEMPERATURE_DIFF
 
         # Attic plants light
         state = Registry.getItemState("pOther_Manual_State_Auto_Attic_Light").intValue()
-        if state > 0:
-            plant_energy += (18 if state == 1 else 12) * ATTIC_LIGHT_ENERGY_PER_HOUR
+        indoor_plant_energy = (18 if state == 1 else 12) * ATTIC_LIGHT_ENERGY_PER_HOUR if state > 0 else 0
 
-        msg = "🏠 Base {:.2f}kWh 🔥 Heating {:.2f}kWh 🌳 Plants {:.2f}kWh".format(MAX_CONSUMPTION_PER_DAY, house_heating, plant_energy)
+        # Garage plants heating
+        outdoor_plant_energy = ChargingHelper.findValueFromMap(self.avg_expected_temperature, FROST_GUARD_HEATING_MAP)
 
-        return MAX_CONSUMPTION_PER_DAY + house_heating + plant_energy, house_heating + plant_energy, msg
+        # Garden plants irrigation
+        if Registry.getItemState("pOutdoor_Plant_Sensor_Lawn_Back_Left_Switch") == scope.ON:
+            state = Registry.getItemState("pOutdoor_Plant_Sensor_Lawn_Back_Left_State").intValue()
+            if state == WateringHelper.STATE_WATERING_MAYBE:
+                outdoor_plant_energy += 0.5 * WATER_PUMP_ENERGY_PER_HOUR
+            elif state == WateringHelper.STATE_WATERING_NOW:
+                outdoor_plant_energy += 1.0 * WATER_PUMP_ENERGY_PER_HOUR
+        if Registry.getItemState("pOutdoor_Plant_Sensor_Lawn_Streedside_Switch") == scope.ON:
+            state = Registry.getItemState("pOutdoor_Plant_Sensor_Lawn_Streedside_State").intValue()
+            if state == WateringHelper.STATE_WATERING_MAYBE:
+                outdoor_plant_energy += 0.5 * WATER_PUMP_ENERGY_PER_HOUR
+            elif state == WateringHelper.STATE_WATERING_NOW:
+                outdoor_plant_energy += 1.0 * WATER_PUMP_ENERGY_PER_HOUR
+
+        # DEBUG
+        msg = "🏠 Base {:.2f}kWh 🔥 Heating {:.2f}kWh 💨 Cooling {:.2f}kWh 🪴 Indoor {:.2f}kWh 🌳 Outdoor {:.2f}kWh".format(MAX_CONSUMPTION_PER_DAY, house_heating, house_cooling, indoor_plant_energy, outdoor_plant_energy)
+
+        _consumption_start = charging_start - timedelta(seconds=dawn_duration * 3)
+        _sleeping_time = _consumption_start.replace(hour=23,minute=0,second=0,microsecond=0)
+        evening_duration = ( _sleeping_time - (_consumption_start if now < _consumption_start else now) ).total_seconds() / 60.0 / 60.0 if now < _sleeping_time else 0
+
+        _consumption_end = charging_end + timedelta(seconds=dawn_duration * 3)
+        sleeping_duration = (_consumption_end - (_sleeping_time if now < _sleeping_time else now) ).total_seconds() / 60.0 / 60.0 if now < _consumption_end else 0
+
+        total_consumption = MAX_CONSUMPTION_PER_DAY + house_heating + house_cooling + indoor_plant_energy + outdoor_plant_energy
+
+        evening_consumption_per_hour = house_heating / 20 + house_cooling / 24 + ( indoor_plant_energy + outdoor_plant_energy ) / 18 # heating only during 20 hours, cooling during 24 hours, and the rest only during 18 hours
+        evening_consumption = round(evening_duration * (BASE_DAY_CONSUMPTION_PER_HOUR * 2 + evening_consumption_per_hour), 1)
+
+        sleep_consumption_per_hour = house_heating / 20 + house_cooling / 24
+        sleeping_consumption = round(sleeping_duration * (BASE_NIGHT_CONSUMPTION_PER_HOUR + sleep_consumption_per_hour), 1)
+
+        #print(evening_duration, evening_consumption, _consumption_start)
+        #print(sleeping_duration, sleeping_consumption, _consumption_end)
+
+        return total_consumption, evening_consumption + sleeping_consumption, msg
 
     def getStorageChargingPower(self, battery_soc):
         battery_percent = int(round(battery_soc * 100 / STORAGE_MAX_CAPACITY, 0))
@@ -387,28 +434,29 @@ class StoragePower:
             msg = "{} • reduced emergency".format(msg)
         return [is_allowed, msg]
 
-    def calculateStorageMaxSolarChargePower(self, now, current_battery_soc, limit_battery_soc):
+    def calculateStorageMaxSolarChargePower(self, now, current_battery_soc, max_battery_soc):
         requested_max_power = None
 
-        #limit_battery_soc = 50
-        #now = now.replace(hour=6) + timedelta(days=1)
-        solar_forecasts = self.today_solar_forceast # self.tomorrow_solar_forceast
+        if max_battery_soc < STORAGE_MAX_CAPACITY * 0.5: # not less then 50%
+            max_battery_soc = STORAGE_MAX_CAPACITY * 0.5
+        elif max_battery_soc > STORAGE_MAX_CAPACITY * 0.95: # upper 95% => 100%
+            max_battery_soc = STORAGE_MAX_CAPACITY
 
-        if current_battery_soc < limit_battery_soc * 0.5:
+        if current_battery_soc < max_battery_soc * 0.5:
             max_power_msg = "battery low"
-        elif current_battery_soc >= limit_battery_soc and current_battery_soc < 100:
-            requested_max_power = 0
-            max_power_msg = "battery health"
         elif current_battery_soc > STORAGE_MAX_CAPACITY * 0.95:
             max_power_msg = "battery full"
+        elif current_battery_soc >= max_battery_soc:
+            requested_max_power = 0
+            max_power_msg = "battery health"
         else:
-            _charge_power_missing = limit_battery_soc - current_battery_soc
+            _charge_power_missing = max_battery_soc - current_battery_soc
 
             _start_timestamp = now.replace(minute=math.floor(now.minute / 15) * 15, second=0, microsecond=0).timestamp()
             solar_min_limit = STORAGE_MIN_CHARGING_POWER / 4
             solar_slots_remaining = []
             solar_max_chargeable = 0
-            for slot in solar_forecasts.values():
+            for slot in self.today_solar_forceast.values():
                 if slot["timestamp"].timestamp() >= _start_timestamp: # cmp by timestamp for performance reason
                     solar_slots_remaining.append({"timestamp": slot["timestamp"], "chargeable": slot["chargeable"], "limit": None})
                 if slot["chargeable"] > solar_max_chargeable:
@@ -471,7 +519,7 @@ class StoragePower:
                     requested_max_power = _active_limit * 4
                     max_power_msg = "unil {}, end {}".format(_until_timestamp.strftime('%H:%M'), _end_timestamp.strftime('%H:%M'))
 
-        max_power_msg = "{}, max {:.0f}%".format(max_power_msg, limit_battery_soc * 100 / STORAGE_MAX_CAPACITY)
+        max_power_msg = "{}, max {:.0f}%".format(max_power_msg, max_battery_soc * 100 / STORAGE_MAX_CAPACITY)
 
         return [requested_max_power, max_power_msg]
 
@@ -484,6 +532,7 @@ class StoragePower:
     def calculateStorageChargeLevel(self, now):
         # ***************************************
         # *** INIT Timeranges, Vars and Cache ***
+        dawn = Registry.getItemState("pOutdoor_Astro_Dawn_Time").getZonedDateTime()
         sunrise = Registry.getItemState("pOutdoor_Astro_Sunrise_Time").getZonedDateTime()
         sunset = Registry.getItemState("pOutdoor_Astro_Sunset_Time").getZonedDateTime()
 
@@ -499,7 +548,6 @@ class StoragePower:
 
             consumption_start = charging_end.replace(hour=0, minute=0, second=0, microsecond=0)
             consumption_end = consumption_start + timedelta(days=1)
-        night_duration = (charging_end - (charging_start if now < charging_start else now)).total_seconds() / 60.0 / 60.0
 
         self.initStorageCache(now, consumption_start, consumption_end)
 
@@ -514,7 +562,8 @@ class StoragePower:
         today_consumption = Registry.getItemState("pGF_Utilityroom_Electricity_State_Daily_Consumption").doubleValue()
         today_production = Registry.getItemState("pGF_Utilityroom_Electricity_State_Daily_Production").doubleValue()
 
-        expected_total_demand, expected_heating_demand, expected_total_demand_msg = self.getExpectedTotalDemand()
+        #total_consumption, evening_consumption_per_hour, sleep_consumption_per_hour
+        expected_total_demand, expected_night_demand, expected_total_demand_msg = self.getExpectedTotalDemand(now, charging_start, charging_end, (sunrise - dawn).total_seconds())
 
         requested_grid_charge_power = requested_max_solar_charge_power = None
         grid_charge_state_msg = max_solar_charge_info = "wrong time"
@@ -540,11 +589,13 @@ class StoragePower:
                 expected_chargeable_solar_production += slot["chargeable"]
 
             # ratio of 1 => 0.73, 2 => 0.92, 3 => 0.99, 4 => 1.00
+            # factor of 1.0 is only used if 4 times more solar is available
+            # factor of 0.73 is only used if 1 times more solar is available
             ratio = min( expected_total_solar_production / expected_consumed_solar_production, 4)
             ratio = (ratio * -1) + 4.0 # invert ration
             expected_consumed_solar_factor = (100 - ratio**3) / 100.0
 
-            expected_solar_msg = "{:.2f}kWh (direct {:.2f}kWh * {:.2f}, charged {:.2f}kWh)".format(expected_total_solar_production, expected_consumed_solar_production, expected_consumed_solar_factor, expected_chargeable_solar_production)
+            expected_solar_msg = "total {:.2f}kWh • direct consumption {:.2f}kWh * {:.2f}, chargeable {:.2f}kWh)".format(expected_total_solar_production, expected_consumed_solar_production, expected_consumed_solar_factor, expected_chargeable_solar_production)
 
             today_remaining_solar_production = sum(slot["total"] for slot in self.today_solar_forceast.values() if slot["timestamp"] >= now)
             _today_total_solar_production = sum(slot["total"] for slot in self.today_solar_forceast.values())
@@ -560,27 +611,24 @@ class StoragePower:
             # *********************************************************
             # *** CALCULATE GENERAL BATTERY TARGET ********************
             # >>> INFO: goal is to charge enough energy, taking into account direct consumption
-            target_battery_soc = emergency_battery_soc + expected_total_demand - (today_consumption if now < sunrise else 0.0)
-            target_battery_soc -= expected_consumed_solar_production * expected_consumed_solar_factor
+            min_battery_soc = emergency_battery_soc + expected_total_demand - (today_consumption if now < sunrise else 0.0)
+            min_battery_soc -= expected_consumed_solar_production * expected_consumed_solar_factor
             battery_target_msg = "emergency + expected demand - consumed solar"
 
             # >>> INFO: if there is expected chargeable solar, it is priorized to give enough battery space (this prevents grid charge and "MAX SOLAR CHARGE" logic will take over)
-            if target_battery_soc + expected_chargeable_solar_production > STORAGE_MAX_CAPACITY:
-                target_battery_soc = STORAGE_MAX_CAPACITY - expected_chargeable_solar_production
+            if min_battery_soc + expected_chargeable_solar_production > STORAGE_MAX_CAPACITY:
+                min_battery_soc = STORAGE_MAX_CAPACITY - expected_chargeable_solar_production
                 battery_target_msg = "max capacity - chargeable solar"
 
             # >>> INFO: with a fallback to have enough at last for the evening and night (only happens if there is expected solar)
-            _evening_duration = night_duration - 8.0 if night_duration > 8.0 else 0
-            _sleeping_duration = night_duration - _evening_duration
-            heating_demand_per_hour = expected_heating_demand / 24
-            expected_total_demand_during_night = round(_evening_duration * (BASE_DAY_CONSUMPTION_PER_HOUR + heating_demand_per_hour) + _sleeping_duration * (BASE_NIGHT_CONSUMPTION_PER_HOUR + heating_demand_per_hour), 1)
-            if target_battery_soc < emergency_battery_soc + expected_total_demand_during_night:
-                target_battery_soc = emergency_battery_soc + expected_total_demand_during_night
+            if min_battery_soc < emergency_battery_soc + expected_night_demand:
+                min_battery_soc = emergency_battery_soc + expected_night_demand
                 battery_target_msg = "emergency + evening/night demand"
 
-            _target_battery_percent = target_battery_soc * 100 / STORAGE_MAX_CAPACITY
-            self.logger.info("Forecast: {} 🌞 Solar {}".format(expected_total_demand_msg, expected_solar_msg))
-            self.logger.info("        : 🏠 Total demand {:.2f}kWh 🔋 Battery target {:.2f}kWh ({:.0f}%) ({})".format(expected_total_demand, target_battery_soc, _target_battery_percent, battery_target_msg))
+            _min_battery_percent = min_battery_soc * 100 / STORAGE_MAX_CAPACITY
+            self.logger.info("Forecast: {}".format(expected_total_demand_msg))
+            self.logger.info("        : 🌞 Solar {}".format(expected_solar_msg))
+            self.logger.info("        : 🏠 Total demand {:.2f}kWh 🔋 Min Battery {:.2f}kWh ({:.0f}%) ({})".format(expected_total_demand, min_battery_soc, _min_battery_percent, battery_target_msg))
             self.logger.info("        : --")
 
             self.logger.info("Current : 🔋 Battery {:.2f}kWh ({:.0f}%) • {:.2f}kWh ({:.2f}€/kWh) • {:.2f}kWh (0.00€/kWh) 💰 Spot price {:.2f}€/kWh".format(current_battery_soc, current_battery_percent, grid_battery_soc, battery_price, solar_battery_soc, stock_price))
@@ -595,38 +643,29 @@ class StoragePower:
                 _maximumSinceOneWeekState = Registry.getItem("pGF_Garage_Solar_Storage_EssSoc").getPersistence("jdbc").maximumSince(sunrise - timedelta(days=6))
                 _forceFullStorageCharge = _maximumSinceOneWeekState.getState().intValue() != 100 or now.date() == _maximumSinceOneWeekState.getTimestamp().date()
                 if _forceFullStorageCharge or expected_total_solar_production < expected_total_demand * SOLAR_SAFETY_TRESHOLD: # charge once a week to 100% or for min battery level, tomorrow must be 50% more then needed (safty net)
-                    min_level = 1.0
+                    max_level = 1.0
                 else:
                     # >>> INFO: just charge enough for the next day, taking into account direct consumption
-                    _min_soc = emergency_battery_soc + expected_total_demand - expected_consumed_solar_production * expected_consumed_solar_factor # today evening consumtion is included in (expected_total_demand), because tomorrow evening consumption does not matter here
-                    min_level = 1.0 if _min_soc > STORAGE_MAX_CAPACITY else min(round(_min_soc / STORAGE_MAX_CAPACITY, 2), 1.0)
+                    _max_battey_soc = emergency_battery_soc + expected_total_demand - expected_consumed_solar_production * expected_consumed_solar_factor # today evening consumtion is included in (expected_total_demand), because tomorrow evening consumption does not matter here
+                    if min_battery_soc > _max_battey_soc:
+                        self.logger.error("        : Unexpected target battery soc Min: {} > Max: {}",format(min_battery_soc, _max_battey_soc))
+                        _max_battey_soc = min_battery_soc
+                    max_level = 1.0 if _max_battey_soc > STORAGE_MAX_CAPACITY else min(round(_max_battey_soc / STORAGE_MAX_CAPACITY, 2), 1.0)
 
-                limit_battery_soc = round(STORAGE_MAX_CAPACITY * min_level, 1)
-                requested_max_solar_charge_power, max_solar_charge_info = self.calculateStorageMaxSolarChargePower(now, current_battery_soc, limit_battery_soc)
+                requested_max_solar_charge_power, max_solar_charge_info = self.calculateStorageMaxSolarChargePower(now, current_battery_soc, round(STORAGE_MAX_CAPACITY * max_level, 1))
 
-                #_duration_until_evening = (sunset - now).total_seconds() / 60.0 / 60.0
-                #_expected_total_demand_until_evening = round(_duration_until_evening * (BASE_DAY_CONSUMPTION_PER_HOUR + heating_demand_per_hour), 1)
-                #_target_battery_soc_until_evening = emergency_battery_soc + _expected_total_demand_until_evening - today_remaining_solar_production
-                #if requested_max_solar_charge_power is None and current_battery_soc < _target_battery_soc_until_evening:
-                #    charging_start = now
-                #    charging_end = sunset
-                #    target_battery_soc = _target_battery_soc_until_evening
-                #    _target_battery_percent = target_battery_soc * 100 / STORAGE_MAX_CAPACITY
-                #    self.logger.error("Overload: ✨ Battery too low to last until evening • 🔋 Battery target {:.2f}kWh ({:.0f}%) (emergency + expected demand - remaining solar => until evening)".format(target_battery_soc, _target_battery_percent))
-                #    self.logger.error("        : --")
-                #else:
-                target_battery_soc = None
+                min_battery_soc = None
             # ********************************************************
 
             # *******************************************************
             # *** CALCULATE POSSIBLE CHARGING *****
-            if target_battery_soc is not None:
+            if min_battery_soc is not None:
                 requested_grid_charge_power, grid_charge_state_msg, grid_charge_next_state_msg, grid_charge_details_msg = self.charging_helper.calculateRequestedPower(
                     start_time = charging_start,
                     end_time = charging_end,
                     current_time = now,
                     current_energy_soc = current_battery_soc,
-                    target_energy_soc = target_battery_soc,
+                    target_energy_soc = min_battery_soc,
                     min_charging_power = STORAGE_MIN_CHARGING_POWER,
                     max_charging_power = STORAGE_MAX_CHARGING_POWER,
                     charging_callback = self.getStorageChargingPower
@@ -695,7 +734,7 @@ class StoragePower:
         now = datetime.now().astimezone()
 
         # *** INIT
-        self.charging_helper.refresh(now)
+        self.charging_helper.refresh(self.logger, now)
 
         # *** BATTERY CHARGING
         if Registry.getItemState("pGF_Garage_Solar_Inverter_Charge_Control") == scope.ON:

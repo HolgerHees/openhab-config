@@ -14,7 +14,7 @@ class WeatherHelper:
     # *** TEMPERATURE ***
     @staticmethod
     def getTemperatureItemName():
-        return "pOutdoor_WeatherStation_Temperature" if Registry.getItemState("pOutdoor_WeatherStation_Is_Working") == scope.ON else "pGF_Utilityroom_Heating_Temperature_Outdoor"
+        return "pOutdoor_WeatherStation_Temperature" if Registry.getItemState("pOutdoor_WeatherStation_Is_Working") == scope.ON else "pGF_Utilityroom_Heatpump_S_Aussentemperatur"
 
     @staticmethod
     def getTemperatureStableItemState(time_slot):
@@ -22,7 +22,7 @@ class WeatherHelper:
 
     #@staticmethod
     #def getTemperature():
-    #    return Registry.getItemState("pOutdoor_WeatherStation_Temperature").doubleValue() if Registry.getItemState("pOutdoor_WeatherStation_Is_Working") == ON else Registry.getItemState("pGF_Utilityroom_Heating_Temperature_Outdoor").doubleValue()
+    #    return Registry.getItemState("pOutdoor_WeatherStation_Temperature").doubleValue() if Registry.getItemState("pOutdoor_WeatherStation_Is_Working") == ON else Registry.getItemState("pGF_Utilityroom_Heatpump_S_Aussentemperatur").doubleValue()
 
     # *** SOLAR_POWER ***
     @staticmethod
