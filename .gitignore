@@ -2,6 +2,8 @@
 
 .env*
 .vscode*
+conf/yaml/composed*
+conf/services*
 conf/html/shared*
 conf/automation/python/typings*
 conf/automation/python/lib/openhab*
