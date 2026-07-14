@@ -1,0 +1,7 @@
+version: 1
+
+things:
+  pushover:pushover-account:account:
+    config:
+      apikey: !literal ${ENV:CUSTOM_PUSHOVER_API_KEY}
+      user: !literal ${ENV:CUSTOM_PUSHOVER_USER_KEY}

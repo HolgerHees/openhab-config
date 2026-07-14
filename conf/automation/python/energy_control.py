@@ -345,13 +345,14 @@ class StoragePower:
         else:
             house_heating = ( self.avg_expected_temperature - HEATING_MAX_TEMPERATURE ) * HEATING_MAX_ENERGY / HEATING_MAX_TEMPERATURE_DIFF
 
-        # House cooling
-        if self.avg_expected_temperature < COOLING_MIN_TEMPERATURE:
-            house_cooling = 0
-        elif self.avg_expected_temperature > COOLING_MAX_TEMPERATURE:
-            house_cooling = COOLING_MAX_ENERGY
-        else:
-            house_cooling = ( self.avg_expected_temperature - COOLING_MIN_TEMPERATURE ) * COOLING_MAX_ENERGY / COOLING_MAX_TEMPERATURE_DIFF
+        if Registry.getItemState("pGF_Utilityroom_Ventilation_Clime_Power") == scope.ON and Registry.getItemState("pGF_Utilityroom_Ventilation_Clime_Season").intValue() == 2:
+            # House cooling
+            if self.avg_expected_temperature < COOLING_MIN_TEMPERATURE:
+                house_cooling = 0
+            elif self.avg_expected_temperature > COOLING_MAX_TEMPERATURE:
+                house_cooling = COOLING_MAX_ENERGY
+            else:
+                house_cooling = ( self.avg_expected_temperature - COOLING_MIN_TEMPERATURE ) * COOLING_MAX_ENERGY / COOLING_MAX_TEMPERATURE_DIFF
 
         # Attic plants light
         state = Registry.getItemState("pOther_Manual_State_Auto_Attic_Light").intValue()
@@ -647,8 +648,8 @@ class StoragePower:
                 else:
                     # >>> INFO: just charge enough for the next day, taking into account direct consumption
                     _max_battey_soc = emergency_battery_soc + expected_total_demand - expected_consumed_solar_production * expected_consumed_solar_factor # today evening consumtion is included in (expected_total_demand), because tomorrow evening consumption does not matter here
+
                     if min_battery_soc > _max_battey_soc:
-                        self.logger.error("        : Unexpected target battery soc Min: {} > Max: {}",format(min_battery_soc, _max_battey_soc))
                         _max_battey_soc = min_battery_soc
                     max_level = 1.0 if _max_battey_soc > STORAGE_MAX_CAPACITY else min(round(_max_battey_soc / STORAGE_MAX_CAPACITY, 2), 1.0)
 

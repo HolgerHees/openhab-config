@@ -1,0 +1,666 @@
+version: 1
+
+things:
+  modbus:tcp:heatpump:
+    isBridge: true
+    label: Wärmepumpe Bridge
+    config:
+      host: ${ENV.CUSTOM_HEATPUMP_IP}
+      port: 502
+      id: 1
+
+  modbus:poller:heatpump:heatpump_system_input:
+    isBridge: true
+    bridge: modbus:tcp:heatpump
+    label: Wärmepumpe System
+    config:
+      refresh: 60000
+      start: 30001
+      length: 6
+      type: input
+
+  modbus:data:heatpump:heatpump_system_input:System_Aussentemperatur:
+    bridge: modbus:poller:heatpump:heatpump_system_input
+    label: Wärmepumpe System Außentemperatur
+    config:
+      readStart: "30001"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_system_input:System_Fehler:
+    bridge: modbus:poller:heatpump:heatpump_system_input
+    label: Wärmepumpe System Fehler
+    config:
+      readStart: "30003"
+      readValueType: uint16
+
+  modbus:data:heatpump:heatpump_system_input:System_Warnung:
+    bridge: modbus:poller:heatpump:heatpump_system_input
+    label: Wärmepumpe System Warnung
+    config:
+      readStart: "30004"
+      readValueType: uint16
+
+  modbus:data:heatpump:heatpump_system_input:System_Fehlerfrei:
+    bridge: modbus:poller:heatpump:heatpump_system_input
+    label: Wärmepumpe System Fehlerfrei
+    config:
+      readStart: "30005"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_system_input:System_Betriebstatusanzeige:
+    bridge: modbus:poller:heatpump:heatpump_system_input
+    label: Wärmepumpe System Betriebstatusanzeige
+    config:
+      readStart: "30006"
+      readValueType: int16
+
+  modbus:poller:heatpump:heatpump_system_holding:
+    isBridge: true
+    bridge: modbus:tcp:heatpump
+    label: Wärmepumpe System
+    config:
+      refresh: 60000
+      start: 40001
+      length: 1
+      type: holding
+
+  modbus:data:heatpump:heatpump_system_holding:System_Systembetriebsart:
+    bridge: modbus:poller:heatpump:heatpump_system_holding
+    label: Wärmepumpe System Systembetriebsart
+    config:
+      readStart: "40001"
+      readValueType: int16
+      writeStart: "40001"
+      writeType: holding
+      writeValueType: int16
+
+  modbus:poller:heatpump:heatpump_wp_input:
+    isBridge: true
+    bridge: modbus:tcp:heatpump
+    label: Wärmepumpe WP
+    config:
+      refresh: 60000
+      start: 33101
+      length: 11
+      type: input
+
+  modbus:data:heatpump:heatpump_wp_input:WP_Betrieb:
+    bridge: modbus:poller:heatpump:heatpump_wp_input
+    label: Wärmepumpe WP Betrieb
+    config:
+      readStart: "33101"
+      readValueType: uint16
+
+  modbus:data:heatpump:heatpump_wp_input:WP_Stoermeldung:
+    bridge: modbus:poller:heatpump:heatpump_wp_input
+    label: Wärmepumpe WP Störmeldung
+    config:
+      readStart: "33102"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_wp_input:WP_Leistungsanforderung:
+    bridge: modbus:poller:heatpump:heatpump_wp_input
+    label: Wärmepumpe WP Leistungsanforderung
+    config:
+      readStart: "33103"
+      readValueType: int16
+
+  #modbus:data:heatpump:heatpump_wp_input:WP_Vorlauftemperatur:
+  #  bridge: modbus:poller:heatpump:heatpump_wp_input
+  #  label: Wärmepumpe WP Vorlauftemperatur
+  #  config:
+  #    readStart: "33104"
+  #    readValueType: int16
+
+  modbus:data:heatpump:heatpump_wp_input:WP_Ruecklauftemperatur:
+    bridge: modbus:poller:heatpump:heatpump_wp_input
+    label: Wärmepumpe WP Rücklauftemperatur
+    config:
+      readStart: "33105"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_wp_input:WP_Verdampfungstemperatur:
+    bridge: modbus:poller:heatpump:heatpump_wp_input
+    label: Wärmepumpe WP Verdampfer
+    config:
+      readStart: "33106"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_wp_input:WP_Verdichtersauggastemp:
+    bridge: modbus:poller:heatpump:heatpump_wp_input
+    label: Wärmepumpe WP Verdichter
+    config:
+      readStart: "33107"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_wp_input:WP_Weichentemperatur:
+    bridge: modbus:poller:heatpump:heatpump_wp_input
+    label: Wärmepumpe WP Weiche
+    config:
+      readStart: "33108"
+      readValueType: int16
+
+  #modbus:data:heatpump:heatpump_wp_input:WP_Regenerativtemperatur: // always 32768
+  #  bridge: modbus:poller:heatpump:heatpump_wp_input
+  #  label: Wärmepumpe WP Regenerativ
+  #  config:
+  #    readStart: "33109"
+  #    readValueType: int16
+
+  modbus:data:heatpump:heatpump_wp_input:WP_Puffertemperatur:
+    bridge: modbus:poller:heatpump:heatpump_wp_input
+    label: Wärmepumpe WP Puffer
+    config:
+      readStart: "33110"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_wp_input:WP_Vorlauftemperatur:
+    bridge: modbus:poller:heatpump:heatpump_wp_input
+    label: Wärmepumpe WP Vorlauftemperatur
+    config:
+      readStart: "33111"
+      readValueType: int16
+
+  modbus:poller:heatpump:heatpump_wp_holding:
+    isBridge: true
+    bridge: modbus:tcp:heatpump
+    label: Wärmepumpe WP
+    config:
+      refresh: 60000
+      start: 43101
+      length: 9
+      type: holding
+
+  modbus:data:heatpump:heatpump_wp_holding:WP_Konfiguration_Ruhemodus:
+    bridge: modbus:poller:heatpump:heatpump_wp_holding
+    label: Wärmepumpe WP Konfiguration/Ruhemodus
+    config:
+      readStart: "43101"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_wp_holding:WP_PumpeEinschaltart:
+    bridge: modbus:poller:heatpump:heatpump_wp_holding
+    label: Wärmepumpe WP Pumpe Einschaltart
+    config:
+      readStart: "43102"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_wp_holding:WP_PumpeLeistungHeizen:
+    bridge: modbus:poller:heatpump:heatpump_wp_holding
+    label: Wärmepumpe WP Pumpe Leistung Heize
+    config:
+      readStart: "43103"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_wp_holding:WP_PumpeLeistungWarmwasser:
+    bridge: modbus:poller:heatpump:heatpump_wp_holding
+    label: Wärmepumpe WP Pumpe Leistung Warmwasser
+    config:
+      readStart: "43105"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_wp_holding:WP_PumpeLeistungAbtaubetrieb:
+    bridge: modbus:poller:heatpump:heatpump_wp_holding
+    label: Wärmepumpe WP Pumpe Leistung Abtaubetrieb
+    config:
+      readStart: "43106"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_wp_holding:WP_VolumenstromHeizen:
+    bridge: modbus:poller:heatpump:heatpump_wp_holding
+    label: Wärmepumpe WP Volumenstrom Heizen
+    config:
+      readStart: "43107"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_wp_holding:WP_VolumenstromWarmwasser:
+    bridge: modbus:poller:heatpump:heatpump_wp_holding
+    label: Wärmepumpe WP Volumenstrom Warmwasser
+    config:
+      readStart: "43109"
+      readValueType: int16
+
+  modbus:poller:heatpump:heatpump_2wez_input:
+    isBridge: true
+    bridge: modbus:tcp:heatpump
+    label: Wärmepumpe 2WEZ
+    config:
+      refresh: 60000
+      start: 34101
+      length: 7
+      type: input
+
+  modbus:data:heatpump:heatpump_2wez_input:WEZ2_Status2WEZ:
+    bridge: modbus:poller:heatpump:heatpump_2wez_input
+    label: Wärmepumpe 2WEZ Status 2. WEZ
+    config:
+      readStart: "34101"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_2wez_input:WEZ2_Betriebsstunden2WEZ:
+    bridge: modbus:poller:heatpump:heatpump_2wez_input
+    label: Wärmepumpe 2WEZ Betriebsstunden 2WEZ
+    config:
+      readStart: "34102"
+      readValueType: uint16
+
+  modbus:data:heatpump:heatpump_2wez_input:WEZ2_Schaltspiele2WEZ:
+    bridge: modbus:poller:heatpump:heatpump_2wez_input
+    label: Wärmepumpe 2WEZ Schaltspiele 2WEZ
+    config:
+      readStart: "34103"
+      readValueType: uint16
+
+  modbus:data:heatpump:heatpump_2wez_input:WEZ2_StatusEHeizung1:
+    bridge: modbus:poller:heatpump:heatpump_2wez_input
+    label: Wärmepumpe 2WEZ Status EHeizung 1
+    config:
+      readStart: "34104"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_2wez_input:WEZ2_StatusEHeizung2:
+    bridge: modbus:poller:heatpump:heatpump_2wez_input
+    label: Wärmepumpe 2WEZ Status EHeizung 2
+    config:
+      readStart: "34105"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_2wez_input:WEZ2_BetriebsstundenE1:
+    bridge: modbus:poller:heatpump:heatpump_2wez_input
+    label: Wärmepumpe 2WEZ Betriebsstunden E1
+    config:
+      readStart: "34106"
+      readValueType: uint16
+
+  modbus:data:heatpump:heatpump_2wez_input:WEZ2_BetriebsstundenE2:
+    bridge: modbus:poller:heatpump:heatpump_2wez_input
+    label: Wärmepumpe 2WEZ Betriebsstunden E2
+    config:
+      readStart: "34107"
+      readValueType: uint16
+
+  modbus:poller:heatpump:heatpump_2wez_holding:
+    isBridge: true
+    bridge: modbus:tcp:heatpump
+    label: Wärmepumpe 2WEZ
+    config:
+      refresh: 60000
+      start: 44101
+      length: 4
+      type: holding
+
+  modbus:data:heatpump:heatpump_2wez_holding:WEZ2_Konfiguration:
+    bridge: modbus:poller:heatpump:heatpump_2wez_holding
+    label: Wärmepumpe 2WEZ Konfiguration
+    config:
+      readStart: "44101"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_2wez_holding:WEZ2_Grenztemperatur:
+    bridge: modbus:poller:heatpump:heatpump_2wez_holding
+    label: Wärmepumpe 2WEZ Grenztemperatur
+    config:
+      readStart: "44102"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_2wez_holding:WEZ2_Bivalenztemperatur:
+    bridge: modbus:poller:heatpump:heatpump_2wez_holding
+    label: Wärmepumpe 2WEZ Bivalenztemperatur
+    config:
+      readStart: "44103"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_2wez_holding:WEZ2_BivalenztemperaturWW:
+    bridge: modbus:poller:heatpump:heatpump_2wez_holding
+    label: Wärmepumpe 2WEZ Bivalenztemperatur WW
+    config:
+      readStart: "44104"
+      readValueType: int16
+
+  modbus:poller:heatpump:heatpump_hk2_input:
+    isBridge: true
+    bridge: modbus:tcp:heatpump
+    label: Wärmepumpe HK2
+    config:
+      refresh: 60000
+      start: 31201
+      length: 6
+      type: input
+
+  modbus:data:heatpump:heatpump_hk2_input:HK2_Raumsolltemperatur:
+    bridge: modbus:poller:heatpump:heatpump_hk2_input
+    label: Wärmepumpe HK2 Raumsolltemperatur
+    config:
+      readStart: "31201"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_hk2_input:HK2_Vorlaufsolltemperatur:
+    bridge: modbus:poller:heatpump:heatpump_hk2_input
+    label: Wärmepumpe HK2 Vorlaufsolltemperatur
+    config:
+      readStart: "31204"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_hk2_input:HK2_Vorlauftemperatur:
+    bridge: modbus:poller:heatpump:heatpump_hk2_input
+    label: Wärmepumpe HK2 Vorlauftemperatur
+    config:
+      readStart: "31205"
+      readValueType: int16
+
+  modbus:poller:heatpump:heatpump_hk2_holding:
+    isBridge: true
+    bridge: modbus:tcp:heatpump
+    label: Wärmepumpe HK2
+    config:
+      refresh: 60000
+      start: 41201
+      length: 12
+      type: holding
+
+  modbus:data:heatpump:heatpump_hk2_holding:HK2_Konfiguration:
+    bridge: modbus:poller:heatpump:heatpump_hk2_holding
+    label: Wärmepumpe HK2 Konfiguration
+    config:
+      readStart: "41201"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_hk2_holding:HK2_AnforderungTyp:
+    bridge: modbus:poller:heatpump:heatpump_hk2_holding
+    label: Wärmepumpe HK2 Anforderung Typ
+    config:
+      readStart: "41202"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_hk2_holding:HK2_Betriebsart:
+    bridge: modbus:poller:heatpump:heatpump_hk2_holding
+    label: Wärmepumpe HK2 Betriebsart
+    config:
+      readStart: "41203"
+      readValueType: int16
+      writeStart: "41203"
+      writeType: holding
+      writeValueType: int16
+
+  modbus:data:heatpump:heatpump_hk2_holding:HK2_PauseParty:
+    bridge: modbus:poller:heatpump:heatpump_hk2_holding
+    label: Wärmepumpe HK2 Pause / Party
+    config:
+      readStart: "41204"
+      readValueType: int16
+      writeStart: "41204"
+      writeType: holding
+      writeValueType: int16
+
+  modbus:data:heatpump:heatpump_hk2_holding:HK2_RaumsolltemperaturKomfort:
+    bridge: modbus:poller:heatpump:heatpump_hk2_holding
+    label: Wärmepumpe HK2 Raumsolltemperatur Komfort
+    config:
+      readStart: "41205"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_hk2_holding:HK2_RaumsolltemperaturNormal:
+    bridge: modbus:poller:heatpump:heatpump_hk2_holding
+    label: Wärmepumpe HK2 Raumsolltemperatur Normal
+    config:
+      readStart: "41206"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_hk2_holding:HK2_RaumsolltemperaturAbsenk:
+    bridge: modbus:poller:heatpump:heatpump_hk2_holding
+    label: Wärmepumpe HK2 Raumsolltemperatur Absenk
+    config:
+      readStart: "41207"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_hk2_holding:HK2_Heizkennlinie:
+    bridge: modbus:poller:heatpump:heatpump_hk2_holding
+    label: Wärmepumpe HK2 Heizkennlinie
+    config:
+      readStart: "41208"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_hk2_holding:HK2_SommerWinterUmschaltung:
+    bridge: modbus:poller:heatpump:heatpump_hk2_holding
+    label: Wärmepumpe HK2 Sommer Winter Umschaltung
+    config:
+      readStart: "41209"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_hk2_holding:HK2_HeizenKonstanttemperatur:
+    bridge: modbus:poller:heatpump:heatpump_hk2_holding
+    label: Wärmepumpe HK2 Heizen Konstanttemperatur
+    config:
+      readStart: "41210"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_hk2_holding:HK2_HeizenKonstanttempAbsenk:
+    bridge: modbus:poller:heatpump:heatpump_hk2_holding
+    label: Wärmepumpe HK2 Heizen Konstanttemp Absenk
+    config:
+      readStart: "41211"
+      readValueType: int16
+
+  modbus:poller:heatpump:heatpump_ww_input:
+    isBridge: true
+    bridge: modbus:tcp:heatpump
+    label: Wärmepumpe WW
+    config:
+      refresh: 60000
+      start: 32101
+      length: 2
+      type: input
+
+  modbus:data:heatpump:heatpump_ww_input:WW_Warmwassersolltemperatur:
+    bridge: modbus:poller:heatpump:heatpump_ww_input
+    label: Wärmepumpe WW Warmwassersolltemperatur
+    config:
+      readStart: "32101"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_ww_input:WW_Warmwassertemperatur:
+    bridge: modbus:poller:heatpump:heatpump_ww_input
+    label: Wärmepumpe WW Warmwassertemperatur
+    config:
+      readStart: "32102"
+      readValueType: int16
+
+  modbus:poller:heatpump:heatpump_ww_holding:
+    isBridge: true
+    bridge: modbus:tcp:heatpump
+    label: Wärmepumpe WW
+    config:
+      refresh: 60000
+      start: 42101
+      length: 5
+      type: holding
+
+  modbus:data:heatpump:heatpump_ww_holding:WW_Konfiguration:
+    bridge: modbus:poller:heatpump:heatpump_ww_holding
+    label: Wärmepumpe WW Konfiguration
+    config:
+      readStart: "42101"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_ww_holding:WW_WarmwasserPush:
+    bridge: modbus:poller:heatpump:heatpump_ww_holding
+    label: Wärmepumpe WW Push
+    config:
+      readStart: "42102"
+      readValueType: int16
+      writeStart: "42102"
+      writeType: holding
+      writeValueType: int16
+
+  modbus:data:heatpump:heatpump_ww_holding:WW_WarmwasserNormal:
+    bridge: modbus:poller:heatpump:heatpump_ww_holding
+    label: Wärmepumpe WW Normal
+    config:
+      readStart: "42103"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_ww_holding:WW_WarmwasserAbsenk:
+    bridge: modbus:poller:heatpump:heatpump_ww_holding
+    label: Wärmepumpe WW Absenk
+    config:
+      readStart: "42104"
+      readValueType: int16
+
+  modbus:data:heatpump:heatpump_ww_holding:WW_SGReadyAnhebung:
+    bridge: modbus:poller:heatpump:heatpump_ww_holding
+    label: Wärmepumpe WW SG Ready Anhebung
+    config:
+      readStart: "42105"
+      readValueType: int16
+
+  modbus:poller:heatpump:heatpump_stats_gesamt:
+    isBridge: true
+    bridge: modbus:tcp:heatpump
+    label: Wärmepumpe Stats Gesamt
+    config:
+      refresh: 60000
+      start: 36101
+      length: 4
+      type: input
+
+  modbus:data:heatpump:heatpump_stats_gesamt:Statistik_Gesamt_heute:
+    bridge: modbus:poller:heatpump:heatpump_stats_gesamt
+    label: Wärmepumpe Stats Gesamt heute
+    config:
+      readStart: "36101"
+      readValueType: uint16
+
+  modbus:data:heatpump:heatpump_stats_gesamt:Statistik_Gesamt_gestern:
+    bridge: modbus:poller:heatpump:heatpump_stats_gesamt
+    label: Wärmepumpe Stats Gesamt gestern
+    config:
+      readStart: "36102"
+      readValueType: uint16
+
+  modbus:data:heatpump:heatpump_stats_gesamt:Statistik_Gesamt_monat:
+    bridge: modbus:poller:heatpump:heatpump_stats_gesamt
+    label: Wärmepumpe Stats Gesamt monat
+    config:
+      readStart: "36103"
+      readValueType: uint16
+
+  modbus:data:heatpump:heatpump_stats_gesamt:Statistik_Gesamt_jahr:
+    bridge: modbus:poller:heatpump:heatpump_stats_gesamt
+    label: Wärmepumpe Stats Gesamt jahr
+    config:
+      readStart: "36104"
+      readValueType: uint16
+
+  modbus:poller:heatpump:heatpump_stats_heizen:
+    isBridge: true
+    bridge: modbus:tcp:heatpump
+    label: Wärmepumpe Stats Heizen
+    config:
+      refresh: 60000
+      start: 36201
+      length: 4
+      type: input
+
+  modbus:data:heatpump:heatpump_stats_heizen:Statistik_Heizen_heute:
+    bridge: modbus:poller:heatpump:heatpump_stats_heizen
+    label: Wärmepumpe Stats Heizen heute
+    config:
+      readStart: "36201"
+      readValueType: uint16
+
+  modbus:data:heatpump:heatpump_stats_heizen:Statistik_Heizen_gestern:
+    bridge: modbus:poller:heatpump:heatpump_stats_heizen
+    label: Wärmepumpe Stats Heizen gestern
+    config:
+      readStart: "36202"
+      readValueType: uint16
+
+  modbus:data:heatpump:heatpump_stats_heizen:Statistik_Heizen_monat:
+    bridge: modbus:poller:heatpump:heatpump_stats_heizen
+    label: Wärmepumpe Stats Heizen monat
+    config:
+      readStart: "36203"
+      readValueType: uint16
+
+  modbus:data:heatpump:heatpump_stats_heizen:Statistik_Heizen_jahr:
+    bridge: modbus:poller:heatpump:heatpump_stats_heizen
+    label: Wärmepumpe Stats Heizen jahr
+    config:
+      readStart: "36204"
+      readValueType: uint16
+
+  modbus:poller:heatpump:heatpump_stats_ww:
+    isBridge: true
+    bridge: modbus:tcp:heatpump
+    label: Wärmepumpe Stats WW
+    config:
+      refresh: 60000
+      start: 36301
+      length: 4
+      type: input
+
+  modbus:data:heatpump:heatpump_stats_ww:Statistik_WW_heute:
+    bridge: modbus:poller:heatpump:heatpump_stats_ww
+    label: Wärmepumpe Stats WW heute
+    config:
+      readStart: "36301"
+      readValueType: uint16
+
+  modbus:data:heatpump:heatpump_stats_ww:Statistik_WW_gestern:
+    bridge: modbus:poller:heatpump:heatpump_stats_ww
+    label: Wärmepumpe Stats WW gestern
+    config:
+      readStart: "36302"
+      readValueType: uint16
+
+  modbus:data:heatpump:heatpump_stats_ww:Statistik_WW_monat:
+    bridge: modbus:poller:heatpump:heatpump_stats_ww
+    label: Wärmepumpe Stats WW monat
+    config:
+      readStart: "36303"
+      readValueType: uint16
+
+  modbus:data:heatpump:heatpump_stats_ww:Statistik_WW_jahr:
+    bridge: modbus:poller:heatpump:heatpump_stats_ww
+    label: Wärmepumpe Stats WW jahr
+    config:
+      readStart: "36304"
+      readValueType: uint16
+
+  modbus:poller:heatpump:heatpump_stats_electro:
+    isBridge: true
+    bridge: modbus:tcp:heatpump
+    label: Wärmepumpe Stats (Elektrisch)
+    config:
+      refresh: 60000
+      start: 36701
+      length: 4
+      type: input
+
+  modbus:data:heatpump:heatpump_stats_electro:Statistik_Elektro_heute:
+    bridge: modbus:poller:heatpump:heatpump_stats_electro
+    label: Wärmepumpe Stats Elektro heute
+    config:
+      readStart: "36701"
+      readValueType: uint16
+
+  modbus:data:heatpump:heatpump_stats_electro:Statistik_Elektro_gestern:
+    bridge: modbus:poller:heatpump:heatpump_stats_electro
+    label: Wärmepumpe Stats Elektro gestern
+    config:
+      readStart: "36702"
+      readValueType: uint16
+
+  modbus:data:heatpump:heatpump_stats_electro:Statistik_Elektro_monat:
+    bridge: modbus:poller:heatpump:heatpump_stats_electro
+    label: Wärmepumpe Stats Elektro monat
+    config:
+      readStart: "36703"
+      readValueType: uint16
+
+  modbus:data:heatpump:heatpump_stats_electro:Statistik_Elektro_jahr:
+    bridge: modbus:poller:heatpump:heatpump_stats_electro
+    label: Wärmepumpe Stats Elektro jahr
+    config:
+      readStart: "36704"
+      readValueType: uint16

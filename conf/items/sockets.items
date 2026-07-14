@@ -42,32 +42,32 @@ Switch pOutdoor_Toolshed_Socket_Powered     "Steckdosen"         <selfsocket> (e
 
 // **** MOBILE ****
 Group  eMobile_Socket_1                        "Mobile 1"           <selfsocket> (lIndoorOther) ["PowerOutlet"]
-Switch pMobile_Socket_1_Powered                "Mobile 1"           <selfsocket> (eMobile_Socket_1,gAll_Sockets) ["Switch","Power"]              { channel="hue:device:default:socket8:switch" }
-Number pMobile_Socket_1_Consumption	           "Lüfter Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_1) ["Messurement","Power"]  { channel="shelly:shellyplugs:socket8:meter#currentWatts" }
-Number pMobile_Socket_1_Total_Raw   	       "Lüfter Gesamt Raw [%.2f KWh]"	<selfenergy> (eMobile_Socket_1)  { channel="shelly:shellyplugs:socket8:meter#totalKWH" }
-Number pMobile_Socket_1_Total_Consumption      "Lüfter Gesamt [%.2f KWh]"	<selfenergy> (eMobile_Socket_1,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]
-Number pMobile_Socket_1_Daily_Consumption	   "Lüfter Tagesverbrauch [%.2f KWh]"	<selfenergy> (eMobile_Socket_1) ["Point"]
+Switch pMobile_Socket_1_Powered                "Mobile 1"           <selfsocket> (eMobile_Socket_1,gAll_Sockets) ["Switch","Power"]              { channel="shelly:shellyplusplug:socket8:relay#output" }
+Number pMobile_Socket_1_Consumption	           "Mobile 1 Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_1) ["Messurement","Power"]  { channel="shelly:shellyplusplug:socket8:meter#currentWatts" }
+Number pMobile_Socket_1_Total_Raw   	       "Mobile 1 Gesamt Raw [%.2f KWh]"	<selfenergy> (eMobile_Socket_1)  { channel="shelly:shellyplusplug:socket8:meter#totalKWH" }
+Number pMobile_Socket_1_Total_Consumption      "Mobile 1 Gesamt [%.2f KWh]"	<selfenergy> (eMobile_Socket_1,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]
+Number pMobile_Socket_1_Daily_Consumption	   "Mobile 1 Tagesverbrauch [%.2f KWh]"	<selfenergy> (eMobile_Socket_1) ["Point"]
 
 Group  eMobile_Socket_2                        "Mobile 2"           <selfsocket> (lIndoorOther) ["PowerOutlet"]
-Switch pMobile_Socket_2_Powered                "Mobile 2"           <selfsocket> (eMobile_Socket_2,gAll_Sockets) ["Switch","Power"]              { channel="hue:device:default:socket9:switch" }
-Number pMobile_Socket_2_Consumption	           "Lüfter Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_2) ["Messurement","Power"]  { channel="shelly:shellyplugs:socket9:meter#currentWatts" }
-Number pMobile_Socket_2_Total_Raw   	       "Lüfter Gesamt Raw [%.2f KWh]"	<selfenergy> (eMobile_Socket_2)  { channel="shelly:shellyplugs:socket9:meter#totalKWH" }
-Number pMobile_Socket_2_Total_Consumption      "Lüfter Gesamt [%.2f KWh]"	<selfenergy> (eMobile_Socket_2,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]
-Number pMobile_Socket_2_Daily_Consumption	   "Lüfter Tagesverbrauch [%.2f KWh]"	<selfenergy> (eMobile_Socket_2) ["Point"]
+Switch pMobile_Socket_2_Powered                "Mobile 2"           <selfsocket> (eMobile_Socket_2,gAll_Sockets) ["Switch","Power"]              { channel="shelly:shellyplusplug:socket9:relay#output" }
+Number pMobile_Socket_2_Consumption	           "Mobile 2 Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_2) ["Messurement","Power"]  { channel="shelly:shellyplusplug:socket9:meter#currentWatts" }
+Number pMobile_Socket_2_Total_Raw   	       "Mobile 2 Gesamt Raw [%.2f KWh]"	<selfenergy> (eMobile_Socket_2)  { channel="shelly:shellyplusplug:socket9:meter#totalKWH" }
+Number pMobile_Socket_2_Total_Consumption      "Mobile 2 Gesamt [%.2f KWh]"	<selfenergy> (eMobile_Socket_2,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]
+Number pMobile_Socket_2_Daily_Consumption	   "Mobile 2 Tagesverbrauch [%.2f KWh]"	<selfenergy> (eMobile_Socket_2) ["Point"]
 
 Group  eMobile_Socket_3                        "Mobile 3"           <selfsocket> (lIndoorOther) ["PowerOutlet"]
-Switch pMobile_Socket_3_Powered                "Mobile 3"           <selfsocket> (eMobile_Socket_3,gAll_Sockets) ["Switch","Power"]              { channel="hue:device:default:socket6:switch" }
-Number pMobile_Socket_3_Consumption	           "Lüfter Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_3) ["Messurement","Power"]  { channel="shelly:shellyplugs:socket6:meter#currentWatts" }
-Number pMobile_Socket_3_Total_Raw   	       "Lüfter Gesamt Raw [%.2f KWh]"	<selfenergy> (eMobile_Socket_3)  { channel="shelly:shellyplugs:socket6:meter#totalKWH" }
-Number pMobile_Socket_3_Total_Consumption      "Lüfter Gesamt [%.2f KWh]"	<selfenergy> (eMobile_Socket_3,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]
-Number pMobile_Socket_3_Daily_Consumption	   "Lüfter Tagesverbrauch [%.2f KWh]"	<selfenergy> (eMobile_Socket_3) ["Point"]
+Switch pMobile_Socket_3_Powered                "Mobile 3"           <selfsocket> (eMobile_Socket_3,gAll_Sockets) ["Switch","Power"]              { channel="shelly:shellyplusplug:socket6:relay#output" }
+Number pMobile_Socket_3_Consumption	           "Mobile 3 Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_3) ["Messurement","Power"]  { channel="shelly:shellyplusplug:socket6:meter#currentWatts" }
+Number pMobile_Socket_3_Total_Raw   	       "Mobile 3 Gesamt Raw [%.2f KWh]"	<selfenergy> (eMobile_Socket_3)  { channel="shelly:shellyplusplug:socket6:meter#totalKWH" }
+Number pMobile_Socket_3_Total_Consumption      "Mobile 3 Gesamt [%.2f KWh]"	<selfenergy> (eMobile_Socket_3,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]
+Number pMobile_Socket_3_Daily_Consumption	   "Mobile 3 Tagesverbrauch [%.2f KWh]"	<selfenergy> (eMobile_Socket_3) ["Point"]
 
 Group  eMobile_Socket_4                        "Mobile 4"           <selfsocket> (lIndoorOther) ["PowerOutlet"]
-Switch pMobile_Socket_4_Powered                "Mobile 4"           <selfsocket> (eMobile_Socket_4,gAll_Sockets) ["Switch","Power"]              { channel="shelly:shellyplugs:socket7:relay#output" }
-Number pMobile_Socket_4_Consumption	           "Lüfter Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_4) ["Messurement","Power"]  { channel="shelly:shellyplugs:socket7:meter#currentWatts" }
-Number pMobile_Socket_4_Total_Raw   	       "Lüfter Gesamt Raw [%.2f KWh]"	<selfenergy> (eMobile_Socket_4)  { channel="shelly:shellyplugs:socket7:meter#totalKWH" }
-Number pMobile_Socket_4_Total_Consumption      "Lüfter Gesamt [%.2f KWh]"	<selfenergy> (eMobile_Socket_4,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]
-Number pMobile_Socket_4_Daily_Consumption	   "Lüfter Tagesverbrauch [%.2f KWh]"	<selfenergy> (eMobile_Socket_4) ["Point"]
+Switch pMobile_Socket_4_Powered                "Mobile 4"           <selfsocket> (eMobile_Socket_4,gAll_Sockets) ["Switch","Power"]              { channel="shelly:shellyplusplug:socket7:relay#output" }
+Number pMobile_Socket_4_Consumption	           "Mobile 4 Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_4) ["Messurement","Power"]  { channel="shelly:shellyplusplug:socket7:meter#currentWatts" }
+Number pMobile_Socket_4_Total_Raw   	       "Mobile 4 Gesamt Raw [%.2f KWh]"	<selfenergy> (eMobile_Socket_4)  { channel="shelly:shellyplusplug:socket7:meter#totalKWH" }
+Number pMobile_Socket_4_Total_Consumption      "Mobile 4 Gesamt [%.2f KWh]"	<selfenergy> (eMobile_Socket_4,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]
+Number pMobile_Socket_4_Daily_Consumption	   "Mobile 4 Tagesverbrauch [%.2f KWh]"	<selfenergy> (eMobile_Socket_4) ["Point"]
 
 Group  eMobile_Socket_5                        "Lüfter"           <selfsocket> (lIndoorOther) ["PowerOutlet"]
 Switch pMobile_Socket_5_Powered                "Lüfter"           <selfsocket> (eMobile_Socket_5,gAll_Sockets) ["Switch","Power"]              { channel="shelly:shellyplugs:socket1:relay#output" }

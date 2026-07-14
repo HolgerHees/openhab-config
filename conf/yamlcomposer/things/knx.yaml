@@ -1,0 +1,904 @@
+version: 1
+
+things:
+  knx:ip:bridge:
+    isBridge: true
+    label: Bridge KNX Gateway
+    config:
+      type: TUNNEL
+      ipAddress: ${ENV.CUSTOM_KNX_GATEWAY_IP}
+      localIp: ${ENV.CUSTOM_KNX_LOCAL_IP}
+      portNumber: 3671
+      readingPause: 50
+      responseTimeout: 10
+      readRetriesLimit: 3
+      autoReconnectPeriod: 60
+      localSourceAddr: 0.0.0
+
+  knx:device:bridge:other:
+    bridge: knx:ip:bridge
+    label: Sonstiges
+    channels:
+      #Type    number  :       energyDemandActive      "Wirkenergie Bezug"          [ ga="13.010:0/4/10" ]
+      #Type    number  :       energySupplyActive      "Wirkenergie Lieferung"      [ ga="13.010:0/4/11" ]
+      #Type    number  :       powerDemandActive       "Wirkleistung Bezug"         [ ga="14.056:0/4/12" ]
+      #Type    number  :       powerSupplyActive       "Wirkleistung Lieferung"     [ ga="14.056:0/4/13" ]
+      #Type    number  :       powerSupplyActiveL1       "Wirkleistung Bezug L1"     [ ga="14.056:0/4/15" ]
+      #Type    number  :       powerSupplyActiveL2       "Wirkleistung Bezug L2"     [ ga="14.056:0/4/16" ]
+      #Type    number  :       powerSupplyActiveL3       "Wirkleistung Bezug L3"     [ ga="14.056:0/4/17" ]
+      stateNotify:
+        type: switch
+        label: Benachrichtigen
+        config:
+          ga: <0/4/1
+      switchDooropener:
+        type: switch
+        label: Türöffner
+        config:
+          ga: 0/4/4
+      smokeDetector:
+        type: contact
+        label: Rauchmelder
+        config:
+          ga: 0/4/5
+      gasCounter:
+        type: number
+        label: Gas Counter
+        config:
+          ga: 13.001:<0/4/6
+      switchBell:
+        type: contact
+        label: Klingeltaster
+        config:
+          ga: <0/4/7
+      stateHoliday:
+        type: switch
+        label: Urlaubsmodus
+        config:
+          ga: <0/4/8
+      receiverState:
+        type: contact
+        label: Receiverstatus
+        config:
+          ga: <0/4/9
+      alarmSiren:
+        type: switch
+        label: Alarmsirene
+        config:
+          ga: <0/4/14
+      bedroomLeft:
+        type: switch
+        label: Schlafz. Bett Fenster
+        config:
+          ga: 1/4/1
+      bedroomLeftLongPressed:
+        type: switch
+        label: Schlafz. Bett Fenster (lang)
+        config:
+          ga: 1/4/2
+      bedroomRight:
+        type: switch
+        label: Schlafz. Bett Wand
+        config:
+          ga: 1/4/3
+      bedroomRightLongPressed:
+        type: switch
+        label: Schlafz. Bett Wand (lang)
+        config:
+          ga: 1/4/4
+
+  knx:device:bridge:heating_ff:
+    bridge: knx:ip:bridge
+    label: Heizungskreise Erdgeschoss
+    config:
+      fetch: false
+      pingInterval: 600
+      readInterval: 0
+    channels:
+      livingroomCircuit:
+        type: switch
+        label: Heizkreis Wohnzimmer
+        config:
+          ga: 0/5/0+<0/5/1
+      floorCircuit:
+        type: switch
+        label: Heizkreis Flur
+        config:
+          ga: 0/5/2+<0/5/3
+      workroomCircuit:
+        type: switch
+        label: Heizkreis Arbeitszimmer
+        config:
+          ga: 0/5/4+<0/5/5
+      guestWCCircuit:
+        type: switch
+        label: Heizkreis Gäste WC
+        config:
+          ga: 0/5/6+<0/5/7
+      guestWCHK:
+        type: switch
+        label: Heizkreis Gäste WC HK
+        config:
+          ga: 0/5/8+<0/5/9
+
+  knx:device:bridge:heating_sf:
+    bridge: knx:ip:bridge
+    label: Heizungskreise Obergeschoss
+    channels:
+      floorCircuit:
+        type: switch
+        label: Heizkreis Flur
+        config:
+          ga: 1/5/0+<1/5/1
+      child1Circuit:
+        type: switch
+        label: Heizkreis Kind 1
+        config:
+          ga: 1/5/2+<1/5/3
+      child2Circuit:
+        type: switch
+        label: Heizkreis Kind 2
+        config:
+          ga: 1/5/4+<1/5/5
+      bedroomCircuit:
+        type: switch
+        label: Heizkreis Schlafzimmer
+        config:
+          ga: 1/5/6+<1/5/7
+      bathroomCircuit:
+        type: switch
+        label: Heizkreis Badezimmer
+        config:
+          ga: 1/5/8+<1/5/9
+      bathroomHK:
+        type: switch
+        label: Heizkreis Badezimmer HK
+        config:
+          ga: 1/5/10+<1/5/11
+
+  knx:device:bridge:sensors_ff:
+    bridge: knx:ip:bridge
+    label: Sensoren Erdgeschoss
+    config:
+      fetch: false
+      pingInterval: 600
+      readInterval: 0
+    channels:
+      heatingPipeOut:
+        type: number
+        label: Heizung Vorlauf
+        config:
+          ga: <0/7/50
+      heatingPipeIn:
+        type: number
+        label: Heizung Rücklauf
+        config:
+          ga: <0/7/51
+      temperatureLivingroom:
+        type: number
+        label: Wohnzimmer Temperatur
+        config:
+          ga: 9.001:0/7/1
+      humidityLivingroom:
+        type: number
+        label: Wohnzimmer Feuchtigkeit
+        config:
+          ga: 9.007:0/7/2
+      temperatureBoxroom:
+        type: number
+        label: Abstellkammer Temperatur
+        config:
+          ga: 9.001:0/7/3
+      humidityBoxroom:
+        type: number
+        label: Abstellkammer Feuchtigkeit
+        config:
+          ga: 9.007:0/7/4
+      temperatureGuestroom:
+        type: number
+        label: Gästezimmer Temperatur
+        config:
+          ga: 9.001:0/7/5
+      humidityGuestroom:
+        type: number
+        label: Gästezimmer Feuchtigkeit
+        config:
+          ga: 9.007:0/7/6
+      temperatureGuesttoilet:
+        type: number
+        label: Gäste WC Temperatur
+        config:
+          ga: 9.001:0/7/7
+      humidityGuesttoilet:
+        type: number
+        label: Gäste WC Feuchtigkeit
+        config:
+          ga: 9.007:0/7/8
+      temperatureFloor:
+        type: number
+        label: Flur EG Temperatur
+        config:
+          ga: 9.001:0/7/9
+      humidityFloor:
+        type: number
+        label: Flur EG Feuchtigkeit
+        config:
+          ga: 9.007:0/7/10
+      temperatureUtilityroom:
+        type: number
+        label: HWR Temperatur
+        config:
+          ga: 9.001:0/7/11
+      humidityUtilityroom:
+        type: number
+        label: HWR Feuchtigkeit
+        config:
+          ga: 9.007:0/7/12
+      temperatureGarage:
+        type: number
+        label: Schuppen Temperatur
+        config:
+          ga: 9.001:0/7/13
+      humidityGarage:
+        type: number
+        label: Schuppen Feuchtigkeit
+        config:
+          ga: 9.007:0/7/14
+
+  knx:device:bridge:sensors_sf:
+    bridge: knx:ip:bridge
+    label: Sensoren Obergeschoss
+    channels:
+      temperatureBedroom:
+        type: number
+        label: Schlafzimmer Temperatur
+        config:
+          ga: 9.001:1/7/1
+      humidityBedroom:
+        type: number
+        label: Schlafzimmer Feuchtigkeit
+        config:
+          ga: 9.007:1/7/2
+      temperatureDressingroom:
+        type: number
+        label: Ankleide Temperatur
+        config:
+          ga: 9.001:1/7/3
+      humidityDressingroom:
+        type: number
+        label: Ankleide Feuchtigkeit
+        config:
+          ga: 9.007:1/7/4
+      temperatureChild1:
+        type: number
+        label: Kind 1 Temperatur
+        config:
+          ga: 9.001:1/7/5
+      humidityChild1:
+        type: number
+        label: Kind 1 Feuchtigkeit
+        config:
+          ga: 9.007:1/7/6
+      temperatureChild2:
+        type: number
+        label: Kind 2 Temperatur
+        config:
+          ga: 9.001:1/7/7
+      humidityChild2:
+        type: number
+        label: Kind 2 Feuchtigkeit
+        config:
+          ga: 9.007:1/7/8
+      temperatureBathroom:
+        type: number
+        label: Badezimmer Temperatur
+        config:
+          ga: 9.001:1/7/9
+      humidityBathroom:
+        type: number
+        label: Badezimmer Feuchtigkeit
+        config:
+          ga: 9.007:1/7/10
+      temperatureFloor:
+        type: number
+        label: Flur OG Temperatur
+        config:
+          ga: 9.001:1/7/11
+      humidityFloor:
+        type: number
+        label: Flur OG Feuchtigkeit
+        config:
+          ga: 9.007:1/7/12
+      temperatureAttic:
+        type: number
+        label: Dachboden Temperatur
+        config:
+          ga: 9.001:1/7/13
+      humidityAttic:
+        type: number
+        label: Dachboden Feuchtigkeit
+        config:
+          ga: 9.007:1/7/14
+
+  knx:device:bridge:sensors_toolshed:
+    bridge: knx:ip:bridge
+    label: Sensoren Geräteschuppen
+    channels:
+      temperature:
+        type: number
+        label: Temperatur
+        config:
+          ga: 9.001:2/2/0
+      humidity:
+        type: number
+        label: Feuchtigkeit
+        config:
+          ga: 9.007:2/2/1
+
+  knx:device:bridge:lights_ff:
+    bridge: knx:ip:bridge
+    label: Licht Erdgeschoss
+    channels:
+      kitchenCeiling:
+        type: dimmer
+        label: Küche Licht
+        config:
+          switch: 0/0/1
+          position: 0/0/30+<0/0/31
+          increaseDecrease: 0/0/2
+      kitchenCupboard:
+        type: switch
+        label: Küche Schrank
+        config:
+          ga: 0/0/6+<0/0/7
+      livingroomDiningtable:
+        type: dimmer
+        label: Wohnzimmer Esstisch Licht
+        config:
+          switch: 0/0/8
+          position: 0/0/32+<0/0/33
+          increaseDecrease: 0/0/9
+      livingroomCouch:
+        type: dimmer
+        label: Wohnzimmer Couch Licht
+        config:
+          switch: 0/0/11
+          position: 0/0/34+<0/0/35
+          increaseDecrease: 0/0/12
+      garage:
+        type: switch
+        label: Schuppen Licht
+        config:
+          ga: 0/0/14+<0/0/15
+      boxroomCeiling:
+        type: switch
+        label: Kammer
+        config:
+          ga: 0/0/16+<0/0/17
+      utilityroomCeiling:
+        type: switch
+        label: HWR
+        config:
+          ga: 0/0/18+<0/0/19
+      guesttoiletCeiling:
+        type: switch
+        label: Gäste WC Decke
+        config:
+          ga: 0/0/20+<0/0/21
+      guesttoiletMirror:
+        type: switch
+        label: Gäste WC Spiegel
+        config:
+          ga: 0/0/22+<0/0/23
+      workroomCeiling:
+        type: switch
+        label: Arbeitszimmer
+        config:
+          ga: 0/0/24+<0/0/25
+      floorCeiling:
+        type: switch
+        label: Flur Decke
+        config:
+          ga: 0/0/26+<0/0/27
+      floorMirror:
+        type: switch
+        label: Flur Spiegel
+        config:
+          ga: 0/0/28+<0/0/29
+
+  knx:device:bridge:lights_sf:
+    bridge: knx:ip:bridge
+    label: Licht Obergeschoss
+    channels:
+      floorCeiling:
+        type: switch
+        label: Flur oben
+        config:
+          ga: 1/0/0+<1/0/1
+      bathroomCeiling:
+        type: switch
+        label: Badezimmer Decke
+        config:
+          ga: 1/0/2+<1/0/3
+      bathroomMirror:
+        type: switch
+        label: Badezimmer Spiegel
+        config:
+          ga: 1/0/4+<1/0/5
+      dressingroomCeiling:
+        type: switch
+        label: Ankleide
+        config:
+          ga: 1/0/6+<1/0/7
+      bedroomCeiling:
+        type: switch
+        label: Schlafzimmer
+        config:
+          ga: 1/0/8+<1/0/9
+      child1Ceiling:
+        type: switch
+        label: Kinderzimmer eins
+        config:
+          ga: 1/0/10+<1/0/11
+      child2Ceiling:
+        type: switch
+        label: Kinderzimmer zwei
+        config:
+          ga: 1/0/12+<1/0/13
+      attic:
+        type: switch
+        label: Dachboden
+        config:
+          ga: 1/0/14+<1/0/15
+
+  knx:device:bridge:lights_toolshed:
+    bridge: knx:ip:bridge
+    label: Licht Geräteschuppen
+    config:
+      fetch: false
+      pingInterval: 600
+      readInterval: 0
+    channels:
+      ceiling:
+        type: switch
+        label: Deckenlicht
+        config:
+          ga: 2/0/0+<2/0/1
+
+  knx:device:bridge:lights_outdoor:
+    bridge: knx:ip:bridge
+    label: Licht Garten
+    channels:
+      garageStreedside:
+        type: switch
+        label: Schuppen Strassenseite
+        config:
+          ga: 9/0/0+<9/0/1
+      frontdoor:
+        type: switch
+        label: Haupteingang
+        config:
+          ga: 9/0/3+<9/0/4
+      carport:
+        type: switch
+        label: Carport
+        config:
+          ga: 9/0/6+<9/0/7
+      garageGardenside:
+        type: switch
+        label: Schuppen Gartenseite
+        config:
+          ga: 9/0/9+<9/0/10
+      outdoorTerrace:
+        type: dimmer
+        label: Terrassen Licht
+        config:
+          switch: 9/0/12
+          position: 9/0/17+<0/0/18
+          increaseDecrease: 9/0/16
+      toolshedRight:
+        type: switch
+        label: Geräteschuppen (rechts)
+        config:
+          ga: 9/0/19+<9/0/20
+      toolshedBehind:
+        type: switch
+        label: Geräteschuppen (hinten)
+        config:
+          ga: 9/0/22+<9/0/23
+      toolshedLeft:
+        type: switch
+        label: Geräteschuppen (links)
+        config:
+          ga: 9/0/25+<9/0/26
+
+  knx:device:bridge:sockets_ff:
+    bridge: knx:ip:bridge
+    label: Steckdosen Erdgeschoss
+    channels:
+      guesttoilet:
+        type: switch
+        label: WC Radio
+        config:
+          ga: 0/1/1+<0/1/2
+      livingroomBassbox:
+        type: switch
+        label: Wohnzimmersteckdose Bassbox
+        config:
+          ga: 0/1/3+<0/1/4
+      livingroomCouch:
+        type: switch
+        label: Wohnzimmersteckdose Stehlampe
+        config:
+          ga: 0/1/5+<0/1/6
+      floor:
+        type: switch
+        label: Flursteckdose
+        config:
+          ga: 0/1/7+<0/1/8
+      livingroomFireplace:
+        type: switch
+        label: Wohnzimmersteckdose Kamin
+        config:
+          ga: 0/1/9+<0/1/10
+
+  knx:device:bridge:sockets_sf:
+    bridge: knx:ip:bridge
+    label: Steckdosen Obergeschoss
+    channels:
+      bathroomLeft:
+        type: switch
+        label: Badezimmer links
+        config:
+          ga: 1/1/0+<1/1/1
+      bathroomRight:
+        type: switch
+        label: Badezimmer links
+        config:
+          ga: 1/1/2+<1/1/3
+      attic:
+        type: switch
+        label: Dachbodensteckdose
+        config:
+          ga: 1/1/8+<1/1/9
+
+  knx:device:bridge:sockets_outdoor:
+    bridge: knx:ip:bridge
+    label: Steckdosen Garten
+    channels:
+      streedside:
+        type: switch
+        label: Aussensteckdosen vorne
+        config:
+          ga: 9/1/0+<9/1/1
+      gardenside:
+        type: switch
+        label: Aussensteckdosen hinten
+        config:
+          ga: 9/1/2+<9/1/3
+      toolshed:
+        type: switch
+        label: Geräteschuppen
+        config:
+          ga: 9/1/4+<9/1/5
+
+  knx:device:bridge:shutter_ff:
+    bridge: knx:ip:bridge
+    label: Rollläden Erdgeschoss
+    channels:
+      kitchen:
+        type: rollershutter
+        label: Küche
+        config:
+          upDown: 0/2/1
+          stopMove: 0/2/2
+          position: <0/2/3
+      livingroomTerrace:
+        type: rollershutter
+        label: Terrasse
+        config:
+          upDown: 0/2/4
+          stopMove: 0/2/5
+          position: <0/2/6
+      livingroomCouch:
+        type: rollershutter
+        label: Couch
+        config:
+          upDown: 0/2/7
+          stopMove: 0/2/8
+          position: <0/2/9
+      workroom:
+        type: rollershutter
+        label: Arbeitszimmer
+        config:
+          upDown: 0/2/13
+          stopMove: 0/2/14
+          position: <0/2/15
+      guestWC:
+        type: rollershutter
+        label: Gäste WC
+        config:
+          upDown: 0/2/10
+          stopMove: 0/2/11
+          position: <0/2/12
+
+  knx:device:bridge:shutter_sf:
+    bridge: knx:ip:bridge
+    label: Rollläden Obergeschoss
+    channels:
+      bathroom:
+        type: rollershutter
+        label: Badezimmer
+        config:
+          upDown: 1/2/1
+          stopMove: 1/2/2
+          position: <1/2/3
+      dressingroom:
+        type: rollershutter
+        label: Ankleide
+        config:
+          upDown: 1/2/4
+          stopMove: 1/2/5
+          position: <1/2/6
+      bedroom:
+        type: rollershutter
+        label: Schlafzimmer
+        config:
+          upDown: 1/2/7
+          stopMove: 1/2/8
+          position: <1/2/9
+      child1:
+        type: rollershutter
+        label: Kindzimmer 1
+        config:
+          upDown: 1/2/10
+          stopMove: 1/2/11
+          position: <1/2/12
+      child2:
+        type: rollershutter
+        label: Kindzimmer 2
+        config:
+          upDown: 1/2/13
+          stopMove: 1/2/14
+          position: <1/2/15
+      attic:
+        type: rollershutter
+        label: Dachboden
+        config:
+          upDown: 1/2/16
+          stopMove: 1/2/17
+          position: <1/2/18
+
+  knx:device:bridge:contacts_door:
+    bridge: knx:ip:bridge
+    label: Kontakte Türen
+    channels:
+      main:
+        type: contact
+        label: Haustür
+        config:
+          ga: <0/3/5
+      garageStreedside:
+        type: contact
+        label: Schuppentür Strasse
+        config:
+          ga: <0/3/6
+      garageGardenside:
+        type: contact
+        label: Schuppentür Garten
+        config:
+          ga: <0/3/7
+
+  knx:device:bridge:contacts_window_ff:
+    bridge: knx:ip:bridge
+    label: Kontakte Fenster Erdgeschoss
+    channels:
+      guestWC:
+        type: contact
+        label: Gäste WC
+        config:
+          ga: <0/3/0
+      kitchen:
+        type: contact
+        label: Küche
+        config:
+          ga: <0/3/1
+      livingroomTerrace:
+        type: contact
+        label: Terrasse
+        config:
+          ga: <0/3/2
+      livingroomCouch:
+        type: contact
+        label: Couch
+        config:
+          ga: <0/3/3
+      workroom:
+        type: contact
+        label: Arbeitszimmer
+        config:
+          ga: <0/3/4
+      garage:
+        type: contact
+        label: Schuppenfenster
+        config:
+          ga: <0/3/8
+
+  knx:device:bridge:contacts_window_sf:
+    bridge: knx:ip:bridge
+    label: Kontakte Fenster Obergeschoss
+    channels:
+      bathroom:
+        type: contact
+        label: Badezimmer
+        config:
+          ga: <1/3/0
+      dressingroom:
+        type: contact
+        label: Ankleide
+        config:
+          ga: <1/3/1
+      bedroom:
+        type: contact
+        label: Schlafzimmer
+        config:
+          ga: <1/3/2
+      child1:
+        type: contact
+        label: Kind 1
+        config:
+          ga: <1/3/3
+      child2:
+        type: contact
+        label: Kind 2
+        config:
+          ga: <1/3/4
+      attic:
+        type: contact
+        label: Dachboden
+        config:
+          ga: <1/3/5
+
+  knx:device:bridge:contacts_toolshed:
+    bridge: knx:ip:bridge
+    label: Kontakte Geräteschuppen
+    channels:
+      door:
+        type: contact
+        label: Tür
+        config:
+          ga: <2/1/0
+      window:
+        type: contact
+        label: Fenster
+        config:
+          ga: <2/1/1
+
+  knx:device:bridge:motion_outdoor:
+    bridge: knx:ip:bridge
+    label: Bewegungsmelder Garten
+    channels:
+      garageStreetside:
+        type: contact
+        label: Schuppen (vorne)
+        config:
+          ga: <9/0/2
+      frontdoor:
+        type: contact
+        label: Haustür
+        config:
+          ga: <9/0/5
+      carport:
+        type: contact
+        label: Carport
+        config:
+          ga: <9/0/8
+      garageGardenside:
+        type: contact
+        label: Schuppen (hinten)
+        config:
+          ga: <9/0/11
+      terrace1:
+        type: contact
+        label: Terrasse 1
+        config:
+          ga: <9/0/14
+      terrace2:
+        type: contact
+        label: Terrasse 2
+        config:
+          ga: <9/0/15
+      toolshedRight:
+        type: contact
+        label: Geräteschuppen (rechts)
+        config:
+          ga: 9/0/21
+      toolshedBehind:
+        type: contact
+        label: Geräteschuppen (hinten)
+        config:
+          ga: 9/0/24
+      toolshedLeft:
+        type: contact
+        label: Geräteschuppen (links)
+        config:
+          ga: 9/0/27
+      main:
+        type: switch
+        label: Gartenlicht autom.
+        config:
+          ga: <9/0/100
+
+  knx:device:bridge:motion_indoor:
+    bridge: knx:ip:bridge
+    label: Bewegungsmelder Haus
+    channels:
+      livingroom:
+        type: contact
+        label: Wohnzimmer
+        config:
+          ga: <0/4/2
+      ffFloor:
+        type: contact
+        label: Flur unten
+        config:
+          ga: <0/4/3
+      sfFloor:
+        type: contact
+        label: Flur oben
+        config:
+          ga: <1/4/0
+
+  knx:device:bridge:wattering:
+    bridge: knx:ip:bridge
+    label: Bewässerung Garten
+    channels:
+      gardensideLawnLeft:
+        type: switch
+        label: Bewässerung Rasen links
+        config:
+          ga: 9/3/0+<9/3/1
+      gardensideLawnRight:
+        type: switch
+        label: Bewässerung Rasen rechts
+        config:
+          ga: 9/3/2+<9/3/3
+      gardensideBedsFront:
+        type: switch
+        label: Bewässerung Beete Terrasse
+        config:
+          ga: 9/3/4+<9/3/5
+      gardensideBedsBack:
+        type: switch
+        label: Bewässerung Beete hinten
+        config:
+          ga: 9/3/6+<9/3/7
+      streetsideLawn:
+        type: switch
+        label: Bewässerung Rasen vorn
+        config:
+          ga: 9/3/8+<9/3/9
+      streetsideBeds:
+        type: switch
+        label: Bewässerung Beete vorne
+        config:
+          ga: 9/3/10+<9/3/11
+
+  knx:device:bridge:shading:
+    bridge: knx:ip:bridge
+    label: Beschattung Garten
+    channels:
+      terraceLeft:
+        type: rollershutter
+        label: Terrasse Links
+        config:
+          upDown: 9/2/0
+          stopMove: 9/2/1
+          position: <9/2/2
+      terraceRight:
+        type: rollershutter
+        label: Terrasse Rechts
+        config:
+          upDown: 9/2/3
+          stopMove: 9/2/4
+          position: <9/2/5

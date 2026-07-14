@@ -1,0 +1,175 @@
+version: 1
+
+things:
+  tuya:project:bridge:
+    label: Luftbefeuchter Bridge
+    config:
+      username: ${ENV.CUSTOM_TUYA_USERNAME}
+      password: !literal ${ENV:CUSTOM_TUYA_PASSWORD}
+      accessId: ${ENV.CUSTOM_TUYA_ACCESS_ID}
+      accessSecret: !literal ${ENV:CUSTOM_TUYA_ACCESS_SECRET}
+      countryCode: 49
+      schema: smartLife
+      dataCenter: https://openapi.tuyaeu.com
+
+  tuya:tuyaDevice:humidifier_eg:
+    label: Luftbefeuchter EG
+    config:
+      deviceId: ${ENV.CUSTOM_HUMIDIFIER_EG_DEVICE_ID}
+      localKey: !literal ${ENV:CUSTOM_HUMIDIFIER_EG_LOCAL_KEY}
+      productId: ${ENV.CUSTOM_HUMIDIFIER_EG_PRODUCT_ID}
+      ip: ${ENV.CUSTOM_HUMIDIFIER_EG_IP}
+      protocol: "3.4"
+      pollingInterval: 60
+    channels:
+      power:
+        type: switch
+        label: Ein/Aus
+        config:
+          dp: 1
+      humidity_current:
+        type: number
+        label: Luftfeuchtigkeit
+        config:
+          dp: 14
+          min: 0
+          max: 100
+          sendAsString: false
+      fault:
+        type: number
+        label: Fehler
+        config:
+          dp: 22
+          min: 0
+          max: 100
+          sendAsString: false
+      filter_reset:
+        type: switch
+        label: Filter Reset
+        config:
+          dp: 28
+      child_lock:
+        type: switch
+        label: Kinder Sperre
+        config:
+          dp: 29
+      filter_life:
+        type: number
+        label: Filter Laufzeit
+        config:
+          dp: 33
+          min: 0
+          max: 100
+          sendAsString: false
+      backlight_enum:
+        type: string
+        label: Beleuchtung
+        config:
+          dp: 34
+          range: "Fully,Half,Close"
+      fan_speed_enum:
+        type: string
+        label: Lüftergeschwindigkeit
+        config:
+          dp: 101
+          range: "level_1,level_2,level_3,level_4"
+      auto:
+        type: switch
+        label: Auto
+        config:
+          dp: 102
+      humidity_target:
+        type: string
+        label: Zielfeuchtigkeit
+        config:
+          dp: 103
+          range: "40,45,50,55,CO"
+      replace_filter:
+        type: number
+        label: Filter Ersetzen
+        config:
+          dp: 104
+          min: 0
+          max: 100
+          sendAsString: false
+
+  tuya:tuyaDevice:humidifier_og:
+    label: Luftbefeuchter OG
+    config:
+      deviceId: ${ENV.CUSTOM_HUMIDIFIER_OG_DEVICE_ID}
+      localKey: !literal ${ENV:CUSTOM_HUMIDIFIER_OG_LOCAL_KEY}
+      productId: ${ENV.CUSTOM_HUMIDIFIER_OG_PRODUCT_ID}
+      ip: ${ENV.CUSTOM_HUMIDIFIER_OG_IP}
+      protocol: "3.3"
+      pollingInterval: 60
+    channels:
+      power:
+        type: switch
+        label: Ein/Aus
+        config:
+          dp: 1
+      humidity_current:
+        type: number
+        label: Luftfeuchtigkeit
+        config:
+          dp: 14
+          min: 0
+          max: 100
+          sendAsString: false
+      fault:
+        type: number
+        label: Fehler
+        config:
+          dp: 22
+          min: 0
+          max: 100
+          sendAsString: false
+      filter_reset:
+        type: switch
+        label: Filter Reset
+        config:
+          dp: 28
+      child_lock:
+        type: switch
+        label: Kinder Sperre
+        config:
+          dp: 29
+      filter_life:
+        type: number
+        label: Filter Laufzeit
+        config:
+          dp: 33
+          min: 0
+          max: 100
+          sendAsString: false
+      backlight_enum:
+        type: string
+        label: Beleuchtung
+        config:
+          dp: 34
+          range: "Fully,Half,Close"
+      fan_speed_enum:
+        type: string
+        label: Lüftergeschwindigkeit
+        config:
+          dp: 101
+          range: "level_1,level_2,level_3,level_4"
+      auto:
+        type: switch
+        label: Auto
+        config:
+          dp: 102
+      humidity_target:
+        type: string
+        label: Zielfeuchtigkeit
+        config:
+          dp: 103
+          range: "40,45,50,55,CO"
+      replace_filter:
+        type: number
+        label: Filter Ersetzen
+        config:
+          dp: 104
+          min: 0
+          max: 100
+          sendAsString: false

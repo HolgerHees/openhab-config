@@ -383,7 +383,7 @@ sitemap haus label="Main Menu"
 			{
                 Switch item=pOther_Manual_State_Holiday label="Urlaubsmodus (Heizung ignoriert Werktage) (u)"
                 Selection item=pOther_Manual_State_Heating label="Heizungsreduktion (h)" mappings=[0="Normal", 1="-1", 2="-2", 3="-3 (Kaminunterstützt)", 4="-4", 5="-5 (Sommermodus)"]
-                Group label="Komforttemperaturen [%.1f °C]" item=pGF_Utilityroom_Ventilation_Comfort_Temperature icon="selfheating"{
+                Group label="Komforttemperaturen [%.1f °C]" item=pGF_Utilityroom_Ventilation_Target_Temperature icon="selfheating"{
                     Setpoint item=pGF_Guesttoilet_Temperature_Desired label="Gäste WC [%.1f °C]" step=0.5 minValue=15 maxValue=25
                     Setpoint item=pGF_Livingroom_Temperature_Desired label="Wohnzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                     Setpoint item=pGF_Workroom_Temperature_Desired label="Arbeitszimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
@@ -393,7 +393,7 @@ sitemap haus label="Main Menu"
                     Setpoint item=pFF_Makeuproom_Temperature_Desired label="Schminkzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                     Setpoint item=pFF_Bedroom_Temperature_Desired label="Schlafzimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
                     Setpoint item=pFF_Bathroom_Temperature_Desired label="Badezimmer [%.1f °C]" step=0.5 minValue=15 maxValue=25
-                    Text item=pGF_Utilityroom_Ventilation_Comfort_Temperature label="Komforttemperatur (Lüftung) [%.1f °C]"
+                    Text item=pGF_Utilityroom_Ventilation_Target_Temperature label="Komforttemperatur (Lüftung) [%.1f °C]"
                 }
 			}
             Frame label="Automatik" {
@@ -770,7 +770,7 @@ sitemap haus label="Main Menu"
                                 Text item=pOutdoor_WeatherStation_Temperature_Perceived label="Gefühlt [%.1f °C]"
                                 Text item=pOutdoor_WeatherStation_Humidity label="Luftfeuchtigkeit [%.1f %%]"
                                 Text item=pOutdoor_WeatherStation_Dewpoint
-                                Text item=pGF_Utilityroom_Heating_Temperature_Outdoor label="Temperatur (Schatten) [%.1f °C]"
+                                Text item=pGF_Utilityroom_Heatpump_S_Aussentemperatur label="Temperatur (Schatten) [%.1f °C]"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
@@ -939,32 +939,54 @@ sitemap haus label="Main Menu"
 		Group label="Technik [%s]" icon="selfhouse" item=pOther_State_Message_Main valuecolor=[=="Alles ok"="#6bc305",=="Lüftungsanlage Filter"="#cbcb00",!="Alles ok"="#d72a2a"]
 		{
             Frame label="Technik" {
-                Group item=pGF_Utilityroom_Ventilation_Fan_Level label="Lüftung [MAP(level_de.map):%s]" icon="selfairing" {
-                    Frame label="Steuerung" {
+                Group item=pGF_Utilityroom_Ventilation_Summary_Message label="Lüftung [%s]" icon="selfairing" {
+                    Frame label="Übersicht" {
                         Switch item=pGF_Utilityroom_Ventilation_Auto_Mode label="Modus" mappings=[ON="Auto", OFF="Manuell"]
-                        Switch item=pGF_Utilityroom_Ventilation_Fan_Level label="Stufe" mappings=[1="A", 2="1", 3="2", 4="3"]
-                        Text item=pGF_Utilityroom_Ventilation_Comfort_Temperature label="Komforttemperatur [%.1f °C]"
-                        Switch item=pGF_Utilityroom_Ventilation_Control mappings=[ON="App", OFF="CCEase"]
-                    }
-                    Frame label="Sensordaten" {
-                        Text item=pGF_Utilityroom_Ventilation_Outdoor_Temperature_Message
-                        Text item=pGF_Utilityroom_Ventilation_Indoor_Temperature_Message
-                        Text item=pGF_Utilityroom_Ventilation_Fan_Message
-                        Text item=pGF_Utilityroom_Ventilation_Bypass
-                        Text item=pGF_Utilityroom_Ventilation_Bypass_Efficiency
-                        Text item=pGF_Utilityroom_Ventilation_Filter_Runtime_Message
+                        Switch item=pGF_Utilityroom_Ventilation_Fan_Level label="Stufe" mappings=[0="A", 1="1", 2="2", 3="3"]
+                        Text item=pGF_Utilityroom_Ventilation_Target_Temperature_Message label="Ziel [%s]"
+                        Text item=pGF_Utilityroom_Ventilation_Cooling_Temperature_Message
                         Text item=pGF_Utilityroom_Ventilation_State_Message visibility=[pGF_Utilityroom_Ventilation_State_Message=="Alles ok"] valuecolor=[=="Alles ok"="#6bc305"]
                         Text item=pGF_Utilityroom_Ventilation_State_Message visibility=[pGF_Utilityroom_Ventilation_State_Message!="Alles ok"] valuecolor=[=="Filter"="#cbcb00",!="Alles ok"="#d72a2a"] {
-                            Text item=pGF_Utilityroom_Ventilation_Filter_Error
-                            Switch item=pGF_Utilityroom_Ventilation_Filter_Reset mappings=[1="Reset"]
-                            Text item=pGF_Utilityroom_Ventilation_Error_Message
-                            Switch item=pGF_Utilityroom_Ventilation_Error_Reset mappings=[1="Reset"]
+                            Switch item=pGF_Utilityroom_Ventilation_Error_Reset mappings=[ON="Reset"]
+                            Text item=pGF_Utilityroom_Ventilation_Filter_Dirty
+                            Text item=pGF_Utilityroom_Ventilation_Error
+                            Text item=pGF_Utilityroom_Ventilation_Error_1
+                            Text item=pGF_Utilityroom_Ventilation_Error_2
+                            Text item=pGF_Utilityroom_Ventilation_Error_3
+                            Text item=pGF_Utilityroom_Ventilation_Error_4
+                            Text item=pGF_Utilityroom_Ventilation_Error_5
                         }
+                        Text item=pGF_Utilityroom_Ventilation_Clime_Headpump_Status
+                    }
+                    Frame label="Details" {
+                        Text item=pGF_Utilityroom_Ventilation_Outdoor_Temperature_Message
+                        Text item=pGF_Utilityroom_Ventilation_Indoor_Temperature_Message
+                        Text item=pGF_Utilityroom_Ventilation_Airflow_Message
+                        Text item=pGF_Utilityroom_Ventilation_Fan_Speed_Message
+                    }
+                    Frame label="Comfo Air" {
+                        Text item=pGF_Utilityroom_Ventilation_Bypass_State
+                        Text item=pGF_Utilityroom_Ventilation_Bypass_Efficiency
+                        Text item=pGF_Utilityroom_Ventilation_Connection_State
+                        Text item=pGF_Utilityroom_Ventilation_Filter_Remaining
+                        Text item=pGF_Utilityroom_Ventilation_Target_Temperature
+                    }
+                    Frame label="Comfo Clime" {
+                        Text item=pGF_Utilityroom_Ventilation_Clime_Season
+                        Text item=pGF_Utilityroom_Ventilation_Clime_Free_Cooling
+                        Text item=pGF_Utilityroom_Ventilation_Clime_CAQ_Free_Cooling
+                        Text item=pGF_Utilityroom_Ventilation_Clime_Headpump_Power
+                        Text item=pGF_Utilityroom_Ventilation_Clime_Supply_Temperature
+                        Text item=pGF_Utilityroom_Ventilation_Clime_TPMA_Temperature
+                        Text item=pGF_Utilityroom_Ventilation_Clime_Target_Temperature
+                        Selection item=pGF_Utilityroom_Ventilation_Clime_Target_Offset label="Ziel Offset" mappings=[3="3", 2="2", 1="1", 0="0", -1="-1", -2="-2", -3="-3"]
+                        Text item=pGF_Utilityroom_Ventilation_Clime_Power label="Klimagerät" visibility=[pGF_Utilityroom_Ventilation_Auto_Mode=="ON"]
+                        Switch item=pGF_Utilityroom_Ventilation_Clime_Power label="Klimagerät" visibility=[pGF_Utilityroom_Ventilation_Auto_Mode=="OFF"]
                     }
                 }
-                Group item=pGF_Utilityroom_Heatpump_S_Betriebstatusanzeige label="Heizung [MAP(heatpump_betriebstatusanzeige.map):%s]" icon="selfheating"{
+                Group item=pGF_Utilityroom_Heatpump_Summary_Message label="Heizung [%s]" icon="selfheating"{
                     Frame label="Laufzeitdaten" {
-                        Switch item=pGF_Utilityroom_Heatpump_Auto_Mode label="Modus" mappings=[1="Auto", 0="Manuell"]
+                        Switch item=pGF_Utilityroom_Heatpump_Auto_Mode label="Modus" mappings=[2="Auto", 1="Kühlen", 0="Manuell"]
                         Selection item=pOther_Manual_State_Heating label="Heizungsreduktion" mappings=[0="Normal", 1="-1", 2="-2", 3="-3", 4="-4", 5="-5"]
 
                         Switch item=pGF_Utilityroom_Heatpump_S_Systembetriebsart label="Systembetriebsart" mappings=[1="Heizen",3="Sommer",4="Standby",5="2. WEZ"]  visibility=[pGF_Utilityroom_Heatpump_Auto_Mode==0]
@@ -1108,28 +1130,27 @@ sitemap haus label="Main Menu"
                                 Text item=pGF_Utilityroom_Electricity_State_House_ActivePower label="Aktuell [%d W]"
                                 Text item=pGF_Utilityroom_Electricity_State_House_Daily_Consumption label="Heute [%.1f kWh]"
                             }
+                            Frame label="Lüftung / Klima" {
+                                Text item=pGF_Utilityroom_Electricity_State_Comfoair_ActivePower label="Aktuell [%d W]"
+                                Text item=pGF_Utilityroom_Electricity_State_Comfoair_Daily_Consumption label="Heute [%.1f kWh]"
+                            }
                             Frame label="Wärmepumpe" {
                                 Text item=pGF_Utilityroom_Electricity_State_Heatpump_ActivePower label="Aktuell [%d W]" {
-                                    Frame label="Details Kompressor" {
-                                        Text item=pGF_Utilityroom_Electricity_Heatpump_Compressor_ActivePower_1 label="Aktuell L1 [%d W]"
-                                        Text item=pGF_Utilityroom_Electricity_Heatpump_Compressor_ActivePower_2 label="Aktuell L2 [%d W]"
-                                        Text item=pGF_Utilityroom_Electricity_Heatpump_Compressor_ActivePower_3 label="Aktuell L3 [%d W]"
+                                    Frame label="Heizen" {
+                                        Text item=pGF_Utilityroom_Electricity_State_Heatpump_Heating_Total_Consumption label="Gesamt [%.1f kWh]"
+                                        Text item=pGF_Utilityroom_Electricity_State_Heatpump_Heating_Daily_Consumption label="Heute [%.1f kWh]"
                                     }
-                                    Frame label="Details Elektroheizung" {
-                                        Text item=pGF_Utilityroom_Electricity_Heatpump_Electric_ActivePower_1 label="Aktuell L1 [%d W]"
-                                        Text item=pGF_Utilityroom_Electricity_Heatpump_Electric_ActivePower_2 label="Aktuell L2 [%d W]"
-                                        Text item=pGF_Utilityroom_Electricity_Heatpump_Electric_ActivePower_3 label="Aktuell L3 [%d W]"
+                                    Frame label="Warmwasser" {
+                                        Text item=pGF_Utilityroom_Electricity_State_Heatpump_Water_Total_Consumption label="Gesamt [%.1f kWh]"
+                                        Text item=pGF_Utilityroom_Electricity_State_Heatpump_Water_Daily_Consumption label="Heute [%.1f kWh]"
+                                    }
+                                    Frame label="Details" {
+                                        Text item=pGF_Utilityroom_Electricity_State_Heatpump_Main_ActivePower label="Gerät Aktuell [%d W]"
+                                        Text item=pGF_Utilityroom_Electricity_State_Heatpump_Compressor_ActivePower label="Compressor Aktuell [%d W]"
+                                        Text item=pGF_Utilityroom_Electricity_State_Heatpump_Electric_ActivePower label="Electric Aktuell [%d W]"
                                     }
                                 }
                                 Text item=pGF_Utilityroom_Electricity_State_Heatpump_Daily_Consumption label="Heute [%.1f kWh]"
-                            }
-                            Frame label="Heizen" {
-                                Text item=pGF_Utilityroom_Electricity_State_Heatpump_Heating_Total_Consumption label="Gesamt [%.1f kWh]"
-                                Text item=pGF_Utilityroom_Electricity_State_Heatpump_Heating_Daily_Consumption label="Heute [%.1f kWh]"
-                            }
-                            Frame label="Warmwasser" {
-                                Text item=pGF_Utilityroom_Electricity_State_Heatpump_Water_Total_Consumption label="Gesamt [%.1f kWh]"
-                                Text item=pGF_Utilityroom_Electricity_State_Heatpump_Water_Daily_Consumption label="Heute [%.1f kWh]"
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]

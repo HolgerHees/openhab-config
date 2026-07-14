@@ -6,6 +6,7 @@ from shared.toolbox import ToolboxHelper
 
 from custom.heating.heating import Heating
 from custom.heating.house import ThermalStorageType, ThermalBridgeType, Wall, Door, Window, Room
+from custom.heating import HeatingHelper
 from custom.suncalculation import SunRadiation
 from custom.sunprotection import SunProtectionHelper
 from custom.weather import WeatherHelper
@@ -32,7 +33,7 @@ Heating.forecast_temperature_item_name = "pOutdoor_WeatherService_Temperature"
 
 Heating.current_temperature_garden_item_name = WeatherHelper.getTemperatureItemName()
 
-Heating.ventilation_level_item_name = "pGF_Utilityroom_Ventilation_Outgoing"
+Heating.ventilation_volume_item_name = "pGF_Utilityroom_Ventilation_Clime_Outgoing_Airflow"
 Heating.ventilation_outgoing_temperature_item_name = "pGF_Utilityroom_Ventilation_Outdoor_Outgoing_Temperature"
 Heating.ventilation_incomming_temperature_item_name = "pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature"
 
@@ -407,9 +408,9 @@ class Main:
         self.logger.info(u"--------: >>>" )
 
         now = datetime.now().astimezone()
-        auto_mode_enabled = Registry.getItemState("pGF_Utilityroom_Heatpump_Auto_Mode").intValue() == 1
+        auto_mode = Registry.getItemState("pGF_Utilityroom_Heatpump_Auto_Mode").intValue()
 
-        current_heatpump_is_sleeping = Registry.getItemState("pGF_Utilityroom_Heatpump_S_Systembetriebsart").intValue() == 3
+        current_heatpump_is_sleeping = Registry.getItemState("pGF_Utilityroom_Heatpump_S_Systembetriebsart").intValue() == HeatingHelper.OPERATING_MODE_SUMMER
         current_hk2_active = Registry.getItemState("pGF_Utilityroom_Heatpump_HK2_State") == scope.ON
         current_hk2_demand = Registry.getItemState("pGF_Utilityroom_Heatpump_HK2_Demand") == scope.ON
 
@@ -433,7 +434,15 @@ class Main:
         heating.logHeatingStates(cr)
         # ***************
 
-        if auto_mode_enabled:
+        if auto_mode == HeatingHelper.STATE_MODE_MANUAL: # manual
+            self.logger.info(u"Demand  : SKIPPED • MANUAL MODE ACTIVE")
+            volume = 0 if current_hk2_active else -1
+        elif auto_mode == HeatingHelper.STATE_MODE_COOLING: # cooling
+            self.logger.info(u"Demand  : SKIPPED • COOLING MODE ACTIVE")
+            volume = -1
+            if (input['event'].getType() != "TimerEvent" and input['event'].getItemName() == "pGF_Utilityroom_Heatpump_Auto_Mode"):
+                Registry.getItem("pGF_Utilityroom_Heatpump_S_Systembetriebsart").sendCommandIfDifferent(HeatingHelper.OPERATING_MODE_SUMMER)
+        elif auto_mode == HeatingHelper.STATE_MODE_AUTO: # auto
             # *** CHECK OPEN WINDOWS AND NIGHT MODE ***
             longest_runetime = 0
             requested_possible_heating_volume = 0.0
@@ -533,7 +542,7 @@ class Main:
                     if hk2_demand:
                         if now.hour < 19:
                             #Registry.getItem("pGF_Utilityroom_Heatpump_HK2_Betriebsart").sendCommand(1)
-                            Registry.getItem("pGF_Utilityroom_Heatpump_S_Systembetriebsart").sendCommand(1)
+                            Registry.getItem("pGF_Utilityroom_Heatpump_S_Systembetriebsart").sendCommand(HeatingHelper.OPERATING_MODE_HEATING)
                             self.logger.info(u"Heatpump: Switch to 'Heizen'")
                         else:
                             self.logger.error("Heatpump: FLAPPING HEATING MODE CHANGE (Heizen)")
@@ -541,15 +550,12 @@ class Main:
                     if not hk2_demand and night_mode_possible:
                         if now.hour >= 19:
                             #Registry.getItem("pGF_Utilityroom_Heatpump_HK2_Betriebsart").sendCommand(3)
-                            Registry.getItem("pGF_Utilityroom_Heatpump_S_Systembetriebsart").sendCommand(3)
+                            Registry.getItem("pGF_Utilityroom_Heatpump_S_Systembetriebsart").sendCommand(HeatingHelper.OPERATING_MODE_SUMMER)
                             self.logger.info(u"Heatpump: Switch to 'Sommer'")
                         else:
                             self.logger.error("Heatpump: FLAPPING HEATING MODE CHANGE (Sommer)")
 
                 volume = requested_possible_heating_volume / 60 if current_hk2_active else -1
-        else:
-            self.logger.info(u"Demand  : SKIPPED • MANUAL MODE ACTIVE")
-            volume = 0 if current_hk2_active else -1
 
         Registry.getItem("pGF_Utilityroom_Heatpump_HK2_Volumenstrom").postUpdateIfDifferent(volume)
 

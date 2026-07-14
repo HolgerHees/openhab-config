@@ -1,0 +1,222 @@
+version: 1
+
+things:
+  http:url:comfoairq_telemetrie:
+    label: ComfoAirQ Telemetrie
+    config:
+      baseURL: http://${ENV.CUSTOM_COMFO_CLIME_IP}/device/${ENV.CUSTOM_COMFO_AIR_UID}/telemetry
+      ignoreSSLErrors: true
+    channels:
+      exhaustFanSpeed:
+        type: number
+        label: Exhaust Fan Speed
+        config:
+          stateTransformation:
+            - "JSONPATH($..data[0])"
+          stateExtension: /117
+          mode: READONLY
+      supplyFanSpeed:
+        type: number
+        label: Supply Fan Speed
+        config:
+          stateTransformation:
+            - "JSONPATH($..data[0])"
+          stateExtension: /118
+          mode: READONLY
+      bypassState:
+        type: number
+        label: Bypass State
+        config:
+          stateTransformation:
+            - "JSONPATH($..data[0])"
+          stateExtension: /227
+          mode: READONLY
+
+  http:url:comfoclime_thermalprofile:
+    label: ComfoClime Thermal
+    config:
+      baseURL: http://${ENV.CUSTOM_COMFO_CLIME_IP}/system/${ENV.CUSTOM_COMFO_CLIME_UID}/thermalprofile
+      refresh: 60
+      commandMethod: PUT
+      ignoreSSLErrors: true
+    channels:
+      season:
+        type: number
+        label: Season
+        config:
+          stateTransformation:
+            - "JSONPATH($..season.season)"
+          commandTransformation:
+            - "PY(|'{\"season\": {\"season\":' + str(input) + '}}')"
+          mode: READWRITE
+
+  http:url:comfoclime_telemetrie:
+    label: ComfoClime Telemetrie
+    config:
+      baseURL: http://${ENV.CUSTOM_COMFO_CLIME_IP}/device/${ENV.CUSTOM_COMFO_CLIME_UID}/telemetry
+      refresh: 60
+      ignoreSSLErrors: true
+    channels:
+      tpmaTemperature:
+        type: number
+        label: TPMA Temperature
+        config:
+          stateTransformation:
+            - "JSONPATH($..data[0])"
+            - "PY(|int(input)/10.0)"
+          stateExtension: /4145
+          mode: READONLY
+      heatpumpPower:
+        type: number
+        label: Headpump Power
+        config:
+          stateTransformation:
+            - "JSONPATH($..data[0])"
+          stateExtension: /4198
+          mode: READONLY
+
+  http:url:comfoclime_dashboard:
+    label: ComfoClime Dashboard
+    config:
+      baseURL: http://${ENV.CUSTOM_COMFO_CLIME_IP}/system/${ENV.CUSTOM_COMFO_CLIME_UID}/dashboard
+      refresh: 60
+      commandMethod: PUT
+      ignoreSSLErrors: true
+    channels:
+      #indoorTemperature:
+      #  type: number
+      #  label: Indoor Temperature
+      #  config:
+      #    stateTransformation:
+      #      - "JSONPATH($..indoorTemperature)"
+      #    mode: READONLY
+      #outdoorTemperature:
+      #  type: number
+      #  label: Outdoor Temperature
+      #  config:
+      #    stateTransformation:
+      #      - "JSONPATH($..outdoorTemperature)"
+      #    mode: READONLY
+      exhaustAirFlow:
+        type: number
+        label: Abfluft Volumenstrom
+        config:
+          stateTransformation:
+            - "JSONPATH($..exhaustAirFlow)"
+          mode: READONLY
+      supplyAirFlow:
+        type: number
+        label: Zuluft Volumenstrom
+        config:
+          stateTransformation:
+            - "JSONPATH($..supplyAirFlow)"
+          mode: READONLY
+      #fanSpeed:
+      #  type: number
+      #  label: Fan Speed
+      #  config:
+      #    stateTransformation:
+      #      - JSONPATH($..fanSpeed)
+      #    mode: READONLY
+      setPointTemperature:
+        type: number
+        label: Target Temperature
+        config:
+          stateTransformation:
+            - "JSONPATH($..setPointTemperature)"
+          commandTransformation:
+            - "PY(|'{\"setPointTemperature\":' + str(input) + '}')"
+          mode: READWRITE
+      #season:
+      #  type: number
+      #  label: Season
+      #  config:
+      #    stateTransformation:
+      #      - JSONPATH($..season)
+      #    mode: READONLY
+      #schedule:
+      #  type: number
+      #  label: Schedule
+      #  config:
+      #    stateTransformation:
+      #      - JSONPATH($..schedule)
+      #    mode: READONLY
+      #status:
+      #  type: number
+      #  label: Status
+      #  config:
+      #    stateTransformation:
+      #      - JSONPATH($..status)
+      #    mode: READONLY
+      heatPumpStatus:
+        type: number
+        label: Heatpump Status
+        config:
+          stateTransformation:
+            - "JSONPATH($..heatPumpStatus)"
+          mode: READONLY
+      climePower:
+        type: switch
+        label: Power
+        config:
+          stateTransformation:
+            - "JSONPATH($..hpStandby)"
+          commandTransformation:
+            - "PY(|'{\"hpStandby\":' + str(input) + '}')"
+          onValue: "false"
+          offValue: "true"
+          mode: READWRITE
+      freeCoolingEnabled:
+        type: switch
+        label: Free Cooling Enabled
+        config:
+          stateTransformation:
+            - "JSONPATH($..freeCoolingEnabled)"
+          onValue: "true"
+          offValue: "false"
+          mode: READONLY
+      caqFreeCoolingAvailable:
+        type: switch
+        label: Caq Free Cooling Available
+        config:
+          stateTransformation:
+            - "JSONPATH($..caqFreeCoolingAvailable)"
+          onValue: "true"
+          offValue: "false"
+          mode: READONLY
+
+  http:url:comfoclime_definition:
+    label: ComfoClime Definition
+    config:
+      baseURL: http://${ENV.CUSTOM_COMFO_CLIME_IP}/device/${ENV.CUSTOM_COMFO_CLIME_UID}/definition
+      refresh: 60
+      ignoreSSLErrors: true
+    channels:
+      #setPointTemperature:
+      #  type: number
+      #  label: Target Temperature
+      #  config:
+      #    stateTransformation:
+      #      - JSONPATH($..setPointTemperature)
+      #    mode: READONLY
+      #status:
+      #  type: number
+      #  label: Status
+      #  config:
+      #    stateTransformation:
+      #      - JSONPATH($..status)
+      #    mode: READONLY
+      #heatPumpStatus:
+      #  type: number
+      #  label: Heatpump Status
+      #  config:
+      #    stateTransformation:
+      #      - JSONPATH($..heatPumpStatus)
+      #    mode: READONLY
+      supplyTemperature:
+        type: number
+        label: Supply Temperature
+        config:
+          stateTransformation:
+            - "JSONPATH($..supplyTemperature)"
+          mode: READONLY

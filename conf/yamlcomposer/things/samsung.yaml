@@ -1,0 +1,13 @@
+version: 1
+
+things:
+  samsungtv:tv:livingroom:
+    label: Gerät Fernseher
+    config:
+      hostName: ${ENV.CUSTOM_TV_LIVINGROOM_IP}
+      macAddress: ${ENV.CUSTOM_TV_LIVINGROOM_MAC}
+      protocol: SecureWebSocket
+      port: 8002
+      refreshInterval: 1000
+      webSocketToken: !literal ${ENV:CUSTOM_TV_LIVINGROOM_TOKEN}
+      subscription: true

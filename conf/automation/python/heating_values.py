@@ -1,5 +1,5 @@
 from openhab import rule, Registry
-from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger
+from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger, SystemStartlevelTrigger
 from openhab.actions import Transformation
 
 import scope
@@ -18,6 +18,22 @@ class ErrorMessage:
             return
 
         Registry.getItem("eOther_Error_Heating_Message").postUpdateIfDifferent("")
+
+@rule(
+    triggers = [
+        SystemStartlevelTrigger(80),
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_Auto_Mode"),
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_S_Betriebstatusanzeige")
+    ]
+)
+class SummaryMessage:
+    def execute(self, module, input):
+        mode = Registry.getItemState("pGF_Utilityroom_Heatpump_Auto_Mode")
+        status = Registry.getItemState("pGF_Utilityroom_Heatpump_S_Betriebstatusanzeige")
+
+        msg = "{} - {}".format(Transformation.transform("MAP", "heatpump_mode.map", mode.toString()), Transformation.transform("MAP", "heatpump_betriebstatusanzeige.map", status.toString()))
+
+        Registry.getItem("pGF_Utilityroom_Heatpump_Summary_Message").postUpdateIfDifferent(msg)
 
 @rule(
     triggers = [

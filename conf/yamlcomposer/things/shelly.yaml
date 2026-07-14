@@ -1,0 +1,80 @@
+version: 1
+
+things:
+  shelly:shellyplugs:socket1:
+    label: "Steckdose Lüfter"
+    config:
+      deviceIp: ${ENV.CUSTOM_SHELLY_SOCKET_1_IP}
+      password: !literal ${ENV:CUSTOM_SHELLY_SOCKET_PASSWORD}
+
+  shelly:shellyplugs:socket2:
+    label: "Steckdose Frostwächter"
+    config:
+      deviceIp: ${ENV.CUSTOM_SHELLY_SOCKET_2_IP}
+      password: !literal ${ENV:CUSTOM_SHELLY_SOCKET_PASSWORD}
+
+  shelly:shellyplusplug:socket3:
+    label: "Steckdose Dachboden"
+    config:
+      deviceIp: ${ENV.CUSTOM_SHELLY_SOCKET_3_IP}
+      password: !literal ${ENV:CUSTOM_SHELLY_SOCKET_PASSWORD}
+
+  shelly:shellyplusplug:socket4:
+    label: "Steckdose Wetterstation"
+    config:
+      deviceIp: ${ENV.CUSTOM_SHELLY_SOCKET_4_IP}
+      password: !literal ${ENV:CUSTOM_SHELLY_SOCKET_PASSWORD}
+
+  shelly:shellyplusplug:socket5:
+    label: "Steckdose Server"
+    config:
+      deviceIp: ${ENV.CUSTOM_SHELLY_SOCKET_5_IP}
+      password: !literal ${ENV:CUSTOM_SHELLY_SOCKET_PASSWORD}
+
+  shelly:shellyplusplug:socket8:
+    label: "Steckdose Mobile 1"
+    config:
+      deviceIp: ${ENV.CUSTOM_SHELLY_SOCKET_6_IP}
+      password: !literal ${ENV:CUSTOM_SHELLY_SOCKET_PASSWORD}
+
+  shelly:shellyplusplug:socket9:
+    label: "Steckdose Mobile 2"
+    config:
+      deviceIp: ${ENV.CUSTOM_SHELLY_SOCKET_7_IP}
+      password: !literal ${ENV:CUSTOM_SHELLY_SOCKET_PASSWORD}
+
+  shelly:shellyplusplug:socket6:
+    label: "Steckdose Mobile 3"
+    config:
+      deviceIp: ${ENV.CUSTOM_SHELLY_SOCKET_8_IP}
+      password: !literal ${ENV:CUSTOM_SHELLY_SOCKET_PASSWORD}
+
+  shelly:shellyplusplug:socket7:
+    label: "Steckdose Mobile 4"
+    config:
+      deviceIp: ${ENV.CUSTOM_SHELLY_SOCKET_9_IP}
+      password: !literal ${ENV:CUSTOM_SHELLY_SOCKET_PASSWORD}
+
+  shelly:shellypro3em:energy-meter-headpump-compressor:
+    label: "Wärmepumpe Stromzähler Kompressor"
+    config:
+      deviceIp: ${ENV.CUSTOM_SHELLY_ENERGY_METER_HEADPUMP_COMPRESSOR_IP}
+      password: !literal ${ENV:CUSTOM_SHELLY_ENERGY_METER_PASSWORD}
+
+  shelly:shellypro3em:energy-meter-headpump-electro:
+    label: "Wärmepumpe Stromzähler Elektroheizung"
+    config:
+      deviceIp: ${ENV.CUSTOM_SHELLY_ENERGY_METER_HEADPUMP_ELECTRIC_IP}
+      password: !literal ${ENV:CUSTOM_SHELLY_ENERGY_METER_PASSWORD}
+
+  shelly:shellyproem50:energy-meter-headpump-main:
+    label: "Wärmepumpe Stromzähler Gerät"
+    config:
+      deviceIp: ${ENV.CUSTOM_SHELLY_ENERGY_METER_HEADPUMP_MAIN_IP}
+      password: !literal ${ENV:CUSTOM_SHELLY_ENERGY_METER_PASSWORD}
+
+  shelly:shellyproem50:energy-meter-comfoair:
+    label: "ComfoAir Stromzähler"
+    config:
+      deviceIp: ${ENV.CUSTOM_SHELLY_ENERGY_METER_COMFOAIR_IP}
+      password: !literal ${ENV:CUSTOM_SHELLY_ENERGY_METER_PASSWORD}

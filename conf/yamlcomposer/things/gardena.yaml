@@ -1,0 +1,57 @@
+version: 1
+
+things:
+  gardena:account:default:
+    isBridge: true
+    label: Bodenfeuchte Gardena Smart System API
+    config:
+      apiSecret: ${ENV.CUSTOM_GARDENA_SECRET}
+      apiKey: ${ENV.CUSTOM_GARDENA_KEY}
+
+  gardena:sensor:default:sensor1:
+    bridge: gardena:account:default
+    label: Bodenfeuchte Sensor 1
+    config:
+      deviceId: ${ENV.CUSTOM_GARDENA_SENSOR1_ID}
+
+  gardena:sensor:default:sensor2:
+    bridge: gardena:account:default
+    label: Bodenfeuchte Sensor 2
+    config:
+      deviceId: ${ENV.CUSTOM_GARDENA_SENSOR2_ID}
+
+  gardena:sensor:default:sensor3:
+    bridge: gardena:account:default
+    label: Bodenfeuchte Sensor 3
+    config:
+      deviceId: ${ENV.CUSTOM_GARDENA_SENSOR3_ID}
+
+  gardena:sensor:default:sensor4:
+    bridge: gardena:account:default
+    label: Bodenfeuchte Sensor 4
+    config:
+      deviceId: ${ENV.CUSTOM_GARDENA_SENSOR4_ID}
+
+  gardena:sensor:default:sensor5:
+    bridge: gardena:account:default
+    label: Bodenfeuchte Sensor 5
+    config:
+      deviceId: ${ENV.CUSTOM_GARDENA_SENSOR5_ID}
+
+  gardena:sensor:default:sensor6:
+    bridge: gardena:account:default
+    label: Bodenfeuchte Sensor 6
+    config:
+      deviceId: ${ENV.CUSTOM_GARDENA_SENSOR6_ID}
+
+  gardena:sensor:default:sensor7:
+    bridge: gardena:account:default
+    label: Bodenfeuchte Sensor 7
+    config:
+      deviceId: ${ENV.CUSTOM_GARDENA_SENSOR7_ID}
+
+  gardena:sensor:default:sensor8:
+    bridge: gardena:account:default
+    label: Bodenfeuchte Sensor 8
+    config:
+      deviceId: ${ENV.CUSTOM_GARDENA_SENSOR8_ID}

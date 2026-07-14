@@ -1,0 +1,11 @@
+version: 1
+
+things:
+  skyq:skyqreceiver:livingroom:
+    label: Gerät SkyQ Receiver
+    config:
+      hostname: ${ENV.CUSTOM_SKY_LIVINGROOM_IP}
+      configurablePresets: true
+      refreshInterval: 30
+      retryInterval: 60
+      checkStatusInterval: 60

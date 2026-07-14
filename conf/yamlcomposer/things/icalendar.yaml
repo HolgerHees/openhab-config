@@ -1,0 +1,20 @@
+version: 1
+
+things:
+  icalendar:calendar:muellabfuhr:
+    isBridge: true
+    label: Müllentsorgungstermine
+    config:
+      url: !literal ${ENV:CUSTOM_GARBAGE_CALENDAR_URL}
+      refreshTime: 60
+
+  icalendar:eventfilter:muellabfuhr:entsorgungstermine:
+    bridge: icalendar:calendar:muellabfuhr
+    label: Müllentsorgungstermine
+    config:
+      maxEvents: 4
+      refreshTime: 10
+      datetimeUnit: DAY
+      datetimeStart: 1
+      datetimeEnd: 30
+      datetimeRound: true

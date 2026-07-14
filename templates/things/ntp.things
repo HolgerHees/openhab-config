@@ -1,1 +1,0 @@
-ntp:ntp:local "Zeitserver" [ hostname="de.pool.ntp.org", refreshInterval=60, refreshNtp=30 ]

@@ -53,7 +53,7 @@ class Heating():
     current_cloud_cover_item_name = None
     current_temperature_garden_item_name = None
 
-    ventilation_level_item_name = None
+    ventilation_volume_item_name = None
     ventilation_outgoing_temperature_item_name = None
     ventilation_incomming_temperature_item_name = None
     
@@ -149,8 +149,8 @@ class Heating():
       
     def getVentilationEnergy(self, temp_diff_offset):
         # *** Calculate power loss by ventilation ***
-        _ventilationLevel = Registry.getItemState(self.ventilation_level_item_name)
-        if _ventilationLevel != scope.UNDEF:
+        _ventilationVolume = Registry.getItemState(self.ventilation_volume_item_name)
+        if _ventilationVolume != scope.UNDEF:
             _ventilation_temp_diff = Registry.getItemState(self.ventilation_outgoing_temperature_item_name).doubleValue() - Registry.getItemState(self.ventilation_incomming_temperature_item_name).doubleValue()
 
             # apply outdoor temperature changes to ventilation in / out difference
@@ -159,10 +159,7 @@ class Heating():
                 if _ventilation_temp_diff + ventilation_diff > 0:
                     _ventilation_temp_diff = _ventilation_temp_diff + ventilation_diff
 
-            # Ventilation Energy
-            # 15% => 40m/h		XX => ?
-            # 100% => 350m/h		85 => 310
-            _ventilation_volume = ( ( ( _ventilationLevel.intValue() - 15.0 ) * 310.0 ) / 85.0 ) + 40.0
+            _ventilation_volume = _ventilationVolume.intValue()
             _ventilation_u_value = _ventilation_volume * self.DENSITY_AIR * self.C_AIR
             _ventilation_energy_in_kj = _ventilation_u_value * _ventilation_temp_diff
 

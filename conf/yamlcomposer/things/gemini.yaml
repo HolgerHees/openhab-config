@@ -1,0 +1,11 @@
+version: 1
+
+things:
+  gemini:account:smartserver:
+    config:
+      apiKey: !literal ${ENV:CUSTOM_GEMINI_TOKEN}
+      model: gemini-2.5-flash
+      temperature: 1
+      topP: 1
+      maxOutputTokens: 2048
+      requestTimeout: 30

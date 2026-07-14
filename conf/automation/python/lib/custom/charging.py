@@ -50,20 +50,21 @@ class ChargingHelper:
             for price, slots in price_map.items():
                 slots.sort(key=lambda x: x["start"].timestamp(), reverse=True)
 
-            if len(date_map) == 0:
+            self.date_map = date_map
+            self.price_map = dict(sorted(price_map.items(), key=lambda item: item[0]))
+            self.last_price_day = last_price_date.day
+
+        if self.date_map is not None:
+            if len(self.date_map) > 0 and self.date_map[0]["end"] < now:
+                self.price_map[self.date_map[0]["price"]].remove(self.date_map[0])
+                del self.date_map[0]
+
+            if len(self.date_map) == 0:
                 logger.error("NO PRICE MAP AVAILABLE. {} - {}".format(self.last_price_day, last_price_date))
 
                 self.date_map = None
                 self.price_map = None
                 self.last_price_day = -1
-            else:
-                self.date_map = date_map
-                self.price_map = dict(sorted(price_map.items(), key=lambda item: item[0]))
-                self.last_price_day = last_price_date.day
-
-        if self.date_map is not None and self.date_map[0]["end"] < now:
-            self.price_map[self.date_map[0]["price"]].remove(self.date_map[0])
-            del self.date_map[0]
 
     def calculateRemainingSlots(self, start_time, end_time, current_time, current_energy_soc, target_energy_soc, min_charging_power, max_charging_power, charging_callback):
         missing_energy = target_energy_soc - current_energy_soc

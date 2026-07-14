@@ -2,7 +2,6 @@ import math
 
 from scope import actions
 
-astroAction = actions.get("astro","astro:sun:local")
 
 # https://azimut.polka-umwelt.de/
 # https://www.sonnenverlauf.de/
@@ -100,6 +99,7 @@ class SunRadiation():
 
     @staticmethod
     def getSunData( time, direction = None ):
+        astroAction = actions.get("astro","astro:sun:local")
         elevation, azimut = astroAction.getElevation(time).doubleValue(), astroAction.getAzimuth(time).doubleValue()
 
         active_horizon_slot = horizon_slots[0]

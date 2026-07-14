@@ -1,0 +1,338 @@
+version: 1
+
+things:
+  modbus:tcp:ventilation:
+    isBridge: true
+    label: ComfoAir Bridge
+    config:
+      host: ${ENV.CUSTOM_COMFO_AIR_IP}
+      port: 502
+      id: 1
+
+  modbus:poller:ventilation:input:
+    isBridge: true
+    bridge: modbus:tcp:ventilation
+    label: ComfoAir Input
+    config:
+      refresh: 15000
+      start: 0
+      length: 26
+      type: input
+
+  modbus:data:ventilation:input:comfoairq_connection_state:
+    bridge: modbus:poller:ventilation:input
+    label: ComfoAirQ connection state
+    config:
+      readStart: "0"
+      readValueType: uint16
+
+  modbus:data:ventilation:input:comfoairq_active_error_1:
+    bridge: modbus:poller:ventilation:input
+    label: ComfoAirQ active error 1
+    config:
+      readStart: "1"
+      readValueType: uint16
+
+  modbus:data:ventilation:input:comfoairq_active_error_2:
+    bridge: modbus:poller:ventilation:input
+    label: ComfoAirQ active error 2
+    config:
+      readStart: "2"
+      readValueType: uint16
+
+  modbus:data:ventilation:input:comfoairq_active_error_3:
+    bridge: modbus:poller:ventilation:input
+    label: ComfoAirQ active error 3
+    config:
+      readStart: "3"
+      readValueType: uint16
+
+  modbus:data:ventilation:input:comfoairq_active_error_4:
+    bridge: modbus:poller:ventilation:input
+    label: ComfoAirQ active error 4
+    config:
+      readStart: "4"
+      readValueType: uint16
+
+  modbus:data:ventilation:input:comfoairq_active_error_5:
+    bridge: modbus:poller:ventilation:input
+    label: ComfoAirQ active error 5
+    config:
+      readStart: "5"
+      readValueType: uint16
+
+  #modbus:data:ventilation:input:comfoairq_airflow:
+  #  bridge: modbus:poller:ventilation:input
+  #  label: ComfoAirQ airflow
+  #  config:
+  #    readStart: "6"
+  #    readValueType: uint16
+
+  #modbus:data:ventilation:input:comfoairq_t_room:
+  #  bridge: modbus:poller:ventilation:input
+  #  label: ComfoAirQ room temperature
+  #  config:
+  #    readStart: "7"
+  #    readValueType: int16
+
+  modbus:data:ventilation:input:comfoairq_t_indoor_out:
+    bridge: modbus:poller:ventilation:input
+    label: ComfoAirQ indoor out temperature
+    config:
+      readStart: "8"
+      readTransform:
+        - "PY(|int(input)/10.0)"
+      readValueType: int16
+
+  modbus:data:ventilation:input:comfoairq_t_outdoor_out:
+    bridge: modbus:poller:ventilation:input
+    label: ComfoAirQ outdoor out temperature
+    config:
+      readStart: "9"
+      readTransform:
+        - "PY(|int(input)/10.0)"
+      readValueType: int16
+
+  modbus:data:ventilation:input:comfoairq_t_outdoor_in:
+    bridge: modbus:poller:ventilation:input
+    label: ComfoAirQ outdoor in temperature
+    config:
+      readStart: "10"
+      readTransform:
+        - "PY(|int(input)/10.0)"
+      readValueType: int16
+
+  modbus:data:ventilation:input:comfoairq_t_indoor_in:
+    bridge: modbus:poller:ventilation:input
+    label: ComfoAirQ indoor in temperature
+    config:
+      readStart: "11"
+      readTransform:
+        - "PY(|int(input)/10.0)"
+      readValueType: int16
+
+  #modbus:data:ventilation:input:comfoairq_h_room:
+  #  bridge: modbus:poller:ventilation:input
+  #  label: ComfoAirQ room humidity
+  #  config:
+  #    readStart: "12"
+  #    readValueType: int16
+
+  modbus:data:ventilation:input:comfoairq_h_indoor_out:
+    bridge: modbus:poller:ventilation:input
+    label: ComfoAirQ indoor out humidity
+    config:
+      readStart: "13"
+      readValueType: uint16
+
+  modbus:data:ventilation:input:comfoairq_h_outdoor_out:
+    bridge: modbus:poller:ventilation:input
+    label: ComfoAirQ outdoor out humidity
+    config:
+      readStart: "14"
+      readValueType: uint16
+
+  modbus:data:ventilation:input:comfoairq_h_outdoor_in:
+    bridge: modbus:poller:ventilation:input
+    label: ComfoAirQ outdoor in humidity
+    config:
+      readStart: "15"
+      readValueType: uint16
+
+  modbus:data:ventilation:input:comfoairq_h_indoor_in:
+    bridge: modbus:poller:ventilation:input
+    label: ComfoAirQ indoor in humidity
+    config:
+      readStart: "16"
+      readValueType: uint16
+
+  modbus:data:ventilation:input:comfoairq_filter_days_remaining:
+    bridge: modbus:poller:ventilation:input
+    label: ComfoAirQ filter days remaining
+    config:
+      readStart: "25"
+      readValueType: uint16
+
+  modbus:poller:ventilation:discrete:
+    isBridge: true
+    bridge: modbus:tcp:ventilation
+    label: ComfoAir Discrete
+    config:
+      refresh: 60000
+      start: 0
+      length: 4
+      type: discrete
+
+  modbus:data:ventilation:discrete:comfoairq_error:
+    bridge: modbus:poller:ventilation:discrete
+    label: ComfoAirQ error active
+    config:
+      readStart: "0"
+      readValueType: bit
+
+  modbus:data:ventilation:discrete:comfoairq_standby:
+    bridge: modbus:poller:ventilation:discrete
+    label: ComfoAirQ standby active
+    config:
+      readStart: "1"
+      readValueType: bit
+
+  #modbus:data:ventilation:discrete:comfoairq_hood:
+  #  bridge: modbus:poller:ventilation:discrete
+  #  label: ComfoAirQ hood
+  #  config:
+  #    readStart: "2"
+  #    readValueType: bit
+
+  modbus:data:ventilation:discrete:comfoairq_filter_dirty:
+    bridge: modbus:poller:ventilation:discrete
+    label: ComfoAirQ filter dirty
+    config:
+      readStart: "3"
+      readValueType: bit
+
+  modbus:poller:ventilation:coil:
+    isBridge: true
+    bridge: modbus:tcp:ventilation
+    label: ComfoAir Coil
+    config:
+      refresh: 0
+      start: 0
+      length: 9
+      type: coil
+
+  modbus:data:ventilation:coil:comfoairq_reset_error:
+    bridge: modbus:poller:ventilation:coil
+    label: ComfoAirQ reset error
+    config:
+      writeStart: "0"
+      writeType: coil
+      writeValueType: bit
+
+  #modbus:data:ventilation:coil:comfoairq_ventilation_preset_away:
+  #  bridge: modbus:poller:ventilation:coil
+  #  label: ComfoAirQ preset away
+  #  config:
+  #    writeStart: "1"
+  #    writeType: coil
+  #    writeValueType: bit
+
+  #modbus:data:ventilation:coil:comfoairq_ventilation_preset_1:
+  #  bridge: modbus:poller:ventilation:coil
+  #  label: ComfoAirQ preset 1
+  #  config:
+  #    writeStart: "2"
+  #    writeType: coil
+  #    writeValueType: bit
+
+  #modbus:data:ventilation:coil:comfoairq_ventilation_preset_2:
+  #  bridge: modbus:poller:ventilation:coil
+  #  label: ComfoAirQ preset 2
+  #  config:
+  #    writeStart: "3"
+  #    writeType: coil
+  #    writeValueType: bit
+
+  #modbus:data:ventilation:coil:comfoairq_ventilation_preset_3:
+  #  bridge: modbus:poller:ventilation:coil
+  #  label: ComfoAirQ preset 3
+  #  config:
+  #    writeStart: "4"
+  #    writeType: coil
+  #    writeValueType: bit
+
+  #modbus:data:ventilation:coil:comfoairq_auto_mode:
+  #  bridge: modbus:poller:ventilation:coil
+  #  label: ComfoAirQ auto mode
+  #  config:
+  #    writeStart: "5"
+  #    writeType: coil
+  #    writeValueType: bit
+
+  #modbus:data:ventilation:coil:comfoairq_boost_mode:
+  #  bridge: modbus:poller:ventilation:coil
+  #  label: ComfoAirQ boost mode
+  #  config:
+  #    writeStart: "6"
+  #    writeType: coil
+  #    writeValueType: bit
+
+  #modbus:data:ventilation:coil:comfoairq_away_mode:
+  #  bridge: modbus:poller:ventilation:coil
+  #  label: ComfoAirQ away mode
+  #  config:
+  #    writeStart: "7"
+  #    writeType: coil
+  #    writeValueType: bit
+
+  #modbus:data:ventilation:coil:comfoairq_comfocool:
+  #  bridge: modbus:poller:ventilation:coil
+  #  label: ComfoAirQ comfocool
+  #  config:
+  #    writeStart: "8"
+  #    writeType: coil
+  #    writeValueType: bit
+
+  modbus:poller:ventilation:holding:
+    isBridge: true
+    bridge: modbus:tcp:ventilation
+    label: ComfoAir Holding
+    config:
+      refresh: 60000
+      start: 0
+      length: 5
+      type: holding
+
+  modbus:data:ventilation:holding:comfoairq_preset: #  // 0 - 3
+    bridge: modbus:poller:ventilation:holding
+    label: ComfoAirQ preset
+    config:
+      readStart: "0"
+      readValueType: int16
+      writeStart: "0"
+      writeType: holding
+      writeValueType: int16
+
+  #modbus:data:ventilation:holding:comfoairq_t_profile: #  // 0 normal, 1 cold, 2 warm (only mode 0 and 1)
+  #  bridge: modbus:poller:ventilation:holding
+  #  label: ComfoAirQ temperature profile
+  #  config:
+  #    readStart: "1"
+  #    readValueType: int16
+  #    writeStart: "1"
+  #    writeType: holding
+  #    writeValueType: int16
+
+  modbus:data:ventilation:holding:comfoairq_t_profile_mode:
+    bridge: modbus:poller:ventilation:holding
+    label: ComfoAirQ temperature profile mode
+    config:
+      readStart: "2"
+      readValueType: int16
+      writeStart: "2"
+      writeType: holding
+      writeValueType: int16
+
+  modbus:data:ventilation:holding:comfoairq_t_external_setpoint: # // °C (only mode 2)
+    bridge: modbus:poller:ventilation:holding
+    label: ComfoAirQ temperature external setpoint
+    config:
+      readStart: "3"
+      readTransform:
+        - PY(|int(input)/10.0)
+      readValueType: int16
+      writeStart: "3"
+      writeType: holding
+      writeTransform:
+        - PY(|int(float(input) * 10.0))
+      writeValueType: int16
+
+  #modbus:data:ventilation:holding:comfoairq_boost_time:
+  #  bridge: modbus:poller:ventilation:holding
+  #  label: ComfoAirQ temperature external setpoint
+  #  config:
+  #    readStart: "4"
+  #    readValueType: int16
+  #    writeStart: "4"
+  #    writeType: holding
+  #    writeValueType: int16

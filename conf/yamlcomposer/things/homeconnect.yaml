@@ -1,0 +1,29 @@
+version: 1
+
+things:
+  homeconnectdirect:dishwasher:default:
+    label: Gerät Geschirrspühler
+    location: Geräte
+    config:
+      haId: ${ENV.CUSTOM_HOMECONNECT_DISHWASHER_ID}
+      address: ${ENV.CUSTOM_HOMECONNECT_DISHWASHER_IP}
+      connectionRetryDelay: 1
+      connectionType: AES_HMAC_SHA256
+
+  homeconnectdirect:coffeemaker:default:
+    label: Gerät Kaffeemaschine
+    location: Geräte
+    config:
+      haId: ${ENV.CUSTOM_HOMECONNECT_COFFEEMAKER_ID}
+      address: ${ENV.CUSTOM_HOMECONNECT_COFFEEMAKER_IP}
+      connectionRetryDelay: 1
+      connectionType: AES_HMAC_SHA256
+
+  homeconnectdirect:washer:default:
+    label: Gerät Waschmaschine
+    location: Geräte
+    config:
+      haId: ${ENV.CUSTOM_HOMECONNECT_WASHER_ID}
+      address: ${ENV.CUSTOM_HOMECONNECT_WASHER_IP}
+      connectionRetryDelay: 1
+      connectionType: AES_HMAC_SHA256

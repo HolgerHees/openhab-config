@@ -14,9 +14,7 @@ class State:
     def execute(self, module, input):
         thing = Registry.getThing("gardena:account:default")
         status = thing.getStatus()
-
         Registry.getItem("eOther_Error_Gardena_Message").postUpdateIfDifferent("Thing: {}".format(thing.getStatusInfo().toString()) if status.toString() != "ONLINE" else "")
-
 
 @rule()
 class BatteryDetail:

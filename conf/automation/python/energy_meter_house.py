@@ -14,12 +14,17 @@ from shared.toolbox import ToolboxHelper
 @rule(
     triggers = [
       ItemStateChangeTrigger("pGF_Utilityroom_Electricity_State_Total_Consumption"),
+      ItemStateChangeTrigger("pGF_Utilityroom_Electricity_State_Comfoair_Total_Consumption"),
       ItemStateChangeTrigger("pGF_Utilityroom_Electricity_State_Heatpump_Total_Consumption"),
     ]
 )
 class Consumption:
     def execute(self, module, input):
-        consumption = Registry.getItemState("pGF_Utilityroom_Electricity_State_Total_Consumption").doubleValue() - Registry.getItemState("pGF_Utilityroom_Electricity_State_Heatpump_Total_Consumption").doubleValue()
+        total = Registry.getItemState("pGF_Utilityroom_Electricity_State_Total_Consumption").doubleValue()
+        comfoair = Registry.getItemState("pGF_Utilityroom_Electricity_State_Comfoair_Total_Consumption").doubleValue()
+        heatpump = Registry.getItemState("pGF_Utilityroom_Electricity_State_Heatpump_Total_Consumption").doubleValue()
+
+        consumption = total - comfoair - heatpump
 
         Registry.getItem("pGF_Utilityroom_Electricity_State_House_Total_Consumption").postUpdateIfDifferent(consumption)
 
@@ -30,6 +35,8 @@ class Consumption:
 @rule(
     triggers = [
       ItemStateChangeTrigger("pGF_Garage_Solar_Inverter_ConsumptionActivePower"),
+      ItemStateChangeTrigger("pGF_Utilityroom_Electricity_State_Comfoair_ActivePower"),
+      ItemStateChangeTrigger("pGF_Utilityroom_Electricity_State_Heatpump_Main_ActivePower"),
       ItemStateChangeTrigger("pGF_Utilityroom_Electricity_State_Heatpump_Compressor_ActivePower"),
       ItemStateChangeTrigger("pGF_Utilityroom_Electricity_State_Heatpump_Electric_ActivePower")
     ]
@@ -37,8 +44,10 @@ class Consumption:
 class ActivePower:
     def execute(self, module, input):
         total = Registry.getItemState("pGF_Garage_Solar_Inverter_ConsumptionActivePower").doubleValue()
+        comfoair = Registry.getItemState("pGF_Utilityroom_Electricity_State_Comfoair_ActivePower").doubleValue()
+        headpump_main = Registry.getItemState("pGF_Utilityroom_Electricity_State_Heatpump_Main_ActivePower").doubleValue()
         headpump_compressor = Registry.getItemState("pGF_Utilityroom_Electricity_State_Heatpump_Compressor_ActivePower").doubleValue()
         headpump_electric = Registry.getItemState("pGF_Utilityroom_Electricity_State_Heatpump_Electric_ActivePower").doubleValue()
 
-        Registry.getItem("pGF_Utilityroom_Electricity_State_House_ActivePower").postUpdate(total - headpump_compressor - headpump_electric)
+        Registry.getItem("pGF_Utilityroom_Electricity_State_House_ActivePower").postUpdate(total - comfoair - headpump_main - headpump_compressor - headpump_electric)
 

@@ -1,1 +1,0 @@
-Thing pushover:pushover-account:account [ apikey="{{custom_pushover_api_key}}", user="{{custom_pushover_user_key}}" ]

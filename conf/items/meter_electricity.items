@@ -4,22 +4,19 @@ Number:Energy pGF_Utilityroom_Electricity_Meter_Demand				"Zählerstand Bezug [%
 Number:Energy pGF_Utilityroom_Electricity_Meter_Supply				"Zählerstand Lieferung [%.1f KWh]"	    <selfenergy_meter> (eGF_Utilityroom_Electricity_Meter) ["Messurement"] { channel="mqtt:topic:mosquitto:watt_waechter:supply" }
 
 // **** ELECTRICITY METER HEATPUMP ****
-Group  eGF_Utilityroom_Electricity_Heatpump_Meter                               "Stromzähler"                   <selfinfo> (lGF_Utilityroom) ["Sensor"]
-Number:Energy pGF_Utilityroom_Electricity_Heatpump_Compressor_Meter_Consumption   <selfenergy_meter> (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Messurement"]           {channel="shelly:shellypro3em:energy-meter-headpump-compressor:device#totalKWH"}
-//Number:Energy pGF_Utilityroom_Electricity_Heatpump_Compressor_Meter_Consumption_1 <selfenergy_meter> (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Messurement"]           {channel="shelly:shellypro3em:energy-meter-headpump-compressor:meter1#totalKWH"}
-Number:Power  pGF_Utilityroom_Electricity_Heatpump_Compressor_ActivePower_1       <selfenergy>       (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Measurement", "Power"]  {channel="shelly:shellypro3em:energy-meter-headpump-compressor:meter1#currentWatts"}
-//Number:Energy pGF_Utilityroom_Electricity_Heatpump_Compressor_Meter_Consumption_2 <selfenergy_meter> (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Messurement"]           {channel="shelly:shellypro3em:energy-meter-headpump-compressor:meter2#totalKWH"}
-Number:Power  pGF_Utilityroom_Electricity_Heatpump_Compressor_ActivePower_2       <selfenergy>       (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Measurement", "Power"]  {channel="shelly:shellypro3em:energy-meter-headpump-compressor:meter2#currentWatts"}
-//Number:Energy pGF_Utilityroom_Electricity_Heatpump_Compressor_Meter_Consumption_3 <selfenergy_meter> (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Messurement"]           {channel="shelly:shellypro3em:energy-meter-headpump-compressor:meter3#totalKWH"}
-Number:Power  pGF_Utilityroom_Electricity_Heatpump_Compressor_ActivePower_3       <selfenergy>       (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Measurement", "Power"]  {channel="shelly:shellypro3em:energy-meter-headpump-compressor:meter3#currentWatts"}
+Group  eGF_Utilityroom_Electricity_Heatpump_Meter                               "Stromzähler"        <selfinfo> (lGF_Utilityroom) ["Sensor"]
+Number:Energy pGF_Utilityroom_Electricity_Heatpump_Compressor_Meter_Consumption <selfenergy_meter> (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Messurement"]           {channel="shelly:shellypro3em:energy-meter-headpump-compressor:device#totalEnergy"}
+Number:Power  pGF_Utilityroom_Electricity_Heatpump_Compressor_ActivePower       <selfenergy>       (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Measurement", "Power"]  {channel="shelly:shellypro3em:energy-meter-headpump-compressor:device#accumulatedWatts"}
 
-Number:Energy pGF_Utilityroom_Electricity_Heatpump_Electric_Meter_Consumption   <selfenergy_meter>   (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Messurement"]           {channel="shelly:shellypro3em:energy-meter-headpump-electric:device#totalKWH"}
-//Number:Energy pGF_Utilityroom_Electricity_Heatpump_Electric_Meter_Consumption_1   <selfenergy_meter> (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Messurement"]           {channel="shelly:shellypro3em:energy-meter-headpump-electric:meter1#totalKWH"}
-Number:Power  pGF_Utilityroom_Electricity_Heatpump_Electric_ActivePower_1         <selfenergy>       (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Measurement", "Power"]  {channel="shelly:shellypro3em:energy-meter-headpump-electric:meter1#currentWatts"}
-//Number:Energy pGF_Utilityroom_Electricity_Heatpump_Electric_Meter_Consumption_2   <selfenergy_meter> (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Messurement"]           {channel="shelly:shellypro3em:energy-meter-headpump-electric:meter2#totalKWH"}
-Number:Power  pGF_Utilityroom_Electricity_Heatpump_Electric_ActivePower_2         <selfenergy>       (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Measurement", "Power"]  {channel="shelly:shellypro3em:energy-meter-headpump-electric:meter2#currentWatts"}
-//Number:Energy pGF_Utilityroom_Electricity_Heatpump_Electric_Meter_Consumption_3   <selfenergy_meter> (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Messurement"]           {channel="shelly:shellypro3em:energy-meter-headpump-electric:meter3#totalKWH"}
-Number:Power  pGF_Utilityroom_Electricity_Heatpump_Electric_ActivePower_3         <selfenergy>       (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Measurement", "Power"]  {channel="shelly:shellypro3em:energy-meter-headpump-electric:meter3#currentWatts"}
+Number:Energy pGF_Utilityroom_Electricity_Heatpump_Electric_Meter_Consumption   <selfenergy_meter>   (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Messurement"]           {channel="shelly:shellypro3em:energy-meter-headpump-electro:device#totalEnergy"}
+Number:Power  pGF_Utilityroom_Electricity_Heatpump_Electric_ActivePower         <selfenergy>         (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Measurement", "Power"]  {channel="shelly:shellypro3em:energy-meter-headpump-electro:device#accumulatedWatts"}
+
+Number:Energy pGF_Utilityroom_Electricity_Heatpump_Main_Meter_Consumption       <selfenergy_meter>   (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Messurement"]           {channel="shelly:shellyproem50:energy-meter-headpump-main:device#totalEnergy"}
+Number:Power  pGF_Utilityroom_Electricity_Heatpump_Main_ActivePower             <selfenergy>         (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Measurement", "Power"]  {channel="shelly:shellyproem50:energy-meter-headpump-main:device#accumulatedWatts"}
+
+// **** ELECTRICITY METER COMFOAIR ****
+Number:Energy pGF_Utilityroom_Electricity_Comfoair_Meter_Consumption            <selfenergy_meter>   (eGF_Utilityroom_Electricity_Comfoair_Meter) ["Messurement"]           {channel="shelly:shellyproem50:energy-meter-comfoair:device#totalEnergy"}
+Number:Power  pGF_Utilityroom_Electricity_Comfoair_ActivePower                  <selfenergy>         (eGF_Utilityroom_Electricity_Comfoair_Meter) ["Measurement", "Power"]  {channel="shelly:shellyproem50:energy-meter-comfoair:device#accumulatedWatts"}
 
 // **** SOLAR ****
 Group  eGF_Garage_Solar                     "Solaranlage"             <selfinfo> (lGF_Garage) ["Sensor"]
@@ -139,7 +136,9 @@ Number:Power  pGF_Utilityroom_Electricity_State_House_ActivePower          "Verb
 
 Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Total_Consumption "Zählerstand Verbrauch [%.1f KWh]"		<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
 Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Daily_Consumption "Tagesverbrauch [%.1f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+
 Number:Power  pGF_Utilityroom_Electricity_State_Heatpump_ActivePower       "Verbrauch [%d W]"   <selfenergy>       (pGF_Utilityroom_Electricity_State) ["Measurement", "Power"]
+Number:Power  pGF_Utilityroom_Electricity_State_Heatpump_Main_ActivePower "Verbrauch [%d W]"   <selfenergy>       (pGF_Utilityroom_Electricity_State) ["Measurement", "Power"]
 Number:Power  pGF_Utilityroom_Electricity_State_Heatpump_Compressor_ActivePower "Verbrauch [%d W]"   <selfenergy>       (pGF_Utilityroom_Electricity_State) ["Measurement", "Power"]
 Number:Power  pGF_Utilityroom_Electricity_State_Heatpump_Electric_ActivePower "Verbrauch [%d W]"   <selfenergy>       (pGF_Utilityroom_Electricity_State) ["Measurement", "Power"]
 
@@ -149,6 +148,9 @@ Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Heating_Daily_Consumpti
 Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Water_Total_Consumption   "Zählerstand Verbrauch [%.1f KWh]"		<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
 Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Water_Daily_Consumption   "Tagesverbrauch [%.1f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
 
+Number:Energy pGF_Utilityroom_Electricity_State_Comfoair_Total_Consumption "Zählerstand Verbrauch [%.1f KWh]"		<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Comfoair_Daily_Consumption "Tagesverbrauch [%.1f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Power  pGF_Utilityroom_Electricity_State_Comfoair_ActivePower       "Verbrauch [%d W]"   <selfenergy>       (pGF_Utilityroom_Electricity_State) ["Measurement", "Power"]
 
 Number pGF_Utilityroom_Electricity_State_Autarky                           "Autarkie [%d %%]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
 Number pGF_Utilityroom_Electricity_State_Ratio                             "Eigenverbrauch [%d %%]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]

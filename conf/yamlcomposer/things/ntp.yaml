@@ -1,0 +1,9 @@
+version: 1
+
+things:
+  ntp:ntp:local:
+    label: Zeitserver
+    config:
+      hostname: ${ENV.CUSTOM_NTP_SERVER}
+      refreshInterval: 60
+      refreshNtp: 30

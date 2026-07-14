@@ -1,3 +1,0 @@
-Thing homeconnectdirect:washer:default "Gerät Waschmaschine" @ "Geräte" [ haId = "{{custom_homeconnect_washer}}", address = "{{custom_homeconnect_washer_ip}}", connectionType = "AES_HMAC_SHA256", connectionRetryDelay = 1 ] {}
-Thing homeconnectdirect:dishwasher:default "Gerät Geschirrspühler" @ "Geräte" [ haId = "{{custom_homeconnect_dishwasher}}", address = "{{custom_homeconnect_dishwasher_ip}}", connectionType = "AES_HMAC_SHA256", connectionRetryDelay = 1 ] {}
-Thing homeconnectdirect:coffeemaker:default "Gerät Kaffeemaschine" @ "Geräte" [ haId = "{{custom_homeconnect_coffeemaker}}", address = "{{custom_homeconnect_coffeemaker_ip}}", connectionType = "AES_HMAC_SHA256", connectionRetryDelay = 1 ] {}

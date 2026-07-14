@@ -1,0 +1,135 @@
+version: 1
+
+things:
+  mqtt:broker:cloud:
+    isBridge: true
+    label: MQTT Broker (Cloud-MQTT)
+    config:
+      host: ${ENV.CUSTOM_MQTT_CLOUD}
+      secure: false
+    channels:
+      weatherforecast_temperature:
+        type: publishTrigger
+        label: Temperatur
+        config:
+          stateTopic: hhees/weather/provider/forecast/airTemperatureInCelsius/#
+          separator: "#"
+      weatherforecast_humidity:
+        type: publishTrigger
+        label: Luftfeuchtigkeit
+        config:
+          stateTopic: hhees/weather/provider/forecast/relativeHumidityInPercent/#
+          separator: "#"
+      weatherforecast_sunshine:
+        type: publishTrigger
+        label: Sonnenlicht Dauer
+        config:
+          stateTopic: hhees/weather/provider/forecast/sunshineDurationInMinutes/#
+          separator: "#"
+      weatherforecast_direct_radiation:
+        type: publishTrigger
+        label: Direkte Sonneneinstrahlung
+        config:
+          stateTopic: hhees/weather/provider/forecast/directRadiationInWatt/#
+          separator: "#"
+      weatherforecast_diffuse_radiation:
+        type: publishTrigger
+        label: Diffuse Sonneneinstrahlung
+        config:
+          stateTopic: hhees/weather/provider/forecast/diffuseRadiationInWatt/#
+          separator: "#"
+      weatherforecast_cloudcover:
+        type: publishTrigger
+        label: Bewölkung
+        config:
+          stateTopic: hhees/weather/provider/forecast/cloudCoverInOcta/#
+          separator: "#"
+      weatherforecast_refreshed:
+        type: publishTrigger
+        label: Refreshed
+        config:
+          stateTopic: hhees/weather/provider/forecast/refreshed
+
+  mqtt:topic:cloud:weatherstation:
+    bridge: mqtt:broker:cloud
+    label: MQTT Wetterstation (Cloud-MQTT)
+    channels:
+      cloudCoverInOcta:
+        type: number
+        label: Cloud cover
+        config:
+          commandTopic: hhees/weather/station/cloudCoverInOcta
+      precipitationRateInMillimeterPerHour:
+        type: number
+        label: Rain current
+        config:
+          commandTopic: hhees/weather/station/precipitationRateInMillimeterPerHour
+      precipitationAmountInMillimeter:
+        type: number
+        label: Rain last hour
+        config:
+          commandTopic: hhees/weather/station/precipitationAmountInMillimeter
+      precipitationDailyInMillimeter:
+        type: number
+        label: Rain daily
+        config:
+          commandTopic: hhees/weather/station/precipitationDailyInMillimeter
+      precipitationLevel:
+        type: number
+        label: Rain level
+        config:
+          commandTopic: hhees/weather/station/precipitationLevel
+      windSpeedInKilometerPerHour:
+        type: number
+        label: Wind speed
+        config:
+          commandTopic: hhees/weather/station/windSpeedInKilometerPerHour
+      windGustInKilometerPerHour:
+        type: number
+        label: Wind guest
+        config:
+          commandTopic: hhees/weather/station/windGustInKilometerPerHour
+      windDirectionInDegree:
+        type: number
+        label: Wind direction
+        config:
+          commandTopic: hhees/weather/station/windDirectionInDegree
+      dewpointInCelsius:
+        type: number
+        label: Dewpoint
+        config:
+          commandTopic: hhees/weather/station/dewpointInCelsius
+      airTemperatureInCelsius:
+        type: number
+        label: Air temperature
+        config:
+          commandTopic: hhees/weather/station/airTemperatureInCelsius
+      feelsLikeTemperatureInCelsius:
+        type: number
+        label: Perceived temperature
+        config:
+          commandTopic: hhees/weather/station/feelsLikeTemperatureInCelsius
+      relativeHumidityInPercent:
+        type: number
+        label: Air humidity
+        config:
+          commandTopic: hhees/weather/station/relativeHumidityInPercent
+      pressureInHectopascals:
+        type: number
+        label: Pressure
+        config:
+          commandTopic: hhees/weather/station/pressureInHectopascals
+      solarRadiationInWatt:
+        type: number
+        label: Solar power
+        config:
+      lightLevelInLux:
+        type: number
+        label: Light level
+        config:
+          commandTopic: hhees/weather/station/lightLevelInLux
+      uvIndex:
+        type: number
+        label: UV index
+        config:
+          commandTopic: hhees/weather/station/uvIndex

@@ -1,0 +1,59 @@
+version: 1
+
+things:
+  amazonechocontrol:account:account1:
+    isBridge: true
+    label: Amazon Account
+    config:
+      discoverSmartHome: 0
+      pollingIntervalSmartHomeAlexa: 30
+      pollingIntervalSmartSkills: 120
+
+  amazonechocontrol:echo:account1:pFF_Bathroom_Alexa:
+    bridge: amazonechocontrol:account:account1
+    label: Alexa Device @ pFF_Bathroom_Alexa
+    config:
+      serialNumber: ${ENV.CUSTOM_ALEXA_BATHROOM_SERIAL}
+
+  amazonechocontrol:echoshow:account1:pFF_Bedroom_Alexa:
+    bridge: amazonechocontrol:account:account1
+    label: Alexa Device @ pFF_Bedroom_Alexa
+    config:
+      serialNumber: ${ENV.CUSTOM_ALEXA_BEDROOM_SERIAL}
+
+  amazonechocontrol:echo:account1:pFF_Fitnessroom_Alexa:
+    bridge: amazonechocontrol:account:account1
+    label: Alexa Device @ pFF_Fitnessroom_Alexa
+    config:
+      serialNumber: ${ENV.CUSTOM_ALEXA_FITNESSROOM_SERIAL}
+
+  amazonechocontrol:echo:account1:pFF_Makeuproom_Alexa:
+    bridge: amazonechocontrol:account:account1
+    label: Alexa Device @ pFF_Makeuproom_Alexa
+    config:
+      serialNumber: ${ENV.CUSTOM_ALEXA_MAKEUPROOM_SERIAL}
+
+  amazonechocontrol:echo:account1:pGF_Corridor_Alexa:
+    bridge: amazonechocontrol:account:account1
+    label: Alexa Device @ pGF_Corridor_Alexa
+    config:
+      serialNumber: ${ENV.CUSTOM_ALEXA_CORRIDOR_SERIAL}
+
+  amazonechocontrol:echo:account1:pGF_Livingroom_Alexa:
+    bridge: amazonechocontrol:account:account1
+    label: Alexa Device @ pGF_Livingroom_Alexa
+    config:
+      serialNumber: ${ENV.CUSTOM_ALEXA_LIVINGROOM_SERIAL}
+
+  amazonechocontrol:echo:account1:pGF_Workroom_Alexa:
+    bridge: amazonechocontrol:account:account1
+    label: Alexa Device @ pGF_Workroom_Alexa
+    config:
+      serialNumber: ${ENV.CUSTOM_ALEXA_WORKROOM_SERIAL}
+
+  amazonechocontrol:wha:account1:pIndoor_Alexa:
+    bridge: amazonechocontrol:account:account1
+    label: Alexa Device @ pIndoor_Alexa
+    config:
+      serialNumber: ${ENV.CUSTOM_ALEXA_INDOOR_SERIAL}
+

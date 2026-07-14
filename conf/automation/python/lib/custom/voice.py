@@ -7,8 +7,6 @@ import scope
 
 from configuration import customConfigs
 
-gemini = scope.actions.get("gemini", "gemini:account:smartserver")
-
 class VoiceAssistentHelper:
     EFFECT_WISPER = 1
 
@@ -58,5 +56,5 @@ class VoiceAssistentHelper:
         if interactive:
             return Voice.interpret(message, "gemini", "voice-assistent", "get-date-time,item-get-state,item-send-command")
         else:
-            return gemini.sendMessage(message)
+            return scope.actions.get("gemini", "gemini:account:smartserver").sendMessage(message)
 

@@ -1,0 +1,17 @@
+version: 1
+
+things:
+  astro:moon:local:
+    label: Astro Monddaten
+    location: Services
+    config:
+      geolocation: ${ENV.CUSTOM_ASTRO_LOCATION}
+      interval: 300
+
+  astro:sun:local:
+    label: Astro Sonnendaten
+    location: Services
+    config:
+      geolocation: ${ENV.CUSTOM_ASTRO_LOCATION}
+      useMeteorologicalSeason: false
+      interval: 300

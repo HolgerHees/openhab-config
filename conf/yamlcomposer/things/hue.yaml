@@ -1,0 +1,135 @@
+version: 1
+
+things:
+  hue:bridge-api2:default:
+    isBridge: true
+    label: Hue Bridge (v2)
+    config:
+      ipAddress: ${ENV.CUSTOM_HUE_IP}
+      applicationKey: !literal ${ENV:CUSTOM_HUE_KEY}
+
+  hue:device:default:lamp1:
+    bridge: hue:bridge-api2:default
+    label: Licht Wohnzimmer Bassbox
+    config:
+      resourceId: ${ENV.CUSTOM_HUE_LIGHT_LIVINGROOM_BASSBOX}
+
+  hue:device:default:lamp2:
+    bridge: hue:bridge-api2:default
+    label: Licht Wohnzimmer Stehlampe
+    config:
+      resourceId: ${ENV.CUSTOM_HUE_LIGHT_LIVINGROOM_STANDARD}
+
+  hue:device:default:lamp4:
+    bridge: hue:bridge-api2:default
+    label: Licht Flur EG Indirekt
+    config:
+      resourceId: ${ENV.CUSTOM_HUE_LIGHT_FLOOR_EG_INDIRECT}
+
+  hue:device:default:lamp5:
+    bridge: hue:bridge-api2:default
+    label: Licht Schlafzimmer Nachtischlampe links
+    config:
+      resourceId: ${ENV.CUSTOM_HUE_LIGHT_BEDSIDE_LEFT}
+
+  hue:device:default:lamp6:
+    bridge: hue:bridge-api2:default
+    label: Licht Schlafzimmer Nachtischlampe rechts
+    config:
+      resourceId: ${ENV.CUSTOM_HUE_LIGHT_BEDSIDE_RIGHT}
+
+  hue:device:default:lamp7:
+    bridge: hue:bridge-api2:default
+    label: Licht Terasse rechts
+    config:
+      resourceId: ${ENV.CUSTOM_HUE_LIGHT_TERASSE_RIGHT}
+
+  hue:device:default:lamp8:
+    bridge: hue:bridge-api2:default
+    label: Licht Terasse links
+    config:
+      resourceId: ${ENV.CUSTOM_HUE_LIGHT_TERASSE_LEFT}
+
+  hue:device:default:play1:
+    bridge: hue:bridge-api2:default
+    label: Licht Wohnzimmer Fernseher links unten
+    config:
+      resourceId: ${ENV.CUSTOM_HUE_LIVINGROOM_TV_LEFT_BOTTOM}
+
+  hue:device:default:play2:
+    bridge: hue:bridge-api2:default
+    label: Licht Wohnzimmer Fernseher links oben
+    config:
+      resourceId: ${ENV.CUSTOM_HUE_LIVINGROOM_TV_LEFT_TOP}
+
+  hue:device:default:play3:
+    bridge: hue:bridge-api2:default
+    label: Licht Wohnzimmer Fernseher links
+    config:
+      resourceId: ${ENV.CUSTOM_HUE_LIVINGROOM_TV_LEFT}
+
+  hue:device:default:play4:
+    bridge: hue:bridge-api2:default
+    label: Licht Wohnzimmer Fernseher rechts unten
+    config:
+      resourceId: ${ENV.CUSTOM_HUE_LIVINGROOM_TV_RIGHT_BOTTOM}
+
+  hue:device:default:play5:
+    bridge: hue:bridge-api2:default
+    label: Licht Wohnzimmer Fernseher rechts oben
+    config:
+      resourceId: ${ENV.CUSTOM_HUE_LIVINGROOM_TV_RIGHT_TOP}
+
+  hue:device:default:play6:
+    bridge: hue:bridge-api2:default
+    label: Licht Wohnzimmer Fernseher rechts
+    config:
+      resourceId: ${ENV.CUSTOM_HUE_LIVINGROOM_TV_RIGHT}
+
+  hue:device:default:strip1:
+    bridge: hue:bridge-api2:default
+    label: Licht Wohnzimmer Bücherregal
+    config:
+      resourceId: ${ENV.CUSTOM_HUE_LIVINGROOM_BOOKCASE}
+
+  hue:device:default:strip2:
+    bridge: hue:bridge-api2:default
+    label: Licht Wohnzimmer Tresen
+    config:
+      resourceId: ${ENV.CUSTOM_HUE_LIVINGROOM_COUNTER}
+
+  hue:room:default:livingroom:
+    bridge: hue:bridge-api2:default
+    label: HUE Gruppe Wohnzimmer
+    config:
+      resourceId: ${ENV.CUSTOM_HUE_GROUP_LIVINGROOM}
+
+  hue:room:default:corridor:
+    bridge: hue:bridge-api2:default
+    label: HUE Gruppe Flur EG
+    config:
+      resourceId: ${ENV.CUSTOM_HUE_GROUP_FLOOR_EG}
+
+  hue:room:default:mobile:
+    bridge: hue:bridge-api2:default
+    label: HUE Gruppe Mobil
+    config:
+      resourceId: ${ENV.CUSTOM_HUE_GROUP_MOBILE}
+
+  hue:room:default:bedroom:
+    bridge: hue:bridge-api2:default
+    label: HUE Gruppe Schlafzimmer
+    config:
+      resourceId: ${ENV.CUSTOM_HUE_GROUP_BEDROOM}
+
+  hue:room:default:play:
+    bridge: hue:bridge-api2:default
+    label: HUE Gruppe Play
+    config:
+      resourceId: ${ENV.CUSTOM_HUE_GROUP_PLAY}
+
+  hue:room:default:terrace:
+    bridge: hue:bridge-api2:default
+    label: HUE Gruppe Terasse
+    config:
+      resourceId: ${ENV.CUSTOM_HUE_GROUP_TERRACE}

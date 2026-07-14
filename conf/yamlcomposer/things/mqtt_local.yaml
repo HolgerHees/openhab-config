@@ -1,0 +1,178 @@
+version: 1
+
+things:
+  mqtt:broker:mosquitto:
+    isBridge: true
+    label: MQTT Broker (Local-MQTT)
+    config:
+      host: ${ENV.CUSTOM_MQTT_LOCAL}
+      secure: false
+
+  mqtt:topic:mosquitto:system_service:
+    bridge: mqtt:broker:mosquitto
+    label: System Info
+    channels:
+      phone_hhees:
+        type: switch
+        label: Device
+        config:
+          stateTopic: system_info/network/192.168.0.69/online
+      phone_sandra:
+        type: switch
+        label: Device
+        config:
+          stateTopic: system_info/network/192.168.0.26/online
+
+  mqtt:topic:mosquitto:frigate:
+    bridge: mqtt:broker:mosquitto
+    label: MQTT Frigate
+    channels:
+      reviews:
+        type: string
+        label: Ereignisse
+        config:
+          stateTopic: frigate/reviews
+
+  mqtt:topic:mosquitto:watt_waechter:
+    bridge: mqtt:broker:mosquitto
+    label: MQTT Watt Wächter
+    channels:
+      demand:
+        type: number
+        label: Bedarf
+        config:
+          stateTopic: wattwaechter/SENSOR
+          transformationPattern:
+            - "JSONPATH:$.LK13BE.total"
+      supply:
+        type: number
+        label: Einspeisung
+        config:
+          stateTopic: wattwaechter/SENSOR
+          transformationPattern:
+            - "JSONPATH:$.LK13BE.total_out"
+
+  mqtt:topic:mosquitto:weatherstation:
+    bridge: mqtt:broker:mosquitto
+    label: MQTT Wetterstation (Default-MQTT)
+    channels:
+      solarRadiation:
+        type: number
+        label: Sonnentemperatur
+        config:
+          stateTopic: ecowitt/8813BF4638DF/#
+          transformationPattern:
+            - "REGEX:.*solarradiation=([0-9\\.]*).*"
+
+  mqtt:topic:mosquitto:nuki:
+    bridge: mqtt:broker:mosquitto
+    label: MQTT Nuki Türschloss
+    channels:
+      connected:
+        type: switch
+        label: Verbunden
+        config:
+          stateTopic: nuki/43347577/connected
+          "on": "true"
+          "off": "false"
+      deviceType:
+        type: number
+        label: Device Typ
+        config:
+          stateTopic: nuki/43347577/deviceType
+      name:
+        type: string
+        label: Name
+        config:
+          stateTopic: nuki/43347577/name
+      firmware:
+        type: string
+        label: Firmware
+        config:
+          stateTopic: nuki/43347577/firmware
+      batteryChargeState:
+        type: number
+        label: Batterie Ladezustand
+        config:
+          stateTopic: nuki/43347577/batteryChargeState
+      batteryCritical:
+        type: switch
+        label: Batteriefehler
+        config:
+          stateTopic: nuki/43347577/batteryCritical
+          "on": "true"
+          "off": "false"
+      batteryCharging:
+        type: switch
+        label: Batterie wird geladen
+        config:
+          stateTopic: nuki/43347577/batteryCharging
+          "on": "true"
+          "off": "false"
+      state:
+        type: number
+        label: Status
+        config:
+          stateTopic: nuki/43347577/state
+      mode:
+        type: number
+        label: Modus
+        config:
+          stateTopic: nuki/43347577/mode
+      serverConnected:
+        type: switch
+        label: Server verbunden
+        config:
+          stateTopic: nuki/43347577/serverConnected
+          "on": "true"
+          "off": "false"
+      timestamp:
+        type: datetime
+        label: Zeitstempel
+        config:
+          stateTopic: nuki/43347577/timestamp
+      lockAction:
+        type: number
+        label: Aktion
+        config:
+          commandTopic: nuki/43347577/lockAction
+
+  mqtt:topic:mosquitto:ebus:
+    bridge: mqtt:broker:mosquitto
+    label: MQTT Nuki Türschloss
+    channels:
+      tempVorlauf:
+        type: number
+        label: Temperatur Vorlauf
+        config:
+          stateTopic: ebusd/WRSol/TempVorlauf
+      tempRuecklauf:
+        type: number
+        label: Temperatur Ruecklauf
+        config:
+          stateTopic: ebusd/WRSol/TempRuecklauf
+      tempSpeicher:
+        type: number
+        label: Temperatur Speicher
+        config:
+          stateTopic: ebusd/WRSol/TempSpeiche
+      tempKollektor:
+        type: number
+        label: Temperatur Kollektor
+        config:
+          stateTopic: ebusd/WRSol/TempKollektor
+      drehzahlPumpe:
+        type: number
+        label: Drehzahl Pumpe
+        config:
+          stateTopic: ebusd/WRSol/DrehzahlPumpe
+      flow:
+        type: number
+        label: Flow
+        config:
+          stateTopic: ebusd/WRSol/Flow
+      ertragAktuell:
+        type: number
+        label: Ertrag Aktuel
+        config:
+          stateTopic: ebusd/WRSol/ErtragAktuell

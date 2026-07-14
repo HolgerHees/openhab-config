@@ -1,0 +1,25 @@
+version: 1
+
+things:
+  fineoffsetweatherstation:gateway:default:
+    isBridge: true
+    label: Wetterstation Bridge
+    config:
+      ip: ${ENV.CUSTOM_WEATHERSTATION_IP}
+      port: 45000
+      protocol: DEFAULT
+      pollingInterval: 16
+      discoverInterval: 900
+
+  fineoffsetweatherstation:sensor:default:WH90:
+    bridge: fineoffsetweatherstation:gateway:default
+    label: Wetterstation Haupt Sensor
+    config:
+      sensor: WH90
+
+  fineoffsetweatherstation:sensor:default:WH26:
+    bridge: fineoffsetweatherstation:gateway:default
+    label: Wetterstation Extern Sensor
+    config:
+      sensor: WH26
+

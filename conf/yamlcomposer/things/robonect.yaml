@@ -1,0 +1,11 @@
+version: 1
+
+things:
+  robonect:mower:automower:
+    label: Rasenmäher
+    config:
+      host: ${ENV.CUSTOM_AUTOMOWER_IP}
+      user: ${ENV.CUSTOM_AUTOMOWER_USERNAME}
+      password: !literal ${ENV:CUSTOM_AUTOMOWER_PASSWORD}
+      pollInterval: 15
+      offlineTimeout: 300

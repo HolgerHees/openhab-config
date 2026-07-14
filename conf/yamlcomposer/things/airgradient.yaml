@@ -1,0 +1,17 @@
+version: 1
+
+things:
+  airgradient:airgradient-local:boxroom:
+    label: AirGradient Abstellkammer
+    config:
+      hostname: http://${ENV.CUSTOM_AIRGRADIENT_2_IP}/measures/current
+
+  airgradient:airgradient-local:bedroom:
+    label: AirGradient Schlafzimmer
+    config:
+      hostname: http://${ENV.CUSTOM_AIRGRADIENT_3_IP}/measures/current
+
+  airgradient:airgradient-local:livingroom:
+    label: AirGradient Wohnzimmer
+    config:
+      hostname: http://${ENV.CUSTOM_AIRGRADIENT_1_IP}/measures/current

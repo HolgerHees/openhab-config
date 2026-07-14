@@ -66,7 +66,8 @@ Number pFF_Makeuproom_Heating_Temperature_Target    "Ziel - aktiv"         <self
 // **** HEATING DEVICE ****
 Group  eGF_Utilityroom_Heatpump                     "Wärmepumpe"           <selfinfo> (lGF_Utilityroom) ["HVAC"]
 
-Number              pGF_Utilityroom_Heatpump_Auto_Mode                      "Modus"                                  <selfautomode> (eGF_Utilityroom_Heatpump) ["Point"]
+Number              pGF_Utilityroom_Heatpump_Auto_Mode                      "Modus [MAP(heatpump_mode.map):%s]"      <selfautomode> (eGF_Utilityroom_Heatpump) ["Point"]
+String              pGF_Utilityroom_Heatpump_Summary_Message                "Summery [%s]"                           <selfinfo> (eGF_Utilityroom_Heatpump) ["Point"]
 
 Number              pGF_Utilityroom_Heatpump_HK2_Volumenstrom               "Heizkreis Volumenstrom [%.1f l/min]"    <selfinfo>     (eGF_Utilityroom_Heatpump,gPersistance_Chart,gPersistance_History)
 Switch              pGF_Utilityroom_Heatpump_HK2_Demand                     "Heizkreis Bedarf [%s]"                  <selfsettings> (eGF_Utilityroom_Heatpump,gPersistance_Chart,gPersistance_History) ["Point"]

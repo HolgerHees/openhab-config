@@ -1,27 +1,66 @@
 // **** VENTILATION ****
 Group  eGF_Utilityroom_Ventilation                              "Lüftungsanlage"                <selfinfo> (lGF_Utilityroom) ["Fan"]
-Switch pGF_Utilityroom_Ventilation_Control                      "Steuerung"                     <selfsettings> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:bindingControl#activate"}
 Switch pGF_Utilityroom_Ventilation_Auto_Mode                    "Modus"                         <selfautomode> (eGF_Utilityroom_Ventilation) ["Point"]
-Number pGF_Utilityroom_Ventilation_Fan_Level                    "Stufe [MAP(level_de.map):%s]"                         <selfairing> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:ventilation#fanLevel"}
-Number pGF_Utilityroom_Ventilation_Comfort_Temperature          "Ziel [%.1f °C]"                <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:temperatures#targetTemperature"}
-Switch pGF_Utilityroom_Ventilation_Bypass                       "Bypass [MAP(ventilation_bypass_de.map):%s]" <selfbypass> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:menuP9#bypassState"}
-Number pGF_Utilityroom_Ventilation_Bypass_Efficiency            "Effizienz [%d %%]"             <selfbypass> (eGF_Utilityroom_Ventilation) ["Point"]
+
+String pGF_Utilityroom_Ventilation_Summary_Message              "Summery [%s]"                  <selfinfo> (eGF_Utilityroom_Ventilation) ["Point"]
+String pGF_Utilityroom_Ventilation_State_Message                "Comfo Air [%s]"                   <selfinfo> (eGF_Utilityroom_Ventilation) ["Point"]
+
+String pGF_Utilityroom_Ventilation_Airflow_Message              "Volumenstrom [%s]"             <selfairing> (eGF_Utilityroom_Ventilation) ["Point"]
+String pGF_Utilityroom_Ventilation_Target_Temperature_Message   "Ziel Temperatur [%s]"          <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"]
+String pGF_Utilityroom_Ventilation_Fan_Speed_Message            "Fan Speed [%s]"                <selfairing> (eGF_Utilityroom_Ventilation) ["Point"]
+
+String pGF_Utilityroom_Ventilation_Cooling_Temperature_Message  "Kühlung [%s]"                  <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"]
+
 String pGF_Utilityroom_Ventilation_Outdoor_Temperature_Message  "Aussen [%s]"                   <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"]
 String pGF_Utilityroom_Ventilation_Indoor_Temperature_Message   "Innen [%s]"                    <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"]
-String pGF_Utilityroom_Ventilation_Fan_Message                  "Ventilator [%s]"               <selfairing> (eGF_Utilityroom_Ventilation) ["Point"]
-String pGF_Utilityroom_Ventilation_Filter_Runtime_Message       "Filterlaufzeit [%s]"           <selfruntime> (eGF_Utilityroom_Ventilation) ["Point"]
-String pGF_Utilityroom_Ventilation_State_Message                "Status [%s]"                   <selfinfo> (eGF_Utilityroom_Ventilation) ["Point"]
-Number pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature "Aussenzuluft [%.1f °C]"        <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:temperatures#outdoorTemperatureIn"}
-Number pGF_Utilityroom_Ventilation_Outdoor_Outgoing_Temperature "Aussenabluft [%.1f °C]"        <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:temperatures#outdoorTemperatureOut"}
-Number pGF_Utilityroom_Ventilation_Indoor_Incoming_Temperature  "Raumzuluft [%.1f °C]"          <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:temperatures#indoorTemperatureIn"}
-Number pGF_Utilityroom_Ventilation_Indoor_Outgoing_Temperature  "Raumabluft [%.1f °C]"          <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:temperatures#indoorTemperatureOut"}
-Number pGF_Utilityroom_Ventilation_Incoming                     "Ventilator Zuluft [%d %%]"     <selfairing>      (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:ventilation#fanInPercent"}
-Number pGF_Utilityroom_Ventilation_Outgoing                     "Ventilator Abluft [%d %%]"     <selfairing>      (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:ventilation#fanOutPercent"}
 
-Number pGF_Utilityroom_Ventilation_Filter_Runtime               "Filterlaufzeit [%d h]"         <selfruntime>     (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:times#filterHours"}
-Number pGF_Utilityroom_Ventilation_Filter_Reset                 "Filterreset"                   <selfFilterintern> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:resets#filterReset"}
-Switch pGF_Utilityroom_Ventilation_Filter_Error                 "Filter [MAP(ventilation_filter_de.map):%s]" <selfFilterintern>    (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:errors#filterError"}
+Number pGF_Utilityroom_Ventilation_Bypass_Efficiency            "Effizienz [%d %%]"             <selfbypass> (eGF_Utilityroom_Ventilation) ["Point"]
 
-Number pGF_Utilityroom_Ventilation_Error_Reset                  "Fehlerreset"                   <selfinfo> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:resets#errorReset"}
-String pGF_Utilityroom_Ventilation_Error_Message                "Fehlercode [%s]"               <selfinfo> (eGF_Utilityroom_Ventilation) ["Point"] {channel="comfoair:comfoair:default:errors#errorsCurrent"}
- 
+Number pGF_Utilityroom_Ventilation_Clime_Target_Offset          "Ziel Offset [%.1f °C]"         <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"]
+
+Number pGF_Utilityroom_Ventilation_Connection_State             "Verbindung [MAP(ventilation_connection.map):%s]"               <selfinfo> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:input:comfoairq_connection_state:number"}
+
+Switch pGF_Utilityroom_Ventilation_Standby                      "Standby [%s]"                  <selfinfo> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:discrete:comfoairq_standby:switch"}
+
+Switch pGF_Utilityroom_Ventilation_Error                        "Fehler [%s]"                   <selfinfo> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:discrete:comfoairq_error:switch"}
+Switch pGF_Utilityroom_Ventilation_Error_Reset                  "Fehlerreset"                   <selfinfo> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:coil:comfoairq_reset_error:switch"}
+Number pGF_Utilityroom_Ventilation_Error_1                      "Fehler 1 [%s]"                 <selfFilterintern>    (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:input:comfoairq_active_error_1:number"}
+Number pGF_Utilityroom_Ventilation_Error_2                      "Fehler 2 [%s]"                 <selfFilterintern>    (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:input:comfoairq_active_error_2:number"}
+Number pGF_Utilityroom_Ventilation_Error_3                      "Fehler 3 [%s]"                 <selfFilterintern>    (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:input:comfoairq_active_error_3:number"}
+Number pGF_Utilityroom_Ventilation_Error_4                      "Fehler 4 [%s]"                 <selfFilterintern>    (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:input:comfoairq_active_error_4:number"}
+Number pGF_Utilityroom_Ventilation_Error_5                      "Fehler 5 [%s]"                 <selfFilterintern>    (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:input:comfoairq_active_error_5:number"}
+
+Number pGF_Utilityroom_Ventilation_Filter_Remaining             "Filterrestlaufzeit [%d Tage]"  <selfruntime>     (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:input:comfoairq_filter_days_remaining:number"}
+Switch pGF_Utilityroom_Ventilation_Filter_Dirty                 "Filter wechseln [%s]"               <selfFilterintern> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:discrete:comfoairq_filter_dirty:switch"}
+
+Number pGF_Utilityroom_Ventilation_Fan_Level                    "Stufe [MAP(ventilation_level_de.map):%s]"  <selfairing> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:holding:comfoairq_preset:number"}
+
+Number pGF_Utilityroom_Ventilation_Target_Temperature           "Ziel Temperatur [%.1f °C]"     <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:holding:comfoairq_t_external_setpoint:number"}
+Number pGF_Utilityroom_Ventilation_Target_Mode                  "Ziel Modus [%d]"               <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:holding:comfoairq_t_profile_mode:number"}
+
+Number pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature "Aussenzuluft [%.1f °C]"        <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:input:comfoairq_t_outdoor_in:number"}
+Number pGF_Utilityroom_Ventilation_Outdoor_Outgoing_Temperature "Aussenabluft [%.1f °C]"        <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:input:comfoairq_t_outdoor_out:number"} // Fortluft
+Number pGF_Utilityroom_Ventilation_Indoor_Incoming_Temperature  "Raumzuluft [%.1f °C]"          <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:input:comfoairq_t_indoor_in:number"} // Zuluft
+Number pGF_Utilityroom_Ventilation_Indoor_Outgoing_Temperature  "Raumabluft [%.1f °C]"          <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:input:comfoairq_t_indoor_out:number"} // Abluft
+Number pGF_Utilityroom_Ventilation_Outdoor_Incoming_Humidity    "Aussenzuluft [%d %]"           <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:input:comfoairq_h_outdoor_in:number"}
+Number pGF_Utilityroom_Ventilation_Outdoor_Outgoing_Humidity    "Aussenabluft [%d %]"           <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:input:comfoairq_h_outdoor_out:number"} // Fortluft
+Number pGF_Utilityroom_Ventilation_Indoor_Incoming_Humidity     "Raumzuluft [%d %]"             <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:input:comfoairq_h_indoor_in:number"} // Zuluft
+Number pGF_Utilityroom_Ventilation_Indoor_Outgoing_Humidity     "Raumabluft [%d %]"             <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:input:comfoairq_h_indoor_out:number"} // Abluft
+
+Number pGF_Utilityroom_Ventilation_Bypass_State                 "Bypass [%d %%]"                <selfbypass> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoairq_telemetrie:bypassState"}
+Number pGF_Utilityroom_Ventilation_Exhaust_Fan_Speed            "Exhaust Fan Speed [%d %%]"     <selfairing> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoairq_telemetrie:exhaustFanSpeed"}
+Number pGF_Utilityroom_Ventilation_Supply_Fan_Speed             "Supply Fan Speed [%d %%]"      <selfairing> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoairq_telemetrie:supplyFanSpeed"}
+
+Number pGF_Utilityroom_Ventilation_Clime_Target_Temperature     "Ziel Temperatur [%.1f °C]"     <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoclime_dashboard:setPointTemperature"}
+Number pGF_Utilityroom_Ventilation_Clime_Season                 "Season [MAP(ventilation_clime_season.map):%s]" <selfairing> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoclime_thermalprofile:season"}
+Number pGF_Utilityroom_Ventilation_Clime_Headpump_Status        "Comfo Clime  [MAP(ventilation_clime_state.map):%s]"          <selfairing> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoclime_dashboard:heatPumpStatus"}
+Switch pGF_Utilityroom_Ventilation_Clime_Power                  "Gerät [MAP(ventilation_clime_power.map):%s]"         <selfautomode> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoclime_dashboard:climePower"}
+Switch pGF_Utilityroom_Ventilation_Clime_Free_Cooling           "Free Cooling [MAP(ventilation_clime_available.map):%s]"             <selfairing> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoclime_dashboard:freeCoolingEnabled"}
+Switch pGF_Utilityroom_Ventilation_Clime_CAQ_Free_Cooling       "CAQ Free Cooling [MAP(ventilation_clime_available.map):%s]"       <selfairing> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoclime_dashboard:caqFreeCoolingAvailable"}
+Number pGF_Utilityroom_Ventilation_Clime_Supply_Temperature     "Kühl Temperatur [%.1f °C]"     <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoclime_definition:supplyTemperature"}
+
+Number pGF_Utilityroom_Ventilation_Clime_TPMA_Temperature       "TPMA Temperatur [%.1f °C]"     <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoclime_telemetrie:tpmaTemperature"}
+Number pGF_Utilityroom_Ventilation_Clime_Headpump_Power         "Headpump_Power [%d %%]"              <selfinfo> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoclime_telemetrie:heatpumpPower"}
+
+Number pGF_Utilityroom_Ventilation_Clime_Outgoing_Airflow       "Volumenstrom (Raumabluft) [%d m³/h]" <selfairing> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoclime_dashboard:exhaustAirFlow"}
+Number pGF_Utilityroom_Ventilation_Clime_Incomming_Airflow      "Volumenstrom (Raumzuluft) [%d m³/h]" <selfairing> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoclime_dashboard:supplyAirFlow"}
