@@ -5,7 +5,7 @@ from openhab.actions import Voice
 
 import scope
 
-gemini = scope.actions.get("gemini", "gemini:account:smartserver")
+#gemini = scope.actions.get("gemini", "gemini:account:smartserver")
 
 #message = "Test"
 #message = "Wie spät ist es jetzt?"
@@ -14,8 +14,11 @@ gemini = scope.actions.get("gemini", "gemini:account:smartserver")
 #logger.info(response)
 
 
-var = Registry.getItem("pOutdoor_Astro_Dawn_Time").getState().getInstant()
-print(var)
+test = Registry.getItem("pFF_Bedroom_Air_Sensor_Temperature_Value").getState()
+print(test)
+
+test = Registry.getItem("pFF_Bedroom_Heating_Temperature_Target").getState()
+print(test)
 
 #var.test = 1
 

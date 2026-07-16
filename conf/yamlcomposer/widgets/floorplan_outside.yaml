@@ -1,0 +1,50 @@
+#version: 1
+widgets:
+  widget_floorplan_outside:
+    tags: []
+    props:
+      parameters:
+        - description: A text prop
+          label: Prop 1
+          name: prop1
+          required: false
+          type: TEXT
+        - context: item
+          description: An item to control
+          label: Item
+          name: item
+          required: false
+          type: TEXT
+      parameterGroups: []
+    component: div
+    config:
+      class:
+        - "=items['pOther_Automatic_State_Rollershutter'].state === 'ON' ? 'shutterDownAdvise' : ''"
+        - oh-grid-item-content
+      style:
+        position: relative
+      stylesheet: |
+        svg {
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+        }
+    slots:
+      default:
+        - component: svg
+          config:
+            style:
+              fill: transparent
+              height: 100%
+              object-fit: contain
+              overflow: visible
+              stroke: var(--f7-card-footer-text-color)
+              stroke-width: 0.7px
+            viewBox: 0 0 1000 736
+          slots:
+            default:
+              - component: use
+                config:
+                  xlink:href: /static/shared/habpanel/svg/icons.svg#haus_outside_grayscaled

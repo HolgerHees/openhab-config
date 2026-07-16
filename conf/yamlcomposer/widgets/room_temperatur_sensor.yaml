@@ -1,0 +1,130 @@
+#version: 1
+widgets:
+  widget_room_temperatur_sensor:
+    tags: []
+    props:
+      parameters:
+        - default: Wohnzimmer
+          label: Title
+          name: title
+          required: true
+          type: TEXT
+        - context: item
+          default: pGF_Livingroom_Air_Sensor_Temperature_Value
+          label: Temperature Item
+          name: item_temperature
+          required: true
+          type: TEXT
+        - context: item
+          default: pGF_Livingroom_Air_Sensor_Humidity_Value
+          label: Humidity Item
+          name: item_humidity
+          required: true
+          type: TEXT
+      parameterGroups: []
+    component: f7-card
+    config:
+      title: =props.title
+    slots:
+      default:
+        - component: f7-card-footer
+          config:
+            style:
+              height: 100%
+              padding: 8px 4px
+          slots:
+            default:
+              - component: f7-row
+                config:
+                  style:
+                    height: 100%
+                    width: 100%
+                slots:
+                  default:
+                    - component: f7-col
+                      config:
+                        style:
+                          align-items: center
+                          display: grid
+                          height: 100%
+                          position: relative
+                      slots:
+                        default:
+                          - component: svg
+                            config:
+                              style:
+                                fill: var(--f7-card-footer-text-color)
+                                left: -12px
+                                position: absolute
+                                stroke: var(--f7-card-footer-text-color)
+                                width: 54px
+                              viewBox: 0 0 64 64
+                            slots:
+                              default:
+                                - component: use
+                                  config:
+                                    xlink:href: /static/shared/habpanel/svg/icons.svg#self_temperature_grayscaled
+                          - component: div
+                            config:
+                              style:
+                                align-items: flex-start
+                                display: flex
+                                flex-flow: row nowrap
+                                position: absolute
+                                right: 0
+                                top: 7px
+                            slots:
+                              default:
+                                - component: div
+                                  slots:
+                                    default:
+                                      - component: Label
+                                        config:
+                                          style:
+                                            font-size: 1.8vw
+                                            font-weight: 300
+                                            line-height: 60%
+                                            padding-right: 3px
+                                          text: =Number.parseFloat(items[props.item_temperature].state).toFixed(1)
+                                - component: div
+                                  slots:
+                                    default:
+                                      - component: Label
+                                        config:
+                                          style:
+                                            font-size: 1.0vw
+                                            font-weight: 200
+                                            line-height: 60%
+                                          text: °C
+                          - component: div
+                            config:
+                              style:
+                                align-items: flex-start
+                                bottom: 7px
+                                display: flex
+                                flex-flow: row nowrap
+                                position: absolute
+                                right: 0
+                            slots:
+                              default:
+                                - component: div
+                                  slots:
+                                    default:
+                                      - component: Label
+                                        config:
+                                          style:
+                                            font-size: 1.0vw
+                                            font-weight: 300
+                                            line-height: 60%
+                                            padding-right: 3px
+                                          text: =Number.parseInt(items[props.item_humidity].state)
+                                - component: div
+                                  slots:
+                                    default:
+                                      - component: Label
+                                        config:
+                                          style:
+                                            font-size: 1.0vw
+                                            font-weight: 200
+                                            line-height: 60%
+                                          text: "%"

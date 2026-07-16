@@ -1,0 +1,232 @@
+#version: 1
+pages:
+  overview2:
+    tags: []
+    props:
+      parameters: []
+      parameterGroups: []
+    component: oh-layout-page
+    config:
+      colNum: 17
+      fixedType: grid
+      hideNavbar: false
+      hideSidebarIcon: false
+      label: DashboardOverview
+      layoutType: fixed
+      scale: false
+      screenHeight: 712
+      screenWidth: 1138
+      showFullscreenIcon: false
+      sidebar: true
+      stylesheet: |
+        section:nth-child(4),
+        section:nth-child(6),
+        section:nth-child(6),
+        section:nth-child(9),
+        section:nth-child(10),
+        section:nth-child(11),
+        section:nth-child(12),
+        section:nth-child(13),
+        section:nth-child(14)
+        {
+          --f7-card-border-radius: 0;
+          --f7-card-bg-color: transparent;
+          --f7-card-footer-border-color: transparent;
+          --f7-card-box-shadow: none;
+          --f7-block-margin: 0;
+          transform: translate(0, 5%);
+        }
+        .errorState {
+          color: #e64a19;
+        }
+        .warnState {
+          color: #ffa500;
+        }
+        .normalState {
+          color: var(--f7-card-footer-text-color);
+        }
+        .normalText {
+          color: var(--f7-card-footer-text-color);
+        }
+        //svg.floor_actions .circuitActive {
+        //  color: green;
+        //}
+        svg.floor_actions .lightActive {
+          fill: rgba(150,150,0,0.5);
+        }
+        svg.floor_actions .shutterAvailable.shutterDown {
+          fill: rgba(38,191,117,1.0)
+        }
+        .shutterDownAdvise svg.floor_actions .shutterAvailable {
+          fill: #ffa500
+        }
+        svg.floor_actions .contactOpen {
+          fill: #e64a19;
+        }
+        div.sensorCO2Modifier {
+        }
+        div.sensorTopModifier {
+          font-size: 1em;
+        }
+        div.sensorMiddleModifier {
+          font-size: 0.8em;
+          opacity: 0.7;
+        }
+        div.sensorBottomModifier {
+          font-size: 0.9em;
+          opacity: 0.7;
+        }
+        div.sensorCO2Suffix::after {
+          content: " ppm";
+          font-size: 0.8em;
+          vertical-align: top;
+        }
+        div.sensorTemperatureSuffix::after {
+          content: " °C";
+          font-size: 0.8em;
+          vertical-align: top;
+        }
+        div.sensorHumiditySuffix::after {
+          content: " %";
+          font-size: 0.8em;
+          vertical-align: top;
+        }
+        div.circuiteActive {
+          color: green;
+        }
+    slots:
+      canvas: []
+      default: []
+      grid:
+        - component: oh-grid-item
+          config:
+            h: 2
+            w: 7
+            x: 0
+            y: 0
+          slots:
+            default:
+              - component: widget:widget_weather_station
+        - component: oh-grid-item
+          config:
+            h: 2
+            w: 2
+            x: 7
+            y: 0
+          slots:
+            default:
+              - component: widget:widget_room_temperatur_sensor
+                config:
+                  title: Wohnzimmer
+                  item_humidity: pGF_Livingroom_Air_Sensor_Humidity_Value
+                  item_temperature: pGF_Livingroom_Air_Sensor_Temperature_Value
+        - component: oh-grid-item
+          config:
+            h: 2
+            w: 9
+            x: 0
+            y: 2
+          slots:
+            default: []
+        - component: oh-grid-item
+          config:
+            h: 3
+            w: 4
+            x: 9
+            y: 0
+          slots:
+            default:
+              - component: widget:widget_floorplan_og
+                config: {}
+        - component: oh-grid-item
+          config:
+            h: 3
+            w: 9
+            x: 0
+            y: 4
+          slots:
+            default:
+              - component: widget:widget_welcome
+                config: {}
+        - component: oh-grid-item
+          config:
+            h: 3
+            w: 4
+            x: 9
+            y: 8
+          slots:
+            default: []
+        - component: oh-grid-item
+          config:
+            h: 4
+            w: 4
+            x: 0
+            y: 7
+          slots:
+            default:
+              - component: widget:widget_house_status
+        - component: oh-grid-item
+          config:
+            h: 4
+            w: 5
+            x: 4
+            y: 7
+          slots:
+            default:
+              - component: widget:widget_house_main_control
+                config: {}
+        - component: oh-grid-item
+          config:
+            h: 3
+            w: 4
+            x: 9
+            y: 3
+          slots:
+            default:
+              - component: widget:widget_floorplan_eg
+                config: {}
+        - component: oh-grid-item
+          config:
+            h: 2
+            w: 4
+            x: 9
+            y: 6
+          slots:
+            default: []
+        - component: oh-grid-item
+          config:
+            h: 3
+            w: 4
+            x: 13
+            y: 0
+          slots:
+            default:
+              - component: widget:widget_floorplan_attic
+                config: {}
+        - component: oh-grid-item
+          config:
+            h: 3
+            w: 4
+            x: 13
+            y: 3
+          slots:
+            default:
+              - component: widget:widget_floorplan_outside
+                config: {}
+        - component: oh-grid-item
+          config:
+            h: 2
+            w: 4
+            x: 13
+            y: 6
+          slots:
+            default: []
+        - component: oh-grid-item
+          config:
+            h: 3
+            w: 4
+            x: 13
+            y: 8
+          slots:
+            default: []
+      masonry: []

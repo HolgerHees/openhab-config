@@ -1,0 +1,420 @@
+#version: 1
+widgets:
+  widget_weather_station:
+    tags: []
+    props:
+      parameters:
+        - default: Garten
+          label: Title
+          name: title
+          required: true
+          type: TEXT
+        - context: item
+          default: pOutdoor_WeatherStation_Temperature
+          label: Temperature
+          name: item_temperature
+          required: true
+          type: TEXT
+        - context: item
+          default: pOutdoor_WeatherStation_Temperature_Perceived
+          label: Temperature (perceived)
+          name: item_temperature_perceived
+          required: true
+          type: TEXT
+        - context: item
+          default: pOutdoor_WeatherStation_Humidity
+          label: Humidity
+          name: item_humidity
+          required: true
+          type: TEXT
+        - context: item
+          default: pOutdoor_WeatherStation_Rain_Rate
+          label: Rain Rate
+          name: item_rain_rate
+          required: true
+          type: TEXT
+        - context: item
+          default: pOutdoor_WeatherStation_Rain_Daily
+          label: Rain Daily
+          name: item_rain_daily
+          required: true
+          type: TEXT
+        - context: item
+          default: pOutdoor_WeatherStation_Wind_Speed
+          label: Wind Speed
+          name: item_wind_speed
+          required: true
+          type: TEXT
+        - context: item
+          default: pOutdoor_WeatherStation_Wind_Gust
+          label: Wind Gust
+          name: item_wind_gust
+          required: true
+          type: TEXT
+        - context: item
+          default: pOutdoor_WeatherStation_Wind_Direction_Short
+          label: Wind Direction
+          name: item_wind_direction
+          required: true
+          type: TEXT
+      parameterGroups: []
+    component: f7-card
+    config:
+      title: =props.title
+    slots:
+      default:
+        - component: f7-card-footer
+          config:
+            style:
+              display: flex
+              height: 100%
+              padding: 8px 4px
+          slots:
+            default:
+              - component: f7-row
+                config:
+                  style:
+                    height: 100%
+                    width: 100%
+                slots:
+                  default:
+                    - component: f7-col
+                      config:
+                        style:
+                          align-items: center
+                          display: grid
+                          height: 100%
+                          position: relative
+                          width: 30%
+                      slots:
+                        default:
+                          - component: svg
+                            config:
+                              style:
+                                fill: var(--f7-card-footer-text-color)
+                                left: -6px
+                                position: absolute
+                                stroke: var(--f7-card-footer-text-color)
+                                width: 54px
+                              viewBox: 0 0 64 64
+                            slots:
+                              default:
+                                - component: use
+                                  config:
+                                    xlink:href: /static/shared/habpanel/svg/icons.svg#self_temperature_grayscaled
+                          - component: div
+                            config:
+                              style:
+                                align-items: flex-start
+                                display: flex
+                                flex-flow: row nowrap
+                                position: absolute
+                                right: 5px
+                                top: 7px
+                            slots:
+                              default:
+                                - component: div
+                                  slots:
+                                    default:
+                                      - component: Label
+                                        config:
+                                          style:
+                                            font-size: 1.8vw
+                                            font-weight: 300
+                                            line-height: 60%
+                                            padding-right: 3px
+                                          text: =Number.parseFloat(items[props.item_temperature].state).toFixed(1)
+                                - component: div
+                                  slots:
+                                    default:
+                                      - component: Label
+                                        config:
+                                          style:
+                                            font-size: 1.0vw
+                                            font-weight: 200
+                                            line-height: 60%
+                                          text: °C
+                          - component: div
+                            config:
+                              style:
+                                align-items: flex-start
+                                bottom: 7px
+                                display: flex
+                                flex-flow: row nowrap
+                                position: absolute
+                                right: 5px
+                            slots:
+                              default:
+                                - component: div
+                                  slots:
+                                    default:
+                                      - component: Label
+                                        config:
+                                          style:
+                                            font-size: 1.0vw
+                                            font-weight: 200
+                                            line-height: 60%
+                                          text: (
+                                - component: div
+                                  slots:
+                                    default:
+                                      - component: Label
+                                        config:
+                                          style:
+                                            font-size: 1.0vw
+                                            font-weight: 300
+                                            line-height: 60%
+                                            padding-right: 3px
+                                          text: =Number.parseInt(items[props.item_temperature_perceived].state)
+                                - component: div
+                                  slots:
+                                    default:
+                                      - component: Label
+                                        config:
+                                          style:
+                                            font-size: 1.0vw
+                                            font-weight: 200
+                                            line-height: 60%
+                                            padding-right: 3px
+                                          text: °C)
+                                - component: div
+                                  slots:
+                                    default:
+                                      - component: Label
+                                        config:
+                                          style:
+                                            font-size: 1.0vw
+                                            font-weight: 300
+                                            line-height: 60%
+                                            padding-right: 3px
+                                          text: =Number.parseInt(items[props.item_humidity].state)
+                                - component: div
+                                  slots:
+                                    default:
+                                      - component: Label
+                                        config:
+                                          style:
+                                            font-size: 1.0vw
+                                            font-weight: 200
+                                            line-height: 60%
+                                          text: "%"
+                    - component: f7-col
+                      config:
+                        style:
+                          align-items: center
+                          display: grid
+                          fill: none
+                          height: 100%
+                          position: relative
+                          stroke: var(--f7-card-footer-text-color)
+                          width: 32%
+                      slots:
+                        default:
+                          - component: svg
+                            config:
+                              style:
+                                left: 5px
+                                position: absolute
+                                width: 54px
+                              viewBox: 0 0 64 64
+                            slots:
+                              default:
+                                - component: use
+                                  config:
+                                    xlink:href: /static/shared/habpanel/svg/icons.svg#self_rain_grayscaled
+                          - component: div
+                            config:
+                              style:
+                                align-items: flex-start
+                                display: flex
+                                flex-flow: row nowrap
+                                position: absolute
+                                right: 9px
+                                top: 7px
+                            slots:
+                              default:
+                                - component: div
+                                  slots:
+                                    default:
+                                      - component: Label
+                                        config:
+                                          style:
+                                            font-size: 1.8vw
+                                            font-weight: 300
+                                            line-height: 60%
+                                            padding-right: 3px
+                                          text: =Number.parseFloat(items[props.item_rain_rate].state).toFixed(1)
+                                - component: div
+                                  slots:
+                                    default:
+                                      - component: Label
+                                        config:
+                                          style:
+                                            font-size: 1.0vw
+                                            font-weight: 200
+                                            line-height: 60%
+                                          text: mm
+                          - component: div
+                            config:
+                              style:
+                                align-items: flex-start
+                                bottom: 7px
+                                display: flex
+                                flex-flow: row nowrap
+                                position: absolute
+                                right: 9px
+                            slots:
+                              default:
+                                - component: div
+                                  slots:
+                                    default:
+                                      - component: Label
+                                        config:
+                                          style:
+                                            font-size: 1.0vw
+                                            font-weight: 300
+                                            line-height: 60%
+                                            padding-right: 3px
+                                          text: "24h:"
+                                - component: div
+                                  slots:
+                                    default:
+                                      - component: Label
+                                        config:
+                                          style:
+                                            font-size: 1.0vw
+                                            font-weight: 300
+                                            line-height: 60%
+                                            padding-right: 3px
+                                          text: =Number.parseInt(items[props.item_rain_daily].state)
+                                - component: div
+                                  slots:
+                                    default:
+                                      - component: Label
+                                        config:
+                                          style:
+                                            font-size: 1.0vw
+                                            font-weight: 200
+                                            line-height: 60%
+                                          text: mm
+                    - component: f7-col
+                      config:
+                        style:
+                          align-items: center
+                          display: grid
+                          fill: var(--f7-card-footer-text-color)
+                          height: 100%
+                          position: relative
+                          stroke: none
+                          width: 38%
+                      slots:
+                        default:
+                          - component: svg
+                            config:
+                              style:
+                                left: 8px
+                                position: absolute
+                                transform: scaleX(-1)
+                                width: 54px
+                              viewBox: 0 0 64 64
+                            slots:
+                              default:
+                                - component: use
+                                  config:
+                                    xlink:href: /static/shared/habpanel/svg/icons.svg#self_wind_grayscaled
+                          - component: div
+                            config:
+                              style:
+                                align-items: flex-start
+                                display: flex
+                                flex-flow: row nowrap
+                                position: absolute
+                                right: 5px
+                                top: 7px
+                            slots:
+                              default:
+                                - component: div
+                                  slots:
+                                    default:
+                                      - component: Label
+                                        config:
+                                          style:
+                                            font-size: 1.8vw
+                                            font-weight: 300
+                                            line-height: 60%
+                                            padding-right: 3px
+                                          text: =Number.parseFloat(items[props.item_wind_speed].state).toFixed(1)
+                                - component: div
+                                  slots:
+                                    default:
+                                      - component: Label
+                                        config:
+                                          style:
+                                            font-size: 1.0vw
+                                            font-weight: 200
+                                            line-height: 60%
+                                          text: km/h
+                          - component: div
+                            config:
+                              style:
+                                align-items: flex-start
+                                display: flex
+                                flex-flow: row nowrap
+                                position: absolute
+                                right: 5px
+                                top: 27px
+                            slots:
+                              default:
+                                - component: div
+                                  slots:
+                                    default:
+                                      - component: Label
+                                        config:
+                                          style:
+                                            font-size: 1.0vw
+                                            font-weight: 200
+                                            line-height: 60%
+                                          text: =items[props.item_wind_direction].state
+                          - component: div
+                            config:
+                              style:
+                                align-items: flex-start
+                                bottom: 7px
+                                display: flex
+                                flex-flow: row nowrap
+                                position: absolute
+                                right: 5px
+                            slots:
+                              default:
+                                - component: div
+                                  slots:
+                                    default:
+                                      - component: Label
+                                        config:
+                                          style:
+                                            font-size: 1.0vw
+                                            font-weight: 200
+                                            line-height: 60%
+                                            padding-right: 3px
+                                          text: "Boe:"
+                                - component: div
+                                  slots:
+                                    default:
+                                      - component: Label
+                                        config:
+                                          style:
+                                            font-size: 1.0vw
+                                            font-weight: 300
+                                            line-height: 60%
+                                            padding-right: 3px
+                                          text: =Number.parseFloat(items[props.item_wind_gust].state).toFixed(1)
+                                - component: div
+                                  slots:
+                                    default:
+                                      - component: Label
+                                        config:
+                                          style:
+                                            font-size: 1.0vw
+                                            font-weight: 200
+                                            line-height: 60%
+                                          text: km/h

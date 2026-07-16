@@ -255,12 +255,12 @@ class IndoorTemperatureMessage:
 
 @rule(
     triggers = [
-        #GenericCronTrigger("0 */1 * * * ?"),
-        GenericCronTrigger("*/15 * * * * ?"),
+        GenericCronTrigger("0 */1 * * * ?"),
+#        GenericCronTrigger("*/15 * * * * ?"),
         ItemStateChangeTrigger("pOther_Presence_State"),
 
         ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Auto_Mode", state=scope.ON),
-        ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Fan_Level"),
+        ItemCommandTrigger("pGF_Utilityroom_Ventilation_Fan_Level"),
 
         ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_Auto_Mode"),
         ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Clime_Target_Temperature"),
@@ -269,7 +269,6 @@ class IndoorTemperatureMessage:
 )
 class FanLevel:
     def __init__(self):
-        self.auto_change_in_progress = False
         self.last_refresh = None
 
     def execute(self, module, input):
@@ -279,11 +278,8 @@ class FanLevel:
         eventSourceItem = input['event'].getItemName() if input['event'].getType() != "TimerEvent" else None
         current_level = new_level = Registry.getItemState("pGF_Utilityroom_Ventilation_Fan_Level").intValue()
 
-        if eventSourceItem == "pGF_Utilityroom_Ventilation_Fan_Level":
-            if self.auto_change_in_progress:
-                self.auto_change_in_progress = False
-            else:
-                Registry.getItem("pGF_Utilityroom_Ventilation_Auto_Mode").postUpdate(scope.OFF)
+        if eventSourceItem == "pGF_Utilityroom_Ventilation_Fan_Level" and "FanLevelAutomatic" not in input['event'].getSource():
+            Registry.getItem("pGF_Utilityroom_Ventilation_Auto_Mode").postUpdate(scope.OFF)
         else:
             outdoor_temperature = WeatherHelper.getTemperatureStableItemState(900).doubleValue()
 
@@ -311,13 +307,17 @@ class FanLevel:
                     # possible boost for cooling
                     hour = now.hour
                     if hour >= 7 and hour < 22:
+                        diff = indoor_temperature - Registry.getItemState("pGF_Utilityroom_Ventilation_Clime_Target_Temperature").doubleValue()
+
                         is_cooling = Registry.getItemState("pGF_Utilityroom_Heatpump_Auto_Mode").intValue() == HeatingHelper.STATE_MODE_COOLING
-                        if is_cooling:
-                            diff = indoor_temperature - Registry.getItemState("pGF_Utilityroom_Ventilation_Clime_Target_Temperature").doubleValue()
-                            if diff > 1.0: # activate if temp is 1.0°C to warm
-                                new_level = 3
-                            elif diff > 0.5 and current_level == 3:  # stay activate if temp is still 0.5°C to warm
-                                new_level = 3
+
+                        # => is_cooling => true => starts if 1 °C too warm
+                        # => is_cooling => false => starts if 1 + diff_offset (2) °C too warm
+                        diff_offset = 0 if is_cooling else 2
+                        if diff > 1.0 + diff_offset: # activate if temp is 1.0°C to warm
+                            new_level = 3
+                        elif diff > 0.5 + diff_offset and current_level == 3:  # stay activate if temp is still 0.5°C to warm
+                            new_level = 3
 
             if new_level != current_level:
                 # 1. 'event' in input.keys() is an presence or auto mode change
@@ -325,12 +325,13 @@ class FanLevel:
                 # => .getLastChange check to prevent level flapping on temperature changes
                 if eventSourceItem == "pGF_Utilityroom_Ventilation_Auto_Mode" or Registry.getItem("pGF_Utilityroom_Ventilation_Fan_Level").getLastStateChange() < ( now - timedelta(minutes=15) ):
                     self.last_refresh = now
-                    self.auto_change_in_progress = True
-                    Registry.getItem("pGF_Utilityroom_Ventilation_Fan_Level").sendCommand(new_level)
+                    Registry.getItem("pGF_Utilityroom_Ventilation_Fan_Level").sendCommand(new_level, "FanLevelAutomatic")
+                else:
+                    self.logger.info("Delayed ventilation fan level change")
             elif current_level != 2:
                 if (self.last_refresh is None or (now - self.last_refresh).total_seconds() > 3600):
                     self.last_refresh = now
-                    Registry.getItem("pGF_Utilityroom_Ventilation_Fan_Level").sendCommand(current_level)
+                    Registry.getItem("pGF_Utilityroom_Ventilation_Fan_Level").sendCommand(current_level, "FanLevelAutomatic")
 
 #Registry.getItem("pGF_Utilityroom_Ventilation_Auto_Mode").sendCommand(scope.ON, "custom_script")
 #Registry.getItem("pGF_Utilityroom_Ventilation_Fan_Level").sendCommand(3)

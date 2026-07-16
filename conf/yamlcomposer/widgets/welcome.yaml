@@ -1,0 +1,48 @@
+#version: 1
+widgets:
+  widget_welcome:
+    tags: []
+    props:
+      parameters:
+        - context: item
+          default: pOutdoor_Watering_Logic_Program_State
+          label: Item
+          name: item
+          required: false
+          type: TEXT
+      parameterGroups: []
+    component: f7-card
+    config: {}
+    slots:
+      default:
+        - component: f7-card-footer
+          config:
+            style:
+              display: flex
+              flex-direction: column
+              height: 100%
+              justify-content: flex-start
+          slots:
+            default:
+              - component: f7-cell
+                slots:
+                  default:
+                    - component: oh-clock
+                      config:
+                        format: HH:mm
+                        style:
+                          font-size: 3em
+              - component: f7-cell
+                slots:
+                  default:
+                    - component: oh-clock
+                      config:
+                        format: dddd [, der] D. MMMM YYYY
+                        style:
+                          font-size: 2em
+              - component: f7-cell
+                slots:
+                  default:
+                    - component: Label
+                      config:
+                        text: "=(items[props.item].state != 'läuft nicht') ? 'Bewässerung: ' + items[props.item].state : ''"
