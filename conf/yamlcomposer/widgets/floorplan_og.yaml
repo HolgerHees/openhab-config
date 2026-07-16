@@ -36,7 +36,7 @@ widgets:
         - component: Label
           config:
             class:
-              - "=Number.parseInt(items['pFF_Bedroom_Air_Sensor_CO2_Value'].state) > 1500 ? 'errorState' : (Number.parseInt(items['pFF_Bedroom_Air_Sensor_CO2_Value'].state) > 900 ? 'warnState' : 'normalState')"
+              - "=Number.parseInt(items['pFF_Bedroom_Air_Sensor_CO2_Value'].state) > 1500 ? 'errorState' : (Number.parseInt(items['pFF_Bedroom_Air_Sensor_CO2_Value'].state) > 900 ? 'warnState' : 'activeState')"
               - sensorCO2Modifier
             text: CO2
             style:
@@ -57,9 +57,8 @@ widgets:
         - component: Label
           config:
             class:
-              - normalState
               - sensorTemperatureSuffix
-              - "=items['pFF_Bedroom_Heating_Circuit'].state === 'ON' ? 'circuiteActive' : ''"
+              - "=items['pFF_Bedroom_Heating_Circuit'].state === 'ON' ? 'activeState' : 'normalState'"
             text: =Number.parseFloat(items['pFF_Bedroom_Air_Sensor_Temperature_Value'].state).toFixed(1)
             style:
               position: absolute
@@ -111,9 +110,8 @@ widgets:
         - component: Label
           config:
             class:
-              - normalState
               - sensorTemperatureSuffix
-              - "=items['pFF_Makeuproom_Heating_Circuit'].state === 'ON' ? 'circuiteActive' : ''"
+              - "=items['pFF_Makeuproom_Heating_Circuit'].state === 'ON' ? 'activeState' : 'normalState'"
             text: =Number.parseFloat(items['pFF_Makeuproom_Air_Sensor_Temperature_Value'].state).toFixed(1)
             style:
               position: absolute
@@ -144,9 +142,8 @@ widgets:
         - component: Label
           config:
             class:
-              - normalState
               - sensorTemperatureSuffix
-              - "=items['pFF_Fitnessroom_Heating_Circuit'].state === 'ON' ? 'circuiteActive' : ''"
+              - "=items['pFF_Fitnessroom_Heating_Circuit'].state === 'ON' ? 'activeState' : 'normalState'"
             text: =Number.parseFloat(items['pFF_Fitnessroom_Air_Sensor_Temperature_Value'].state).toFixed(1)
             style:
               position: absolute
@@ -177,9 +174,8 @@ widgets:
         - component: Label
           config:
             class:
-              - normalState
               - sensorTemperatureSuffix
-              - "=items['pFF_Corridor_Heating_Circuit'].state === 'ON' ? 'circuiteActive' : ''"
+              - "=items['pFF_Corridor_Heating_Circuit'].state === 'ON' ? 'activeState' : 'normalState'"
             text: =Number.parseFloat(items['pFF_Corridor_Air_Sensor_Temperature_Value'].state).toFixed(1)
             style:
               position: absolute
@@ -210,9 +206,8 @@ widgets:
         - component: Label
           config:
             class:
-              - normalState
               - sensorTemperatureSuffix
-              - "=items['pFF_Bathroom_Heating_Circuit'].state === 'ON' ? 'circuiteActive' : ''"
+              - "=items['pFF_Bathroom_Heating_Circuit'].state === 'ON' ? 'activeState' : 'normalState'"
             text: =Number.parseFloat(items['pFF_Bathroom_Air_Sensor_Temperature_Value'].state).toFixed(1)
             style:
               position: absolute

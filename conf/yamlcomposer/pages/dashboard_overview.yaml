@@ -42,6 +42,9 @@ pages:
         .warnState {
           color: #ffa500;
         }
+        .activeState {
+          color: green;
+        }
         .normalState {
           color: var(--f7-card-footer-text-color);
         }
