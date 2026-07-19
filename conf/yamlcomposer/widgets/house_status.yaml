@@ -1,4 +1,4 @@
-#version: 1
+version: 1
 widgets:
   widget_house_status:
     tags: []
@@ -58,12 +58,11 @@ widgets:
     config: {}
     slots:
       default:
-        - component: f7-card-footer
+        - component: f7-card-content
           config:
             style:
               display: flex
               flex-direction: column
-              font-size: 1.0vw
               height: 100%
               padding: 8px 8px
           slots:
@@ -118,7 +117,9 @@ widgets:
                         default:
                           - component: Label
                             config:
-                              class: "=(items[props.item_security].state !== 'CLOSED') ? 'errorState' : 'normalState'"
+                              class:
+                                - highlightModifier
+                                - "=(items[props.item_security].state !== 'CLOSED') ? 'errorState' : 'normalState'"
                               text: "=(items[props.item_security].state !== 'CLOSED') ? 'Offen' : 'Alles zu'"
               - component: f7-row
                 config:
@@ -170,7 +171,9 @@ widgets:
                         default:
                           - component: Label
                             config:
-                              class: "=(items[props.item_message_garden].state !== 'Alles ok') ? 'errorState' : 'normalState'"
+                              class:
+                                - highlightModifier
+                                - "=(items[props.item_message_garden].state !== 'Alles ok') ? 'errorState' : 'normalState'"
                               text: =items[props.item_message_garden].state
               - component: f7-row
                 config:
@@ -222,7 +225,9 @@ widgets:
                         default:
                           - component: Label
                             config:
-                              class: "=(items[props.item_message_devices].state !== 'Alles ok') ? 'errorState' : 'normalState'"
+                              class:
+                                - highlightModifier
+                                - "=(items[props.item_message_devices].state !== 'Alles ok') ? 'errorState' : 'normalState'"
                               text: =items[props.item_message_devices].state
               - component: f7-row
                 config:
@@ -274,7 +279,9 @@ widgets:
                         default:
                           - component: Label
                             config:
-                              class: "=(items[props.item_watering_info].state === '3' && items[props.item_message_sensors].state == 'Giessen') ? 'warnState' : ((items[props.item_watering_info].state !== '3' || items[props.item_message_sensors].state !== 'Giessen') && items[props.item_message_sensors].state !== 'Alles ok' ? 'errorState' : 'normalState')"
+                              class:
+                                - highlightModifier
+                                - "=(items[props.item_watering_info].state === '3' && items[props.item_message_sensors].state == 'Giessen') ? 'warnState' : ((items[props.item_watering_info].state !== '3' || items[props.item_message_sensors].state !== 'Giessen') && items[props.item_message_sensors].state !== 'Alles ok' ? 'errorState' : 'normalState')"
                               text: =items[props.item_message_sensors].state
               - component: f7-row
                 config:
@@ -326,7 +333,9 @@ widgets:
                         default:
                           - component: Label
                             config:
-                              class: "=({'Lüftungsanlage Filter': 'warnState', 'Alles ok': 'normalState'})[items[props.item_message_main].state] || 'errorState'"
+                              class:
+                                - highlightModifier
+                                - "=({'Lüftungsanlage Filter': 'warnState', 'Alles ok': 'normalState'})[items[props.item_message_main].state] || 'errorState'"
                               text: =items[props.item_message_main].state
               - component: f7-row
                 config:
@@ -383,7 +392,9 @@ widgets:
                         default:
                           - component: Label
                             config:
-                              class: normalState
+                              class:
+                                - highlightModifier
+                                - normalState
                               text: |
                                 =({4:'Schlafen', 3: '(Schlafen)', 2: 'Anwesend', 1: '(Anwesend)', 0: Abwesend})[items[props.item_presence_state].state]
               - component: f7-row
@@ -436,7 +447,9 @@ widgets:
                         default:
                           - component: Label
                             config:
-                              class: normalState
+                              class:
+                                - highlightModifier
+                                - normalState
                               text: =items[props.item_message_auto].state
               - component: f7-row
                 config:
@@ -488,5 +501,7 @@ widgets:
                         default:
                           - component: Label
                             config:
-                              class: "=(items[props.item_security_notify].state === 'ON') ? 'normalState' : 'warnState'"
+                              class:
+                                - highlightModifier
+                                - "=(items[props.item_security_notify].state === 'ON') ? 'normalState' : 'warnState'"
                               text: "=(items[props.item_security_notify].state === 'ON') ? 'An' : 'Aus'"

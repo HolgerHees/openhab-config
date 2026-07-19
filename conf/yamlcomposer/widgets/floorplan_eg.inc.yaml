@@ -1,0 +1,558 @@
+component: div
+config:
+  style:
+    position: relative
+    width: 100%
+    height: 100%
+slots:
+  default:
+    - component: Label
+      config:
+        class:
+          - "=Number.parseInt(items['pGF_Boxroom_Air_Sensor_CO2_Value'].state) > 1500 || Number.parseInt(items['pGF_Livingroom_Air_Sensor_CO2_Value'].state) > 1500 ? 'errorState' : (Number.parseInt(items['pGF_Boxroom_Air_Sensor_CO2_Value'].state) > 900 || Number.parseInt(items['pGF_Livingroom_Air_Sensor_CO2_Value'].state) > 900 ? 'warnState' : 'activeState')"
+          - lengendModifier
+          - highlightModifier
+          - sensorCO2Modifier
+        style:
+          left: 25%
+          position: absolute
+          top: -5px
+        text: CO2
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorTopModifier
+          - sensorTemperatureSuffix
+        style:
+          left: 5%
+          position: absolute
+          top: 48%
+        text: =Number.parseFloat(items['pGF_Garage_Air_Sensor_Temperature_Value'].state).toFixed(1)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorBottomModifier
+          - sensorHumiditySuffix
+        style:
+          left: 5%
+          position: absolute
+          top: 57%
+        text: =Number.parseInt(items['pGF_Garage_Air_Sensor_Humidity_Value'].state)
+    - component: Label
+      config:
+        class:
+          - "=items['pGF_Livingroom_Heating_Circuit'].state === 'ON' ? 'activeState' : 'normalState'"
+          - sensorTopModifier
+          - sensorTemperatureSuffix
+        style:
+          left: 55%
+          position: absolute
+          top: 9%
+        text: =Number.parseFloat(items['pGF_Livingroom_Air_Sensor_Temperature_Value'].state).toFixed(1)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorBottomModifier
+          - sensorHumiditySuffix
+        style:
+          left: 55%
+          position: absolute
+          top: 18%
+        text: =Number.parseInt(items['pGF_Livingroom_Air_Sensor_Humidity_Value'].state)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorTopModifier
+          - sensorCO2Suffix
+        style:
+          left: 55%
+          position: absolute
+          top: 31%
+        text: =Number.parseInt(items['pGF_Livingroom_Air_Sensor_CO2_Value'].state)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorTopModifier
+          - sensorTemperatureSuffix
+        style:
+          font-size: 0.6em
+          left: 28.5%
+          position: absolute
+          top: 44%
+        text: =Number.parseFloat(items['pGF_Boxroom_Air_Sensor_Temperature_Value'].state).toFixed(1)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorBottomModifier
+          - sensorHumiditySuffix
+        style:
+          font-size: 0.6em
+          left: 41.5%
+          position: absolute
+          top: 44%
+        text: =Number.parseInt(items['pGF_Boxroom_Air_Sensor_Humidity_Value'].state)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorTopModifier
+          - sensorCO2Suffix
+        style:
+          font-size: 0.6em
+          left: 28.5%
+          position: absolute
+          top: 50%
+        text: =Number.parseInt(items['pGF_Boxroom_Air_Sensor_CO2_Value'].state)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorTopModifier
+          - sensorTemperatureSuffix
+        style:
+          left: 30%
+          position: absolute
+          top: 60%
+        text: =Number.parseFloat(items['pGF_Utilityroom_Air_Sensor_Temperature_Value'].state).toFixed(1)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorBottomModifier
+          - sensorHumiditySuffix
+        style:
+          left: 30%
+          position: absolute
+          top: 69%
+        text: =Number.parseInt(items['pGF_Utilityroom_Air_Sensor_Humidity_Value'].state)
+    - component: Label
+      config:
+        class:
+          - "=items['pGF_Guesttoilet_Heating_Circuit'].state === 'ON' ? 'activeState' : 'normalState'"
+          - sensorTopModifier
+          - sensorTemperatureSuffix
+        style:
+          font-size: 0.6em
+          left: 28.5%
+          position: absolute
+          top: 85%
+        text: =Number.parseFloat(items['pGF_Guesttoilet_Air_Sensor_Temperature_Value'].state).toFixed(1)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorBottomModifier
+          - sensorHumiditySuffix
+        style:
+          font-size: 0.6em
+          left: 41.5%
+          position: absolute
+          top: 85%
+        text: =Number.parseInt(items['pGF_Guesttoilet_Air_Sensor_Humidity_Value'].state)
+    - component: Label
+      config:
+        class:
+          - "=items['pGF_Corridor_Heating_Circuit'].state === 'ON' ? 'activeState' : 'normalState'"
+          - sensorTopModifier
+          - sensorTemperatureSuffix
+        style:
+          left: 55%
+          position: absolute
+          top: 69%
+        text: =Number.parseFloat(items['pGF_Corridor_Air_Sensor_Temperature_Value'].state).toFixed(1)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorBottomModifier
+          - sensorHumiditySuffix
+        style:
+          left: 55%
+          position: absolute
+          top: 78%
+        text: =Number.parseInt(items['pGF_Corridor_Air_Sensor_Humidity_Value'].state)
+    - component: Label
+      config:
+        class:
+          - "=items['pGF_Workroom_Heating_Circuit'].state === 'ON' ? 'activeState' : 'normalState'"
+          - sensorTopModifier
+          - sensorTemperatureSuffix
+        style:
+          left: 78%
+          position: absolute
+          top: 69%
+        text: =Number.parseFloat(items['pGF_Workroom_Air_Sensor_Temperature_Value'].state).toFixed(1)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorBottomModifier
+          - sensorHumiditySuffix
+        style:
+          left: 78%
+          position: absolute
+          top: 78%
+        text: =Number.parseInt(items['pGF_Workroom_Air_Sensor_Humidity_Value'].state)
+    - component: oh-link
+      config:
+        action: command
+        actionCommand: "=items['gGF_Kitchen_Lights'].state === 'ON' ? 'OFF' : 'ON'"
+        actionItem: "=items['gGF_Kitchen_Lights'].state === 'ON' ? 'gGF_Kitchen_Lights' : 'pGF_Kitchen_Light_Ceiling_Brightness'"
+        id: room_eg_kitchen_analyzer
+        style:
+          display: none
+    - component: oh-link
+      config:
+        action: command
+        actionCommand: "=items['gGF_Livingroom_Lights'].state === 'ON' ? 'OFF' : 'ON'"
+        actionItem: "=items['gGF_Livingroom_Lights'].state === 'ON' ? 'gGF_Livingroom_Lights' : 'gGF_Livingroom_Light_Ceiling_Brightness'"
+        id: room_eg_livingroom_analyzer
+        style:
+          display: none
+    - component: oh-link
+      config:
+        action: command
+        actionCommand: "=items['pGF_Boxroom_Light_Ceiling_Powered'].state === 'ON' ? 'OFF' : 'ON'"
+        actionItem: pGF_Boxroom_Light_Ceiling_Powered
+        id: room_eg_boxroom_analyzer
+        style:
+          display: none
+    - component: oh-link
+      config:
+        action: command
+        actionCommand: "=items['pGF_Utilityroom_Light_Ceiling_Powered'].state === 'ON' ? 'OFF' : 'ON'"
+        actionItem: pGF_Utilityroom_Light_Ceiling_Powered
+        id: room_eg_utilityroom_analyzer
+        style:
+          display: none
+    - component: oh-link
+      config:
+        action: command
+        actionCommand: "=items['gGF_Guesttoilet_Lights'].state == 'ON' ? 'OFF' : 'ON'"
+        actionItem: "=items['gGF_Guesttoilet_Lights'].state == 'ON' ? 'gGF_Guesttoilet_Lights' : 'pGF_Guesttoilet_Light_Ceiling_Powered'"
+        id: room_eg_guesttoilet_analyzer
+        style:
+          display: none
+    - component: oh-link
+      config:
+        action: command
+        actionCommand: "=items['gGF_Corridor_Lights'].state === 'ON' ? 'OFF' : 'ON'"
+        actionItem: "=items['gGF_Corridor_Lights'].state === 'ON' ? 'gGF_Corridor_Lights' : 'pGF_Corridor_Light_Ceiling_Powered'"
+        id: room_eg_corridor_analyzer
+        style:
+          display: none
+    - component: oh-link
+      config:
+        action: command
+        actionCommand: "=items['pGF_Workroom_Light_Ceiling_Powered'].state === 'ON' ? 'OFF' : 'ON'"
+        actionItem: pGF_Workroom_Light_Ceiling_Powered
+        id: room_eg_workroom_analyzer
+        style:
+          display: none
+    - component: oh-link
+      config:
+        action: command
+        actionCommand: "=items['pGF_Garage_Light_Ceiling_Powered'].state === 'ON' ? 'OFF' : 'ON'"
+        actionItem: pGF_Garage_Light_Ceiling_Powered
+        id: room_eg_garage_analyzer
+        style:
+          display: none
+    - component: svg
+      config:
+        class:
+          - floor_plan
+        style:
+          fill: transparent
+          height: 100%
+          object-fit: contain
+          overflow: visible
+          stroke: var(--custom-default-state)
+          stroke-width: 1.5px
+        viewBox: 0 0 1000 736
+      slots:
+        default:
+          - component: use
+            config:
+              xlink:href: /static/shared/habpanel/svg/icons.svg#haus_floor_first_grayscaled
+    - component: svg
+      config:
+        class:
+          - floor_outdoor_lights
+        style:
+          fill: transparent
+          height: 100%
+          object-fit: contain
+          stroke: var(--custom-default-state)
+          overflow: visible
+        viewBox: 0 0 1000 736
+      slots:
+        default:
+          - component: svg
+            config:
+              class:
+                - "=items['pOutdoor_Garden_Garage_Light_Powered'].state === 'ON' ? 'lightActive' : (items['pOutdoor_Garden_Garage_Automatic_Switch'].state === 'ON' ? 'lightAuto' : 'lightDisabled')"
+              height: 64px
+              id: light_garden_garage
+              width: 64px
+              x: 91px
+              y: 110px
+            slots:
+              default:
+                - component: use
+                  config:
+                    xlink:href: /static/shared/habpanel/svg/icons.svg#openhab_light_grayscaled
+          - component: svg
+            config:
+              class:
+                - "=items['pOutdoor_Terrace_Light_Brightness'].state !== '0' ? 'lightActive' : (items['pOutdoor_Terrace_Automatic_Switch'].state === 'ON' ? 'lightAuto' : 'lightDisabled')"
+              height: 64px
+              id: light_terrace1
+              width: 64px
+              x: 425px
+              y: -10px
+            slots:
+              default:
+                - component: use
+                  config:
+                    xlink:href: /static/shared/habpanel/svg/icons.svg#openhab_light_grayscaled
+          - component: svg
+            config:
+              class:
+                - "=items['pOutdoor_Terrace_Light_Brightness'].state !== '0' ? 'lightActive' : (items['pOutdoor_Terrace_Automatic_Switch'].state === 'ON' ? 'lightAuto' : 'lightDisabled')"
+              height: 64px
+              id: light_terrace2
+              width: 64px
+              x: 755px
+              y: -10px
+            slots:
+              default:
+                - component: use
+                  config:
+                    xlink:href: /static/shared/habpanel/svg/icons.svg#openhab_light_grayscaled
+          - component: svg
+            config:
+              class:
+                - "=items['pOutdoor_Carport_Light_Powered'].state === 'ON' ? 'lightActive' : (items['pOutdoor_Carport_Automatic_Switch'].state === 'ON' ? 'lightAuto' : 'lightDisabled')"
+              height: 64px
+              id: light_terrace2
+              width: 64px
+              x: 1000px
+              y: 360px
+            slots:
+              default:
+                - component: use
+                  config:
+                    xlink:href: /static/shared/habpanel/svg/icons.svg#openhab_light_grayscaled
+          - component: svg
+            config:
+              class:
+                - "=items['pOutdoor_Streedside_Frontdoor_Light_Powered'].state === 'ON' ? 'lightActive' : (items['pOutdoor_Streedside_Frontdoor_Automatic_Switch'].state === 'ON' ? 'lightAuto' : 'lightDisabled')"
+              height: 64px
+              id: light_terrace2
+              width: 64px
+              x: 570px
+              y: 740px
+            slots:
+              default:
+                - component: use
+                  config:
+                    xlink:href: /static/shared/habpanel/svg/icons.svg#openhab_light_grayscaled
+          - component: svg
+            config:
+              class:
+                - "=items['pOutdoor_Streedside_Garage_Light_Powered'].state === 'ON' ? 'lightActive' : (items['pOutdoor_Streedside_Garage_Automatic_Switch'].state === 'ON' ? 'lightAuto' : 'lightDisabled')"
+              height: 64px
+              id: light_terrace2
+              width: 64px
+              x: 91px
+              y: 745px
+            slots:
+              default:
+                - component: use
+                  config:
+                    xlink:href: /static/shared/habpanel/svg/icons.svg#openhab_light_grayscaled
+    - component: svg
+      config:
+        class:
+          - floor_actions
+        style:
+          fill: transparent
+          height: 100%
+          object-fit: contain
+        viewBox: 0 0 1000 736
+      slots:
+        default:
+          - component: rect
+            config:
+              class:
+                - "=items['gGF_Kitchen_Lights'].state === 'ON' ? 'lightActive' : ''"
+              height: 214px
+              id: room_eg_kitchen
+              onclick: document.getElementById('room_eg_kitchen_analyzer').click()
+              width: 239px
+              x: 280px
+              y: 99px
+          - component: rect
+            config:
+              class:
+                - shutterAvailable
+                - "=items['pGF_Kitchen_Shutter_Control'].state === '100' ? 'shutterDown' : ''"
+                - "=items['pGF_Kitchen_Openingcontact_Window_State'].state === 'OPEN' ? 'contactOpen' : ''"
+              height: 15px
+              id: window_eg_kitchen
+              width: 111px
+              x: 313px
+              y: 76px
+          - component: path
+            config:
+              class:
+                - "=items['gGF_Livingroom_Lights'].state === 'ON' ? 'lightActive' : ''"
+              d: M519 32 L732 32 L732 100 L969 100 L969 454 L519 454 Z
+              id: room_eg_livingroom
+              onclick: document.getElementById('room_eg_livingroom_analyzer').click()
+          - component: rect
+            config:
+              class:
+                - shutterAvailable
+                - "=items['pGF_Livingroom_Shutter_Terrace_Control'].state === '100' ? 'shutterDown' : ''"
+                - "=items['pGF_Livingroom_Openingcontact_Window_Terrace_State'].state === 'OPEN' ? 'contactOpen' : ''"
+              height: 15px
+              id: window_eg_livingroom_terrace
+              width: 160px
+              x: 544px
+              y: 8px
+          - component: rect
+            config:
+              class:
+                - shutterAvailable
+                - "=items['pGF_Livingroom_Shutter_Couch_Control'].state === '100' ? 'shutterDown' : ''"
+                - "=items['pGF_Livingroom_Openingcontact_Window_Couch_State'].state === 'OPEN' ? 'contactOpen' : ''"
+              height: 15px
+              id: window_eg_livingroom_couch
+              width: 112px
+              x: 823px
+              y: 76px
+          - component: rect
+            config:
+              class:
+                - "=items['pGF_Boxroom_Light_Ceiling_Powered'].state === 'ON' ? 'lightActive' : ''"
+              height: 91px
+              id: room_eg_boxroom
+              onclick: document.getElementById('room_eg_boxroom_analyzer').click()
+              width: 216px
+              x: 280px
+              y: 337px
+          - component: rect
+            config:
+              class:
+                - "=items['pGF_Utilityroom_Light_Ceiling_Powered'].state === 'ON' ? 'lightActive' : ''"
+              height: 152px
+              id: room_eg_utilityroom
+              onclick: document.getElementById('room_eg_utilityroom_analyzer').click()
+              width: 216px
+              x: 280px
+              y: 442px
+          - component: rect
+            config:
+              class:
+                - "=items['gGF_Guesttoilet_Lights'].state === 'ON' ? 'lightActive' : ''"
+              height: 94px
+              id: room_eg_guesttoilet
+              onclick: document.getElementById('room_eg_guesttoilet_analyzer').click()
+              width: 216px
+              x: 280px
+              y: 611px
+          - component: rect
+            config:
+              class:
+                - shutterAvailable
+                - "=items['pGF_Guesttoilet_Shutter_Control'].state === '100' ? 'shutterDown' : ''"
+                - "=items['pGF_Guesttoilet_Openingcontact_Window_State'].state === 'OPEN' ? 'contactOpen' : ''"
+              height: 15px
+              id: window_eg_guesttoilet
+              width: 45px
+              x: 372px
+              y: 714px
+          - component: rect
+            config:
+              class:
+                - "=items['gGF_Corridor_Lights'].state === 'ON' ? 'lightActive' : ''"
+              height: 229px
+              id: room_eg_corridor
+              onclick: document.getElementById('room_eg_corridor_analyzer').click()
+              width: 211px
+              x: 520px
+              y: 475px
+          - component: rect
+            config:
+              class:
+                - "=items['pGF_Corridor_Openingcontact_Door_State'].state === 'OPEN' ? 'contactOpen' : ''"
+              height: 15px
+              id: window_eg_corridor
+              width: 45px
+              x: 372px
+              y: 714px
+          - component: rect
+            config:
+              class:
+                - "=items['pGF_Workroom_Light_Ceiling_Powered'].state === 'ON' ? 'lightActive' : ''"
+              height: 229px
+              id: room_eg_workroom
+              onclick: document.getElementById('room_eg_workroom_analyzer').click()
+              width: 217px
+              x: 753px
+              y: 475px
+          - component: rect
+            config:
+              class:
+                - shutterAvailable
+                - "=items['pGF_Workroom_Shutter_Control'].state === '100' ? 'shutterDown' : ''"
+                - "=items['pGF_Workroom_Openingcontact_Window_State'].state === 'OPEN' ? 'contactOpen' : ''"
+              height: 15px
+              id: window_eg_workroom
+              width: 95px
+              x: 799px
+              y: 715px
+          - component: rect
+            config:
+              class:
+                - "=items['pGF_Garage_Light_Ceiling_Powered'].state === 'ON' ? 'lightActive' : ''"
+              height: 509px
+              id: room_eg_garage
+              onclick: document.getElementById('room_eg_garage_analyzer').click()
+              width: 225px
+              x: 20px
+              y: 207px
+          - component: rect
+            config:
+              class:
+                - "=items['pGF_Garage_Openingcontact_Door_Streedside_State'].state === 'OPEN' ? 'contactOpen' : ''"
+              height: 15px
+              id: window_eg_garage_1
+              width: 68px
+              x: 142px
+              y: 720px
+          - component: rect
+            config:
+              class:
+                - "=items['pGF_Garage_Openingcontact_Door_Garden_State'].state === 'OPEN' ? 'contactOpen' : ''"
+              height: 15px
+              id: window_eg_garage_2
+              width: 65px
+              x: 144px
+              y: 187px
+          - component: rect
+            config:
+              class:
+                - "=items['pGF_Garage_Openingcontact_Window_Garden_State'].state === 'OPEN' ? 'contactOpen' : ''"
+              height: 15px
+              id: window_eg_garage_3
+              width: 46px
+              x: 53px
+              y: 187px

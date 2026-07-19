@@ -60,7 +60,7 @@ Switch pGF_Utilityroom_Ventilation_Clime_CAQ_Free_Cooling       "CAQ Free Coolin
 Number pGF_Utilityroom_Ventilation_Clime_Supply_Temperature     "Kühl Temperatur [%.1f °C]"     <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoclime_definition:supplyTemperature"}
 
 Number pGF_Utilityroom_Ventilation_Clime_TPMA_Temperature       "TPMA Temperatur [%.1f °C]"     <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoclime_telemetrie:tpmaTemperature"}
-Number pGF_Utilityroom_Ventilation_Clime_Headpump_Power         "Headpump_Power [%d %%]"              <selfinfo> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoclime_telemetrie:heatpumpPower"}
+Number pGF_Utilityroom_Ventilation_Clime_Headpump_Power         "Leistung [%d %%]"              <selfinfo> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoclime_telemetrie:heatpumpPower"}
 
 Number pGF_Utilityroom_Ventilation_Clime_Outgoing_Airflow       "Volumenstrom (Raumabluft) [%d m³/h]" <selfairing> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoclime_dashboard:exhaustAirFlow"}
 Number pGF_Utilityroom_Ventilation_Clime_Incomming_Airflow      "Volumenstrom (Raumzuluft) [%d m³/h]" <selfairing> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoclime_dashboard:supplyAirFlow"}

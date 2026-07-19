@@ -1,6 +1,6 @@
-Group:Switch:OR(OFF,ON) gShutters_Count	"Alle" <selfrollershutter> {autoupdate="false"}
-Group:Switch:OR(OFF,ON) gGF_Shutters_Count	"EG" 	 <selfrollershutter> {autoupdate="false"}
-Group:Switch:OR(OFF,ON) gFF_Shutters_Count	"OG" 	 <selfrollershutter> {autoupdate="false"}
+Group:Number:COUNT(0) gShutters_Count	"Alle" <selfrollershutter> {autoupdate="false"}
+Group:Number:COUNT(0) gGF_Shutters_Count	"EG" 	 <selfrollershutter> {autoupdate="false"}
+Group:Number:COUNT(0) gFF_Shutters_Count	"OG" 	 <selfrollershutter> {autoupdate="false"}
 
 Group:Rollershutter:OR(UP, DOWN) gShutters	"Alle" <selfrollershutter> {autoupdate="false"}
 Group:Rollershutter:OR(UP, DOWN) gGF_Shutters	"EG" 	 <selfrollershutter> {autoupdate="false"}

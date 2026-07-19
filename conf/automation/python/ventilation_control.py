@@ -278,7 +278,9 @@ class FanLevel:
         eventSourceItem = input['event'].getItemName() if input['event'].getType() != "TimerEvent" else None
         current_level = new_level = Registry.getItemState("pGF_Utilityroom_Ventilation_Fan_Level").intValue()
 
-        if eventSourceItem == "pGF_Utilityroom_Ventilation_Fan_Level" and "FanLevelAutomatic" not in input['event'].getSource():
+        if eventSourceItem == "pGF_Utilityroom_Ventilation_Fan_Level":
+            if "FanLevelAutomatic" in input['event'].getSource():
+                return
             Registry.getItem("pGF_Utilityroom_Ventilation_Auto_Mode").postUpdate(scope.OFF)
         else:
             outdoor_temperature = WeatherHelper.getTemperatureStableItemState(900).doubleValue()

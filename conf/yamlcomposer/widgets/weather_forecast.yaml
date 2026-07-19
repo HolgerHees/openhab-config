@@ -1,0 +1,15 @@
+version: 1
+widgets:
+  widget_weather_forecast:
+    tags: []
+    props:
+      parameters: []
+      parameterGroups: []
+    component: oh-webframe-card
+    config:
+      height: 122px
+      style:
+        overflow: visible
+        padding: 0 5px
+      src: https://smartmarvin.de/weather_service/widgetTodayDashboard/
+

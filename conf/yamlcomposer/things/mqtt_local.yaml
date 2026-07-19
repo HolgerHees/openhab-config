@@ -139,7 +139,7 @@ things:
 
   mqtt:topic:mosquitto:ebus:
     bridge: mqtt:broker:mosquitto
-    label: MQTT Nuki Türschloss
+    label: MQTT EBus
     channels:
       tempVorlauf:
         type: number
@@ -155,7 +155,7 @@ things:
         type: number
         label: Temperatur Speicher
         config:
-          stateTopic: ebusd/WRSol/TempSpeiche
+          stateTopic: ebusd/WRSol/TempSpeicher
       tempKollektor:
         type: number
         label: Temperatur Kollektor

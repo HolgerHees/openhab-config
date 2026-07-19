@@ -1,0 +1,115 @@
+component: div
+config:
+  style:
+    position: relative
+    width: 100%
+    height: 100%
+slots:
+  default:
+    - component: svg
+      config:
+        style:
+          fill: transparent
+          height: 100%
+          object-fit: contain
+          overflow: visible
+          stroke: var(--custom-default-state)
+          stroke-width: 0.7px
+        viewBox: 0 0 1000 736
+      slots:
+        default:
+          - component: use
+            config:
+              xlink:href: /static/shared/habpanel/svg/icons.svg#haus_outside_grayscaled
+    - component: svg
+      config:
+        class:
+          - floor_outdoor_lights
+        style:
+          fill: transparent
+          height: 100%
+          object-fit: contain
+          stroke: var(--custom-default-state)
+        viewBox: 0 0 1000 736
+      slots:
+        default:
+          - component: svg
+            config:
+              class:
+                - "=items['pOutdoor_Terrace_Light_Brightness'].state !== '0' ? 'lightActive' : (items['pOutdoor_Terrace_Automatic_Switch'].state === 'ON' ? 'lightAuto' : 'lightDisabled')"
+              height: 64px
+              id: light_terrace
+              width: 64px
+              x: 123px
+              y: 560px
+            slots:
+              default:
+                - component: use
+                  config:
+                    xlink:href: /static/shared/habpanel/svg/icons.svg#openhab_light_grayscaled
+          - component: svg
+            config:
+              class:
+                - "=items['pOutdoor_Garden_Garage_Light_Powered'].state === 'ON' ? 'lightActive' : (items['pOutdoor_Garden_Garage_Automatic_Switch'].state === 'ON' ? 'lightAuto' : 'lightDisabled')"
+              height: 64px
+              id: light_terrace
+              width: 64px
+              x: 308px
+              y: 560px
+            slots:
+              default:
+                - component: use
+                  config:
+                    xlink:href: /static/shared/habpanel/svg/icons.svg#openhab_light_grayscaled
+          - component: svg
+            config:
+              class:
+                - "=items['pOutdoor_Streedside_Garage_Light_Powered'].state === 'ON' ? 'lightActive' : (items['pOutdoor_Streedside_Garage_Automatic_Switch'].state === 'ON' ? 'lightAuto' : 'lightDisabled')"
+              height: 64px
+              id: light_terrace
+              width: 64px
+              x: 939px
+              y: 560px
+            slots:
+              default:
+                - component: use
+                  config:
+                    xlink:href: /static/shared/habpanel/svg/icons.svg#openhab_light_grayscaled
+    - component: svg
+      config:
+        class:
+          - floor_actions
+        style:
+          fill: transparent
+          height: 100%
+          object-fit: contain
+        viewBox: 0 0 1000 736
+      slots:
+        default:
+          - component: rect
+            config:
+              class:
+                - "=items['pFF_Attic_Light_Ceiling_Powered'].state === 'ON' ? 'lightActive' : ''"
+              height: 72px
+              id: window_attic
+              width: 51px
+              x: 570px
+              y: 149px
+          - component: rect
+            config:
+              class:
+                - "=items['pFF_Dressingroom_Light_Ceiling_Powered'].state === 'ON' ? 'lightActive' : ''"
+              height: 89px
+              id: window_attic
+              width: 73px
+              x: 441px
+              y: 323px
+          - component: rect
+            config:
+              class:
+                - "=items['eFF_Bathroom_Lights'].state === 'ON' ? 'lightActive' : ''"
+              height: 89px
+              id: window_attic
+              width: 73px
+              x: 676px
+              y: 323px

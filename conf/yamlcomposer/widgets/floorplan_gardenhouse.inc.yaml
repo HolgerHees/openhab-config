@@ -1,0 +1,116 @@
+component: div
+config:
+  style:
+    position: relative
+    width: 100%
+    height: 100%
+slots:
+  default:
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorTopModifier
+          - sensorTemperatureSuffix
+        style:
+          left: 15%
+          position: absolute
+          top: 8%
+        text: =Number.parseFloat(items['pToolshed_Sensor_Temperature_Value'].state).toFixed(1)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorBottomModifier
+          - sensorHumiditySuffix
+        style:
+          left: 15%
+          position: absolute
+          top: 18%
+        text: =Number.parseInt(items['pToolshed_Sensor_Humidity_Value'].state)
+    - component: oh-link
+      config:
+        action: command
+        actionCommand: "=items['pToolshed_Light_Ceiling_Powered'].state === 'ON' ? 'OFF' : 'ON'"
+        actionItem: pToolshed_Light_Ceiling_Powered
+        id: room_gardenhouse_analyzer
+        style:
+          display: none
+    - component: svg
+      config:
+        class:
+          - floor_plan
+        style:
+          fill: transparent
+          width: 100%
+          stroke: var(--custom-default-state)
+          stroke-width: 1.5px
+        viewBox: 0 0 1000 736
+      slots:
+        default:
+          - component: use
+            config:
+              xlink:href: /static/shared/habpanel/svg/icons.svg#haus_toolshed_grayscaled
+    - component: svg
+      config:
+        class:
+          - floor_outdoor_lights
+        style:
+          fill: transparent
+          width: 100%
+          stroke: var(--custom-default-state)
+        viewBox: 0 0 1000 736
+      slots:
+        default:
+          - component: svg
+            config:
+              class:
+                - "=items['pOutdoor_Toolshed_Right_Light_Powered'].state === 'ON' ? 'lightActive' : (items['pOutdoor_Toolshed_Right_Automatic_Switch'].state === 'ON' ? 'lightAuto' : 'lightDisabled')"
+              height: 64px
+              id: light_garden_garage
+              width: 64px
+              x: 170px
+              y: 315px
+            slots:
+              default:
+                - component: use
+                  config:
+                    xlink:href: /static/shared/habpanel/svg/icons.svg#openhab_light_grayscaled
+    - component: svg
+      config:
+        class:
+          - floor_actions
+        style:
+          fill: transparent
+          width: 100%
+        viewBox: 0 0 1000 736
+      slots:
+        default:
+          - component: rect
+            config:
+              class:
+                - "=items['pToolshed_Light_Ceiling_Powered'].state === 'ON' ? 'lightActive' : ''"
+              height: 282px
+              id: room_gardenhouse
+              onclick: document.getElementById('room_gardenhouse_analyzer').click()
+              width: 380px
+              x: 18px
+              y: 16px
+          - component: rect
+            config:
+              class:
+                - "=items['pToolshed_Openingcontact_Door_State'].state === 'OPEN' ? 'contactOpen' : ''"
+              height: 11px
+              id: window_gardenhouse1
+              width: 135px
+              x: 40px
+              y: 298px
+          - component: rect
+            config:
+              class:
+                - "=items['pToolshed_Openingcontact_Window_State'].state === 'OPEN' ? 'contactOpen' : ''"
+              height: 11px
+              id: window_gardenhouse1
+              width: 145px
+              x: 230px
+              y: 298px

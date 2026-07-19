@@ -1,0 +1,274 @@
+version: 1
+widgets:
+  widget_device_energy:
+    tags: []
+    props:
+      parameters:
+        - context: item
+          default: pGF_Garage_Solar_Inverter_GridActivePower
+          label: Grid Energy
+          name: item_grid_energy
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Garage_Solar_Inverter_ProductionActivePower
+          label: Production Energy
+          name: item_production_energy
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Garage_Solar_Inverter_ConsumptionActivePower
+          label: Consumption Energy
+          name: item_consumption_energy
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Garage_Solar_Storage_ActivePower
+          label: Storage Energy
+          name: item_storage_energy
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Garage_Solar_Storage_EssSoc
+          label: Storage EssSoc
+          name: item_storage_esssoc
+          required: false
+          type: TEXT
+      parameterGroups: []
+    component: div
+    config:
+      class:
+        - oh-grid-item-content
+        - lengendModifier
+      style:
+        position: relative
+        overflow: visible
+        transform: translate(0,6px)
+      stylesheet: |
+        div,
+        svg {
+          position: absolute;
+        }
+    slots:
+      default:
+        - component: svg
+          config:
+            style:
+              left: 50%
+              top: 50%
+              width: 50px
+              height: 50px
+              transform: translate(-50%,-50%)
+            viewBox: 0 0 64 64
+          slots:
+            default:
+              - component: circle
+                config:
+                  fill: "#999999"
+                  cx: 50%
+                  cy: 50%
+                  r: 6
+                  tag: circle
+                  visible: true
+        - component: Label
+          config:
+            class:
+              - normalState
+              - highlightModifier
+              - sensorEnergySuffix
+            style:
+              left: 20%
+              top: 60px
+              transform: translate(-50%,0)
+            text: "=(Math.abs(Number.parseFloat(items[props.item_grid_energy].state)) > 50 ? Number.parseFloat(items[props.item_grid_energy].state) / 1000 : 0).toFixed(2)"
+        - component: div
+          config:
+            style:
+              width: 40px
+              height: 10px
+              right: 50%
+              bottom: 50%
+              transform: translate(0,50%)
+              visibility: "=Number.parseFloat(items[props.item_grid_energy].state) > 50 ? 'visible' : 'hidden'"
+          slots:
+            default:
+              - !include { file: device_energy_line.inc.yaml, vars: {uid: "energy_path_grid1", width: 40, height: 10, direction: "right"}}
+        - component: div
+          config:
+            style:
+              width: 40px
+              height: 10px
+              right: 50%
+              bottom: 50%
+              transform: translate(0,50%)
+              visibility: "=Number.parseFloat(items[props.item_grid_energy].state) <- 50 ? 'visible' : 'hidden'"
+          slots:
+            default:
+              - !include { file: device_energy_line.inc.yaml, vars: {uid: "energy_path_grid2", width: 40, height: 10, direction: "left"}}
+        - component: svg
+          config:
+            style:
+              fill: transparent
+              stroke: "=Number.parseFloat(items[props.item_grid_energy].state) > 50 ? 'var(--custom-yellow)' : ( Number.parseFloat(items[props.item_grid_energy].state) < -50 ? 'var(--custom-green)' : 'var(--custom-default-color)')"
+              #stroke: var(--custom-default-state)
+              stroke-width: 1.5px
+              left: 20%
+              top: 50%
+              width: 50px
+              height: 50px
+              transform: translate(-50%,-30%)
+              opacity: 0.6
+            viewBox: 0 0 64 64
+          slots:
+            default:
+              - component: use
+                config:
+                  xlink:href: /static/custom/solar.svg#grid
+        - component: Label
+          config:
+            class:
+              - normalState
+              - highlightModifier
+              - sensorEnergySuffix
+            style:
+              right: 50%
+              top: 0
+              transform: translate(50%,0)
+            #text: =(Number.parseFloat(items[props.item_production_energy].state) / 1000).toFixed(2)
+            text: "=(Math.abs(Number.parseFloat(items[props.item_production_energy].state)) > 50 ? Number.parseFloat(items[props.item_production_energy].state) / 1000 : 0).toFixed(2)"
+        - component: div
+          config:
+            style:
+              width: 10px
+              height: 30px
+              left: 50%
+              bottom: 50%
+              transform: translate(-50%,0)
+              visibility: "=Number.parseFloat(items[props.item_production_energy].state) > 50 ? 'visible' : 'hidden'"
+          slots:
+            default:
+              - !include { file: device_energy_line.inc.yaml, vars: {uid: "energy_path_production", width: 10, height: 30, direction: "down"}}
+        - component: svg
+          config:
+            style:
+              fill: transparent
+              stroke: "=Number.parseFloat(items[props.item_production_energy].state) > 50 ? 'var(--custom-yellow)' : 'var(--custom-default-color)'"
+              stroke-width: 1.5px
+              left: 51.5%
+              top: 15px
+              width: 50px
+              height: 50px
+              transform: translate(-50%,0)
+              opacity: 0.6
+            viewBox: 0 0 16.933 16.933
+          slots:
+            default:
+              - component: use
+                config:
+                  xlink:href: /static/custom/solar.svg#solar
+        - component: Label
+          config:
+            class:
+              - normalState
+              - highlightModifier
+              - sensorEnergySuffix
+            style:
+              right: 20%
+              top: 60px
+              transform: translate(50%,0)
+            #text: =(Number.parseFloat(items[props.item_consumption_energy].state) / 1000).toFixed(2)
+            text: "=(Math.abs(Number.parseFloat(items[props.item_consumption_energy].state)) > 50 ? Number.parseFloat(items[props.item_consumption_energy].state) / 1000 : 0).toFixed(2)"
+        - component: div
+          config:
+            style:
+              width: 40px
+              height: 10px
+              left: 50%
+              top: 50%
+              transform: translate(0,-50%)
+              visibility: "=Number.parseFloat(items[props.item_consumption_energy].state) > 50 ? 'visible' : 'hidden'"
+          slots:
+            default:
+              - !include { file: device_energy_line.inc.yaml, vars: {uid: "energy_path_consumption", width: 40, height: 10, direction: "right"}}
+        - component: svg
+          config:
+            style:
+              fill: transparent
+              stroke: "=Number.parseFloat(items[props.item_consumption_energy].state) > 50 ? 'var(--custom-yellow)' : 'var(--custom-default-color)'"
+              stroke-width: 2.5px
+              right: 20%
+              top: 50%
+              width: 50px
+              height: 50px
+              transform: translate(50%,-30%)
+            viewBox: 0 0 64 64
+          slots:
+            default:
+              - component: use
+                config:
+                  xlink:href: /static/custom/solar.svg#light
+        - component: Label
+          config:
+            class:
+              - normalState
+              - highlightModifier
+              - sensorEnergySuffix
+            style:
+              right: 50%
+              bottom: 12px
+              transform: translate(50%,0)
+            #text: =(Number.parseFloat(items[props.item_storage_energy].state) / 1000).toFixed(2)
+            text: "=(Math.abs(Number.parseFloat(items[props.item_storage_energy].state)) > 50 ? Number.parseFloat(items[props.item_storage_energy].state) / 1000 : 0).toFixed(2)"
+        - component: div
+          config:
+            style:
+              height: 30px
+              width: 10px
+              left: 50%
+              top: 50%
+              transform: translate(-50%,0)
+              visibility: "=Number.parseFloat(items[props.item_storage_energy].state) > 50 ? 'visible' : 'hidden'"
+          slots:
+            default:
+              - !include { file: device_energy_line.inc.yaml, vars: {uid: "energy_path_storage1", width: 10, height: 30, direction: "down"}}
+        - component: div
+          config:
+            style:
+              height: 30px
+              width: 10px
+              left: 50%
+              top: 50%
+              transform: translate(-50%,0)
+              visibility: "=Number.parseFloat(items[props.item_storage_energy].state) < -50 ? 'visible' : 'hidden'"
+          slots:
+            default:
+              - !include { file: device_energy_line.inc.yaml, vars: {uid: "energy_path_storage2", width: 10, height: 30, direction: "up"}}
+        - component: Label
+          config:
+            class:
+              - normalState
+              - highlightModifier
+              - sensorPercentSuffix
+            style:
+              right: 51%
+              bottom: 37px
+              transform: translate(50%,0) scale(0.7)
+            text: =Number.parseFloat(items[props.item_storage_esssoc].state).toFixed(1)
+        - component: svg
+          config:
+            style:
+              fill: transparent
+              stroke: "=Number.parseFloat(items[props.item_storage_energy].state) > 50 ? 'var(--custom-yellow)' : ( Number.parseFloat(items[props.item_storage_energy].state) < -50 ? 'var(--custom-green)' : 'var(--custom-default-color)')"
+              stroke-width: 1.5px
+              left: 50%
+              bottom: 26px
+              width: 50px
+              height: 50px
+              transform: translate(-50%,0)
+              opacity: 0.6
+            viewBox: 0 0 64 64
+          slots:
+            default:
+              - component: use
+                config:
+                  xlink:href: /static/custom/solar.svg#battery

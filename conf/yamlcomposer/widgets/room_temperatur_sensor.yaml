@@ -1,4 +1,4 @@
-#version: 1
+version: 1
 widgets:
   widget_room_temperatur_sensor:
     tags: []
@@ -23,108 +23,59 @@ widgets:
           type: TEXT
       parameterGroups: []
     component: f7-card
-    config:
-      title: =props.title
     slots:
       default:
-        - component: f7-card-footer
+        - component: f7-card-header
+          slots:
+            default:
+              - component: Label
+                config:
+                  style:
+                    color: var(--custom-default-color)
+                    font-size: var(--custom-default-font-size)
+                  text: =props.title
+        - component: f7-card-content
           config:
             style:
               height: 100%
-              padding: 8px 4px
+              padding: 0
+              position: relative
           slots:
             default:
-              - component: f7-row
+              - component: svg
                 config:
                   style:
-                    height: 100%
-                    width: 100%
+                    fill: var(--custom-default-state)
+                    left: var(--custom-widget-padding)
+                    position: absolute
+                    stroke: var(--custom-default-state)
+                    top: calc(var(--custom-widget-padding) + 10%)
+                    width: 35px
+                  viewBox: 0 0 64 64
                 slots:
                   default:
-                    - component: f7-col
+                    - component: use
                       config:
-                        style:
-                          align-items: center
-                          display: grid
-                          height: 100%
-                          position: relative
-                      slots:
-                        default:
-                          - component: svg
-                            config:
-                              style:
-                                fill: var(--f7-card-footer-text-color)
-                                left: -12px
-                                position: absolute
-                                stroke: var(--f7-card-footer-text-color)
-                                width: 54px
-                              viewBox: 0 0 64 64
-                            slots:
-                              default:
-                                - component: use
-                                  config:
-                                    xlink:href: /static/shared/habpanel/svg/icons.svg#self_temperature_grayscaled
-                          - component: div
-                            config:
-                              style:
-                                align-items: flex-start
-                                display: flex
-                                flex-flow: row nowrap
-                                position: absolute
-                                right: 0
-                                top: 7px
-                            slots:
-                              default:
-                                - component: div
-                                  slots:
-                                    default:
-                                      - component: Label
-                                        config:
-                                          style:
-                                            font-size: 1.8vw
-                                            font-weight: 300
-                                            line-height: 60%
-                                            padding-right: 3px
-                                          text: =Number.parseFloat(items[props.item_temperature].state).toFixed(1)
-                                - component: div
-                                  slots:
-                                    default:
-                                      - component: Label
-                                        config:
-                                          style:
-                                            font-size: 1.0vw
-                                            font-weight: 200
-                                            line-height: 60%
-                                          text: °C
-                          - component: div
-                            config:
-                              style:
-                                align-items: flex-start
-                                bottom: 7px
-                                display: flex
-                                flex-flow: row nowrap
-                                position: absolute
-                                right: 0
-                            slots:
-                              default:
-                                - component: div
-                                  slots:
-                                    default:
-                                      - component: Label
-                                        config:
-                                          style:
-                                            font-size: 1.0vw
-                                            font-weight: 300
-                                            line-height: 60%
-                                            padding-right: 3px
-                                          text: =Number.parseInt(items[props.item_humidity].state)
-                                - component: div
-                                  slots:
-                                    default:
-                                      - component: Label
-                                        config:
-                                          style:
-                                            font-size: 1.0vw
-                                            font-weight: 200
-                                            line-height: 60%
-                                          text: "%"
+                        xlink:href: /static/shared/habpanel/svg/icons.svg#self_temperature_grayscaled
+              - component: Label
+                config:
+                  class:
+                    - sensorMain
+                    - sensorSuffix
+                    - sensorTemperatureSuffix
+                  style:
+                    position: absolute
+                    right: var(--custom-widget-padding)
+                    top: var(--custom-widget-padding)
+                  text: =Number.parseFloat(items[props.item_temperature].state).toFixed(1)
+              - component: Label
+                config:
+                  class:
+                    - sensorSub
+                    - sensorSuffix
+                    - sensorHumiditySuffix
+                  style:
+                    bottom: var(--custom-widget-padding)
+                    position: absolute
+                    right: var(--custom-widget-padding)
+                  text: =Number.parseInt(items[props.item_humidity].state)

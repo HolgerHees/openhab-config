@@ -1,4 +1,4 @@
-#version: 1
+version: 1
 widgets:
   widget_welcome:
     tags: []
@@ -15,7 +15,7 @@ widgets:
     config: {}
     slots:
       default:
-        - component: f7-card-footer
+        - component: f7-card-content
           config:
             style:
               display: flex
@@ -24,25 +24,6 @@ widgets:
               justify-content: flex-start
           slots:
             default:
-              - component: f7-cell
-                slots:
-                  default:
-                    - component: oh-clock
-                      config:
-                        format: HH:mm
-                        style:
-                          font-size: 3em
-              - component: f7-cell
-                slots:
-                  default:
-                    - component: oh-clock
-                      config:
-                        format: dddd [, der] D. MMMM YYYY
-                        style:
-                          font-size: 2em
-              - component: f7-cell
-                slots:
-                  default:
-                    - component: Label
-                      config:
-                        text: "=(items[props.item].state != 'läuft nicht') ? 'Bewässerung: ' + items[props.item].state : ''"
+              - component: Label
+                config:
+                  text: "=(items[props.item].state != 'läuft nicht') ? 'Bewässerung: ' + items[props.item].state : 'Keine aktuellen Vorkommnisse'"

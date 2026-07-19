@@ -1,0 +1,356 @@
+component: div
+config:
+  style:
+    position: relative
+    width: 100%
+    height: 100%
+slots:
+  default:
+    - component: Label
+      config:
+        class:
+          - "=Number.parseInt(items['pFF_Bedroom_Air_Sensor_CO2_Value'].state) > 1500 ? 'errorState' : (Number.parseInt(items['pFF_Bedroom_Air_Sensor_CO2_Value'].state) > 900 ? 'warnState' : 'activeState')"
+          - lengendModifier
+          - highlightModifier
+          - sensorCO2Modifier
+        style:
+          left: 25%
+          position: absolute
+          top: -5px
+        text: CO2
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorTopModifier
+          - sensorCO2Suffix
+        style:
+          left: 41%
+          position: absolute
+          top: 31%
+        text: =Number.parseInt(items['pFF_Bedroom_Air_Sensor_CO2_Value'].state)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorTopModifier
+          - sensorTemperatureSuffix
+          - "=items['pFF_Bedroom_Heating_Circuit'].state === 'ON' ? 'activeState' : 'normalState'"
+        style:
+          left: 55%
+          position: absolute
+          top: 10%
+        text: =Number.parseFloat(items['pFF_Bedroom_Air_Sensor_Temperature_Value'].state).toFixed(1)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorBottomModifier
+          - sensorHumiditySuffix
+        style:
+          left: 55%
+          position: absolute
+          top: 19%
+        text: =Number.parseInt(items['pFF_Bedroom_Air_Sensor_Humidity_Value'].state)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorTopModifier
+          - sensorTemperatureSuffix
+        style:
+          left: 30%
+          position: absolute
+          top: 14%
+        text: =Number.parseFloat(items['pFF_Dressingroom_Air_Sensor_Temperature_Value'].state).toFixed(1)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorBottomModifier
+          - sensorHumiditySuffix
+        style:
+          left: 30%
+          position: absolute
+          top: 23%
+        text: =Number.parseInt(items['pFF_Dressingroom_Air_Sensor_Humidity_Value'].state)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorTopModifier
+          - sensorTemperatureSuffix
+          - "=items['pFF_Makeuproom_Heating_Circuit'].state === 'ON' ? 'activeState' : 'normalState'"
+        style:
+          left: 78%
+          position: absolute
+          top: 20%
+        text: =Number.parseFloat(items['pFF_Makeuproom_Air_Sensor_Temperature_Value'].state).toFixed(1)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorBottomModifier
+          - sensorHumiditySuffix
+        style:
+          left: 78%
+          position: absolute
+          top: 29%
+        text: =Number.parseInt(items['pFF_Makeuproom_Air_Sensor_Humidity_Value'].state)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorTopModifier
+          - sensorTemperatureSuffix
+          - "=items['pFF_Fitnessroom_Heating_Circuit'].state === 'ON' ? 'activeState' : 'normalState'"
+        style:
+          left: 78%
+          position: absolute
+          top: 63%
+        text: =Number.parseFloat(items['pFF_Fitnessroom_Air_Sensor_Temperature_Value'].state).toFixed(1)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorBottomModifier
+          - sensorHumiditySuffix
+        style:
+          left: 78%
+          position: absolute
+          top: 72%
+        text: =Number.parseInt(items['pFF_Fitnessroom_Air_Sensor_Humidity_Value'].state)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorTopModifier
+          - sensorTemperatureSuffix
+          - "=items['pFF_Corridor_Heating_Circuit'].state === 'ON' ? 'activeState' : 'normalState'"
+        style:
+          left: 55%
+          position: absolute
+          top: 50%
+        text: =Number.parseFloat(items['pFF_Corridor_Air_Sensor_Temperature_Value'].state).toFixed(1)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorBottomModifier
+          - sensorHumiditySuffix
+        style:
+          left: 55%
+          position: absolute
+          top: 59%
+        text: =Number.parseInt(items['pFF_Corridor_Air_Sensor_Humidity_Value'].state)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorTopModifier
+          - sensorTemperatureSuffix
+          - "=items['pFF_Bathroom_Heating_Circuit'].state === 'ON' ? 'activeState' : 'normalState'"
+        style:
+          left: 30%
+          position: absolute
+          top: 59%
+        text: =Number.parseFloat(items['pFF_Bathroom_Air_Sensor_Temperature_Value'].state).toFixed(1)
+    - component: Label
+      config:
+        class:
+          - normalState
+          - sensorBottomModifier
+          - sensorHumiditySuffix
+        style:
+          left: 30%
+          position: absolute
+          top: 68%
+        text: =Number.parseInt(items['pFF_Bathroom_Air_Sensor_Humidity_Value'].state)
+    - component: oh-link
+      config:
+        action: command
+        actionCommand: "=items['pFF_Dressingroom_Light_Ceiling_Powered'].state === 'ON' ? 'OFF' : 'ON'"
+        actionItem: pFF_Dressingroom_Light_Ceiling_Powered
+        id: room_og_dressing_analyzer
+        style:
+          display: none
+    - component: oh-link
+      config:
+        action: command
+        actionCommand: "=items['gFF_Bedroom_Lights'].state === 'ON' ? 'OFF' : 'ON'"
+        actionItem: "=items['gFF_Bedroom_Lights'].state === 'ON' ? 'gFF_Bedroom_Lights' : 'pFF_Bedroom_Light_Ceiling_Powered'"
+        id: room_og_bedroom_analyzer
+        style:
+          display: none
+    - component: oh-link
+      config:
+        action: command
+        actionCommand: "=items['pFF_Makeuproom_Light_Ceiling_Powered'].state === 'ON' ? 'OFF' : 'ON'"
+        actionItem: pFF_Makeuproom_Light_Ceiling_Powered
+        id: room_og_makeuproom_analyzer
+        style:
+          display: none
+    - component: oh-link
+      config:
+        action: command
+        actionCommand: "=items['pFF_Fitnessroom_Light_Ceiling_Powered'].state === 'ON' ? 'OFF' : 'ON'"
+        actionItem: pFF_Fitnessroom_Light_Ceiling_Powered
+        id: room_og_sportuproom_analyzer
+        style:
+          display: none
+    - component: oh-link
+      config:
+        action: command
+        actionCommand: "=items['eFF_Bathroom_Lights'].state === 'ON' ? 'OFF' : 'ON'"
+        actionItem: "=items['eFF_Bathroom_Lights'].state === 'ON' ? 'eFF_Bathroom_Lights' : 'pFF_Bathroom_Light_Ceiling_Powered'"
+        id: room_og_bathroom_analyzer
+        style:
+          display: none
+    - component: oh-link
+      config:
+        action: command
+        actionCommand: "=items['pFF_Corridor_Light_Ceiling_Powered'].state === 'ON' ? 'OFF' : 'ON'"
+        actionItem: pFF_Corridor_Light_Ceiling_Powered
+        id: room_og_floor_analyzer
+        style:
+          display: none
+    - component: svg
+      config:
+        class:
+          - floor_plan
+        style:
+          fill: transparent
+          height: 100%
+          object-fit: contain
+          overflow: visible
+          stroke: var(--custom-default-state)
+          stroke-width: 1.5px
+        viewBox: 0 0 1000 736
+      slots:
+        default:
+          - component: use
+            config:
+              xlink:href: /static/shared/habpanel/svg/icons.svg#haus_floor_second_grayscaled
+    - component: svg
+      config:
+        class:
+          - floor_actions
+        style:
+          fill: transparent
+          height: 100%
+          object-fit: contain
+        viewBox: 0 0 1000 736
+      slots:
+        default:
+          - component: rect
+            config:
+              class:
+                - "=items['pFF_Dressingroom_Light_Ceiling_Powered'].state === 'ON' ? 'lightActive' : ''"
+              height: 297px
+              id: room_og_dressing
+              onclick: document.getElementById('room_og_dressing_analyzer').click()
+              width: 216px
+              x: 280px
+              y: 100px
+          - component: rect
+            config:
+              class:
+                - shutterAvailable
+                - "=items['pFF_Dressingroom_Shutter_Control'].state === '100' ? 'shutterDown' : ''"
+                - "=items['pFF_Dressingroom_Openingcontact_Window_State'].state === 'OPEN' ? 'contactOpen' : ''"
+              height: 68px
+              id: window_og_dressing
+              width: 15px
+              x: 253px
+              y: 253px
+          - component: path
+            config:
+              class:
+                - "=items['gFF_Bedroom_Lights'].state === 'ON' ? 'lightActive' : ''"
+              d: M517 32 L732 32 L732 312 L496 312 L496 100 L512 100 Z
+              id: room_og_bedroom
+              onclick: document.getElementById('room_og_bedroom_analyzer').click()
+          - component: rect
+            config:
+              class:
+                - shutterAvailable
+                - "=items['pFF_Bedroom_Shutter_Control'].state === '100' ? 'shutterDown' : ''"
+                - "=items['pFF_Bedroom_Openingcontact_Window_State'].state === 'OPEN' ? 'contactOpen' : ''"
+              height: 15px
+              id: window_og_bedroom
+              width: 160px
+              x: 544px
+              y: 6px
+          - component: rect
+            config:
+              class:
+                - "=items['pFF_Makeuproom_Light_Ceiling_Powered'].state === 'ON' ? 'lightActive' : ''"
+              height: 298px
+              id: room_og_makeuproom
+              onclick: document.getElementById('room_og_makeuproom_analyzer').click()
+              width: 217px
+              x: 752px
+              y: 100px
+          - component: rect
+            config:
+              class:
+                - shutterAvailable
+                - "=items['pFF_Makeuproom_Shutter_Control'].state === '100' ? 'shutterDown' : ''"
+                - "=items['pFF_Makeuproom_Openingcontact_Window_State'].state === 'OPEN' ? 'contactOpen' : ''"
+              height: 95px
+              id: window_og_makeuproom
+              width: 15px
+              x: 978px
+              y: 244px
+          - component: rect
+            config:
+              class:
+                - "=items['pFF_Fitnessroom_Light_Ceiling_Powered'].state === 'ON' ? 'lightActive' : ''"
+              height: 289px
+              id: room_og_sportroom
+              onclick: document.getElementById('room_og_sportuproom_analyzer').click()
+              width: 217px
+              x: 752px
+              y: 416px
+          - component: rect
+            config:
+              class:
+                - shutterAvailable
+                - "=items['pFF_Fitnessroom_Shutter_Control'].state === '100' ? 'shutterDown' : ''"
+                - "=items['pFF_Fitnessroom_Openingcontact_Window_State'].state === 'OPEN' ? 'contactOpen' : ''"
+              height: 94px
+              id: window_og_sportroom
+              width: 15px
+              x: 978px
+              y: 466px
+          - component: rect
+            config:
+              class:
+                - "=items['eFF_Bathroom_Lights'].state === 'ON' ? 'lightActive' : ''"
+              height: 249px
+              id: room_og_bath
+              onclick: document.getElementById('room_og_bathroom_analyzer').click()
+              width: 218px
+              x: 279px
+              y: 416px
+          - component: rect
+            config:
+              class:
+                - shutterAvailable
+                - "=items['pFF_Bathroom_Shutter_Control'].state === '100' ? 'shutterDown' : ''"
+                - "=items['pFF_Bathroom_Openingcontact_Window_State'].state === 'OPEN' ? 'contactOpen' : ''"
+              height: 70px
+              id: window_og_bath
+              width: 15px
+              x: 253px
+              y: 482px
+          - component: rect
+            config:
+              class:
+                - "=items['pFF_Corridor_Light_Ceiling_Powered'].state === 'ON' ? 'lightActive' : ''"
+              height: 175px
+              id: room_og_floor
+              onclick: document.getElementById('room_og_floor_analyzer').click()
+              width: 211px
+              x: 518px
+              y: 330px

@@ -112,3 +112,29 @@ class HeatpumpWarmwasserInfo:
         soll_wp = Registry.getItemState("pGF_Utilityroom_Heatpump_WW_Warmwassersolltemperatur").doubleValue()
 
         Registry.getItem("pGF_Utilityroom_Heatpump_WW_Info").postUpdateIfDifferent("{:.1f} ({:.1f}) °C".format(ist_wp, soll_wp))
+
+@rule(
+    triggers = [
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_Solar_Temperature_Vorlauf"),
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_Solar_Temperature_Ruecklauf")
+    ]
+)
+class HeatpumpSolarInfo:
+    def execute(self, module, input):
+        max_flow = 240 * 60.0 # l/min
+
+        vorlauf = Registry.getItemState("pGF_Utilityroom_Heatpump_Solar_Temperature_Vorlauf").doubleValue()
+        ruecklauf = Registry.getItemState("pGF_Utilityroom_Heatpump_Solar_Temperature_Ruecklauf").doubleValue()
+        pump_level = Registry.getItemState("pGF_Utilityroom_Heatpump_Solar_Pump_State").intValue()
+
+        messured_power = Registry.getItemState("pGF_Utilityroom_Heatpump_Solar_Power").doubleValue()
+
+        current_flow = ( pump_level * max_flow / 100.0 )
+        temp_diff = ruecklauf - vorlauf
+        if temp_diff < 0:
+            temp_diff = 0
+
+        calculated_power = current_flow * temp_diff * 0.7
+
+        self.logger.info("{} {} {} {}".format(vorlauf, ruecklauf, temp_diff, pump_level) )
+        self.logger.info("SOLAR THERMIE DEBUG: CALC POWER: {}, MESSURED POWER: {}".format(calculated_power, messured_power))

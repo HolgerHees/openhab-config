@@ -1080,6 +1080,7 @@ sitemap haus label="Main Menu"
                                 Text item=pGF_Utilityroom_Heatpump_Solar_Temperature_Collector
                                 Text item=pGF_Utilityroom_Heatpump_Solar_Temperature_Storage
                                 Text item=pGF_Utilityroom_Heatpump_Solar_Temperature_Vorlauf
+                                Text item=pGF_Utilityroom_Heatpump_Solar_Temperature_Ruecklauf
                                 Text item=pGF_Utilityroom_Heatpump_Solar_Pump_State
                                 Text item=pGF_Utilityroom_Heatpump_Solar_Power
                             }

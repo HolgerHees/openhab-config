@@ -1,0 +1,62 @@
+version: 1
+
+widgets:
+  widget_device_heating:
+    tags: [
+      ]
+    props:
+      parameters:
+        - context: item
+          default: pGF_Utilityroom_Heatpump_Auto_Mode
+          label: Auto Mode
+          name: item_auto_mode
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Utilityroom_Heatpump_S_Betriebstatusanzeige
+          label: Betriebstatusanzeige
+          name: item_betriebsstatus
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Utilityroom_Electricity_State_Heatpump_ActivePower
+          label: Leistung
+          name: item_power
+          required: false
+          type: TEXT
+      parameterGroups: [
+        ]
+    component: div
+    config:
+      class:
+        - oh-grid-item-content
+      style:
+        position: relative
+        overflow: visible
+      stylesheet: |
+        svg {
+          position: absolute;
+        }
+    slots:
+      default:
+        - component: Label
+          config:
+            class:
+              - normalState
+              - highlightModifier
+            text: "Heizung"
+        - component: Label
+          config:
+            class:
+              - normalState
+            text: =items[props.item_auto_mode].displayState
+        - component: Label
+          config:
+            class:
+              - normalState
+            text: =items[props.item_betriebsstatus].displayState
+        - component: Label
+          config:
+            class:
+              - normalState
+            text: "=('Leistung: ' + items[props.item_power].state)"
