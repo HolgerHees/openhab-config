@@ -28,15 +28,29 @@ widgets:
           name: item_power_consumption
           required: false
           type: TEXT
+        - context: item
+          default: pGF_Utilityroom_Ventilation_Bypass_State
+          label: Bypass
+          name: item_bypass
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Utilityroom_Ventilation_Clime_Supply_Temperature
+          label: Supply
+          name: item_supply
+          required: false
+          type: TEXT
       parameterGroups: []
     component: div
     config:
       class:
         - oh-grid-item-content
+        - lengendModifier
       style:
         position: relative
         overflow: visible
       stylesheet: |
+        div,
         svg {
           position: absolute;
         }
@@ -64,23 +78,68 @@ widgets:
       default:
         - component: Label
           config:
+            style:
+              left: 50%
+              top: 17%
+              transform: translate(-50%,0)
+              width: 100%
             class:
               - normalState
-              - highlightModifier
-            text: "Klima"
+            text: "=(items[props.item_auto_mode].state === 'ON' ? 'Automatik' : 'Manuell')"
+
+        - component: svg
+          config:
+            style:
+              fill: "=items[props.item_bypass].state == '0' ? 'var(--custom-green)' : 'var(--custom-blue)'"
+              stroke-width: 0
+              left: 10%
+              top: 50%
+              width: 30px
+              height: 30px
+              transform: translate(0,-50%)
+              opacity: "=items[props.item_bypass].state == '0' ? '0.6' : '0.7'"
+            viewBox: 0 0 64 64
+          slots:
+            default:
+              - component: use
+                config:
+                  xlink:href: /static/custom/clime.svg#bypass
+
+        - component: div
+          config:
+            style:
+              width: 20px
+              height: 10px
+              left: 53px
+              bottom: 50%
+              transform: translate(0,50%)
+              visibility: "Number.parseFloat(items[props.item_power_consumption].state) > 0 ? 'visible' : 'hidden'"
+          slots:
+            default:
+              - !include { file: device_energy_line.inc.yaml, vars: {uid: "ventilation_path_bypass", width: 20, height: 10, direction: "right"}}
+
+        - component: Label
+          config:
+            style:
+              left: 10%
+              top: 56%
+            class:
+              - normalState
+              - "=items[props.item_bypass].state != '0' ? 'highlightModifier' : ''"
+              - sensorPercentSuffix
+            text: "=items[props.item_bypass].state"
+
         - component: svg
           config:
             style:
               fill: transparent
-              stroke: var(--custom-default-color) #"=Number.parseFloat(items[props.item_grid_energy].state) > 50 ? 'var(--custom-yellow)' : ( Number.parseFloat(items[props.item_grid_energy].state) < -50 ? 'var(--custom-green)' : 'var(--custom-default-color)')"
-              #stroke: var(--custom-default-state)
+              stroke: "=(['5','21'].includes(items[props.item_headpump_status].state) ? 'var(--custom-blue)' : 'var(--custom-default-color)')"
               stroke-width: 1.0px
-              right: 5%
-              top: 27%
+              left: "calc(50% - 30px)"
+              top: "calc(50% - 30px)"
               width: 60px
               height: 60px
-              transform: translate(0,-50%)
-              opacity: 0.6
+              opacity: "=(['5','21'].includes(items[props.item_headpump_status].state) ? '0.7' : '0.4')"
             viewBox: 0 0 64 64
             class:
               - "='rotating' + items[props.item_fan_level].state"
@@ -89,43 +148,69 @@ widgets:
               - component: use
                 config:
                   xlink:href: /static/custom/clime.svg#airing
+
+        - component: div
+          config:
+            style:
+              width: 22px
+              height: 10px
+              right: 52px
+              bottom: 50%
+              transform: translate(0,50%)
+              visibility: "Number.parseFloat(items[props.item_power_consumption].state) > 0 ? 'visible' : 'hidden'"
+          slots:
+            default:
+              - !include { file: device_energy_line.inc.yaml, vars: {uid: "ventilation_path_bypass", width: 22, height: 10, direction: "right"}}
+
+        - component: svg
+          config:
+            style:
+              fill: "=(['5','21'].includes(items[props.item_headpump_status].state) ? 'var(--custom-blue)' : 'var(--custom-default-color)')"
+              stroke-width: 0
+              right: 22px
+              top: 50%
+              width: 30px
+              height: 30px
+              transform: translate(0,-50%)
+              opacity: "=(['5','21'].includes(items[props.item_headpump_status].state) ? '0.7' : '0.4')"
+            viewBox: 0 0 24 24
+          slots:
+            default:
+              - component: use
+                config:
+                  xlink:href: /static/custom/clime.svg#wind
+
+
         - component: Label
           config:
             style:
-              position: absolute
-              left: 10px
-              top: 27%
-              transform: translate(0,-50%)
+              right: 6%
+              top: 56%
             class:
               - normalState
-            text: "=(items[props.item_auto_mode].state === 'ON' ? 'Automatik' : 'Manuell')"
+              - highlightModifier
+              - sensorTemperatureSuffix
+            text: "=items[props.item_supply].state"
+
         - component: Label
           config:
             style:
-              position: absolute
-              left: 10px
-              top: 40%
-              transform: translate(0,-50%)
-            class:
-              - normalState
-            text: "=('Stufe: ' + items[props.item_fan_level].state)"
-        - component: Label
-          config:
-            style:
-              position: absolute
-              left: 10px
-              top: 53%
-              transform: translate(0,-50%)
-            class:
-              - normalState
-            text: "=('Modus: ' + items[props.item_headpump_status].displayState)"
-        - component: Label
-          config:
-            style:
-              position: absolute
               left: 50%
-              bottom: 5px
-              transform: translate(-50%,0)
+              bottom: 17%
+              transform: translate(-50%,0%)
             class:
               - normalState
-            text: "=('Leistung: ' + items[props.item_power_consumption].state)"
+              - "=Number.parseFloat(items[props.item_power_consumption].state) > 50 ? 'highlightModifier' : ''"
+              - sensorEnergySuffix
+            text: "=(Number.parseFloat(items[props.item_power_consumption].state) / 1000.0).toFixed(1)"
+
+        #- component: Label
+        #  config:
+        #    style:
+        #      position: absolute
+        #      right: 5%
+        #      top: 53%
+        #      font-size: 0.8em
+        #    class:
+        #      - normalState
+        #    text: "=('Stufe: ' + items[props.item_fan_level].state)"
