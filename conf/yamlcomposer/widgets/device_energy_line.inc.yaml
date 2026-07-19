@@ -49,7 +49,7 @@ slots:
           - component: f7-row
             config:
               calcMode: linear
-              dur: 3s
+              dur: "=(Math.max(${width},${height})/13) + 's'" #3s
               repeatCount: indefinite
               tag: animateMotion
             slots:
