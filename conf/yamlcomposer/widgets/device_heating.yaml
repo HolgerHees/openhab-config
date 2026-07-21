@@ -33,7 +33,13 @@ widgets:
         - context: item
           default: pGF_Utilityroom_Heatpump_Solar_Power
           label: Solar
-          name: item_solar
+          name: item_solar_power
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Utilityroom_Heatpump_Solar_Pump_State
+          label: Solar
+          name: item_solar_pump_state
           required: false
           type: TEXT
         - context: item
@@ -46,6 +52,12 @@ widgets:
           default: pGF_Utilityroom_Heatpump_WP_Weichentemperatur
           label: Middle Temperature
           name: item_tank_middle_temperature
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Utilityroom_Heatpump_Solar_Temperature_Collector
+          label: Collector Temperature
+          name: item_collector_temperature
           required: false
           type: TEXT
         - context: item
@@ -75,67 +87,22 @@ widgets:
           config:
             style:
               left: 50%
-              top: 17%
+              top: 5px
               transform: translate(-50%,0)
-              width: 100%
             class:
               - normalState
-            text: "=items[props.item_auto_mode].displayState + ' / ' + items[props.item_betriebsstatus].displayState"
+            text: "=items[props.item_betriebsstatus].displayState"
 
         - component: svg
           config:
             style:
               fill: transparent
-              stroke: "=Number.parseFloat(items[props.item_solar].state) == '0' ? 'var(--custom-default-color)' : 'var(--custom-yellow-dark)'"
-              stroke-width: 1
-              left: 5%
-              top: 48%
-              width: 50px
-              height: 50px
-              transform: translate(0,-50%)
-              opacity: "=Number.parseFloat(items[props.item_solar].state) == '0' ? '0.4' : '0.6'"
-            viewBox: 0 0 16.933 16.933
-          slots:
-            default:
-              - component: use
-                config:
-                  xlink:href: /static/custom/heatpump.svg#solar
-
-        - component: div
-          config:
-            style:
-              width: 25px
-              height: 10px
-              left: calc(5% + 45px)
-              top: 50%
-              transform: translate(0,-50%)
-              visibility: "=Number.parseFloat(items[props.item_solar].state) > 0 ? 'visible' : 'hidden'"
-          slots:
-            default:
-              - !include { file: device_energy_line.inc.yaml, vars: {uid: "heating_path_solar", width: 25, height: 10, direction: "right"}}
-        - component: Label
-          config:
-            style:
-              left: 5%
-              bottom: 27%
-            class:
-              - normalState
-              - "=Number.parseFloat(items[props.item_solar].state) > 0 ? 'highlightModifier' : ''"
-              - sensorEnergySuffix
-            text: "=(Number.parseFloat(items[props.item_solar].state) / 1000.0).toFixed(1)"
-
-
-
-        - component: svg
-          config:
-            style:
-              fill: transparent
-              stroke: var(--custom-default-color)
+              stroke: var(--custom-value-color)
               stroke-width: 0.8
               left: 50%
               top: 50%
-              width: 970px
-              height: 90px
+              width: 105px
+              height: 105px
               transform: translate(-50%,-50%)
               opacity: 0.6
             viewBox: 0 0 64 64
@@ -148,9 +115,9 @@ widgets:
           config:
             style:
               left: 50%
-              bottom: 55%
+              top: 65px
               transform: translate(-50%,0)
-              font-size: 0.8em
+              font-size: 0.9em
             class:
               - normalState
               - sensorTemperatureSuffix
@@ -159,9 +126,9 @@ widgets:
           config:
             style:
               left: 50%
-              bottom: 46%
+              top: 88px
               transform: translate(-50%,0)
-              font-size: 0.8em
+              font-size: 0.9em
             class:
               - normalState
               - sensorTemperatureSuffix
@@ -170,9 +137,9 @@ widgets:
           config:
             style:
               left: 50%
-              bottom: 37%
+              top: 111px
               transform: translate(-50%,0)
-              font-size: 0.8em
+              font-size: 0.9em
             class:
               - normalState
               - sensorTemperatureSuffix
@@ -182,30 +149,74 @@ widgets:
 
 
 
-        - component: div
-          config:
-            style:
-              width: 30px
-              height: 10px
-              right: calc(5% + 42px)
-              top: 50%
-              transform: translate(0,-50%)
-              visibility: "=Number.parseFloat(items[props.item_power_requested].state) > 0 ? 'visible' : 'hidden'"
-          slots:
-            default:
-              - !include { file: device_energy_line.inc.yaml, vars: {uid: "heating_path_heatpump", width: 30, height: 10, direction: "left"}}
 
         - component: svg
           config:
             style:
               fill: transparent
-              stroke: "=items[props.item_power_requested].state == '0' ? 'var(--custom-default-color)' : 'var(--custom-yellow-dark)'"
+              stroke: "=Number.parseFloat(items[props.item_solar_pump_state].state) == '0' ? 'var(--custom-value-color)' : 'var(--custom-yellow-dark)'"
+              stroke-width: 1
+              width: 50px
+              height: 50px
+              left: 5px
+              bottom: 50%
+              transform: translate(0,45%)
+              opacity: "=Number.parseFloat(items[props.item_solar_pump_state].state) == '0' ? '0.4' : '1.0'"
+            viewBox: 0 0 64 64
+          slots:
+            default:
+              - component: use
+                config:
+                  xlink:href: /static/custom/heatpump.svg#solar
+
+        - component: div
+          config:
+            style:
+              width: 25px
+              height: 10px
+              left: calc(5% + 43px)
+              bottom: 40%
+              visibility: "=Number.parseFloat(items[props.item_solar_pump_state].state) > 0 ? 'visible' : 'hidden'"
+          slots:
+            default:
+              - !include { file: device_energy_line.inc.yaml, vars: {uid: "heating_path_solar", width: 25, height: 10, direction: "right"}}
+        - component: Label
+          config:
+            style:
+              left: 5%
+              bottom: 130px
+            class:
+              - normalState
+              - sensorTemperatureSuffix
+            text: "=Number.parseFloat(items[props.item_collector_temperature].state).toFixed(1)"
+        - component: Label
+          config:
+            style:
+              left: 5%
+              bottom: 55px
+            class:
+              - normalState
+              - "=Number.parseFloat(items[props.item_solar_power].state) > 0 ? 'highlightModifier' : ''"
+              - sensorEnergySuffix
+            text: "=Number.parseFloat(items[props.item_solar_power].state).toFixed(1)"
+
+
+
+
+
+
+
+        - component: svg
+          config:
+            style:
+              fill: transparent
+              stroke: "=items[props.item_power_requested].state == '0' ? 'var(--custom-value-color)' : 'var(--custom-yellow-dark)'"
               stroke-width: 4
               right: 5%
-              top: 50%
+              bottom: 50%
               width: 40px
               height: 40px
-              transform: translate(0,-50%)
+              transform: translate(0,50%)
               opacity: "=items[props.item_power_requested].state == '0' ? '0.4' : '0.6'"
             viewBox: 0 0 64 64
           slots:
@@ -214,11 +225,23 @@ widgets:
                 config:
                   xlink:href: /static/custom/heatpump.svg#heatpump
 
+        - component: div
+          config:
+            style:
+              width: 25px
+              height: 10px
+              right: calc(5% + 42px)
+              bottom: 50%
+              visibility: "=Number.parseFloat(items[props.item_power_requested].state) > 0 ? 'visible' : 'hidden'"
+          slots:
+            default:
+              - !include { file: device_energy_line.inc.yaml, vars: {uid: "heating_path_heatpump", width: 25, height: 10, direction: "left"}}
+
         - component: Label
           config:
             style:
               right: 5%
-              bottom: 27%
+              bottom: 55px
             class:
               - normalState
               - "=Number.parseFloat(items[props.item_power_consumption].state) > 50 ? 'highlightModifier' : ''"
@@ -227,3 +250,12 @@ widgets:
 
 
 
+        - component: Label
+          config:
+            style:
+              left: 50%
+              bottom: 12px
+              transform: translate(-50%,0)
+            class:
+              - normalState
+            text: "=items[props.item_auto_mode].displayState"

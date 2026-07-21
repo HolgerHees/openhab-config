@@ -87,7 +87,7 @@ widgets:
                               class:
                                 - highlightModifier
                               style:
-                                color: var(--custom-default-color)
+                                color: var(--custom-value-color)
                                 font-size: var(--custom-default-font-size)
                     - component: f7-cell
                       slots:
@@ -98,7 +98,7 @@ widgets:
                               class:
                                 - highlightModifier
                               style:
-                                color: var(--custom-default-color)
+                                color: var(--custom-value-color)
                                 font-size: var(--custom-default-font-size)
         - component: f7-card-footer
           config:

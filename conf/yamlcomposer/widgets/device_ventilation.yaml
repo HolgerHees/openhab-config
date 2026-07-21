@@ -74,18 +74,96 @@ widgets:
         .rotating3 {
           animation: rotating 2s linear infinite;
         }
+        svg.roomAir g path.top    { animation-duration: 1.5s; animation-delay: 0.5s; }
+        svg.roomAir g path.middle { animation-duration: 1.3s; }
+        svg.roomAir g path.bottom { animation-duration: 1.4s; animation-delay: 1.0s; }
+        svg.roomAir g path {
+              stroke-width: 1.1; /* Dicke der Windlinie */
+              stroke-linecap: round;
+              stroke-linejoin: round;
+              stroke-dasharray: 30 12;
+              animation: windFlowAnim 3s linear infinite;
+        }
+
+        @keyframes windFlowAnim {
+          from {
+            stroke-dashoffset: 42; /* Startposition (Summe aus dasharray) */
+          }
+          to {
+            stroke-dashoffset: 0; /* Endposition */
+          }
+        }
     slots:
       default:
         - component: Label
           config:
             style:
               left: 50%
-              top: 17%
+              top: 5px
               transform: translate(-50%,0)
-              width: 100%
             class:
               - normalState
-            text: "=(items[props.item_auto_mode].state === 'ON' ? 'Automatik' : 'Manuell')"
+              - highlightModifier
+              - sensorTemperatureSuffix
+            text: "=items[props.item_supply].state"
+
+        - component: svg
+          config:
+            style:
+              fill: transparent;
+              stroke: "=['5','21'].includes(items[props.item_headpump_status].state) ? 'var(--custom-blue)' : 'var(--custom-default-color)'"
+              left: 50%
+              top: 28px
+              width: 30px
+              height: 30px
+              opacity: "=(['5','21'].includes(items[props.item_headpump_status].state) ? '0.7' : '0.4')"
+              transform: translate(-50%,0) rotate(-90deg)
+            class:
+              - roomAir
+            viewBox: 0 0 24 24
+          slots:
+            default:
+              - component: g
+                slots:
+                  default:
+                    - component: path
+                      config:
+                        d: "M3,8 H9.5 C11.5,8 11.5,4.5 9.5,4.5 C7.5,4.5 7.5,8 7.5,8"
+                        class:
+                          - top
+              - component: g
+                slots:
+                  default:
+                    - component: path
+                      config:
+                        d: "M2,11 H18.5 C21.5,11 21.5,6.5 18.5,6.5 C15.5,6.5 15.5,11 15.5,11"
+                        class:
+                          - middle
+              - component: g
+                slots:
+                  default:
+                    - component: path
+                      config:
+                        d: "M4,14 H18.5 C21.5,14 21.5,18.5 18.5,18.5 C15.5,18.5 15.5,14 15.5,14"
+                        class:
+                          - bottom
+
+        - component: div
+          config:
+            style:
+              width: 10px
+              height: 12px
+              left: 50%
+              top: 58px
+              transform: translate(-50%,0)
+              visibility: 'visible'
+          slots:
+            default:
+              - !include { file: device_energy_line.inc.yaml, vars: {uid: "ventilation_path_wind", width: 10, height: 12, direction: "up"}}
+
+
+
+
 
         - component: svg
           config:
@@ -93,10 +171,9 @@ widgets:
               fill: "=items[props.item_bypass].state == '0' ? 'var(--custom-green)' : 'var(--custom-blue)'"
               stroke-width: 0
               left: 10%
-              top: 50%
+              bottom: 39px
               width: 30px
               height: 30px
-              transform: translate(0,-50%)
               opacity: "=items[props.item_bypass].state == '0' ? '0.6' : '0.7'"
             viewBox: 0 0 64 64
           slots:
@@ -108,21 +185,21 @@ widgets:
         - component: div
           config:
             style:
-              width: 20px
+              width: 30px
               height: 10px
-              left: 53px
-              bottom: 50%
-              transform: translate(0,50%)
+              left: 51px
+              bottom: 68px
+              transform: translate(0,50%) rotate(-45deg)
               visibility: "Number.parseFloat(items[props.item_power_consumption].state) > 0 ? 'visible' : 'hidden'"
           slots:
             default:
-              - !include { file: device_energy_line.inc.yaml, vars: {uid: "ventilation_path_bypass", width: 20, height: 10, direction: "right"}}
+              - !include { file: device_energy_line.inc.yaml, vars: {uid: "ventilation_path_bypass", width: 30, height: 10, direction: "right"}}
 
         - component: Label
           config:
             style:
               left: 10%
-              top: 56%
+              bottom: 12px
             class:
               - normalState
               - "=items[props.item_bypass].state != '0' ? 'highlightModifier' : ''"
@@ -149,55 +226,53 @@ widgets:
                 config:
                   xlink:href: /static/custom/clime.svg#airing
 
-        - component: div
-          config:
-            style:
-              width: 22px
-              height: 10px
-              right: 52px
-              bottom: 50%
-              transform: translate(0,50%)
-              visibility: "Number.parseFloat(items[props.item_power_consumption].state) > 0 ? 'visible' : 'hidden'"
-          slots:
-            default:
-              - !include { file: device_energy_line.inc.yaml, vars: {uid: "ventilation_path_bypass", width: 22, height: 10, direction: "right"}}
-
-        - component: svg
-          config:
-            style:
-              fill: "=(['5','21'].includes(items[props.item_headpump_status].state) ? 'var(--custom-blue)' : 'var(--custom-default-color)')"
-              stroke-width: 0
-              right: 22px
-              top: 50%
-              width: 30px
-              height: 30px
-              transform: translate(0,-50%)
-              opacity: "=(['5','21'].includes(items[props.item_headpump_status].state) ? '0.7' : '0.4')"
-            viewBox: 0 0 24 24
-          slots:
-            default:
-              - component: use
-                config:
-                  xlink:href: /static/custom/clime.svg#wind
-
-
-        - component: Label
-          config:
-            style:
-              right: 6%
-              top: 56%
-            class:
-              - normalState
-              - highlightModifier
-              - sensorTemperatureSuffix
-            text: "=items[props.item_supply].state"
-
         - component: Label
           config:
             style:
               left: 50%
               bottom: 17%
               transform: translate(-50%,0%)
+              width: 100%
+            class:
+              - normalState
+            text: "=(items[props.item_auto_mode].state === 'ON' ? 'Automatik' : 'Manuell')"
+
+        - component: svg
+          config:
+            style:
+              fill: transparent
+              stroke: "=(['5','21'].includes(items[props.item_headpump_status].state) ? 'var(--custom-blue)' : 'var(--custom-default-color)')"
+              stroke-width: 0.8
+              right: 22px
+              bottom: 39px
+              width: 30px
+              height: 30px
+              opacity: "=(['5','21'].includes(items[props.item_headpump_status].state) ? '0.7' : '0.4')"
+            viewBox: 0 0 64 64
+          slots:
+            default:
+              - component: use
+                config:
+                  xlink:href: /static/custom/clime.svg#cooling
+
+        - component: div
+          config:
+            style:
+              width: 30px
+              height: 10px
+              right: 51px
+              bottom: 68px
+              transform: translate(0,50%) rotate(45deg)
+              visibility: "Number.parseFloat(items[props.item_power_consumption].state) > 0 ? 'visible' : 'hidden'"
+          slots:
+            default:
+              - !include { file: device_energy_line.inc.yaml, vars: {uid: "ventilation_path_cooling", width: 30, height: 10, direction: "left"}}
+
+        - component: Label
+          config:
+            style:
+              right: 6%
+              bottom: 12px
             class:
               - normalState
               - "=Number.parseFloat(items[props.item_power_consumption].state) > 50 ? 'highlightModifier' : ''"

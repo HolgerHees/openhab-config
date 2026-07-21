@@ -33,6 +33,7 @@ widgets:
                   style:
                     color: var(--custom-default-color)
                     font-size: var(--custom-default-font-size)
+                    opacity: 0.8
                   text: =props.title
         - component: f7-card-content
           config:

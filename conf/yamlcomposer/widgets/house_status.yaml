@@ -54,454 +54,452 @@ widgets:
           name: item_security_notify
           required: false
       parameterGroups: []
-    component: f7-card
-    config: {}
+    component: oh-card
+    config:
+      action: popup
+      actionModal: widget:widget_sitemap
+      stylesheet: |
+        div.row div.col:first-child {
+          margin: auto;
+        }
     slots:
-      default:
-        - component: f7-card-content
+      content:
+        - component: f7-row
           config:
             style:
-              display: flex
-              flex-direction: column
-              height: 100%
-              padding: 8px 8px
+              width: 100%
           slots:
             default:
-              - component: f7-row
+              - component: f7-col
                 config:
                   style:
-                    width: 100%
+                    display: flex
+                    flex-basis: 27px
+                    flex-grow: 0
+                    height: 100%
+                    padding-right: 3px
+                    text-align: left
                 slots:
                   default:
-                    - component: f7-col
+                    - component: svg
                       config:
                         style:
-                          display: flex
-                          flex-basis: 27px
-                          flex-grow: 0
-                          height: 100%
-                          padding-right: 3px
-                          text-align: left
+                          display: inline-block
+                          fill: var(--custom-default-color)
+                          stroke: var(--custom-default-color)
+                          width: 20px
+                        viewBox: 0 0 64 64
                       slots:
                         default:
-                          - component: svg
+                          - component: use
                             config:
-                              style:
-                                display: inline-block
-                                fill: var(--f7-card-footer-text-color)
-                                stroke: var(--f7-card-footer-text-color)
-                                width: 20px
-                              viewBox: 0 0 64 64
-                            slots:
-                              default:
-                                - component: use
-                                  config:
-                                    xlink:href: /static/shared/habpanel/svg/icons.svg#self_window_grayscaled
-                    - component: f7-col
-                      config:
-                        style:
-                          flex-grow: 0
-                          text-align: left
-                      slots:
-                        default:
-                          - component: Label
-                            config:
-                              class: normalText
-                              text: Fenster
-                    - component: f7-col
-                      config:
-                        style:
-                          flex-grow: 1
-                          text-align: right
-                      slots:
-                        default:
-                          - component: Label
-                            config:
-                              class:
-                                - highlightModifier
-                                - "=(items[props.item_security].state !== 'CLOSED') ? 'errorState' : 'normalState'"
-                              text: "=(items[props.item_security].state !== 'CLOSED') ? 'Offen' : 'Alles zu'"
-              - component: f7-row
+                              xlink:href: /static/shared/habpanel/svg/icons.svg#self_window_grayscaled
+              - component: f7-col
                 config:
                   style:
-                    width: 100%
+                    flex-grow: 0
+                    text-align: left
                 slots:
                   default:
-                    - component: f7-col
+                    - component: Label
                       config:
-                        style:
-                          display: flex
-                          flex-basis: 27px
-                          flex-grow: 0
-                          height: 100%
-                          padding-right: 3px
-                          text-align: left
-                      slots:
-                        default:
-                          - component: svg
-                            config:
-                              style:
-                                display: inline-block
-                                fill: var(--f7-card-footer-text-color)
-                                stroke: var(--f7-card-footer-text-color)
-                                width: 20px
-                              viewBox: 0 0 64 64
-                            slots:
-                              default:
-                                - component: use
-                                  config:
-                                    xlink:href: /static/shared/habpanel/svg/icons.svg#self_garden_grayscaled
-                    - component: f7-col
-                      config:
-                        style:
-                          flex-grow: 0
-                          text-align: left
-                      slots:
-                        default:
-                          - component: Label
-                            config:
-                              class: normalText
-                              text: Garten
-                    - component: f7-col
-                      config:
-                        style:
-                          flex-grow: 1
-                          text-align: right
-                      slots:
-                        default:
-                          - component: Label
-                            config:
-                              class:
-                                - highlightModifier
-                                - "=(items[props.item_message_garden].state !== 'Alles ok') ? 'errorState' : 'normalState'"
-                              text: =items[props.item_message_garden].state
-              - component: f7-row
+                        class: normalText
+                        text: Fenster
+              - component: f7-col
                 config:
                   style:
-                    width: 100%
+                    flex-grow: 1
+                    text-align: right
                 slots:
                   default:
-                    - component: f7-col
+                    - component: Label
                       config:
-                        style:
-                          display: flex
-                          flex-basis: 27px
-                          flex-grow: 0
-                          height: 100%
-                          padding-right: 3px
-                          text-align: left
-                      slots:
-                        default:
-                          - component: svg
-                            config:
-                              style:
-                                display: inline-block
-                                fill: var(--f7-card-footer-text-color)
-                                stroke: var(--f7-card-footer-text-color)
-                                width: 20px
-                              viewBox: 0 0 64 64
-                            slots:
-                              default:
-                                - component: use
-                                  config:
-                                    xlink:href: /static/shared/habpanel/svg/icons.svg#self_roomba_grayscaled
-                    - component: f7-col
-                      config:
-                        style:
-                          flex-grow: 0
-                          text-align: left
-                      slots:
-                        default:
-                          - component: Label
-                            config:
-                              class: normalText
-                              text: Geräte
-                    - component: f7-col
-                      config:
-                        style:
-                          flex-grow: 1
-                          text-align: right
-                      slots:
-                        default:
-                          - component: Label
-                            config:
-                              class:
-                                - highlightModifier
-                                - "=(items[props.item_message_devices].state !== 'Alles ok') ? 'errorState' : 'normalState'"
-                              text: =items[props.item_message_devices].state
-              - component: f7-row
+                        class:
+                          - highlightModifier
+                          - "=(items[props.item_security].state !== 'CLOSED') ? 'errorState' : 'normalState'"
+                        text: "=(items[props.item_security].state !== 'CLOSED') ? 'Offen' : 'Alles zu'"
+        - component: f7-row
+          config:
+            style:
+              width: 100%
+          slots:
+            default:
+              - component: f7-col
                 config:
                   style:
-                    width: 100%
+                    display: flex
+                    flex-basis: 27px
+                    flex-grow: 0
+                    height: 100%
+                    padding-right: 3px
+                    text-align: left
                 slots:
                   default:
-                    - component: f7-col
+                    - component: svg
                       config:
                         style:
-                          display: flex
-                          flex-basis: 27px
-                          flex-grow: 0
-                          height: 100%
-                          padding-right: 3px
-                          text-align: left
+                          display: inline-block
+                          fill: var(--custom-default-color)
+                          stroke: var(--custom-default-color)
+                          width: 20px
+                        viewBox: 0 0 64 64
                       slots:
                         default:
-                          - component: svg
+                          - component: use
                             config:
-                              style:
-                                display: inline-block
-                                fill: var(--f7-card-footer-text-color)
-                                stroke: var(--f7-card-footer-text-color)
-                                width: 20px
-                              viewBox: 0 0 64 64
-                            slots:
-                              default:
-                                - component: use
-                                  config:
-                                    xlink:href: /static/shared/habpanel/svg/icons.svg#self_sensor2_grayscaled
-                    - component: f7-col
-                      config:
-                        style:
-                          flex-grow: 0
-                          text-align: left
-                      slots:
-                        default:
-                          - component: Label
-                            config:
-                              class: normalText
-                              text: Sensor
-                    - component: f7-col
-                      config:
-                        style:
-                          flex-grow: 1
-                          text-align: right
-                      slots:
-                        default:
-                          - component: Label
-                            config:
-                              class:
-                                - highlightModifier
-                                - "=(items[props.item_watering_info].state === '3' && items[props.item_message_sensors].state == 'Giessen') ? 'warnState' : ((items[props.item_watering_info].state !== '3' || items[props.item_message_sensors].state !== 'Giessen') && items[props.item_message_sensors].state !== 'Alles ok' ? 'errorState' : 'normalState')"
-                              text: =items[props.item_message_sensors].state
-              - component: f7-row
+                              xlink:href: /static/shared/habpanel/svg/icons.svg#self_garden_grayscaled
+              - component: f7-col
                 config:
                   style:
-                    width: 100%
+                    flex-grow: 0
+                    text-align: left
                 slots:
                   default:
-                    - component: f7-col
+                    - component: Label
                       config:
-                        style:
-                          display: flex
-                          flex-basis: 27px
-                          flex-grow: 0
-                          height: 100%
-                          padding-right: 3px
-                          text-align: left
-                      slots:
-                        default:
-                          - component: svg
-                            config:
-                              style:
-                                display: inline-block
-                                fill: var(--f7-card-footer-text-color)
-                                stroke: var(--f7-card-footer-text-color)
-                                width: 20px
-                              viewBox: 0 0 64 64
-                            slots:
-                              default:
-                                - component: use
-                                  config:
-                                    xlink:href: /static/shared/habpanel/svg/icons.svg#self_info_grayscaled
-                    - component: f7-col
-                      config:
-                        style:
-                          flex-grow: 0
-                          text-align: left
-                      slots:
-                        default:
-                          - component: Label
-                            config:
-                              class: normalText
-                              text: Technik
-                    - component: f7-col
-                      config:
-                        style:
-                          flex-grow: 1
-                          text-align: right
-                      slots:
-                        default:
-                          - component: Label
-                            config:
-                              class:
-                                - highlightModifier
-                                - "=({'Lüftungsanlage Filter': 'warnState', 'Alles ok': 'normalState'})[items[props.item_message_main].state] || 'errorState'"
-                              text: =items[props.item_message_main].state
-              - component: f7-row
+                        class: normalText
+                        text: Garten
+              - component: f7-col
                 config:
                   style:
-                    height: 20px
-                    width: 100%
-              - component: f7-row
-                config:
-                  style:
-                    width: 100%
+                    flex-grow: 1
+                    text-align: right
                 slots:
                   default:
-                    - component: f7-col
+                    - component: Label
                       config:
-                        style:
-                          display: flex
-                          flex-basis: 27px
-                          flex-grow: 0
-                          height: 100%
-                          padding-right: 3px
-                          text-align: left
-                      slots:
-                        default:
-                          - component: svg
-                            config:
-                              style:
-                                display: inline-block
-                                fill: var(--f7-card-footer-text-color)
-                                stroke: var(--f7-card-footer-text-color)
-                                width: 20px
-                              viewBox: 0 0 64 64
-                            slots:
-                              default:
-                                - component: use
-                                  config:
-                                    xlink:href: /static/shared/habpanel/svg/icons.svg#self_roomba_grayscaled
-                    - component: f7-col
-                      config:
-                        style:
-                          flex-grow: 0
-                          text-align: left
-                      slots:
-                        default:
-                          - component: Label
-                            config:
-                              class: normalText
-                              text: Presenz
-                    - component: f7-col
-                      config:
-                        style:
-                          flex-grow: 1
-                          text-align: right
-                      slots:
-                        default:
-                          - component: Label
-                            config:
-                              class:
-                                - highlightModifier
-                                - normalState
-                              text: |
-                                =({4:'Schlafen', 3: '(Schlafen)', 2: 'Anwesend', 1: '(Anwesend)', 0: Abwesend})[items[props.item_presence_state].state]
-              - component: f7-row
+                        class:
+                          - highlightModifier
+                          - "=(items[props.item_message_garden].state !== 'Alles ok') ? 'errorState' : 'normalState'"
+                        text: =items[props.item_message_garden].state
+        - component: f7-row
+          config:
+            style:
+              width: 100%
+          slots:
+            default:
+              - component: f7-col
                 config:
                   style:
-                    width: 100%
+                    display: flex
+                    flex-basis: 27px
+                    flex-grow: 0
+                    height: 100%
+                    padding-right: 3px
+                    text-align: left
                 slots:
                   default:
-                    - component: f7-col
+                    - component: svg
                       config:
                         style:
-                          display: flex
-                          flex-basis: 27px
-                          flex-grow: 0
-                          height: 100%
-                          padding-right: 3px
-                          text-align: left
+                          display: inline-block
+                          fill: var(--custom-default-color)
+                          stroke: var(--custom-default-color)
+                          width: 20px
+                        viewBox: 0 0 64 64
                       slots:
                         default:
-                          - component: svg
+                          - component: use
                             config:
-                              style:
-                                display: inline-block
-                                fill: var(--f7-card-footer-text-color)
-                                stroke: var(--f7-card-footer-text-color)
-                                width: 20px
-                              viewBox: 0 0 64 64
-                            slots:
-                              default:
-                                - component: use
-                                  config:
-                                    xlink:href: /static/shared/habpanel/svg/icons.svg#openhab_settings_grayscaled
-                    - component: f7-col
-                      config:
-                        style:
-                          flex-grow: 0
-                          text-align: left
-                      slots:
-                        default:
-                          - component: Label
-                            config:
-                              class: normalText
-                              text: Prog.
-                    - component: f7-col
-                      config:
-                        style:
-                          flex-grow: 1
-                          text-align: right
-                      slots:
-                        default:
-                          - component: Label
-                            config:
-                              class:
-                                - highlightModifier
-                                - normalState
-                              text: =items[props.item_message_auto].state
-              - component: f7-row
+                              xlink:href: /static/shared/habpanel/svg/icons.svg#self_roomba_grayscaled
+              - component: f7-col
                 config:
                   style:
-                    width: 100%
+                    flex-grow: 0
+                    text-align: left
                 slots:
                   default:
-                    - component: f7-col
+                    - component: Label
+                      config:
+                        class: normalText
+                        text: Geräte
+              - component: f7-col
+                config:
+                  style:
+                    flex-grow: 1
+                    text-align: right
+                slots:
+                  default:
+                    - component: Label
+                      config:
+                        class:
+                          - highlightModifier
+                          - "=(items[props.item_message_devices].state !== 'Alles ok') ? 'errorState' : 'normalState'"
+                        text: =items[props.item_message_devices].state
+        - component: f7-row
+          config:
+            style:
+              width: 100%
+          slots:
+            default:
+              - component: f7-col
+                config:
+                  style:
+                    display: flex
+                    flex-basis: 27px
+                    flex-grow: 0
+                    height: 100%
+                    padding-right: 3px
+                    text-align: left
+                slots:
+                  default:
+                    - component: svg
                       config:
                         style:
-                          display: flex
-                          flex-basis: 27px
-                          flex-grow: 0
-                          height: 100%
-                          padding-right: 3px
-                          text-align: left
+                          display: inline-block
+                          fill: var(--custom-default-color)
+                          stroke: var(--custom-default-color)
+                          width: 20px
+                        viewBox: 0 0 64 64
                       slots:
                         default:
-                          - component: svg
+                          - component: use
                             config:
-                              style:
-                                display: inline-block
-                                fill: var(--f7-card-footer-text-color)
-                                stroke: var(--f7-card-footer-text-color)
-                                width: 20px
-                              viewBox: 0 0 64 64
-                            slots:
-                              default:
-                                - component: use
-                                  config:
-                                    xlink:href: /static/shared/habpanel/svg/icons.svg#self_loudspeaker_grayscaled
-                    - component: f7-col
+                              xlink:href: /static/shared/habpanel/svg/icons.svg#self_sensor2_grayscaled
+              - component: f7-col
+                config:
+                  style:
+                    flex-grow: 0
+                    text-align: left
+                slots:
+                  default:
+                    - component: Label
+                      config:
+                        class: normalText
+                        text: Sensor
+              - component: f7-col
+                config:
+                  style:
+                    flex-grow: 1
+                    text-align: right
+                slots:
+                  default:
+                    - component: Label
+                      config:
+                        class:
+                          - highlightModifier
+                          - "=(items[props.item_watering_info].state === '3' && items[props.item_message_sensors].state == 'Giessen') ? 'warnState' : ((items[props.item_watering_info].state !== '3' || items[props.item_message_sensors].state !== 'Giessen') && items[props.item_message_sensors].state !== 'Alles ok' ? 'errorState' : 'normalState')"
+                        text: =items[props.item_message_sensors].state
+        - component: f7-row
+          config:
+            style:
+              width: 100%
+          slots:
+            default:
+              - component: f7-col
+                config:
+                  style:
+                    display: flex
+                    flex-basis: 27px
+                    flex-grow: 0
+                    height: 100%
+                    padding-right: 3px
+                    text-align: left
+                slots:
+                  default:
+                    - component: svg
                       config:
                         style:
-                          flex-grow: 0
-                          text-align: left
+                          display: inline-block
+                          fill: var(--custom-default-color)
+                          stroke: var(--custom-default-color)
+                          stroke-width: 3
+                          width: 20px
+                        viewBox: 0 0 64 64
                       slots:
                         default:
-                          - component: Label
+                          - component: use
                             config:
-                              class: normalText
-                              text: Benachrichtigung
-                    - component: f7-col
+                              xlink:href: /static/shared/habpanel/svg/icons.svg#self_info_grayscaled
+              - component: f7-col
+                config:
+                  style:
+                    flex-grow: 0
+                    text-align: left
+                slots:
+                  default:
+                    - component: Label
+                      config:
+                        class: normalText
+                        text: Technik
+              - component: f7-col
+                config:
+                  style:
+                    flex-grow: 1
+                    text-align: right
+                slots:
+                  default:
+                    - component: Label
+                      config:
+                        class:
+                          - highlightModifier
+                          - "=({'Lüftungsanlage Filter': 'warnState', 'Alles ok': 'normalState'})[items[props.item_message_main].state] || 'errorState'"
+                        text: =items[props.item_message_main].state
+        - component: f7-row
+          config:
+            style:
+              height: 20px
+              width: 100%
+        - component: f7-row
+          config:
+            style:
+              width: 100%
+          slots:
+            default:
+              - component: f7-col
+                config:
+                  style:
+                    display: flex
+                    flex-basis: 27px
+                    flex-grow: 0
+                    height: 100%
+                    padding-right: 3px
+                    text-align: left
+                slots:
+                  default:
+                    - component: svg
                       config:
                         style:
-                          flex-grow: 1
-                          text-align: right
+                          display: inline-block
+                          fill: var(--custom-default-color)
+                          stroke: var(--custom-default-color)
+                          width: 20px
+                        viewBox: 0 0 64 64
                       slots:
                         default:
-                          - component: Label
+                          - component: use
                             config:
-                              class:
-                                - highlightModifier
-                                - "=(items[props.item_security_notify].state === 'ON') ? 'normalState' : 'warnState'"
-                              text: "=(items[props.item_security_notify].state === 'ON') ? 'An' : 'Aus'"
+                              xlink:href: /static/shared/habpanel/svg/icons.svg#self_roomba_grayscaled
+              - component: f7-col
+                config:
+                  style:
+                    flex-grow: 0
+                    text-align: left
+                slots:
+                  default:
+                    - component: Label
+                      config:
+                        class: normalText
+                        text: Presenz
+              - component: f7-col
+                config:
+                  style:
+                    flex-grow: 1
+                    text-align: right
+                slots:
+                  default:
+                    - component: Label
+                      config:
+                        class:
+                          - highlightModifier
+                          - normalState
+                        text: |
+                          =({4:'Schlafen', 3: '(Schlafen)', 2: 'Anwesend', 1: '(Anwesend)', 0: Abwesend})[items[props.item_presence_state].state]
+        - component: f7-row
+          config:
+            style:
+              width: 100%
+          slots:
+            default:
+              - component: f7-col
+                config:
+                  style:
+                    display: flex
+                    flex-basis: 27px
+                    flex-grow: 0
+                    height: 100%
+                    padding-right: 3px
+                    text-align: left
+                slots:
+                  default:
+                    - component: svg
+                      config:
+                        style:
+                          display: inline-block
+                          fill: var(--custom-default-color)
+                          stroke: var(--custom-default-color)
+                          width: 20px
+                        viewBox: 0 0 64 64
+                      slots:
+                        default:
+                          - component: use
+                            config:
+                              xlink:href: /static/shared/habpanel/svg/icons.svg#openhab_settings_grayscaled
+              - component: f7-col
+                config:
+                  style:
+                    flex-grow: 0
+                    text-align: left
+                slots:
+                  default:
+                    - component: Label
+                      config:
+                        class: normalText
+                        text: Prog.
+              - component: f7-col
+                config:
+                  style:
+                    flex-grow: 1
+                    text-align: right
+                slots:
+                  default:
+                    - component: Label
+                      config:
+                        class:
+                          - highlightModifier
+                          - normalState
+                        text: =items[props.item_message_auto].state
+        - component: f7-row
+          config:
+            style:
+              width: 100%
+          slots:
+            default:
+              - component: f7-col
+                config:
+                  style:
+                    display: flex
+                    flex-basis: 27px
+                    flex-grow: 0
+                    height: 100%
+                    padding-right: 3px
+                    text-align: left
+                slots:
+                  default:
+                    - component: svg
+                      config:
+                        style:
+                          display: inline-block
+                          fill: var(--custom-default-color)
+                          stroke: var(--custom-default-color)
+                          width: 20px
+                        viewBox: 0 0 64 64
+                      slots:
+                        default:
+                          - component: use
+                            config:
+                              xlink:href: /static/shared/habpanel/svg/icons.svg#self_loudspeaker_grayscaled
+              - component: f7-col
+                config:
+                  style:
+                    flex-grow: 0
+                    text-align: left
+                slots:
+                  default:
+                    - component: Label
+                      config:
+                        class: normalText
+                        text: Benachrichtigung
+              - component: f7-col
+                config:
+                  style:
+                    flex-grow: 1
+                    text-align: right
+                slots:
+                  default:
+                    - component: Label
+                      config:
+                        class:
+                          - highlightModifier
+                          - "=(items[props.item_security_notify].state === 'ON') ? 'normalState' : 'warnState'"
+                        text: "=(items[props.item_security_notify].state === 'ON') ? 'An' : 'Aus'"
