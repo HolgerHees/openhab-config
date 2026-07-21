@@ -47,5 +47,5 @@ widgets:
                   href: "/static/shared/widgets/camera.css"
               - component: oh-image
                 config:
-                  onload: "='mvCamera.build(event, \\'https://frigate.smartmarvin.de/' + props.image_url + '\\', \\'https://frigate.smartmarvin.de/' + props.video_url + '\\')'"
-                  url: ='https://frigate.smartmarvin.de/' + props.image_url
+                  onload: "='mvCamera.build(event, \\'' + props.image_url + '\\', \\'' + props.video_url + '\\')'"
+                  url: = props.image_url

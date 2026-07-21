@@ -14,5 +14,5 @@ widgets:
         overflow: hidden
         padding: 0
         margin: 0
-      src: https://openhab.smartmarvin.de/basicui/app
+      src: /basicui/app
 
