@@ -1,5 +1,5 @@
 from openhab import rule, Registry
-from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger
+from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger, SystemStartlevelTrigger
 
 from datetime import datetime
 
@@ -34,9 +34,10 @@ class MeterConsumption:
         consumption += Registry.getItemState("pGF_Utilityroom_Electricity_Heatpump_Electric_Meter_Consumption").doubleValue()
 
         consumption_saved = Registry.getItemState("pGF_Utilityroom_Electricity_State_Heatpump_Total_Consumption",scope.DecimalType(0.0)).doubleValue()
+
         if consumption < consumption_saved:
             new_offset = consumption_saved - ( consumption - start_electricity_meter_offset)
-            self.logger.error("{}: Calculation is wrong ('{}' < '{}'). Set 'start offset' to '{}'".format(mapping[0], consumption, consumption_saved, new_offset ))
+            self.logger.error("{}: Calculation is wrong ('{}' < '{}'). Set 'start offset' to '{}'".format(consumption, consumption_saved, new_offset ))
             return
 
         # *** Gesamtverbrauch ***
@@ -45,8 +46,6 @@ class MeterConsumption:
         # *** Tagesverbrauch ***
         consumption_today_morning = ToolboxHelper.getPersistedState("pGF_Utilityroom_Electricity_State_Heatpump_Total_Consumption", datetime.now().astimezone().replace(hour=0, minute=0, second=0, microsecond=0) ).doubleValue()
         Registry.getItem("pGF_Utilityroom_Electricity_State_Heatpump_Daily_Consumption").postUpdateIfDifferent(consumption - consumption_today_morning)
-
-
 
         if input['event'].getType() == "TimerEvent":
             Registry.getItem("pGF_Utilityroom_Electricity_State_Heatpump_Heating_Daily_Consumption").postUpdateIfDifferent(0)

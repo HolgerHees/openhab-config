@@ -1,6 +1,6 @@
 #version: 1
 pages:
-  overview2:
+  page_bacdc58c7a:
     tags: []
     props:
       parameters: []
@@ -50,23 +50,32 @@ pages:
           --custom-accent-color-dark: var(--custom-blue-dark);
           --custom-legend-font-size: 16px; //var(--f7-card-header-font-size);
           --custom-default-font-size: 19px; //var(--f7-card-header-font-size);
-          --custom-default-color: white; //var(--f7-card-footer-text-color);
+          --custom-head-font-size: 26px;
+          --custom-default-color: #FFFFFFAA; //white; //var(--f7-card-footer-text-color);
+          --custom-value-color: #FFFFFF; //white; //var(--f7-card-footer-text-color);
+          --custom-control-color: #FFFFFFDE;
           --custom-error-state: var(--custom-red);
           --custom-warn-state: #ffa500;
           --custom-active-state: var(--custom-green);
-          --custom-default-state: var(--custom-default-color);
+          --custom-default-state: var(--custom-value-color);
           --custom-widget-padding: 4%;
           --f7-theme-color: var(--custom-accent-color);
           --f7-button-fill-bg-color: var(--custom-accent-color-dark);
+          --f7-popup-tablet-width: 829px;
+          --f7-popup-tablet-height: 700px;
+          --f7-card-header-min-height: auto;
         }
         * {
           font-size: var(--custom-default-font-size);
-          font-weight: 250;
+          font-weight: 200;
         }
         .highlightModifier *,
         .highlightModifier {
           font-weight: 350;
         }
+        //unimportantModifier {
+        //  opacity: 0.8;
+        //}
         .lengendModifier *,
         .lengendModifier {
           font-size: var(--custom-legend-font-size);
@@ -81,10 +90,10 @@ pages:
           color: var(--custom-active-state);
         }
         .normalState {
-          color: var(--custom-default-color);
+          color: var(--custom-value-color);
         }
         .normalText {
-          color: var(--custom-default-state);
+          color: var(--custom-default-color);
         }
         div.circuiteActive {
           color: var(--custom-green);
@@ -99,10 +108,10 @@ pages:
           stroke: red;
         }
         svg.floor_actions .shutterAvailable.shutterDown {
-          fill: var(--custom-green-dark)
+          fill: var(--custom-green-dark);
         }
         .shutterDownAdvise svg.floor_actions .shutterAvailable {
-          fill: #ffa500
+          fill: #ffa500;
         }
         svg.floor_actions .contactOpen {
           fill: var(--custom-red-dark);
@@ -129,15 +138,15 @@ pages:
           padding-right: 5px;
         }
         div.sensorMain::after {
-          opacity: 0.7 !important;
+          opacity: 0.5 !important;
         }
         div.sensorMain {
-          color: var(--custom-default-color);
+          color: var(--custom-value-color);
           font-size: 1.5em;
           font-weight: 350;
         }
         div.sensorSub {
-          color: var(--custom-default-color);
+          color: var(--custom-value-color);
           font-size: 1.0em;
           font-weight: 300;
         }
@@ -150,7 +159,7 @@ pages:
         div.sensorSpeedSuffix::after {
           font-size: 0.7em;
           vertical-align: text-top;
-          opacity: 0.9;
+          opacity: 0.7;
           font-weight: 200;
         }
         div.sensorEnergySuffix::after {
@@ -181,7 +190,7 @@ pages:
             h: 2
             w: 7
             x: 0
-            y: 3
+            y: 0
           slots:
             default:
               - component: widget:widget_weather_station
@@ -190,7 +199,7 @@ pages:
             h: 2
             w: 2
             x: 7
-            y: 3
+            y: 0
           slots:
             default:
               - component: widget:widget_room_temperatur_sensor
@@ -203,11 +212,13 @@ pages:
             h: 2
             w: 9
             x: 0
-            y: 5
+            y: 2
           slots:
             default:
               - component: widget:widget_weather_forecast
-                config: {}
+                config:
+                  dashboard_url: https://smartmarvin.de/weather_service/widgetTodayDashboard/
+                  detail_url: https://smartmarvin.de/weather_service/detailOverview/?withoutToday=1
         - component: oh-grid-item
           config:
             h: 3
@@ -218,8 +229,8 @@ pages:
             default:
               - component: widget:widget_camera
                 config:
-                  image_url: /api/toolshed/latest.jpg?height=300&quality=80
-                  video_url: /live/mse/api/ws?src=toolshed_main
+                  image_url: https://frigate.smartmarvin.de/api/toolshed/latest.jpg?height=300&quality=80
+                  video_url: https://frigate.smartmarvin.de/live/mse/api/ws?src=toolshed_main
         - component: oh-grid-item
           config:
             h: 4
@@ -244,7 +255,7 @@ pages:
             h: 3
             w: 3
             x: 0
-            y: 0
+            y: 4
           slots:
             default:
               - component: widget:widget_device_energy
@@ -259,44 +270,44 @@ pages:
             default:
               - component: widget:widget_camera
                 config:
-                  image_url: /api/streedside/latest.jpg?height=300&quality=80
-                  video_url: /live/mse/api/ws?src=streedside_main
+                  image_url: https://frigate.smartmarvin.de/api/streedside/latest.jpg?height=300&quality=80
+                  video_url: https://frigate.smartmarvin.de/live/mse/api/ws?src=streedside_main
         - component: oh-grid-item
           config:
-            x: 9
-            y: 7
             h: 1
             w: 8
+            x: 9
+            y: 7
           slots:
             default:
               - component: widget:widget_welcome
                 config: {}
         - component: oh-grid-item
           config:
-            x: 9
-            y: 0
             h: 7
             w: 8
+            x: 9
+            y: 0
           slots:
             default:
               - component: widget:widget_floorplan
                 config: {}
         - component: oh-grid-item
           config:
-            x: 3
-            y: 0
             h: 3
             w: 3
+            x: 3
+            y: 4
           slots:
             default:
               - component: widget:widget_device_ventilation
                 config: {}
         - component: oh-grid-item
           config:
-            x: 6
-            y: 0
             h: 3
             w: 3
+            x: 6
+            y: 4
           slots:
             default:
               - component: widget:widget_device_heating

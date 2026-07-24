@@ -16,7 +16,7 @@ slots:
           left: 52%
           position: absolute
           top: 45%
-        text: =Number.parseFloat(items['pFF_Attic_Air_Sensor_Temperature_Value'].state).toFixed(1)
+        text: =items['pFF_Attic_Air_Sensor_Temperature_Value'].numericState.toFixed(1)
     - component: Label
       config:
         class:
@@ -27,7 +27,7 @@ slots:
           left: 52%
           position: absolute
           top: 54%
-        text: =Number.parseInt(items['pFF_Attic_Air_Sensor_Humidity_Value'].state)
+        text: =items['pFF_Attic_Air_Sensor_Humidity_Value'].numericState
     - component: oh-link
       config:
         action: command

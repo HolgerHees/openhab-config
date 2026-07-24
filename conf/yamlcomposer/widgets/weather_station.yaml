@@ -59,7 +59,9 @@ widgets:
           type: TEXT
       parameterGroups: []
     component: f7-card
-    config: {}
+    config:
+      style:
+        position: relative
     slots:
       default:
         - component: f7-card-header
@@ -74,6 +76,9 @@ widgets:
               - component: div
                 config:
                   style:
+                    position: absolute
+                    top: -6px
+                    right: 16px
                     display: flex
                     gap: 5px
                 slots:
@@ -83,12 +88,12 @@ widgets:
                         default:
                           - component: oh-clock
                             config:
-                              format: dddd [, der] D. MMMM YYYY
+                              format: dddd [,] D. MMMM
                               class:
                                 - highlightModifier
                               style:
                                 color: var(--custom-value-color)
-                                font-size: var(--custom-default-font-size)
+                                font-size: var(--custom-head-font-size)
                     - component: f7-cell
                       slots:
                         default:
@@ -99,7 +104,7 @@ widgets:
                                 - highlightModifier
                               style:
                                 color: var(--custom-value-color)
-                                font-size: var(--custom-default-font-size)
+                                font-size: var(--custom-head-font-size)
         - component: f7-card-footer
           config:
             style:
@@ -148,7 +153,7 @@ widgets:
                                 position: absolute
                                 right: var(--custom-widget-padding)
                                 top: var(--custom-widget-padding)
-                              text: =Number.parseFloat(items[props.item_temperature].state).toFixed(1)
+                              text: =items[props.item_temperature].numericState.toFixed(1)
                           - component: div
                             config:
                               style:
@@ -169,7 +174,7 @@ widgets:
                                       - sensorSub
                                       - sensorSuffix
                                       - sensorTemperatureSuffix
-                                    text: =Number.parseFloat(items[props.item_temperature_perceived].state).toFixed(1)
+                                    text: =items[props.item_temperature_perceived].numericState.toFixed(1)
                                 - component: Label
                                   config:
                                     class:
@@ -185,7 +190,7 @@ widgets:
                                 bottom: var(--custom-widget-padding)
                                 position: absolute
                                 right: var(--custom-widget-padding)
-                              text: =Number.parseInt(items[props.item_humidity].state)
+                              text: =items[props.item_humidity].numericState
                     - component: f7-col
                       config:
                         style:
@@ -219,7 +224,7 @@ widgets:
                                 position: absolute
                                 right: var(--custom-widget-padding)
                                 top: var(--custom-widget-padding)
-                              text: =Number.parseFloat(items[props.item_rain_rate].state).toFixed(1)
+                              text: =items[props.item_rain_rate].numericState.toFixed(1)
                           - component: div
                             config:
                               style:
@@ -241,7 +246,7 @@ widgets:
                                       - sensorSub
                                       - sensorSuffix
                                       - sensorMillimeterSuffix
-                                    text: =Number.parseInt(items[props.item_rain_daily].state)
+                                    text: =items[props.item_rain_daily].numericState
                     - component: f7-col
                       config:
                         style:
@@ -275,7 +280,7 @@ widgets:
                                 position: absolute
                                 right: var(--custom-widget-padding)
                                 top: var(--custom-widget-padding)
-                              text: =Number.parseFloat(items[props.item_wind_speed].state).toFixed(1)
+                              text: =items[props.item_wind_speed].numericState.toFixed(1)
                           - component: Label
                             config:
                               class:
@@ -285,7 +290,7 @@ widgets:
                                 position: absolute
                                 right: var(--custom-widget-padding)
                                 top: 50%
-                                transform: translate(0, -55%)
+                                transform: translate(0, -80%) scale(0.8)
                               text: =items[props.item_wind_direction].state
                           - component: div
                             config:
@@ -308,4 +313,4 @@ widgets:
                                       - sensorSub
                                       - sensorSuffix
                                       - sensorSpeedSuffix
-                                    text: =Number.parseFloat(items[props.item_wind_gust].state).toFixed(1)
+                                    text: =items[props.item_wind_gust].numericState.toFixed(1)

@@ -57,7 +57,7 @@ widgets:
     component: oh-card
     config:
       action: popup
-      actionModal: widget:widget_sitemap
+      actionModal: widget:widget_popup_sitemap
       stylesheet: |
         div.row div.col:first-child {
           margin: auto;
@@ -394,7 +394,7 @@ widgets:
                           - highlightModifier
                           - normalState
                         text: |
-                          =({4:'Schlafen', 3: '(Schlafen)', 2: 'Anwesend', 1: '(Anwesend)', 0: Abwesend})[items[props.item_presence_state].state]
+                          =({4:'Schlafen', 3: '(Schlafen)', 2: 'Anwesend', 1: '(Anwesend)', 0: 'Abwesend'})[items[props.item_presence_state].state]
         - component: f7-row
           config:
             style:

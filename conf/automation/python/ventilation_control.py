@@ -73,9 +73,12 @@ class SummaryMessage:
     def execute(self, module, input):
         mode = Registry.getItemState("pGF_Utilityroom_Ventilation_Auto_Mode")
         fan_level = Registry.getItemState("pGF_Utilityroom_Ventilation_Fan_Level")
-        status = Registry.getItemState("pGF_Utilityroom_Ventilation_Clime_Headpump_Status")
 
-        msg = "{} - Stufe {} - {}".format("Manuel" if mode == scope.OFF else "Auto", fan_level, Transformation.transform("MAP", "ventilation_clime_state.map", status.toString()))
+        status = Registry.getItemState("pGF_Utilityroom_Ventilation_Clime_Headpump_Status")
+        power = Registry.getItemState("pGF_Utilityroom_Ventilation_Clime_Power")
+        state_msg = Transformation.transform("MAP", "ventilation_clime_state.map", status.toString()) if power == scope.ON else "Ausgeschaltet"
+
+        msg = "{} - Stufe {} - {}".format("Manuel" if mode == scope.OFF else "Auto", fan_level, state_msg)
 
         Registry.getItem("pGF_Utilityroom_Ventilation_Summary_Message").postUpdateIfDifferent(msg)
 
@@ -300,32 +303,30 @@ class FanLevel:
                 # Sleep
                 if presence_state in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
                     new_level = 1
-                # Away since 60 minutes
-                elif presence_state in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT] and Registry.getItem("pOther_Presence_State").getLastStateChange() < ( now - timedelta(minutes=60) ):
-                    new_level = 1
                 else:
-                    new_level = 2
+                    # Away since 60 minutes
+                    if presence_state in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT] and Registry.getItem("pOther_Presence_State").getLastStateChange() < ( now - timedelta(minutes=60) ):
+                        new_level = 1
+                    else:
+                        new_level = 2
 
-                    # possible boost for cooling
-                    hour = now.hour
-                    if hour >= 7 and hour < 22:
-                        diff = indoor_temperature - Registry.getItemState("pGF_Utilityroom_Ventilation_Clime_Target_Temperature").doubleValue()
-
-                        is_cooling = Registry.getItemState("pGF_Utilityroom_Heatpump_Auto_Mode").intValue() == HeatingHelper.STATE_MODE_COOLING
-
-                        # => is_cooling => true => starts if 1 °C too warm
-                        # => is_cooling => false => starts if 1 + diff_offset (2) °C too warm
-                        diff_offset = 0 if is_cooling else 2
-                        if diff > 1.0 + diff_offset: # activate if temp is 1.0°C to warm
-                            new_level = 3
-                        elif diff > 0.5 + diff_offset and current_level == 3:  # stay activate if temp is still 0.5°C to warm
-                            new_level = 3
+                    is_cooling = Registry.getItemState("pGF_Utilityroom_Heatpump_Auto_Mode").intValue() == HeatingHelper.STATE_MODE_COOLING
+                    if is_cooling:
+                      # possible boost for cooling
+                      hour = now.hour
+                      if hour >= 7 and hour < 22:
+                          diff = indoor_temperature - Registry.getItemState("pGF_Utilityroom_Ventilation_Clime_Target_Temperature").doubleValue()
+                          # => is_cooling => true => starts if 1 °C too warm
+                          if diff >= 1.0: # activate if temp is 1.0°C to warm
+                              new_level = 3
+                          elif diff >= 0.5 and current_level == 3:  # stay activate if temp is still 0.5°C to warm
+                              new_level = 3
 
             if new_level != current_level:
                 # 1. 'event' in input.keys() is an presence or auto mode change
                 # 2. is cron triggered event
                 # => .getLastChange check to prevent level flapping on temperature changes
-                if eventSourceItem == "pGF_Utilityroom_Ventilation_Auto_Mode" or Registry.getItem("pGF_Utilityroom_Ventilation_Fan_Level").getLastStateChange() < ( now - timedelta(minutes=15) ):
+                if eventSourceItem in ["pGF_Utilityroom_Ventilation_Auto_Mode","pGF_Utilityroom_Heatpump_Auto_Mode","pOther_Presence_State"] or Registry.getItem("pGF_Utilityroom_Ventilation_Fan_Level").getLastStateChange() < ( now - timedelta(minutes=15) ):
                     self.last_refresh = now
                     Registry.getItem("pGF_Utilityroom_Ventilation_Fan_Level").sendCommand(new_level, "FanLevelAutomatic")
                 else:

@@ -16,7 +16,7 @@ slots:
           left: 15%
           position: absolute
           top: 8%
-        text: =Number.parseFloat(items['pToolshed_Sensor_Temperature_Value'].state).toFixed(1)
+        text: =items['pToolshed_Sensor_Temperature_Value'].numericState.toFixed(1)
     - component: Label
       config:
         class:
@@ -27,7 +27,7 @@ slots:
           left: 15%
           position: absolute
           top: 18%
-        text: =Number.parseInt(items['pToolshed_Sensor_Humidity_Value'].state)
+        text: =items['pToolshed_Sensor_Humidity_Value'].numericState
     - component: oh-link
       config:
         action: command

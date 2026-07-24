@@ -48,4 +48,4 @@ widgets:
               - component: oh-image
                 config:
                   onload: "='mvCamera.build(event, \\'' + props.image_url + '\\', \\'' + props.video_url + '\\')'"
-                  url: = props.image_url
+                  url: =props.image_url

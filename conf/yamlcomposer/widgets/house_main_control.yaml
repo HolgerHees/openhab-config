@@ -78,6 +78,7 @@ widgets:
                               style:
                                 height: 50px
                                 padding-bottom: 10px
+                                color: var(--custom-control-color)
                               text: Garten Licht
                           - component: oh-button
                             config:
@@ -124,6 +125,7 @@ widgets:
                               style:
                                 height: 50px
                                 padding-bottom: 15px
+                                color: var(--custom-control-color)
                               text: Decken Licht
                           - component: oh-block
                             config:
@@ -156,6 +158,7 @@ widgets:
                               style:
                                 height: 50px
                                 padding-bottom: 15px
+                                color: var(--custom-control-color)
                               text: Indirektes Licht
                           - component: oh-block
                             config:
@@ -183,11 +186,16 @@ widgets:
                           height: 100%
                       slots:
                         default:
-                          - component: Label
+                          - component: oh-link
                             config:
+                              action: popup
+                              actionModal: widget:widget_popup_rollershutter
                               style:
-                                height: 50px
+                                height: 65px
                                 padding-bottom: 10px
+                                #white-space: auto
+                                color: var(--custom-control-color)
+                                font-size: var(--custom-default-font-size)
                               text: Alle Rolläden
                           - component: oh-button
                             config:

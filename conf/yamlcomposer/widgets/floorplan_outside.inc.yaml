@@ -36,7 +36,7 @@ slots:
           - component: svg
             config:
               class:
-                - "=items['pOutdoor_Terrace_Light_Brightness'].state !== '0' ? 'lightActive' : (items['pOutdoor_Terrace_Automatic_Switch'].state === 'ON' ? 'lightAuto' : 'lightDisabled')"
+                - "=items['pOutdoor_Terrace_Light_Brightness'].numericState !== 0 ? 'lightActive' : (items['pOutdoor_Terrace_Automatic_Switch'].state === 'ON' ? 'lightAuto' : 'lightDisabled')"
               height: 64px
               id: light_terrace
               width: 64px

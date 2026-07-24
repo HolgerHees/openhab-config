@@ -3,12 +3,46 @@ widgets:
   widget_weather_forecast:
     tags: []
     props:
-      parameters: []
+      parameters:
+        - label: Dashboard url
+          name: dashboard_url
+          required: false
+          type: TEXT
+      parameters:
+        - label: Detail url
+          name: detail_url
+          required: false
+          type: TEXT
       parameterGroups: []
-    component: oh-webframe-card
+    component: div
     config:
-      height: 122px
       style:
-        overflow: visible
-        padding: 0 5px
-      src: https://smartmarvin.de/weather_service/widgetTodayDashboard/
+        position: relative
+        padding: 10px
+    slots:
+      default:
+        - component: oh-webframe-card
+          config:
+            height: 122px
+            class:
+              - oh-grid-item-content
+            style:
+              overflow: visible
+            src: =props.dashboard_url
+        - component: oh-card
+          config:
+            action: popup
+            actionModal: widget:widget_popup_weather_forecast
+            actionModalConfig:
+              detail_url: =props.detail_url
+            class:
+              - oh-grid-item-content
+            style:
+              position: absolute
+              inset: 0 0 0 0
+              background-color: transparent
+            stylesheet: |
+              .card-content {
+                height: 100%;
+              }
+

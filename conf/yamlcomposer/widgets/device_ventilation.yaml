@@ -29,6 +29,12 @@ widgets:
           required: false
           type: TEXT
         - context: item
+          default: pGF_Utilityroom_Ventilation_Clime_Headpump_Power
+          label: Leistung
+          name: item_headpump_power
+          required: false
+          type: TEXT
+        - context: item
           default: pGF_Utilityroom_Ventilation_Bypass_State
           label: Bypass
           name: item_bypass
@@ -41,7 +47,7 @@ widgets:
           required: false
           type: TEXT
       parameterGroups: []
-    component: div
+    component: oh-card
     config:
       class:
         - oh-grid-item-content
@@ -49,7 +55,14 @@ widgets:
       style:
         position: relative
         overflow: visible
+      action: popup
+      actionModal: widget:widget_popup_ventilation
       stylesheet: |
+        .card-content {
+          width: 100%;
+          height: 100%;
+          box-sizing: border-box;
+        }
         div,
         svg {
           position: absolute;
@@ -66,13 +79,13 @@ widgets:
           animation: rotating 8s linear infinite;
         }
         .rotating1 {
-          animation: rotating 6s linear infinite;
-        }
-        .rotating2 {
           animation: rotating 4s linear infinite;
         }
-        .rotating3 {
+        .rotating2 {
           animation: rotating 2s linear infinite;
+        }
+        .rotating3 {
+          animation: rotating 1s linear infinite;
         }
         svg.roomAir g path.top    { animation-duration: 1.5s; animation-delay: 0.5s; }
         svg.roomAir g path.middle { animation-duration: 1.3s; }
@@ -94,7 +107,7 @@ widgets:
           }
         }
     slots:
-      default:
+      content:
         - component: Label
           config:
             style:
@@ -111,12 +124,12 @@ widgets:
           config:
             style:
               fill: transparent;
-              stroke: "=['5','21'].includes(items[props.item_headpump_status].state) ? 'var(--custom-blue)' : 'var(--custom-default-color)'"
+              stroke: "=[5,21].includes(items[props.item_headpump_status].numericState) ? 'var(--custom-blue)' : 'var(--custom-default-color)'"
               left: 50%
               top: 28px
               width: 30px
               height: 30px
-              opacity: "=(['5','21'].includes(items[props.item_headpump_status].state) ? '0.7' : '0.4')"
+              opacity: "=([5,21].includes(items[props.item_headpump_status].numericState) ? '0.7' : '0.4')"
               transform: translate(-50%,0) rotate(-90deg)
             class:
               - roomAir
@@ -168,13 +181,13 @@ widgets:
         - component: svg
           config:
             style:
-              fill: "=items[props.item_bypass].state == '0' ? 'var(--custom-green)' : 'var(--custom-blue)'"
+              fill: "=items[props.item_bypass].numericState == 0 ? 'var(--custom-green)' : 'var(--custom-blue)'"
               stroke-width: 0
               left: 10%
               bottom: 39px
               width: 30px
               height: 30px
-              opacity: "=items[props.item_bypass].state == '0' ? '0.6' : '0.7'"
+              opacity: "=items[props.item_bypass].numericState == 0 ? '0.6' : '0.7'"
             viewBox: 0 0 64 64
           slots:
             default:
@@ -190,7 +203,6 @@ widgets:
               left: 51px
               bottom: 68px
               transform: translate(0,50%) rotate(-45deg)
-              visibility: "Number.parseFloat(items[props.item_power_consumption].state) > 0 ? 'visible' : 'hidden'"
           slots:
             default:
               - !include { file: device_energy_line.inc.yaml, vars: {uid: "ventilation_path_bypass", width: 30, height: 10, direction: "right"}}
@@ -202,7 +214,7 @@ widgets:
               bottom: 12px
             class:
               - normalState
-              - "=items[props.item_bypass].state != '0' ? 'highlightModifier' : ''"
+              - "=items[props.item_bypass].numericState != 0 ? 'highlightModifier' : ''"
               - sensorPercentSuffix
             text: "=items[props.item_bypass].state"
 
@@ -210,13 +222,13 @@ widgets:
           config:
             style:
               fill: transparent
-              stroke: "=(['5','21'].includes(items[props.item_headpump_status].state) ? 'var(--custom-blue)' : 'var(--custom-default-color)')"
+              stroke: "=([5,21].includes(items[props.item_headpump_status].numericState) ? 'var(--custom-blue)' : 'var(--custom-default-color)')"
               stroke-width: 1.0px
               left: "calc(50% - 30px)"
               top: "calc(50% - 30px)"
               width: 60px
               height: 60px
-              opacity: "=(['5','21'].includes(items[props.item_headpump_status].state) ? '0.7' : '0.4')"
+              opacity: "=([5,21].includes(items[props.item_headpump_status].numericState) ? '0.7' : '0.4')"
             viewBox: 0 0 64 64
             class:
               - "='rotating' + items[props.item_fan_level].state"
@@ -241,13 +253,13 @@ widgets:
           config:
             style:
               fill: transparent
-              stroke: "=(['5','21'].includes(items[props.item_headpump_status].state) ? 'var(--custom-blue)' : 'var(--custom-default-color)')"
+              stroke: "=([5,21].includes(items[props.item_headpump_status].numericState) ? 'var(--custom-blue)' : 'var(--custom-default-color)')"
               stroke-width: 0.8
               right: 22px
               bottom: 39px
               width: 30px
               height: 30px
-              opacity: "=(['5','21'].includes(items[props.item_headpump_status].state) ? '0.7' : '0.4')"
+              opacity: "=([5,21].includes(items[props.item_headpump_status].numericState) ? '0.7' : '0.4')"
             viewBox: 0 0 64 64
           slots:
             default:
@@ -263,7 +275,7 @@ widgets:
               right: 51px
               bottom: 68px
               transform: translate(0,50%) rotate(45deg)
-              visibility: "Number.parseFloat(items[props.item_power_consumption].state) > 0 ? 'visible' : 'hidden'"
+              visibility: "=items[props.item_headpump_power].numericState > 0 ? 'visible' : 'hidden'"
           slots:
             default:
               - !include { file: device_energy_line.inc.yaml, vars: {uid: "ventilation_path_cooling", width: 30, height: 10, direction: "left"}}
@@ -275,9 +287,9 @@ widgets:
               bottom: 12px
             class:
               - normalState
-              - "=Number.parseFloat(items[props.item_power_consumption].state) > 50 ? 'highlightModifier' : ''"
+              - "=items[props.item_power_consumption].numericState > 50 ? 'highlightModifier' : ''"
               - sensorEnergySuffix
-            text: "=(Number.parseFloat(items[props.item_power_consumption].state) / 1000.0).toFixed(1)"
+            text: "=(items[props.item_power_consumption].numericState / 1000.0).toFixed(2)"
 
         #- component: Label
         #  config:

@@ -15,6 +15,9 @@ widgets:
     config: {}
     slots:
       default:
+        #- component: script
+        #  config:
+        #    text: "if( localStorage.getItem('openhab.ui:panel.visibleBreakpointDisabled') == 'false'){ localStorage.setItem('openhab.ui:panel.visibleBreakpointDisabled', 'true'); window.location.reload(); }"
         - component: f7-card-content
           config:
             style:

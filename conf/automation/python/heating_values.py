@@ -2,6 +2,10 @@ from openhab import rule, Registry
 from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger, SystemStartlevelTrigger
 from openhab.actions import Transformation
 
+from datetime import datetime, timedelta
+
+from shared.toolbox import ToolboxHelper
+
 import scope
 
 
@@ -115,26 +119,69 @@ class HeatpumpWarmwasserInfo:
 
 @rule(
     triggers = [
+        #SystemStartlevelTrigger(80),
+        GenericCronTrigger("0 */15 * * * ?")
+    ]
+)
+class HeatpumpSolarEnergy:
+    def execute(self, module, input):
+        now = datetime.now().astimezone()
+        energy_in_watt_second = Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Power").getPersistence("jdbc").riemannSumBetween(now - timedelta(minutes=15), now).doubleValue()
+
+        energy = round(energy_in_watt_second / 60 / 60 / 1000, 3) # W/s => kW/h
+
+        #self.logger.info("SOLAR THERMIE DEBUG: ENERGY: {:.3f}".format(energy))
+
+        zaehler_stand_current = Registry.getItemState("pGF_Utilityroom_Heatpump_Solar_Energy_Total").doubleValue()
+        zaehler_stand_current += energy
+
+        Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Energy_Total").postUpdate(zaehler_stand_current)
+
+        zaehler_stand_heute_morgen = ToolboxHelper.getPersistedState("pGF_Utilityroom_Heatpump_Solar_Energy_Total", now.replace(hour=0, minute=0, second=0, microsecond=0) ).doubleValue()
+        Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Energy_Daily").postUpdateIfDifferent(zaehler_stand_current - zaehler_stand_heute_morgen)
+
+#now = datetime.now().astimezone()
+#energy_in_watt_second = Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Power").getPersistence("jdbc").riemannSumBetween(now - timedelta(minutes=1), now).doubleValue()
+#print(energy_in_watt_second)
+#print(round(energy_in_watt_second / 60 / 60 / 1000, 3))
+
+#start_of_the_day = datetime.now().astimezone().replace(hour=0, minute=0, second=0, microsecond=0)
+#Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Energy_Total").getPersistence("jdbc").persist(start_of_the_day, 0)
+#print(ToolboxHelper.getPersistedState("pGF_Utilityroom_Heatpump_Solar_Energy_Total", datetime.now().astimezone().replace(hour=0, minute=0, second=0, microsecond=0) ).doubleValue())
+#print(Registry.getItemState("pGF_Utilityroom_Heatpump_Solar_Energy_Total").doubleValue())
+
+@rule(
+    triggers = [
         ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_Solar_Temperature_Vorlauf"),
         ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_Solar_Temperature_Ruecklauf")
     ]
 )
 class HeatpumpSolarInfo:
     def execute(self, module, input):
-        max_flow = 240 * 60.0 # l/min
+        messured_power = Registry.getItemState("pGF_Utilityroom_Heatpump_Solar_Power_Current_Test").doubleValue()
+        pump_level = Registry.getItemState("pGF_Utilityroom_Heatpump_Solar_Pump_State").intValue()
 
         vorlauf = Registry.getItemState("pGF_Utilityroom_Heatpump_Solar_Temperature_Vorlauf").doubleValue()
         ruecklauf = Registry.getItemState("pGF_Utilityroom_Heatpump_Solar_Temperature_Ruecklauf").doubleValue()
-        pump_level = Registry.getItemState("pGF_Utilityroom_Heatpump_Solar_Pump_State").intValue()
-
-        messured_power = Registry.getItemState("pGF_Utilityroom_Heatpump_Solar_Power").doubleValue()
-
-        current_flow = ( pump_level * max_flow / 100.0 )
-        temp_diff = ruecklauf - vorlauf
+        temp_diff = vorlauf - ruecklauf
         if temp_diff < 0:
             temp_diff = 0
 
-        calculated_power = current_flow * temp_diff * 0.7
+        if pump_level == 0:
+          current_flow = 0
+          #self.logger.info("SOLAR THERMIE DEBUG: INACTIVE")
+        else:
+          max_flow = 240 / 60 # l/min
+          current_flow = ( pump_level * max_flow / 100.0 )
 
-        self.logger.info("{} {} {} {}".format(vorlauf, ruecklauf, temp_diff, pump_level) )
-        self.logger.info("SOLAR THERMIE DEBUG: CALC POWER: {}, MESSURED POWER: {}".format(calculated_power, messured_power))
+
+        #self.logger.info(str(current_flow))
+        Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Flow").postUpdate(current_flow)
+
+        calculated_power = round(((current_flow * 3.7 * temp_diff) / 60) * 1000)
+
+        Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Power").postUpdate(calculated_power)
+
+        #self.logger.info("SOLAR THERMIE DEBUG: MESSURED POWER: {:.1f}, CALC POWER: {:.1f}, Flow: {:.1f}, Vorlauf: {:.1f}, Rücklauf: {:.1f}, Diff: {:.1f}, Pump Level: {:.1f}".format(messured_power, calculated_power, current_flow, vorlauf, ruecklauf, temp_diff, pump_level))
+
+Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Flow").postUpdate(2.1)

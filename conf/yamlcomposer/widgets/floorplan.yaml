@@ -28,6 +28,27 @@ widgets:
               position: absolute
               font-size: 0.8em
               opacity: 0.8
+              left: 5.5%
+              top: 22%
+            text: Schuppen
+        - component: div
+          config:
+            style:
+              position: absolute
+              width: 270px
+              aspect-ratio: 1.35869565217 # 1000 736
+              top: 5px
+              left: 15px
+          slots:
+            default:
+              - !include floorplan_gardenhouse.inc.yaml
+
+        - component: Label
+          config:
+            style:
+              position: absolute
+              font-size: 0.8em
+              opacity: 0.8
               left: 20%
               bottom: 0
             text: Südseite
@@ -107,27 +128,6 @@ widgets:
           slots:
             default:
               - !include floorplan_attic.inc.yaml
-
-        - component: Label
-          config:
-            style:
-              position: absolute
-              font-size: 0.8em
-              opacity: 0.8
-              left: 5.5%
-              top: 22%
-            text: Schuppen
-        - component: div
-          config:
-            style:
-              position: absolute
-              width: 270px
-              aspect-ratio: 1.35869565217 # 1000 736
-              top: 5px
-              left: 15px
-          slots:
-            default:
-              - !include floorplan_gardenhouse.inc.yaml
 
         - component: Label
           config:

@@ -173,13 +173,25 @@ Number:Energy       pGF_Utilityroom_Heatpump_Statistik_Elektro_gestern     "Elek
 Number:Energy       pGF_Utilityroom_Heatpump_Statistik_Elektro_monat       "Elektro monat [%d %unit%]"              <selfenergy> ( eGF_Utilityroom_Heatpump_Stats ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_stats_electro:Statistik_Elektro_monat:number" [ profile="modbus:gainOffset", gain="1 kWh", pre-gain-offset="0" ] }
 Number:Energy       pGF_Utilityroom_Heatpump_Statistik_Elektro_jahr        "Elektro jahr [%d %unit%]"               <selfenergy> ( eGF_Utilityroom_Heatpump_Stats ) [ "Point" ] { channel="modbus:data:heatpump:heatpump_stats_electro:Statistik_Elektro_jahr:number" [ profile="modbus:gainOffset", gain="1 kWh", pre-gain-offset="0" ] }
 
-Group               eGF_Utilityroom_Heatpump_Solar                         "Solar"                                  <selfsun> ( eGF_Utilityroom_Heatpump )       [ "Equipment" ]
-Number:Temperature  pGF_Utilityroom_Heatpump_Solar_Temperature_Vorlauf     "Solar Vorlauf [%.1f %unit%]"            <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History )  [ "Point" ] {channel="mqtt:topic:mosquitto:ebus:tempVorlauf" }
-Number:Temperature  pGF_Utilityroom_Heatpump_Solar_Temperature_Ruecklauf   "Solar Rücklauf [%.1f %unit%]"            <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History )  [ "Point" ] {channel="mqtt:topic:mosquitto:ebus:tempRuecklauf" }
-Number:Temperature  pGF_Utilityroom_Heatpump_Solar_Temperature_Collector   "Solar Kollektor [%.1f %unit%]"          <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History )  [ "Point" ] {channel="mqtt:topic:mosquitto:ebus:tempKollektor" }
-Number:Temperature  pGF_Utilityroom_Heatpump_Solar_Temperature_Storage     "Solar Speicher [%.1f %unit%]"           <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History )  [ "Point" ] {channel="mqtt:topic:mosquitto:ebus:tempSpeicher" }
-Number              pGF_Utilityroom_Heatpump_Solar_Pump_State              "Solar Drehzal Pumpe [%d %unit%]"        <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History )  [ "Point" ] {channel="mqtt:topic:mosquitto:ebus:drehzahlPumpe", unit="%" }
-Number:Energy       pGF_Utilityroom_Heatpump_Solar_Power                   "Solar Aktuell [%.1f %unit%]"            <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History )  [ "Point" ] {channel="mqtt:topic:mosquitto:ebus:ertragAktuell" }
+Group               eGF_Utilityroom_Heatpump_Solar                         "Solar"                            <selfsun> ( eGF_Utilityroom_Heatpump )       [ "Equipment" ]
+Number:Temperature  pGF_Utilityroom_Heatpump_Solar_Temperature_Vorlauf     "Vorlauf [%.1f %unit%]"            <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History )  [ "Messurement" ] {channel="mqtt:topic:mosquitto:ebus:tempVorlauf" }
+Number:Temperature  pGF_Utilityroom_Heatpump_Solar_Temperature_Ruecklauf   "Rücklauf [%.1f %unit%]"           <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History )  [ "Messurement" ] {channel="mqtt:topic:mosquitto:ebus:tempRuecklauf" }
+Number:Temperature  pGF_Utilityroom_Heatpump_Solar_Temperature_Collector   "Kollektor [%.1f %unit%]"          <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History )  [ "Messurement" ] {channel="mqtt:topic:mosquitto:ebus:tempKollektor" }
+Number:Temperature  pGF_Utilityroom_Heatpump_Solar_Temperature_Storage     "Speicher [%.1f %unit%]"           <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History )  [ "Messurement" ] {channel="mqtt:topic:mosquitto:ebus:tempSpeicher" }
+Number              pGF_Utilityroom_Heatpump_Solar_Pump_State              "Drehzal Pumpe [%d %%]"            <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History )  [ "Messurement" ] {channel="mqtt:topic:mosquitto:ebus:drehzahlPumpe", unit="%" }
+Number:Power        pGF_Utilityroom_Heatpump_Solar_Power                   "Leistung Aktuell [%d %unit%]"   <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History ) [ "Messurement" ]
+Number:Energy       pGF_Utilityroom_Heatpump_Solar_Energy_Daily            "Ertrag Heute [%.1f %unit%]"       <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History )  [ "Messurement" ]
+Number:Energy       pGF_Utilityroom_Heatpump_Solar_Energy_Total            "Ertrag Gesamt [%.1f %unit%]"      <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History )  [ "Messurement" ]
+Number:VolumetricFlowRate pGF_Utilityroom_Heatpump_Solar_Flow              "Volumenstrom [%.1f %unit%]"               <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History )  [ "Messurement" ]
+
+
+
+Number:Energy       pGF_Utilityroom_Heatpump_Solar_Energy_Current_Test     "Ertrag Aktuell [%.1f %unit%]"            <selftemperature> {channel="mqtt:topic:mosquitto:ebus:ertragAktuell" }
+Number:Energy       pGF_Utilityroom_Heatpump_Solar_Energy_Total_Test       "Ertrag Gesamt [%.1f %unit%]"            <selftemperature> {channel="mqtt:topic:mosquitto:ebus:ertragGesamt" }
+Number:Power        pGF_Utilityroom_Heatpump_Solar_Power_Current_Test      "Leistung Aktuell [%.1f %unit%]"            <selftemperature> {channel="mqtt:topic:mosquitto:ebus:leistungAktuell" }
+Number:VolumetricFlowRate pGF_Utilityroom_Heatpump_Solar_Flow_Test         "Solar Flow [%.1f l/h]"                  <selftemperature> {channel="mqtt:topic:mosquitto:ebus:flow" }
+
+
 //Number:Energy       pGF_Utilityroom_Heatpump_Solar_Total                   "Solar Ertrag [%.1f %unit%]"             <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History )  [ "Point" ] {channel="mqtt:topic:mosquitto:ebus:ertragAktuell" }
 
 // Error

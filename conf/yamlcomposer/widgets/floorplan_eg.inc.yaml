@@ -9,7 +9,7 @@ slots:
     - component: Label
       config:
         class:
-          - "=Number.parseInt(items['pGF_Boxroom_Air_Sensor_CO2_Value'].state) > 1500 || Number.parseInt(items['pGF_Livingroom_Air_Sensor_CO2_Value'].state) > 1500 ? 'errorState' : (Number.parseInt(items['pGF_Boxroom_Air_Sensor_CO2_Value'].state) > 900 || Number.parseInt(items['pGF_Livingroom_Air_Sensor_CO2_Value'].state) > 900 ? 'warnState' : 'activeState')"
+          - "=items['pGF_Boxroom_Air_Sensor_CO2_Value'].numericState > 1500 || items['pGF_Livingroom_Air_Sensor_CO2_Value'].numericState > 1500 ? 'errorState' : (items['pGF_Boxroom_Air_Sensor_CO2_Value'].numericState > 900 || items['pGF_Livingroom_Air_Sensor_CO2_Value'].numericState > 900 ? 'warnState' : 'activeState')"
           - lengendModifier
           - highlightModifier
           - sensorCO2Modifier
@@ -28,7 +28,7 @@ slots:
           left: 5%
           position: absolute
           top: 48%
-        text: =Number.parseFloat(items['pGF_Garage_Air_Sensor_Temperature_Value'].state).toFixed(1)
+        text: =items['pGF_Garage_Air_Sensor_Temperature_Value'].numericState.toFixed(1)
     - component: Label
       config:
         class:
@@ -39,7 +39,7 @@ slots:
           left: 5%
           position: absolute
           top: 57%
-        text: =Number.parseInt(items['pGF_Garage_Air_Sensor_Humidity_Value'].state)
+        text: =items['pGF_Garage_Air_Sensor_Humidity_Value'].numericState
     - component: Label
       config:
         class:
@@ -50,7 +50,7 @@ slots:
           left: 55%
           position: absolute
           top: 9%
-        text: =Number.parseFloat(items['pGF_Livingroom_Air_Sensor_Temperature_Value'].state).toFixed(1)
+        text: =items['pGF_Livingroom_Air_Sensor_Temperature_Value'].numericState.toFixed(1)
     - component: Label
       config:
         class:
@@ -61,7 +61,7 @@ slots:
           left: 55%
           position: absolute
           top: 18%
-        text: =Number.parseInt(items['pGF_Livingroom_Air_Sensor_Humidity_Value'].state)
+        text: =items['pGF_Livingroom_Air_Sensor_Humidity_Value'].numericState
     - component: Label
       config:
         class:
@@ -72,7 +72,7 @@ slots:
           left: 55%
           position: absolute
           top: 31%
-        text: =Number.parseInt(items['pGF_Livingroom_Air_Sensor_CO2_Value'].state)
+        text: =items['pGF_Livingroom_Air_Sensor_CO2_Value'].numericState
     - component: Label
       config:
         class:
@@ -84,7 +84,7 @@ slots:
           left: 28.5%
           position: absolute
           top: 44%
-        text: =Number.parseFloat(items['pGF_Boxroom_Air_Sensor_Temperature_Value'].state).toFixed(1)
+        text: =items['pGF_Boxroom_Air_Sensor_Temperature_Value'].numericState.toFixed(1)
     - component: Label
       config:
         class:
@@ -96,7 +96,7 @@ slots:
           left: 41.5%
           position: absolute
           top: 44%
-        text: =Number.parseInt(items['pGF_Boxroom_Air_Sensor_Humidity_Value'].state)
+        text: =items['pGF_Boxroom_Air_Sensor_Humidity_Value'].numericState
     - component: Label
       config:
         class:
@@ -108,7 +108,7 @@ slots:
           left: 28.5%
           position: absolute
           top: 50%
-        text: =Number.parseInt(items['pGF_Boxroom_Air_Sensor_CO2_Value'].state)
+        text: =items['pGF_Boxroom_Air_Sensor_CO2_Value'].numericState
     - component: Label
       config:
         class:
@@ -119,7 +119,7 @@ slots:
           left: 30%
           position: absolute
           top: 60%
-        text: =Number.parseFloat(items['pGF_Utilityroom_Air_Sensor_Temperature_Value'].state).toFixed(1)
+        text: =items['pGF_Utilityroom_Air_Sensor_Temperature_Value'].numericState.toFixed(1)
     - component: Label
       config:
         class:
@@ -130,7 +130,7 @@ slots:
           left: 30%
           position: absolute
           top: 69%
-        text: =Number.parseInt(items['pGF_Utilityroom_Air_Sensor_Humidity_Value'].state)
+        text: =items['pGF_Utilityroom_Air_Sensor_Humidity_Value'].numericState
     - component: Label
       config:
         class:
@@ -142,7 +142,7 @@ slots:
           left: 28.5%
           position: absolute
           top: 85%
-        text: =Number.parseFloat(items['pGF_Guesttoilet_Air_Sensor_Temperature_Value'].state).toFixed(1)
+        text: =items['pGF_Guesttoilet_Air_Sensor_Temperature_Value'].numericState.toFixed(1)
     - component: Label
       config:
         class:
@@ -154,7 +154,7 @@ slots:
           left: 41.5%
           position: absolute
           top: 85%
-        text: =Number.parseInt(items['pGF_Guesttoilet_Air_Sensor_Humidity_Value'].state)
+        text: =items['pGF_Guesttoilet_Air_Sensor_Humidity_Value'].numericState
     - component: Label
       config:
         class:
@@ -165,7 +165,7 @@ slots:
           left: 55%
           position: absolute
           top: 69%
-        text: =Number.parseFloat(items['pGF_Corridor_Air_Sensor_Temperature_Value'].state).toFixed(1)
+        text: =items['pGF_Corridor_Air_Sensor_Temperature_Value'].numericState.toFixed(1)
     - component: Label
       config:
         class:
@@ -176,7 +176,7 @@ slots:
           left: 55%
           position: absolute
           top: 78%
-        text: =Number.parseInt(items['pGF_Corridor_Air_Sensor_Humidity_Value'].state)
+        text: =items['pGF_Corridor_Air_Sensor_Humidity_Value'].numericState
     - component: Label
       config:
         class:
@@ -187,7 +187,7 @@ slots:
           left: 78%
           position: absolute
           top: 69%
-        text: =Number.parseFloat(items['pGF_Workroom_Air_Sensor_Temperature_Value'].state).toFixed(1)
+        text: =items['pGF_Workroom_Air_Sensor_Temperature_Value'].numericState.toFixed(1)
     - component: Label
       config:
         class:
@@ -198,7 +198,7 @@ slots:
           left: 78%
           position: absolute
           top: 78%
-        text: =Number.parseInt(items['pGF_Workroom_Air_Sensor_Humidity_Value'].state)
+        text: =items['pGF_Workroom_Air_Sensor_Humidity_Value'].numericState
     - component: oh-link
       config:
         action: command

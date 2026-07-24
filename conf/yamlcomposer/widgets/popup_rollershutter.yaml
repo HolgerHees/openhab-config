@@ -1,0 +1,40 @@
+version: 1
+widgets:
+  widget_popup_rollershutter:
+    tags: []
+    props:
+      parameters: []
+      parameterGroups: []
+    component: oh-webframe-card
+    config:
+      height: 630px
+      style:
+        width: 100%
+        height: 100%
+        overflow: hidden
+        padding: 0
+        margin: 0
+      src: /basicui/app?w=1_01&sitemap=haus
+    #component: oh-repeater
+    #config:
+    #  for: location
+    #  #fragement: true
+    #  groupItem: lGroundFloor
+    #  sourceType: itemsInGroup
+    #slots:
+    #  default:
+    #    - component: oh-repeater
+    #      config:
+    #        for: item
+    #        #fragement: true
+    #        groupItem: =loop.location.name
+    #        sourceType: itemsInGroup
+    #        #filter: loop.item.type == "Rollershutter"
+    #      slots:
+    #        default:
+    #          - component: oh-rollershutter-item
+    #            config:
+    #              icon: oh:rollershutter
+    #              item: =loop.item.name
+    #              title: "=loop.location.label + ' ' + ' ' + loop.item.label + ' ' + loop.item.type"
+

@@ -35,7 +35,7 @@ widgets:
           required: false
           type: TEXT
       parameterGroups: []
-    component: div
+    component: oh-card
     config:
       class:
         - oh-grid-item-content
@@ -43,13 +43,20 @@ widgets:
       style:
         position: relative
         overflow: visible
+      action: popup
+      actionModal: widget:widget_popup_energy
       stylesheet: |
         div,
         svg {
           position: absolute;
         }
+        .card-content {
+          width: 100%;
+          height: 100%;
+          box-sizing: border-box;
+        }
     slots:
-      default:
+      content:
         - component: svg
           config:
             style:
@@ -73,13 +80,13 @@ widgets:
           config:
             class:
               - normalState
-              - "=Math.abs(Number.parseFloat(items[props.item_grid_energy].state)) > 50 ? 'highlightModifier' : ''"
+              - "=Math.abs(items[props.item_grid_energy].numericState) > 50 ? 'highlightModifier' : ''"
               - sensorEnergySuffix
             style:
               left: 20%
               top: 60px
               transform: translate(-50%,0)
-            text: "=(Math.abs(Number.parseFloat(items[props.item_grid_energy].state)) > 50 ? Number.parseFloat(items[props.item_grid_energy].state) / 1000 : 0).toFixed(2)"
+            text: "=(Math.abs(items[props.item_grid_energy].numericState) > 50 ? items[props.item_grid_energy].numericState / 1000 : 0).toFixed(2)"
         - component: div
           config:
             style:
@@ -88,7 +95,7 @@ widgets:
               right: 50%
               bottom: 50%
               transform: translate(0,50%)
-              visibility: "=Number.parseFloat(items[props.item_grid_energy].state) > 50 ? 'visible' : 'hidden'"
+              visibility: "=items[props.item_grid_energy].numericState > 50 ? 'visible' : 'hidden'"
           slots:
             default:
               - !include { file: device_energy_line.inc.yaml, vars: {uid: "energy_path_grid1", width: 40, height: 10, direction: "right"}}
@@ -100,7 +107,7 @@ widgets:
               right: 50%
               bottom: 50%
               transform: translate(0,50%)
-              visibility: "=Number.parseFloat(items[props.item_grid_energy].state) <- 50 ? 'visible' : 'hidden'"
+              visibility: "=items[props.item_grid_energy].numericState <- 50 ? 'visible' : 'hidden'"
           slots:
             default:
               - !include { file: device_energy_line.inc.yaml, vars: {uid: "energy_path_grid2", width: 40, height: 10, direction: "left"}}
@@ -108,7 +115,7 @@ widgets:
           config:
             style:
               fill: transparent
-              stroke: "=Number.parseFloat(items[props.item_grid_energy].state) > 50 ? 'var(--custom-yellow)' : ( Number.parseFloat(items[props.item_grid_energy].state) < -50 ? 'var(--custom-green)' : 'var(--custom-default-color)')"
+              stroke: "=items[props.item_grid_energy].numericState > 50 ? 'var(--custom-yellow)' : (items[props.item_grid_energy].numericState < -50 ? 'var(--custom-green)' : 'var(--custom-default-color)')"
               #stroke: var(--custom-default-state)
               stroke-width: 1.5px
               left: 20%
@@ -116,7 +123,7 @@ widgets:
               width: 50px
               height: 50px
               transform: translate(-50%,-30%)
-              opacity: "=Number.parseFloat(items[props.item_grid_energy].state) > 50 ? '0.6' : ( Number.parseFloat(items[props.item_grid_energy].state) < -50 ? '0.6' : '0.4')"
+              opacity: "=items[props.item_grid_energy].numericState > 50 ? '0.6' : (items[props.item_grid_energy].numericState < -50 ? '0.6' : '0.4')"
             viewBox: 0 0 64 64
           slots:
             default:
@@ -127,14 +134,13 @@ widgets:
           config:
             class:
               - normalState
-              - "=Math.abs(Number.parseFloat(items[props.item_production_energy].state)) > 50 ? 'highlightModifier' : ''"
+              - "=Math.abs(items[props.item_production_energy].numericState) > 50 ? 'highlightModifier' : ''"
               - sensorEnergySuffix
             style:
               right: 50%
               top: 5px
               transform: translate(50%,0)
-            #text: =(Number.parseFloat(items[props.item_production_energy].state) / 1000).toFixed(2)
-            text: "=(Math.abs(Number.parseFloat(items[props.item_production_energy].state)) > 50 ? Number.parseFloat(items[props.item_production_energy].state) / 1000 : 0).toFixed(2)"
+            text: "=(Math.abs(items[props.item_production_energy].numericState) > 50 ? items[props.item_production_energy].numericState / 1000 : 0).toFixed(2)"
         - component: div
           config:
             style:
@@ -143,7 +149,7 @@ widgets:
               left: 50%
               bottom: 50%
               transform: translate(-50%,0)
-              visibility: "=Number.parseFloat(items[props.item_production_energy].state) > 50 ? 'visible' : 'hidden'"
+              visibility: "=items[props.item_production_energy].numericState > 50 ? 'visible' : 'hidden'"
           slots:
             default:
               - !include { file: device_energy_line.inc.yaml, vars: {uid: "energy_path_production", width: 10, height: 27, direction: "down"}}
@@ -151,14 +157,14 @@ widgets:
           config:
             style:
               fill: transparent
-              stroke: "=Number.parseFloat(items[props.item_production_energy].state) > 50 ? 'var(--custom-green)' : 'var(--custom-default-color)'"
+              stroke: "=items[props.item_production_energy].numericState > 50 ? 'var(--custom-green)' : 'var(--custom-default-color)'"
               stroke-width: 1.5px
               left: 51.5%
               top: 20px
               width: 50px
               height: 50px
               transform: translate(-50%,0)
-              opacity: "=Number.parseFloat(items[props.item_production_energy].state) > 50 ? '0.6' : '0.4'"
+              opacity: "=items[props.item_production_energy].numericState > 50 ? '0.6' : '0.4'"
             viewBox: 0 0 16.933 16.933
           slots:
             default:
@@ -169,13 +175,13 @@ widgets:
           config:
             class:
               - normalState
-              - "=Math.abs(Number.parseFloat(items[props.item_consumption_energy].state)) > 50 ? 'highlightModifier' : ''"
+              - "=Math.abs(items[props.item_consumption_energy].numericState) > 50 ? 'highlightModifier' : ''"
               - sensorEnergySuffix
             style:
               right: 20%
               top: 60px
               transform: translate(50%,0)
-            text: "=(Math.abs(Number.parseFloat(items[props.item_consumption_energy].state)) > 50 ? Number.parseFloat(items[props.item_consumption_energy].state) / 1000 : 0).toFixed(2)"
+            text: "=(Math.abs(items[props.item_consumption_energy].numericState) > 50 ? items[props.item_consumption_energy].numericState / 1000 : 0).toFixed(2)"
         - component: div
           config:
             style:
@@ -184,7 +190,7 @@ widgets:
               left: 50%
               top: 50%
               transform: translate(0,-50%)
-              visibility: "=Number.parseFloat(items[props.item_consumption_energy].state) > 50 ? 'visible' : 'hidden'"
+              visibility: "=items[props.item_consumption_energy].numericState > 50 ? 'visible' : 'hidden'"
           slots:
             default:
               - !include { file: device_energy_line.inc.yaml, vars: {uid: "energy_path_consumption", width: 40, height: 10, direction: "right"}}
@@ -192,7 +198,7 @@ widgets:
           config:
             style:
               fill: transparent
-              stroke: "=Number.parseFloat(items[props.item_consumption_energy].state) > 50 ? 'var(--custom-yellow)' : 'var(--custom-default-color)'"
+              stroke: "=items[props.item_consumption_energy].numericState > 50 ? 'var(--custom-yellow)' : 'var(--custom-default-color)'"
               stroke-width: 2.5px
               right: 20%
               top: 50%
@@ -209,13 +215,13 @@ widgets:
           config:
             class:
               - normalState
-              - "=Math.abs(Number.parseFloat(items[props.item_storage_energy].state)) > 50 ? 'highlightModifier' : ''"
+              - "=Math.abs(items[props.item_storage_energy].numericState) > 50 ? 'highlightModifier' : ''"
               - sensorEnergySuffix
             style:
               right: 50%
               bottom: 12px
               transform: translate(50%,0)
-            text: "=(Math.abs(Number.parseFloat(items[props.item_storage_energy].state)) > 50 ? Number.parseFloat(items[props.item_storage_energy].state) / 1000 : 0).toFixed(2)"
+            text: "=(Math.abs(items[props.item_storage_energy].numericState) > 50 ? items[props.item_storage_energy].numericState / 1000 : 0).toFixed(2)"
         - component: div
           config:
             style:
@@ -224,7 +230,7 @@ widgets:
               left: 50%
               top: 50%
               transform: translate(-50%,0)
-              visibility: "=Number.parseFloat(items[props.item_storage_energy].state) > 50 ? 'visible' : 'hidden'"
+              visibility: "=items[props.item_storage_energy].numericState > 50 ? 'visible' : 'hidden'"
           slots:
             default:
               - !include { file: device_energy_line.inc.yaml, vars: {uid: "energy_path_storage1", width: 10, height: 35, direction: "up"}}
@@ -236,7 +242,7 @@ widgets:
               left: 50%
               top: 50%
               transform: translate(-50%,0)
-              visibility: "=Number.parseFloat(items[props.item_storage_energy].state) < -50 ? 'visible' : 'hidden'"
+              visibility: "=items[props.item_storage_energy].numericState < -50 ? 'visible' : 'hidden'"
           slots:
             default:
               - !include { file: device_energy_line.inc.yaml, vars: {uid: "energy_path_storage2", width: 10, height: 35, direction: "down"}}
@@ -248,21 +254,21 @@ widgets:
               - sensorPercentSuffix
             style:
               right: 51%
-              bottom: 37px
-              transform: translate(50%,0) scale(0.7)
-            text: =Number.parseFloat(items[props.item_storage_esssoc].state).toFixed(1)
+              bottom: 38px
+              transform: translate(50%,0) scale(0.8)
+            text: =items[props.item_storage_esssoc].state
         - component: svg
           config:
             style:
               fill: transparent
-              stroke: "=Number.parseFloat(items[props.item_storage_energy].state) > 50 ? 'var(--custom-yellow)' : ( Number.parseFloat(items[props.item_storage_energy].state) < -50 ? 'var(--custom-green)' : 'var(--custom-default-color)')"
+              stroke: "=items[props.item_storage_energy].numericState > 50 ? 'var(--custom-yellow)' : (items[props.item_storage_energy].numericState < -50 ? 'var(--custom-green)' : 'var(--custom-default-color)')"
               stroke-width: 1.5px
               left: 50%
               bottom: 26px
               width: 50px
               height: 50px
               transform: translate(-50%,0)
-              opacity: "=Number.parseFloat(items[props.item_storage_energy].state) > 50 ? '0.6' : ( Number.parseFloat(items[props.item_storage_energy].state) < -50 ? '0.6' : '0.4')"
+              opacity: "=items[props.item_storage_energy].numericState > 50 ? '0.6' : (items[props.item_storage_energy].numericState < -50 ? '0.6' : '0.4')"
             viewBox: 0 0 64 64
           slots:
             default:

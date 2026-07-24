@@ -1075,14 +1075,27 @@ sitemap haus label="Main Menu"
                             Text item=pGF_Utilityroom_Heatpump_WP_VolumenstromHeizen
                             Text item=pGF_Utilityroom_Heatpump_WP_VolumenstromWarmwasser
                         }
-                        Text item=pGF_Utilityroom_Heatpump_Solar_Power label="Solarthermie [%.1f KW]" icon="selfsun"{
-                            Frame label="Daten" {
+                        Text item=pGF_Utilityroom_Heatpump_Solar_Power label="Solarthermie [%d W]" icon="selfsun"{
+                            Frame label="Status" {
+                                Text item=pGF_Utilityroom_Heatpump_Solar_Power
+                                Text item=pGF_Utilityroom_Heatpump_Solar_Pump_State
+                                Text item=pGF_Utilityroom_Heatpump_Solar_Flow
+                            }
+                            Frame label="Temperaturen" {
                                 Text item=pGF_Utilityroom_Heatpump_Solar_Temperature_Collector
-                                Text item=pGF_Utilityroom_Heatpump_Solar_Temperature_Storage
                                 Text item=pGF_Utilityroom_Heatpump_Solar_Temperature_Vorlauf
                                 Text item=pGF_Utilityroom_Heatpump_Solar_Temperature_Ruecklauf
-                                Text item=pGF_Utilityroom_Heatpump_Solar_Pump_State
-                                Text item=pGF_Utilityroom_Heatpump_Solar_Power
+                                Text item=pGF_Utilityroom_Heatpump_Solar_Temperature_Storage
+                            }
+                            Frame label="Erträge" {
+                                Text item=pGF_Utilityroom_Heatpump_Solar_Energy_Daily
+                                Text item=pGF_Utilityroom_Heatpump_Solar_Energy_Total
+                            }
+                            Frame label="Test" {
+                                Text item=pGF_Utilityroom_Heatpump_Solar_Flow_Test
+                                Text item=pGF_Utilityroom_Heatpump_Solar_Power_Current_Test
+                                Text item=pGF_Utilityroom_Heatpump_Solar_Energy_Current_Test
+                                Text item=pGF_Utilityroom_Heatpump_Solar_Energy_Total_Test
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
