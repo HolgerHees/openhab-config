@@ -16,18 +16,24 @@ widgets:
       parameterGroups: []
     component: div
     config:
+      class:
+        - card
+        - oh-canvas-item-content
       style:
         position: relative
-        padding: 10px
     slots:
       default:
         - component: oh-webframe-card
           config:
-            height: 122px
-            class:
-              - oh-grid-item-content
+            height: 138
             style:
-              overflow: visible
+              margin: var(--custom-widget-padding)
+              border: 0
+              position: absolute
+              inset: 0 0 0 0
+              background-color: transparent
+              overflow: hidden
+              box-shadow: none
             src: =props.dashboard_url
         - component: oh-card
           config:
@@ -35,14 +41,11 @@ widgets:
             actionModal: widget:widget_popup_weather_forecast
             actionModalConfig:
               detail_url: =props.detail_url
-            class:
-              - oh-grid-item-content
             style:
+              border: 0
+              display: flex
               position: absolute
               inset: 0 0 0 0
               background-color: transparent
-            stylesheet: |
-              .card-content {
-                height: 100%;
-              }
+              box-shadow: none
 

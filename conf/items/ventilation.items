@@ -18,6 +18,10 @@ Number pGF_Utilityroom_Ventilation_Bypass_Efficiency            "Effizienz [%d %
 
 Number pGF_Utilityroom_Ventilation_Clime_Target_Offset          "Ziel Offset [%.1f °C]"         <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"]
 
+Number:Temperature pGF_Utilityroom_Ventilation_Supply_Temperature "Vorlauf Haus [%.1f °C]"        <selftemperature>    (eGF_Utilityroom_Ventilation,gPersistance_Chart,gPersistance_History) ["Temperature"] { channel="knx:device:bridge:sensors_ff:ventilationPipeOut" }
+Number:Temperature pGF_Utilityroom_Ventilation_Extract_Temperature "Rücklauf Haus [%.1f °C]"       <selftemperature>    (eGF_Utilityroom_Ventilation,gPersistance_Chart,gPersistance_History) ["Temperature"] { channel="knx:device:bridge:sensors_ff:ventilationPipeIn" }
+String pGF_Utilityroom_Ventilation_Sensor_Temperature_Message   "Innen (Sensor) [%s]"                  <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"]
+
 Number pGF_Utilityroom_Ventilation_Connection_State             "Verbindung [MAP(ventilation_connection.map):%s]"               <selfinfo> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:input:comfoairq_connection_state:number"}
 
 Switch pGF_Utilityroom_Ventilation_Standby                      "Standby [%s]"                  <selfinfo> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:discrete:comfoairq_standby:switch"}
@@ -36,7 +40,7 @@ Switch pGF_Utilityroom_Ventilation_Filter_Dirty                 "Filter wechseln
 Number pGF_Utilityroom_Ventilation_Fan_Level                    "Stufe [MAP(ventilation_level_de.map):%s]"  <selfairing> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:holding:comfoairq_preset:number"}
 
 Number pGF_Utilityroom_Ventilation_Target_Temperature           "Ziel Temperatur [%.1f °C]"     <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:holding:comfoairq_t_external_setpoint:number"}
-Number pGF_Utilityroom_Ventilation_Target_Mode                  "Ziel Modus [%d]"               <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:holding:comfoairq_t_profile_mode:number"}
+Number pGF_Utilityroom_Ventilation_Target_Mode                  "Ziel Modus [MAP(ventilation_target_mode.map):%s]"               <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:holding:comfoairq_t_profile_mode:number"}
 
 Number pGF_Utilityroom_Ventilation_Outdoor_Incoming_Temperature "Aussenzuluft [%.1f °C]"        <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:input:comfoairq_t_outdoor_in:number"}
 Number pGF_Utilityroom_Ventilation_Outdoor_Outgoing_Temperature "Aussenabluft [%.1f °C]"        <selftemperature> (eGF_Utilityroom_Ventilation) ["Point"] {channel="modbus:data:ventilation:input:comfoairq_t_outdoor_out:number"} // Fortluft

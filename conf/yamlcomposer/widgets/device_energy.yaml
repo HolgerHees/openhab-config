@@ -62,10 +62,10 @@ widgets:
             style:
               left: 50%
               top: 50%
-              width: 50px
-              height: 50px
               transform: translate(-50%,-50%)
-            viewBox: 0 0 64 64
+              width: 10px
+              height: 10px
+            viewBox: 0 0 10 10
           slots:
             default:
               - component: circle
@@ -73,7 +73,7 @@ widgets:
                   fill: "#999999"
                   cx: 50%
                   cy: 50%
-                  r: 6
+                  r: 50%
                   tag: circle
                   visible: true
         - component: Label
@@ -138,7 +138,7 @@ widgets:
               - sensorEnergySuffix
             style:
               right: 50%
-              top: 5px
+              top: var(--custom-widget-padding)
               transform: translate(50%,0)
             text: "=(Math.abs(items[props.item_production_energy].numericState) > 50 ? items[props.item_production_energy].numericState / 1000 : 0).toFixed(2)"
         - component: div
@@ -160,7 +160,7 @@ widgets:
               stroke: "=items[props.item_production_energy].numericState > 50 ? 'var(--custom-green)' : 'var(--custom-default-color)'"
               stroke-width: 1.5px
               left: 51.5%
-              top: 20px
+              top: 23px
               width: 50px
               height: 50px
               transform: translate(-50%,0)

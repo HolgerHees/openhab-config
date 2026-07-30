@@ -55,7 +55,7 @@ widgets:
           config:
             style:
               height: 100%
-              padding: 8px
+              padding: var(--custom-widget-padding)
           slots:
             default:
               - component: f7-row

@@ -31,8 +31,9 @@ widgets:
               - component: Label
                 config:
                   style:
+                    padding-top: var(--f7-card-margin-vertical)
                     color: var(--custom-default-color)
-                    font-size: var(--custom-default-font-size)
+                    font-size: var(--custom-legend-font-size)
                     opacity: 0.8
                   text: =props.title
         - component: f7-card-content
@@ -50,7 +51,7 @@ widgets:
                     left: var(--custom-widget-padding)
                     position: absolute
                     stroke: var(--custom-default-state)
-                    top: calc(var(--custom-widget-padding) + 10%)
+                    top: 7px
                     width: 35px
                   viewBox: 0 0 64 64
                 slots:
@@ -67,7 +68,7 @@ widgets:
                   style:
                     position: absolute
                     right: var(--custom-widget-padding)
-                    top: var(--custom-widget-padding)
+                    top: -5px
                   text: =Number.parseFloat(items[props.item_temperature].state).toFixed(1)
               - component: Label
                 config:
@@ -76,7 +77,7 @@ widgets:
                     - sensorSuffix
                     - sensorHumiditySuffix
                   style:
-                    bottom: var(--custom-widget-padding)
+                    bottom: 0
                     position: absolute
                     right: var(--custom-widget-padding)
                   text: =Number.parseInt(items[props.item_humidity].state)

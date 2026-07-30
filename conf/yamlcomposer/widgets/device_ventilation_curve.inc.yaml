@@ -1,45 +1,46 @@
 component: svg
 config:
   style:
-    #transform: scaleX(-1)
-    left: 20%
-    top: 50%
-    height: auto
-    width: auto
-  preserveAspectRatio: xMidYMid slice
+    left: 0
+    height: 100%
+    width: 100%
+  #preserveAspectRatio: xMidYMid slice
   tag: svg
-  viewBox: 0 0 100 100
+  viewBox: 0 0 ${width} ${height}
 slots:
   default:
     - component: f7-row
       config:
-        d: M 0 10 l 10 0 c 40 0 35 10 35 50 l 0 10
+        d: "${path}"
         fill: none
-        id: path5
-        stroke: rgba(100, 150, 200, 0.8)
+        id: ${uid}
+        stroke: "#999999"
         stroke-width: 2
         tag: path
         vector-effect: non-scaling-stroke
         visible: true
     - component: f7-row
       config:
-        fill: rgba(100, 150, 200, 0.8)
-        r: 6
-        strokeWidth: 10
-        tag: circle
+        fill: "#BBBBBB"
+        d: "M 0 -5 l 5.0 5.0 l -5 5.0"
+        tag: path
         vectorEffect: non-scaling-stroke
         visible: true
+        style:
+            overflow: visible
       slots:
         default:
           - component: f7-row
             config:
-              calcMode: linear
-              dur: 4s
+              calcMode: paced
+              dur: "=(Math.max(${width},${height})/13) + 's'" #3s
               repeatCount: indefinite
               tag: animateMotion
+              rotate: auto
             slots:
               default:
                 - component: f7-row
                   config:
                     tag: mpath
-                    xlink:href: "#path5"
+                    xlink:href: "#${uid}"
+

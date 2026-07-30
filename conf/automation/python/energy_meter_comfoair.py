@@ -27,7 +27,7 @@ class MeterConsumption:
         consumption_saved = Registry.getItemState("pGF_Utilityroom_Electricity_State_Comfoair_Total_Consumption",scope.DecimalType(0.0)).doubleValue()
         if consumption < consumption_saved:
             new_offset = consumption_saved - ( consumption - start_electricity_meter_offset)
-            self.logger.error("{}: Calculation is wrong ('{}' < '{}'). Set 'start offset' to '{}'".format(mapping[0], consumption, consumption_saved, new_offset ))
+            self.logger.error("pGF_Utilityroom_Electricity_State_Comfoair_Total_Consumption: Calculation is wrong ('{}' < '{}'). Set 'start offset' to '{}'".format(consumption, consumption_saved, new_offset ))
             return
 
         # *** Gesamtverbrauch ***

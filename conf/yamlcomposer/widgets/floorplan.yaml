@@ -9,7 +9,8 @@ widgets:
     config:
       class:
         - "=items['pOther_Automatic_State_Rollershutter'].state === 'ON' ? 'shutterDownAdvise' : ''"
-        - oh-grid-item-content
+        - card
+        - oh-canvas-item-content
       style:
         position: relative
       stylesheet: |
@@ -28,7 +29,7 @@ widgets:
               position: absolute
               font-size: 0.8em
               opacity: 0.8
-              left: 5.5%
+              left: 6.5%
               top: 22%
             text: Schuppen
         - component: div
@@ -37,7 +38,7 @@ widgets:
               position: absolute
               width: 270px
               aspect-ratio: 1.35869565217 # 1000 736
-              top: 5px
+              top: 8px
               left: 15px
           slots:
             default:
@@ -50,7 +51,7 @@ widgets:
               font-size: 0.8em
               opacity: 0.8
               left: 20%
-              bottom: 0
+              bottom: 8px
             text: Südseite
         - component: div
           config:
@@ -58,7 +59,7 @@ widgets:
               position: absolute
               width: 270px
               aspect-ratio: 1.35869565217 # 1000 736
-              bottom: 26px
+              bottom: 32px
               left: -10px
           slots:
             default:
@@ -71,8 +72,8 @@ widgets:
               position: absolute
               font-size: 0.8em
               opacity: 0.8
-              right: 23%
-              bottom: 0
+              right: 24%
+              bottom: 8px
             text: Erdgeschoss
         - component: div
           config:
@@ -80,7 +81,7 @@ widgets:
               position: absolute
               width: 270px
               aspect-ratio: 1.35869565217 # 1000 736
-              bottom: 30px
+              bottom: 36px
               right: 15px
               overflow: visible
           slots:
@@ -94,7 +95,7 @@ widgets:
               font-size: 0.8em
               opacity: 0.8
               left: 72%
-              top: 44%
+              top: 43%
             text: Obergeschoss
         - component: div
           config:
@@ -102,7 +103,7 @@ widgets:
               position: absolute
               width: 270px
               aspect-ratio: 1.35869565217 # 1000 736
-              top: 5px
+              top: 8px
               right: 15px
           slots:
             default:
@@ -115,7 +116,7 @@ widgets:
               font-size: 0.8em
               opacity: 0.8
               left: 36%
-              top: 44%
+              top: 43%
             text: Dachboden
         - component: div
           config:
@@ -123,7 +124,7 @@ widgets:
               position: absolute
               width: 270px
               aspect-ratio: 1.35869565217 # 1000 736
-              top: 5px
+              top: 8px
               left: 80px
           slots:
             default:
@@ -135,6 +136,6 @@ widgets:
               position: absolute
               font-size: 0.8em
               opacity: 0.8
-              left: 7%
-              top: 44%
+              left: 8%
+              top: 43%
             text: Carport

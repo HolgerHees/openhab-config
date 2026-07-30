@@ -58,6 +58,10 @@ widgets:
     config:
       action: popup
       actionModal: widget:widget_popup_sitemap
+      contentStyle:
+        height: 100%
+        justify-content: flex-start
+        padding: var(--custom-widget-padding) !important
       stylesheet: |
         div.row div.col:first-child {
           margin: auto;

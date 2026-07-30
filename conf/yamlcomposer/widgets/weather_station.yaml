@@ -70,42 +70,11 @@ widgets:
               - component: Label
                 config:
                   style:
+                    padding-top: var(--f7-card-margin-vertical)
                     color: var(--custom-default-color)
-                    font-size: var(--custom-default-font-size)
+                    font-size: var(--custom-legend-font-size)
                   text: =props.title
-              - component: div
-                config:
-                  style:
-                    position: absolute
-                    top: -6px
-                    right: 16px
-                    display: flex
-                    gap: 5px
-                slots:
-                  default:
-                    - component: f7-cell
-                      slots:
-                        default:
-                          - component: oh-clock
-                            config:
-                              format: dddd [,] D. MMMM
-                              class:
-                                - highlightModifier
-                              style:
-                                color: var(--custom-value-color)
-                                font-size: var(--custom-head-font-size)
-                    - component: f7-cell
-                      slots:
-                        default:
-                          - component: oh-clock
-                            config:
-                              format: "[, ] HH:mm [ Uhr]"
-                              class:
-                                - highlightModifier
-                              style:
-                                color: var(--custom-value-color)
-                                font-size: var(--custom-head-font-size)
-        - component: f7-card-footer
+        - component: f7-card-content
           config:
             style:
               height: 100%
@@ -135,7 +104,7 @@ widgets:
                                 left: var(--custom-widget-padding)
                                 position: absolute
                                 stroke: var(--custom-default-state)
-                                top: calc(var(--custom-widget-padding) + 10%)
+                                top: 7px
                                 width: 35px
                               viewBox: 0 0 64 64
                             slots:
@@ -152,12 +121,12 @@ widgets:
                               style:
                                 position: absolute
                                 right: var(--custom-widget-padding)
-                                top: var(--custom-widget-padding)
+                                top: -5px
                               text: =items[props.item_temperature].numericState.toFixed(1)
                           - component: div
                             config:
                               style:
-                                bottom: var(--custom-widget-padding)
+                                bottom: 0
                                 display: flex
                                 left: calc(var(--custom-widget-padding) + 8px)
                                 position: absolute
@@ -187,7 +156,7 @@ widgets:
                                 - sensorSuffix
                                 - sensorHumiditySuffix
                               style:
-                                bottom: var(--custom-widget-padding)
+                                bottom: 0
                                 position: absolute
                                 right: var(--custom-widget-padding)
                               text: =items[props.item_humidity].numericState
@@ -206,7 +175,7 @@ widgets:
                                 left: var(--custom-widget-padding)
                                 position: absolute
                                 stroke: var(--custom-default-state)
-                                top: calc(var(--custom-widget-padding) + 10%)
+                                top: 7px
                                 width: 35px
                               viewBox: 0 0 64 64
                             slots:
@@ -223,12 +192,12 @@ widgets:
                               style:
                                 position: absolute
                                 right: var(--custom-widget-padding)
-                                top: var(--custom-widget-padding)
+                                top: -5px
                               text: =items[props.item_rain_rate].numericState.toFixed(1)
                           - component: div
                             config:
                               style:
-                                bottom: var(--custom-widget-padding)
+                                bottom: 0
                                 display: flex
                                 position: absolute
                                 right: var(--custom-widget-padding)
@@ -259,10 +228,10 @@ widgets:
                             config:
                               style:
                                 fill: var(--custom-default-state)
-                                left: var(--custom-widget-padding)
+                                left: 0
                                 position: absolute
                                 stroke: var(--custom-default-state)
-                                top: calc(var(--custom-widget-padding) + 10%)
+                                top: 7px
                                 width: 35px
                               viewBox: 0 0 64 64
                             slots:
@@ -279,7 +248,7 @@ widgets:
                               style:
                                 position: absolute
                                 right: var(--custom-widget-padding)
-                                top: var(--custom-widget-padding)
+                                top: -5px
                               text: =items[props.item_wind_speed].numericState.toFixed(1)
                           - component: Label
                             config:
@@ -290,12 +259,12 @@ widgets:
                                 position: absolute
                                 right: var(--custom-widget-padding)
                                 top: 50%
-                                transform: translate(0, -80%) scale(0.8)
+                                transform: translate(0, -70%) scale(0.8)
                               text: =items[props.item_wind_direction].state
                           - component: div
                             config:
                               style:
-                                bottom: var(--custom-widget-padding)
+                                bottom: 0
                                 display: flex
                                 position: absolute
                                 right: var(--custom-widget-padding)

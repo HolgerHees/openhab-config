@@ -37,7 +37,7 @@ class MeterConsumption:
 
         if consumption < consumption_saved:
             new_offset = consumption_saved - ( consumption - start_electricity_meter_offset)
-            self.logger.error("{}: Calculation is wrong ('{}' < '{}'). Set 'start offset' to '{}'".format(consumption, consumption_saved, new_offset ))
+            self.logger.error("pGF_Utilityroom_Electricity_State_Heatpump_Total_Consumption: Calculation is wrong ('{}' < '{}'). Set 'start offset' to '{}'".format(consumption, consumption_saved, new_offset ))
             return
 
         # *** Gesamtverbrauch ***

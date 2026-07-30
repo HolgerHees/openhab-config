@@ -16,11 +16,14 @@ widgets:
     component: div
     config:
       class:
-        - oh-grid-item-content
+        - card
+        - oh-canvas-item-content
       style:
         position: relative
         display: flex
         flex-direction: columns
+        justify-content: center
+        align-items: center
       stylesheet: |
         img {
           max-width: 100%;

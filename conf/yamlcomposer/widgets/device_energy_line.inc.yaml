@@ -22,14 +22,14 @@ slots:
             then: "M ${width} ${height/2} l -${width} 0"
         fill: none
         id: ${uid}
-        stroke: "#999999"
+        stroke: "${stroke || '#999999'}"
         stroke-width: 2
         tag: path
         vector-effect: non-scaling-stroke
         visible: true
     - component: f7-row
       config:
-        fill: "#BBBBBB"
+        fill: "${fill || '#BBBBBB'}"
         d: !if
           - if: direction == 'down'
             then: "M -${width/2} 0 l ${width/2} ${width/2} l ${width/2} -${width/2}"

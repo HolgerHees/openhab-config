@@ -961,6 +961,7 @@ sitemap haus label="Main Menu"
                     Frame label="Details" {
                         Text item=pGF_Utilityroom_Ventilation_Outdoor_Temperature_Message
                         Text item=pGF_Utilityroom_Ventilation_Indoor_Temperature_Message
+                        Text item=pGF_Utilityroom_Ventilation_Sensor_Temperature_Message
                         Text item=pGF_Utilityroom_Ventilation_Airflow_Message
                         Text item=pGF_Utilityroom_Ventilation_Fan_Speed_Message
                     }
@@ -970,6 +971,7 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Utilityroom_Ventilation_Connection_State
                         Text item=pGF_Utilityroom_Ventilation_Filter_Remaining
                         Text item=pGF_Utilityroom_Ventilation_Target_Temperature
+                        Text item=pGF_Utilityroom_Ventilation_Target_Mode
                     }
                     Frame label="Comfo Clime" {
                         Text item=pGF_Utilityroom_Ventilation_Clime_Season
@@ -1092,10 +1094,7 @@ sitemap haus label="Main Menu"
                                 Text item=pGF_Utilityroom_Heatpump_Solar_Energy_Total
                             }
                             Frame label="Test" {
-                                Text item=pGF_Utilityroom_Heatpump_Solar_Flow_Test
-                                Text item=pGF_Utilityroom_Heatpump_Solar_Power_Current_Test
-                                Text item=pGF_Utilityroom_Heatpump_Solar_Energy_Current_Test
-                                Text item=pGF_Utilityroom_Heatpump_Solar_Energy_Total_Test
+                                Text item=pGF_Utilityroom_Heatpump_Solar_Energy_Current
                             }
                             Frame label="Auswertung" {
                                 Selection item=Chart_From mappings=[HOUR="Stunde", DAY="Tag", WEEK="Woche", MONTH="Monat", YEAR="Jahr", 5YEARS="5 Jahre"]
@@ -1273,10 +1272,22 @@ sitemap haus label="Main Menu"
                         Text item=pGF_Garage_Solar_Inverter_BmsBoxTemp
                     }
                     Frame label="Energy Control" {
-                        Text item=pGF_Garage_Solar_Storage_Requested_Grid_Message
-                        Text item=pGF_Garage_Solar_Storage_Requested_Max_Solar_Message
-                        Text item=pGF_Garage_Solar_Storage_Discharged_Message
+                        Selection item=pGF_Utilityroom_Electricity_Charge_Offset mappings=[0="0 kWh", 5="5 kWh", 10="10 kWh", 15="15 kWh", 20="20 kWh", 100="Voll"]
                         Text item=pGF_Garage_Solar_Storage_ActivePowerEqual
+                        Group item=pGF_Garage_Solar_Storage_Summary_Details {
+                            Frame label="Grid Charge" {
+                                Text item=pGF_Garage_Solar_Storage_Requested_Grid_Status
+                                Text item=pGF_Garage_Solar_Storage_Requested_Grid_Details
+                            }
+                            Frame label="Solar Charge" {
+                                Text item=pGF_Garage_Solar_Storage_Requested_Max_Solar_Status
+                                Text item=pGF_Garage_Solar_Storage_Requested_Max_Solar_Details
+                            }
+                            Frame label="Discharge" {
+                                Text item=pGF_Garage_Solar_Storage_Discharged_Status
+                                Text item=pGF_Garage_Solar_Storage_Discharged_Details
+                            }
+                        }
                     }
                 }
                 Group label="Schalten (RAW) [MAP(group_socket.map):%d]" icon="selfsocket" item=gAll_Sockets {

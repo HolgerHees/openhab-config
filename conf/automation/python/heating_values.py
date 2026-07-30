@@ -59,8 +59,8 @@ class HeatpumpState:
                 hw_status = scope.ON
 
         if wp_status == 19 and Registry.getItemState("pGF_Utilityroom_Heatpump_HK2_Vorlaufsolltemperatur").doubleValue() > 20.0:
-            #temperature_pipe_out = Registry.getItemState("pGF_Utilityroom_Heating_Temperature_Pipe_Out").doubleValue()
-            #temperature_pipe_in = Registry.getItemState("pGF_Utilityroom_Heating_Temperature_Pipe_In").doubleValue()
+            #temperature_pipe_out = Registry.getItemState("pGF_Utilityroom_Heatpump_HK2_Temperature_Pipe_Out").doubleValue()
+            #temperature_pipe_in = Registry.getItemState("pGF_Utilityroom_Heatpump_HK2_Temperature_Pipe_In").doubleValue()
             #if temperature_pipe_out - temperature_pipe_in > 1.0:
             hk2_status = scope.ON
 
@@ -91,14 +91,14 @@ class HeatpumpInfo:
 
 @rule(
     triggers = [
-        ItemStateChangeTrigger("pGF_Utilityroom_Heating_Temperature_Pipe_Out"),
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_HK2_Temperature_Pipe_Out"),
         ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_HK2_Vorlauftemperatur"),
         ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_HK2_Vorlaufsolltemperatur")
     ]
 )
 class HeatpumpVorlaufInfo:
     def execute(self, module, input):
-        vorlauf_sensor = Registry.getItemState("pGF_Utilityroom_Heating_Temperature_Pipe_Out").doubleValue()
+        vorlauf_sensor = Registry.getItemState("pGF_Utilityroom_Heatpump_HK2_Temperature_Pipe_Out").doubleValue()
         vorlauf_ist_wp = Registry.getItemState("pGF_Utilityroom_Heatpump_HK2_Vorlauftemperatur").doubleValue()
         vorlauf_soll_wp = Registry.getItemState("pGF_Utilityroom_Heatpump_HK2_Vorlaufsolltemperatur").doubleValue()
 
@@ -152,13 +152,15 @@ class HeatpumpSolarEnergy:
 
 @rule(
     triggers = [
+        #SystemStartlevelTrigger(80),
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_Solar_Pump_State"),
         ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_Solar_Temperature_Vorlauf"),
         ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_Solar_Temperature_Ruecklauf")
     ]
 )
 class HeatpumpSolarInfo:
     def execute(self, module, input):
-        messured_power = Registry.getItemState("pGF_Utilityroom_Heatpump_Solar_Power_Current_Test").doubleValue()
+        #messured_power = Registry.getItemState("pGF_Utilityroom_Heatpump_Solar_Power_Current").doubleValue()
         pump_level = Registry.getItemState("pGF_Utilityroom_Heatpump_Solar_Pump_State").intValue()
 
         vorlauf = Registry.getItemState("pGF_Utilityroom_Heatpump_Solar_Temperature_Vorlauf").doubleValue()
@@ -171,8 +173,46 @@ class HeatpumpSolarInfo:
           current_flow = 0
           #self.logger.info("SOLAR THERMIE DEBUG: INACTIVE")
         else:
-          max_flow = 240 / 60 # l/min
-          current_flow = ( pump_level * max_flow / 100.0 )
+          # P0(51,90) P1(53,100) P2(56,115) P4(57,120) P5(60,150) P6(67,180) P7(70,198) P8(74,220) P9(76,240) P10(100,310)
+          # Tendlinie = 4.6x-149
+          # https://www.desmos.com/calculator?lang=de
+          # ask ai to create a function which includes two point P1(100,310) P2(60,180) P3(50,80)
+          # 100% => 310l/h
+          # 60%  => 180l/h
+          # 50%  => 80l/h
+          # result is 0.03x^2+0.1x
+
+          """messpunkte = [
+              {"percent": 0,  "flow": 0},
+              {"percent": 10,  "flow": 0},
+              {"percent": 20,  "flow": 0},
+              {"percent": 30,  "flow": 0},
+              {"percent": 40,  "flow": 0},
+              {"percent": 51,  "flow": 90},
+              {"percent": 53,  "flow": 100},
+              {"percent": 56,  "flow": 115},
+              {"percent": 57,  "flow": 120},
+              {"percent": 60,  "flow": 150},
+              {"percent": 67,  "flow": 180},
+              {"percent": 70,  "flow": 198},
+              {"percent": 74,  "flow": 220},
+              {"percent": 76,  "flow": 240},
+              {"percent": 100, "flow": 310}
+          ]
+
+
+          for data in messpunkte:
+            ref = 4.6 * data["percent"] - 149
+            print(data["percent"], ref / 60, ref, data["flow"])"""
+
+          current_flow = min(max(4.6 * pump_level - 149, 0), 310)
+          #current_flow = 0.03 * pump_level ** 2 + 0.1 * pump_level #0.03x^{2}+0.1x
+          current_flow = current_flow / 60 # l/h => l/min
+          #print(current_flow, pump_level)
+          #max_flow = 310 / 60 # l/min
+          #current_flow = ( pump_level * max_flow / 100.0 )
+
+
 
 
         #self.logger.info(str(current_flow))
@@ -184,4 +224,4 @@ class HeatpumpSolarInfo:
 
         #self.logger.info("SOLAR THERMIE DEBUG: MESSURED POWER: {:.1f}, CALC POWER: {:.1f}, Flow: {:.1f}, Vorlauf: {:.1f}, Rücklauf: {:.1f}, Diff: {:.1f}, Pump Level: {:.1f}".format(messured_power, calculated_power, current_flow, vorlauf, ruecklauf, temp_diff, pump_level))
 
-Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Flow").postUpdate(2.1)
+#Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Flow").postUpdate(2.1)

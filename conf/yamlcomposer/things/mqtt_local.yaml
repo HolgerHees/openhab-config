@@ -166,25 +166,25 @@ things:
         label: Drehzahl Pumpe
         config:
           stateTopic: ebusd/WRSol/DrehzahlPumpe
-      flow:
-        type: number
-        label: Flow
-        config:
-          stateTopic: ebusd/WRSol/Flow
-          transformationPattern:
-            - "PY(|int(input)/60.0)"
+      #flow:
+      #  type: number
+      #  label: Flow
+      #  config:
+      #    stateTopic: ebusd/WRSol/Flow
+      #    transformationPattern:
+      #      - "PY(|int(input)/60.0)"
       ertragAktuell:
         type: number
         label: Ertrag Aktuel
         config:
           stateTopic: ebusd/WRSol/ErtragAktuell
-      ertragGesamt:
-        type: number
-        label: Ertrag Gesamt
-        config:
-          stateTopic: ebusd/WRSol/ErtragGesamt
-      leistungAktuell:
-        type: number
-        label: Leistung Aktuell
-        config:
-          stateTopic: ebusd/WRSol/LeistungAktuell
+      #ertragGesamt:
+      #  type: number
+      #  label: Ertrag Gesamt
+      #  config:
+      #    stateTopic: ebusd/WRSol/ErtragGesamt
+      #leistungAktuell:
+      #  type: number
+      #  label: Leistung Aktuell
+      #  config:
+      #    stateTopic: ebusd/WRSol/LeistungAktuell

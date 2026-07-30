@@ -117,20 +117,35 @@ class TargetTemperatureMessage:
 @rule(
     triggers = [
         SystemStartlevelTrigger(80),
-        ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Clime_Supply_Temperature"),
+        ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Supply_Temperature"),
         ItemStateChangeTrigger("pGF_Livingroom_Air_Sensor_Temperature_Value"),
         ItemStateChangeTrigger("pFF_Bedroom_Air_Sensor_Temperature_Value")
     ]
 )
 class CoolingTemperatureMessage:
     def execute(self, module, input):
-        supply_temperature = Registry.getItemState("pGF_Utilityroom_Ventilation_Clime_Supply_Temperature")
+        supply_temperature = Registry.getItemState("pGF_Utilityroom_Ventilation_Supply_Temperature")
         livingroom_temperature = Registry.getItemState("pGF_Livingroom_Air_Sensor_Temperature_Value")
         bedroom_temperature = Registry.getItemState("pFF_Bedroom_Air_Sensor_Temperature_Value")
 
         msg = "{}°C → {}°C (WZ), {}°C (SZ)".format(supply_temperature.format("%.1f"),livingroom_temperature.format("%.1f"),bedroom_temperature.format("%.1f"))
 
         Registry.getItem("pGF_Utilityroom_Ventilation_Cooling_Temperature_Message").postUpdateIfDifferent(msg)
+
+@rule(
+    triggers = [
+        SystemStartlevelTrigger(80),
+        ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Supply_Temperature"),
+        ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Extract_Temperature")
+    ]
+)
+class SensorTemperatureMessage:
+    def execute(self, module, input):
+        supply_state = Registry.getItemState("pGF_Utilityroom_Ventilation_Supply_Temperature")
+        extract_state = Registry.getItemState("pGF_Utilityroom_Ventilation_Extract_Temperature")
+
+        msg = "→ {}°C, ← {}°C".format(supply_state.format("%.1f"), extract_state.format("%.1f"))
+        Registry.getItem("pGF_Utilityroom_Ventilation_Sensor_Temperature_Message").postUpdateIfDifferent(msg)
 
 @rule(
     triggers = [
@@ -267,7 +282,7 @@ class IndoorTemperatureMessage:
 
         ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_Auto_Mode"),
         ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Clime_Target_Temperature"),
-        ItemStateChangeTrigger("pGF_Livingroom_Air_Sensor_Temperature_Value")
+        ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Extract_Temperature")
     ]
 )
 class FanLevel:
@@ -296,7 +311,8 @@ class FanLevel:
             elif outdoor_temperature <= -5.0:
                 new_level = 1
             else:
-                indoor_temperature = ToolboxHelper.getStableState("pGF_Livingroom_Air_Sensor_Temperature_Value", 900).doubleValue()
+                indoor_temperature = ToolboxHelper.getStableState("pGF_Utilityroom_Ventilation_Extract_Temperature", 900).doubleValue()
+                #indoor_temperature = ToolboxHelper.getStableState("pGF_Livingroom_Air_Sensor_Temperature_Value", 900).doubleValue()
 
                 presence_state = Registry.getItemState("pOther_Presence_State").intValue()
 
@@ -340,9 +356,9 @@ class FanLevel:
 #Registry.getItem("pGF_Utilityroom_Ventilation_Fan_Level").sendCommand(3)
 
 @rule
-class ComfortTemperature:
+class ComfoInitializer:
     def buildTriggers(self):
-        triggers = []
+        triggers = [ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Auto_Mode", state=scope.ON)]
         for item in Registry.getItem("eOther_Target_Temperatures").getAllMembers():
             triggers.append(ItemStateChangeTrigger(item.getName()))
         return triggers
@@ -354,7 +370,7 @@ class ComfortTemperature:
             if temperature > max_temperature:
                 max_temperature = temperature
 
-        Registry.getItem("pGF_Utilityroom_Ventilation_Target_Mode").sendCommandIfDifferent(2)
+        Registry.getItem("pGF_Utilityroom_Ventilation_Target_Mode").sendCommandIfDifferent(2) # manuell
         Registry.getItem("pGF_Utilityroom_Ventilation_Target_Temperature").sendCommandIfDifferent(max_temperature)
 
         offset = Registry.getItemState("pGF_Utilityroom_Ventilation_Clime_Target_Offset").intValue()
@@ -365,9 +381,9 @@ class ComfortTemperature:
         ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_Auto_Mode")
     ]
 )
-class ComfortCoolingControl:
+class ComfoCoolingControl:
     def execute(self, module, input):
-        season = 2 if Registry.getItemState("pGF_Utilityroom_Heatpump_Auto_Mode").intValue() == 1 else 0
+        season = HeatingHelper.STATE_CLIME_SEASON_COOLING if Registry.getItemState("pGF_Utilityroom_Heatpump_Auto_Mode").intValue() == 1 else HeatingHelper.STATE_CLIME_SEASON_OFF
         Registry.getItem("pGF_Utilityroom_Ventilation_Clime_Season").sendCommandIfDifferent(season)
 
 @rule(
@@ -388,6 +404,7 @@ class ComfortOffsetControl:
 #Registry.getItem("pGF_Utilityroom_Ventilation_Clime_Target_Temperature").sendCommand(23.0)
 #Registry.getItem("pGF_Utilityroom_Ventilation_Clime_Control_Season").sendCommand(0)
 
+#print(Registry.getItemState("pGF_Utilityroom_Ventilation_Bypass_State").intValue() )
 
 
 
