@@ -32,6 +32,7 @@ class MeterConsumption:
         consumption += Registry.getItemState("pGF_Utilityroom_Electricity_Heatpump_Main_Meter_Consumption").doubleValue()
         consumption += Registry.getItemState("pGF_Utilityroom_Electricity_Heatpump_Compressor_Meter_Consumption").doubleValue()
         consumption += Registry.getItemState("pGF_Utilityroom_Electricity_Heatpump_Electric_Meter_Consumption").doubleValue()
+        consumption = round(consumption,3)
 
         consumption_saved = Registry.getItemState("pGF_Utilityroom_Electricity_State_Heatpump_Total_Consumption",scope.DecimalType(0.0)).doubleValue()
 

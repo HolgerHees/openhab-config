@@ -1,104 +1,108 @@
+Group:Number:COUNT(ON) gAll_Sockets_Count      "Alle [MAP(group_socket.map):%d]"             <selflight> {autoupdate="false"}
+Group:Number:COUNT(ON) gOutdoor_Sockets_Count  "Alle [MAP(group_socket.map):%d]"             <selflight> {autoupdate="false"}
+
+
 Group:Switch:OR(ON, OFF) gAll_Sockets          "Alle"               <selfsocket> {autoupdate="false"}
 Group:Switch:OR(ON, OFF) gOutdoor_Sockets      "Garten"             <selfsocket> {autoupdate="false"}
 
 // **** GF LIVINGROOM ****
 Group  eGF_Livingroom_Socket_Bassbox           "Bassbox"            <selfsocket> (lGF_Livingroom) ["PowerOutlet"]
-Switch pGF_Livingroom_Socket_Bassbox_Powered   "Bassbox"            <selfsocket> (eGF_Livingroom_Socket_Bassbox,gAll_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_ff:livingroomBassbox" }
+Switch pGF_Livingroom_Socket_Bassbox_Powered   "Bassbox"            <selfsocket> (eGF_Livingroom_Socket_Bassbox,gAll_Sockets,gAll_Sockets_Count) ["Switch","Power"] { channel="knx:device:bridge:sockets_ff:livingroomBassbox" }
 
 Group  eGF_Livingroom_Socket_Couch             "Couch"              <selfsocket> (lGF_Livingroom) ["PowerOutlet"]
-Switch pGF_Livingroom_Socket_Couch_Powered     "Couch"              <selfsocket> (eGF_Livingroom_Socket_Couch,gAll_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_ff:livingroomCouch" }
+Switch pGF_Livingroom_Socket_Couch_Powered     "Couch"              <selfsocket> (eGF_Livingroom_Socket_Couch,gAll_Sockets,gAll_Sockets_Count) ["Switch","Power"] { channel="knx:device:bridge:sockets_ff:livingroomCouch" }
 
 Group  eGF_Livingroom_Socket_Fireplace         "Kamin"              <selfsocket> (lGF_Livingroom) ["PowerOutlet"]
-Switch pGF_Livingroom_Socket_Fireplace_Powered "Kamin"              <selfsocket> (eGF_Livingroom_Socket_Fireplace,gAll_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_ff:livingroomFireplace" }
+Switch pGF_Livingroom_Socket_Fireplace_Powered "Kamin"              <selfsocket> (eGF_Livingroom_Socket_Fireplace,gAll_Sockets,gAll_Sockets_Count) ["Switch","Power"] { channel="knx:device:bridge:sockets_ff:livingroomFireplace" }
 
 // **** GF CORRIDOR ****
 Group  eGF_Corridor_Socket                     "Treppe"             <selfsocket> (lGF_Corridor) ["PowerOutlet"]
-Switch pGF_Corridor_Socket_Powered             "Treppe"             <selfsocket> (eGF_Corridor_Socket,gAll_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_ff:floor" }
+Switch pGF_Corridor_Socket_Powered             "Treppe"             <selfsocket> (eGF_Corridor_Socket,gAll_Sockets,gAll_Sockets_Count) ["Switch","Power"] { channel="knx:device:bridge:sockets_ff:floor" }
 
 // **** GF GUESTTOILET ****
 Group  eGF_Guesttoilet_Socket                  "WC Radio"           <selfsocket> (lGF_Guesttoilet) ["PowerOutlet"]
-Switch pGF_Guesttoilet_Socket_Powered          "WC Radio"           <selfsocket> (eGF_Guesttoilet_Socket,gAll_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_ff:guesttoilet" }
+Switch pGF_Guesttoilet_Socket_Powered          "WC Radio"           <selfsocket> (eGF_Guesttoilet_Socket,gAll_Sockets,gAll_Sockets_Count) ["Switch","Power"] { channel="knx:device:bridge:sockets_ff:guesttoilet" }
 
 // **** FF BATHROOM ****
 Group  eFF_Bathroom_Socket_Left                "Waschbecken links"  <selfsocket> (lFF_Bathroom) ["PowerOutlet"]
-Switch pFF_Bathroom_Socket_Left_Powered        "Waschbecken links"  <selfsocket> (eFF_Bathroom_Socket_Left,gAll_Sockets) ["Switch","Power"]   { channel="knx:device:bridge:sockets_sf:bathroomLeft" }
+Switch pFF_Bathroom_Socket_Left_Powered        "Waschbecken links"  <selfsocket> (eFF_Bathroom_Socket_Left,gAll_Sockets,gAll_Sockets_Count) ["Switch","Power"]   { channel="knx:device:bridge:sockets_sf:bathroomLeft" }
 
 Group  eFF_Bathroom_Socket_Right               "Waschbecken rechts" <selfsocket> (lFF_Bathroom) ["PowerOutlet"]
-Switch pFF_Bathroom_Socket_Right_Powered       "Waschbecken rechts" <selfsocket> (eFF_Bathroom_Socket_Right,gAll_Sockets) ["Switch","Power"]   { channel="knx:device:bridge:sockets_sf:bathroomRight" }
+Switch pFF_Bathroom_Socket_Right_Powered       "Waschbecken rechts" <selfsocket> (eFF_Bathroom_Socket_Right,gAll_Sockets,gAll_Sockets_Count) ["Switch","Power"]   { channel="knx:device:bridge:sockets_sf:bathroomRight" }
 
 // **** ATTIC ****
 Group  eFF_Attic_Socket                           "Schornstein"        <selfsocket> (lFF_Attic) ["PowerOutlet"]
-Switch pFF_Attic_Socket_Powered                   "Schornstein"        <selfsocket> (eFF_Attic_Socket,gAll_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_sf:attic" }
+Switch pFF_Attic_Socket_Powered                   "Schornstein"        <selfsocket> (eFF_Attic_Socket,gAll_Sockets,gAll_Sockets_Count) ["Switch","Power"] { channel="knx:device:bridge:sockets_sf:attic" }
 
 // **** GARDEN ****
 Group  eOutdoor_Streedside_Socket              "Steckdosen"         <selfsocket> (lOutdoor) ["PowerOutlet"] { synonyms="aussensteckdose", ia_description="Die Aussensteckdose befindet sich im Garten auf der Strassenseite" }
-Switch pOutdoor_Streeside_Socket_Powered       "Steckdosen"         <selfsocket> (eOutdoor_Streedside_Socket,gAll_Sockets,gOutdoor_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_outdoor:streedside" }
+Switch pOutdoor_Streeside_Socket_Powered       "Steckdosen"         <selfsocket> (eOutdoor_Streedside_Socket,gAll_Sockets,gAll_Sockets_Count,gOutdoor_Sockets,gOutdoor_Sockets_Count) ["Switch","Power"] { channel="knx:device:bridge:sockets_outdoor:streedside" }
 
 Group  eOutdoor_Terrace_Socket                 "Steckdosen"         <selfsocket> (lOutdoor) ["PowerOutlet"] { synonyms="aussensteckdose", ia_description="Die Aussensteckdose befindet sich im Garten an der Terasse" }
-Switch pOutdoor_Terrace_Socket_Powered         "Steckdosen"         <selfsocket> (eOutdoor_Terrace_Socket,gAll_Sockets,gOutdoor_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_outdoor:gardenside" }
+Switch pOutdoor_Terrace_Socket_Powered         "Steckdosen"         <selfsocket> (eOutdoor_Terrace_Socket,gAll_Sockets,gAll_Sockets_Count,gOutdoor_Sockets,gOutdoor_Sockets_Count) ["Switch","Power"] { channel="knx:device:bridge:sockets_outdoor:gardenside" }
 
 Group  eOutdoor_Toolshed_Socket             "Steckdosen"         <selfsocket> (lOutdoor) ["PowerOutlet"] { synonyms="aussensteckdose", ia_description="Die Aussensteckdose befindet sich im Garten an der Werkstatt zur Terassenseite" }
-Switch pOutdoor_Toolshed_Socket_Powered     "Steckdosen"         <selfsocket> (eOutdoor_Toolshed_Socket,gAll_Sockets,gOutdoor_Sockets) ["Switch","Power"] { channel="knx:device:bridge:sockets_outdoor:toolshed" }
+Switch pOutdoor_Toolshed_Socket_Powered     "Steckdosen"         <selfsocket> (eOutdoor_Toolshed_Socket,gAll_Sockets,gAll_Sockets_Count,gOutdoor_Sockets,gOutdoor_Sockets_Count) ["Switch","Power"] { channel="knx:device:bridge:sockets_outdoor:toolshed" }
 
 // **** MOBILE ****
 Group  eMobile_Socket_1                        "Mobile 1"           <selfsocket> (lIndoorOther) ["PowerOutlet"]
-Switch pMobile_Socket_1_Powered                "Mobile 1"           <selfsocket> (eMobile_Socket_1,gAll_Sockets) ["Switch","Power"]              { channel="shelly:shellyplusplug:socket8:relay#output" }
+Switch pMobile_Socket_1_Powered                "Mobile 1"           <selfsocket> (eMobile_Socket_1,gAll_Sockets,gAll_Sockets_Count) ["Switch","Power"]              { channel="shelly:shellyplusplug:socket8:relay#output" }
 Number pMobile_Socket_1_Consumption	           "Mobile 1 Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_1) ["Messurement","Power"]  { channel="shelly:shellyplusplug:socket8:meter#currentWatts" }
 Number pMobile_Socket_1_Total_Raw   	       "Mobile 1 Gesamt Raw [%.2f KWh]"	<selfenergy> (eMobile_Socket_1)  { channel="shelly:shellyplusplug:socket8:meter#totalKWH" }
 Number pMobile_Socket_1_Total_Consumption      "Mobile 1 Gesamt [%.2f KWh]"	<selfenergy> (eMobile_Socket_1,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]
 Number pMobile_Socket_1_Daily_Consumption	   "Mobile 1 Tagesverbrauch [%.2f KWh]"	<selfenergy> (eMobile_Socket_1) ["Point"]
 
 Group  eMobile_Socket_2                        "Mobile 2"           <selfsocket> (lIndoorOther) ["PowerOutlet"]
-Switch pMobile_Socket_2_Powered                "Mobile 2"           <selfsocket> (eMobile_Socket_2,gAll_Sockets) ["Switch","Power"]              { channel="shelly:shellyplusplug:socket9:relay#output" }
+Switch pMobile_Socket_2_Powered                "Mobile 2"           <selfsocket> (eMobile_Socket_2,gAll_Sockets,gAll_Sockets_Count) ["Switch","Power"]              { channel="shelly:shellyplusplug:socket9:relay#output" }
 Number pMobile_Socket_2_Consumption	           "Mobile 2 Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_2) ["Messurement","Power"]  { channel="shelly:shellyplusplug:socket9:meter#currentWatts" }
 Number pMobile_Socket_2_Total_Raw   	       "Mobile 2 Gesamt Raw [%.2f KWh]"	<selfenergy> (eMobile_Socket_2)  { channel="shelly:shellyplusplug:socket9:meter#totalKWH" }
 Number pMobile_Socket_2_Total_Consumption      "Mobile 2 Gesamt [%.2f KWh]"	<selfenergy> (eMobile_Socket_2,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]
 Number pMobile_Socket_2_Daily_Consumption	   "Mobile 2 Tagesverbrauch [%.2f KWh]"	<selfenergy> (eMobile_Socket_2) ["Point"]
 
 Group  eMobile_Socket_3                        "Mobile 3"           <selfsocket> (lIndoorOther) ["PowerOutlet"]
-Switch pMobile_Socket_3_Powered                "Mobile 3"           <selfsocket> (eMobile_Socket_3,gAll_Sockets) ["Switch","Power"]              { channel="shelly:shellyplusplug:socket6:relay#output" }
+Switch pMobile_Socket_3_Powered                "Mobile 3"           <selfsocket> (eMobile_Socket_3,gAll_Sockets,gAll_Sockets_Count) ["Switch","Power"]              { channel="shelly:shellyplusplug:socket6:relay#output" }
 Number pMobile_Socket_3_Consumption	           "Mobile 3 Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_3) ["Messurement","Power"]  { channel="shelly:shellyplusplug:socket6:meter#currentWatts" }
 Number pMobile_Socket_3_Total_Raw   	       "Mobile 3 Gesamt Raw [%.2f KWh]"	<selfenergy> (eMobile_Socket_3)  { channel="shelly:shellyplusplug:socket6:meter#totalKWH" }
 Number pMobile_Socket_3_Total_Consumption      "Mobile 3 Gesamt [%.2f KWh]"	<selfenergy> (eMobile_Socket_3,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]
 Number pMobile_Socket_3_Daily_Consumption	   "Mobile 3 Tagesverbrauch [%.2f KWh]"	<selfenergy> (eMobile_Socket_3) ["Point"]
 
 Group  eMobile_Socket_4                        "Mobile 4"           <selfsocket> (lIndoorOther) ["PowerOutlet"]
-Switch pMobile_Socket_4_Powered                "Mobile 4"           <selfsocket> (eMobile_Socket_4,gAll_Sockets) ["Switch","Power"]              { channel="shelly:shellyplusplug:socket7:relay#output" }
+Switch pMobile_Socket_4_Powered                "Mobile 4"           <selfsocket> (eMobile_Socket_4,gAll_Sockets,gAll_Sockets_Count) ["Switch","Power"]              { channel="shelly:shellyplusplug:socket7:relay#output" }
 Number pMobile_Socket_4_Consumption	           "Mobile 4 Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_4) ["Messurement","Power"]  { channel="shelly:shellyplusplug:socket7:meter#currentWatts" }
 Number pMobile_Socket_4_Total_Raw   	       "Mobile 4 Gesamt Raw [%.2f KWh]"	<selfenergy> (eMobile_Socket_4)  { channel="shelly:shellyplusplug:socket7:meter#totalKWH" }
 Number pMobile_Socket_4_Total_Consumption      "Mobile 4 Gesamt [%.2f KWh]"	<selfenergy> (eMobile_Socket_4,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]
 Number pMobile_Socket_4_Daily_Consumption	   "Mobile 4 Tagesverbrauch [%.2f KWh]"	<selfenergy> (eMobile_Socket_4) ["Point"]
 
 Group  eMobile_Socket_5                        "Lüfter"           <selfsocket> (lIndoorOther) ["PowerOutlet"]
-Switch pMobile_Socket_5_Powered                "Lüfter"           <selfsocket> (eMobile_Socket_5,gAll_Sockets) ["Switch","Power"]              { channel="shelly:shellyplugs:socket1:relay#output" }
+Switch pMobile_Socket_5_Powered                "Lüfter"           <selfsocket> (eMobile_Socket_5,gAll_Sockets,gAll_Sockets_Count) ["Switch","Power"]              { channel="shelly:shellyplugs:socket1:relay#output" }
 Number pMobile_Socket_5_Consumption	           "Lüfter Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_5) ["Messurement","Power"]  { channel="shelly:shellyplugs:socket1:meter#currentWatts" }
 Number pMobile_Socket_5_Total_Raw   	       "Lüfter Gesamt Raw [%.2f KWh]"	<selfenergy> (eMobile_Socket_5)  { channel="shelly:shellyplugs:socket1:meter#totalKWH" }
 Number pMobile_Socket_5_Total_Consumption      "Lüfter Gesamt [%.2f KWh]"	<selfenergy> (eMobile_Socket_5,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]
 Number pMobile_Socket_5_Daily_Consumption	   "Lüfter Tagesverbrauch [%.2f KWh]"	<selfenergy> (eMobile_Socket_5) ["Point"]
 
 Group  eMobile_Socket_6                        "Frostwächter"           <selfsocket> (lToolshed) ["PowerOutlet"]
-Switch pMobile_Socket_6_Powered                "Frostwächter"           <selfsocket> (eMobile_Socket_6,gAll_Sockets) ["Switch","Power"]              { channel="shelly:shellyplugs:socket2:relay#output" }
+Switch pMobile_Socket_6_Powered                "Frostwächter"           <selfsocket> (eMobile_Socket_6,gAll_Sockets,gAll_Sockets_Count) ["Switch","Power"]              { channel="shelly:shellyplugs:socket2:relay#output" }
 Number pMobile_Socket_6_Consumption	           "Frostwächter Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_6) ["Messurement","Power"]  { channel="shelly:shellyplugs:socket2:meter#currentWatts" }
 Number pMobile_Socket_6_Total_Raw 	           "Frostwächter Gesamt Raw [%.2f KWh]"	<selfenergy> (eMobile_Socket_6)  { channel="shelly:shellyplugs:socket2:meter#totalKWH" }
 Number pMobile_Socket_6_Total_Consumption      "Frostwächter Gesamt [%.2f KWh]"	<selfenergy> (eMobile_Socket_6,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]
 Number pMobile_Socket_6_Daily_Consumption	   "Frostwächter Tagesverbrauch [%.2f KWh]"	<selfenergy> (eMobile_Socket_6) ["Point"]
 
 Group  eMobile_Socket_7                        "Dachboden"           <selfsocket> (lFF_Attic) ["PowerOutlet"]
-Switch pMobile_Socket_7_Powered                "Dachboden"           <selfsocket> (eMobile_Socket_7,gAll_Sockets) ["Switch","Power"]              { channel="shelly:shellyplusplug:socket3:relay#output" }
+Switch pMobile_Socket_7_Powered                "Dachboden"           <selfsocket> (eMobile_Socket_7,gAll_Sockets,gAll_Sockets_Count) ["Switch","Power"]              { channel="shelly:shellyplusplug:socket3:relay#output" }
 Number pMobile_Socket_7_Consumption	           "Dachboden Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_7) ["Messurement","Power"]  { channel="shelly:shellyplusplug:socket3:meter#currentWatts" }
 Number pMobile_Socket_7_Total_Raw 	           "Dachboden Gesamt Raw [%.2f KWh]"	<selfenergy> (eMobile_Socket_7)  { channel="shelly:shellyplusplug:socket3:meter#totalKWH" }
 Number pMobile_Socket_7_Total_Consumption      "Dachboden Gesamt [%.2f KWh]"	<selfenergy> (eMobile_Socket_7,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]
 Number pMobile_Socket_7_Daily_Consumption	   "Dachboden Tagesverbrauch [%.2f KWh]"	<selfenergy> (eMobile_Socket_7) ["Point"]
 
 Group  eMobile_Socket_8                        "Wetterstation"           <selfsocket> (lToolshed) ["PowerOutlet"]
-Switch pMobile_Socket_8_Powered                "Wetterstation"           <selfsocket> (eMobile_Socket_8,gAll_Sockets) ["Switch","Power"]              { channel="shelly:shellyplusplug:socket4:relay#output" }
+Switch pMobile_Socket_8_Powered                "Wetterstation"           <selfsocket> (eMobile_Socket_8,gAll_Sockets,gAll_Sockets_Count) ["Switch","Power"]              { channel="shelly:shellyplusplug:socket4:relay#output" }
 Number pMobile_Socket_8_Consumption	           "Wetterstation Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_8,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]  { channel="shelly:shellyplusplug:socket4:meter#currentWatts" }
 Number pMobile_Socket_8_Total_Raw 	           "Wetterstation Gesamt Raw [%.2f KWh]"	<selfenergy> (eMobile_Socket_8)  { channel="shelly:shellyplusplug:socket4:meter#totalKWH" }
 Number pMobile_Socket_8_Total_Consumption      "Wetterstation Gesamt [%.2f KWh]"	<selfenergy> (eMobile_Socket_8,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]
 Number pMobile_Socket_8_Daily_Consumption	   "Wetterstation Tagesverbrauch [%.2f KWh]"	<selfenergy> (eMobile_Socket_8) ["Point"]
 
 Group  eMobile_Socket_9                        "Server"           <selfsocket> (lGF_Utilityroom) ["PowerOutlet"]
-Switch pMobile_Socket_9_Powered                "Server"           <selfsocket> (eMobile_Socket_9,gAll_Sockets) ["Switch","Power"]              { channel="shelly:shellyplusplug:socket5:relay#output" }
+Switch pMobile_Socket_9_Powered                "Server"           <selfsocket> (eMobile_Socket_9,gAll_Sockets,gAll_Sockets_Count) ["Switch","Power"]              { channel="shelly:shellyplusplug:socket5:relay#output" }
 Number pMobile_Socket_9_Consumption	           "Server Verbrauch [%.2f W]"	<selfenergy> (eMobile_Socket_9,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]  { channel="shelly:shellyplusplug:socket5:meter#currentWatts" }
 Number pMobile_Socket_9_Total_Raw 	           "Server Gesamt Raw [%.2f KWh]"	<selfenergy> (eMobile_Socket_9)  { channel="shelly:shellyplusplug:socket5:meter#totalKWH" }
 Number pMobile_Socket_9_Total_Consumption      "Server Gesamt [%.2f KWh]"	<selfenergy> (eMobile_Socket_9,gPersistance_Chart,gPersistance_History) ["Messurement","Power"]

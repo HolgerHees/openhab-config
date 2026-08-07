@@ -23,8 +23,8 @@ class Consumption:
         total = Registry.getItemState("pGF_Utilityroom_Electricity_State_Total_Consumption").doubleValue()
         comfoair = Registry.getItemState("pGF_Utilityroom_Electricity_State_Comfoair_Total_Consumption").doubleValue()
         heatpump = Registry.getItemState("pGF_Utilityroom_Electricity_State_Heatpump_Total_Consumption").doubleValue()
-
         consumption = total - comfoair - heatpump
+        consumption = round(consumption,3)
 
         Registry.getItem("pGF_Utilityroom_Electricity_State_House_Total_Consumption").postUpdateIfDifferent(consumption)
 

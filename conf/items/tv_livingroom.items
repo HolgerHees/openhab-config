@@ -1,7 +1,7 @@
 // **** TELEVISION ****
 Group  eGF_Livingroom_Television                  "Fernseher"    <selfinfo> (lGF_Livingroom) ["Television"]
 
-Switch pGF_Livingroom_Television_POWER            "An / Aus"     <selfsettings> (eGF_Livingroom_Television) ["Control"]
+Switch pGF_Livingroom_Television_POWER            "Eingeschaltet [MAP(on_off_de.map):%s]"     <selfsettings> (eGF_Livingroom_Television) ["Control"]
 
 Switch pGF_Livingroom_Television_Key_POWER        "An / Aus"     <selfsettings> (eGF_Livingroom_Television) ["Control"] {channel="samsungtv:tv:livingroom:power"}
 String pGF_Livingroom_Television_Key_CODE         "Tastendruck"  <selfsettings> (eGF_Livingroom_Television) ["Control"] {channel="samsungtv:tv:livingroom:keyCode"} 

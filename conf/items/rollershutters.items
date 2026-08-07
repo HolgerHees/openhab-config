@@ -1,4 +1,4 @@
-Group:Number:COUNT(0) gShutters_Count	"Alle" <selfrollershutter> {autoupdate="false"}
+Group:Number:COUNT(0) gShutters_Count	"Alle [MAP(group_rollershutter.map):%d]" <selfrollershutter> {autoupdate="false"}
 Group:Number:COUNT(0) gGF_Shutters_Count	"EG" 	 <selfrollershutter> {autoupdate="false"}
 Group:Number:COUNT(0) gFF_Shutters_Count	"OG" 	 <selfrollershutter> {autoupdate="false"}
 

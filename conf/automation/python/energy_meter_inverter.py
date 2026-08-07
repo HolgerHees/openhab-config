@@ -64,6 +64,7 @@ class DailyConsumptionTotalCalculation:
     def execute(self, module, input):
         zaehler_stand_saved = Registry.getItemState("pGF_Utilityroom_Electricity_State_Total_Consumption",scope.DecimalType(0.0)).doubleValue()
         zaehler_stand_current = round(Registry.getItemState("pGF_Garage_Solar_Inverter_ConsumptionTotalEnergy").doubleValue() + start_electricity_meter_consumption_offset, 3)
+
         if zaehler_stand_current < zaehler_stand_saved:
             new_offset = zaehler_stand_saved - ( zaehler_stand_current - start_electricity_meter_consumption_offset)
             self.logger.error("pGF_Utilityroom_Electricity_State_Total_Consumption: Calculation is wrong ('{}' < '{}'). Set 'start_electricity_meter_consumption_offset' to '{}'".format(zaehler_stand_current, zaehler_stand_saved, new_offset ))
@@ -108,7 +109,7 @@ class AutarkyCalculation:
     def execute(self, module, input):
         daily_demand = Registry.getItemState("pGF_Utilityroom_Electricity_State_Daily_Demand").floatValue()
         daily_consumption = Registry.getItemState("pGF_Utilityroom_Electricity_State_Daily_Consumption").floatValue()
-        autarky = (100 - ((daily_demand * 100) / daily_consumption)) if daily_consumption > 0 else 100
+        autarky = round((100 - ((daily_demand * 100) / daily_consumption)) if daily_consumption > 0 else 100, 0)
         Registry.getItem("pGF_Utilityroom_Electricity_State_Autarky").postUpdate(autarky)
 
 @rule

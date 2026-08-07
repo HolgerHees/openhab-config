@@ -233,8 +233,6 @@ sitemap haus label="Main Menu"
                     }
                     Frame label="Sonstiges" {
                         Text item=pGF_Utilityroom_Washer_RemoteStartAllowanceState
-                        Text item=pGF_Utilityroom_Washer_RemoteControlActiveState
-                        Text item=pGF_Utilityroom_Washer_LocalControlActiveState
                         Text item=pGF_Utilityroom_Washer_WashingProgramDosingLevel1
                         Text item=pGF_Utilityroom_Washer_WashingProgramDosingLevel2
                     }
@@ -265,7 +263,7 @@ sitemap haus label="Main Menu"
                     Frame label="Status" {
                         Text item=pGF_Kitchen_Coffeemaker_Power_State
                         Text item=pGF_Kitchen_Coffeemaker_Operation_State
-                        Text item=pGF_Kitchen_Coffeemaker_Program_Progress_State visibility=[pGF_Kitchen_Dishwasher_OperationState==Run]
+                        Text item=pGF_Kitchen_Coffeemaker_Program_Progress_State visibility=[pGF_Kitchen_Coffeemaker_Operation_State==Run]
                     }
                     Frame label="Programm" {
                         Text item=pGF_Kitchen_Coffeemaker_Active_Program_State
@@ -297,7 +295,7 @@ sitemap haus label="Main Menu"
                 }
             }
             Frame label="Luftbefeuchter" {
-                Text label="Erdgeschoss ausgeschaltet" icon="humidifier" visibility=[pGF_Livingroom_Humidifier_Online==OFF]
+                Text label="Erdgeschoss ausgeschaltet" icon="humidifier" visibility=[pGF_Livingroom_Humidifier_Online==ON]
                 Text label="Erdgeschoss" item=pGF_Livingroom_Humidifier_Speed icon="humidifier" visibility=[pGF_Livingroom_Humidifier_Online==ON]{
                     Frame label="Steuerung " {
                         Switch item=pGF_Livingroom_Humidifier_Auto_Mode label="Modus" mappings=[ON="Auto", OFF="Manuell"]
@@ -1024,7 +1022,7 @@ sitemap haus label="Main Menu"
                             }
                         }
                         Text item=pGF_Utilityroom_Heatpump_HK2_Vorlauf_Info
-                        Text item=pGF_Utilityroom_Heating_Temperature_Pipe_In label="Rücklauf Sensor [%.1f °C]"
+                        Text item=pGF_Utilityroom_Heatpump_HK2_Temperature_Pipe_In label="Rücklauf Sensor [%.1f °C]"
                         Text item=pGF_Utilityroom_Heatpump_WP_Weichentemperatur label="Weiche (Speicher) [%.1f °C]"
                         Text item=pGF_Utilityroom_Heatpump_HW_State label="Wärmezufuhr [%s]" {
                             Text item=pGF_Utilityroom_Heatpump_HK2_Raumsolltemperatur

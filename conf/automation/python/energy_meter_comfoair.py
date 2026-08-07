@@ -23,6 +23,8 @@ class MeterConsumption:
     def execute(self, module, input):
         consumption = start_electricity_meter_offset
         consumption += Registry.getItemState("pGF_Utilityroom_Electricity_Comfoair_Meter_Consumption").doubleValue()
+        consumption = round(consumption,3)
+
 
         consumption_saved = Registry.getItemState("pGF_Utilityroom_Electricity_State_Comfoair_Total_Consumption",scope.DecimalType(0.0)).doubleValue()
         if consumption < consumption_saved:

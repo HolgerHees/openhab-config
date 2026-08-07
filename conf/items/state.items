@@ -1,7 +1,7 @@
 // **** PRESENCE ****
 Group  eOther_Presence                          "Präsenz"         <selfinfo> (lOther) ["Sensor"]
 
-Number pOther_Presence_State                    "Präsenz"         <selfinfo> (eOther_Presence) ["Status"]
+Number pOther_Presence_State                    "Präsenz [MAP(state_presence.map):%d]"         <selfinfo> (eOther_Presence) ["Status"]
 Number pOther_Presence_Arrive_State             "Ankunft"         <selfinfo> (eOther_Presence) ["Status"]
 
 Group:Switch:OR(ON, OFF) gOther_Presence_State_Raw "Präsenz"      <selflight>

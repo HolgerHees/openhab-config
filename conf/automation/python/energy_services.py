@@ -69,6 +69,8 @@ elevation_reduction_map = {
     ]
 )
 class ExpectedSolar:
+    TIMESPAN = 4
+
     def __init__(self):
         self.check(logger)
         #self.fetch(logger)
@@ -84,7 +86,7 @@ class ExpectedSolar:
         else:
             #now = now - timedelta(days=1)
             start = now
-            end = now + timedelta(days=1)
+            end = now + timedelta(days=self.TIMESPAN)
 
         self.calculateDumpedValues(rebuild, logger, start, end)
 
@@ -225,7 +227,7 @@ class ExpectedSolar:
 
     def execute(self, module, input):
         start = datetime.now().astimezone().replace(minute=0, second=0, microsecond=0)
-        end = start + timedelta(days=2)
+        end = start + timedelta(days=self.TIMESPAN)
 
         self.calculateDumpedValues(True, logger, start, end)
 
@@ -312,7 +314,7 @@ class StockPrices:
             data = None
 
         if data is None:
-            logger.error("Epexspot price response is not valid".format(name))
+            logger.error("Epexspot price response is not valid")
             logger.error(url)
             logger.error(response)
             return
