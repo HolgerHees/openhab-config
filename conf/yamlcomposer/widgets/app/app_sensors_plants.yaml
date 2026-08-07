@@ -9,26 +9,26 @@ vars:
       vars:
         title: Flächen
         slots:
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Rasen links", item: "pOutdoor_Plant_Sensor_Lawn_Back_Left_Msg", icon: "oh:selfplant", valuecolor: "({'3':'#cbcb00','4':'#d72a2a'})[@@'pOutdoor_Plant_Sensor_Lawn_Back_Left_State']", target:  {widget: "widget:app_sensors_plants_details", config: {title: "Rasen hinten", item_prefix: "pOutdoor_Plant_Sensor_Lawn_Back_Left"}}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Rasen links", item: "pOutdoor_Plant_Sensor_Lawn_Back_Left_Msg", icon: "oh:selfplant", valuecolor: "({'3':'#cbcb00','4':'#d72a2a'})[@@'pOutdoor_Plant_Sensor_Lawn_Back_Left_State']", target: {widget: "widget:app_sensors_plants_lawn_back_left"}}}
 
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Rasen vorne", item: "pOutdoor_Plant_Sensor_Lawn_Streedside_Msg", icon: "oh:selfplant", valuecolor: "({'3':'#cbcb00','4':'#d72a2a'})[@@'pOutdoor_Plant_Sensor_Lawn_Streedside_State']", target:  {widget: "widget:app_sensors_plants_lawn_streedside"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Rasen vorne", item: "pOutdoor_Plant_Sensor_Lawn_Streedside_Msg", icon: "oh:selfplant", valuecolor: "({'3':'#cbcb00','4':'#d72a2a'})[@@'pOutdoor_Plant_Sensor_Lawn_Streedside_State']", target: {widget: "widget:app_sensors_plants_lawn_streedside"}}}
 
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Terasse", item: "pOutdoor_Plant_Sensor_Terrace_Msg", icon: "oh:selfplant", valuecolor: "({'3':'#cbcb00','4':'#d72a2a'})[@@'pOutdoor_Plant_Sensor_Terrace_State']", target:  {widget: "widget:app_sensors_plants_terrace"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Terasse", item: "pOutdoor_Plant_Sensor_Terrace_Msg", icon: "oh:selfplant", valuecolor: "({'3':'#cbcb00','4':'#d72a2a'})[@@'pOutdoor_Plant_Sensor_Terrace_State']", target: {widget: "widget:app_sensors_plants_terrace"}}}
 
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Hecke Strasse", item: "pOutdoor_Plant_Sensor_Hedge_Street_Msg", icon: "oh:selfplant", valuecolor: "({'3':'#cbcb00','4':'#d72a2a'})[@@'pOutdoor_Plant_Sensor_Hedge_Street_State']", target:  {widget: "widget:app_sensors_plants_hedge_street"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Hecke Strasse", item: "pOutdoor_Plant_Sensor_Hedge_Street_Msg", icon: "oh:selfplant", valuecolor: "({'3':'#cbcb00','4':'#d72a2a'})[@@'pOutdoor_Plant_Sensor_Hedge_Street_State']", target: {widget: "widget:app_sensors_plants_hedge_street"}}}
 
     - !include
       file: ../layout/box.inc.yaml
       vars:
         title: Pflanzen
         slots:
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Dachboden", item: "pIndoor_Plant_Sensor_Mobile_Msg", icon: "oh:selfplant", valuecolor: "({'3':'#cbcb00','4':'#d72a2a'})[@@'pIndoor_Plant_Sensor_Mobile_State']", target:  {widget: "widget:app_sensors_plants_attic"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Dachboden", item: "pIndoor_Plant_Sensor_Mobile_Msg", icon: "oh:selfplant", valuecolor: "({'3':'#cbcb00','4':'#d72a2a'})[@@'pIndoor_Plant_Sensor_Mobile_State']", target: {widget: "widget:app_sensors_plants_attic"}}}
 
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Tomaten", item: "pOutdoor_Plant_Sensor_Tomatos_Msg", icon: "oh:selfplant", valuecolor: "({'3':'#cbcb00','4':'#d72a2a'})[@@'pOutdoor_Plant_Sensor_Tomatos_State']", target:  {widget: "widget:app_sensors_plants_tomatos"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Tomaten", item: "pOutdoor_Plant_Sensor_Tomatos_Msg", icon: "oh:selfplant", valuecolor: "({'3':'#cbcb00','4':'#d72a2a'})[@@'pOutdoor_Plant_Sensor_Tomatos_State']", target: {widget: "widget:app_sensors_plants_tomatos"}}}
 
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Brombeeren", item: "pOutdoor_Plant_Sensor_Blackberries_Msg", icon: "oh:selfplant", valuecolor: "({'3':'#cbcb00','4':'#d72a2a'})[@@'pOutdoor_Plant_Sensor_Blackberries_State']", target:  {widget: "widget:app_sensors_plants_blackberries"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Brombeeren", item: "pOutdoor_Plant_Sensor_Blackberries_Msg", icon: "oh:selfplant", valuecolor: "({'3':'#cbcb00','4':'#d72a2a'})[@@'pOutdoor_Plant_Sensor_Blackberries_State']", target: {widget: "widget:app_sensors_plants_blackberries"}}}
 
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Blumenbeet hinten rechts", item: "pOutdoor_Plant_Sensor_Bed_Back_Right_Msg", icon: "oh:selfplant", valuecolor: "({'3':'#cbcb00','4':'#d72a2a'})[@@'pOutdoor_Plant_Sensor_Bed_Back_Right_State']", target:  {widget: "widget:app_sensors_plants_red_back_right"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Blumenbeet hinten rechts", item: "pOutdoor_Plant_Sensor_Bed_Back_Right_Msg", icon: "oh:selfplant", valuecolor: "({'3':'#cbcb00','4':'#d72a2a'})[@@'pOutdoor_Plant_Sensor_Bed_Back_Right_State']", target: {widget: "widget:app_sensors_plants_red_back_right"}}}
 
     - !include
       file: ../layout/box.inc.yaml

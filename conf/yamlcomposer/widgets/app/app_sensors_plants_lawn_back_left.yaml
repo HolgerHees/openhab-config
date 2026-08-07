@@ -8,3 +8,4 @@ vars:
       file: ../layout/box.inc.yaml
       vars:
         <<: !include { file: app_sensors_plants.inc.yaml, vars: {item_name_prefix: "pOutdoor_Plant_Sensor_Lawn_Back_Left"}}
+

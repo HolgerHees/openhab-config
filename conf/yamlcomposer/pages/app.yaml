@@ -7,7 +7,7 @@ pages:
       parameterGroups: []
     component: oh-layout-page
     config:
-      label: Test
+      label: App
       sidebar: true
       hideNavbar: false
       stylesheet: |

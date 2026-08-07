@@ -15,16 +15,40 @@ pages:
       screenHeight: 799
       screenWidth: 1280
       sidebar: true
-      stylesheet: |
-        @import "/static/shared/widgets/app_navigation.css";
-        @import "/static/shared/widgets/app_page.css";
-        @import "/static/shared/widgets/app_content.css";
+      #stylesheet: |
+      #  @import "/static/shared/widgets/app_navigation.css";
+      #  @import "/static/shared/widgets/app_page.css";
+      #  @import "/static/shared/widgets/app_content.css";
     slots:
       canvas:
         - component: oh-canvas-layer
           config: {}
           slots:
             default:
+              - component: oh-canvas-item
+                config: {}
+                slots:
+                  default:
+                    - component: link
+                      config:
+                        rel: stylesheet
+                        href: /static/shared/widgets/app_navigation.css
+              - component: oh-canvas-item
+                config: {}
+                slots:
+                  default:
+                    - component: link
+                      config:
+                        rel: stylesheet
+                        href: /static/shared/widgets/app_page.css
+              - component: oh-canvas-item
+                config: {}
+                slots:
+                  default:
+                    - component: link
+                      config:
+                        rel: stylesheet
+                        href: /static/shared/widgets/app_content.css
               - component: oh-canvas-item
                 config: {}
                 slots:
