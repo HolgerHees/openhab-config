@@ -1,331 +1,166 @@
-#version: 1
+version: 1
 pages:
-  page_726fb3d7c3:
+  page_dashboard_tablet_livingroom:
     tags: []
     props:
       parameters: []
       parameterGroups: []
     component: oh-layout-page
     config:
-      layoutType: fixed
       fixedType: canvas
-      label: DashboardTabletLivingroom
-      stylesheet: |
-        /*section:nth-child(4),
-        section:nth-child(6),
-        section:nth-child(6),
-        section:nth-child(9),
-        section:nth-child(10),
-        section:nth-child(11),
-        section:nth-child(12),
-        section:nth-child(13),
-        section:nth-child(14)
-        {
-          --f7-card-border-radius: 0;
-          --f7-card-bg-color: transparent;
-          --f7-card-footer-border-color: transparent;
-          --f7-card-box-shadow: none;
-          --f7-block-margin: 0;
-          transform: translate(0, 5%);
-        }*/
-        :root {
-          --custom-green: #4ab516;
-          --custom-green-dark: #4ab51677;
-          --custom-yellow: #ffdf6f;
-          --custom-yellow-dark: #ffdf6f55;
-          --custom-red: #ff0000;
-          --custom-red-dark: #ff000077;
-          --custom-blue: #4285c7;
-          --custom-blue-dark: #4285c788;
-
-          --custom-accent-color: var(--custom-blue);
-          --custom-accent-color-dark: var(--custom-blue-dark);
-
-          --custom-legend-font-size: 16px; //var(--f7-card-header-font-size);
-          --custom-default-font-size: 19px; //var(--f7-card-header-font-size);
-          --custom-welcome-head-font-size: 40px;
-          --custom-welcome-info-font-size: 36px;
-          --custom-sensor-main-font-size: 32px;
-          --custom-sensor-sub-font-size: 22px;
-          --custom-sensor-suffix-font-size: 13px;
-
-          --custom-default-color: #FFFFFFAA; //white; //var(--f7-card-footer-text-color);
-          --custom-value-color: #FFFFFF; //white; //var(--f7-card-footer-text-color);
-          --custom-control-color: #FFFFFFDE;
-          --custom-error-state: var(--custom-red);
-          --custom-warn-state: #ffa500;
-          --custom-active-state: var(--custom-green);
-          --custom-default-state: var(--custom-value-color);
-
-          --custom-widget-padding: 8px;
-
-          --f7-theme-color: var(--custom-accent-color);
-
-          --f7-button-fill-bg-color: var(--custom-accent-color-dark);
-          --f7-button-pressed-bg-color: var(--custom-accent-color);
-
-          --f7-popup-tablet-width: 829px;
-          --f7-popup-tablet-height: 700px;
-
-          --f7-card-margin-vertical: 5px;
-
-          --f7-card-header-min-height: auto;
-          --f7-card-header-padding-vertical: 0;
-          --f7-card-header-border-color: transparent !important;
-        }
-        * {
-          font-size: var(--custom-default-font-size);
-          font-weight: 200;
-        }
-        .highlightModifier *,
-        .highlightModifier {
-          font-weight: 350;
-        }
-        //unimportantModifier {
-        //  opacity: 0.8;
-        //}
-        .lengendModifier *,
-        .lengendModifier {
-          font-size: var(--custom-legend-font-size);
-        }
-        .errorState {
-          color: var(--custom-error-state);
-        }
-        .warnState {
-          color: var(--custom-warn-state);
-        }
-        .activeState {
-          color: var(--custom-active-state);
-        }
-        .normalState {
-          color: var(--custom-value-color);
-        }
-        .normalText {
-          color: var(--custom-default-color);
-        }
-        div.circuiteActive {
-          color: var(--custom-green);
-        }
-        svg.floor_outdoor_lights .lightAuto {
-        }
-        svg.floor_outdoor_lights .lightActive,
-        svg.floor_actions .lightActive {
-          fill: var(--custom-yellow-dark);
-        }
-        svg.floor_outdoor_lights .lightDisabled {
-          fill: var(--custom-red-dark);
-        }
-        svg.floor_actions .shutterAvailable.shutterDown {
-          fill: var(--custom-green-dark);
-        }
-        .shutterDownAdvise svg.floor_actions .shutterAvailable {
-          fill: #ffa500;
-        }
-        svg.floor_actions .contactOpen {
-          fill: var(--custom-red-dark);
-        }
-        div.sensorCO2Modifier {
-        }
-        div.sensorTopModifier {
-          font-size: var(--custom-legend-font-size);
-          font-weight: 350;
-        }
-        div.sensorBottomModifier {
-          font-size: var(--custom-legend-font-size);
-          transform: translate(-2px, 0) scale(0.9);
-          opacity: 0.7;
-        }
-        div.sensorInfo {
-          color: var(--custom-default-color);
-          opacity: 0.7;
-        }
-        div.sensorPrefix {
-          color: var(--custom-default-color);
-          vertical-align: text-top;
-          opacity: 0.7;
-          padding-right: 5px;
-        }
-        div.sensorMain {
-          color: var(--custom-value-color);
-          font-size: var(--custom-sensor-main-font-size);
-          font-weight: 350;
-        }
-        div.sensorSub {
-          color: var(--custom-value-color);
-          font-size: var(--custom-sensor-sub-font-size);
-          font-weight: 300;
-        }
-        div.sensorPercentSuffix::after,
-        div.sensorEnergySuffix::after,
-        div.sensorCO2Suffix::after,
-        div.sensorTemperatureSuffix::after,
-        div.sensorHumiditySuffix::after,
-        div.sensorMillimeterSuffix::after,
-        div.sensorSpeedSuffix::after {
-          font-size: var(--custom-sensor-suffix-font-size);
-          vertical-align: text-top;
-          opacity: 0.7;
-          font-weight: 200;
-        }
-        div.sensorEnergySuffix::after {
-          content: " kW";
-        }
-        div.sensorCO2Suffix::after {
-          content: " ppm";
-        }
-        div.sensorTemperatureSuffix::after {
-          content: " °C";
-        }
-        div.sensorPercentSuffix::after,
-        div.sensorHumiditySuffix::after {
-          content: " %";
-        }
-        div.sensorMillimeterSuffix::after {
-          content: " mm";
-        }
-        div.sensorSpeedSuffix::after {
-          content: " km/h";
-        }    slots:
-      screenWidth: 1280
-      screenHeight: 799
-      sidebar: true
       hideNavbar: true
       hideSidebarIcon: true
+      label: DashboardTabletLivingroom
+      layoutType: fixed
+      screenHeight: 799
+      screenWidth: 1280
+      sidebar: true
+      stylesheet: |
+        @import "/static/shared/widgets/app_navigation.css";
+        @import "/static/shared/widgets/app_page.css";
+        @import "/static/shared/widgets/app_content.css";
     slots:
-      default: []
-      masonry: []
-      grid: []
       canvas:
         - component: oh-canvas-layer
           config: {}
           slots:
             default:
               - component: oh-canvas-item
-                config:
-                  x: 10
-                  y: 10
-                  h: 108
-                  w: 513
+                config: {}
                 slots:
                   default:
-                    - component: widget:widget_weather_station
+                    - component: script
+                      config:
+                        src: /static/shared/widgets/app_navigation.js
+              - component: oh-canvas-item
+                config:
+                  h: 108
+                  w: 513
+                  x: 10
+                  y: 10
+                slots:
+                  default:
+                    - component: widget:dashboard_tablet_weather_station
                       config: {}
               - component: oh-canvas-item
                 config:
-                  x: 533
-                  y: 10
                   h: 108
                   w: 139
+                  x: 533
+                  y: 10
                 slots:
                   default:
-                    - component: widget:widget_room_temperatur_sensor
+                    - component: widget:dashboard_tablet_room_temperatur_sensor
                       config:
                         item_humidity: pGF_Livingroom_Air_Sensor_Humidity_Value
                         item_temperature: pGF_Livingroom_Air_Sensor_Temperature_Value
                         title: Wohnzimmer
               - component: oh-canvas-item
                 config:
-                  x: 10
-                  y: 128
                   h: 153
                   w: 662
+                  x: 10
+                  y: 128
                 slots:
                   default:
-                    - component: widget:widget_weather_forecast
+                    - component: widget:dashboard_tablet_weather_forecast
                       config:
                         dashboard_url: https://smartmarvin.de/weather_service/widgetTodayDashboard/
                         detail_url: https://smartmarvin.de/weather_service/detailOverview/?withoutToday=1
               - component: oh-canvas-item
                 config:
-                  x: 10
-                  y: 292
                   h: 210
                   w: 214
+                  x: 10
+                  y: 292
                 slots:
                   default:
-                    - component: widget:widget_device_energy
+                    - component: widget:dashboard_tablet_device_energy
                       config: {}
               - component: oh-canvas-item
                 config:
+                  h: 210
+                  w: 214
                   x: 234
                   y: 292
-                  h: 210
-                  w: 214
                 slots:
                   default:
-                    - component: widget:widget_device_ventilation
+                    - component: widget:dashboard_tablet_device_ventilation
                       config: {}
               - component: oh-canvas-item
                 config:
+                  h: 210
+                  w: 214
                   x: 458
                   y: 292
-                  h: 210
-                  w: 214
                 slots:
                   default:
-                    - component: widget:widget_device_heating
+                    - component: widget:dashboard_tablet_device_heating
                       config: {}
               - component: oh-canvas-item
                 config:
+                  h: 277
+                  w: 289
                   x: 10
                   y: 512
-                  h: 277
-                  w: 289
                 slots:
                   default:
-                    - component: widget:widget_house_status
+                    - component: widget:dashboard_tablet_house_status
                       config: {}
               - component: oh-canvas-item
                 config:
-                  x: 309
-                  y: 512
                   h: 277
                   w: 364
+                  x: 309
+                  y: 512
                 slots:
                   default:
-                    - component: widget:widget_house_main_control
+                    - component: widget:dashboard_tablet_house_main_control
                       config: {}
               - component: oh-canvas-item
                 config:
-                  x: 682
-                  y: 10
                   h: 492
                   w: 588
+                  x: 682
+                  y: 10
                 slots:
                   default:
-                    - component: widget:widget_floorplan
+                    - component: widget:dashboard_tablet_floorplan
                       config: {}
               - component: oh-canvas-item
                 config:
-                  x: 682
-                  y: 512
                   h: 77
                   w: 588
+                  x: 682
+                  y: 512
                 slots:
                   default:
-                    - component: widget:widget_welcome
+                    - component: widget:dashboard_tablet_welcome
                       config: {}
               - component: oh-canvas-item
                 config:
-                  x: 682
-                  y: 599
                   h: 190
                   w: 289
+                  x: 682
+                  y: 599
                 slots:
                   default:
-                    - component: widget:widget_camera
+                    - component: widget:dashboard_tablet_camera
                       config:
                         image_url: https://frigate.smartmarvin.de/api/streedside/latest.jpg?height=300&quality=80
                         video_url: https://frigate.smartmarvin.de/live/mse/api/ws?src=streedside_main
               - component: oh-canvas-item
                 config:
-                  x: 981
-                  y: 599
                   h: 190
                   w: 289
+                  x: 981
+                  y: 599
                 slots:
                   default:
-                    - component: widget:widget_camera
+                    - component: widget:dashboard_tablet_camera
                       config:
                         image_url: https://frigate.smartmarvin.de/api/toolshed/latest.jpg?height=300&quality=80
                         video_url: https://frigate.smartmarvin.de/live/mse/api/ws?src=toolshed_main
+      default: []
+      grid: []
+      masonry: []

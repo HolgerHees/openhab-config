@@ -1,0 +1,13 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_sensors_og_corridor
+  title: Sensoren Obergeschoss Flur
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Komforttemperatur
+        slots:
+          - !include { file: ../layout/item_setpoint.inc.yaml, vars: {title: "Flur oben", item: "pFF_Corridor_Temperature_Desired", icon: "oh:selftemperature", step: 0.5, min: 15, max: 25}}
+

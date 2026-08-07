@@ -1,0 +1,28 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_heating_heatpump
+  title: Technik Heizung Warmwasser Details
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Betrieb", item: "pGF_Utilityroom_Heatpump_WP_Betrieb"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Störmeldung", item: "pGF_Utilityroom_Heatpump_WP_Stoermeldung"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Leistungsanforderung", item: "pGF_Utilityroom_Heatpump_WP_Leistungsanforderung", icon: "oh:selfruntime"}}
+
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Vorlauf (zum Speicher)", item: "pGF_Utilityroom_Heatpump_WP_Vorlauftemperatur", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Rücklauf (vom Speicher)", item: "pGF_Utilityroom_Heatpump_WP_Ruecklauftemperatur", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Verdampfer", item: "pGF_Utilityroom_Heatpump_WP_Verdampfungstemperatur", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Verdichtersauggas", item: "pGF_Utilityroom_Heatpump_WP_Verdichtersauggastemp", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Weichentemperatur", item: "pGF_Utilityroom_Heatpump_WP_Weichentemperatur", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Puffertemperatur", item: "pGF_Utilityroom_Heatpump_WP_Puffertemperatur", icon: "oh:selftemperature"}}
+
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Konfiguration/Ruhemodus", item: "pGF_Utilityroom_Heatpump_WP_Konfiguration_Ruhemodus"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Pumpe Einschaltart", item: "pGF_Utilityroom_Heatpump_WP_PumpeEinschaltart"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Pumpe Leistung Heizen", item: "pGF_Utilityroom_Heatpump_WP_PumpeLeistungHeizen"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Pumpe Leistung Warmwasser", item: "pGF_Utilityroom_Heatpump_WP_PumpeLeistungWarmwasser"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Pumpe Leistung Abtaubetrieb", item: "pGF_Utilityroom_Heatpump_WP_PumpeLeistungAbtaubetrieb"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Volumenstrom Heizen ", item: "pGF_Utilityroom_Heatpump_WP_VolumenstromHeizen"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Volumenstrom Warmwasser", item: "pGF_Utilityroom_Heatpump_WP_VolumenstromWarmwasser"}}

@@ -1,0 +1,17 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_garden_settings
+  title: Garten Einstellungen
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Werkstatt Strassenseite", item: "pOutdoor_Streedside_Garage_Automatic_Switch", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Haustür", item: "pOutdoor_Streedside_Frontdoor_Automatic_Switch", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Carport", item: "pOutdoor_Carport_Automatic_Switch", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Terasse", item: "pOutdoor_Terrace_Automatic_Switch", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Werkstatt Gartenseite", item: "pOutdoor_Garden_Garage_Automatic_Switch", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Geräteschuppen", item: "pOutdoor_Toolshed_Right_Automatic_Switch", icon: "oh:selflight"}}
+

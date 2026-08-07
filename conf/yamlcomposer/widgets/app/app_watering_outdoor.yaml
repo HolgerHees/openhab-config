@@ -1,0 +1,34 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_watering_outdoor
+  title: Garten Bewässerung
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        titl: Programm
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Status", item: "pOutdoor_Watering_Logic_Program_State", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_selection.inc.yaml, vars: {title: "Starten", item: "pOutdoor_Watering_Logic_Program_Start", icon: "oh:selfautomode", mappings: "0=Aus,1=Jetzt starten,2=Am Morgen starten,3=Am Abend starten"}}
+          - !include { file: ../layout/item_setpoint.inc.yaml, vars: {title: "Laufzeit pro Kreis ", item: "pOutdoor_Watering_Logic_Program_Duration", icon: "oh:selfruntime", step: 1.0, min: 10, max: 60}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Aktive Kreise", item: "pOutdoor_Watering_Logic_Info", icon: "oh:selfautomode", target: {widget: "widget:app_watering_outdoor_auto"}}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        titl: Details
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Rasen Garten links", item: "pOutdoor_Garden_Left_Watering_Info", icon: "oh:selfwater"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Rasen Garten rechts", item: "pOutdoor_Garden_Right_Watering_Info", icon: "oh:selfwater"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Rasen Strasse", item: "pOutdoor_Streetside_Lawn_Watering_Info", icon: "oh:selfwater"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Beete Terasse", item: "pOutdoor_Terrace_Watering_Info", icon: "oh:selfwater"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Beete Strasse", item: "pOutdoor_Streetside_Beds_Watering_Info", icon: "oh:selfwater"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Beete Brombeeren", item: "pOutdoor_Garden_Back_Watering_Info", icon: "oh:selfwater"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        titl: Direkt
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Direkt", item: "gOutdoor_Watering_Circuits_Count", icon: "oh:selfwater", target: {widget: "widget:app_watering_outdoor_manuell"}}}

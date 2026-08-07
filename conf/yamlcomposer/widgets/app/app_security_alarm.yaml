@@ -1,0 +1,25 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_security_alarm
+  title: Sicherheit Alarm
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: "Alarm"
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Alarmsirene", item: "pOther_Alarm_Siren_Powered", icon: "oh:selfalarm"}}
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: "Licht"
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Alle Lampen (innen)", item: "gIndoor_Lights", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Alle Lampen (aussen)", item: "gOutdoor_Lights", icon: "oh:selflight"}}
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: "Rollläden"
+        slots:
+          - !include { file: ../layout/item_rollershutter.inc.yaml, vars: {title: "Alle Rollläden", item: "gShutters", icon: "oh:selfrollershutter"}}

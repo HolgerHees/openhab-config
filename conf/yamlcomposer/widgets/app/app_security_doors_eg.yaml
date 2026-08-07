@@ -1,0 +1,13 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_security_doors_eg
+  title: Sicherheit Türen Erdgeschoss
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Haustür", item: "pGF_Corridor_Openingcontact_Door_State", icon: "oh:selfdoor"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Werkstatt Strassenseite", item: "pGF_Garage_Openingcontact_Door_Streedside_State", icon: "oh:selfdoor"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Werkstatt Gartenseite", item: "pGF_Garage_Openingcontact_Door_Garden_State", icon: "oh:selfdoor"}}

@@ -1,0 +1,17 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_electricity_consumption_summary
+  title: Technik Strom Verbrauch Übersicht Details
+  slots:
+    - !include
+    file: ../layout/box.inc.yaml
+    vars:
+      slots:
+        - !include
+          file: ../layout/box.inc.yaml
+          vars:
+            slots:
+              - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Aktuell L1", item: "pGF_Garage_Solar_Inverter_ConsumptionActivePowerL1", icon: "oh:selfenergy_solar"}}
+              - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Aktuell L2", item: "pGF_Garage_Solar_Inverter_ConsumptionActivePowerL2", icon: "oh:selfenergy_solar"}}
+              - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Aktuell L3", item: "pGF_Garage_Solar_Inverter_ConsumptionActivePowerL3", icon: "oh:selfenergy_solar"}}

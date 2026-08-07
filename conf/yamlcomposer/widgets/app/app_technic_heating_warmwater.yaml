@@ -1,0 +1,18 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_heating_warmwater
+  title: Technik Heizung Warmwasser
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Warmwasser Details
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Warmwasser (Soll)", item: "pGF_Utilityroom_Heatpump_WW_Warmwassersolltemperatur", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Warmwasser (Ist)", item: "pGF_Utilityroom_Heatpump_WW_Warmwassertemperatur", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Konfiguration", item: "pGF_Utilityroom_Heatpump_WW_Konfiguration"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Warmwasser Push", item: "pGF_Utilityroom_Heatpump_WW_WarmwasserPush"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Warmwasser Normal", item: "pGF_Utilityroom_Heatpump_WW_WarmwasserNormal", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Warmwasser Absenk", item: "pGF_Utilityroom_Heatpump_WW_WarmwasserAbsenk", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "SG REady Anhebung", item: "eGF_Utilityroom_Heatpump_WW_SGReadyAnhebung", icon: "oh:selftemperature"}}

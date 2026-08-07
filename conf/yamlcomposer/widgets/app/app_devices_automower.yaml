@@ -1,0 +1,34 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_devices_automower
+  title: Geräte Fernseher
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Status
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Batterie", item: "pOutdoor_Mower_Battery", icon: "oh:selfbattery"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Status", item: "pOutdoor_Mower_StatusFormatted", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_buttons.inc.yaml, vars: {title: "Mähen", item: "pOutdoor_Mower_Started", icon: "oh:selfswitch", mappings: "ON=Start,OFF=Stopp"}}
+          - !include { file: ../layout/item_selection.inc.yaml, vars: {title: "Modus", item: "pOutdoor_Mower_Mode", icon: "oh:selfautomode", mappings: "HOME=Parken,EOD=Morgen weitermachen,AUTO=Automatisch,MANUAL=Manuell"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Info
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Timer", item: "pOutdoor_Mower_TimerStatusFormatted", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "WLAN Signal", item: "pOutdoor_Mower_WlanSignal", icon: "oh:selfnetwork"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Fehlercode", item: "pOutdoor_Mower_ErrorCode", icon: "oh:selfshield"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Fehlermeldung", item: "pOutdoor_Mower_ErrorMessage", icon: "oh:selfshield"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Fehlerdatum", item: "pOutdoor_Mower_ErrorDate", icon: "oh:selfcalendar"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Betriebsstunden", item: "pOutdoor_Mower_Hours", icon: "oh:selfclock"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Sonstiges
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Winter Modus", item: "pOutdoor_Mower_Winter_Mode", icon: "oh:selfswitch"}}

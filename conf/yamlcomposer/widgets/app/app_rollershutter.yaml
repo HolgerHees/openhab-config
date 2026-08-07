@@ -1,0 +1,53 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_rollershutter
+  title: Rollläden
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        slots:
+            - !include { file: ../layout/item_rollershutter.inc.yaml, vars: {title: "Alle Rollläden", item: "gShutters"}}
+            - !include { file: ../layout/item_rollershutter.inc.yaml, vars: {title: "Markise", item: "gOutdoor_Terrace_Shading"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        medium: "50"
+        title: Rollläden im Erdgeschoss
+        slots:
+          - !include { file: ../layout/item_rollershutter.inc.yaml, vars: {title: "Terrasse", item: "pGF_Livingroom_Shutter_Terrace_Control"}}
+          - !include { file: ../layout/item_rollershutter.inc.yaml, vars: {title: "Couch", item: "pGF_Livingroom_Shutter_Couch_Control"}}
+          - !include { file: ../layout/item_rollershutter.inc.yaml, vars: {title: "Küche", item: "pGF_Kitchen_Shutter_Control"}}
+          - !include { file: ../layout/item_rollershutter.inc.yaml, vars: {title: "Arbeitszimmer", item: "pGF_Workroom_Shutter_Control"}}
+          - !include { file: ../layout/item_rollershutter.inc.yaml, vars: {title: "Gäste-WC", item: "pGF_Guesttoilet_Shutter_Control"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        medium: "50"
+        title: Rollläden im Obergeschoss
+        slots:
+          - !include { file: ../layout/item_rollershutter.inc.yaml, vars: {title: "Schlafzimmer", item: "pFF_Bedroom_Shutter_Control"}}
+          - !include { file: ../layout/item_rollershutter.inc.yaml, vars: {title: "Ankleide", item: "pFF_Dressingroom_Shutter_Control"}}
+          - !include { file: ../layout/item_rollershutter.inc.yaml, vars: {title: "Sportzimmer", item: "pFF_Fitnessroom_Shutter_Control"}}
+          - !include { file: ../layout/item_rollershutter.inc.yaml, vars: {title: "Schminkzimmer", item: "pFF_Makeuproom_Shutter_Control"}}
+          - !include { file: ../layout/item_rollershutter.inc.yaml, vars: {title: "Badezimmer", item: "pFF_Bathroom_Shutter_Control"}}
+          - !include { file: ../layout/item_rollershutter.inc.yaml, vars: {title: "Dachboden", item: "pFF_Attic_Shutter_Control"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Beschattung
+        slots:
+          - !include { file: ../layout/item_rollershutter.inc.yaml, vars: {title: "Südseite", item: "gSouth_Shutters"}}
+          - !include { file: ../layout/item_rollershutter.inc.yaml, vars: {title: "Westseite", item: "gWest_Shutters"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Markise einzeln
+        slots:
+          - !include { file: ../layout/item_rollershutter.inc.yaml, vars: {title: "Links", item: "pOutdoor_Terrace_Shading_Left_Control"}}
+          - !include { file: ../layout/item_rollershutter.inc.yaml, vars: {title: "Rechts", item: "pOutdoor_Terrace_Shading_Right_Control"}}

@@ -1,0 +1,21 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_heating_electro
+  title: Technik Elektroheizung Details
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Status", item: "pGF_Utilityroom_Heatpump_WEZ2_Status"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Betriebsstunden", item: "pGF_Utilityroom_Heatpump_WEZ2_Betriebsstunden2WEZ"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Schaltspiele", item: "pGF_Utilityroom_Heatpump_WEZ2_Schaltspiele2WEZ"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Status EHeizung 1", item: "pGF_Utilityroom_Heatpump_WEZ2_StatusEHeizung1"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Status EHeizung 2", item: "pGF_Utilityroom_Heatpump_WEZ2_StatusEHeizung2"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Betriebsstunden E1", item: "pGF_Utilityroom_Heatpump_WEZ2_BetriebsstundenE1"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Betriebsstunden E2", item: "pGF_Utilityroom_Heatpump_WEZ2_BetriebsstundenE2"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Konfiguration", item: "pGF_Utilityroom_Heatpump_WEZ2_Konfiguration"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Grenztemperatur", item: "pGF_Utilityroom_Heatpump_WEZ2_Grenztemperatur", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Bivalenztemperatur", item: "pGF_Utilityroom_Heatpump_WEZ2_Bivalenztemperatur", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Bivalenztemperatur WW", item: "pGF_Utilityroom_Heatpump_WEZ2_BivalenztemperaturWW", icon: "oh:selftemperature"}}

@@ -1,0 +1,11 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_sockets_shelly_frostguard
+  title: Technik Steckdosen Frostwächter
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Daten
+        <<: !include { file: app_technic_sockets_shelly.inc.yaml, vars: {item_name_prefix: "pMobile_Socket_6", chart_name: "mobile_socket_6_consumption"}}

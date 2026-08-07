@@ -1,0 +1,144 @@
+variables:
+  title: ""
+  item: ""
+  icon: "oh:selfsettings"
+  iconstate: ""
+  display: ""
+  valuecolor: ""
+  mappings: ""
+  target:
+    uid: ""
+    page: ""
+    popup: ""
+    widget: ""
+    halfsize: no
+
+component: li
+config:
+  style:
+    <<: !if
+      if: display
+      then:
+        display: "=${display} ? '' : 'none'"
+  class:
+    - text
+    - !if
+      if: target.page or target.popup or target.widget
+      then: "link"
+  <<: !if
+    if: target.page or target.popup or target.widget
+    then:
+      onclick: "event.target.closest('li').querySelector('a').click()"
+slots:
+  default:
+    - component: oh-link
+      config:
+        <<: !if
+          if: target.page
+          then:
+            action: navigate
+            actionPage: ${target.page}
+            actionPageTransition: "f7-push"
+        <<: !if
+          if: target.widget
+          then:
+            onclick: "prepareAppSlide()"
+            action: popup
+            actionModal: ${target.widget}
+            #actionPageTransition: "f7-push"
+        <<: !if
+          if: target.popup
+          then:
+            action: popup
+            popupOpen: .targetPopup_${target.uid}
+        style:
+          display: none
+    - component: oh-icon
+      config:
+        class:
+          - icon
+        height: 32px
+        icon: "${icon}"
+        <<: !if
+            if: iconstate
+            then:
+              state: "=${iconstate}"
+            elseif item:
+              state: "=(items['${item}'].numericState === undefined ? items['${item}'].state : items['${item}'].numericState)"
+    - component: Label
+      config:
+        class:
+          - name
+        text: "${title}"
+    - component: div
+      config:
+        style:
+          display: flex
+          column-gap: 16px
+      slots:
+        default:
+          - component: Label
+            config:
+              class:
+                - value
+              style:
+                <<: !if
+                  if: valuecolor
+                  then:
+                    color: "=${valuecolor}"
+                <<: !if
+                  if: not item
+                  then:
+                    display: "none"
+              <<: !if
+                if: mappings
+                then:
+                  text: "=('${mappings}'.split(',').filter((value) => value.startsWith((items['${item}'].numericState === undefined ? items['${item}'].state : items['${item}'].numericState) + '=')).map(value => value.split('=')[1])[0] || '')"
+                else:
+                  text: "=items['${item}'].displayState || items['${item}'].state"
+          - component: Label
+            config:
+              style:
+                <<: !if
+                  if: target.page or target.popup or target.widget
+                  then:
+                    display: ""
+                  else:
+                    display: "none"
+              <<: !if
+                if: target.page or target.widget
+                then:
+                  text: "▸"
+              <<: !if
+                if: target.popup
+                then:
+                  text: "▼"
+    - !if
+      if: target.popup
+      then:
+        component: f7-popup
+        config:
+          style:
+            height: fit-content
+            left: 0
+            right: 0
+            padding: auto
+            margin: auto
+            position: absolute
+          class:
+            - targetPopup
+            - targetPopup_${target.uid}
+            - "='${target.halfsize}' == 'yes' ? 'halfSize' : ''"
+        slots:
+          default:
+            - component: f7-page
+              config:
+                style:
+                  width: 100%
+                  height: fit-content
+                  position: relative
+              slots:
+                default:
+                  - component: f7-content
+                    slots:
+                      default: ${target.popup}

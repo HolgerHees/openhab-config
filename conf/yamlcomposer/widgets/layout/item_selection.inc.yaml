@@ -1,0 +1,119 @@
+variables:
+  title: ""
+  item: ""
+  icon: "oh:selfsettings"
+  display: ""
+  mappings: ""
+  width: "200px"
+
+component: li
+config:
+  style:
+    <<: !if
+      if: display
+      then:
+        display: "=${display} ? '' : 'none'"
+  onclick: "event.target.closest('li').querySelector('a').click()"
+  class:
+    - selection
+    - link
+slots:
+  default:
+    - component: oh-link
+      config:
+        action: popup
+        popupOpen: .selectionPopup
+        style:
+          display: none
+
+    - component: oh-icon
+      config:
+        class:
+          - icon
+        height: 32px
+        icon: "${icon}"
+        state: "=items['${item}'].state"
+    - component: Label
+      config:
+        class:
+          - name
+        text: "${title}"
+    - component: oh-button
+      config:
+        class:
+          - value
+          - highlightModifier
+        action: popup
+        popupOpen: .selectionPopup_${item}
+        text: !if
+              if: mappings
+              then:
+                "=('${mappings}'.split(',').filter((value) => value.startsWith((items['${item}'].numericState === undefined ? items['${item}'].state : items['${item}'].numericState) + '=')).map(value => value.split('=')[1])[0] || '') + ' ▼'"
+              else:
+                "=items['${item}'].state + ' ▼'"
+
+    - component: f7-popup
+      config:
+        style:
+          width: ${width} !important
+          margin-left: calc(-1 * ${width} / 2) !important
+          display: none
+        class:
+          - selectionPopup
+          - selectionPopup_${item}
+      slots:
+        default:
+          - component: f7-page
+            config:
+              style:
+                width: 100%
+                height: fit-content
+                position: relative
+            slots:
+              default:
+                - component: f7-content
+                  slots:
+                    default:
+                      - !if
+                        if: mappings
+                        then:
+                          component: oh-repeater
+                          config:
+                            sourceType: array
+                            in: "='${mappings}'.split(',')"
+                            for: entry
+                            listContainer: true
+                          slots:
+                            default:
+                              - component: oh-list-item
+                                config:
+                                  class:
+                                    - button
+                                    - "=(items['${item}'].numericState === undefined ? items['${item}'].state : items['${item}'].numericState) == loop.entry.split('=')[0] ? 'button-active' : ''"
+                                    - "=(items['${item}'].numericState === undefined ? items['${item}'].state : items['${item}'].numericState) == loop.entry.split('=')[0] ? 'highlightModifier' : ''"
+                                  popupClose: true
+                                  action: command
+                                  actionCommand: =loop.entry.split('=')[0]
+                                  actionItem: ${item}
+                                  title: =loop.entry.split('=')[1]
+                        else:
+                          component: oh-repeater
+                          config:
+                            sourceType: itemStateOptions
+                            itemOptions: ${item}
+                            for: entry
+                            listContainer: true
+                          slots:
+                            default:
+                              - component: oh-list-item
+                                config:
+                                  class:
+                                    - button
+                                    - "=(items['${item}'].numericState === undefined ? items['${item}'].state : items['${item}'].numericState) == loop.entry.value ? 'button-active' : ''"
+                                    - "=(items['${item}'].numericState === undefined ? items['${item}'].state : items['${item}'].numericState) == loop.entry.value ? 'highlightModifier' : ''"
+                                  popupClose: true
+                                  action: command
+                                  actionCommand: =loop.entry.value
+                                  actionItem: ${item}
+                                  #raised: true
+                                  title: =loop.entry.label

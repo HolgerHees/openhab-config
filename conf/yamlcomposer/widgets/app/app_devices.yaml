@@ -1,0 +1,32 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_devices
+  title: Geräte
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Geräte
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Waschmaschine", item: "pGF_Utilityroom_Washer_Message", icon: "oh:whitegood_washer", target: {widget: "widget:app_devices_washer"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Geschirrspüler", item: "pGF_Kitchen_Dishwasher_Message", icon: "oh:whitegood_dishwasher", target: {widget: "widget:app_devices_dishwasher"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Kaffeemaschine", item: "pGF_Kitchen_Coffeemaker_Message", icon: "oh:whitegood_coffeemaschine", target: {widget: "widget:app_devices_coffeemaker"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Fernseher", item: "pGF_Livingroom_Television_POWER", icon: "oh:screen", target: {widget: "widget:app_devices_television"}}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Luftbefeuchter
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Erdgeschoss ausgeschaltet", icon: "oh:humidifier", display: "@@'pGF_Livingroom_Humidifier_Online'=='OFF'"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Erdgeschoss", item: "pGF_Livingroom_Humidifier_Speed", icon: "oh:humidifier", display: "@@'pGF_Livingroom_Humidifier_Online'=='ON'", target: {widget: "widget:app_devices_humidifier_eg"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Obergeschoss ausgeschaltet", icon: "oh:humidifier", display: "@@'pFF_Bedroom_Humidifier_Online'=='OFF'"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Obergeschoss", item: "pFF_Bedroom_Humidifier_Speed", icon: "oh:humidifier", display: "@@'pFF_Bedroom_Humidifier_Online'=='ON'", target: {widget: "widget:app_devices_humidifier_og"}}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Garten
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Automower", item: "pOutdoor_Mower_Status", icon: "oh:mower", target: {widget: "widget:app_devices_automower"}}}

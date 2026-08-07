@@ -1,0 +1,13 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_sensors_eg_workroom
+  title: Sensoren Erdgeschoss Arbeitszimmer
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Komforttemperatur
+        slots:
+          - !include { file: ../layout/item_setpoint.inc.yaml, vars: {title: "Gäste WC", item: "pGF_Workroom_Temperature_Desired", icon: "oh:selftemperature", step: 0.5, min: 15, max: 25}}
+

@@ -1,0 +1,2 @@
+!include { file: item_selection.inc.yaml, vars: {title: "Zeitraum", item: "Chart_From", mappings: "HOUR=Stunde,DAY=Tag,WEEK=Woche,MONTH=Monat,YEAR=Jahr,5YEARS=5 Jahre", width: "200px", height: "400px"}}
+

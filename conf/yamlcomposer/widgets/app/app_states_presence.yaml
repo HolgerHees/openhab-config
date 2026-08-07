@@ -1,0 +1,17 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_states_presence
+  title: Status Presenz
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        slots:
+          - !include { file: ../layout/item_selection.inc.yaml, vars: {title: "Präsenz", item: "pOther_Presence_State", icon: "oh:selfinfo", mappings: "0=Abwesend,1=(Anwesend),2=Anwesend,3=(Schlafen),4=Schlafen"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Schlafen", item: "pOther_Scene4", icon: "oh:selfbedsleep"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Scene 5", item: "pOther_Scene5", icon: "oh:selfautomode"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Holger anwesend", item: "pOther_Presence_Holger_State", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Holger anwesend (RAW)", item: "pOther_Presence_Holger_State_Raw", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Sandra anwesend", item: "pOther_Presence_Sandra_State", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Sandra anwesend (RAW)", item: "pOther_Presence_Sandra_State_Raw", icon: "oh:selfinfo"}}

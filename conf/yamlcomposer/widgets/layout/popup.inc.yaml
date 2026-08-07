@@ -1,0 +1,39 @@
+component: div
+config:
+  style:
+    display: none
+slots:
+  default:
+    - component: oh-link
+      config:
+        onclick: "prepareAppOpener()"
+        action: popup
+        actionModal: widget:${widget}
+        class:
+          - ${name}Opener
+#    - component: f7-popup
+#      config:
+#        class:
+#          - ${name}Popup
+#          - ${class}
+#        closeByBackdropClick: true
+#        closeByOutsideClick: true
+#        closeOnEscape: true
+#      slots:
+#        default:
+#          - component: oh-link
+#            config:
+#              class:
+#                - closeButton
+#              action: popup
+#              popupClose: .${name}Popup
+#          - component: oh-webframe-card
+#            config:
+#              height: 100%
+#              style:
+#                width: 100%
+#                height: 100%
+#                overflow: hidden
+#                padding: 0
+#                margin: 0
+#              src: ${url}

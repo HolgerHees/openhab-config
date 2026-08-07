@@ -1,0 +1,25 @@
+version: 1
+widgets:
+  test1:
+    tags: []
+    props:
+      parameters: []
+      parameterGroups: []
+    component: div
+    config: {}
+    slots:
+      default:
+        - component: oh-button
+          config:
+            action: popup
+            actionModal: widget:test2
+            actionPageTransition: "f7-cover"
+            actionModalConfig:
+              class:
+                - test
+            #  sheet: true
+            popupClose: true
+            style:
+              height: 100px
+              width: 100px
+            text: "Test1. Click me to open Test2"

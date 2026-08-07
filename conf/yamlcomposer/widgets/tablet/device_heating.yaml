@@ -1,0 +1,336 @@
+version: 1
+
+widgets:
+  dashboard_tablet_device_heating:
+    tags: [
+      ]
+    props:
+      parameters:
+        - context: item
+          default: pGF_Utilityroom_Heatpump_Auto_Mode
+          label: Auto Mode
+          name: item_auto_mode
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Utilityroom_Heatpump_S_Betriebstatusanzeige
+          label: Betriebstatusanzeige
+          name: item_betriebsstatus
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Utilityroom_Electricity_State_Heatpump_ActivePower
+          label: Verbrauch
+          name: item_power_consumption
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Utilityroom_Heatpump_WP_Leistungsanforderung
+          label: Leistung
+          name: item_power_requested
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Utilityroom_Heatpump_Solar_Power
+          label: Solar
+          name: item_solar_power
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Utilityroom_Heatpump_Solar_Pump_State
+          label: Solar
+          name: item_solar_pump_state
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Utilityroom_Heatpump_WW_State
+          label: WW Active
+          name: item_ww_active
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Utilityroom_Heatpump_HW_State
+          label: HK Active
+          name: item_hk_active
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Utilityroom_Heatpump_WP_Vorlauftemperatur
+          label: Vorlauf Temperature
+          name: item_vorlauf_temperature
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Utilityroom_Heatpump_WW_Warmwassertemperatur
+          label: Top Temperature
+          name: item_tank_top_temperature
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Utilityroom_Heatpump_WP_Weichentemperatur
+          label: Middle Temperature
+          name: item_tank_middle_temperature
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Utilityroom_Heatpump_Solar_Temperature_Collector
+          label: Collector Temperature
+          name: item_collector_temperature
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Utilityroom_Heatpump_Solar_Temperature_Storage
+          label: Bottom Temperature
+          name: item_tank_bottom_temperature
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Utilityroom_Heatpump_Solar_Temperature_Vorlauf
+          label: Solar Vorlauf Temperature
+          name: item_solar_vorlauf_temperature
+          required: false
+          type: TEXT
+      parameterGroups: [
+        ]
+    component: f7-card
+    config:
+      class:
+        - oh-canvas-item-content
+        - lengendModifier
+      onclick: "document.querySelector('.heatingStateOpener').click()"
+      stylesheet: |
+        div,
+        svg {
+          position: absolute;
+        }
+        .card-content {
+          width: 100%;
+          height: 100%;
+          box-sizing: border-box;
+        }
+    slots:
+      content:
+        - !include { file: ../layout/popup.inc.yaml, vars: {name: "heatingState", widget: "app_technic_heating"}}
+        - component: Label
+          config:
+            style:
+              left: 50%
+              top: var(--custom-widget-padding)
+              transform: translate(-50%,0)
+            class:
+              - normalState
+            text: "=items[props.item_betriebsstatus].displayState"
+
+        - component: svg
+          config:
+            style:
+              fill: transparent
+              stroke: var(--custom-value-color)
+              stroke-width: 0.8
+              left: 50%
+              top: 35px
+              width: 105px
+              height: 105px
+              transform: translate(-50%,0)
+              opacity: 0.6
+            viewBox: 0 0 64 64
+          slots:
+            default:
+              - component: use
+                config:
+                  xlink:href: /static/custom/heatpump.svg#watertank
+        - component: Label
+          config:
+            style:
+              left: 50%
+              top: 50px
+              transform: translate(-50%,0)
+              font-size: 0.9em
+            class:
+              - normalState
+              - "=(items[props.item_power_consumption].numericState > 0 && items[props.item_ww_active].state =='ON' > 0) || (items[props.item_solar_pump_state].numericState > 0 && items[props.item_solar_vorlauf_temperature].numericState > items[props.item_tank_top_temperature].numericState + 3) ? 'highlightModifier' : ''"
+              - sensorTemperatureSuffix
+            text: "=items[props.item_tank_top_temperature].numericState.toFixed(1)"
+        - component: Label
+          config:
+            style:
+              left: 50%
+              top: 73px
+              transform: translate(-50%,0)
+              font-size: 0.9em
+            class:
+              - normalState
+              - "=(items[props.item_power_consumption].numericState > 0 && items[props.item_hk_active].state =='ON' > 0) || (items[props.item_solar_pump_state].numericState > 0 && items[props.item_solar_vorlauf_temperature].numericState > items[props.item_tank_middle_temperature].numericState + 3) ? 'highlightModifier' : ''"
+              - sensorTemperatureSuffix
+            text: "=items[props.item_tank_middle_temperature].numericState.toFixed(1)"
+        - component: Label
+          config:
+            style:
+              left: 50%
+              top: 96px
+              transform: translate(-50%,0)
+              font-size: 0.9em
+            class:
+              - normalState
+              - "=items[props.item_solar_pump_state].numericState > 0 ? 'highlightModifier' : ''"
+              - sensorTemperatureSuffix
+            text: "=items[props.item_tank_bottom_temperature].numericState.toFixed(1)"
+
+
+
+
+
+
+        - component: Label
+          config:
+            style:
+              left: 42px
+              bottom: 67px
+              transform: translate(-50%,0)
+            class:
+              - normalState
+              - "=items[props.item_solar_pump_state].numericState > 0 ? 'highlightModifier' : ''"
+              - sensorTemperatureSuffix
+            text: "=items[props.item_collector_temperature].numericState.toFixed(1)"
+        - component: svg
+          config:
+            style:
+              fill: transparent
+              stroke: "=items[props.item_solar_pump_state].numericState == 0 ? 'var(--custom-value-color)' : 'var(--custom-yellow-dark)'"
+              stroke-width: 1
+              width: 35px
+              height: 35px
+              left: 20px
+              bottom: 35px
+              opacity: "=items[props.item_solar_pump_state].numericState == 0 ? '0.4' : '1.0'"
+            viewBox: 0 0 64 64
+          slots:
+            default:
+              - component: use
+                config:
+                  xlink:href: /static/custom/heatpump.svg#solar
+        - component: div
+          config:
+            style:
+              width: 45px
+              height: 66px
+              left: 33px
+              bottom: 88px
+              visibility: "=items[props.item_solar_pump_state].numericState > 0 && items[props.item_solar_vorlauf_temperature].numericState > items[props.item_tank_top_temperature].numericState + 3 ? 'visible' : 'hidden'"
+          slots:
+            default:
+              - !include { file: inc/device_ventilation_curve.inc.yaml, vars: {uid: "heating_path_solar", width: 45, height: 66, path: "M 5 66 l 0 -46 Q 5 5 20 5 l 25 0"}}
+        - component: div
+          config:
+            style:
+              width: 45px
+              height: 43px
+              left: 33px
+              bottom: 88px
+              visibility: "=items[props.item_solar_pump_state].numericState > 0 && items[props.item_solar_vorlauf_temperature].numericState > items[props.item_tank_middle_temperature].numericState + 3 ? 'visible' : 'hidden'"
+          slots:
+            default:
+              - !include { file: inc/device_ventilation_curve.inc.yaml, vars: {uid: "heating_path_solar", width: 45, height: 43, path: "M 5 43 l 0 -23 Q 5 5 20 5 l 25 0"}}
+        - component: div
+          config:
+            style:
+              width: 45px
+              height: 22px
+              left: 33px
+              bottom: 88px
+              visibility: "=items[props.item_solar_pump_state].numericState > 0 ? 'visible' : 'hidden'"
+          slots:
+            default:
+              - !include { file: inc/device_ventilation_curve.inc.yaml, vars: {uid: "heating_path_solar", width: 45, height: 22, path: "M 5 22 l 0 -2 Q 5 5 20 5 l 25 0"}}
+        - component: Label
+          config:
+            style:
+              left: 42px
+              bottom: 12px
+              transform: translate(-50%,0)
+            class:
+              - normalState
+              - "=items[props.item_solar_power].numericState > 0 ? 'highlightModifier' : ''"
+              - sensorEnergySuffix
+            text: "=(items[props.item_solar_power].numericState / 1000.0).toFixed(1)"
+
+
+
+
+
+
+
+        - component: Label
+          config:
+            style:
+              right: 42px
+              bottom: 69px
+              transform: translate(50%,0)
+              visibility: "=items[props.item_power_requested].numericState > 0 ? 'visible' : 'hidden'"
+            class:
+              - normalState
+              - highlightModifier
+              - sensorTemperatureSuffix
+            text: "=items[props.item_vorlauf_temperature].numericState.toFixed(1)"
+        - component: svg
+          config:
+            style:
+              fill: transparent
+              stroke: "=items[props.item_power_requested].numericState == 0 ? 'var(--custom-value-color)' : 'var(--custom-yellow)'"
+              stroke-width: 4
+              right: 23px
+              bottom: 35px
+              width: 35px
+              height: 35px
+              opacity: "=items[props.item_power_requested].numericState == 0 ? '0.4' : '0.6'"
+            viewBox: 0 0 64 64
+          slots:
+            default:
+              - component: use
+                config:
+                  xlink:href: /static/custom/heatpump.svg#heatpump
+        - component: div
+          config:
+            style:
+              width: 40px
+              height: 58px
+              right: 37px
+              bottom: 73px
+              visibility: "=items[props.item_power_consumption].numericState > 0 && items[props.item_ww_active].state == 'ON' 0 ? 'visible' : 'hidden'"
+          slots:
+            default:
+              - !include { file: inc/device_ventilation_curve.inc.yaml, vars: {uid: "heating_path_heatpump_ww", width: 40, height: 58, path: "M 35 58 l 0 -38 Q 35 5 20 5 l -20 0"}}
+        - component: div
+          config:
+            style:
+              width: 40px
+              height: 82px
+              right: 37px
+              bottom: 73px
+              visibility: "=items[props.item_power_consumption].numericState > 0 && items[props.item_hk_active].state =='ON' > 0 ? 'visible' : 'hidden'"
+          slots:
+            default:
+              - !include { file: inc/device_ventilation_curve.inc.yaml, vars: {uid: "heating_path_heatpump_hk", width: 40, height: 82, path: "M 35 82 l 0 -62 Q 35 5 20 5 l -20 0"}}
+        - component: Label
+          config:
+            style:
+              right: 42px
+              bottom: 12px
+              transform: translate(50%,0)
+            class:
+              - normalState
+              - "=items[props.item_power_consumption].numericState > 50 ? 'highlightModifier' : ''"
+              - sensorEnergySuffix
+            text: "=(items[props.item_power_consumption].numericState / 1000.0).toFixed(1)"
+
+
+
+        - component: Label
+          config:
+            style:
+              left: 50%
+              bottom: 35px
+              transform: translate(-50%,0)
+            class:
+              - normalState
+            text: "=items[props.item_auto_mode].displayState"

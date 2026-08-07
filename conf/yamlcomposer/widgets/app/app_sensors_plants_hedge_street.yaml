@@ -1,0 +1,10 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_sensors_plants_hedge_street
+  title: Hecke Strasse
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        <<: !include { file: app_sensors_plants.inc.yaml, vars: {item_name_prefix: "pOutdoor_Plant_Sensor_Hedge_Street"}}

@@ -1,0 +1,16 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_security_windows_og
+  title: Sicherheit Fenster Obergeschoss
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Badezimmer", item: "pFF_Bathroom_Openingcontact_Window_State", icon: "oh:selfwindow"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Ankleide", item: "pFF_Dressingroom_Openingcontact_Window_State", icon: "oh:selfwindow"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Schlafzimmer", item: "pFF_Bedroom_Openingcontact_Window_State", icon: "oh:selfwindow"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Sportzimmer", item: "pFF_Fitnessroom_Openingcontact_Window_State", icon: "oh:selfwindow"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Schminkzimmer", item: "pFF_Makeuproom_Openingcontact_Window_State", icon: "oh:selfwindow"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Dachboden", item: "pFF_Attic_Openingcontact_Window_State", icon: "oh:selfwindow"}}

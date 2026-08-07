@@ -1,0 +1,40 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_security
+  title: Sicherheit
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Sonstiges
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Alarm", icon: "oh:selfalarm", target: {widget: "widget:app_security_alarm"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Rauchmelder", item: "pOther_Smoke_Detector_State", icon: "oh:smoke", valuecolor: "@@'pOther_Smoke_Detector_State'!='CLOSED' ? '#d72a2a' : ''"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Bewegung
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Innen", item: "gSensor_Indoor", icon: "oh:selfmotion", valuecolor: "@@'gSensor_Indoor'!='CLOSED' ? '#d72a2a' : ''", target: {widget: "widget:app_security_indoor"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Aussen", item: "gSensor_Outdoor", icon: "oh:selfmotion", valuecolor: "@@'gSensor_Indoor'!='CLOSED' ? '#d72a2a' : ''", target: {widget: "widget:app_security_outdoor"}}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Fenster & Türen
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Haustür", item: "pGF_Corridor_Lock_State", icon: "oh:selfdoor", target: {widget: "widget:app_security_door_main"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "EG Türen", item: "gGF_Sensor_Doors_Count", icon: "oh:selfdoor", valuecolor: "@@'gGF_Sensor_Doors_Count' == '0' ? '' : '#d72a2a'", target: {widget: "widget:app_security_doors_eg"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "EG Fenster", item: "gGF_Sensor_Window_Count", icon: "oh:selfwindow", valuecolor: "@@'gGF_Sensor_Window_Count' == '0' ? '' : '#d72a2a'", target: {widget: "widget:app_security_windows_eg"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "OG Fenster", item: "gFF_Sensor_Window_Count", icon: "oh:selfwindow", valuecolor: "@@'gFF_Sensor_Window_Count' == '0' ? '' : '#d72a2a'", target: {widget: "widget:app_security_windows_og"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Geräteschuppen Tür", item: "pToolshed_Openingcontact_Door_State", icon: "oh:selfdoor", valuecolor: "@@'pToolshed_Openingcontact_Door_State' == 'CLOSED' ? '' : '#d72a2a'"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Geräteschuppen Fenster", item: "pToolshed_Openingcontact_Window_State", icon: "oh:selfwindow"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: History
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Bewegungsevents", item: "pGF_Corridor_Lock_State", icon: "oh:selfstate", target: {widget: "widget:app_security_events"}}}

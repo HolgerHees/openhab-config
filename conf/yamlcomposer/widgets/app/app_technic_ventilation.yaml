@@ -1,0 +1,57 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_ventilation
+  title: Technik Lüftung
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Übersicht
+        slots:
+          - !include { file: ../layout/item_buttons.inc.yaml, vars: {title: "Modus", item: "pGF_Utilityroom_Ventilation_Auto_Mode", icon: "oh:selfautomode", mappings: "ON=Auto,OFF=Manuell"}}
+          - !include { file: ../layout/item_buttons.inc.yaml, vars: {title: "Stufe", item: "pGF_Utilityroom_Ventilation_Fan_Level", icon: "oh:selfairing", mappings: "0=A,1=1,2=2,3=3"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Ziel", item: "pGF_Utilityroom_Ventilation_Target_Temperature_Message", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Kühlung", item: "pGF_Utilityroom_Ventilation_Cooling_Temperature_Message", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Comfo Air", item: "pGF_Utilityroom_Ventilation_State_Message", icon: "oh:selfinfo", display: "@@'pGF_Utilityroom_Ventilation_State_Message'=='Alles ok'", valuecolor: "'#6bc305'"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Comfo Air", item: "pGF_Utilityroom_Ventilation_State_Message", icon: "oh:selfinfo", display: "@@'pGF_Utilityroom_Ventilation_State_Message'!='Alles ok'", valuecolor: "@@'pGF_Utilityroom_Ventilation_State_Message'=='Filter' ? '#cbcb00' : '#d72a2a'", target: {widget: "app_technic_ventilation_errorstate"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Comfo Air", item: "pGF_Utilityroom_Ventilation_Clime_Headpump_Status", icon: "oh:selfairing"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Details
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Aussen", item: "pGF_Utilityroom_Ventilation_Outdoor_Temperature_Message", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Innen", item: "pGF_Utilityroom_Ventilation_Indoor_Temperature_Message", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Innen (Sensor)", item: "pGF_Utilityroom_Ventilation_Sensor_Temperature_Message", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Volumenstrom", item: "pGF_Utilityroom_Ventilation_Airflow_Message", icon: "oh:selfairing"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Fan Speed", item: "pGF_Utilityroom_Ventilation_Fan_Speed_Message", icon: "oh:selfairing"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Comfo Air
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Bypass", item: "pGF_Utilityroom_Ventilation_Bypass_State", icon: "oh:selfbypass"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Effizienz", item: "pGF_Utilityroom_Ventilation_Bypass_Efficiency", icon: "oh:selfbypass"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Verbindung", item: "pGF_Utilityroom_Ventilation_Connection_State", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Filterrestlaufzeit", item: "pGF_Utilityroom_Ventilation_Filter_Remaining", icon: "oh:selfruntime"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Ziel Temperatur", item: "pGF_Utilityroom_Ventilation_Target_Temperature", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Ziel Modus", item: "pGF_Utilityroom_Ventilation_Target_Mode", icon: "oh:selftemperature"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Comfo Clime
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Season", item: "pGF_Utilityroom_Ventilation_Clime_Season", icon: "oh:selfairing"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Free Cooling", item: "pGF_Utilityroom_Ventilation_Clime_Free_Cooling", icon: "oh:selfairing"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "CAQ Free Cooling", item: "pGF_Utilityroom_Ventilation_Clime_CAQ_Free_Cooling", icon: "oh:selfairing"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Leistung", item: "pGF_Utilityroom_Ventilation_Clime_Headpump_Power", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Kühl Temperatur", item: "pGF_Utilityroom_Ventilation_Clime_Supply_Temperature", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "TPMA Temperatur", item: "pGF_Utilityroom_Ventilation_Clime_TPMA_Temperature", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Ziel Temperatur", item: "pGF_Utilityroom_Ventilation_Clime_Target_Temperature", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_selection.inc.yaml, vars: {title: "Ziel Offset", item: "pGF_Utilityroom_Ventilation_Clime_Target_Offset", icon: "oh:selftemperature", mappings: "3=3,2=2,1=1,0=0,-1=-1,-2=-2,-3=-3"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Klimagerät", item: "pGF_Utilityroom_Ventilation_Clime_Power", icon: "oh:selftemperature", display: "@@'pGF_Utilityroom_Ventilation_Auto_Mode'=='ON'"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Klimagerät", item: "pGF_Utilityroom_Ventilation_Clime_Power", icon: "oh:selftemperature", display: "@@'pGF_Utilityroom_Ventilation_Auto_Mode'=='OFF'"}}

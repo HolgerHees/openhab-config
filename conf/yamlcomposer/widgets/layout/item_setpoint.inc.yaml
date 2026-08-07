@@ -1,0 +1,41 @@
+variables:
+  title: ""
+  item: ""
+  icon: "oh:selfsettings"
+  display: ""
+  step: 1
+  min: 1
+  max: 10
+
+component: li
+config:
+  style:
+    <<: !if
+      if: display
+      then:
+        display: "=${display} ? '' : 'none'"
+  class:
+    - switch
+slots:
+  default:
+    - component: oh-icon
+      config:
+        class:
+          - icon
+        height: 32px
+        icon: "${icon}"
+        state: "=items['${item}'].state"
+    - component: Label
+      config:
+        class:
+          - name
+        text: "${title}"
+    - component: oh-stepper-item
+      config:
+        item: ${item}
+        min: ${min}
+        max: ${max}
+        step: ${step}
+        class:
+          - "=items['${item}'].state == 'ON'' ? 'button-active' : ''"
+          - highlightModifier

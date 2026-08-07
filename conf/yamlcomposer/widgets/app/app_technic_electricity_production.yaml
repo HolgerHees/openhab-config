@@ -1,0 +1,58 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_electricity_production
+  title: Technik Strom Erzeugung
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Gesamt
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Leistung", item: "pGF_Garage_Solar_Inverter_ProductionActivePower", icon: "oh:selfenergy_solar"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Erzeugung (Heute)", item: "pGF_Utilityroom_Electricity_State_Daily_Production", icon: "oh:selfenergy_solar"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Ost (Strasse)
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Leistung", item: "pGF_Garage_Solar_Inverter_ChargerEastActualPower", icon: "oh:selfenergy_solar"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Erzeugung (Heute)", item: "pGF_Utilityroom_Electricity_State_Daily_East_Production", icon: "oh:selfenergy_solar"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Spannung", item: "pGF_Garage_Solar_Inverter_ChargerEastVoltage", icon: "oh:selfenergy_solar"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Strom", item: "pGF_Garage_Solar_Inverter_ChargerEastCurrent", icon: "oh:selfenergy_solar"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Süd (Garage)
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Leistung", item: "pGF_Garage_Solar_Inverter_ChargerSouthActualPower", icon: "oh:selfenergy_solar"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Erzeugung (Heute)", item: "pGF_Utilityroom_Electricity_State_Daily_South_Production", icon: "oh:selfenergy_solar"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Spannung", item: "pGF_Garage_Solar_Inverter_ChargerSouthVoltage", icon: "oh:selfenergy_solar"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Strom", item: "pGF_Garage_Solar_Inverter_ChargerSouthCurrent", icon: "oh:selfenergy_solar"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: West (Garten)
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Leistung", item: "pGF_Garage_Solar_Inverter_ChargerWestActualPower", icon: "oh:selfenergy_solar"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Erzeugung (Heute)", item: "pGF_Utilityroom_Electricity_State_Daily_West_Production", icon: "oh:selfenergy_solar"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Spannung", item: "pGF_Garage_Solar_Inverter_ChargerWestVoltage", icon: "oh:selfenergy_solar"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Strom", item: "pGF_Garage_Solar_Inverter_ChargerWestCurrent", icon: "oh:selfenergy_solar"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Zähler
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Zählerstand", item: "pGF_Utilityroom_Electricity_Meter_Supply", icon: "oh:selfenergy_meter"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Auswertung
+        slots:
+          - !include { file: ../layout/web_time.inc.yaml}
+          - !include { file: ../layout/web_frame.inc.yaml, vars: {url: "/static/custom/grafana/solar_energy.html?fromItem=Chart_From", height: 1091px}}

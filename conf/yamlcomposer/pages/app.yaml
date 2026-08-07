@@ -1,0 +1,130 @@
+version: 1
+pages:
+  app:
+    tags: []
+    props:
+      parameters: []
+      parameterGroups: []
+    component: oh-layout-page
+    config:
+      label: Test
+      sidebar: true
+      hideNavbar: false
+      stylesheet: |
+        @import "/static/shared/widgets/app_navigation.css";
+        @import "/static/shared/widgets/app_page.css";
+        @import "/static/shared/widgets/app_content.css";
+    slots:
+      default:
+        - component: oh-block
+          config:
+            style:
+              padding: 0
+              margin: 0
+          slots:
+            default:
+              - component: oh-grid-col
+                slots:
+                  default:
+                    - component: script
+                      config:
+                        src: /static/shared/widgets/app_navigation.js
+              - component: oh-grid-col
+                config:
+                  width: "100"
+                  medium: "100"
+                slots:
+                  default:
+                    - component: widget:app
+
+        # - component: oh-block
+        #   slots:
+        #     default:
+        #       - component: oh-grid-col
+        #         config:
+        #           width: "100"
+        #           medium: "100"
+        #         slots:
+        #           default:
+        #             - component: div
+        #               slots:
+        #                 default:
+        #                   - component: script
+        #                     config:
+        #                       src: /static/shared/widgets/test.js
+        #                   - component: oh-button
+        #                     config:
+        #                       #onclick: "document.body.classList.add('popupInitialOpener'); window.setTimeout(function(){ document.body.classList.remove('popupInitialOpener'); }, 600);" #
+        #                       #onclick: "app._vnode.el.f7.views.main.router.navigate({url: 'widget:app', route: {popup:{component: CustomPopup}}}, {props: {uid: 'widget:app', el: event.target, modalConfig: {} } } );"
+        #                       action: popup
+        #                       actionModal: widget:app
+        #                       style:
+        #                         height: 100px
+        #                         width: 100px
+        #                       text: "click me"
+        #                   - component: template
+        #                     slots:
+        #                       default:
+        #                         - component: div
+        #                           config:
+        #                             class: myPopup
+        #                           slots:
+        #                             default:
+        #                               - component: Label
+        #                                 config:
+        #                                   title: "Hallo"
+        #                   - component: script
+        #                     config:
+        #                       text: |
+        #                         console.log(app._vnode.el.f7);
+        #                         console.log(app._vnode.el.f7.registerComponent);
+
+        # - component: oh-block
+        #   slots:
+        #     default:
+        #       - component: oh-grid-col
+        #         config:
+        #           width: "100"
+        #           medium: "100"
+        #         slots:
+        #           default:
+        #             - component: f7-popup
+        #               config:
+        #                 style:
+        #                   width: 400px !important
+        #                   height: 400px !important
+        #                   left: 0
+        #                   right: 0
+        #                   margin: auto
+        #                   position: absolute
+        #                   display: block
+        #                 class:
+        #                   - subNavigationPopup
+        #               slots:
+        #                 default:
+        #                   - component: f7-page
+        #                     config:
+        #                       style:
+        #                         width: 100%
+        #                         height: fit-content
+        #                         position: relative
+        #                     slots:
+        #                       default:
+        #                         - component: widget:test1
+        #       - component: oh-grid-col
+        #         config:
+        #           width: "100"
+        #           medium: "100"
+        #         slots:
+        #           default:
+        #             - component: oh-button
+        #               config:
+        #                 action: popup
+        #                 popupOpen: .subNavigationPopup
+        #                 style:
+        #                   height: 100px
+        #                   width: 100px
+        #                 text: "click me"
+        #
+        #
+        #

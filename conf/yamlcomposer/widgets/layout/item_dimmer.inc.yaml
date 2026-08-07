@@ -1,0 +1,110 @@
+variables:
+  title: ""
+  item: ""
+  icon: "oh:selfsettings"
+  display: ""
+  is_hue: ""
+  width: "300px"
+
+component: li
+config:
+  style:
+    <<: !if
+      if: display
+      then:
+        display: "=${display} ? '' : 'none'"
+  class:
+    - dimmer
+slots:
+  default:
+    - !if
+      if: is_hue
+      then:
+        component: oh-link
+        config:
+          action: popover
+          popupOpen: .colorPopup_${item}
+          #actionPageTransition: "f7-push"
+          id: colorPopup_${item}
+          style:
+            display: none
+    - component: oh-icon
+      config:
+        <<: !if
+          if: is_hue
+          then:
+            onclick: document.getElementById('colorPopup_${item}').click()
+            style:
+              cursor: pointer
+        class:
+          - icon
+        height: 32px
+        icon: "${icon}"
+        state: "=items['${item}'].state"
+    - !if
+      if: is_hue
+      then:
+        component: f7-popup
+        config:
+          style:
+            width: ${width} !important
+            margin-left: calc(-1 * ${width} / 2) !important
+          class:
+            - colorPopup
+            - colorPopup_${item}
+        slots:
+          default:
+            - component: f7-page
+              config:
+                style:
+                  width: 100%
+                  height: fit-content
+                  position: relative
+              slots:
+                default:
+                  - component: f7-content
+                    slots:
+                      default:
+                        - !include
+                          file: box.inc.yaml
+                          vars:
+                            title: ${title}
+                            slots:
+                              - component: li
+                                config:
+                                  class:
+                                    - selection
+                                slots:
+                                  default:
+                                    - component: oh-colorpicker
+                                      config:
+                                        item: ${item}
+                                        modules:
+                                          - hue-slider
+                                          - brightness-slider
+    - component: Label
+      config:
+        class:
+          - name
+        text: "${title}"
+    - !if
+      if: is_hue
+      then:
+        component: oh-icon
+        config:
+          onclick: document.getElementById('colorPopup_${item}').click()
+          class:
+            - icon
+          height: 32px
+          icon: "oh:colorwheel"
+          style:
+            cursor: pointer
+    - component: oh-slider
+      config:
+        item: ${item}
+        style:
+          max-width: 33%
+          box-sizing: border-box
+        class:
+          - "=items['${item}'].state == 'ON'' ? 'button-active' : ''"
+          - highlightModifier

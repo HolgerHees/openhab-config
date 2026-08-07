@@ -1,0 +1,36 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_electricity_consumption_headpump
+  title: Technik Strom Verbrauch Wärmepumpe Details
+  slots:
+    - !include
+    file: ../layout/box.inc.yaml
+    vars:
+      slots:
+        - !include
+          file: ../layout/box.inc.yaml
+          vars:
+            slots:
+              - !include
+                file: ../layout/box.inc.yaml
+                vars:
+                  title: Heizen
+                  slots:
+                    - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Gesamt", item: "pGF_Utilityroom_Electricity_State_Heatpump_Heating_Total_Consumption", icon: "oh:selfenergy_grid_in"}}
+                    - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heute", item: "pGF_Utilityroom_Electricity_State_Heatpump_Heating_Daily_Consumption", icon: "oh:selfenergy_grid_in"}}
+              - !include
+                file: ../layout/box.inc.yaml
+                vars:
+                  title: Warmwasser
+                  slots:
+                    - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Gesamt", item: "pGF_Utilityroom_Electricity_State_Heatpump_Water_Total_Consumption", icon: "oh:selfenergy_grid_in"}}
+                    - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heute", item: "pGF_Utilityroom_Electricity_State_Heatpump_Water_Daily_Consumption", icon: "oh:selfenergy_grid_in"}}
+              - !include
+                file: ../layout/box.inc.yaml
+                vars:
+                  title: Details
+                  slots:
+                    - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Gerät Aktuell", item: "pGF_Utilityroom_Electricity_State_Heatpump_Main_ActivePower", icon: "oh:selfenergy"}}
+                    - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Compressor Aktuell", item: "pGF_Utilityroom_Electricity_State_Heatpump_Compressor_ActivePower", icon: "oh:selfenergy"}}
+                    - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Electric Aktuell", item: "pGF_Utilityroom_Electricity_State_Heatpump_Electric_ActivePower", icon: "oh:selfenergy"}}

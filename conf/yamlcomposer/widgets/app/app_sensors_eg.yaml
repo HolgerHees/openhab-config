@@ -1,0 +1,24 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_sensors_eg
+  title: Sensoren Erdgeschoss
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Daten
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Wohnzimmer", item: "pGF_Livingroom_Air_Sensor_Message", icon: "oh:selftemperature", target: {widget: "widget:app_sensors_eg_livingroom"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Abstellkammer", item: "pGF_Boxroom_Air_Sensor_Message", icon: "oh:selftemperature", target: {widget: "widget:app_sensors_eg_boxroom"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Arbeitszimmer", item: "pGF_Workroom_Air_Sensor_Message", icon: "oh:selftemperature", target: {widget: "widget:app_sensors_eg_workroom"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Gäste WC", item: "pGF_Guesttoilet_Air_Sensor_Message", icon: "oh:selftemperature", target: {widget: "widget:app_sensors_eg_guestwc"}}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Auswertung
+        slots:
+          - !include { file: ../layout/web_time.inc.yaml}
+          - !include { file: ../layout/web_frame.inc.yaml, vars: {url: "/static/custom/grafana/temperatures_eg.html?fromItem=Chart_From", height: 1091px}}
+

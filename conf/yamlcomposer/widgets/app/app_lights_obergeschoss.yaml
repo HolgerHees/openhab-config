@@ -1,0 +1,32 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_lights_obergeschoss
+  title: Beleuchtung Obergeschoss
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Schlafzimmer & Ankleide
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Decke", item: "pFF_Bedroom_Light_Ceiling_Powered", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Ankleide", item: "pFF_Dressingroom_Light_Ceiling_Powered", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_dimmer.inc.yaml, vars: {title: "Sandra", item: "pFF_Bedroom_Light_Hue_Left_Color", icon: "oh:selflight", is_hue: yes}}
+          - !include { file: ../layout/item_dimmer.inc.yaml, vars: {title: "Holger", item: "pFF_Bedroom_Light_Hue_Right_Color", icon: "oh:selflight", is_hue: yes}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Badezimmer
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Decke", item: "pFF_Bathroom_Light_Ceiling_Powered", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Spiegel", item: "pFF_Bathroom_Light_Mirror_Powered", icon: "oh:selflight"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Sonstiges
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Sportzimmer", item: "pFF_Fitnessroom_Light_Ceiling_Powered", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Schminkzimmer", item: "pFF_Makeuproom_Light_Ceiling_Powered", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Flur oben", item: "pFF_Corridor_Light_Ceiling_Powered", icon: "oh:selflight"}}

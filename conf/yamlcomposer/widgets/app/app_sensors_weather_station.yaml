@@ -1,0 +1,44 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_sensors_weather_station
+  title: Sensoren Wetterstation
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Wetter
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Luft", item: "pOutdoor_WeatherStation_Air_Message", icon: "oh:selftemperature", target: {widget: "widget:app_sensors_weather_station_air"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Luftdruck", item: "pOutdoor_WeatherStation_Pressure", icon: "oh:selfruntime", target: {widget: "widget:app_sensors_weather_station_pressure"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Regen", item: "pOutdoor_WeatherStation_Rain_Message", icon: "oh:selfrain", target: {widget: "widget:app_sensors_weather_station_rain"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Wind", item: "pOutdoor_WeatherStation_Wind_Message", icon: "oh:wind", target: {widget: "widget:app_sensors_weather_station_wind"}}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Sonne und Wolken
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Bewölkung", item: "pOutdoor_WeatherStation_Cloud_Cover", icon: "oh:selfrain"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "UV Index", item: "pOutdoor_WeatherStation_UV_Index", icon: "oh:selfsun", target: {widget: "widget:app_sensors_weather_station_uv"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Helligkeit", item: "pOutdoor_WeatherStation_Light_Level", icon: "oh:selfsun", target: {widget: "widget:app_sensors_weather_station_light"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Sonnenkraft", item: "pOutdoor_WeatherStation_Solar_Power", icon: "oh:selfsun", target: {widget: "widget:app_sensors_weather_station_solar"}}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Sonstiges
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Device Status", item: "pOutdoor_WeatherStation_State_Device_Info", icon: "oh:selfplant", valuecolor: "@@'pOutdoor_WeatherStation_State_Device_Info'=='Alles ok' ? '#6bc305' : '#d72a2a'"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Letzte Änderung", item: "pOutdoor_WeatherStation_Update_Message", icon: "oh:selfclock", valuecolor: "@@'pOutdoor_WeatherStation_Update_Message'!='' ? '#6bc305' : ''", display: "@@'pOutdoor_WeatherStation_Is_Working'!='OFF'"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Letzte Änderung", item: "pOutdoor_WeatherStation_Update_Message", icon: "oh:selfclock", valuecolor: "@@'pOutdoor_WeatherStation_Update_Message'!='' ? '#d72a2a' : ''", display: "@@'pOutdoor_WeatherStation_Is_Working'=='OFF'"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Batterie
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Wetterstation Signal", item: "pOutdoor_WeatherStation_MainSensor_Signal", icon: "oh:network"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Wetterstation Batterie niedrig", item: "pOutdoor_WeatherStation_MainSensor_Battery_Low", icon: "oh:selfbattery", valuecolor: "@@'pOutdoor_WeatherStation_Update_Message'].state == 'ON' ? '#d72a2a' : ''"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Temperatursensor Signal", item: "pOutdoor_WeatherStation_TemperatureSensor_Signal", icon: "oh:network"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Temperatursensor Batterie niedrig", item: "pOutdoor_WeatherStation_TemperatureSensor_Battery_Low", icon: "oh:selfbattery", valuecolor: "@@'pOutdoor_WeatherStation_Update_Message'].state == 'ON' ? '#d72a2a' : ''"}}

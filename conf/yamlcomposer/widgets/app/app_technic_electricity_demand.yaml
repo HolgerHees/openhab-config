@@ -1,0 +1,31 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_electricity_demand
+  title: Technik Strom Bezug
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Daten
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Aktuell", item: "pGF_Garage_Solar_Inverter_BuyFromGridPower", icon: "oh:selfenergy_grid_in"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heute", item: "pGF_Utilityroom_Electricity_State_Daily_Demand", icon: "oh:selfenergy_grid_in"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Dieses Jahr", item: "pGF_Utilityroom_Electricity_State_Annual_Demand_Current", icon: "oh:selfenergy_grid_in"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Letztes Jahr", item: "pGF_Utilityroom_Electricity_State_Annual_Demand_Last", icon: "oh:selfenergy_grid_in"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Hochrechnung", item: "pGF_Utilityroom_Electricity_State_Annual_Demand_Forecast", icon: "oh:selfenergy_grid_in"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Zähler
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Zählerstand", item: "pGF_Utilityroom_Electricity_Meter_Demand", icon: "oh:selfenergy_meter"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Auswertung
+        slots:
+          - !include { file: ../layout/web_time.inc.yaml}
+          - !include { file: ../layout/web_frame.inc.yaml, vars: {url: "/static/custom/grafana/energy_demand.html?fromItem=Chart_From", height: 1091px}}

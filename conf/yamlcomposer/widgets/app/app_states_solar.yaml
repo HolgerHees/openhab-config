@@ -1,0 +1,28 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_states_solar
+  title: Status Solar
+  slots:
+      - !include
+        file: ../layout/box.inc.yaml
+        vars:
+          title: Sonstiges
+          slots:
+            - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Aussenbeleuchtung aktiv", item: "pOther_Automatic_State_Outdoorlights", icon: "oh:selflight"}}
+            - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Solaranlage wird abgefragt", item: "pOther_Automatic_State_Solar", icon: "oh:selfinfo"}}
+            - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Rollläden", item: "pOther_Automatic_State_Rollershutter", icon: "oh:selfrollershutter"}}
+            - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Rollläden hoch", item: "pOther_Automatic_State_Rollershutter_Up", icon: "oh:selfrollershutter"}}
+            - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Rollläden runter ", item: "pOther_Automatic_State_Rollershutter_Down", icon: "oh:selfrollershutter"}}
+
+      - !include
+        file: ../layout/box.inc.yaml
+        vars:
+          title: Sonnenschutz
+          slots:
+            - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Beschattung Dachboden", item: "pOther_Automatic_State_Sunprotection_Attic", icon: "oh:selfrollershutter"}}
+            - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Beschattung Badezimmer", item: "pOther_Automatic_State_Sunprotection_Bathroom", icon: "oh:selfrollershutter"}}
+            - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Beschattung Ankleide", item: "pOther_Automatic_State_Sunprotection_Dressingroom", icon: "oh:selfrollershutter"}}
+            - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Beschattung Schlafzimmer", item: "pOther_Automatic_State_Sunprotection_Bedroom", icon: "oh:selfrollershutter"}}
+            - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Beschattung Wohnzimmer", item: "pOther_Automatic_State_Sunprotection_Livingroom", icon: "oh:selfrollershutter"}}
+            - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Beschattung Terasse", item: "pOther_Automatic_State_Sunprotection_Terrace", icon: "oh:selfrollershutter"}}

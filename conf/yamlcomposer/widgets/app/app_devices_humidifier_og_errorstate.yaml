@@ -1,0 +1,12 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_devices_humidifier_og_errorstate
+  title: Geräte Luftbefeuchter OG Fehlerstatus
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Filter Ersetzen", item: "pFF_Bedroom_Humidifier_Replace_Filter", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Filter Reset", item: "pFF_Bedroom_Humidifier_Filter_Reset", icon: "oh:selfinfo"}}

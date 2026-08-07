@@ -1,0 +1,34 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_programms
+  title: Programme
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Steuerung
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Urlaubsmodus (Heizung ignoriert Werktage) (u)", item: "pOther_Manual_State_Holiday", icon: "oh:selfshield"}}
+          - !include { file: ../layout/item_selection.inc.yaml, vars: {title: "Heizungsreduktion (h)", item: "pOther_Manual_State_Heating", icon: "oh:selfshield", mappings: "0=0 Normal,1=-1,2=-2,3=-3 (Kaminunterstützt),4=-4,5=-5"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Komforttemperaturen", item: "pGF_Utilityroom_Ventilation_Target_Temperature", icon: "oh:selfheating", target: {widget: "app_programms_comfort_temperatures"}}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Automatik
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Aussenbeleuchtung (a)", item: "pOutdoor_Light_Automatic_Main_Switch", icon: "oh:selfautomode"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Innenbeleuchtung (Bei Abwesenheit) (i)", item: "pOther_Manual_State_Auto_Lighting", icon: "oh:selfautomode"}}
+          - !include { file: ../layout/item_selection.inc.yaml, vars: {title: "Rollläden", item: "pOther_Manual_State_Auto_Rollershutter", icon: "oh:selfautomode", mappings: "0=Aus,1=Tageszeitabhängig (t),2=Beschattung (b),3=Tageszeitabhängig & Beschattung (tb)"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Sonstiges
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Weihnachtsmodus (w)", item: "pOther_Manual_State_Auto_Christmas", icon: "oh:selfautomode"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Weihnachsmodus (Steckdosen)", icon: "oh:selfsocket", display: "@@'pOther_Manual_State_Auto_Christmas'=='ON'", target: {widget: "app_programms_christmas"}}}
+
+          - !include { file: ../layout/item_selection.inc.yaml, vars: {title: "Dachbodensteuerung (d)", item: "pOther_Manual_State_Auto_Attic_Light", icon: "oh:selfautomode", mappings: "0=Aus,1=Wachstum,2=Blüte"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Dachboden (Steckdose)", item: "pMobile_Socket_7_Powered", icon: "oh:selfautomode", display: "@@'pOther_Manual_State_Auto_Attic_Light'!='0'"}}

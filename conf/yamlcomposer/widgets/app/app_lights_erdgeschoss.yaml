@@ -1,0 +1,43 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_lights_erdgeschoss
+  title: Beleuchtung Erdgeschoss
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Wohnzimmer & Küche
+        slots:
+          - !include { file: ../layout/item_dimmer.inc.yaml, vars: {title: "Indirekt", item: "gGF_Livingroom_Light_Hue_Color", icon: "oh:selflight", is_hue: yes}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Indirekt Einzeln", icon: "oh:selflight", target: { widget: "widget:app_lights_erdgeschoss_indirect"}}}
+          - !include { file: ../layout/item_dimmer.inc.yaml, vars: {title: "Esstisch", item: "pGF_Livingroom_Light_Diningtable_Brightness", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_dimmer.inc.yaml, vars: {title: "Couch", item: "pGF_Livingroom_Light_Couchtable_Brightness", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_dimmer.inc.yaml, vars: {title: "Küche", item: "pGF_Kitchen_Light_Ceiling_Brightness", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Küchenschrank", item: "pGF_Kitchen_Light_Cupboard_Powered", icon: "oh:selflight"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Flur
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Decke", item: "pGF_Corridor_Light_Ceiling_Powered", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Spiegel", item: "pGF_Corridor_Light_Mirror_Powered", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_dimmer.inc.yaml, vars: {title: "Indirekt", item: "pGF_Corridor_Light_Hue_Color", icon: "oh:selflight", is_hue: yes}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Gäste WC
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Decke", item: "pGF_Guesttoilet_Light_Ceiling_Powered", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Spiegel", item: "pGF_Guesttoilet_Light_Mirror_Powered", icon: "oh:selflight"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Sonstiges
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Arbeitszimmer", item: "pGF_Workroom_Light_Ceiling_Powered", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Abstellkammer", item: "pGF_Boxroom_Light_Ceiling_Powered", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "HWR", item: "pGF_Utilityroom_Light_Ceiling_Powered", icon: "oh:selflight"}}

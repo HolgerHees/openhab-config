@@ -1,0 +1,43 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_electricity
+  title: Technik Strom
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Verbrauch
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Autarkie", item: "pGF_Utilityroom_Electricity_State_Autarky", icon: "oh:selfenergy_solar"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Eigenverbrauch", item: "pGF_Utilityroom_Electricity_State_Ratio", icon: "oh:selfenergy_solar"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Verbrauch", item: "pGF_Utilityroom_Electricity_State_Consumption_Msg", icon: "oh:selfenergy", target: {widget: "widget:app_technic_electricity_consumption"}}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Details
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Bezug", item: "pGF_Utilityroom_Electricity_State_Demand_Msg", icon: "oh:selfenergy_grid_in", target: {widget: "widget:app_technic_electricity_demand"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Einspeisung", item: "pGF_Utilityroom_Electricity_State_Supply_Msg", icon: "oh:selfenergy_grid_out", target: {widget: "widget:app_technic_electricity_supply"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Erzeugung", item: "pGF_Utilityroom_Electricity_State_Production_Msg", icon: "oh:selfenergy_production", target: {widget: "widget:app_technic_electricity_production"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Batterie", item: "pGF_Utilityroom_Electricity_State_Battery_Msg", icon: "oh:selfbattery", target: {widget: "widget:app_technic_electricity_battery"}}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Wechselrichter
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Status", item: "pGF_Utilityroom_Electricity_State_Message", icon: "oh:selfinfo", valuecolor: "@@'pGF_Utilityroom_Electricity_State_Message'=='Alles ok' ? '#6bc305' : '#d72a2a'"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Grid Aktiv", item: "pGF_Garage_Solar_Inverter_GridEnabled", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Wechselrichter", item: "pGF_Garage_Solar_Inverter_InverterAirTemp", icon: "oh:temperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "BMS Box", item: "pGF_Garage_Solar_Inverter_BmsBoxTemp", icon: "oh:temperature"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Energy Control
+        slots:
+          - !include { file: ../layout/item_selection.inc.yaml, vars: {title: "Überladung", item: "pGF_Utilityroom_Electricity_Charge_Offset", icon: "oh:selfenergy_solar", mappings: "0=0 kWh,5=5 kWh,10=10 kWh,15=15 kWh,20=20 kWh,100=Voll"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Inverter (ActivePowerEqual)", item: "pGF_Garage_Solar_Storage_ActivePowerEqual", icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Details", item: "pGF_Garage_Solar_Storage_Summary_Details", icon: "oh:selfenergy", target: {widget: "widget:app_technic_electricity_control"}}}

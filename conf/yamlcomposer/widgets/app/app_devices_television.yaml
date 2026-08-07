@@ -1,0 +1,23 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_devices_television
+  title: Geräte Fernseher
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Status
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Program Titel", item: "pGF_Livingroom_SkyQ_Info_Program_Title", display: "items['pGF_Livingroom_Television_POWER'].state=='ON'"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Eingeschaltet", item: "pGF_Livingroom_Television_POWER"}}
+          - !include { file: ../layout/item_dimmer.inc.yaml, vars: {title: "Lautstärke", item: "pGF_Livingroom_Television_Key_VOLUME", display: "items['pGF_Livingroom_Television_POWER'].state=='ON'"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Lautlos", item: "pGF_Livingroom_Television_Key_MUTE", display: "items['pGF_Livingroom_Television_POWER'].state=='ON'"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Raw
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Power Fernseher", item: "pGF_Livingroom_Television_Key_POWER"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Power SkyQ", item: "pGF_Livingroom_SkyQ_Key_POWER"}}

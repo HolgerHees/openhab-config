@@ -1,0 +1,42 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_devices_washer
+  title: Geräte Waschmaschine
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Status
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Status", item: "pGF_Utilityroom_Washer_OperationState", icon: "oh:selfautomode"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Tür", item: "pGF_Utilityroom_Washer_DoorState", icon: "oh:whitegood"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Fortschritt", item: "pGF_Utilityroom_Washer_ProgramProgressState", icon: "oh:selfruntime", display: "@@'pGF_Utilityroom_Washer_OperationState'=='Run'"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Restlaufzeit", item: "pGF_Utilityroom_Washer_RemainingProgramTimeState", icon: "oh:selfruntime", display: "@@'pGF_Utilityroom_Washer_OperationState'=='Run'"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Programm
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Aktiv", item: "pGF_Utilityroom_Washer_ActiveProgramState", icon: "oh:heating"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Gewählt", item: "pGF_Utilityroom_Washer_SelectedProgramState", icon: "oh:heating"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Temperatur", item: "pGF_Utilityroom_Washer_WashingProgramTemperature", icon: "oh:selftemperature", display: "@@'pGF_Utilityroom_Washer_OperationState'=='Run'"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Schleudern", item: "pGF_Utilityroom_Washer_WashingProgramSpinSpeed", icon: "oh:selfinfo", display: "@@'pGF_Utilityroom_Washer_OperationState'=='Run'"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Info
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Trommelreinigung", item: "pGF_Utilityroom_Washer_DrumCleanState", icon: "oh:selfruntime", valuecolor: "@@'pOther_State_Message_Garden'=='ON' ? '#d72a2a' : '#6bc305'"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Beladung", item: "pGF_Utilityroom_Washer_LoadState", icon: "oh:selfinfo"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Sonstiges
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Fernstart erlaubt", item: "pGF_Utilityroom_Washer_RemoteStartAllowanceState", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Dosierung I", item: "pGF_Utilityroom_Washer_WashingProgramDosingLevel1", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Dosierung II", item: "pGF_Utilityroom_Washer_WashingProgramDosingLevel2", icon: "oh:selfinfo"}}

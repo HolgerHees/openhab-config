@@ -1,0 +1,21 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_heating_demand
+  title: Technik Heizbedarf
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Heizbedarf
+        slots:
+          - component: oh-webframe-card
+            config:
+              height: 1311px
+              style:
+                width: 100%
+                height: 100%
+                overflow: hidden
+                padding: 0
+                margin: 0
+              src: /static/custom/logs/heating.html

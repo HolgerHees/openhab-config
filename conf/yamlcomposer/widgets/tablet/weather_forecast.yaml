@@ -1,0 +1,51 @@
+version: 1
+widgets:
+  dashboard_tablet_weather_forecast:
+    tags: []
+    props:
+      parameters:
+        - label: Dashboard url
+          name: dashboard_url
+          required: false
+          type: TEXT
+      parameters:
+        - label: Detail url
+          name: detail_url
+          required: false
+          type: TEXT
+      parameterGroups: []
+    component: div
+    config:
+      class:
+        - card
+        - oh-canvas-item-content
+      style:
+        position: relative
+    slots:
+      default:
+        - component: oh-webframe-card
+          config:
+            height: 138
+            style:
+              margin: var(--custom-widget-padding)
+              border: 0
+              position: absolute
+              inset: 0 0 0 0
+              background-color: transparent
+              overflow: hidden
+              box-shadow: none
+            src: =props.dashboard_url
+        - component: oh-card
+          config:
+            action: popup
+            actionModal: widget:dashboard_tablet_popup_weather_forecast
+            actionModalConfig:
+              detail_url: =props.detail_url
+            style:
+              border: 0
+              display: flex
+              position: absolute
+              inset: 0 0 0 0
+              background-color: transparent
+              box-shadow: none
+

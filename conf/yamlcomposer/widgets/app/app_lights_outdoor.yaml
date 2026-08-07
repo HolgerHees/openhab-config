@@ -1,0 +1,24 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_lights_outdoor
+  title: Beleuchtung Garten
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Terasse
+        slots:
+          - !include { file: ../layout/item_dimmer.inc.yaml, vars: {title: "Wand", item: "pOutdoor_Terrace_Light_Brightness", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_dimmer.inc.yaml, vars: {title: "Beete", item: "gOutdoor_Terrace_Light_Hue_Color", icon: "oh:selflight", is_hue: yes}}
+          - !include { file: ../layout/item_dimmer.inc.yaml, vars: {title: "Einzeln", icon: "oh:selflight", target: {widget: "widget:app_lights_outdoor_single"}}}
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Sonstige
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Haustür", item: "pOutdoor_Streedside_Frontdoor_Light_Powered", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Carport", item: "pOutdoor_Carport_Light_Powered", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Werkstatt vorne", item: "pOutdoor_Streedside_Garage_Light_Powered", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Werkstatt hinten", item: "pOutdoor_Garden_Garage_Light_Powered", icon: "oh:selflight"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Geräteschuppen", item: "pOutdoor_Toolshed_Right_Light_Powered", icon: "oh:selflight"}}

@@ -1,0 +1,26 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_sensors_og
+  title: Sensoren Obergeschoss
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Daten
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Schlafzimmer", item: "pFF_Bedroom_Air_Sensor_Message", icon: "oh:selftemperature", target: {widget: "widget:app_sensors_og_bedroom"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Ankleide", item: "pFF_Dressingroom_Air_Sensor_Message", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Sportzimmer", item: "pFF_Dressingroom_Air_Sensor_Message", icon: "oh:selftemperature", target: {widget: "widget:app_sensors_og_sportroom"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Schminkzimmer", item: "pFF_Makeuproom_Air_Sensor_Message", icon: "oh:selftemperature", target: {widget: "widget:app_sensors_og_makeuproom"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Badezimmer", item: "pFF_Bathroom_Air_Sensor_Message", icon: "oh:selftemperature", target: {widget: "widget:app_sensors_og_bathroom"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Flur oben", item: "pFF_Corridor_Air_Sensor_Message", icon: "oh:selftemperature", target: {widget: "widget:app_sensors_og_corridor"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Dachboden", item: "pFF_Attic_Air_Sensor_Message", icon: "oh:selftemperature"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Auswertung
+        slots:
+          - !include { file: ../layout/web_time.inc.yaml}
+          - !include { file: ../layout/web_frame.inc.yaml, vars: {url: "/static/custom/grafana/temperatures_og.html?fromItem=Chart_From", height: 1091px}}

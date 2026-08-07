@@ -1,0 +1,18 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_ventilation_errorstate
+  title: Technik Lüftung
+  slots:
+    - !include
+    file: ../layout/box.inc.yaml
+    vars:
+      slots:
+        - !include { file: ../layout/item_buttons.inc.yaml, vars: {title: "Fehlerreset", item: "pGF_Utilityroom_Ventilation_Error_Reset", icon: "oh:selfinfo", mappings: "ON=Reset"}}
+        - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Filter wechseln", item: "pGF_Utilityroom_Ventilation_Filter_Dirty", icon: "oh:selfFilterintern"}}
+        - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Fehler", item: "pGF_Utilityroom_Ventilation_Error", icon: "oh:selfinfo"}}
+        - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Fehler 1", item: "pGF_Utilityroom_Ventilation_Error_1", icon: "oh:selfinfo"}}
+        - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Fehler 2", item: "pGF_Utilityroom_Ventilation_Error_2", icon: "oh:selfinfo"}}
+        - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Fehler 3", item: "pGF_Utilityroom_Ventilation_Error_3", icon: "oh:selfinfo"}}
+        - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Fehler 4", item: "pGF_Utilityroom_Ventilation_Error_4", icon: "oh:selfinfo"}}
+        - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Fehler 5", item: "pGF_Utilityroom_Ventilation_Error_5", icon: "oh:selfinfo"}}

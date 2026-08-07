@@ -1,0 +1,13 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_sockets_outdoor
+  title: Steckdosen Garten
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Strassenseite", item: "pOutdoor_Streeside_Socket_Powered", icon: "oh:selfsocket"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Gartenseite", item: "pOutdoor_Terrace_Socket_Powered", icon: "oh:selfsocket"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Geräteschuppen ", item: "pOutdoor_Toolshed_Socket_Powered", icon: "oh:selfsocket"}}

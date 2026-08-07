@@ -1,0 +1,24 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_sensors_eg_livingroom
+  title: Sensoren Obergeschoss Wohnzimmer
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Komforttemperatur
+        slots:
+          - !include { file: ../layout/item_setpoint.inc.yaml, vars: {title: "Wohnzimmer", item: "pGF_Livingroom_Temperature_Desired", icon: "oh:selftemperature", step: 0.5, min: 15, max: 25}}
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Luftgüte
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "PM01", item: "pGF_Livingroom_Air_Sensor_PM1_Value", icon: "oh:chart"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "PM02", item: "pGF_Livingroom_Air_Sensor_PM2_Value", icon: "oh:chart"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "PM10", item: "pGF_Livingroom_Air_Sensor_PM10_Value", icon: "oh:chart"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "PM 0.3 count", item: "pGF_Livingroom_Air_Sensor_PM03_Count", icon: "oh:chart"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "CO2", item: "pGF_Livingroom_Air_Sensor_CO2_Value", icon: "oh:chart"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "TVOC", item: "pGF_Livingroom_Air_Sensor_TVOC2_Value", icon: "oh:chart"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Wifi", item: "pGF_Livingroom_Air_Sensor_RSSI", icon: "oh:selfnetwork"}}

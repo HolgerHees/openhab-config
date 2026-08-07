@@ -1,0 +1,16 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_programms_christmas
+  title: Programme Weihnachtsmodus
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Couch", item: "pGF_Livingroom_Socket_Couch_Powered", icon: "oh:selfsocket"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Kamin", item: "pGF_Livingroom_Socket_Fireplace_Powered", icon: "oh:selfsocket"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Treppe", item: "pGF_Corridor_Socket_Powered", icon: "oh:selfsocket"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Mobile 1", item: "pMobile_Socket_1_Powered", icon: "oh:selfsocket"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Mobile 2", item: "pMobile_Socket_2_Powered", icon: "oh:selfsocket"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Strassenseite", item: "pOutdoor_Streeside_Socket_Powered", icon: "oh:selfsocket"}}

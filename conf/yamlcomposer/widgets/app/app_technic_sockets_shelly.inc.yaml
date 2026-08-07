@@ -1,0 +1,21 @@
+variables:
+  item_name_prefix: ""
+  chart_name: ""
+
+slots:
+  - !include
+    file: ../layout/box.inc.yaml
+    vars:
+      title: Status
+      slots:
+        - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Verbrauch", item: "${item_name_prefix}_Consumption", icon: "oh:selfenergy"}}
+        - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Gesamt", item: "${item_name_prefix}_Total_Consumption", icon: "oh:selfenergy"}}
+        - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heute", item: "${item_name_prefix}_Daily_Consumption", icon: "oh:selfenergy"}}
+
+  - !include
+    file: ../layout/box.inc.yaml
+    vars:
+      title: Auswertung
+      slots:
+        - !include { file: ../layout/web_time.inc.yaml}
+        - !include { file: ../layout/web_frame.inc.yaml, vars: {url: "/static/custom/grafana/${chart_name}.html?fromItem=Chart_From", height: 1091px}}

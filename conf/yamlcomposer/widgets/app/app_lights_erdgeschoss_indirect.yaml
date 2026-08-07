@@ -1,0 +1,23 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_lights_erdgeschoss_indirect
+  title: Beleuchtung Erdgeschoss
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: "Gruppe"
+        slots:
+          - !include { file: ../layout/item_dimmer.inc.yaml, vars: {title: "Alle lampen", item: "gGF_Livingroom_Light_Hue_Color", icon: "oh:selflight", is_hue: yes}}
+          - !include { file: ../layout/item_selection.inc.yaml, vars: {title: "Scene", item: "pGF_Livingroom_Light_Hue_Scene", icon: "oh:selflight", width: "300px"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: "Einzeln"
+        slots:
+          - !include { file: ../layout/item_dimmer.inc.yaml, vars: {title: "Küche Tresen", item: "pGF_Livingroom_Light_Hue4_Color", icon: "oh:selflight", is_hue: yes}}
+          - !include { file: ../layout/item_dimmer.inc.yaml, vars: {title: "Bücherregal", item: "pGF_Livingroom_Light_Hue5_Color", icon: "oh:selflight", is_hue: yes}}
+          - !include { file: ../layout/item_dimmer.inc.yaml, vars: {title: "Stehlampe", item: "pGF_Livingroom_Light_Hue2_Color", icon: "oh:selflight", is_hue: yes}}
+          - !include { file: ../layout/item_dimmer.inc.yaml, vars: {title: "Couchecke", item: "pGF_Livingroom_Light_Hue1_Color", icon: "oh:selflight", is_hue: yes}}

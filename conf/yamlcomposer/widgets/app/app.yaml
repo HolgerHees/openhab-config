@@ -1,0 +1,51 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app
+  title: Steuerung
+  sidebar: true
+  slots:
+    #- component: oh-grid-row
+    #  slots:
+    #    default:
+    #      - component: oh-grid-col
+    #        config:
+    #          width: "100"
+    #          medium: "100"
+    #        slots:
+    #          default:
+    #            - component: widget:app_test
+    #              config:
+    #                mappings: '[ {"key": "key1", value: "value1" }, {"key": "key2", value: "value2" } ]'
+    - !include
+            file: ../layout/box.inc.yaml
+            vars:
+              title: Hauptkategorien
+              slots:
+                - !include
+                  file: ../layout/item_text.inc.yaml
+                  vars: {title: "Lampen",    item: "gIndoor_Lights_Count", icon: "oh:selflight",         iconstate: "@@'gIndoor_Lights_Count' != '0' ? 'ON' : 'OFF'", target: {widget: "widget:app_lights"}}
+                - !include
+                  file: ../layout/item_text.inc.yaml
+                  vars: {title: "Rollläden", item: "gShutters_Count",      icon: "oh:selfrollershutter", iconstate: "@@'gShutters_Count' != '0' ? 'UP' : 'DOWN'",     target: {widget: "widget:app_rollershutter"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Steuern
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Garten", item: "pOther_State_Message_Garden",  icon: "oh:selfgarden", target: {widget: "widget:app_garden"}, valuecolor: "@@'pOther_State_Message_Garden' == 'Alles ok' ? '#6bc305' : '#d72a2a'"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Geräte", item: "pOther_State_Message_Devices",  icon: "oh:whitegood_coffeemaschine", target: {widget: "widget:app_devices"}, valuecolor: "@@'pOther_State_Message_Devices' == 'Alles ok' ? '#6bc305' : '#d72a2a'"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Sonstiges
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Benachrichtigungen", item: "pOther_State_Message_Notifications",  icon: "oh:selfnotification", target: {widget: "widget:app_notifications"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Programme", item: "pOther_State_Message_Auto",  icon: "oh:selfstate", target: {widget: "widget:app_programms"}, valuecolor: "({'Inaktiv':'#d72a2a'})[@@'pOther_State_Message_Garden']"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Sicherheit", item: "pOther_State_Message_Security",  icon: "oh:selfstate", target: {widget: "widget:app_security"}, valuecolor: "({'Alles geschlossen':'#6bc305'})[@@'pOther_State_Message_Security'] || '#d72a2a'"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Sensoren", item: "pOther_State_Message_Sensors",  icon: "oh:selfsensor", target: {widget: "widget:app_sensors"}, valuecolor: "@@'pOther_State_Message_Sensors' == 'Alles ok' ? '#6bc305' : (@@'pOther_State_Message_Sensors'=='Giessen' && @@'pOther_Plant_Sensor_State_Watering_Info' == '3') ? '#cbcb00' : '#d72a2a'"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Status", item: "pOther_Presence_State",  icon: "oh:selfstate", target: {widget: "widget:app_states"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Technik", item: "pOther_State_Message_Main",  icon: "oh:selfhouse", target: {widget: "widget:app_technic"}, valuecolor: "({'Alles ok':'#6bc305','Lüftungsanlage Filter': '#cbcb00'})[@@'pOther_State_Message_Garden'] || '#d72a2a'"}}
+

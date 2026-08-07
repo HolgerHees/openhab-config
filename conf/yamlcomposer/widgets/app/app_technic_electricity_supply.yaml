@@ -1,0 +1,31 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_electricity_supply
+  title: Technik Strom Einspeisung
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Daten
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Aktuell", item: "pGF_Garage_Solar_Inverter_SellToGridPower", icon: "oh:selfenergy_grid_out"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heute", item: "pGF_Utilityroom_Electricity_State_Daily_Supply", icon: "oh:selfenergy_grid_out"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Dieses Jahr", item: "pGF_Utilityroom_Electricity_State_Annual_Supply_Current", icon: "oh:selfenergy_grid_out"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Letztes Jahr", item: "pGF_Utilityroom_Electricity_State_Annual_Supply_Last", icon: "oh:selfenergy_grid_out"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Hochrechnung", item: "pGF_Utilityroom_Electricity_State_Annual_Supply_Forecast", icon: "oh:selfenergy_grid_out"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Zähler
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Zählerstand", item: "pGF_Utilityroom_Electricity_Meter_Supply", icon: "oh:selfenergy_meter"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Auswertung
+        slots:
+          - !include { file: ../layout/web_time.inc.yaml}
+          - !include { file: ../layout/web_frame.inc.yaml, vars: {url: "/static/custom/grafana/energy_supply.html?fromItem=Chart_From", height: 1091px}}

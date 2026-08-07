@@ -1,0 +1,21 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_gas
+  title: Technik Gas
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: "Daten"
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Aktuelle Periode", item: "pGF_Utilityroom_Gas_Annual_Consumption", icon: "oh:selfgas"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Zählerstand", item: "pGF_Utilityroom_Gas_Meter_Current_Count", icon: "oh:selfgas"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Hochrechnung", item: "pGF_Utilityroom_Gas_Forecast", icon: "oh:selfgas"}}
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: "Auswertung"
+        slots:
+          - !include { file: ../layout/web_time.inc.yaml}
+          - !include { file: ../layout/web_frame.inc.yaml, vars: {url: "/static/custom/grafana/gas_consumption.html?fromItem=Chart_From", height: 1091px}}

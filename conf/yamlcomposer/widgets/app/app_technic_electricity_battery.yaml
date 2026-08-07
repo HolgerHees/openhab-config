@@ -1,0 +1,55 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_electricity_battery
+  title: Technik Strom Batterie
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Daten
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Beladung", item: "pGF_Garage_Solar_Storage_ChargerPower", icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Entladung", item: "pGF_Garage_Solar_Storage_DischargerPower", icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Ladestand", item: "pGF_Garage_Solar_Storage_EssSoc", icon: "oh:selfbattery"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Ladestand", item: "pGF_Garage_Solar_Storage_EnergySoc", icon: "oh:selfenergy"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Grid Control
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Ladestand Solar", item: "pGF_Utilityroom_Electricity_Storage_Solar_Soc", icon: "oh:selfenergy_solar"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Ladestand Grid", item: "pGF_Utilityroom_Electricity_Storage_Grid_Soc", icon: "oh:selfenergy_solar"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Gridpreis", item: "pGF_Utilityroom_Electricity_Storage_Price", icon: "oh:selfenergy_solar"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Börsenpreis", item: "pGF_Utilityroom_Electricity_Stock_Price", icon: "oh:selfenergy_solar"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Batterie Turm
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Spannung", item: "pGF_Garage_Solar_Storage_BattTowerVoltage", icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Strom", item: "pGF_Garage_Solar_Storage_BattTowerCurrent", icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Zustand", item: "pGF_Garage_Solar_Storage_BattSoh", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Kapazität", item: "pGF_Garage_Solar_Storage_Capacity", icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Ladezyklen (Turm links)", item: "pGF_Garage_Solar_Storage_BattTower1Cycles", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Ladezyklen (Turm rechts)", item: "pGF_Garage_Solar_Storage_BattTower2Cycles", icon: "oh:selfinfo"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Batterie Zellen
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Spannung", item: "pGF_Garage_Solar_Storage_MinEssVoltage", icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Strom", item: "pGF_Garage_Solar_Storage_MaxEssVoltage", icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Zustand", item: "pGF_Garage_Solar_Storage_MinEssTemperature", icon: "oh:temperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Kapazität", item: "pGF_Garage_Solar_Storage_MaxEssTemperature", icon: "oh:temperature"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Auswertung
+        slots:
+          - !include { file: ../layout/web_time.inc.yaml}
+          - !include { file: ../layout/web_frame.inc.yaml, vars: {url: "/static/custom/grafana/solar_battery.html?fromItem=Chart_From", height: 1091px}}

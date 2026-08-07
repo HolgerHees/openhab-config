@@ -1,0 +1,40 @@
+variables:
+  title: ""
+  item: ""
+  icon: "oh:selfsettings"
+  display: ""
+  mappings: ""
+
+component: li
+config:
+  style:
+    <<: !if
+      if: display
+      then:
+        display: "=${display} ? '' : 'none'"
+  class:
+    - colorpicker
+slots:
+  default:
+    - component: oh-icon
+      config:
+        class:
+          - icon
+        height: 32px
+        icon: "${icon}"
+        state: "=items['${item}'].state"
+    - component: Label
+      config:
+        class:
+          - name
+        text: "${title}"
+    - component: oh-colorpicker
+      config:
+        #action: command
+        #actionCommand: "=items['${item}'].state == 'ON' ? 'OFF' : 'ON'"
+        item: ${item}
+        #state: "=items['${item}'].state"
+        class:
+          - button
+          - "=items['${item}'].state == 'ON'' ? 'button-active' : ''"
+          - highlightModifier

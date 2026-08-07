@@ -1,0 +1,23 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_sensors_weather_station_air
+  title: Sensoren Wetterstation Luft
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Details
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Temperatur", item: "pOutdoor_WeatherStation_Temperature", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Gefühlt", item: "pOutdoor_WeatherStation_Temperature_Perceived", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Luftfeuchtigkeit", item: "pOutdoor_WeatherStation_Humidity", icon: "oh:humidity"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Taupunkt", item: "pOutdoor_WeatherStation_Dewpoint", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Temperatur (Schatten)", item: "pGF_Utilityroom_Heatpump_S_Aussentemperatur", icon: "oh:selftemperature"}}
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Auswertung
+        slots:
+          - !include { file: ../layout/web_time.inc.yaml}
+          - !include { file: ../layout/web_frame.inc.yaml, vars: {url: "/static/custom/grafana/weatherstation_temperatures.html?fromItem=Chart_From", height: 1091px}}

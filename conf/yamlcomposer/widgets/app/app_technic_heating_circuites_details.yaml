@@ -1,0 +1,24 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_heating_circuites_details
+  title: Technik Heizkreise Details
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Raumsolltemperatur", item: "pGF_Utilityroom_Heatpump_HK2_Raumsolltemperatur", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Vorlaufsolltemperatur", item: "pGF_Utilityroom_Heatpump_HK2_Vorlaufsolltemperatur", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Vorlauftemperatur", item: "pGF_Utilityroom_Heatpump_HK2_Vorlauftemperatur", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Konfiguration", item: "pGF_Utilityroom_Heatpump_HK2_Konfiguration"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Anforderung Typ", item: "pGF_Utilityroom_Heatpump_HK2_AnforderungTyp"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Betriebsart", item: "pGF_Utilityroom_Heatpump_HK2_Betriebsart"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Pause / Party", item: "pGF_Utilityroom_Heatpump_HK2_PauseParty"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Raumsolltemperatur Komfort", item: "pGF_Utilityroom_Heatpump_HK2_RaumsolltemperaturKomfort", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Raumsolltemperatur Normal", item: "pGF_Utilityroom_Heatpump_HK2_RaumsolltemperaturNormal", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Raumsolltemperatur Absenk ", item: "pGF_Utilityroom_Heatpump_HK2_RaumsolltemperaturAbsenk", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heizkennlinie", item: "pGF_Utilityroom_Heatpump_HK2_Heizkennlinie"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Sommer Winter Umschaltung", item: "pGF_Utilityroom_Heatpump_HK2_SommerWinterUmschaltung"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heizen Konstanttemperatur", item: "pGF_Utilityroom_Heatpump_HK2_HeizenKonstanttemperatur", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heizen Konstanttemp Absenk", item: "pGF_Utilityroom_Heatpump_HK2_HeizenKonstanttempAbsenk", icon: "oh:selftemperature"}}

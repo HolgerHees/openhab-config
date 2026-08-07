@@ -1,0 +1,29 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic
+  title: Technik
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Technik
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Lüftung", item: "pGF_Utilityroom_Ventilation_Summary_Message",  icon: "oh:selfairing", target: {widget: "widget:app_technic_ventilation"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heizung", item: "pGF_Utilityroom_Heatpump_Summary_Message",  icon: "oh:selfheating", target: {widget: "widget:app_technic_heating"}}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Versorgung
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Strom", item: "pGF_Utilityroom_Electricity_State_Daily_Consumption",  icon: "oh:selfenergy", target: {widget: "widget:app_technic_electricity"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Schalten", item: "gAll_Sockets_Count",  icon: "oh:selfsocket", target: {widget: "widget:app_technic_sockets"}}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Debug
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Alexa", target: {widget: "widget:app_technic_alexa"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Gas (Alt)", item: "pGF_Utilityroom_Gas_Current_Daily_Consumption", icon: "oh:selfgas", target: {widget: "widget:app_technic_gas"}}}

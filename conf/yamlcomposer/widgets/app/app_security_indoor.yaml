@@ -1,0 +1,13 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_security_indoor
+  title: Sicherheit Indoor
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Flur unten", item: "pGF_Corridor_Motiondetector_State", icon: "oh:selfmotion"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Wohnzimmer", item: "pGF_Livingroom_Motiondetector_State", icon: "oh:selfmotion"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Flur oben", item: "pFF_Corridor_Motiondetector_State", icon: "oh:selfmotion"}}

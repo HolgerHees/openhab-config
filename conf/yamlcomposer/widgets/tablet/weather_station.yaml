@@ -1,0 +1,283 @@
+version: 1
+widgets:
+  dashboard_tablet_weather_station:
+    tags: []
+    props:
+      parameters:
+        - default: Garten
+          label: Title
+          name: title
+          required: true
+          type: TEXT
+        - context: item
+          default: pOutdoor_WeatherStation_Temperature
+          label: Temperature
+          name: item_temperature
+          required: true
+          type: TEXT
+        - context: item
+          default: pOutdoor_WeatherStation_Temperature_Perceived
+          label: Temperature (perceived)
+          name: item_temperature_perceived
+          required: true
+          type: TEXT
+        - context: item
+          default: pOutdoor_WeatherStation_Humidity
+          label: Humidity
+          name: item_humidity
+          required: true
+          type: TEXT
+        - context: item
+          default: pOutdoor_WeatherStation_Rain_Rate
+          label: Rain Rate
+          name: item_rain_rate
+          required: true
+          type: TEXT
+        - context: item
+          default: pOutdoor_WeatherStation_Rain_Daily
+          label: Rain Daily
+          name: item_rain_daily
+          required: true
+          type: TEXT
+        - context: item
+          default: pOutdoor_WeatherStation_Wind_Speed
+          label: Wind Speed
+          name: item_wind_speed
+          required: true
+          type: TEXT
+        - context: item
+          default: pOutdoor_WeatherStation_Wind_Gust
+          label: Wind Gust
+          name: item_wind_gust
+          required: true
+          type: TEXT
+        - context: item
+          default: pOutdoor_WeatherStation_Wind_Direction_Short
+          label: Wind Direction
+          name: item_wind_direction
+          required: true
+          type: TEXT
+      parameterGroups: []
+    component: f7-card
+    config:
+      style:
+        position: relative
+    slots:
+      default:
+        - component: f7-card-header
+          slots:
+            default:
+              - component: Label
+                config:
+                  style:
+                    padding-top: var(--f7-card-margin-vertical)
+                  text: =props.title
+        - component: f7-card-content
+          config:
+            style:
+              height: 100%
+              padding: 0
+              position: relative
+          slots:
+            default:
+              - component: f7-row
+                config:
+                  style:
+                    height: 100%
+                    width: 100%
+                slots:
+                  default:
+                    - component: f7-col
+                      config:
+                        style:
+                          height: 100%
+                          position: relative
+                          width: 30%
+                      slots:
+                        default:
+                          - component: svg
+                            config:
+                              style:
+                                fill: var(--custom-default-state)
+                                left: var(--custom-widget-padding)
+                                position: absolute
+                                stroke: var(--custom-default-state)
+                                top: 7px
+                                width: 35px
+                              viewBox: 0 0 64 64
+                            slots:
+                              default:
+                                - component: use
+                                  config:
+                                    xlink:href: /static/shared/habpanel/svg/icons.svg#self_temperature_grayscaled
+                          - component: Label
+                            config:
+                              class:
+                                - sensorMain
+                                - sensorSuffix
+                                - sensorTemperatureSuffix
+                              style:
+                                position: absolute
+                                right: var(--custom-widget-padding)
+                                top: -5px
+                              text: =items[props.item_temperature].numericState.toFixed(1)
+                          - component: div
+                            config:
+                              style:
+                                bottom: 0
+                                display: flex
+                                left: calc(var(--custom-widget-padding) + 8px)
+                                position: absolute
+                            slots:
+                              default:
+                                - component: Label
+                                  config:
+                                    class:
+                                      - sensorInfo
+                                    text: (
+                                - component: Label
+                                  config:
+                                    class:
+                                      - sensorSub
+                                      - sensorSuffix
+                                      - sensorTemperatureSuffix
+                                    text: =items[props.item_temperature_perceived].numericState.toFixed(1)
+                                - component: Label
+                                  config:
+                                    class:
+                                      - sensorInfo
+                                    text: )
+                          - component: Label
+                            config:
+                              class:
+                                - sensorSub
+                                - sensorSuffix
+                                - sensorHumiditySuffix
+                              style:
+                                bottom: 0
+                                position: absolute
+                                right: var(--custom-widget-padding)
+                              text: =items[props.item_humidity].numericState
+                    - component: f7-col
+                      config:
+                        style:
+                          height: 100%
+                          position: relative
+                          width: 30%
+                      slots:
+                        default:
+                          - component: svg
+                            config:
+                              style:
+                                fill: none
+                                left: var(--custom-widget-padding)
+                                position: absolute
+                                stroke: var(--custom-default-state)
+                                top: 7px
+                                width: 35px
+                              viewBox: 0 0 64 64
+                            slots:
+                              default:
+                                - component: use
+                                  config:
+                                    xlink:href: /static/shared/habpanel/svg/icons.svg#self_rain_grayscaled
+                          - component: Label
+                            config:
+                              class:
+                                - sensorMain
+                                - sensorSuffix
+                                - sensorMillimeterSuffix
+                              style:
+                                position: absolute
+                                right: var(--custom-widget-padding)
+                                top: -5px
+                              text: =items[props.item_rain_rate].numericState.toFixed(1)
+                          - component: div
+                            config:
+                              style:
+                                bottom: 0
+                                display: flex
+                                position: absolute
+                                right: var(--custom-widget-padding)
+                            slots:
+                              default:
+                                - component: Label
+                                  config:
+                                    class:
+                                      - sensorSub
+                                      - sensorPrefix
+                                    text: "24h:"
+                                - component: Label
+                                  config:
+                                    class:
+                                      - sensorSub
+                                      - sensorSuffix
+                                      - sensorMillimeterSuffix
+                                    text: =items[props.item_rain_daily].numericState
+                    - component: f7-col
+                      config:
+                        style:
+                          height: 100%
+                          position: relative
+                          width: 30%
+                      slots:
+                        default:
+                          - component: svg
+                            config:
+                              style:
+                                fill: var(--custom-default-state)
+                                left: 0
+                                position: absolute
+                                stroke: var(--custom-default-state)
+                                top: 7px
+                                width: 35px
+                              viewBox: 0 0 64 64
+                            slots:
+                              default:
+                                - component: use
+                                  config:
+                                    xlink:href: /static/shared/habpanel/svg/icons.svg#self_wind_grayscaled
+                          - component: Label
+                            config:
+                              class:
+                                - sensorMain
+                                - sensorSuffix
+                                - sensorSpeedSuffix
+                              style:
+                                position: absolute
+                                right: var(--custom-widget-padding)
+                                top: -5px
+                              text: =items[props.item_wind_speed].numericState.toFixed(1)
+                          - component: Label
+                            config:
+                              class:
+                                - sensorSub
+                                - sensorInfo
+                              style:
+                                position: absolute
+                                right: var(--custom-widget-padding)
+                                top: 50%
+                                transform: translate(0, -70%) scale(0.8)
+                              text: =items[props.item_wind_direction].state
+                          - component: div
+                            config:
+                              style:
+                                bottom: 0
+                                display: flex
+                                position: absolute
+                                right: var(--custom-widget-padding)
+                            slots:
+                              default:
+                                - component: Label
+                                  config:
+                                    class:
+                                      - sensorSub
+                                      - sensorPrefix
+                                    text: "Boe:"
+                                - component: Label
+                                  config:
+                                    class:
+                                      - sensorSub
+                                      - sensorSuffix
+                                      - sensorSpeedSuffix
+                                    text: =items[props.item_wind_gust].numericState.toFixed(1)

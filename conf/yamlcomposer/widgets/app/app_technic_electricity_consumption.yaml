@@ -1,0 +1,46 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_electricity_consumption
+  title: Technik Strom Verbrauch
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Gesamt
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Aktuell", item: "pGF_Garage_Solar_Inverter_ConsumptionActivePower", icon: "oh:selfenergy_solar", target: {widget: "widget:app_technic_electricity_consumption_summary"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heute", item: "pGF_Utilityroom_Electricity_State_Daily_Consumption", icon: "oh:selfenergy_grid_in"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Haus
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Aktuell", item: "pGF_Utilityroom_Electricity_State_House_ActivePower", icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heute", item: "pGF_Utilityroom_Electricity_State_House_Daily_Consumption", icon: "oh:selfenergy_grid_in"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Lüftung / Klima
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Aktuell", item: "pGF_Utilityroom_Electricity_State_Comfoair_ActivePower", icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heute", item: "pGF_Utilityroom_Electricity_State_Comfoair_Daily_Consumption", icon: "oh:selfenergy_grid_in"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Wärmepumpe
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Aktuell", item: "pGF_Utilityroom_Electricity_State_Heatpump_ActivePower", icon: "oh:selfenergy", target: {widget: "widget:app_technic_electricity_consumption_headpump"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heute", item: "pGF_Utilityroom_Electricity_State_Heatpump_Daily_Consumption", icon: "oh:selfenergy_grid_in"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Auswertung
+        slots:
+          - !include { file: ../layout/web_time.inc.yaml}
+          - !include { file: ../layout/web_frame.inc.yaml, vars: {url: "/static/custom/grafana/energy_consumption.html?fromItem=Chart_From", height: 1091px}}
+

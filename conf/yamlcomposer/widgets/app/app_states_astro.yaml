@@ -1,0 +1,45 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_states_astro
+  title: Status Astro
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Tageszeiten
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Morgendämmerung", item: "pOutdoor_Astro_Dawn_Time", icon: "oh:selfsun"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Sonnenaufgang", item: "pOutdoor_Astro_Sunrise_Time", icon: "oh:selfsun"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Sonnenuntergang", item: "pOutdoor_Astro_Sunset_Time", icon: "oh:selfsun"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Abenddämmerung", item: "pOutdoor_Astro_Dusk_Time", icon: "oh:selfsun"}}
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Sonnenstand
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Azimuth", item: "pOutdoor_Astro_Sun_Azimuth", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Elevation", item: "pOutdoor_Astro_Sun_Elevation", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Radiation", item: "pOutdoor_Astro_Total_Radiation", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Diffuse Radiation", item: "pOutdoor_Astro_Diffuse_Radiation", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Direct Radiation", item: "pOutdoor_Astro_Direct_Radiation", icon: "oh:selfinfo"}}
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Details
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Tierkreis", item: "pOutdoor_Astro_Zodiac_Name", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Jahreszeit", item: "pOutdoor_Astro_Season", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Mondphase", item: "pOutdoor_Astro_MoonPhase", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Nächster Vollmond", item: "pOutdoor_Astro_FullMoon", icon: "oh:selfcalendar"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Nächster Neumond", item: "pOutdoor_Astro_NewMoon", icon: "oh:selfcalendar"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Sonnenfinsterniss", item: "pOutdoor_Astro_Eclipse_Time", icon: "oh:selfcalendar"}}
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Begin & Ende
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Frühlinganfang", item: "pOutdoor_Astro_Spring_Time", icon: "oh:selfcalendar"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Sommeranfang", item: "pOutdoor_Astro_Summer_Time", icon: "oh:selfcalendar"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Herbstanfang", item: "pOutdoor_Astro_Autumn_Time", icon: "oh:selfcalendar"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Winteranfang", item: "pOutdoor_Astro_Winter_Time", icon: "oh:selfcalendar"}}

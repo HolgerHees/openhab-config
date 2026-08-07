@@ -1,0 +1,34 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_sensors_weather_station_wind
+  title: Sensoren Wetterstation Wind
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Details
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Aktuell", item: "pOutdoor_WeatherStation_Wind_Speed", icon: "oh:wind"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Boen", item: "pOutdoor_WeatherStation_Wind_Gust", icon: "oh:wind"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Richtung", item: "pOutdoor_WeatherStation_Wind_Direction_Long", icon: "oh:wind"}}
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Details (1h)
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Aktuell", item: "pOutdoor_WeatherStation_Wind_Speed_1h", icon: "oh:wind"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Boen", item: "pOutdoor_WeatherStation_Wind_Gust_1h", icon: "oh:wind"}}
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Auswertung
+        slots:
+          - !include { file: ../layout/web_time.inc.yaml}
+          - !include { file: ../layout/web_frame.inc.yaml, vars: {url: "/static/custom/grafana/weatherstation_wind.html?fromItem=Chart_From", height: 1091px}}
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Debug
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Richtung", item: "pOutdoor_WeatherStation_Wind_Direction", icon: "oh:wind"}}

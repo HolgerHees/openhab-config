@@ -1,0 +1,16 @@
+component: div
+config:
+  style:
+    display: none
+slots:
+  default:
+    - component: f7-popup
+      config:
+        class:
+          - popup
+        closeByBackdropClick: true
+        closeByOutsideClick: true
+        closeOnEscape: true
+      slots:
+        default:
+          - component: ${widget}

@@ -1,0 +1,25 @@
+variables:
+  uid: ""
+  title: ""
+  slots: []
+  sidebar: false
+
+version: 1
+pages:
+  ${uid}:
+    tags: []
+    props:
+      parameters: []
+      parameterGroups: []
+    component: oh-layout-page
+    config:
+      label: App ${title}
+      sidebar: ${sidebar}
+      hideNavbar: false
+      stylesheet: |
+        @import "/static/shared/widgets/app_page.css";
+    slots:
+      default:
+        - component: div
+          slots:
+            default: ${slots}

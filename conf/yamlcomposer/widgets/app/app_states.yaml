@@ -1,0 +1,20 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_states
+  title: Status
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Status
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Präsenz & Schlafen", item: "pOther_Presence_State", icon: "oh:selfinfo", target: {widget: "widget:app_states_presence"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Beschattung, Beleuchtung & Solar", item: "pOther_Presence_State", icon: "oh:selfsun", target: {widget: "widget:app_states_solar"}}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Info
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Sonnenauf & Untergang", item: "pOther_Presence_State", icon: "oh:selfsun", target: {widget: "widget:app_states_astro"}}}

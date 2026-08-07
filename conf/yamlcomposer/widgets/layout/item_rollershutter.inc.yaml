@@ -1,0 +1,34 @@
+variables:
+  title: ""
+  item: ""
+  icon: "oh:selfrollershutter"
+  display: ""
+
+component: li
+config:
+  style:
+    <<: !if
+      if: display
+      then:
+        display: "=${display} ? '' : 'none'"
+  class:
+    - rollershutter
+slots:
+  default:
+    - component: oh-icon
+      config:
+        class:
+          - icon
+        height: 32px
+        icon: "${icon}"
+        state: "=items['${item}'].state"
+    - component: Label
+      config:
+        class:
+          - name
+        text: "${title}"
+    - component: oh-rollershutter
+      config:
+        class:
+          - value
+        item: "${item}"

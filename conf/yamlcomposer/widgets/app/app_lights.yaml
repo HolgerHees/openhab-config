@@ -1,0 +1,31 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_lights
+  title: Beleuchtung
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Etagen
+        slots:
+            - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Erdgeschoss", item: "gGF_Lights_Count", icon: "oh:selflight", target: {widget: "widget:app_lights_erdgeschoss"}}}
+            - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Obergeschoss", item: "gFF_Lights_Count", icon: "oh:selflight", target: {widget: "widget:app_lights_obergeschoss"}}}
+            - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Dachboden", item: "pFF_Attic_Light_Ceiling_Powered", icon: "oh:selflight"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Garten
+        slots:
+            - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Werkstatt", item: "pGF_Garage_Light_Ceiling_Powered", icon: "oh:selflight"}}
+            - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Geräteschuppen", item: "pToolshed_Light_Ceiling_Powered", icon: "oh:selflight"}}
+            - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Aussenlampen", item: "gOutdoor_Lights_Count", icon: "oh:selflight", target: {widget: "widget:app_lights_outdoor"}}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Haus
+        slots:
+            - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Alle Lampen", item: "gIndoor_Lights", icon: "oh:selflight"}}
+

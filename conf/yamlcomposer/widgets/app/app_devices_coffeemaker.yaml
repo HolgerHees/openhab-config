@@ -1,0 +1,40 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_devices_coffeemaker
+  title: Geräte Kaffeemaschine
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Status
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Eingeschaltet", item: "pGF_Kitchen_Coffeemaker_Power_State", icon: "oh:selfautomode"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Arbeitsmodus", item: "pGF_Kitchen_Coffeemaker_Operation_State", icon: "oh:selfautomode"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Fortschritt", item: "pGF_Kitchen_Coffeemaker_Program_Progress_State", icon: "oh:selfruntime", display: "@@'pGF_Kitchen_Coffeemaker_Operation_State'=='Run'"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Programm
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Aktiv", item: "pGF_Kitchen_Coffeemaker_Active_Program_State", icon: "oh:heating"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Gewählt", item: "pGF_Kitchen_Coffeemaker_Selected_Program_State", icon: "oh:heating"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Info
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Auslaufschale", item: "pGF_Kitchen_Coffeemaker_Drip_Tray_Full_State", icon: "oh:selfinfo", valuecolor: "@@'pGF_Kitchen_Coffeemaker_Drip_Tray_Full_State' == 'ON' ? '#d72a2a' : '#6bc305'"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Wassertank", item: "pGF_Kitchen_Coffeemaker_Tank_Empty_State", icon: "oh:selfinfo", valuecolor: "@@'pGF_Kitchen_Coffeemaker_Tank_Empty_State' == 'ON' ? '#d72a2a' : '#6bc305'"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Bohnenbehälter", item: "pGF_Kitchen_Coffeemaker_Bean_Container_Empty_State", icon: "oh:selfruntime", valuecolor: "@@'pGF_Kitchen_Coffeemaker_Bean_Container_Empty_State' == 'ON' ? '#d72a2a' : '#6bc305'"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Reinigung", item: "pGF_Kitchen_Coffeemaker_Cleaning_Countdown", icon: "oh:selfruntime"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Entkalkung", item: "pGF_Kitchen_Coffeemaker_Descaling_Countdown", icon: "oh:selfruntime"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Sonstiges
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Fernstart erlaubt", item: "pGF_Kitchen_Coffeemaker_Remote_Start_Allowed", icon: "oh:selfinfo"}}

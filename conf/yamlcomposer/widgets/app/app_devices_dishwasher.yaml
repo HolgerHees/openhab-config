@@ -1,0 +1,40 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_devices_dishwasher
+  title: Geräte Geschirrspühler
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Status
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Eingeschaltet", item: "pGF_Kitchen_Dishwasher_Power_State", icon: "oh:selfautomode"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Status", item: "pGF_Kitchen_Dishwasher_OperationState", icon: "oh:selfautomode"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Tür", item: "pGF_Kitchen_Dishwasher_DoorState", icon: "oh:whitegood"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Fortschritt", item: "pGF_Kitchen_Dishwasher_ProgramProgressState", icon: "oh:selfruntime", display: "@@'pGF_Kitchen_Dishwasher_OperationState'=='Run'"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Restlaufzeit", item: "pGF_Kitchen_Dishwasher_RemainingProgramTimeState", icon: "oh:selfruntime", display: "@@'pGF_Kitchen_Dishwasher_OperationState'=='Run'"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Programm
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Aktiv", item: "pGF_Kitchen_Dishwasher_ActiveProgramState", icon: "oh:heating"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Gewählt", item: "pGF_Kitchen_Dishwasher_SelectedProgramState", icon: "oh:heating"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Info
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Trommelreinigung", item: "pGF_Kitchen_Dishwasher_SaltEmptyState", icon: "oh:selfinfo", valuecolor: "@@'pGF_Kitchen_Dishwasher_SaltEmptyState' == 'ON' ? '#d72a2a' : '#6bc305'"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Beladung", item: "pGF_Kitchen_Dishwasher_RinseEmptyState", icon: "oh:selfinfo", valuecolor: "@@'pGF_Kitchen_Dishwasher_RinseEmptyState' == 'ON' ? '#d72a2a' : '#6bc305'"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Beladung", item: "pGF_Kitchen_Dishwasher_MachineCareState", icon: "oh:selfruntime", valuecolor: "@@'pGF_Kitchen_Dishwasher_MachineCareState' == 'ON' ? '#d72a2a' : '#6bc305'"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Sonstiges
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Fernstart erlaubt", item: "pGF_Kitchen_Dishwasher_RemoteStartAllowanceState", icon: "oh:selfinfo"}}

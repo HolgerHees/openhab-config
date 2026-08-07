@@ -1,0 +1,22 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_watering_outdoor_manuell
+  title: Direkt
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Garten
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Rasen links", item: "pOutdoor_Garden_Left_Watering_Powered", icon: "oh:selfwater"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Rasen rechts", item: "pOutdoor_Garden_Right_Watering_Powered", icon: "oh:selfwater"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Beete Terasse & Hecke", item: "pOutdoor_Terrace_Watering_Powered", icon: "oh:selfwater"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Beete hinten", item: "pOutdoor_Garden_Back_Watering_Powered", icon: "oh:selfwater"}}
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Beete & Hecken
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Rasen", item: "pOutdoor_Streetside_Lawn_Watering_Powered", icon: "oh:selfwater"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Beete & Hecke", item: "pOutdoor_Streetside_Beds_Watering_Powered", icon: "oh:selfwater"}}

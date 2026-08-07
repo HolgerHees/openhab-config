@@ -1,0 +1,274 @@
+version: 1
+widgets:
+  dashboard_tablet_device_energy:
+    tags: []
+    props:
+      parameters:
+        - context: item
+          default: pGF_Garage_Solar_Inverter_GridActivePower
+          label: Grid Energy
+          name: item_grid_energy
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Garage_Solar_Inverter_ProductionActivePower
+          label: Production Energy
+          name: item_production_energy
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Garage_Solar_Inverter_ConsumptionActivePower
+          label: Consumption Energy
+          name: item_consumption_energy
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Garage_Solar_Storage_ActivePower
+          label: Storage Energy
+          name: item_storage_energy
+          required: false
+          type: TEXT
+        - context: item
+          default: pGF_Garage_Solar_Storage_EssSoc
+          label: Storage EssSoc
+          name: item_storage_esssoc
+          required: false
+          type: TEXT
+      parameterGroups: []
+    component: f7-card
+    config:
+      class:
+        - oh-canvas-item-content
+        - lengendModifier
+      onclick: "document.querySelector('.electricityStateOpener').click()"
+      stylesheet: |
+        div,
+        svg {
+          position: absolute;
+        }
+        .card-content {
+          width: 100%;
+          height: 100%;
+          box-sizing: border-box;
+        }
+    slots:
+      content:
+        - !include { file: ../layout/popup.inc.yaml, vars: {name: "electricityState", widget: "app_technic_electricity"}}
+        - component: svg
+          config:
+            style:
+              left: 50%
+              top: 50%
+              transform: translate(-50%,-50%)
+              width: 10px
+              height: 10px
+            viewBox: 0 0 10 10
+          slots:
+            default:
+              - component: circle
+                config:
+                  fill: "#999999"
+                  cx: 50%
+                  cy: 50%
+                  r: 50%
+                  tag: circle
+                  visible: true
+        - component: Label
+          config:
+            class:
+              - normalState
+              - "=Math.abs(items[props.item_grid_energy].numericState) > 50 ? 'highlightModifier' : ''"
+              - sensorEnergySuffix
+            style:
+              left: 20%
+              top: 60px
+              transform: translate(-50%,0)
+            text: "=(Math.abs(items[props.item_grid_energy].numericState) > 50 ? items[props.item_grid_energy].numericState / 1000 : 0).toFixed(2)"
+        - component: div
+          config:
+            style:
+              width: 40px
+              height: 10px
+              right: 50%
+              bottom: 50%
+              transform: translate(0,50%)
+              visibility: "=items[props.item_grid_energy].numericState > 50 ? 'visible' : 'hidden'"
+          slots:
+            default:
+              - !include { file: inc/device_energy_line.inc.yaml, vars: {uid: "energy_path_grid1", width: 40, height: 10, direction: "right"}}
+        - component: div
+          config:
+            style:
+              width: 40px
+              height: 10px
+              right: 50%
+              bottom: 50%
+              transform: translate(0,50%)
+              visibility: "=items[props.item_grid_energy].numericState <- 50 ? 'visible' : 'hidden'"
+          slots:
+            default:
+              - !include { file: inc/device_energy_line.inc.yaml, vars: {uid: "energy_path_grid2", width: 40, height: 10, direction: "left"}}
+        - component: svg
+          config:
+            style:
+              fill: transparent
+              stroke: "=items[props.item_grid_energy].numericState > 50 ? 'var(--custom-yellow)' : (items[props.item_grid_energy].numericState < -50 ? 'var(--custom-green)' : 'var(--custom-default-color)')"
+              #stroke: var(--custom-default-state)
+              stroke-width: 1.5px
+              left: 20%
+              top: 50%
+              width: 50px
+              height: 50px
+              transform: translate(-50%,-30%)
+              opacity: "=items[props.item_grid_energy].numericState > 50 ? '0.6' : (items[props.item_grid_energy].numericState < -50 ? '0.6' : '0.4')"
+            viewBox: 0 0 64 64
+          slots:
+            default:
+              - component: use
+                config:
+                  xlink:href: /static/custom/solar.svg#grid
+        - component: Label
+          config:
+            class:
+              - normalState
+              - "=Math.abs(items[props.item_production_energy].numericState) > 50 ? 'highlightModifier' : ''"
+              - sensorEnergySuffix
+            style:
+              right: 50%
+              top: var(--custom-widget-padding)
+              transform: translate(50%,0)
+            text: "=(Math.abs(items[props.item_production_energy].numericState) > 50 ? items[props.item_production_energy].numericState / 1000 : 0).toFixed(2)"
+        - component: div
+          config:
+            style:
+              width: 10px
+              height: 27px
+              left: 50%
+              bottom: 50%
+              transform: translate(-50%,0)
+              visibility: "=items[props.item_production_energy].numericState > 50 ? 'visible' : 'hidden'"
+          slots:
+            default:
+              - !include { file: inc/device_energy_line.inc.yaml, vars: {uid: "energy_path_production", width: 10, height: 27, direction: "down"}}
+        - component: svg
+          config:
+            style:
+              fill: transparent
+              stroke: "=items[props.item_production_energy].numericState > 50 ? 'var(--custom-green)' : 'var(--custom-default-color)'"
+              stroke-width: 1.5px
+              left: 51.5%
+              top: 23px
+              width: 50px
+              height: 50px
+              transform: translate(-50%,0)
+              opacity: "=items[props.item_production_energy].numericState > 50 ? '0.6' : '0.4'"
+            viewBox: 0 0 16.933 16.933
+          slots:
+            default:
+              - component: use
+                config:
+                  xlink:href: /static/custom/solar.svg#solar
+        - component: Label
+          config:
+            class:
+              - normalState
+              - "=Math.abs(items[props.item_consumption_energy].numericState) > 50 ? 'highlightModifier' : ''"
+              - sensorEnergySuffix
+            style:
+              right: 20%
+              top: 60px
+              transform: translate(50%,0)
+            text: "=(Math.abs(items[props.item_consumption_energy].numericState) > 50 ? items[props.item_consumption_energy].numericState / 1000 : 0).toFixed(2)"
+        - component: div
+          config:
+            style:
+              width: 40px
+              height: 10px
+              left: 50%
+              top: 50%
+              transform: translate(0,-50%)
+              visibility: "=items[props.item_consumption_energy].numericState > 50 ? 'visible' : 'hidden'"
+          slots:
+            default:
+              - !include { file: inc/device_energy_line.inc.yaml, vars: {uid: "energy_path_consumption", width: 40, height: 10, direction: "right"}}
+        - component: svg
+          config:
+            style:
+              fill: transparent
+              stroke: "=items[props.item_consumption_energy].numericState > 50 ? 'var(--custom-yellow)' : 'var(--custom-default-color)'"
+              stroke-width: 2.5px
+              right: 20%
+              top: 50%
+              width: 50px
+              height: 50px
+              transform: translate(50%,-30%)
+            viewBox: 0 0 64 64
+          slots:
+            default:
+              - component: use
+                config:
+                  xlink:href: /static/custom/solar.svg#light
+        - component: Label
+          config:
+            class:
+              - normalState
+              - "=Math.abs(items[props.item_storage_energy].numericState) > 50 ? 'highlightModifier' : ''"
+              - sensorEnergySuffix
+            style:
+              right: 50%
+              bottom: 12px
+              transform: translate(50%,0)
+            text: "=(Math.abs(items[props.item_storage_energy].numericState) > 50 ? items[props.item_storage_energy].numericState / 1000 : 0).toFixed(2)"
+        - component: div
+          config:
+            style:
+              height: 35px
+              width: 10px
+              left: 50%
+              top: 50%
+              transform: translate(-50%,0)
+              visibility: "=items[props.item_storage_energy].numericState > 50 ? 'visible' : 'hidden'"
+          slots:
+            default:
+              - !include { file: inc/device_energy_line.inc.yaml, vars: {uid: "energy_path_storage1", width: 10, height: 35, direction: "up"}}
+        - component: div
+          config:
+            style:
+              height: 35px
+              width: 10px
+              left: 50%
+              top: 50%
+              transform: translate(-50%,0)
+              visibility: "=items[props.item_storage_energy].numericState < -50 ? 'visible' : 'hidden'"
+          slots:
+            default:
+              - !include { file: inc/device_energy_line.inc.yaml, vars: {uid: "energy_path_storage2", width: 10, height: 35, direction: "down"}}
+        - component: Label
+          config:
+            class:
+              - normalState
+              - highlightModifier
+              - sensorPercentSuffix
+            style:
+              right: 51%
+              bottom: 38px
+              transform: translate(50%,0) scale(0.8)
+            text: =items[props.item_storage_esssoc].state
+        - component: svg
+          config:
+            style:
+              fill: transparent
+              stroke: "=items[props.item_storage_energy].numericState > 50 ? 'var(--custom-yellow)' : (items[props.item_storage_energy].numericState < -50 ? 'var(--custom-green)' : 'var(--custom-default-color)')"
+              stroke-width: 1.5px
+              left: 50%
+              bottom: 26px
+              width: 50px
+              height: 50px
+              transform: translate(-50%,0)
+              opacity: "=items[props.item_storage_energy].numericState > 50 ? '0.6' : (items[props.item_storage_energy].numericState < -50 ? '0.6' : '0.4')"
+            viewBox: 0 0 64 64
+          slots:
+            default:
+              - component: use
+                config:
+                  xlink:href: /static/custom/solar.svg#battery

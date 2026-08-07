@@ -1,0 +1,141 @@
+version: 1
+widgets:
+  dashboard_tablet_floorplan:
+    tags: []
+    props:
+      parameters: []
+      parameterGroups: []
+    component: div
+    config:
+      class:
+        - "=items['pOther_Automatic_State_Rollershutter'].state === 'ON' ? 'shutterDownAdvise' : ''"
+        - card
+        - oh-canvas-item-content
+      style:
+        position: relative
+      stylesheet: |
+        svg {
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+        }
+    slots:
+      default:
+        - component: Label
+          config:
+            style:
+              position: absolute
+              font-size: 0.8em
+              opacity: 0.8
+              left: 6.5%
+              top: 22%
+            text: Schuppen
+        - component: div
+          config:
+            style:
+              position: absolute
+              width: 270px
+              aspect-ratio: 1.35869565217 # 1000 736
+              top: 8px
+              left: 15px
+          slots:
+            default:
+              - !include inc/floorplan_gardenhouse.inc.yaml
+
+        - component: Label
+          config:
+            style:
+              position: absolute
+              font-size: 0.8em
+              opacity: 0.8
+              left: 20%
+              bottom: 8px
+            text: Südseite
+        - component: div
+          config:
+            style:
+              position: absolute
+              width: 270px
+              aspect-ratio: 1.35869565217 # 1000 736
+              bottom: 32px
+              left: -10px
+          slots:
+            default:
+              - !include inc/floorplan_outside.inc.yaml
+
+        - component: Label
+          config:
+            class:
+            style:
+              position: absolute
+              font-size: 0.8em
+              opacity: 0.8
+              right: 24%
+              bottom: 8px
+            text: Erdgeschoss
+        - component: div
+          config:
+            style:
+              position: absolute
+              width: 270px
+              aspect-ratio: 1.35869565217 # 1000 736
+              bottom: 36px
+              right: 15px
+              overflow: visible
+          slots:
+            default:
+              - !include inc/floorplan_eg.inc.yaml
+
+        - component: Label
+          config:
+            style:
+              position: absolute
+              font-size: 0.8em
+              opacity: 0.8
+              left: 72%
+              top: 43%
+            text: Obergeschoss
+        - component: div
+          config:
+            style:
+              position: absolute
+              width: 270px
+              aspect-ratio: 1.35869565217 # 1000 736
+              top: 8px
+              right: 15px
+          slots:
+            default:
+              - !include inc/floorplan_og.inc.yaml
+
+        - component: Label
+          config:
+            style:
+              position: absolute
+              font-size: 0.8em
+              opacity: 0.8
+              left: 36%
+              top: 43%
+            text: Dachboden
+        - component: div
+          config:
+            style:
+              position: absolute
+              width: 270px
+              aspect-ratio: 1.35869565217 # 1000 736
+              top: 8px
+              left: 80px
+          slots:
+            default:
+              - !include inc/floorplan_attic.inc.yaml
+
+        - component: Label
+          config:
+            style:
+              position: absolute
+              font-size: 0.8em
+              opacity: 0.8
+              left: 8%
+              top: 43%
+            text: Carport

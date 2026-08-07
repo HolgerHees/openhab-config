@@ -1,0 +1,19 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_sensors_weather_station_pressure
+  title: Sensoren Wetterstation Luftdruck
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Details
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Luftdruck", item: "pOutdoor_WeatherStation_Pressure", icon: "oh:selfruntime"}}
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Auswertung
+        slots:
+          - !include { file: ../layout/web_time.inc.yaml}
+          - !include { file: ../layout/web_frame.inc.yaml, vars: {url: "/static/custom/grafana/weatherstation_pressure.html?fromItem=Chart_From", height: 1091px}}

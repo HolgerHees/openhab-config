@@ -1,0 +1,56 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_sockets
+  title: Technik Steckdosen
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Wohnen
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Bassbox", item: "pGF_Livingroom_Socket_Bassbox_Powered", icon: "oh:selfsocket"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Gäste WC", item: "pGF_Guesttoilet_Socket_Powered", icon: "oh:selfsocket"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Wohnz. neben Stehlampe", item: "pGF_Livingroom_Socket_Couch_Powered", icon: "oh:selfsocket"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Wohnz. Kamin", item: "pGF_Livingroom_Socket_Fireplace_Powered", icon: "oh:selfsocket"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Flur unter Treppe", item: "pGF_Corridor_Socket_Powered", icon: "oh:selfsocket"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Dachboden", item: "pFF_Attic_Socket_Powered", icon: "oh:selfsocket"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Garten
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Aussen vorne", item: "pOutdoor_Streeside_Socket_Powered", icon: "oh:selfsocket"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Aussen hinten", item: "pOutdoor_Terrace_Socket_Powered", icon: "oh:selfsocket"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Geräteschuppen", item: "pOutdoor_Toolshed_Socket_Powered", icon: "oh:selfsocket"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Geräte
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Lüfter", item: "pMobile_Socket_5_Powered", icon: "oh:selfsocket"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Lüfter Verbrauch", icon: "oh:selfsocket", target: {widget: "widget:app_technic_sockets_shelly_livingroom_ventilation"}}}
+
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Frostwächter", item: "pMobile_Socket_6_Powered", icon: "oh:selfsocket"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Frostwächter Verbrauch", icon: "oh:selfsocket", target: {widget: "widget:app_technic_sockets_shelly_frostguard"}}}
+
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Dachboden", item: "pMobile_Socket_7_Powered", icon: "oh:selfsocket"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Dachboden Verbrauch", icon: "oh:selfsocket", target: {widget: "widget:app_technic_sockets_shelly_attic"}}}
+
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Wetterstation", item: "pMobile_Socket_8_Powered", icon: "oh:selfsocket"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Wetterstation Verbrauch", icon: "oh:selfsocket", target: {widget: "widget:app_technic_sockets_shelly_weatherstation"}}}
+
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Server", item: "pMobile_Socket_9_Powered", icon: "oh:selfsocket"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Server Verbrauch", icon: "oh:selfsocket", target: {widget: "widget:app_technic_sockets_shelly_server"}}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Mobil
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Stechdose 1", item: "pMobile_Socket_1_Powered", icon: "oh:selfsocket"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Stechdose 2", item: "pMobile_Socket_2_Powered", icon: "oh:selfsocket"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Stechdose 3", item: "pMobile_Socket_3_Powered", icon: "oh:selfsocket"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Stechdose 4", item: "pMobile_Socket_4_Powered", icon: "oh:selfsocket"}}

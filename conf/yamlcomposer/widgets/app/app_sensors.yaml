@@ -1,0 +1,29 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_sensors
+  title: Sensoren
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Haus
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "EG", item: "pGF_Livingroom_Air_Sensor_Message", icon: "oh:selftemperature", target: {widget: "widget:app_sensors_eg"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "OG", item: "pFF_Bedroom_Air_Sensor_Message", icon: "oh:selftemperature", target: {widget: "widget:app_sensors_og"}}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Garten
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Werkstatt", item: "pGF_Garage_Air_Sensor_Message", icon: "oh:selftemperature", target: {widget: "widget:app_lights_garden"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Geräteschuppen", item: "pToolshed_Sensor_Message", icon: "oh:selftemperature", target: {widget: "widget:app_lights_garden"}}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Sonstiges
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Pflanzen", item: "pOther_Plant_Sensor_State_Watering_Info", icon: "oh:selfplant", target: {widget: "widget:app_sensors_plants"}, valuecolor: "({'3':'#cbcb00','4':'#d72a2a'})[items['pOther_Plant_Sensor_State_Watering_Info'].state]"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Aktuelles Wetter", item: "pOutdoor_WeatherStation_Air_Message", icon: "oh:selftemperature", target: {widget: "widget:app_sensors_weather_station"}}}

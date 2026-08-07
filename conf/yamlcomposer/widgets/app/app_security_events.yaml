@@ -1,0 +1,11 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_security_events
+  title: Sicherheit Ereignisse
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        slots:
+          - !include { file: ../layout/web_frame.inc.yaml, vars: {url: "/static/custom/logs/security.html", height: 500px}}

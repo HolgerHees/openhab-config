@@ -1,0 +1,19 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_lights_outdoor_single
+  title: Beleuchtung Garten Einzeln
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: "Gruppe"
+        slots:
+          - !include { file: ../layout/item_dimmer.inc.yaml, vars: {title: "Alle lampen", item: "gOutdoor_Terrace_Light_Hue_Color", icon: "oh:selflight", is_hue: yes}}
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: "Einzeln"
+        slots:
+          - !include { file: ../layout/item_dimmer.inc.yaml, vars: {title: "Terasse links", item: "pOutdoor_Terrace_Light_Hue_Left_Color", icon: "oh:selflight", is_hue: yes}}
+          - !include { file: ../layout/item_dimmer.inc.yaml, vars: {title: "Terasse rechts", item: "pOutdoor_Terrace_Light_Hue_Right_Color", icon: "oh:selflight", is_hue: yes}}

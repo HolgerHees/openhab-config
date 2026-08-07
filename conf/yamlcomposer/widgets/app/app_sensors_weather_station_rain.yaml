@@ -1,0 +1,27 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_sensors_weather_station_rain
+  title: Sensoren Wetterstation Rain
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Details
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Aktuell", item: "pOutdoor_WeatherStation_Rain_Rate", icon: "oh:chart"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heute", item: "pOutdoor_WeatherStation_Rain_Daily", icon: "oh:chart"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Status", item: "pOutdoor_WeatherStation_Rain_State_Message", icon: "oh:selfrain"}}
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Auswertung
+        slots:
+          - !include { file: ../layout/web_time.inc.yaml}
+          - !include { file: ../layout/web_frame.inc.yaml, vars: {url: "/static/custom/grafana/weatherstation_rain.html?fromItem=Chart_From", height: 1091px}}
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Debug
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Status", item: "pOutdoor_WeatherStation_Rain_State", icon: "oh:selfrain"}}

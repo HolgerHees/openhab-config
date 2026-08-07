@@ -1,0 +1,20 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_sensors_weather_station_solar
+  title: Sensoren Wetterstation Solar
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Details
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Sonnenkraft akt.", item: "pOutdoor_WeatherStation_Solar_Power", icon: "oh:selfsun"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Sonnenkraft max", item: "pOutdoor_Astro_Total_Radiation", icon: "oh:selfsun"}}
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Auswertung
+        slots:
+          - !include { file: ../layout/web_time.inc.yaml}
+          - !include { file: ../layout/web_frame.inc.yaml, vars: {url: "/static/custom/grafana/weatherstation_solarpower.html?fromItem=Chart_From", height: 1091px}}

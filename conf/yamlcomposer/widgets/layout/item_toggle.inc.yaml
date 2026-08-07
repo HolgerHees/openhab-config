@@ -1,0 +1,35 @@
+variables:
+  title: ""
+  item: ""
+  icon: "oh:selfsettings"
+  display: ""
+
+component: li
+config:
+  style:
+    <<: !if
+      if: display
+      then:
+        display: "=${display} ? '' : 'none'"
+  class:
+    - switch
+slots:
+  default:
+    - component: oh-icon
+      config:
+        class:
+          - icon
+        height: 32px
+        icon: "${icon}"
+        state: "=items['${item}'].state"
+    - component: Label
+      config:
+        class:
+          - name
+        text: "${title}"
+    - component: oh-toggle
+      config:
+        item: ${item}
+        class:
+          - "=items['${item}'].state == 'ON'' ? 'button-active' : ''"
+          - highlightModifier

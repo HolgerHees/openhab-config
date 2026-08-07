@@ -1,0 +1,64 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_heating
+  title: Technik Heizung
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Laufzeitdaten
+        slots:
+          - !include { file: ../layout/item_buttons.inc.yaml, vars: {title: "Modus", item: "pGF_Utilityroom_Heatpump_Auto_Mode", icon: "oh:selfautomode", mappings: "2=Auto,1=Kühlen,0=Manuell"}}
+          - !include { file: ../layout/item_selection.inc.yaml, vars: {title: "Heizungsreduktion", item: "pOther_Manual_State_Heating", icon: "oh:selfshield", mappings: "0=Normal,1=-1,2=-2,3=-3,4=-4,5=-5", width: "200px"}}
+
+          - !include { file: ../layout/item_buttons.inc.yaml, vars: {title: "Systembetriebsart", item: "pGF_Utilityroom_Heatpump_S_Systembetriebsart", mappings: "1=Heizen,3=Sommer,4=Standby,5=2. WEZ", display: "#'pGF_Utilityroom_Heatpump_Auto_Mode'==0"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Systembetriebsart", item: "pGF_Utilityroom_Heatpump_S_Systembetriebsart", mappings: "1=Heizen,3=Sommer,4=Standby,5=2. WEZ", display: "#'pGF_Utilityroom_Heatpump_Auto_Mode'!=0"}}
+
+          - !include { file: ../layout/item_buttons.inc.yaml, vars: {title: "Betriebsart", item: "pGF_Utilityroom_Heatpump_HK2_Betriebsart", mappings: "1=Komfort,3=Absenkbetrieb", display: "#'pGF_Utilityroom_Heatpump_Auto_Mode'==0"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Betriebsart", item: "pGF_Utilityroom_Heatpump_HK2_Betriebsart", mappings: "1=Komfort,3=Absenkbetrieb", display: "#'pGF_Utilityroom_Heatpump_Auto_Mode'!=0"}}
+
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Betriebsstatusanzeige", item: "pGF_Utilityroom_Heatpump_S_Betriebstatusanzeige"}}
+
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Fehlerfrei", item: "pGF_Utilityroom_Heatpump_S_Fehlerfrei",  icon: "oh:selfinfo", valuecolor: "#'pGF_Utilityroom_Heatpump_S_Fehlerfrei'==1 ? '#6bc305' : '#d72a2a'", target: {widget: "widget:app_technic_heating_errors"}}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Warmwasser
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Wärmepumpe (Soll)", item: "pGF_Utilityroom_Heatpump_WW_Info",  icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Wärmezufuhr", item: "pGF_Utilityroom_Heatpump_WW_State",  icon: "oh:selftemperature", target: {widget: "widget:app_technic_heating_warmwater"}}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        medium: "50"
+        title: Heizkreis
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heizkreise", item: "pGF_Utilityroom_Heatpump_HK2_Info",  icon: "oh:selfheating", target: {widget: "widget:app_technic_heating_circuites_control"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heizbedarf", item: "pGF_Utilityroom_Heatpump_HK2_Demand",  icon: "oh:selfheating", target: {widget: "widget:app_technic_heating_demand"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Vorlauf Sensor/WP (Soll)", item: "pGF_Utilityroom_Heatpump_HK2_Vorlauf_Info",  icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Rücklauf Sensor", item: "pGF_Utilityroom_Heatpump_HK2_Temperature_Pipe_In",  icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Weiche (Speicher)", item: "pGF_Utilityroom_Heatpump_WP_Weichentemperatur",  icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Wärmezufuhr", item: "pGF_Utilityroom_Heatpump_HW_State", target: {widget: "widget:app_technic_heating_circuites_details"}}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        medium: "50"
+        title: Wärmequelle
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Vorlauf (zum Speicher)", item: "pGF_Utilityroom_Heatpump_WP_Vorlauftemperatur",  icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Rücklauf (vom Speicher)", item: "pGF_Utilityroom_Heatpump_WP_Ruecklauftemperatur",  icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Wärmepumpe", item: "pGF_Utilityroom_Heatpump_WP_Leistungsanforderung",  icon: "oh:selfruntime", target: {widget: "widget:app_technic_heating_heatpump"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Solarthermie", item: "pGF_Utilityroom_Heatpump_Solar_Power",  icon: "oh:selfsun", target: {widget: "widget:app_technic_heating_solar"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Elektroheizung", item: "pGF_Utilityroom_Heatpump_WEZ2_Status", target: {widget: "widget:app_technic_heating_electro"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Statistik", icon: "oh:selfenergy", target: {widget: "widget:app_technic_heating_stats"}}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        slots:
+          - !include { file: ../layout/web_time.inc.yaml}
+          - !include { file: ../layout/web_frame.inc.yaml, vars: {url: "/static/custom/grafana/heating_overview.html?fromItem=Chart_From", height: 1728px}}

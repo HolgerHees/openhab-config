@@ -1,0 +1,46 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_heating_solar
+  title: Technik Heizung Solar
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Solar Status
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Leistung Aktuell", item: "pGF_Utilityroom_Heatpump_Solar_Power",  icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Drehzahl Pumpe", item: "pGF_Utilityroom_Heatpump_Solar_Pump_State",  icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Volumenstrom", item: "pGF_Utilityroom_Heatpump_Solar_Flow",  icon: "oh:selftemperature"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Temperaturen
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Kollektor", item: "pGF_Utilityroom_Heatpump_Solar_Temperature_Collector",  icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Vorlauf", item: "pGF_Utilityroom_Heatpump_Solar_Temperature_Vorlauf",  icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Rücklauf", item: "pGF_Utilityroom_Heatpump_Solar_Temperature_Ruecklauf",  icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Speicher", item: "pGF_Utilityroom_Heatpump_Solar_Temperature_Storage",  icon: "oh:selftemperature"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Erträge
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Ertrag Heute", item: "pGF_Utilityroom_Heatpump_Solar_Energy_Daily",  icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Ertrag Gesamt", item: "pGF_Utilityroom_Heatpump_Solar_Energy_Total",  icon: "oh:selftemperature"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Test
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Test", item: "pGF_Utilityroom_Heatpump_Solar_Energy_Current",  icon: "oh:selftemperature"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        slots:
+          - !include { file: ../layout/web_time.inc.yaml}
+          - !include { file: ../layout/web_frame.inc.yaml, vars: {url: "/static/custom/grafana/solar_heating.html?fromItem=Chart_From", height: 648px}}

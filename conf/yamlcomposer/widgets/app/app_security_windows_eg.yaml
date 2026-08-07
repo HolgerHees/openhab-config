@@ -1,0 +1,16 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_security_windows_eg
+  title: Sicherheit Fenster Erdgeschoss
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Gäste WC", item: "pGF_Guesttoilet_Openingcontact_Window_State", icon: "oh:selfwindow"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Küche", item: "pGF_Kitchen_Openingcontact_Window_State", icon: "oh:selfwindow"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Wohnzimmer Terasse", item: "pGF_Livingroom_Openingcontact_Window_Terrace_State", icon: "oh:selfwindow"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Wohnzimmer Couch", item: "pGF_Livingroom_Openingcontact_Window_Couch_State", icon: "oh:selfwindow"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Arbeitszimmer", item: "pGF_Workroom_Openingcontact_Window_State", icon: "oh:selfwindow"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Werkstatt", item: "pGF_Garage_Openingcontact_Window_Garden_State", icon: "oh:selfwindow"}}

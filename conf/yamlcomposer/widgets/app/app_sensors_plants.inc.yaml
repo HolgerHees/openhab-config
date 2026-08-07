@@ -1,0 +1,26 @@
+variables:
+  item_name_prefix: ""
+
+slots:
+  - !include
+    file: ../layout/box.inc.yaml
+    vars:
+      title: Daten
+      slots:
+        - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Bodenfeuchtigkeit", item: "${item_name_prefix}_Soil_Humidity", icon: "oh:selfwater"}}
+        - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Bodentemperatur", item: "${item_name_prefix}_Soil_Temperature", icon: "oh:selftemperature"}}
+  - !include
+    file: ../layout/box.inc.yaml
+    vars:
+      title: Gerät
+      slots:
+        - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Aktiv", item: "${item_name_prefix}_Switch", icon: "oh:selfautomode"}}
+        - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Status", item: "${item_name_prefix}_State", icon: "oh:selfplant"}}
+        - !include { file: ../layout/item_input.inc.yaml, vars: {title: "Schwellenwerte", item: "${item_name_prefix}_Tresholds", icon: "oh:selfwater"}}
+        - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Letzte Aktualisierung", item: "${item_name_prefix}_Last_Refresh", icon: "oh:selfclock"}}
+        - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Batterieladung", item: "${item_name_prefix}_Battery_Level", icon: "oh:selfbattery"}}
+        - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Batteriestatus", item: "${item_name_prefix}_Battery_State", icon: "oh:selfbattery"}}
+        - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Signalstärke", item: "${item_name_prefix}_Signal_Level", icon: "oh:selfnetwork"}}
+        - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Signalstatus", item: "${item_name_prefix}_Signal_State", icon: "oh:selfnetwork"}}
+
+

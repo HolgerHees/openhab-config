@@ -1,0 +1,248 @@
+version: 1
+widgets:
+  dashboard_tablet_house_main_control:
+    tags: []
+    props:
+      parameters:
+        - context: item
+          default: pOutdoor_Light_Automatic_Main_Switch
+          label: Outdoor Light Auto Switch
+          name: item_outdoor_light_main_switch
+          required: false
+          type: TEXT
+        - context: item
+          default: gOutdoor_Automatic_Switch_Counter
+          label: Outdoor Light Group Counter
+          name: item_outdoor_light_switch_counter
+          required: false
+          type: TEXT
+        - context: item
+          default: pOther_Scene5
+          label: Outdoor Light Scene Switch
+          name: item_outdoor_light_scene_switch
+          required: false
+          type: TEXT
+        - context: item
+          default: gGF_Livingroom_Light_Ceiling_Brightness
+          label: Livingroom ceiling light
+          name: item_livingroom_light_ceiling_dimmer
+          required: false
+          type: TEXT
+        - context: item
+          default: gGF_Livingroom_Light_Hue_Color
+          label: Livingroom indirect light
+          name: item_livingroom_light_indirect_dimmer
+          required: false
+          type: TEXT
+        - context: item
+          default: gShutters
+          label: All Rollershutters
+          name: item_rollershutters
+          required: false
+          type: TEXT
+        - context: item
+          default: gShutters_Count
+          label: All Rollershutters Count
+          name: item_rollershutters_count
+          required: false
+          type: TEXT
+      parameterGroups: []
+    component: f7-card
+    config: {}
+    slots:
+      default:
+        - component: f7-card-content
+          config:
+            style:
+              height: 100%
+              padding: var(--custom-widget-padding)
+          slots:
+            default:
+              - component: f7-row
+                config:
+                  style:
+                    height: 100%
+                    width: 100%
+                slots:
+                  default:
+                    - component: f7-col
+                      config:
+                        style:
+                          display: flex
+                          flex-direction: column
+                          height: 100%
+                      slots:
+                        default:
+                          - component: Label
+                            config:
+                              style:
+                                height: 50px
+                                padding-bottom: 10px
+                                color: var(--custom-control-color)
+                              text: Garten Licht
+                          - component: oh-button
+                            config:
+                              action: command
+                              actionCommand: "=items[props.item_outdoor_light_main_switch].state == 'ON' ? 'OFF' : 'ON'"
+                              actionItem: =props.item_outdoor_light_main_switch
+                              active: =(items[props.item_outdoor_light_main_switch].state  == 'ON')
+                              class:
+                                - highlightModifier
+                              style:
+                                flex-grow: 1
+                              text: Auto
+                          - component: oh-button
+                            config:
+                              action: command
+                              actionCommand: ON
+                              actionItem: =props.item_outdoor_light_scene_switch
+                              class:
+                                - highlightModifier
+                              style:
+                                flex-grow: 1
+                              text: Scene
+                          - component: oh-button
+                            config:
+                              action: command
+                              actionCommand: "=(items[props.item_outdoor_light_main_switch].state  == 'OFF' && items[props.item_outdoor_light_switch_counter].state == '0') ? 'ON' : 'OFF'"
+                              actionItem: =props.item_outdoor_light_main_switch
+                              active: =(items[props.item_outdoor_light_main_switch].state  == 'OFF' && items[props.item_outdoor_light_switch_counter].state == '0')
+                              class:
+                                - highlightModifier
+                              style:
+                                flex-grow: 1
+                              text: Aus
+                    - component: f7-col
+                      config:
+                        style:
+                          display: flex
+                          flex-direction: column
+                          height: 100%
+                      slots:
+                        default:
+                          - component: Label
+                            config:
+                              style:
+                                height: 50px
+                                padding-bottom: 15px
+                                color: var(--custom-control-color)
+                              text: Decken Licht
+                          - component: oh-block
+                            config:
+                              style:
+                                flex-grow: 1
+                                padding-bottom: 15px
+                            slots:
+                              default:
+                                - component: oh-slider
+                                  config:
+                                    item: =props.item_livingroom_light_ceiling_dimmer
+                                    max: 100
+                                    min: 0
+                                    step: 1
+                                    class:
+                                      - highlightModifier
+                                    style:
+                                      width: auto
+                                    vertical: true
+                    - component: f7-col
+                      config:
+                        style:
+                          display: flex
+                          flex-direction: column
+                          height: 100%
+                      slots:
+                        default:
+                          - component: Label
+                            config:
+                              style:
+                                height: 50px
+                                padding-bottom: 15px
+                                color: var(--custom-control-color)
+                              text: Indirektes Licht
+                          - component: oh-block
+                            config:
+                              style:
+                                flex-grow: 1
+                                padding-bottom: 15px
+                            slots:
+                              default:
+                                - component: oh-slider
+                                  config:
+                                    item: =props.item_livingroom_light_indirect_dimmer
+                                    max: 100
+                                    min: 0
+                                    step: 1
+                                    class:
+                                      - highlightModifier
+                                    style:
+                                      width: auto
+                                    vertical: true
+                    - component: f7-col
+                      config:
+                        style:
+                          display: flex
+                          flex-direction: column
+                          height: 100%
+                      slots:
+                        default:
+                          - !include { file: ../layout/popup.inc.yaml, vars: {name: "rollershutterState", widget: "app_rollershutter"}}
+                          - component: oh-link
+                            config:
+                              onclick: "document.querySelector('.rollershutterStateOpener').click()"
+                              style:
+                                height: 65px
+                                padding-bottom: 10px
+                                #white-space: auto
+                                color: var(--custom-control-color)
+                                font-size: var(--custom-default-font-size)
+                              text: Alle Rolläden
+                          - component: oh-link
+                            config:
+                              action: popup
+                              actionModal: page:app_rollershutter
+                              style:
+                                height: 65px
+                                padding-bottom: 10px
+                                #white-space: auto
+                                color: var(--custom-control-color)
+                                font-size: var(--custom-default-font-size)
+                              text: Alle Rolläden
+                          - component: oh-button
+                            config:
+                              action: toggle
+                              actionCommand: UP
+                              actionItem: =props.item_rollershutters
+                              active: =(items[props.item_rollershutters_count].state  === '11')
+                              icon: oh:lightbulb
+                              iconUseState: true
+                              class:
+                                - highlightModifier
+                              style:
+                                flex-grow: 1
+                              text: Hoch
+                          - component: oh-button
+                            config:
+                              action: command
+                              actionCommand: STOP
+                              actionItem: =props.item_rollershutters
+                              icon: oh:lightbulb
+                              iconUseState: true
+                              class:
+                                - highlightModifier
+                              style:
+                                flex-grow: 1
+                              text: Stopp
+                          - component: oh-button
+                            config:
+                              action: toogle
+                              actionCommand: DOWN
+                              actionItem: =props.item_rollershutters
+                              active: =(items[props.item_rollershutters_count].state  == '0')
+                              icon: oh:lightbulb
+                              iconUseState: true
+                              class:
+                                - highlightModifier
+                              style:
+                                flex-grow: 1
+                              text: Runter

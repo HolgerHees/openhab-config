@@ -1,0 +1,13 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_heating_errors
+  title: Technik Heizung Fehler
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Errors
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Fehler", item: "pGF_Utilityroom_Heatpump_S_Fehler", icon: "oh:selferror"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Warnung", item: "pGF_Utilityroom_Heatpump_S_Warnung", icon: "oh:selferror"}}

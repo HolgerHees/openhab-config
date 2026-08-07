@@ -1,0 +1,19 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_security_outdoor
+  title: Sicherheit Draussen
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Werkstatt Strassenseite", item: "pOutdoor_Streedside_Garage_Motiondetector_State", icon: "oh:selfmotion"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Haustür", item: "pOutdoor_Streedside_Frontdoor_Motiondetector_State", icon: "oh:selfmotion"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Carport", item: "pOutdoor_Carport_Motiondetector_State", icon: "oh:selfmotion"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Terasse rechts", item: "pOutdoor_Terrace_Motiondetector_State1", icon: "oh:selfmotion"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Terasse links", item: "pOutdoor_Terrace_Motiondetector_State2", icon: "oh:selfmotion"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Werkstatt Gartenseite", item: "pOutdoor_Garden_Garage_Motiondetector_State", icon: "oh:selfmotion"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Geräteschuppen (rechts)", item: "pOutdoor_Toolshed_Right_Motiondetector_State", icon: "oh:selfmotion"}}
+          #- !include { file: ../layout/item_text.inc.yaml, vars: {title: "Geräteschuppen (hinten)", item: "pOutdoor_Toolshed_Behind_Motiondetector_State", icon: "oh:selfmotion"}}
+          #- !include { file: ../layout/item_text.inc.yaml, vars: {title: "Geräteschuppen (links)", item: "pOutdoor_Toolshed_Left_Motiondetector_State", icon: "oh:selfmotion"}}

@@ -1,0 +1,20 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_programms_comfort_temperatures
+  title: Programme Komfortemperaturen
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        slots:
+          - !include { file: ../layout/item_setpoint.inc.yaml, vars: {title: "Gäste WC", item: "pGF_Guesttoilet_Temperature_Desired", icon: "oh:selftemperature", step: 0.5, min: 15, max: 25}}
+          - !include { file: ../layout/item_setpoint.inc.yaml, vars: {title: "Wohnzimmer", item: "pGF_Livingroom_Temperature_Desired", icon: "oh:selftemperature", step: 0.5, min: 15, max: 25}}
+          - !include { file: ../layout/item_setpoint.inc.yaml, vars: {title: "Arbeitszimmer", item: "pGF_Workroom_Temperature_Desired", icon: "oh:selftemperature", step: 0.5, min: 15, max: 25}}
+          - !include { file: ../layout/item_setpoint.inc.yaml, vars: {title: "Flur unten", item: "pGF_Corridor_Temperature_Desired", icon: "oh:selftemperature", step: 0.5, min: 15, max: 25}}
+          - !include { file: ../layout/item_setpoint.inc.yaml, vars: {title: "Flur oben", item: "pFF_Corridor_Temperature_Desired", icon: "oh:selftemperature", step: 0.5, min: 15, max: 25}}
+          - !include { file: ../layout/item_setpoint.inc.yaml, vars: {title: "Sportzimmer", item: "pFF_Fitnessroom_Temperature_Desired", icon: "oh:selftemperature", step: 0.5, min: 15, max: 25}}
+          - !include { file: ../layout/item_setpoint.inc.yaml, vars: {title: "Schminkzimmer", item: "pFF_Makeuproom_Temperature_Desired", icon: "oh:selftemperature", step: 0.5, min: 15, max: 25}}
+          - !include { file: ../layout/item_setpoint.inc.yaml, vars: {title: "Schlafzimmer", item: "pFF_Bedroom_Temperature_Desired", icon: "oh:selftemperature", step: 0.5, min: 15, max: 25}}
+          - !include { file: ../layout/item_setpoint.inc.yaml, vars: {title: "Badezimmer", item: "pFF_Bathroom_Temperature_Desired", icon: "oh:selftemperature", step: 0.5, min: 15, max: 25}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Komforttemperatur (Lüftung)", item: "pGF_Utilityroom_Ventilation_Target_Temperature", icon: "oh:selftemperature"}}

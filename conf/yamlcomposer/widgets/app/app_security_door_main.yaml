@@ -1,0 +1,31 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_security_door_main
+  title: Sicherheit Haustür
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Status
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Status", item: "pGF_Corridor_Lock_State", icon: "oh:selfdoor"}}
+          - !include { file: ../layout/item_buttons.inc.yaml, vars: {title: "Aktion", item: "pGF_Corridor_Lock_Action", icon: "oh:selfdoor", mappings: "2=Abschliessen,1=Aufschliessen,3=Öffnen"}}
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Zustand
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Batterie Ladezustand", item: "pGF_Corridor_Lock_Battery_Charge_State", icon: "oh:selfbattery"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Batterie leer", item: "pGF_Corridor_Lock_Battery_Critical", icon: "oh:selfbattery"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Batterie wird geladen", item: "pGF_Corridor_Lock_Battery_Charging", icon: "oh:selfbattery"}}
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Sonstiges
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Name", item: "pGF_Corridor_Lock_Name", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Firmware", item: "pGF_Corridor_Lock_Firmware", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Lokal Verbunden", item: "pGF_Corridor_Lock_Connected", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Server verbunden", item: "pGF_Corridor_Lock_Server_Connected", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Zeitstempel", item: "pGF_Corridor_Lock_Timestamp", icon: "oh:selfcalendar"}}

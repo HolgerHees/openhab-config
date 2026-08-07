@@ -1,0 +1,19 @@
+variables:
+  uid: ""
+  title: ""
+  slots: []
+  sidebar: false
+
+version: 1
+widgets:
+  ${uid}:
+    tags: []
+    props:
+      parameters: []
+      parameterGroups: []
+    component: oh-block
+    config:
+      label: ${title}
+    slots:
+      default: ${slots}
+

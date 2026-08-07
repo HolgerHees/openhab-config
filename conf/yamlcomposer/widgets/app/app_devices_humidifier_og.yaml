@@ -1,0 +1,35 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_devices_humidifier_og
+  title: Geräte Luftbefeuchter OG
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Steuerung
+        slots:
+          - !include { file: ../layout/item_buttons.inc.yaml, vars: {title: "Modus", item: "pFF_Bedroom_Humidifier_Auto_Mode", icon: "oh:selfautomode", mappings: "ON=Auto,OFF=Manuell"}}
+          - !include { file: ../layout/item_selection.inc.yaml, vars: {title: "Lüftergeschwindigkeit", item: "pFF_Bedroom_Humidifier_Speed", icon: "oh:selfairing", mappings: "level_1=1,level_2=2,level_3=3,level_4=Max"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Ein/Aus", item: "pFF_Bedroom_Humidifier_Power", icon: "oh:selfswitch"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Status", item: "pFF_Bedroom_Humidifier_State_Message", icon: "oh:selfinfo", display: "@@'pFF_Bedroom_Humidifier_State_Message'=='Alles ok'", valuecolor: "'#6bc305'"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Status", item: "pFF_Bedroom_Humidifier_State_Message", icon: "oh:selfinfo", display: "@@'pFF_Bedroom_Humidifier_State_Message'!='Alles ok'", valuecolor: "@@'pFF_Bedroom_Humidifier_State_Message' == 'Filter' ? '#cbcb00' : '#d72a2a'", target: {widget: "widget:app_devices_humidifier_og_errorstate"}}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Details
+        slots:
+          - !include { file: ../layout/item_selection.inc.yaml, vars: {title: "Automatik Ziel", item: "pFF_Bedroom_Humidifier_Target", icon: "oh:humidity", mappings: "40=40%,45=45%,50=50%,55=55%,CO=CO"}}
+          - !include { file: ../layout/item_selection.inc.yaml, vars: {title: "Beleuchtung", item: "pFF_Bedroom_Humidifier_Lighting", icon: "oh:selflight", mappings: "Fully=Voll,Half=Gedimmt,Close=Aus"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Filter Laufzeit", item: "pFF_Bedroom_Humidifier_Runtime", icon: "oh:selfruntime"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Fehler", item: "pFF_Bedroom_Humidifier_Fault", icon: "oh:selferror"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Sonstiges
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Luftfeuchtigkeit", item: "pFF_Bedroom_Humidifier_Humidity_Value", icon: "oh:humidity"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Kinder Sperre", item: "pFF_Bedroom_Humidifier_Child_Lock", icon: "oh:selfswitch"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Automatik", item: "pFF_Bedroom_Humidifier_Device_Auto_Mode", icon: "oh:selfswitch"}}

@@ -1,0 +1,34 @@
+variables:
+  title: ""
+  medium: "100"
+
+component: oh-grid-col
+config:
+  width: "100"
+  medium: "${medium}"
+slots:
+  default:
+    - component: div
+      config:
+        class:
+          - card
+          - oh-card
+          - custom-card
+      slots:
+        default:
+          - component: Label
+            config:
+              <<: !if
+                if: title
+                then:
+                  class:
+                    - card-header
+                  text: ${title}
+                else:
+                  display: none
+          - component: ul
+            slots:
+              default: ${slots}
+
+
+

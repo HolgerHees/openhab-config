@@ -1,0 +1,14 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_notifications
+  title: Benachrichtigungen
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Geräte
+        slots:
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Sicherheitsbenachrichtigung (s)", item: "pOther_Manual_State_Security_Notify", icon: "oh:selfnotification"}}
+          - !include { file: ../layout/item_selection.inc.yaml, vars: {title: "Lüftungshinweise", item: "pOther_Manual_State_Air_Thoroughly_Notify", icon: "oh:selfnotification", mappings: "0=Aus,1=Push (p),2=Alexa (Bei Anwesenheit) (a),3=Push & Alexa (Bei Anwesenheit) (pa)"}}
+          - !include { file: ../layout/item_selection.inc.yaml, vars: {title: "Kalendereinträge", item: "pOther_Manual_State_Calendar_Event_Notify", icon: "oh:selfnotification", mappings: "0=Aus,1=Push (p),2=Alexa (Bei Anwesenheit) (a),3=Push & Alexa (Bei Anwesenheit) (pa)"}}

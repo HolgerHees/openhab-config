@@ -1,0 +1,13 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_alexa
+  title: Technik Alexa
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "VoiceCommand", item: "VoiceCommand", icon: "oh:recorder"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "VoiceMessage", item: "VoiceMessage", icon: "oh:recorder"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Alexa_Last_TTS", item: "Alexa_Last_TTS", icon: "oh:recorder"}}

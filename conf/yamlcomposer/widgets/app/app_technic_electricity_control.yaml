@@ -1,0 +1,31 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_electricity_control
+  title: Technik Strom Energy Control Details
+  slots:
+    - !include
+    file: ../layout/box.inc.yaml
+    vars:
+      slots:
+        - !include
+          file: ../layout/box.inc.yaml
+          vars:
+            title: Grid Charge
+            slots:
+              - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Status", item: "pGF_Garage_Solar_Storage_Requested_Grid_Status", icon: "oh:selfenergy"}}
+              - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Details", item: "pGF_Garage_Solar_Storage_Requested_Grid_Details", icon: "oh:selfenergy"}}
+        - !include
+          file: ../layout/box.inc.yaml
+          vars:
+            title: Solar Charge
+            slots:
+              - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Status", item: "pGF_Garage_Solar_Storage_Requested_Max_Solar_Status", icon: "oh:selfenergy"}}
+              - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Details", item: "pGF_Garage_Solar_Storage_Requested_Max_Solar_Details", icon: "oh:selfenergy"}}
+        - !include
+          file: ../layout/box.inc.yaml
+          vars:
+            title: Discharge
+            slots:
+              - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Status", item: "pGF_Garage_Solar_Storage_Discharged_Status", icon: "oh:selfenergy"}}
+              - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Details", item: "pGF_Garage_Solar_Storage_Discharged_Details", icon: "oh:selfenergy"}}
