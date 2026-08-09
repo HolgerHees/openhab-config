@@ -40,7 +40,12 @@ slots:
           - icon
         height: 32px
         icon: "${icon}"
-        state: "=items['${item}'].state"
+        <<: !if
+          if: is_hue
+          then:
+            state: "=items['${item}'].state.split(',')[2]"
+          else:
+            state: "=items['${item}'].state"
     - !if
       if: is_hue
       then:
@@ -80,7 +85,7 @@ slots:
                                       config:
                                         item: ${item}
                                         modules:
-                                          - hue-slider
+                                          - wheel
                                           - brightness-slider
     - component: Label
       config:
@@ -90,15 +95,32 @@ slots:
     - !if
       if: is_hue
       then:
-        component: oh-icon
+        component: div
         config:
           onclick: document.getElementById('colorPopup_${item}').click()
-          class:
-            - icon
-          height: 32px
-          icon: "oh:colorwheel"
           style:
+            display: flex
+            position: relative
             cursor: pointer
+        slots:
+          default:
+            - component: oh-icon
+              config:
+                class:
+                  - icon
+                height: 32px
+                icon: "oh:colorwheel"
+            - component: div
+              config:
+                style:
+                  border-radius: 8px
+                  position: absolute
+                  left: 8px
+                  top: 8px
+                  height: 16px
+                  width: 16px
+                  background-color: "='hsl(' + items['${item}'].state.split(',')[0] + ',' + items['${item}'].state.split(',')[1] + '%,' + (items['${item}'].state.split(',')[2] * (1 - (items['${item}'].state.split(',')[1] / 200))) + '%)'"
+
     - component: oh-slider
       config:
         item: ${item}

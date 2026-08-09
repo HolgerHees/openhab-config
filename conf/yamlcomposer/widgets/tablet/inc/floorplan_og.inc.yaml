@@ -28,7 +28,7 @@ slots:
           left: 41%
           position: absolute
           top: 31%
-        text: =items['pFF_Bedroom_Air_Sensor_CO2_Value'].numericState
+        text: =items['pFF_Bedroom_Air_Sensor_CO2_Value'].numericState.toFixed(0)
     - component: Label
       config:
         class:
@@ -51,7 +51,7 @@ slots:
           left: 55%
           position: absolute
           top: 19%
-        text: =items['pFF_Bedroom_Air_Sensor_Humidity_Value'].numericState
+        text: =items['pFF_Bedroom_Air_Sensor_Humidity_Value'].numericState.toFixed(0)
     - component: Label
       config:
         class:
@@ -73,7 +73,7 @@ slots:
           left: 30%
           position: absolute
           top: 23%
-        text: =items['pFF_Dressingroom_Air_Sensor_Humidity_Value'].numericState
+        text: =items['pFF_Dressingroom_Air_Sensor_Humidity_Value'].numericState.toFixed(0)
     - component: Label
       config:
         class:
@@ -96,7 +96,7 @@ slots:
           left: 78%
           position: absolute
           top: 29%
-        text: =items['pFF_Makeuproom_Air_Sensor_Humidity_Value'].numericState
+        text: =items['pFF_Makeuproom_Air_Sensor_Humidity_Value'].numericState.toFixed(0)
     - component: Label
       config:
         class:
@@ -119,7 +119,7 @@ slots:
           left: 78%
           position: absolute
           top: 72%
-        text: =items['pFF_Fitnessroom_Air_Sensor_Humidity_Value'].numericState
+        text: =items['pFF_Fitnessroom_Air_Sensor_Humidity_Value'].numericState.toFixed(0)
     - component: Label
       config:
         class:
@@ -142,7 +142,7 @@ slots:
           left: 55%
           position: absolute
           top: 59%
-        text: =items['pFF_Corridor_Air_Sensor_Humidity_Value'].numericState
+        text: =items['pFF_Corridor_Air_Sensor_Humidity_Value'].numericState.toFixed(0)
     - component: Label
       config:
         class:
@@ -165,7 +165,7 @@ slots:
           left: 30%
           position: absolute
           top: 68%
-        text: =items['pFF_Bathroom_Air_Sensor_Humidity_Value'].numericState
+        text: =items['pFF_Bathroom_Air_Sensor_Humidity_Value'].numericState.toFixed(0)
     - component: oh-link
       config:
         action: command

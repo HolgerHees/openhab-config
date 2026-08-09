@@ -199,17 +199,6 @@ widgets:
                                 color: var(--custom-control-color)
                                 font-size: var(--custom-default-font-size)
                               text: Alle Rolläden
-                          - component: oh-link
-                            config:
-                              action: popup
-                              actionModal: page:app_rollershutter
-                              style:
-                                height: 65px
-                                padding-bottom: 10px
-                                #white-space: auto
-                                color: var(--custom-control-color)
-                                font-size: var(--custom-default-font-size)
-                              text: Alle Rolläden
                           - component: oh-button
                             config:
                               action: toggle

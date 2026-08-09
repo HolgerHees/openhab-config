@@ -1,1 +1,10 @@
-Number TestItem
+Number TestItemButtons
+Number TestItemSelection
+String TestItemText
+Dimmer TestItemDimmer
+Color TestItemColor
+Switch TestItemSwitchOn
+Switch TestItemSwitchOff
+String TestItemInput
+Number TestItemSetpoint
+Rollershutter TestItemRollershutter

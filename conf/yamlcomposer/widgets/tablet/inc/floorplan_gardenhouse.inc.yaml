@@ -27,7 +27,7 @@ slots:
           left: 15%
           position: absolute
           top: 18%
-        text: =items['pToolshed_Sensor_Humidity_Value'].numericState
+        text: =items['pToolshed_Sensor_Humidity_Value'].numericState.toFixed(0)
     - component: oh-link
       config:
         action: command

@@ -39,7 +39,7 @@ slots:
           left: 5%
           position: absolute
           top: 57%
-        text: =items['pGF_Garage_Air_Sensor_Humidity_Value'].numericState
+        text: =items['pGF_Garage_Air_Sensor_Humidity_Value'].numericState.toFixed(0)
     - component: Label
       config:
         class:
@@ -61,7 +61,7 @@ slots:
           left: 55%
           position: absolute
           top: 18%
-        text: =items['pGF_Livingroom_Air_Sensor_Humidity_Value'].numericState
+        text: =items['pGF_Livingroom_Air_Sensor_Humidity_Value'].numericState.toFixed(0)
     - component: Label
       config:
         class:
@@ -72,43 +72,55 @@ slots:
           left: 55%
           position: absolute
           top: 31%
-        text: =items['pGF_Livingroom_Air_Sensor_CO2_Value'].numericState
-    - component: Label
+        text: =items['pGF_Livingroom_Air_Sensor_CO2_Value'].numericState.toFixed(0)
+    - component: div
       config:
-        class:
-          - normalState
-          - sensorTopModifier
-          - sensorTemperatureSuffix
         style:
-          font-size: 0.6em
-          left: 28.5%
+          left: 26%
           position: absolute
-          top: 44%
-        text: =items['pGF_Boxroom_Air_Sensor_Temperature_Value'].numericState.toFixed(1)
-    - component: Label
+          top: 43%
+          transform: scale(0.7)
+      slots:
+        default:
+          - component: Label
+            config:
+              class:
+                - normalState
+                - sensorTopModifier
+                - sensorTemperatureSuffix
+              text: =items['pGF_Boxroom_Air_Sensor_Temperature_Value'].numericState.toFixed(1)
+    - component: div
       config:
-        class:
-          - normalState
-          - sensorBottomModifier
-          - sensorHumiditySuffix
         style:
-          font-size: 0.6em
-          left: 41.5%
+          left: 40%
           position: absolute
-          top: 44%
-        text: =items['pGF_Boxroom_Air_Sensor_Humidity_Value'].numericState
-    - component: Label
+          top: 43%
+          transform: scale(0.7)
+      slots:
+        default:
+          - component: Label
+            config:
+              class:
+                - normalState
+                - sensorBottomModifier
+                - sensorHumiditySuffix
+              text: =items['pGF_Boxroom_Air_Sensor_Humidity_Value'].numericState.toFixed(0)
+    - component: div
       config:
-        class:
-          - normalState
-          - sensorTopModifier
-          - sensorCO2Suffix
         style:
-          font-size: 0.6em
-          left: 28.5%
+          left: 26%
           position: absolute
-          top: 50%
-        text: =items['pGF_Boxroom_Air_Sensor_CO2_Value'].numericState
+          top: 49%
+          transform: scale(0.7)
+      slots:
+        default:
+          - component: Label
+            config:
+              class:
+                - normalState
+                - sensorTopModifier
+                - sensorCO2Suffix
+              text: =items['pGF_Boxroom_Air_Sensor_CO2_Value'].numericState.toFixed(0)
     - component: Label
       config:
         class:
@@ -130,7 +142,7 @@ slots:
           left: 30%
           position: absolute
           top: 69%
-        text: =items['pGF_Utilityroom_Air_Sensor_Humidity_Value'].numericState
+        text: =items['pGF_Utilityroom_Air_Sensor_Humidity_Value'].numericState.toFixed(0)
     - component: Label
       config:
         class:
@@ -154,7 +166,7 @@ slots:
           left: 41.5%
           position: absolute
           top: 85%
-        text: =items['pGF_Guesttoilet_Air_Sensor_Humidity_Value'].numericState
+        text: =items['pGF_Guesttoilet_Air_Sensor_Humidity_Value'].numericState.toFixed(0)
     - component: Label
       config:
         class:
@@ -176,7 +188,7 @@ slots:
           left: 55%
           position: absolute
           top: 78%
-        text: =items['pGF_Corridor_Air_Sensor_Humidity_Value'].numericState
+        text: =items['pGF_Corridor_Air_Sensor_Humidity_Value'].numericState.toFixed(0)
     - component: Label
       config:
         class:
@@ -198,7 +210,7 @@ slots:
           left: 78%
           position: absolute
           top: 78%
-        text: =items['pGF_Workroom_Air_Sensor_Humidity_Value'].numericState
+        text: =items['pGF_Workroom_Air_Sensor_Humidity_Value'].numericState.toFixed(0)
     - component: oh-link
       config:
         action: command

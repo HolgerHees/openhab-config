@@ -83,7 +83,7 @@ slots:
           - value
         style:
           display: flex
-          column-gap: 16px
+          column-gap: 8px
       slots:
         default:
           - component: Label

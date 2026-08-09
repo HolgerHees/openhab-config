@@ -70,7 +70,7 @@ class TabletScreen:
         return Registry.getItemState(item)
 
     def getRequestedScreenState(self, input = None):
-        return "Off" if self.getItemState("pOther_Presence_State", input).intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_SLEEPING] else "On"
+        return "On" #"Off" if self.getItemState("pOther_Presence_State", input).intValue() in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_SLEEPING] else "On"
 
     def getRequestedScreenBrightness(self, input = None):
         isRollershutterOpen = self.getItemState("pGF_Livingroom_Shutter_Terrace_Control", input).intValue() == 0 or self.getItemState("pGF_Livingroom_Shutter_Couch_Control", input).intValue() == 0 or self.getItemState("pGF_Kitchen_Shutter_Control", input).intValue() == 0

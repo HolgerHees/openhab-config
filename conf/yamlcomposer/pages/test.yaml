@@ -29,24 +29,34 @@ pages:
                     - component: script
                       config:
                         src: /static/shared/widgets/app_navigation.js
-              - component: oh-grid-col
-                config:
-                  width: "100"
-                  medium: "100"
-                slots:
-                  default:
-                    - !include
-                      file: ../widgets/layout/box.inc.yaml
-                      vars:
-                        title: Laufzeitdaten
-                        slots:
-                          - !include { file: ../widgets/layout/item_buttons.inc.yaml, vars: {title: "Modus", item: "pGF_Utilityroom_Heatpump_Auto_Mode", icon: "oh:selfautomode", mappings: "2=Auto,1=Kühlen,0=Manuell"}}
-                          - !include { file: ../widgets/layout/item_selection.inc.yaml, vars: {title: "Heizungsreduktion", item: "pOther_Manual_State_Heating", icon: "oh:selfshield", mappings: "0=Normal,1=-1,2=-2,3=-3,4=-4,5=-5", width: "200px"}}
-                          - !include { file: ../widgets/layout/item_text.inc.yaml, vars: {title: "Wärmezufuhr", item: "pGF_Utilityroom_Heatpump_WW_State",  icon: "oh:selftemperature", target: {widget: "widget:app_technic_heating_warmwater"}}}
-                          - !include { file: ../widgets/layout/item_dimmer.inc.yaml, vars: {title: "Küche Tresen", item: "pGF_Livingroom_Light_Hue4_Color", icon: "oh:selflight", is_hue: yes}}
-                          - !include { file: ../widgets/layout/item_dimmer.inc.yaml, vars: {title: "Küche Tresen", item: "pGF_Livingroom_Light_Hue4_Color", icon: "oh:selflight"}}
-                          - !include { file: ../widgets/layout/item_toggle.inc.yaml, vars: {title: "Aktiv", item: "pOutdoor_Plant_Sensor_Blackberries_Switch", icon: "oh:selfautomode"}}
-                          - !include { file: ../widgets/layout/item_input.inc.yaml, vars: {title: "Schwellenwerte", item: "pOutdoor_Plant_Sensor_Blackberries_Tresholds", icon: "oh:selfwater"}}
-                          - !include { file: ../widgets/layout/item_setpoint.inc.yaml, vars: {title: "Gäste WC", item: "pGF_Guesttoilet_Temperature_Desired", icon: "oh:selftemperature", step: 0.5, min: 15, max: 25}}
-                          - !include { file: ../widgets/layout/item_rollershutter.inc.yaml, vars: {title: "Terrasse", item: "pGF_Livingroom_Shutter_Terrace_Control"}}
+              - !include
+                file: ../widgets/layout/box.inc.yaml
+                vars:
+                  title: Block 1
+                  slots:
+                    - !include { file: ../widgets/layout/item_buttons.inc.yaml, vars: {title: "Buttons", item: "TestItemButtons", icon: "oh:selfautomode", mappings: "1=Mode 1,2=Mode 2,3=Mode 3"}}
+                    - !include { file: ../widgets/layout/item_selection.inc.yaml, vars: {title: "Selection (with mappings)", item: "TestItemSelection", icon: "oh:selfshield", mappings: "0=Normal,1=-1,2=-2,3=-3,4=-4,5=-5", width: "200px"}}
+                    - !include { file: ../widgets/layout/item_selection.inc.yaml, vars: {title: "Selection (with options from item)", item: "pGF_Livingroom_Light_Hue_Scene", icon: "oh:selflight", width: "300px"}}
+                    - !include { file: ../widgets/layout/item_toggle.inc.yaml, vars: {title: "Toggle (Aktiv)", item: "TestItemSwitchOn", icon: "oh:selfswitch"}}
+                    - !include { file: ../widgets/layout/item_toggle.inc.yaml, vars: {title: "Toggle (Inactive)", item: "TestItemSwitchOff", icon: "oh:selfswitch"}}
+              - !include
+                file: ../widgets/layout/box.inc.yaml
+                vars:
+                  medium: "50"
+                  title: Block 2
+                  slots:
+                    - !include { file: ../widgets/layout/item_setpoint.inc.yaml, vars: {title: "Setpoint", item: "TestItemSetpoint", icon: "oh:selftemperature", step: 0.5, min: 15, max: 25}}
+                    - !include { file: ../widgets/layout/item_rollershutter.inc.yaml, vars: {title: "Rollershutter", item: "TestItemRollershutter"}}
+                    - !include { file: ../widgets/layout/item_dimmer.inc.yaml, vars: {title: "Dimmer (with Color)", item: "TestItemColor", icon: "oh:selflight", is_hue: yes}}
+                    - !include { file: ../widgets/layout/item_dimmer.inc.yaml, vars: {title: "Dimmer (without Color)", item: "TestItemDimmer", icon: "oh:selflight"}}
+                    - !include { file: ../widgets/layout/item_input.inc.yaml, vars: {title: "Input", item: "TestItemInput", icon: "oh:selfwater"}}
+              - !include
+                file: ../widgets/layout/box.inc.yaml
+                vars:
+                  medium: "50"
+                  title: Block 3
+                  slots:
+                    - !include { file: ../widgets/layout/item_text.inc.yaml, vars: {title: "Just Navigation",  icon: "oh:selfinfo", target: {widget: "widget:app_technic_heating_warmwater"}}}
+                    - !include { file: ../widgets/layout/item_text.inc.yaml, vars: {title: "Text with Navigation", item: "pGF_Livingroom_Air_Sensor_Temperature_Value",  icon: "oh:selftemperature", target: {widget: "widget:app_technic_heating_warmwater"}}}
+                    - !include { file: ../widgets/layout/item_text.inc.yaml, vars: {title: "Just Text and valuecolor", item: "pGF_Livingroom_Air_Sensor_Humidity_Value",  icon: "oh:chart", valuecolor: "#'pGF_Livingroom_Air_Sensor_Humidity_Value'<80 ? '#6bc305' : ''"}}
 
