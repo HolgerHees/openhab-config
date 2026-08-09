@@ -12,7 +12,7 @@ config:
       then:
         display: "=${display} ? '' : 'none'"
   class:
-    - switch
+    - toggle
 slots:
   default:
     - component: oh-icon
@@ -31,5 +31,4 @@ slots:
       config:
         item: ${item}
         class:
-          - "=items['${item}'].state == 'ON'' ? 'button-active' : ''"
-          - highlightModifier
+          - "=items['${item}'].state == 'ON' ? 'button-active' : ''"

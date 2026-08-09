@@ -1,0 +1,52 @@
+version: 1
+pages:
+  test:
+    tags: []
+    props:
+      parameters: []
+      parameterGroups: []
+    component: oh-layout-page
+    config:
+      label: Test
+      sidebar: true
+      hideNavbar: false
+      stylesheet: |
+        @import "/static/shared/widgets/app_navigation.css";
+        @import "/static/shared/widgets/app_page.css";
+        @import "/static/shared/widgets/app_content.css";
+    slots:
+      default:
+        - component: oh-block
+          config:
+            style:
+              padding: 0
+              margin: 0
+          slots:
+            default:
+              - component: oh-grid-col
+                slots:
+                  default:
+                    - component: script
+                      config:
+                        src: /static/shared/widgets/app_navigation.js
+              - component: oh-grid-col
+                config:
+                  width: "100"
+                  medium: "100"
+                slots:
+                  default:
+                    - !include
+                      file: ../widgets/layout/box.inc.yaml
+                      vars:
+                        title: Laufzeitdaten
+                        slots:
+                          - !include { file: ../widgets/layout/item_buttons.inc.yaml, vars: {title: "Modus", item: "pGF_Utilityroom_Heatpump_Auto_Mode", icon: "oh:selfautomode", mappings: "2=Auto,1=Kühlen,0=Manuell"}}
+                          - !include { file: ../widgets/layout/item_selection.inc.yaml, vars: {title: "Heizungsreduktion", item: "pOther_Manual_State_Heating", icon: "oh:selfshield", mappings: "0=Normal,1=-1,2=-2,3=-3,4=-4,5=-5", width: "200px"}}
+                          - !include { file: ../widgets/layout/item_text.inc.yaml, vars: {title: "Wärmezufuhr", item: "pGF_Utilityroom_Heatpump_WW_State",  icon: "oh:selftemperature", target: {widget: "widget:app_technic_heating_warmwater"}}}
+                          - !include { file: ../widgets/layout/item_dimmer.inc.yaml, vars: {title: "Küche Tresen", item: "pGF_Livingroom_Light_Hue4_Color", icon: "oh:selflight", is_hue: yes}}
+                          - !include { file: ../widgets/layout/item_dimmer.inc.yaml, vars: {title: "Küche Tresen", item: "pGF_Livingroom_Light_Hue4_Color", icon: "oh:selflight"}}
+                          - !include { file: ../widgets/layout/item_toggle.inc.yaml, vars: {title: "Aktiv", item: "pOutdoor_Plant_Sensor_Blackberries_Switch", icon: "oh:selfautomode"}}
+                          - !include { file: ../widgets/layout/item_input.inc.yaml, vars: {title: "Schwellenwerte", item: "pOutdoor_Plant_Sensor_Blackberries_Tresholds", icon: "oh:selfwater"}}
+                          - !include { file: ../widgets/layout/item_setpoint.inc.yaml, vars: {title: "Gäste WC", item: "pGF_Guesttoilet_Temperature_Desired", icon: "oh:selftemperature", step: 0.5, min: 15, max: 25}}
+                          - !include { file: ../widgets/layout/item_rollershutter.inc.yaml, vars: {title: "Terrasse", item: "pGF_Livingroom_Shutter_Terrace_Control"}}
+

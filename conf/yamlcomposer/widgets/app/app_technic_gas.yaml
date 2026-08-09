@@ -18,4 +18,4 @@ vars:
         title: "Auswertung"
         slots:
           - !include { file: ../layout/web_time.inc.yaml}
-          - !include { file: ../layout/web_frame.inc.yaml, vars: {url: "/static/custom/grafana/gas_consumption.html?fromItem=Chart_From", height: 1091px}}
+          - !include { file: ../layout/web_frame.inc.yaml, vars: {url: "/static/custom/grafana/gas_consumption.html?fromItem=Chart_From", height: "1091px"}}

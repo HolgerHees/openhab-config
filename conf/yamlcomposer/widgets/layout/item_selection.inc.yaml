@@ -13,19 +13,11 @@ config:
       if: display
       then:
         display: "=${display} ? '' : 'none'"
-  onclick: "event.target.closest('li').querySelector('a').click()"
   class:
     - selection
-    - link
+    - popup-link
 slots:
   default:
-    - component: oh-link
-      config:
-        action: popup
-        popupOpen: .selectionPopup
-        style:
-          display: none
-
     - component: oh-icon
       config:
         class:
@@ -40,17 +32,16 @@ slots:
         text: "${title}"
     - component: oh-button
       config:
-        class:
-          - value
-          - highlightModifier
         action: popup
         popupOpen: .selectionPopup_${item}
+        class:
+          - value
         text: !if
               if: mappings
               then:
-                "=('${mappings}'.split(',').filter((value) => value.startsWith((items['${item}'].numericState === undefined ? items['${item}'].state : items['${item}'].numericState) + '=')).map(value => value.split('=')[1])[0] || '') + ' ▼'"
+                "=('${mappings}'.split(',').filter((value) => value.startsWith((items['${item}'].numericState === undefined ? items['${item}'].state : items['${item}'].numericState) + '=')).map(value => value.split('=')[1])[0] || '')"
               else:
-                "=items['${item}'].state + ' ▼'"
+                "=items['${item}'].state"
 
     - component: f7-popup
       config:
@@ -90,7 +81,6 @@ slots:
                                   class:
                                     - button
                                     - "=(items['${item}'].numericState === undefined ? items['${item}'].state : items['${item}'].numericState) == loop.entry.split('=')[0] ? 'button-active' : ''"
-                                    - "=(items['${item}'].numericState === undefined ? items['${item}'].state : items['${item}'].numericState) == loop.entry.split('=')[0] ? 'highlightModifier' : ''"
                                   popupClose: true
                                   action: command
                                   actionCommand: =loop.entry.split('=')[0]
@@ -110,7 +100,6 @@ slots:
                                   class:
                                     - button
                                     - "=(items['${item}'].numericState === undefined ? items['${item}'].state : items['${item}'].numericState) == loop.entry.value ? 'button-active' : ''"
-                                    - "=(items['${item}'].numericState === undefined ? items['${item}'].state : items['${item}'].numericState) == loop.entry.value ? 'highlightModifier' : ''"
                                   popupClose: true
                                   action: command
                                   actionCommand: =loop.entry.value

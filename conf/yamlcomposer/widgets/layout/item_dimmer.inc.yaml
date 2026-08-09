@@ -107,4 +107,3 @@ slots:
           box-sizing: border-box
         class:
           - "=items['${item}'].state == 'ON'' ? 'button-active' : ''"
-          - highlightModifier

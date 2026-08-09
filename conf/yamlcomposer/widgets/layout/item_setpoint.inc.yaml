@@ -15,7 +15,7 @@ config:
       then:
         display: "=${display} ? '' : 'none'"
   class:
-    - switch
+    - setpoint
 slots:
   default:
     - component: oh-icon
@@ -36,6 +36,3 @@ slots:
         min: ${min}
         max: ${max}
         step: ${step}
-        class:
-          - "=items['${item}'].state == 'ON'' ? 'button-active' : ''"
-          - highlightModifier

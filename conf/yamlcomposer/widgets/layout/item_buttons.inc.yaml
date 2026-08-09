@@ -28,46 +28,48 @@ slots:
         class:
           - name
         text: "${title}"
-    - !if
-      if: mappings
-      then:
-        component: oh-repeater
-        config:
-          sourceType: array
-          in: "='${mappings}'.split(',')"
-          for: entry
-        slots:
-          default:
-            - component: oh-button
+    - component: div
+      slots:
+        default:
+          - !if
+            if: mappings
+            then:
+              component: oh-repeater
               config:
-                class:
+                sourceType: array
+                in: "='${mappings}'.split(',')"
+                for: entry
+                containerClasses:
                   - value
-                action: command
-                actionCommand: =loop.entry[0]
-                actionItem: ${item}
-                class:
-                  - button
-                  - "=items['${item}'].state == loop.entry.split('=')[0] ? 'button-active' : ''"
-                  - highlightModifier
-                text: =loop.entry.split('=')[1]
-      else:
-        component: oh-repeater
-        config:
-          sourceType: itemStateOptions
-          itemOptions: ${item}
-          for: entry
-          listContainer: true
-        slots:
-          default:
-            - component: oh-button
+              slots:
+                default:
+                  - component: oh-button
+                    config:
+                      class:
+                        - value
+                      action: command
+                      actionCommand: =loop.entry[0]
+                      actionItem: ${item}
+                      class:
+                        - "=items['${item}'].state == loop.entry.split('=')[0] ? 'button-active' : ''"
+                      text: =loop.entry.split('=')[1]
+            else:
+              component: oh-repeater
               config:
-                class:
-                  - button
-                  - "=items['${item}'].state == loop.entry.value ? 'button-active' : ''"
-                  - highlightModifier
-                popupClose: true
-                action: command
-                actionCommand: =loop.entry.value
-                actionItem: ${item}
-                #raised: true
-                text: =loop.entry.label
+                sourceType: itemStateOptions
+                itemOptions: ${item}
+                for: entry
+                containerClasses:
+                  - value
+              slots:
+                default:
+                  - component: oh-button
+                    config:
+                      class:
+                        - "=items['${item}'].state == loop.entry.value ? 'button-active' : ''"
+                      popupClose: true
+                      action: command
+                      actionCommand: =loop.entry.value
+                      actionItem: ${item}
+                      #raised: true
+                      text: =loop.entry.label

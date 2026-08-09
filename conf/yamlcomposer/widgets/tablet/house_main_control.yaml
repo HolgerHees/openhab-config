@@ -131,6 +131,7 @@ widgets:
                             config:
                               style:
                                 flex-grow: 1
+                                flex-direction: column
                                 padding-bottom: 15px
                             slots:
                               default:
@@ -164,6 +165,7 @@ widgets:
                             config:
                               style:
                                 flex-grow: 1
+                                flex-direction: column
                                 padding-bottom: 15px
                             slots:
                               default:

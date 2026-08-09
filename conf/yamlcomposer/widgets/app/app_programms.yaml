@@ -11,7 +11,7 @@ vars:
         slots:
           - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Urlaubsmodus (Heizung ignoriert Werktage) (u)", item: "pOther_Manual_State_Holiday", icon: "oh:selfshield"}}
           - !include { file: ../layout/item_selection.inc.yaml, vars: {title: "Heizungsreduktion (h)", item: "pOther_Manual_State_Heating", icon: "oh:selfshield", mappings: "0=0 Normal,1=-1,2=-2,3=-3 (Kaminunterstützt),4=-4,5=-5"}}
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Komforttemperaturen", item: "pGF_Utilityroom_Ventilation_Target_Temperature", icon: "oh:selfheating", target: {widget: "app_programms_comfort_temperatures"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Komforttemperaturen", item: "pGF_Utilityroom_Ventilation_Target_Temperature", icon: "oh:selfheating", target: {widget: "widget:app_programms_comfort_temperatures"}}}
 
     - !include
       file: ../layout/box.inc.yaml

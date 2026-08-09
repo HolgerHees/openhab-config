@@ -37,4 +37,3 @@ slots:
         class:
           - button
           - "=items['${item}'].state == 'ON'' ? 'button-active' : ''"
-          - highlightModifier
