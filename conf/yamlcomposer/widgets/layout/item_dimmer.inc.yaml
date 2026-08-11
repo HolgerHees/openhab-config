@@ -70,23 +70,12 @@ slots:
                   - component: f7-content
                     slots:
                       default:
-                        - !include
-                          file: box.inc.yaml
-                          vars:
-                            title: ${title}
-                            slots:
-                              - component: li
-                                config:
-                                  class:
-                                    - selection
-                                slots:
-                                  default:
-                                    - component: oh-colorpicker
-                                      config:
-                                        item: ${item}
-                                        modules:
-                                          - wheel
-                                          - brightness-slider
+                        - component: oh-colorpicker
+                          config:
+                            item: ${item}
+                            modules:
+                              - wheel
+                              - brightness-slider
     - component: Label
       config:
         class:

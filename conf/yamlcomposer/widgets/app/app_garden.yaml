@@ -9,7 +9,7 @@ vars:
       vars:
         title: "='Allgemein • Letztes klingeln [' + dayjs(@@'pOutdoor_Streedside_Gardendoor_Bell_Last_Change').format('DD.MM HH:mm') + ']'"
         slots:
-            - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Türöffner", item: "pOutdoor_Streedside_Gardendoor_Opener_Timer", icon: "oh:selfdoor"}}
+            - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Türöffner", item: "pOutdoor_Streedside_Gardendoor_Opener_Timer", iconstate: "@@'pOutdoor_Streedside_Gardendoor_Opener_Timer' != 'ON' ? 'CLOSED' : 'OPEN'", icon: "oh:selfdoor"}}
 
     - !include
       file: ../layout/box.inc.yaml
@@ -24,6 +24,6 @@ vars:
       vars:
         title: Licht & Steckdosen
         slots:
-            - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Lampen", item: "gOutdoor_Lights_Count", icon: "oh:selflight", target: {widget: "widget:app_lights_outdoor"}}}
-            - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Steckdosen", item: "gOutdoor_Sockets_Count", icon: "oh:selfsocket", target: {widget: "widget:app_sockets_outdoor"}}}
-            - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Bewässerung", item: "gOutdoor_Watering_Circuits_Count", icon: "oh:selfwater", target: {widget: "widget:app_watering_outdoor"}}}
+            - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Lampen", item: "gOutdoor_Lights_Count", icon: "oh:selflight", iconstate: "@@'gOutdoor_Lights_Count' != '0' ? 'ON' : 'OFF'", target: {widget: "widget:app_lights_outdoor"}}}
+            - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Steckdosen", item: "gOutdoor_Sockets_Count", icon: "oh:selfsocket", iconstate: "@@'gOutdoor_Sockets_Count' != '0' ? 'ON' : 'OFF'", target: {widget: "widget:app_sockets_outdoor"}}}
+            - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Bewässerung", item: "gOutdoor_Watering_Circuits_Count", icon: "oh:selfwater", iconstate: "@@'gOutdoor_Watering_Circuits_Count' != '0' ? 'ON' : 'OFF'", target: {widget: "widget:app_watering_outdoor"}}}

@@ -36,7 +36,7 @@ pages:
                   slots:
                     - !include { file: ../widgets/layout/item_buttons.inc.yaml, vars: {title: "Buttons", item: "TestItemButtons", icon: "oh:selfautomode", mappings: "1=Mode 1,2=Mode 2,3=Mode 3"}}
                     - !include { file: ../widgets/layout/item_selection.inc.yaml, vars: {title: "Selection (with mappings)", item: "TestItemSelection", icon: "oh:selfshield", mappings: "0=Normal,1=-1,2=-2,3=-3,4=-4,5=-5", width: "200px"}}
-                    - !include { file: ../widgets/layout/item_selection.inc.yaml, vars: {title: "Selection (with options from item)", item: "pGF_Livingroom_Light_Hue_Scene", icon: "oh:selflight", width: "300px"}}
+                    - !include { file: ../widgets/layout/item_selection.inc.yaml, vars: {title: "Selection (with options from item)", item: "pGF_Livingroom_Light_Hue_Scene", icon: "oh:selfbypass", width: "300px"}}
                     - !include { file: ../widgets/layout/item_toggle.inc.yaml, vars: {title: "Toggle (Aktiv)", item: "TestItemSwitchOn", icon: "oh:selfswitch"}}
                     - !include { file: ../widgets/layout/item_toggle.inc.yaml, vars: {title: "Toggle (Inactive)", item: "TestItemSwitchOff", icon: "oh:selfswitch"}}
               - !include

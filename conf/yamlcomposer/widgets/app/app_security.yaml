@@ -25,10 +25,10 @@ vars:
       vars:
         title: Fenster & Türen
         slots:
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Haustür", item: "pGF_Corridor_Lock_State", icon: "oh:selfdoor", target: {widget: "widget:app_security_door_main"}}}
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "EG Türen", item: "gGF_Sensor_Doors_Count", icon: "oh:selfdoor", valuecolor: "@@'gGF_Sensor_Doors_Count' == '0' ? '' : '#d72a2a'", target: {widget: "widget:app_security_doors_eg"}}}
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "EG Fenster", item: "gGF_Sensor_Window_Count", icon: "oh:selfwindow", valuecolor: "@@'gGF_Sensor_Window_Count' == '0' ? '' : '#d72a2a'", target: {widget: "widget:app_security_windows_eg"}}}
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "OG Fenster", item: "gFF_Sensor_Window_Count", icon: "oh:selfwindow", valuecolor: "@@'gFF_Sensor_Window_Count' == '0' ? '' : '#d72a2a'", target: {widget: "widget:app_security_windows_og"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Haustür", item: "pGF_Corridor_Lock_State", icon: "oh:selfdoor", iconstate: "@@'pGF_Corridor_Lock_State' == '1' ? 'CLOSED' : 'OPEN'", target: {widget: "widget:app_security_door_main"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "EG Türen", item: "gGF_Sensor_Doors_Count", icon: "oh:selfdoor", iconstate: "@@'gGF_Sensor_Doors_Count' == '0' ? 'CLOSED' : 'OPEN'", valuecolor: "@@'gGF_Sensor_Doors_Count' == '0' ? '' : '#d72a2a'", target: {widget: "widget:app_security_doors_eg"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "EG Fenster", item: "gGF_Sensor_Window_Count", icon: "oh:selfwindow", iconstate: "@@'gGF_Sensor_Window_Count' == '0' ? 'CLOSED' : 'OPEN'", valuecolor: "@@'gGF_Sensor_Window_Count' == '0' ? '' : '#d72a2a'", target: {widget: "widget:app_security_windows_eg"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "OG Fenster", item: "gFF_Sensor_Window_Count", icon: "oh:selfwindow", iconstate: "@@'gFF_Sensor_Window_Count' == '0' ? 'CLOSED' : 'OPEN'", valuecolor: "@@'gFF_Sensor_Window_Count' == '0' ? '' : '#d72a2a'", target: {widget: "widget:app_security_windows_og"}}}
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Geräteschuppen Tür", item: "pToolshed_Openingcontact_Door_State", icon: "oh:selfdoor", valuecolor: "@@'pToolshed_Openingcontact_Door_State' == 'CLOSED' ? '' : '#d72a2a'"}}
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Geräteschuppen Fenster", item: "pToolshed_Openingcontact_Window_State", icon: "oh:selfwindow"}}
 

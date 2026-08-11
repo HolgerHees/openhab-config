@@ -2,6 +2,7 @@ variables:
   title: ""
   item: ""
   icon: "oh:selfsettings"
+  iconstate: ""
   display: ""
   mappings: ""
   width: "200px"
@@ -24,7 +25,13 @@ slots:
           - icon
         height: 32px
         icon: "${icon}"
-        state: "=items['${item}'].state"
+        <<: !if
+            - if: iconstate
+              then:
+                state: "=${iconstate}"
+            - elseif: item
+              then:
+                state: "=items['${item}'].state"
     - component: Label
       config:
         class:

@@ -25,9 +25,12 @@ String pOutdoor_WeatherStation_Rain_State_Message    "Status [%s]" <selfrain> (e
 String pOutdoor_WeatherStation_Rain_Message          "Regen [%s]" <selfrain> (eOutdoor_WeatherStation)
 Number pOutdoor_WeatherStation_Rain_State            "Status Numerisch [%d]" <selfrain> (eOutdoor_WeatherStation) ["Point"] {channel="mqtt:topic:cloud:weatherstation:precipitationLevel"[profile="system:follow"]}
 
-Number:Length pOutdoor_WeatherStation_Rain_Daily     "Heute [%.1f mm]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History,gWeatherstationInputValues) ["Measurement","Rain"] { channel="fineoffsetweatherstation:gateway:default:piezo-rain-day ",channel="mqtt:topic:cloud:weatherstation:precipitationDailyInMillimeter"[profile="system:follow"],unit="mm"}
+Number:Length pOutdoor_WeatherStation_Lightning_Count "Anzahl [%d]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History,gWeatherstationInputValues) ["Measurement","Lightning"] { channel="fineoffsetweatherstation:gateway:default:lightning-counter" }
+Number:Length pOutdoor_WeatherStation_Lightning_Distance "Entfernung [%d km]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History,gWeatherstationInputValues) ["Measurement","Lightning"] { channel="fineoffsetweatherstation:gateway:default:lightning-distance" }
+
+Number:Length pOutdoor_WeatherStation_Rain_Daily     "Heute [%.1f mm]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History,gWeatherstationInputValues) ["Measurement","Rain"] { channel="fineoffsetweatherstation:gateway:default:rain-day ",channel="mqtt:topic:cloud:weatherstation:precipitationDailyInMillimeter"[profile="system:follow"],unit="mm"}
 Number:Length pOutdoor_WeatherStation_Rain_Hourly    "Letzte Stunde [%.1f mm]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart) ["Measurement","Rain"] { channel="mqtt:topic:cloud:weatherstation:precipitationAmountInMillimeter"[profile="system:follow"],unit="mm"}
-Number:Speed pOutdoor_WeatherStation_Rain_Rate       "Aktuell [%.1f mm/h]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart,gWeatherstationInputValues) ["Point"] {channel="fineoffsetweatherstation:gateway:default:piezo-rain-rate",channel="mqtt:topic:cloud:weatherstation:precipitationRateInMillimeterPerHour"[profile="system:follow"],unit="mm/h"}
+Number:Speed pOutdoor_WeatherStation_Rain_Rate       "Aktuell [%.1f mm/h]" <chart> (eOutdoor_WeatherStation,gPersistance_Chart,gWeatherstationInputValues) ["Point"] {channel="fineoffsetweatherstation:gateway:default:rain-rate",channel="mqtt:topic:cloud:weatherstation:precipitationRateInMillimeterPerHour"[profile="system:follow"],unit="mm/h"}
 
 Number:Angle pOutdoor_WeatherStation_Wind_Direction  "Richtung [%d °]" <wind> (eOutdoor_WeatherStation,gWeatherstationInputValues) ["Measurement"] {channel="fineoffsetweatherstation:gateway:default:direction-wind", channel="mqtt:topic:cloud:weatherstation:windDirectionInDegree"[profile="system:follow"]}
 String pOutdoor_WeatherStation_Wind_Direction_Short  "Richtung [%s]" <wind> (eOutdoor_WeatherStation)
@@ -59,8 +62,16 @@ Number:Illuminance pOutdoor_WeatherStation_Light_Level           "Helligkeit [%d
 Number pOutdoor_WeatherStation_UV_Index              "UV Index [%.1f]" <selfsun> (eOutdoor_WeatherStation,gPersistance_Chart,gPersistance_History,gWeatherstationInputValues) ["Measurement"] {channel="fineoffsetweatherstation:gateway:default:uv-index", channel="mqtt:topic:cloud:weatherstation:uvIndex"[profile="system:follow"]}
 
 Number pOutdoor_WeatherStation_MainSensor_Signal           "Wetterstation Signal [%d]" <network> (eOutdoor_WeatherStation) ["Measurement"] {channel="fineoffsetweatherstation:sensor:default:WH90:signal"}
-Number:ElectricPotential pOutdoor_WeatherStation_MainSensor_Battery_Voltage "Wetterstation Spannung [%.2f V]" <selfinfo> (eOutdoor_WeatherStation) ["Measurement"] {channel="fineoffsetweatherstation:sensor:default:WH90:batteryVoltage"}
+//Number:ElectricPotential pOutdoor_WeatherStation_MainSensor_Battery_Voltage "Wetterstation Spannung [%.2f V]" <selfinfo> (eOutdoor_WeatherStation) ["Measurement"] {channel="fineoffsetweatherstation:sensor:default:WH90:batteryVoltage"}
 Switch pOutdoor_WeatherStation_MainSensor_Battery_Low      "Wetterstation Batterie niedrig [%s]" <selfinfo> (eOutdoor_WeatherStation) ["Measurement"] {channel="fineoffsetweatherstation:sensor:default:WH90:lowBattery"}
 
 Number pOutdoor_WeatherStation_TemperatureSensor_Signal      "Temperatursensor Signal [%d]" <network> (eOutdoor_WeatherStation) ["Measurement"] {channel="fineoffsetweatherstation:sensor:default:WH26:signal"}
 Switch pOutdoor_WeatherStation_TemperatureSensor_Battery_Low "Temperatursensor Batterie niedrig [%s]" <selfinfo> (eOutdoor_WeatherStation) ["Measurement"] {channel="fineoffsetweatherstation:sensor:default:WH26:lowBattery"}
+
+Number pOutdoor_WeatherStation_LightningSensor_Signal      "Blitzsensor Signal [%d]" <network> (eOutdoor_WeatherStation) ["Measurement"] {channel="fineoffsetweatherstation:sensor:default:WH57:signal"}
+//Number pOutdoor_WeatherStation_LightningSensor_Battery_Level "Blitzsensor Batteriestand [%d]" <network> (eOutdoor_WeatherStation) ["Measurement"] {channel="fineoffsetweatherstation:sensor:default:WH57:signal"}
+Switch pOutdoor_WeatherStation_LightningSensor_Battery_Low "Blitzsensor Batterie niedrig [%s]" <selfinfo> (eOutdoor_WeatherStation) ["Measurement"] {channel="fineoffsetweatherstation:sensor:default:WH57:lowBattery"}
+
+Number pOutdoor_WeatherStation_RainSensor_Signal      "Regensensor Signal [%d]" <network> (eOutdoor_WeatherStation) ["Measurement"] {channel="fineoffsetweatherstation:sensor:default:WH40:signal"}
+//Number:ElectricPotential pOutdoor_WeatherStation_RainSensor_Battery_Voltage "Regensensor Spannung [%.2f V]" <selfinfo> (eOutdoor_WeatherStation) ["Measurement"] {channel="fineoffsetweatherstation:sensor:default:WH40:batteryVoltage"}
+Switch pOutdoor_WeatherStation_RainSensor_Battery_Low "Regensensor Batterie niedrig [%s]" <selfinfo> (eOutdoor_WeatherStation) ["Measurement"] {channel="fineoffsetweatherstation:sensor:default:WH40:lowBattery"}

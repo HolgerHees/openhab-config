@@ -27,6 +27,14 @@ vars:
     - !include
       file: ../layout/box.inc.yaml
       vars:
+        title: Blitze
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Blitzanzahl", item: "pOutdoor_WeatherStation_Lightning_Count", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Blitzentfernung", item: "pOutdoor_WeatherStation_Lightning_Distance", icon: "oh:selfinfo"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
         title: Sonstiges
         slots:
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Device Status", item: "pOutdoor_WeatherStation_State_Device_Info", icon: "oh:selfplant", valuecolor: "@@'pOutdoor_WeatherStation_State_Device_Info'=='Alles ok' ? '#6bc305' : '#d72a2a'"}}
@@ -39,6 +47,10 @@ vars:
         title: Batterie
         slots:
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Wetterstation Signal", item: "pOutdoor_WeatherStation_MainSensor_Signal", icon: "oh:network"}}
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Wetterstation Batterie niedrig", item: "pOutdoor_WeatherStation_MainSensor_Battery_Low", icon: "oh:selfbattery", valuecolor: "@@'pOutdoor_WeatherStation_Update_Message'].state == 'ON' ? '#d72a2a' : ''"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Wetterstation Batterie niedrig", item: "pOutdoor_WeatherStation_MainSensor_Battery_Low", icon: "oh:selfbattery", valuecolor: "@@'pOutdoor_WeatherStation_MainSensor_Battery_Low'].state == 'ON' ? '#d72a2a' : ''"}}
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Temperatursensor Signal", item: "pOutdoor_WeatherStation_TemperatureSensor_Signal", icon: "oh:network"}}
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Temperatursensor Batterie niedrig", item: "pOutdoor_WeatherStation_TemperatureSensor_Battery_Low", icon: "oh:selfbattery", valuecolor: "@@'pOutdoor_WeatherStation_Update_Message'].state == 'ON' ? '#d72a2a' : ''"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Temperatursensor Batterie niedrig", item: "pOutdoor_WeatherStation_TemperatureSensor_Battery_Low", icon: "oh:selfbattery", valuecolor: "@@'pOutdoor_WeatherStation_TemperatureSensor_Battery_Low'].state == 'ON' ? '#d72a2a' : ''"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Blitzsensor Signal", item: "pOutdoor_WeatherStation_LightningSensor_Signal", icon: "oh:network"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Blitzsensor Batterie niedrig", item: "pOutdoor_WeatherStation_LightningSensor_Battery_Low", icon: "oh:selfbattery", valuecolor: "@@'pOutdoor_WeatherStation_LightningSensor_Battery_Low'].state == 'ON' ? '#d72a2a' : ''"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Regensensor Signal", item: "pOutdoor_WeatherStation_RainSensor_Signal", icon: "oh:network"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Regensensor Batterie niedrig", item: "pOutdoor_WeatherStation_RainSensor_Battery_Low", icon: "oh:selfbattery", valuecolor: "@@'pOutdoor_WeatherStation_RainSensor_Battery_Low'].state == 'ON' ? '#d72a2a' : ''"}}

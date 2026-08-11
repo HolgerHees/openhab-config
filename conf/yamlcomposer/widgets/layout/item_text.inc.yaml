@@ -67,11 +67,12 @@ slots:
         height: 32px
         icon: "${icon}"
         <<: !if
-            if: iconstate
-            then:
-              state: "=${iconstate}"
-            elseif item:
-              state: "=(items['${item}'].numericState === undefined ? items['${item}'].state : items['${item}'].numericState)"
+            - if: iconstate
+              then:
+                state: "=${iconstate}"
+            - elseif: item
+              then:
+                state: "=(items['${item}'].numericState === undefined ? items['${item}'].state : items['${item}'].numericState)"
     - component: Label
       config:
         class:

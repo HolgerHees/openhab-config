@@ -23,3 +23,14 @@ things:
     config:
       sensor: WH26
 
+  fineoffsetweatherstation:sensor:default:WH40:
+    bridge: fineoffsetweatherstation:gateway:default
+    label: Wetterstation Regen Sensor
+    config:
+      sensor: WH40
+
+  fineoffsetweatherstation:sensor:default:WH57:
+    bridge: fineoffsetweatherstation:gateway:default
+    label: Wetterstation Blitz Sensor
+    config:
+      sensor: WH57
