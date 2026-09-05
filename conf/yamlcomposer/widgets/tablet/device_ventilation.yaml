@@ -144,6 +144,7 @@ widgets:
             style:
               fill: transparent;
               stroke: "=[5,21].includes(items[props.item_headpump_status].numericState) ? 'var(--custom-blue)' : 'var(--custom-default-color)'"
+              fill: transparent
               left: 50%
               top: 33px
               width: 30px

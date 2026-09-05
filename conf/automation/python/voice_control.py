@@ -15,10 +15,37 @@ import scope
 @rule(
     triggers = [
 #        GenericCronTrigger("0 0 0 * * ?"),
+        ItemStateUpdateTrigger("pOther_SmartSpeaker_VoiceCommand")
+    ]
+)
+class MainSmartSpeaker:
+    def execute(self, module, input):
+        self.logger.info(str(input))
+        self.logger.info(str(module))
+
+#startDialog(String ks, String stt, String tts, String voice, String interpreters, String source, String sink, String locale, String keyword, String listeningItem)
+#Voice.startDialog("esphome:device:home-speaker-1:source:voice_assistant", "enhancedjavasound")
+
+#Voice.stopDialog("esphome:device:home-speaker-1:source:voice_assistant")
+#Voice.startDialog("rustpotterks", "whisperstt", "openaitts", "openaitts:jarvis", "rulehli", "esphome:device:home-speaker-1:source:voice_assistant", "esphome:device:home-speaker-1:sink:", "de-DE", "Hey Marvin", "pOther_SmartSpeaker_VoiceCommand")
+
+
+
+#Voice.startDialog("rustpotterks", "voskstt", "pipertts", "pipertts:kerstin-low-de_DE", "rulehli", "esphome:device:home-speaker-1:source:voice_assistant", "esphome:device:home-speaker-1:sink:", "de-DE", "Hey Jarvis", "pOther_SmartSpeaker_VoiceCommand")
+#Voice.stopDialog("esphome:device:home-speaker-1:source:voice_assistant")
+
+
+#Voice.listenAndAnswer("esphome:device:home-speaker-1:source:voice_assistant", "enhancedjavasound")
+
+
+
+@rule(
+    triggers = [
+#        GenericCronTrigger("0 0 0 * * ?"),
         ItemStateUpdateTrigger("VoiceCommand")
     ]
 )
-class MainNew:
+class MainAlexa:
     def execute(self, module, input):
         Registry.getItem("VoiceMessage").postUpdate("")
 
@@ -30,7 +57,7 @@ class MainNew:
 
         self.logger.info("Process: '{}', Location: '{}'".format(message, client_id if location_name is None else location_name))
 
-        if "Gute Nacht" in message:
+        if "gute nacht" in message.lower():
             message = "Schalte Scene 4 ein und antworte mit einem zufälligem synonym für 'Schlaf schön'"
         elif location_name is not None:
             location_item = Registry.getItem(location_name)

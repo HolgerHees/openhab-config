@@ -18,16 +18,16 @@ vars:
     #              config:
     #                mappings: '[ {"key": "key1", value: "value1" }, {"key": "key2", value: "value2" } ]'
     - !include
-            file: ../layout/box.inc.yaml
-            vars:
-              title: Hauptkategorien
-              slots:
-                - !include
-                  file: ../layout/item_text.inc.yaml
-                  vars: {title: "Lampen",    item: "gIndoor_Lights_Count", icon: "oh:selflight",         iconstate: "@@'gIndoor_Lights_Count' != '0' ? 'ON' : 'OFF'", target: {widget: "widget:app_lights"}}
-                - !include
-                  file: ../layout/item_text.inc.yaml
-                  vars: {title: "Rollläden", item: "gShutters_Count",      icon: "oh:selfrollershutter", iconstate: "@@'gShutters_Count' != '0' ? 'UP' : 'DOWN'",     target: {widget: "widget:app_rollershutter"}}
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Hauptkategorien
+        slots:
+          - !include
+            file: ../layout/item_text.inc.yaml
+            vars: {title: "Lampen",    item: "gIndoor_Lights_Count", icon: "oh:selflight",         iconstate: "@@'gIndoor_Lights_Count' != '0' ? 'ON' : 'OFF'", target: {widget: "widget:app_lights"}}
+          - !include
+            file: ../layout/item_text.inc.yaml
+            vars: {title: "Rollläden", item: "gShutters_Count",      icon: "oh:selfrollershutter", iconstate: "@@'gShutters_Count' != '0' ? 'UP' : 'DOWN'",     target: {widget: "widget:app_rollershutter"}}
 
     - !include
       file: ../layout/box.inc.yaml

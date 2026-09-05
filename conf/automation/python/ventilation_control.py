@@ -26,23 +26,27 @@ class StateReset:
     def execute(self, module, input):
         Registry.getItem(input['event'].getItemName()).postUpdateIfDifferent(scope.OFF)
 
-#@rule(
-#    triggers = [
-#        SystemStartlevelTrigger(80),
-#        ThingStatusChangeTrigger("comfoair:comfoair:default")
-#    ]
-#)
-#class ErrorMessage:
-#    def execute(self, module, input):
-#        thing = Registry.getThing("comfoair:comfoair:default")
-#        status = thing.getStatus()
-#        if status.toString() != "ONLINE":
-#            info = thing.getStatusInfo()
-#            Registry.getItem("eOther_Error_Ventilation_Message").postUpdateIfDifferent("Thing: {}".format( info.toString() ))
-#        elif Registry.getItemState("pGF_Utilityroom_Ventilation_Error_Message").toString() != "No Errors":
-#            Registry.getItem("eOther_Error_Ventilation_Message").postUpdateIfDifferent( Registry.getItemState("pGF_Utilityroom_Ventilation_Error_Message").toString() )
-#        else:
-#            Registry.getItem("eOther_Error_Ventilation_Message").postUpdateIfDifferent("")
+@rule(
+    triggers = [
+        SystemStartlevelTrigger(80),
+        GenericCronTrigger("0 */5 * * * ?"),
+        #ThingStatusChangeTrigger("modbus:poller:ventilation:input"),
+        #ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Clime_LastError")
+    ]
+)
+class ErrorMessage:
+    def execute(self, module, input):
+        lastError = Registry.getItemState("pGF_Utilityroom_Ventilation_Clime_LastError").getZonedDateTime()
+        lastSuccess = Registry.getItemState("pGF_Utilityroom_Ventilation_Clime_LastSuccess").getZonedDateTime()
+
+        thing = Registry.getThing("modbus:poller:ventilation:input")
+        if thing.getStatus().toString() != "ONLINE":
+            info = thing.getStatusInfo()
+            Registry.getItem("eOther_Error_Ventilation_Message").postUpdateIfDifferent("Thing: ComfoAir offline")
+        elif lastError > lastSuccess:
+            Registry.getItem("eOther_Error_Ventilation_Message").postUpdateIfDifferent("Thing: ComfoClime offline")
+        else:
+            Registry.getItem("eOther_Error_Ventilation_Message").postUpdateIfDifferent("")
 
 @rule(
     triggers = [

@@ -6,7 +6,7 @@ from custom.watering import WateringHelper
 
 @rule(
     triggers = [
-        SystemStartlevelTrigger(80),
+#        SystemStartlevelTrigger(80),
         ThingStatusChangeTrigger("gardena:sensor:default")
     ]
 )

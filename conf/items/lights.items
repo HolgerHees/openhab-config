@@ -111,7 +111,7 @@ Dimmer pFF_Bedroom_Light_Hue_Left_Temperature   "Farbtemperatur" <selflight> (eF
 Switch pFF_Bedroom_Light_Hue_Left_Switch        "Taster" <selflight> (eFF_Bedroom_Light_Hue_Left)                                       ["Point"] { channel="knx:device:bridge:other:bedroomLeft" }
 
 Group  eFF_Bedroom_Light_Hue_Right              "Nachttisch rechts" <selflight> (lFF_Bedroom)                                           ["Lightbulb"] { synonyms="Nachttisch, Bett, rechts, Wand" }
-Color  pFF_Bedroom_Light_Hue_Right_Color        "Farbe" <colorwheel> (eFF_Bedroom_Light_Hue_Right,gIndoor_Lights,gIndoor_Lights_Count,gFF_Lights,gFF_Bedroom_Lights) ["Control","Light"] { channel="hue:device:default:lamp6:color"}
+Color  pFF_Bedroom_Light_Hue_Right_Color        "Farbe" <colorwheel> (eFF_Bedroom_Light_Hue_Right,gIndoor_Lights,gIndoor_Lights_Count,gFF_Lights_Count,gFF_Lights,gFF_Bedroom_Lights) ["Control","Light"] { channel="hue:device:default:lamp6:color"}
 Dimmer pFF_Bedroom_Light_Hue_Right_Temperature  "Farbtemperatur" <selflight> (eFF_Bedroom_Light_Hue_Right)                              ["Setpoint","ColorTemperature"] { channel="hue:device:default:lamp6:color-temperature"}
 Switch pFF_Bedroom_Light_Hue_Right_Switch       "Taster" <selflight> (eFF_Bedroom_Light_Hue_Right)                                      ["Point"] { channel="knx:device:bridge:other:bedroomRight" }
 

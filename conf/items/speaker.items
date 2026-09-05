@@ -1,0 +1,24 @@
+Group  eOther_SmartSpeaker_Devices                    "Home Speaker Geräte"   <selfinfo>        (lOther)                ["Equipment"]
+
+Group  eGF_Workroom_SmartSpeaker                      "Arbeitszimmer"         <selfinfo>        (eOther_SmartSpeaker_Devices)  ["Equipment"]
+
+Number:Illuminance pGF_Workroom_SmartSpeaker_Ambient_Light  "Helligkeit"      <selfsun>         (eGF_Workroom_SmartSpeaker)    ["Point"]      {channel="esphome:device:home-speaker-1:ambient_light"}
+Number:Temperature pGF_Workroom_SmartSpeaker_Temperature    "Temperatur"      <selftemperature> (eGF_Workroom_SmartSpeaker)    ["Point"]      {channel="esphome:device:home-speaker-1:temperature"}
+Number:Dimensionless pGF_Workroom_SmartSpeaker_Humidity     "Feuchtigkeit"    <humidity>        (eGF_Workroom_SmartSpeaker)    ["Point"]      {channel="esphome:device:home-speaker-1:humidity", unit="%"}
+
+Switch pGF_Workroom_SmartSpeaker_Presence             "Anwesenheit"           <selfinfo>        (eGF_Workroom_SmartSpeaker)    ["Point"]      {channel="esphome:device:home-speaker-1:room_presence"}
+Number pGF_Workroom_SmartSpeaker_Radar_Targets_Total  "Radarziele Gesamt"     <selfinfo>        (eGF_Workroom_SmartSpeaker)    ["Point"]      {channel="esphome:device:home-speaker-1:radar_targets_total"}
+Number pGF_Workroom_SmartSpeaker_Radar_Targets_Still  "Radarziele Ruhend"     <selfinfo>        (eGF_Workroom_SmartSpeaker)    ["Point"]      {channel="esphome:device:home-speaker-1:radar_targets_still"}
+Number pGF_Workroom_SmartSpeaker_Radar_Targets_Moving "Radarziele Bewegend"   <selfinfo>        (eGF_Workroom_SmartSpeaker)    ["Point"]      {channel="esphome:device:home-speaker-1:radar_targets_moving"}
+String pGF_Workroom_SmartSpeaker_Radar_Target         "Radarziele"            <selfinfo>        (eGF_Workroom_SmartSpeaker)    ["Point"]      {channel="esphome:device:home-speaker-1:radar_target"}
+
+Switch pGF_Workroom_SmartSpeaker_WakeSound            "Wake sound"            <selfinfo>        (eGF_Workroom_SmartSpeaker)    ["Point"]      {channel="esphome:device:home-speaker-1:wake_sound"}
+Switch pGF_Workroom_SmartSpeaker_Presence_Tuner_WebUI "Radar Tuning WebUI"    <selfinfo>        (eGF_Workroom_SmartSpeaker)    ["Point"]      {channel="esphome:device:home-speaker-1:radar_tuner_webui"}
+String pGF_Workroom_SmartSpeaker_WakeWord_Sensitivity "Wake word sensitivity" <selfinfo>        (eGF_Workroom_SmartSpeaker)    ["Point"]      {channel="esphome:device:home-speaker-1:wake_word_sensitivity"}
+Player pGF_Workroom_SmartSpeaker_MediaPlayer          "MediaPlayer"           <selfinfo>        (eGF_Workroom_SmartSpeaker)    ["Point"]      {channel="esphome:device:home-speaker-1:none"}
+Color pGF_Workroom_SmartSpeaker_LED_Ring              "LED Ring"              <selfinfo>        (eGF_Workroom_SmartSpeaker)    ["Point"]      {channel="esphome:device:home-speaker-1:led_ring"}
+
+
+Switch pGF_Workroom_SmartSpeaker_Activated            "Anwesenheit"           <selfinfo>        (eGF_Workroom_SmartSpeaker)    ["Point"]
+
+String pOther_SmartSpeaker_VoiceCommand               "Sprachbefehl Smartspeaker [%s]"             <recorder>  (eOther_SmartSpeaker_Devices)         ["Point"]

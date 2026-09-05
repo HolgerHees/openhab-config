@@ -14,7 +14,7 @@ vars:
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Ziel", item: "pGF_Utilityroom_Ventilation_Target_Temperature_Message", icon: "oh:selftemperature"}}
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Kühlung", item: "pGF_Utilityroom_Ventilation_Cooling_Temperature_Message", icon: "oh:selftemperature"}}
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Comfo Air", item: "pGF_Utilityroom_Ventilation_State_Message", icon: "oh:selfinfo", display: "@@'pGF_Utilityroom_Ventilation_State_Message'=='Alles ok'", valuecolor: "'#6bc305'"}}
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Comfo Air", item: "pGF_Utilityroom_Ventilation_State_Message", icon: "oh:selfinfo", display: "@@'pGF_Utilityroom_Ventilation_State_Message'!='Alles ok'", valuecolor: "@@'pGF_Utilityroom_Ventilation_State_Message'=='Filter' ? '#cbcb00' : '#d72a2a'", target: {widget: "app_technic_ventilation_errorstate"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Comfo Air", item: "pGF_Utilityroom_Ventilation_State_Message", icon: "oh:selfinfo", display: "@@'pGF_Utilityroom_Ventilation_State_Message'!='Alles ok'", valuecolor: "@@'pGF_Utilityroom_Ventilation_State_Message'=='Filter' ? '#cbcb00' : '#d72a2a'", target: {widget: "widget:app_technic_ventilation_errorstate"}}}
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Comfo Air", item: "pGF_Utilityroom_Ventilation_Clime_Headpump_Status", icon: "oh:selfairing"}}
 
     - !include

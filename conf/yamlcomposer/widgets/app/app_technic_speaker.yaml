@@ -1,0 +1,28 @@
+!include
+file: ../layout/widget.inc.yaml
+vars:
+  uid: app_technic_speaker
+  title: Technik Speaker
+  slots:
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Helligkeit", item: "pGF_Workroom_SmartSpeaker_Ambient_Light", icon: "oh:selfsun"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Temperatur", item: "pGF_Workroom_SmartSpeaker_Temperature", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Feuchtigkeit", item: "pGF_Workroom_SmartSpeaker_Humidity", icon: "oh:humidity"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Anwesenheit", item: "pGF_Workroom_SmartSpeaker_Presence", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Radarziele Gesamt", item: "pGF_Workroom_SmartSpeaker_Radar_Targets_Total", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Radarziele Ruhend", item: "pGF_Workroom_SmartSpeaker_Radar_Targets_Still", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Radarziele Bewegend", item: "pGF_Workroom_SmartSpeaker_Radar_Targets_Moving", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Radarziele", item: "pGF_Workroom_SmartSpeaker_Radar_Target", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "WebUI", item: "pGF_Workroom_SmartSpeaker_Presence_Tuner_WebUI", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Wake Sound", item: "pGF_Workroom_SmartSpeaker_WakeSound", icon: "oh:selfinfo"}}
+          - !include { file: ../layout/item_selection.inc.yaml, vars: {title: "Wake Word Sentivität", item: "pGF_Workroom_SmartSpeaker_WakeWord_Sensitivity", icon: "oh:selflight", width: "300px"}}
+          - !include { file: ../layout/item_dimmer.inc.yaml, vars: {title: "LED Ring", item: "pGF_Workroom_SmartSpeaker_LED_Ring", icon: "oh:selflight", is_hue: yes}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Voice Assistent Aktiv", item: "pGF_Workroom_SmartSpeaker_Activated", icon: "oh:selfinfo"}}

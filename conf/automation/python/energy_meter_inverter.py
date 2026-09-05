@@ -16,7 +16,7 @@ start_electricity_meter_production_offset = 16261.620 #16261.303 #16261.281 #162
 
 @rule(
     triggers = [
-        SystemStartlevelTrigger(80),
+#        SystemStartlevelTrigger(80),
         ThingStatusChangeTrigger("http:url:fenecon-slow")
     ]
 )

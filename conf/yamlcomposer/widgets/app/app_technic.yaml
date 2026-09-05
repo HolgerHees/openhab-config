@@ -25,5 +25,6 @@ vars:
       vars:
         title: Debug
         slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Speaker", target: {widget: "widget:app_technic_speaker"}}}
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Alexa", target: {widget: "widget:app_technic_alexa"}}}
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Gas (Alt)", item: "pGF_Utilityroom_Gas_Current_Daily_Consumption", icon: "oh:selfgas", target: {widget: "widget:app_technic_gas"}}}

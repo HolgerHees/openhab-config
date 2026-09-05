@@ -361,7 +361,9 @@ class PerceivedTemperature:
 @rule(
     triggers = [
         ItemStateChangeTrigger("pOutdoor_WeatherStation_MainSensor_Battery_Low"),
-        ItemStateChangeTrigger("pOutdoor_WeatherStation_TemperatureSensor_Battery_Low")
+        ItemStateChangeTrigger("pOutdoor_WeatherStation_TemperatureSensor_Battery_Low"),
+        ItemStateChangeTrigger("pOutdoor_WeatherStation_LightningSensor_Battery_Low"),
+        ItemStateChangeTrigger("pOutdoor_WeatherStation_RainSensor_Battery_Low")
     ]
 )
 class BatteryDetail:

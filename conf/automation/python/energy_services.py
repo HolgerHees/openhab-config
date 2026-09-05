@@ -25,6 +25,7 @@ solar_map = {
     SunRadiation.DIRECTION_WEST: { "power": 4.45, "azimut": 270.0, "elevation": 45.0, "coefficient": 0.29 }
 }
 
+
 # https://www-solisinverters-com.translate.goog/global/documentation/Influence_of_Azimuth_and_Tilt_on_Yield_of_PV_System_11281117.html?_x_tr_sl=en&_x_tr_tl=de&_x_tr_hl=de&_x_tr_pto=rq
 azimut_diff_reduction_map = {
      0: 0.0,

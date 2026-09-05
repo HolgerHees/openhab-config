@@ -68,3 +68,6 @@ Number pGF_Utilityroom_Ventilation_Clime_Headpump_Power         "Leistung [%d %%
 
 Number pGF_Utilityroom_Ventilation_Clime_Outgoing_Airflow       "Volumenstrom (Raumabluft) [%d m³/h]" <selfairing> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoclime_dashboard:exhaustAirFlow"}
 Number pGF_Utilityroom_Ventilation_Clime_Incomming_Airflow      "Volumenstrom (Raumzuluft) [%d m³/h]" <selfairing> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoclime_dashboard:supplyAirFlow"}
+
+DateTime pGF_Utilityroom_Ventilation_Clime_LastError            "Letzer Fehler [%s]" <selfairing> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoclime_dashboard:last-failure"}
+DateTime pGF_Utilityroom_Ventilation_Clime_LastSuccess          "Letzer Erfolg [%s]" <selfairing> (eGF_Utilityroom_Ventilation) ["Point"] {channel="http:url:comfoclime_dashboard:last-success"}
