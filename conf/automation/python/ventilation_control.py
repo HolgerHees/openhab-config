@@ -17,6 +17,15 @@ import scope
 
 DELAYED_UPDATE_TIMEOUT = 3
 
+#@rule(
+#    triggers = [
+#        GenericCronTrigger("0 0 0 * * ?")
+#    ]
+#)
+#class Reset:
+#    def execute(self, module, input):
+#        Registry.getItem("pGF_Utilityroom_Ventilation_Clime_Reset").sendCommand(scope.ON)
+
 @rule(
     triggers = [
         ItemCommandTrigger("pGF_Utilityroom_Ventilation_Error_Reset")

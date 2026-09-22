@@ -2,6 +2,7 @@ from openhab import Registry, logger
 
 from shared.toolbox import ToolboxHelper
 
+from custom.format import FormatHelper
 from custom.presence import PresenceHelper
 from custom.flags import FlagHelper
 from custom.heating.house import Window, ThermalBridgeType
@@ -743,7 +744,7 @@ class Heating():
 
         lazy_radiation_msg = u" (∾ {})".format( round(sun_radiation_lazy / 60.0, 1) ) if sun_radiation_lazy != None else ""
         light_level_msg = u", {} lux".format( int(sun_light_level) ) if sun_light_level != None else ""
-        debug_info = u"🌍 Az {}° • El {}{}° ⛅ Clouds {:.1f} 🌞 Sun {}{} W/min{}{}".format(sdi["azimut"], sdi["elevation"], sdi["min_elevation"], cr.getCloudCover(), sdi["effective_radiation"], lazy_radiation_msg, light_level_msg, sdi["active"])
+        debug_info = u"🌍 Az {}° • El {}{}° ⛅ Clouds {} 🌞 Sun {}{} W/min{}{}".format(sdi["azimut"], sdi["elevation"], sdi["min_elevation"], FormatHelper.format(cr.getCloudCover(), 1), sdi["effective_radiation"], lazy_radiation_msg, light_level_msg, sdi["active"])
 
         self.logger.info(u"{}: {}".format(prefix, debug_info))
         

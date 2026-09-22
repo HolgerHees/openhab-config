@@ -1,6 +1,9 @@
 from datetime import datetime, timedelta
 import time
 
+from custom.format import FormatHelper
+
+
 class ChargingHelper:
     def __init__(self, stock_price_persistence ):
         self.stock_price_persistence = stock_price_persistence
@@ -22,7 +25,7 @@ class ChargingHelper:
                 max_diff_key = _slot_key - slot_key
                 max_diff_value = _slot_value - slot_value
 
-                diff_key = key - slot_key
+                diff_key = max(key, slot_key) - slot_key
 
                 slot_value += (max_diff_value * (diff_key / max_diff_key))
                 break
@@ -133,9 +136,9 @@ class ChargingHelper:
             hours, remainder = divmod(len(remaining_slots) * 900, 3600)
             minutes, _ = divmod(remainder, 60)
 
-            price_msg = "{:.2f}-{:.2f}".format(min_price, max_price) if min_price != max_price else "{:.2f}".format(min_price)
+            price_msg = "{}-{}".format(FormatHelper.format(min_price, 2), FormatHelper.format(max_price, 2)) if min_price != max_price else "{}".format(FormatHelper.format(min_price, 2))
             between_msg = "{} and {}".format(remaining_slots[0]["start"].strftime('%H:%M'), remaining_slots[-1]["end"].strftime('%H:%M'))
-            details_msg = "🔋 Total {:.2f}kWh 💰 Price {}€/kWh 🕐 Between {} • Duration {:02d}:{:02d} ({} slots)".format(charged_enery, price_msg, between_msg, hours, minutes, len(remaining_slots))
+            details_msg = "🔋 Total {}kWh 💰 Price {}€/kWh 🕐 Between {} • Duration {:02d}:{:02d} ({} slots)".format(FormatHelper.format(charged_enery, 2), price_msg, between_msg, hours, minutes, len(remaining_slots))
 
         return [active_slot, next_slot, details_msg]
 
@@ -150,11 +153,11 @@ class ChargingHelper:
             active_slot, next_slot, details_msg = self.calculateRemainingSlots(start_time, end_time, current_time, current_energy_soc, target_energy_soc, min_charging_power, max_charging_power, charging_callback)
             if active_slot is not None:
                 requested_power = active_slot["charging_power"]
-                state_msg = "for {:.2f}€/kWh".format(active_slot["price"])
+                state_msg = "for {}€/kWh".format(FormatHelper.format(active_slot["price"], 2))
             else:
                 state_msg = "no slot matches"
 
             if next_slot is not None:
-                next_state_msg = "next slot at {} with {:.2f}kWh for {:.2f}€/kWh".format(next_slot["start"].strftime('%H:%M'), next_slot["charging_power"], next_slot["price"])
+                next_state_msg = "next slot at {} with {}kWh for {}€/kWh".format(next_slot["start"].strftime('%H:%M'), FormatHelper.format(next_slot["charging_power"], 2), FormatHelper.format(next_slot["price"], 2))
 
         return [requested_power, state_msg, next_state_msg, details_msg]

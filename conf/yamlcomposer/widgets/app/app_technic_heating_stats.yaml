@@ -4,28 +4,69 @@ vars:
   uid: app_technic_heating_stats
   title: Technik Heizung Statistiken
   slots:
+
     - !include
       file: ../layout/box.inc.yaml
       vars:
-        title: Solar Status
+        title: Thermal Total
         slots:
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Gesamt heute", item: "pGF_Utilityroom_Heatpump_Statistik_Gesamt_heute",  icon: "oh:selfenergy"}}
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Gesamt gestern", item: "pGF_Utilityroom_Heatpump_Statistik_Gesamt_gestern",  icon: "oh:selfenergy"}}
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Gesamt monat", item: "pGF_Utilityroom_Heatpump_Statistik_Gesamt_monat",  icon: "oh:selfenergy"}}
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Gesamt jahr", item: "pGF_Utilityroom_Heatpump_Statistik_Gesamt_jahr",  icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "JAZ", item: "pGF_Utilityroom_Heatpump_Statistik_JAZ",  icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heute", item: "pGF_Utilityroom_Heatpump_Statistik_Daily_Production",  icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Dieses Jahr", item: "pGF_Utilityroom_Heatpump_Statistik_Annual_Production_Msg", icon: "oh:selfenergy_grid_in"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Letztes Jahr", item: "pGF_Utilityroom_Heatpump_Statistik_Annual_Production_Last", icon: "oh:selfenergy_grid_in"}}
 
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heizen heute", item: "pGF_Utilityroom_Heatpump_Statistik_Heizen_heute",  icon: "oh:selfenergy"}}
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heizen gestern", item: "pGF_Utilityroom_Heatpump_Statistik_Heizen_gestern",  icon: "oh:selfenergy"}}
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heizen monat", item: "pGF_Utilityroom_Heatpump_Statistik_Heizen_monat",  icon: "oh:selfenergy"}}
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heizen jahr", item: "pGF_Utilityroom_Heatpump_Statistik_Heizen_jahr",  icon: "oh:selfenergy"}}
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Thermal Heizen
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "JAZ", item: "pGF_Utilityroom_Heatpump_Statistik_Heizen_JAZ",  icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heute", item: "pGF_Utilityroom_Heatpump_Statistik_Heizen_Daily_Production",  icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Dieses Jahr", item: "pGF_Utilityroom_Heatpump_Statistik_Heizen_Annual_Production_Msg", icon: "oh:selfenergy_grid_in"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Letztes Jahr", item: "pGF_Utilityroom_Heatpump_Statistik_Heizen_Annual_Production_Last", icon: "oh:selfenergy_grid_in"}}
 
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "WW heute", item: "pGF_Utilityroom_Heatpump_Statistik_WW_heute",  icon: "oh:selfenergy"}}
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "WW gestern", item: "pGF_Utilityroom_Heatpump_Statistik_WW_gestern",  icon: "oh:selfenergy"}}
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "WW monat", item: "pGF_Utilityroom_Heatpump_Statistik_WW_monat",  icon: "oh:selfenergy"}}
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "WW jahr", item: "pGF_Utilityroom_Heatpump_Statistik_WW_jahr",  icon: "oh:selfenergy"}}
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Thermal WW
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "JAZ", item: "pGF_Utilityroom_Heatpump_Statistik_WW_JAZ",  icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heute", item: "pGF_Utilityroom_Heatpump_Statistik_WW_Daily_Production",  icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Dieses Jahr", item: "pGF_Utilityroom_Heatpump_Statistik_WW_Annual_Production_Msg", icon: "oh:selfenergy_grid_in"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Letztes Jahr", item: "pGF_Utilityroom_Heatpump_Statistik_WW_Annual_Production_Last", icon: "oh:selfenergy_grid_in"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Wärmezähler
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heizen (Aktuell)", item: "pGF_Utilityroom_Heatpump_HW_Energy",  icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "WW (Aktuell)", item: "pGF_Utilityroom_Heatpump_WW_Energy",  icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Zählerstand (Gesamt)", item: "pGF_Utilityroom_Heatpump_Statistik_Total_Production",  icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Zählerstand (Heizen)", item: "pGF_Utilityroom_Heatpump_Statistik_Heizen_Total_Production",  icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Zählerstand (WW)", item: "pGF_Utilityroom_Heatpump_Statistik_WW_Total_Production",  icon: "oh:selfenergy"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Debug (MODBUS)
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "th. Gesamt heute", item: "pGF_Utilityroom_Heatpump_Statistik_Gesamt_heute",  icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "th. Gesamt gestern", item: "pGF_Utilityroom_Heatpump_Statistik_Gesamt_gestern",  icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "th. Gesamt monat", item: "pGF_Utilityroom_Heatpump_Statistik_Gesamt_monat",  icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "th. Gesamt jahr", item: "pGF_Utilityroom_Heatpump_Statistik_Gesamt_jahr",  icon: "oh:selfenergy"}}
+
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "th. Heizen heute", item: "pGF_Utilityroom_Heatpump_Statistik_Heizen_heute",  icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "th. Heizen gestern", item: "pGF_Utilityroom_Heatpump_Statistik_Heizen_gestern",  icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "th. Heizen monat", item: "pGF_Utilityroom_Heatpump_Statistik_Heizen_monat",  icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "th. Heizen jahr", item: "pGF_Utilityroom_Heatpump_Statistik_Heizen_jahr",  icon: "oh:selfenergy"}}
+
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "th. WW heute", item: "pGF_Utilityroom_Heatpump_Statistik_WW_heute",  icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "th. WW gestern", item: "pGF_Utilityroom_Heatpump_Statistik_WW_gestern",  icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "th. WW monat", item: "pGF_Utilityroom_Heatpump_Statistik_WW_monat",  icon: "oh:selfenergy"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "th. WW jahr", item: "pGF_Utilityroom_Heatpump_Statistik_WW_jahr",  icon: "oh:selfenergy"}}
 
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Elektro heute", item: "pGF_Utilityroom_Heatpump_Statistik_Elektro_heute",  icon: "oh:selfenergy"}}
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Elektro gestern", item: "pGF_Utilityroom_Heatpump_Statistik_Elektro_gestern",  icon: "oh:selfenergy"}}
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Elektro monat", item: "pGF_Utilityroom_Heatpump_Statistik_Elektro_monat",  icon: "oh:selfenergy"}}
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Elektro jahr", item: "pGF_Utilityroom_Heatpump_Statistik_Elektro_jahr",  icon: "oh:selfenergy"}}
-

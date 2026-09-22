@@ -1,11 +1,7 @@
 from openhab import rule, Registry
 from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger
 
-from datetime import datetime
-
-from shared.toolbox import ToolboxHelper
-
-import scope
+from custom.energy import EnergyHelper
 
 
 #start_of_the_day = datetime.now().astimezone().replace(hour=0, minute=0, second=0, microsecond=0)
@@ -21,23 +17,17 @@ start_electricity_meter_offset = 0
 )
 class MeterConsumption:
     def execute(self, module, input):
-        consumption = start_electricity_meter_offset
-        consumption += Registry.getItemState("pGF_Utilityroom_Electricity_Comfoair_Meter_Consumption").doubleValue()
-        consumption = round(consumption,3)
-
-
-        consumption_saved = Registry.getItemState("pGF_Utilityroom_Electricity_State_Comfoair_Total_Consumption",scope.DecimalType(0.0)).doubleValue()
-        if consumption < consumption_saved:
-            new_offset = consumption_saved - ( consumption - start_electricity_meter_offset)
-            self.logger.error("pGF_Utilityroom_Electricity_State_Comfoair_Total_Consumption: Calculation is wrong ('{}' < '{}'). Set 'start offset' to '{}'".format(consumption, consumption_saved, new_offset ))
-            return
-
-        # *** Gesamtverbrauch ***
-        Registry.getItem("pGF_Utilityroom_Electricity_State_Comfoair_Total_Consumption").postUpdate(consumption)
-
-        # *** Tagesverbrauch ***
-        consumption_today_morning = ToolboxHelper.getPersistedState("pGF_Utilityroom_Electricity_State_Comfoair_Total_Consumption", datetime.now().astimezone().replace(hour=0, minute=0, second=0, microsecond=0) ).doubleValue()
-        Registry.getItem("pGF_Utilityroom_Electricity_State_Comfoair_Daily_Consumption").postUpdateIfDifferent(consumption - consumption_today_morning)
+        EnergyHelper.calculateStats(
+          logger                = self.logger,
+          meter_value           = Registry.getItemState("pGF_Utilityroom_Electricity_Comfoair_Meter_Consumption").doubleValue(),
+          meter_offset          = start_electricity_meter_offset,
+          total_item            = "pGF_Utilityroom_Electricity_State_Comfoair_Total_Consumption",
+          daily_item            = "pGF_Utilityroom_Electricity_State_Comfoair_Daily_Consumption",
+          annual_current_item   = "pGF_Utilityroom_Electricity_State_Comfoair_Annual_Consumption",
+          annual_forecast_item  = "pGF_Utilityroom_Electricity_State_Comfoair_Annual_Consumption_Forecast",
+          annual_last_year_item = "pGF_Utilityroom_Electricity_State_Comfoair_Annual_Consumption_Last",
+          annual_message_item   = "pGF_Utilityroom_Electricity_State_Comfoair_Annual_Consumption_Msg"
+        )
 
 @rule(
     triggers = [

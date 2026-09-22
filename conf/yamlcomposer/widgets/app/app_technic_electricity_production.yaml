@@ -10,7 +10,9 @@ vars:
         title: Gesamt
         slots:
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Leistung", item: "pGF_Garage_Solar_Inverter_ProductionActivePower", icon: "oh:selfenergy_solar"}}
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Erzeugung (Heute)", item: "pGF_Utilityroom_Electricity_State_Daily_Production", icon: "oh:selfenergy_solar"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heute", item: "pGF_Utilityroom_Electricity_State_Daily_Production", icon: "oh:selfenergy_solar"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Dieses Jahr", item: "pGF_Utilityroom_Electricity_State_Annual_Production_Msg", icon: "oh:selfenergy_grid_in"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Letztes Jahr", item: "pGF_Utilityroom_Electricity_State_Annual_Production_Last", icon: "oh:selfenergy_grid_in"}}
 
     - !include
       file: ../layout/box.inc.yaml

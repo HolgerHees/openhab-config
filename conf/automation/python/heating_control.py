@@ -4,6 +4,7 @@ from openhab.actions import Transformation
 
 from shared.toolbox import ToolboxHelper
 
+from custom.format import FormatHelper
 from custom.heating.heating import Heating
 from custom.heating.house import ThermalStorageType, ThermalBridgeType, Wall, Door, Window, Room
 from custom.heating import HeatingHelper
@@ -601,7 +602,6 @@ class Main:
         azimut, elevation, min_elevation, _ = SunRadiation.getSunData( now )
         if elevation >= min_elevation:
             if azimut >= 120:
-                #self.logger.info(u"Sun     : {:.1f} W/min ({:.1f} W/min)".format(effective_radiation_short_term,effective_radiation_long_term))
                 # glare protection during sandra's workdays
                 needed_sunprotection = azimut >= 180 \
                     and messured_light_level_short_term > 15000 and messured_light_level_long_term > 15000 \

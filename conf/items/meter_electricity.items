@@ -6,17 +6,17 @@ Number:Energy pGF_Utilityroom_Electricity_Meter_Supply				"Zählerstand Lieferun
 // **** ELECTRICITY METER HEATPUMP ****
 Group  eGF_Utilityroom_Electricity_Heatpump_Meter                               "Stromzähler"        <selfinfo> (lGF_Utilityroom) ["Sensor"]
 Number:Energy pGF_Utilityroom_Electricity_Heatpump_Compressor_Meter_Consumption <selfenergy_meter> (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Energy"]           {channel="shelly:shellypro3em:energy-meter-headpump-compressor:device#totalEnergy"}
-Number:Power  pGF_Utilityroom_Electricity_Heatpump_Compressor_ActivePower       <selfenergy>       (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Power"]  {channel="shelly:shellypro3em:energy-meter-headpump-compressor:device#accumulatedWatts"}
+Number:Power  pGF_Utilityroom_Electricity_Heatpump_Compressor_ActivePower       <selfenergy>       (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Power"]  {channel="shelly:shellypro3em:energy-meter-headpump-compressor:device#accumulatedPower"}
 
 Number:Energy pGF_Utilityroom_Electricity_Heatpump_Electric_Meter_Consumption   <selfenergy_meter>   (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Energy"]           {channel="shelly:shellypro3em:energy-meter-headpump-electro:device#totalEnergy"}
-Number:Power  pGF_Utilityroom_Electricity_Heatpump_Electric_ActivePower         <selfenergy>         (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Power"]  {channel="shelly:shellypro3em:energy-meter-headpump-electro:device#accumulatedWatts"}
+Number:Power  pGF_Utilityroom_Electricity_Heatpump_Electric_ActivePower         <selfenergy>         (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Power"]  {channel="shelly:shellypro3em:energy-meter-headpump-electro:device#accumulatedPower"}
 
 Number:Energy pGF_Utilityroom_Electricity_Heatpump_Main_Meter_Consumption       <selfenergy_meter>   (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Energy"]           {channel="shelly:shellyproem50:energy-meter-headpump-main:device#totalEnergy"}
-Number:Power  pGF_Utilityroom_Electricity_Heatpump_Main_ActivePower             <selfenergy>         (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Power"]  {channel="shelly:shellyproem50:energy-meter-headpump-main:device#accumulatedWatts"}
+Number:Power  pGF_Utilityroom_Electricity_Heatpump_Main_ActivePower             <selfenergy>         (eGF_Utilityroom_Electricity_Heatpump_Meter) ["Power"]  {channel="shelly:shellyproem50:energy-meter-headpump-main:device#accumulatedPower"}
 
 // **** ELECTRICITY METER COMFOAIR ****
 Number:Energy pGF_Utilityroom_Electricity_Comfoair_Meter_Consumption            <selfenergy_meter>   (eGF_Utilityroom_Electricity_Comfoair_Meter) ["Energy"]           {channel="shelly:shellyproem50:energy-meter-comfoair:device#totalEnergy"}
-Number:Power  pGF_Utilityroom_Electricity_Comfoair_ActivePower                  <selfenergy>         (eGF_Utilityroom_Electricity_Comfoair_Meter) ["Power"]  {channel="shelly:shellyproem50:energy-meter-comfoair:device#accumulatedWatts"}
+Number:Power  pGF_Utilityroom_Electricity_Comfoair_ActivePower                  <selfenergy>         (eGF_Utilityroom_Electricity_Comfoair_Meter) ["Power"]  {channel="shelly:shellyproem50:energy-meter-comfoair:device#accumulatedPower"}
 
 // **** SOLAR ****
 Group  eGF_Garage_Solar                     "Solaranlage"             <selfinfo> (lGF_Garage) ["Sensor"]
@@ -115,21 +115,32 @@ Group  pGF_Utilityroom_Electricity_State                                   "Stro
 
 Number:Energy pGF_Utilityroom_Electricity_State_Total_Demand               "Zählerstand Bezug [%.1f KWh]"		<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
 Number:Energy pGF_Utilityroom_Electricity_State_Daily_Demand               "Tagesbezug [%.1f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
-Number:Energy pGF_Utilityroom_Electricity_State_Annual_Demand_Current      "Jahresbezug Aktuell [%.1f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
-Number:Energy pGF_Utilityroom_Electricity_State_Annual_Demand_Forecast     "Jahresbezug Hochrechnung [%s]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
-Number:Energy pGF_Utilityroom_Electricity_State_Annual_Demand_Last         "Jahresbezug Zuletzt [%s]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Annual_Demand_Current      "Jahresbezug [%.0f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Annual_Demand_Forecast     "Jahresbezug (Hochrechnung) [%.0f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Annual_Demand_Last         "Jahresbezug (Letztes Jahr) [%.0f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+String        pGF_Utilityroom_Electricity_State_Annual_Demand_Msg          "Jahresverbrauch [%s KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
 
 Number:Energy pGF_Utilityroom_Electricity_State_Total_Supply               "Zählerstand Lieferung [%.1f KWh]"	<selfenergy_grid_out> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
 Number:Energy pGF_Utilityroom_Electricity_State_Daily_Supply               "Tageslieferung [%.1f KWh]"	<selfenergy_grid_out> (pGF_Utilityroom_Electricity_State) ["Point"]
-Number:Energy pGF_Utilityroom_Electricity_State_Annual_Supply_Current      "Jahreslieferung Aktuell [%.1f KWh]"	<selfenergy_grid_out> (pGF_Utilityroom_Electricity_State) ["Point"]
-Number:Energy pGF_Utilityroom_Electricity_State_Annual_Supply_Forecast     "Jahreslieferung Hochrechnung [%s]"	<selfenergy_grid_out> (pGF_Utilityroom_Electricity_State) ["Point"]
-Number:Energy pGF_Utilityroom_Electricity_State_Annual_Supply_Last         "Jahreslieferung Zuletzt [%s]"	<selfenergy_grid_out> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Annual_Supply_Current      "Jahreslieferung [%.0f KWh]"	<selfenergy_grid_out> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Annual_Supply_Forecast     "Jahreslieferung (Hochrechnung) [%.0f KWh]"	<selfenergy_grid_out> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Annual_Supply_Last         "Jahreslieferung (Letztes Jahr) [%.0f KWh]"	<selfenergy_grid_out> (pGF_Utilityroom_Electricity_State) ["Point"]
+String        pGF_Utilityroom_Electricity_State_Annual_Supply_Msg          "Jahresverbrauch [%s KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
 
 Number:Energy pGF_Utilityroom_Electricity_State_Total_Consumption          "Zählerstand Verbrauch [%.1f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
-Number:Energy pGF_Utilityroom_Electricity_State_Daily_Consumption          "Tagesverbrauch [%.2f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Daily_Consumption          "Tagesverbrauch [%.1f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Annual_Consumption         "Jahresverbrauch [%.0f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Annual_Consumption_Forecast   "Jahresverbrauch (Forecast) [%.0f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Annual_Consumption_Last "Jahresverbrauch (Letztes Jahr) [%.0f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+String        pGF_Utilityroom_Electricity_State_Annual_Consumption_Msg "Jahresverbrauch [%s KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
 
 Number:Energy pGF_Utilityroom_Electricity_State_Total_Production           "Zählerstand Ertrag [%.1f KWh]"	<selfenergy_grid_out> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
 Number:Energy pGF_Utilityroom_Electricity_State_Daily_Production           "Tagesertrag [%.1f kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Annual_Production         "Jahresverbrauch [%.0f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Annual_Production_Forecast   "Jahresverbrauch (Forecast) [%.0f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Annual_Production_Last "Jahresverbrauch (Letztes Jahr) [%.0f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+String        pGF_Utilityroom_Electricity_State_Annual_Production_Msg "Jahresverbrauch [%s KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+
 Number:Energy pGF_Utilityroom_Electricity_State_Total_East_Production      "Zählerstand Ertrag Ost [%.1f KWh]"	<selfenergy_grid_out> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
 Number:Energy pGF_Utilityroom_Electricity_State_Daily_East_Production      "Tagesertrag Ost [%.1f kWh]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
 Number:Energy pGF_Utilityroom_Electricity_State_Total_South_Production     "Zählerstand Ertrag Süd [%.1f KWh]"	<selfenergy_grid_out> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
@@ -139,25 +150,46 @@ Number:Energy pGF_Utilityroom_Electricity_State_Daily_West_Production      "Tage
 
 Number:Energy pGF_Utilityroom_Electricity_State_House_Total_Consumption    "Zählerstand Verbrauch [%.1f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
 Number:Energy pGF_Utilityroom_Electricity_State_House_Daily_Consumption    "Tagesverbrauch [%.1f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
-Number:Power  pGF_Utilityroom_Electricity_State_House_ActivePower          "Verbrauch [%d W]"   <selfenergy>       (pGF_Utilityroom_Electricity_State) ["Power"]
+Number:Energy pGF_Utilityroom_Electricity_State_House_Annual_Consumption   "Jahresverbrauch [%.0f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_House_Annual_Consumption_Forecast   "Jahresverbrauch (Forecast) [%.0f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_House_Annual_Consumption_Last "Jahresverbrauch (Letztes Jahr) [%.0f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+String        pGF_Utilityroom_Electricity_State_House_Annual_Consumption_Msg "Jahresverbrauch [%s KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Power  pGF_Utilityroom_Electricity_State_House_ActivePower          "Verbrauch [%.0f W]"   <selfenergy>       (pGF_Utilityroom_Electricity_State) ["Power"]
 
 Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Total_Consumption "Zählerstand Verbrauch [%.1f KWh]"		<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
 Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Daily_Consumption "Tagesverbrauch [%.1f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Annual_Consumption "Jahresverbrauch [%.1f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Annual_Consumption_Forecast   "Jahresverbrauch (Forecast) [%.0f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Annual_Consumption_Last "Jahresverbrauch (Letztes Jahr) [%.0f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+String        pGF_Utilityroom_Electricity_State_Heatpump_Annual_Consumption_Msg "Jahresverbrauch [%s KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
 
-Number:Power  pGF_Utilityroom_Electricity_State_Heatpump_ActivePower       "Verbrauch [%d W]"   <selfenergy>       (pGF_Utilityroom_Electricity_State) ["Power"]
-Number:Power  pGF_Utilityroom_Electricity_State_Heatpump_Main_ActivePower "Verbrauch [%d W]"   <selfenergy>       (pGF_Utilityroom_Electricity_State) ["Power"]
-Number:Power  pGF_Utilityroom_Electricity_State_Heatpump_Compressor_ActivePower "Verbrauch [%d W]"   <selfenergy>       (pGF_Utilityroom_Electricity_State) ["Power"]
-Number:Power  pGF_Utilityroom_Electricity_State_Heatpump_Electric_ActivePower "Verbrauch [%d W]"   <selfenergy>       (pGF_Utilityroom_Electricity_State) ["Power"]
+Number:Power  pGF_Utilityroom_Electricity_State_Heatpump_ActivePower       "Verbrauch [%.0f W]"   <selfenergy>       (pGF_Utilityroom_Electricity_State) ["Power"]
+Number:Power  pGF_Utilityroom_Electricity_State_Heatpump_Main_ActivePower "Verbrauch [%.0f W]"   <selfenergy>       (pGF_Utilityroom_Electricity_State) ["Power"]
+Number:Power  pGF_Utilityroom_Electricity_State_Heatpump_Compressor_ActivePower "Verbrauch [%.0f W]"   <selfenergy>       (pGF_Utilityroom_Electricity_State) ["Power"]
+Number:Power  pGF_Utilityroom_Electricity_State_Heatpump_Electric_ActivePower "Verbrauch [%.0f W]"   <selfenergy>       (pGF_Utilityroom_Electricity_State) ["Power"]
 
 Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Heating_Total_Consumption "Zählerstand Verbrauch [%.1f KWh]"		<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
 Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Heating_Daily_Consumption "Tagesverbrauch [%.1f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Heating_Annual_Consumption "Jahresverbrauch [%.1f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Heating_Annual_Consumption_Forecast   "Jahresverbrauch (Forecast) [%.0f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Heating_Annual_Consumption_Last "Jahresverbrauch (Letztes Jahr) [%.0f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+String        pGF_Utilityroom_Electricity_State_Heatpump_Heating_Annual_Consumption_Msg "Jahresverbrauch [%s KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
 
 Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Water_Total_Consumption   "Zählerstand Verbrauch [%.1f KWh]"		<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
 Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Water_Daily_Consumption   "Tagesverbrauch [%.1f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Water_Annual_Consumption "Jahresverbrauch [%.1f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Water_Annual_Consumption_Forecast   "Jahresverbrauch (Forecast) [%.0f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Heatpump_Water_Annual_Consumption_Last "Jahresverbrauch (Letztes Jahr) [%.0f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+String        pGF_Utilityroom_Electricity_State_Heatpump_Water_Annual_Consumption_Msg "Jahresverbrauch [%s KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
 
 Number:Energy pGF_Utilityroom_Electricity_State_Comfoair_Total_Consumption "Zählerstand Verbrauch [%.1f KWh]"		<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State,gPersistance_Chart,gPersistance_History) ["Point"]
 Number:Energy pGF_Utilityroom_Electricity_State_Comfoair_Daily_Consumption "Tagesverbrauch [%.1f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
-Number:Power  pGF_Utilityroom_Electricity_State_Comfoair_ActivePower       "Verbrauch [%d W]"   <selfenergy>       (pGF_Utilityroom_Electricity_State) ["Power"]
+Number:Energy pGF_Utilityroom_Electricity_State_Comfoair_Annual_Consumption "Jahresverbrauch [%.0f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Comfoair_Annual_Consumption_Forecast   "Jahresverbrauch (Forecast) [%.0f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number:Energy pGF_Utilityroom_Electricity_State_Comfoair_Annual_Consumption_Last "Jahresverbrauch (Letztes Jahr) [%.0f KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+String        pGF_Utilityroom_Electricity_State_Comfoair_Annual_Consumption_Msg "Jahresverbrauch [%s KWh]"	<selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
+
+Number:Power  pGF_Utilityroom_Electricity_State_Comfoair_ActivePower       "Verbrauch [%.0f W]"   <selfenergy>       (pGF_Utilityroom_Electricity_State) ["Power"]
 
 Number pGF_Utilityroom_Electricity_State_Autarky                           "Autarkie [%d %%]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
 Number pGF_Utilityroom_Electricity_State_Ratio                             "Eigenverbrauch [%d %%]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]

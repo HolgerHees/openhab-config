@@ -11,9 +11,8 @@ vars:
         slots:
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Aktuell", item: "pGF_Garage_Solar_Inverter_SellToGridPower", icon: "oh:selfenergy_grid_out"}}
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Heute", item: "pGF_Utilityroom_Electricity_State_Daily_Supply", icon: "oh:selfenergy_grid_out"}}
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Dieses Jahr", item: "pGF_Utilityroom_Electricity_State_Annual_Supply_Current", icon: "oh:selfenergy_grid_out"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Dieses Jahr", item: "pGF_Utilityroom_Electricity_State_Annual_Supply_Msg", icon: "oh:selfenergy_grid_out"}}
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Letztes Jahr", item: "pGF_Utilityroom_Electricity_State_Annual_Supply_Last", icon: "oh:selfenergy_grid_out"}}
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Hochrechnung", item: "pGF_Utilityroom_Electricity_State_Annual_Supply_Forecast", icon: "oh:selfenergy_grid_out"}}
 
     - !include
       file: ../layout/box.inc.yaml

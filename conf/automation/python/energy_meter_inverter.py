@@ -4,6 +4,9 @@ from openhab.triggers import GenericCronTrigger, ItemStateChangeTrigger, SystemS
 from shared.toolbox import ToolboxHelper
 from shared.notification import NotificationHelper
 
+from custom.energy import EnergyHelper
+from custom.format import FormatHelper
+
 from datetime import datetime
 
 from configuration import customConfigs
@@ -11,8 +14,8 @@ from configuration import customConfigs
 import scope
 
 
-start_electricity_meter_consumption_offset = 52934.064 # 52934.018 #52933.991 #52933.980 #52933.973 #52933.935 #52933.913 #52933.875 #52933.840 #52933.821 #52933.754 #25559.396
-start_electricity_meter_production_offset = 16261.620 #16261.303 #16261.281 #16261.268 #16261.245 #16261.244 #16260.991
+start_electricity_meter_consumption_offset = 52934.145 # 52934.018 #52933.991 #52933.980 #52933.973 #52933.935 #52933.913 #52933.875 #52933.840 #52933.821 #52933.754 #25559.396
+start_electricity_meter_production_offset = 16261.692 #16261.303 #16261.281 #16261.268 #16261.245 #16261.244 #16260.991
 
 @rule(
     triggers = [
@@ -62,20 +65,17 @@ class StateMessage:
 )
 class DailyConsumptionTotalCalculation:
     def execute(self, module, input):
-        zaehler_stand_saved = Registry.getItemState("pGF_Utilityroom_Electricity_State_Total_Consumption",scope.DecimalType(0.0)).doubleValue()
-        zaehler_stand_current = round(Registry.getItemState("pGF_Garage_Solar_Inverter_ConsumptionTotalEnergy").doubleValue() + start_electricity_meter_consumption_offset, 3)
-
-        if zaehler_stand_current < zaehler_stand_saved:
-            new_offset = zaehler_stand_saved - ( zaehler_stand_current - start_electricity_meter_consumption_offset)
-            self.logger.error("pGF_Utilityroom_Electricity_State_Total_Consumption: Calculation is wrong ('{}' < '{}'). Set 'start_electricity_meter_consumption_offset' to '{}'".format(zaehler_stand_current, zaehler_stand_saved, new_offset ))
-            return
-
-        Registry.getItem("pGF_Utilityroom_Electricity_State_Total_Consumption").postUpdateIfDifferent(zaehler_stand_current)
-
-        start_of_the_day = datetime.now().astimezone().replace(hour=0, minute=0, second=0, microsecond=0)
-        zaehler_stand_old = ToolboxHelper.getPersistedState("pGF_Utilityroom_Electricity_State_Total_Consumption", start_of_the_day).doubleValue()
-        current_consumption = zaehler_stand_current - zaehler_stand_old
-        Registry.getItem("pGF_Utilityroom_Electricity_State_Daily_Consumption").postUpdateIfDifferent(current_consumption);
+        EnergyHelper.calculateStats(
+          logger                = self.logger,
+          meter_value           = Registry.getItemState("pGF_Garage_Solar_Inverter_ConsumptionTotalEnergy").doubleValue(),
+          meter_offset          = start_electricity_meter_consumption_offset,
+          total_item            = "pGF_Utilityroom_Electricity_State_Total_Consumption",
+          daily_item            = "pGF_Utilityroom_Electricity_State_Daily_Consumption",
+          annual_current_item   = "pGF_Utilityroom_Electricity_State_Annual_Consumption",
+          annual_forecast_item  = "pGF_Utilityroom_Electricity_State_Annual_Consumption_Forecast",
+          annual_last_year_item = "pGF_Utilityroom_Electricity_State_Annual_Consumption_Last",
+          annual_message_item   = "pGF_Utilityroom_Electricity_State_Annual_Consumption_Msg"
+        )
 
 @rule(
     triggers = [
@@ -85,19 +85,17 @@ class DailyConsumptionTotalCalculation:
 )
 class DailyProductionTotalCalculation:
     def execute(self, module, input):
-        zaehler_stand_saved = Registry.getItemState("pGF_Utilityroom_Electricity_State_Total_Production",scope.DecimalType(0.0)).doubleValue()
-        zaehler_stand_current = round(Registry.getItemState("pGF_Garage_Solar_Inverter_ProductionTotalEnergy").doubleValue() + start_electricity_meter_production_offset, 3)
-        if zaehler_stand_current < zaehler_stand_saved:
-            new_offset = zaehler_stand_saved - ( zaehler_stand_current - start_electricity_meter_production_offset)
-            self.logger.error("pGF_Utilityroom_Electricity_State_Total_Production: Calculation is wrong ('{}' < '{}'). Set 'start_electricity_meter_production_offset' to '{}'".format(zaehler_stand_current, zaehler_stand_saved, new_offset ))
-            return
-
-        Registry.getItem("pGF_Utilityroom_Electricity_State_Total_Production").postUpdateIfDifferent(zaehler_stand_current)
-
-        start_of_the_day = datetime.now().astimezone().replace(hour=0, minute=0, second=0, microsecond=0)
-        zaehler_stand_old = ToolboxHelper.getPersistedState("pGF_Utilityroom_Electricity_State_Total_Production", start_of_the_day).doubleValue()
-        current_production = zaehler_stand_current - zaehler_stand_old
-        Registry.getItem("pGF_Utilityroom_Electricity_State_Daily_Production").postUpdateIfDifferent(current_production);
+        EnergyHelper.calculateStats(
+          logger                = self.logger,
+          meter_value           = Registry.getItemState("pGF_Garage_Solar_Inverter_ProductionTotalEnergy").doubleValue(),
+          meter_offset          = start_electricity_meter_production_offset,
+          total_item            = "pGF_Utilityroom_Electricity_State_Total_Production",
+          daily_item            = "pGF_Utilityroom_Electricity_State_Daily_Production",
+          annual_current_item   = "pGF_Utilityroom_Electricity_State_Annual_Production",
+          annual_forecast_item  = "pGF_Utilityroom_Electricity_State_Annual_Production_Forecast",
+          annual_last_year_item = "pGF_Utilityroom_Electricity_State_Annual_Production_Last",
+          annual_message_item   = "pGF_Utilityroom_Electricity_State_Annual_Production_Msg"
+        )
 
 @rule(
     triggers = [
@@ -223,7 +221,7 @@ class StorageCalculation:
         else:
             energy_soc = Registry.getItemState("pGF_Garage_Solar_Storage_EnergySoc").floatValue()
 
-        Registry.getItem("pGF_Utilityroom_Electricity_State_Battery_Msg").postUpdate(u"{} W ({} % • {:.1f} kWh)".format(power, percent, energy_soc))
+        Registry.getItem("pGF_Utilityroom_Electricity_State_Battery_Msg").postUpdate(u"{} W ({} % • {} kWh)".format(power, percent, FormatHelper.format(energy_soc, 1)))
 
 @rule(
     runtime_measurement = False
@@ -256,4 +254,4 @@ class InfoMsg:
         current = Registry.getItemState(mapping[0]).intValue()
         daily = Registry.getItemState(mapping[1]).floatValue()
 
-        Registry.getItem(mapping[2]).postUpdate(u"{} W ({:.1f} kWh)".format(current, daily))
+        Registry.getItem(mapping[2]).postUpdate(u"{} W ({} kWh)".format(current, FormatHelper.format(daily, 1)))

@@ -52,9 +52,9 @@ vars:
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Vorlauf (zum Speicher)", item: "pGF_Utilityroom_Heatpump_WP_Vorlauftemperatur",  icon: "oh:selftemperature"}}
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Rücklauf (vom Speicher)", item: "pGF_Utilityroom_Heatpump_WP_Ruecklauftemperatur",  icon: "oh:selftemperature"}}
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Wärmepumpe", item: "pGF_Utilityroom_Heatpump_WP_Leistungsanforderung",  icon: "oh:selfruntime", target: {widget: "widget:app_technic_heating_heatpump"}}}
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Solarthermie", item: "pGF_Utilityroom_Heatpump_Solar_Power",  icon: "oh:selfsun", target: {widget: "widget:app_technic_heating_solar"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Solarthermie", item: "pGF_Utilityroom_Heatpump_Solar_Energy_Message",  icon: "oh:selfsun", target: {widget: "widget:app_technic_heating_solar"}}}
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Elektroheizung", item: "pGF_Utilityroom_Heatpump_WEZ2_Status", target: {widget: "widget:app_technic_heating_electro"}}}
-          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Statistik", icon: "oh:selfenergy", target: {widget: "widget:app_technic_heating_stats"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Statistik",item: "pGF_Utilityroom_Heatpump_Statistik_Msg", icon: "oh:selfenergy", target: {widget: "widget:app_technic_heating_stats"}}}
 
     - !include
       file: ../layout/box.inc.yaml

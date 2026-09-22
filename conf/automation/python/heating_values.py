@@ -5,6 +5,8 @@ from openhab.actions import Transformation
 from datetime import datetime, timedelta
 
 from shared.toolbox import ToolboxHelper
+from custom.energy import EnergyHelper
+from custom.format import FormatHelper
 
 import scope
 
@@ -70,6 +72,36 @@ class HeatpumpState:
 
 @rule(
     triggers = [
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_HW_State"),
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_WW_State"),
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_WP_Vorlauftemperatur"),
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_WP_Ruecklauftemperatur")
+    ]
+)
+class HeatpumpEnergy:
+    def execute(self, module, input):
+        hw_active = Registry.getItemState("pGF_Utilityroom_Heatpump_HW_State") == scope.ON
+        ww_active = Registry.getItemState("pGF_Utilityroom_Heatpump_WW_State") == scope.ON
+
+        out_temp = Registry.getItemState("pGF_Utilityroom_Heatpump_WP_Vorlauftemperatur").doubleValue()
+        in_temp = Registry.getItemState("pGF_Utilityroom_Heatpump_WP_Ruecklauftemperatur").doubleValue()
+        volumenstrom = 2.0 # 2.0 m³ => 80% TODO
+
+        energy_in_kw = volumenstrom * max(out_temp - in_temp, 0) * 1.162
+
+        Registry.getItem("pGF_Utilityroom_Heatpump_HW_Energy").postUpdateIfDifferent(energy_in_kw if hw_active else 0)
+        Registry.getItem("pGF_Utilityroom_Heatpump_WW_Energy").postUpdateIfDifferent(energy_in_kw if ww_active else 0)
+
+#now = datetime.now().astimezone()
+#energy_since_today_morning = Registry.getItem("pGF_Utilityroom_Heatpump_WW_Energy").getPersistence("jdbc").riemannSumBetween(now.replace(hour=0, minute=0, second=0, microsecond=0), now).doubleValue()
+#energy_since_today_morning = energy_since_today_morning / 60 / 60 # KWs => KWh
+#print(energy_since_today_morning)
+
+#Registry.getItem("pGF_Utilityroom_Heatpump_HW_Energy").postUpdateIfDifferent(0)
+#Registry.getItem("pGF_Utilityroom_Heatpump_WW_Energy").postUpdateIfDifferent(0)
+
+@rule(
+    triggers = [
         ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_HK2_State"),
         ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_HK2_Volumenstrom"),
     ]
@@ -80,7 +112,7 @@ class HeatpumpInfo:
         hk2_volume = Registry.getItemState("pGF_Utilityroom_Heatpump_HK2_Volumenstrom").doubleValue()
 
         if hk2_state and hk2_volume > 0:
-            info = "Pumpe an und HK {:.1f} l/min".format(hk2_volume)
+            info = "Pumpe an und HK {} l/min".format(FormatHelper.format(hk2_volume, 1))
         elif hk2_state:
             info = "Pumpe an und HK aus"
         elif hk2_volume > 0:
@@ -102,7 +134,7 @@ class HeatpumpVorlaufInfo:
         vorlauf_ist_wp = Registry.getItemState("pGF_Utilityroom_Heatpump_HK2_Vorlauftemperatur").doubleValue()
         vorlauf_soll_wp = Registry.getItemState("pGF_Utilityroom_Heatpump_HK2_Vorlaufsolltemperatur").doubleValue()
 
-        Registry.getItem("pGF_Utilityroom_Heatpump_HK2_Vorlauf_Info").postUpdateIfDifferent("{:.1f}/{:.1f} ({:.1f}) °C".format(vorlauf_sensor, vorlauf_ist_wp, vorlauf_soll_wp))
+        Registry.getItem("pGF_Utilityroom_Heatpump_HK2_Vorlauf_Info").postUpdateIfDifferent("{}/{} ({}) °C".format(FormatHelper.format(vorlauf_sensor, 1), FormatHelper.format(vorlauf_ist_wp, 1), FormatHelper.format(vorlauf_soll_wp, 1)))
 
 @rule(
     triggers = [
@@ -115,40 +147,42 @@ class HeatpumpWarmwasserInfo:
         ist_wp = Registry.getItemState("pGF_Utilityroom_Heatpump_WW_Warmwassertemperatur").doubleValue()
         soll_wp = Registry.getItemState("pGF_Utilityroom_Heatpump_WW_Warmwassersolltemperatur").doubleValue()
 
-        Registry.getItem("pGF_Utilityroom_Heatpump_WW_Info").postUpdateIfDifferent("{:.1f} ({:.1f}) °C".format(ist_wp, soll_wp))
+        Registry.getItem("pGF_Utilityroom_Heatpump_WW_Info").postUpdateIfDifferent("{} ({}) °C".format(FormatHelper.format(ist_wp, 1), FormatHelper.format(soll_wp, 1)))
+
+#now = datetime.now().astimezone()
+#today_morning = now.replace(hour=0, minute=0, second=0, microsecond=0)
+#energy_in_watt_second_since_today_morning = Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Power").getPersistence("jdbc").riemannSumBetween(today_morning, now).doubleValue()
+#energy_in_watt_hours_since_today_morning = round(energy_in_watt_second_since_today_morning / 60 / 60 / 1000, 3) # W/s => kW/h
+#energy_in_watt_hours_total_today_morning = ToolboxHelper.getPersistedState("pGF_Utilityroom_Heatpump_Solar_Energy_Total", today_morning ).doubleValue()
+#Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Energy_Total").postUpdate(energy_in_watt_hours_total_today_morning + energy_in_watt_hours_since_today_morning)
 
 @rule(
     triggers = [
         #SystemStartlevelTrigger(80),
-        GenericCronTrigger("0 */15 * * * ?")
+        GenericCronTrigger("0 */5 * * * ?")
     ]
 )
 class HeatpumpSolarEnergy:
     def execute(self, module, input):
         now = datetime.now().astimezone()
-        energy_in_watt_second = Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Power").getPersistence("jdbc").riemannSumBetween(now - timedelta(minutes=15), now).doubleValue()
+        today_morning = now.replace(hour=0, minute=0, second=0, microsecond=0)
 
-        energy = round(energy_in_watt_second / 60 / 60 / 1000, 3) # W/s => kW/h
+        energy_in_watt_second_since_today_morning = Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Power").getPersistence("jdbc").riemannSumBetween(today_morning, now).doubleValue()
 
-        #self.logger.info("SOLAR THERMIE DEBUG: ENERGY: {:.3f}".format(energy))
+        energy_in_watt_hours_since_today_morning = round(energy_in_watt_second_since_today_morning / 60 / 60 / 1000, 3) # W/s => kW/h
+        energy_in_watt_hours_total_today_morning = ToolboxHelper.getPersistedState("pGF_Utilityroom_Heatpump_Solar_Energy_Total", today_morning ).doubleValue()
 
-        zaehler_stand_current = Registry.getItemState("pGF_Utilityroom_Heatpump_Solar_Energy_Total").doubleValue()
-        zaehler_stand_current += energy
-
-        Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Energy_Total").postUpdate(zaehler_stand_current)
-
-        zaehler_stand_heute_morgen = ToolboxHelper.getPersistedState("pGF_Utilityroom_Heatpump_Solar_Energy_Total", now.replace(hour=0, minute=0, second=0, microsecond=0) ).doubleValue()
-        Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Energy_Daily").postUpdateIfDifferent(zaehler_stand_current - zaehler_stand_heute_morgen)
-
-#now = datetime.now().astimezone()
-#energy_in_watt_second = Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Power").getPersistence("jdbc").riemannSumBetween(now - timedelta(minutes=1), now).doubleValue()
-#print(energy_in_watt_second)
-#print(round(energy_in_watt_second / 60 / 60 / 1000, 3))
-
-#start_of_the_day = datetime.now().astimezone().replace(hour=0, minute=0, second=0, microsecond=0)
-#Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Energy_Total").getPersistence("jdbc").persist(start_of_the_day, 0)
-#print(ToolboxHelper.getPersistedState("pGF_Utilityroom_Heatpump_Solar_Energy_Total", datetime.now().astimezone().replace(hour=0, minute=0, second=0, microsecond=0) ).doubleValue())
-#print(Registry.getItemState("pGF_Utilityroom_Heatpump_Solar_Energy_Total").doubleValue())
+        EnergyHelper.calculateStats(
+          logger                = self.logger,
+          meter_value           = energy_in_watt_hours_total_today_morning + energy_in_watt_hours_since_today_morning,
+          meter_offset          = 0,
+          total_item            = "pGF_Utilityroom_Heatpump_Solar_Energy_Total",
+          daily_item            = "pGF_Utilityroom_Heatpump_Solar_Energy_Daily",
+          annual_current_item   = "pGF_Utilityroom_Heatpump_Solar_Energy_Annual",
+          annual_forecast_item  = "pGF_Utilityroom_Heatpump_Solar_Energy_Annual_Forecast",
+          annual_last_year_item = "pGF_Utilityroom_Heatpump_Solar_Energy_Annual_Last",
+          annual_message_item   = "pGF_Utilityroom_Heatpump_Solar_Energy_Annual_Msg"
+        )
 
 @rule(
     triggers = [
@@ -158,7 +192,7 @@ class HeatpumpSolarEnergy:
         ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_Solar_Temperature_Ruecklauf")
     ]
 )
-class HeatpumpSolarInfo:
+class HeatpumpSolarPower:
     def execute(self, module, input):
         #messured_power = Registry.getItemState("pGF_Utilityroom_Heatpump_Solar_Power_Current").doubleValue()
         pump_level = Registry.getItemState("pGF_Utilityroom_Heatpump_Solar_Pump_State").intValue()
@@ -222,6 +256,19 @@ class HeatpumpSolarInfo:
 
         Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Power").postUpdate(calculated_power)
 
-        #self.logger.info("SOLAR THERMIE DEBUG: MESSURED POWER: {:.1f}, CALC POWER: {:.1f}, Flow: {:.1f}, Vorlauf: {:.1f}, Rücklauf: {:.1f}, Diff: {:.1f}, Pump Level: {:.1f}".format(messured_power, calculated_power, current_flow, vorlauf, ruecklauf, temp_diff, pump_level))
+        #self.logger.info("SOLAR THERMIE DEBUG: MESSURED POWER: {}, CALC POWER: {}, Flow: {}, Vorlauf: {}, Rücklauf: {}, Diff: {}, Pump Level: {}".format(messured_power, calculated_power, current_flow, vorlauf, ruecklauf, temp_diff, pump_level))
 
 #Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Flow").postUpdate(2.1)
+
+@rule(
+    triggers = [
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_Solar_Energy_Current"),
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_Solar_Energy_Daily")
+    ]
+)
+class HeatpumpSolarMessage:
+    def execute(self, module, input):
+        current = Registry.getItemState("pGF_Utilityroom_Heatpump_Solar_Energy_Current").doubleValue()
+        daily = Registry.getItemState("pGF_Utilityroom_Heatpump_Solar_Energy_Daily").doubleValue()
+
+        Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Energy_Message").postUpdateIfDifferent("{:.0f} W • {} KWh".format(round(current * 1000, 0), FormatHelper.format(daily, 1)))
