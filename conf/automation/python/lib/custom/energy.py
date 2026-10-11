@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from openhab import Registry
 from shared.toolbox import ToolboxHelper
 
@@ -9,9 +9,6 @@ class EnergyHelper:
     @staticmethod
     def calculateStats(logger, meter_value, meter_offset, total_item, daily_item, annual_current_item, annual_forecast_item, annual_last_year_item, annual_message_item, ndigits = 3, ndigits_message = 0):
         now = datetime.now().astimezone()
-
-        if total_item not in EnergyHelper.last_update:
-            EnergyHelper.last_update[total_item] = now
 
         total_old = Registry.getItemState(total_item).doubleValue()
         if meter_offset >= 0:
@@ -28,7 +25,7 @@ class EnergyHelper:
 
         #logger.info("calculateStats item: {}, old: {}, new: {}".format(total_item, total_old, total_new))
 
-        if total_old == total_new and EnergyHelper.last_update[total_item].day == now.day:
+        if total_old == total_new and total_item in EnergyHelper.last_update and EnergyHelper.last_update[total_item].date() == now.date():
             #logger.info("SKIP calculateStats of item: {}".format(total_item))
             return total_old
 
@@ -72,7 +69,7 @@ class EnergyHelper:
         Registry.getItem(annual_message_item).postUpdate(msg)
         #logger.info("DEBUG: {} = {}".format(annual_message_item, msg))
 
-        if EnergyHelper.last_update[total_item].year != now.year:
+        if total_item in EnergyHelper.last_update and EnergyHelper.last_update[total_item].year != now.year:
             # *** Last Year ***
             Registry.getItem(annual_last_year_item).postUpdateIfDifferent(annual_last_year)
             #logger.info("DEBUG: {} = {}".format(annual_last_year_item, annual_last_year))

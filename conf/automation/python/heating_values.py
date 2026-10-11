@@ -150,11 +150,25 @@ class HeatpumpWarmwasserInfo:
         Registry.getItem("pGF_Utilityroom_Heatpump_WW_Info").postUpdateIfDifferent("{} ({}) °C".format(FormatHelper.format(ist_wp, 1), FormatHelper.format(soll_wp, 1)))
 
 #now = datetime.now().astimezone()
-#today_morning = now.replace(hour=0, minute=0, second=0, microsecond=0)
-#energy_in_watt_second_since_today_morning = Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Power").getPersistence("jdbc").riemannSumBetween(today_morning, now).doubleValue()
-#energy_in_watt_hours_since_today_morning = round(energy_in_watt_second_since_today_morning / 60 / 60 / 1000, 3) # W/s => kW/h
-#energy_in_watt_hours_total_today_morning = ToolboxHelper.getPersistedState("pGF_Utilityroom_Heatpump_Solar_Energy_Total", today_morning ).doubleValue()
-#Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Energy_Total").postUpdate(energy_in_watt_hours_total_today_morning + energy_in_watt_hours_since_today_morning)
+#slot_start = now.replace(year=2026, month=5, day=1, hour=0, minute=0, second=0, microsecond=0)
+
+#while slot_start < now:
+#    slot_end = slot_start + timedelta(days=1)
+
+#    energy_in_watt_seconds_slot = Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Power").getPersistence("jdbc").riemannSumBetween(slot_start, slot_end)
+#    if energy_in_watt_seconds_slot is None:
+#        print("SKIP {}".format(slot_start))
+#    else:
+#        energy_in_watt_hours_slot = round(energy_in_watt_seconds_slot.doubleValue() / 60 / 60 / 1000, 3) # W/s => kW/h
+#        energy_in_watt_hours_total = ToolboxHelper.getPersistedState("pGF_Utilityroom_Heatpump_Solar_Energy_Total", slot_start ).doubleValue()
+
+#        print("PROCESS {} {} {} {}".format(slot_start, slot_end, energy_in_watt_hours_total, energy_in_watt_hours_slot))
+
+#        Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Energy_Total").getPersistence("jdbc").persist(slot_end, round(energy_in_watt_hours_total + energy_in_watt_hours_slot, 3))
+
+#    slot_start = slot_start + timedelta(days=1)
+
+#Registry.getItem("pGF_Utilityroom_Heatpump_Solar_Energy_Total").postUpdate(17890.359)
 
 @rule(
     triggers = [

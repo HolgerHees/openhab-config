@@ -55,7 +55,7 @@ slots:
                       class:
                         - value
                       action: command
-                      actionCommand: =loop.entry[0]
+                      actionCommand: =loop.entry.split('=')[0]
                       actionItem: ${item}
                       class:
                         - "=items['${item}'].state == loop.entry.split('=')[0] ? 'button-active' : ''"

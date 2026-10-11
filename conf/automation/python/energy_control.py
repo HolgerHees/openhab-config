@@ -49,33 +49,35 @@ SOLAR_SAFETY_DAYS_LOOKUP = 2
 #SOLAR_SAFETY_TRESHOLD = 2.0 #1.5 # special logic applies only if 160% of needed energy is expected as solar
 SOLAR_CHARGE_ENDING_TRESHOLD = 0.66 # solar charging should be done, after 66% of total expected charge
 
+SLEEP_DURATION = 6
 MAX_CONSUMPTION_PER_DAY = 25.0
-BASE_DAY_CONSUMPTION_PER_HOUR = 1.0
 BASE_NIGHT_CONSUMPTION_PER_HOUR = 0.5
+BASE_DAY_CONSUMPTION_PER_HOUR = (MAX_CONSUMPTION_PER_DAY - (SLEEP_DURATION * BASE_NIGHT_CONSUMPTION_PER_HOUR)) / (24 - SLEEP_DURATION)
 
 CAR_MAX_CAPACITY = 50.0
 CAR_MAX_CHARGING_POWER = 10.0
 CAR_MIN_CHARGING_POWER = 1.0
 
-# 13.16°C => 2,0m² (26.09.2025)
-# -4.54°C => 9,5m² (17.02.2025)
-
-# DIFF: 17.7 => 7.5
-# DIFF: 1 => 0.423728813559
-
-#  17.88°C =>  0.00m²   |   0.00 =>  0.00
-# -20.00°C => 16.05m²   | -37.88 => 16.05
-
-HEATING_MAX_TEMPERATURE = 17.88
+# 18      =>      0.00
+# 11      =>      3.55
+# 9       =>      4.00
+# 6       =>      6.00
+#-6       =>      9.60
+#-8       =>      10.30
+#-20      =>      16.00
+HEATING_JAZ = 4.5
+HEATING_MAX_TEMPERATURE = 18.0
 HEATING_MIN_TEMPERATURE = -20.0
-HEATING_MAX_TEMPERATURE_DIFF = HEATING_MIN_TEMPERATURE - HEATING_MAX_TEMPERATURE
-HEATING_MAX_ENERGY = ( 16.05 * 11.0 ) / 4.0
-HEATING_WW_ENERGY = 1.0 #0.7
+#HEATING_MAX_ENERGY = ( 16.05 * 11.5 ) / HEATING_JAZ
+HEATING_MAX_ENERGY = ( 15.5 * 11.5 ) / HEATING_JAZ # - 0.5m³ (whater heating)
+
+HEATING_WW_JAZ = 3.05
+HEATING_WW_ENERGY = 1.4 # 2 times 0.7kw
 
 #COOLING_MAX_AVG_TEMPERATURE = 28.00
 #COOLING_MIN_AVG_TEMPERATURE = 20.00
 #COOLING_MAX_AVG_TEMPERATURE_DIFF = COOLING_MAX_AVG_TEMPERATURE - COOLING_MIN_AVG_TEMPERATURE
-VENTILATION_BASE_ENERGY = 0.5 # KW per day
+VENTILATION_BASE_ENERGY = 0.8 # KW per day
 COOLING_MIN_ENERGY = 4.0 # KW per day
 COOLING_MAX_ENERGY = 10.0 # KW per day
 COOLING_DIFF = 5.00
@@ -270,36 +272,43 @@ class StoragePower:
     TIMESPAN = 4
 
     def __init__(self):
-        self.next_cache_calculation = datetime.now().astimezone()
         self.next_temperature_calculation = datetime.now().astimezone()
+        self.avg_day_temperature_past = self.max_temperature_past = None
+        self.avg_day_temperature_today = self.max_temperature_today = None
+        self.avg_current_temperature = self.avg_expected_temperature = None
+        self.target_hk_temperature = self.target_ww_temperature = None
 
-        self.max_temperature_past = None
-        self.avg_day_temperature_past = None
-
-        self.avg_day_temperature_today = None
-        self.max_temperature_today = None
-
+        self.next_cache_calculation = datetime.now().astimezone()
         self.expected_solar_productions = None
-
-        self.avg_expected_temperature = None
 
         self.charging_helper = ChargingHelper(Registry.getItem("pGF_Utilityroom_Electricity_Stock_Price").getPersistence("jdbc"))
 
-    def initStorageCache(self, now):
+    def initStorageCache(self, now, sunrise):
         if now >= self.next_temperature_calculation:
-            self.avg_expected_temperature = Registry.getItem("pOutdoor_WeatherService_Temperature").getPersistence("jdbc").averageBetween(now, now + timedelta(hours=24)).doubleValue()
-            self.next_temperature_calculation = (now + timedelta(hours=1)).replace(minute=0,second=0, microsecond=0)
-
-        if now.day != self.next_cache_calculation.day or now >= self.next_cache_calculation:
-            forecast_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
-            forecast_end = forecast_start + timedelta(days=self.TIMESPAN)
-
             _start = (now - timedelta(hours=24))
             self.max_temperature_past = Registry.getItem("pOutdoor_WeatherStation_Temperature").getPersistence("jdbc").maximumBetween(_start, now).getState().doubleValue()
             self.avg_day_temperature_past = Registry.getItem("pOutdoor_WeatherStation_Temperature").getPersistence("jdbc").averageBetween(_start.replace(hour=8), _start.replace(hour=20)).doubleValue()
 
             self.max_temperature_today = Registry.getItem("pOutdoor_WeatherService_Temperature").getPersistence("jdbc").maximumBetween(now, now+timedelta(hours=24)).getState().doubleValue()
             self.avg_day_temperature_today = Registry.getItem("pOutdoor_WeatherStation_Temperature").getPersistence("jdbc").averageBetween(now.replace(hour=8), now.replace(hour=20)).doubleValue()
+
+            if now >= sunrise:
+                self.avg_current_temperature = Registry.getItem("pOutdoor_WeatherService_Temperature").getPersistence("jdbc").averageBetween(sunrise, sunrise + timedelta(hours=24)).doubleValue()
+                self.avg_expected_temperature = Registry.getItem("pOutdoor_WeatherService_Temperature").getPersistence("jdbc").averageBetween(sunrise + timedelta(hours=24), sunrise + timedelta(hours=48)).doubleValue()
+            else:
+                self.avg_current_temperature = Registry.getItem("pOutdoor_WeatherService_Temperature").getPersistence("jdbc").averageBetween(sunrise - timedelta(hours=24), sunrise).doubleValue()
+                self.avg_expected_temperature = Registry.getItem("pOutdoor_WeatherService_Temperature").getPersistence("jdbc").averageBetween(sunrise, sunrise + timedelta(hours=24)).doubleValue()
+
+            self.target_ww_temperature = max(Registry.getItemState("pGF_Utilityroom_Heatpump_WW_Warmwassersolltemperatur").doubleValue() - 5, 45)
+            self.target_hk_temperature = max(Registry.getItem("pGF_Utilityroom_Heatpump_HK2_Vorlaufsolltemperatur").getPersistence("jdbc").maximumBetween(now - timedelta(days=2), now).getState().doubleValue(), 27)
+
+            self.next_temperature_calculation = (now + timedelta(hours=1)).replace(minute=0,second=0, microsecond=0)
+            if now < sunrise and self.next_temperature_calculation > sunrise:
+                self.next_temperature_calculation = sunrise
+
+        if now >= self.next_cache_calculation:
+            forecast_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+            forecast_end = forecast_start + timedelta(days=self.TIMESPAN)
 
             east = Registry.getItem("pGF_Utilityroom_Electricity_State_Total_East_Production").getPersistence("jdbc").deltaBetween(forecast_start, forecast_end).doubleValue()
             south = Registry.getItem("pGF_Utilityroom_Electricity_State_Total_South_Production").getPersistence("jdbc").deltaBetween(forecast_start, forecast_end).doubleValue()
@@ -380,25 +389,58 @@ class StoragePower:
             # this is why we recalculate forcecast every hour at 7 past
             self.next_cache_calculation = (now + timedelta(hours=1)).replace(minute=7,second=0, microsecond=0)
 
-    def getExpectedTotalDemand(self, now, calculation_slot_end):
-        #total_consumption, evening_consumption_per_hour, sleep_consumption_per_hour
-
+    def _getExpectedHeatingDemand(self, avg_temperature):
         # House heating
         if Registry.getItemState("pGF_Utilityroom_Heatpump_Auto_Mode").intValue() == HeatingHelper.STATE_MODE_AUTO:
-          if self.avg_expected_temperature > HEATING_MAX_TEMPERATURE:
-              house_heating = 0
-          elif self.avg_expected_temperature < HEATING_MIN_TEMPERATURE:
-              house_heating = HEATING_MAX_ENERGY
-          else:
-              house_heating = ( self.avg_expected_temperature - HEATING_MAX_TEMPERATURE ) * HEATING_MAX_ENERGY / HEATING_MAX_TEMPERATURE_DIFF
+            if avg_temperature > HEATING_MAX_TEMPERATURE:
+                house_heating = 0
+            elif avg_temperature < HEATING_MIN_TEMPERATURE:
+                house_heating = HEATING_MAX_ENERGY
+            else:
+                max_diff = HEATING_MAX_TEMPERATURE - HEATING_MIN_TEMPERATURE
+                current_diff = HEATING_MAX_TEMPERATURE - avg_temperature
+                house_heating = round(current_diff * HEATING_MAX_ENERGY / max_diff, 1)
         else:
               house_heating = 0
 
-        # Water heating if current ww temperature not more then 5° above target ww temperature
-        current_ww_temperature = Registry.getItemState("pGF_Utilityroom_Heatpump_WW_Warmwassertemperatur").doubleValue()
-        target_ww_temperature = Registry.getItemState("pGF_Utilityroom_Heatpump_WW_Warmwassersolltemperatur").doubleValue()
-        if current_ww_temperature - target_ww_temperature < 5:
-            house_heating += HEATING_WW_ENERGY
+        # Garage plants heating
+        frost_guard_heating = ChargingHelper.findValueFromMap(avg_temperature, FROST_GUARD_HEATING_MAP)
+
+        return house_heating, frost_guard_heating
+
+    def _getDurationLeft(self, now, start, end, calculation_slot_end):
+        if end < start:
+            end += timedelta(days=1)
+
+        if end < calculation_slot_end - timedelta(days=1):
+            start += timedelta(days=1)
+            end += timedelta(days=1)
+
+        duration_total = (end - start).total_seconds() / 60 / 60
+
+        if start < calculation_slot_end and end > calculation_slot_end:
+            end = calculation_slot_end
+
+        #print(start, end, calculation_slot_end)
+
+        if start < now:
+            start = now
+        elif start < calculation_slot_end and end > calculation_slot_end:
+            end = calculation_slot_end
+
+        #print(start, end, calculation_slot_end)
+
+        duration_left = (end - start).total_seconds() / 60 / 60 if end > start else 0
+
+        return duration_total, duration_left
+
+    def getExpectedDemand(self, now, calculation_slot_end):
+        #_duration_total, _duration_left = self._getDurationLeft(calculation_slot_end.replace(hour=3,minute=0,second=0,microsecond=0), now.replace(hour=23,minute=0,second=0,microsecond=0), now.replace(hour=7,minute=0,second=0,microsecond=0), calculation_slot_end.replace(hour=6,minute=30,second=0,microsecond=0))
+        #print("3,5", _duration_total, _duration_left)
+        #_duration_total, _duration_left = self._getDurationLeft(now.replace(hour=23,minute=30,second=0,microsecond=0), now.replace(hour=23,minute=0,second=0,microsecond=0), now.replace(hour=7,minute=0,second=0,microsecond=0), calculation_slot_end.replace(hour=6,minute=30,second=0,microsecond=0))
+        #print("7", _duration_total, _duration_left)
+        #_duration_total, _duration_left = self._getDurationLeft(calculation_slot_end.replace(hour=7,minute=0,second=0,microsecond=0), now.replace(hour=23,minute=0,second=0,microsecond=0), now.replace(hour=6,minute=0,second=0,microsecond=0), calculation_slot_end.replace(hour=8,minute=0,second=0,microsecond=0))
+        #print("0", _duration_total, _duration_left)
 
         # Cooling / Ventilation
         house_cooling = VENTILATION_BASE_ENERGY
@@ -416,45 +458,91 @@ class StoragePower:
                 house_cooling += COOLING_MIN_ENERGY
 
         # Attic plants light
-        state = Registry.getItemState("pOther_Manual_State_Auto_Attic_Light").intValue()
-        indoor_plant_energy = (18 if state == 1 else 12) * ATTIC_LIGHT_ENERGY_PER_HOUR if state > 0 else 0
-
-        # Garage plants heating
-        outdoor_plant_energy = ChargingHelper.findValueFromMap(self.avg_expected_temperature, FROST_GUARD_HEATING_MAP)
+        _state = Registry.getItemState("pOther_Manual_State_Auto_Attic_Light").intValue()
+        indoor_plant_energy = (18 if _state == 1 else 12) * ATTIC_LIGHT_ENERGY_PER_HOUR if _state > 0 else 0
 
         # Garden plants irrigation
         ref_temp = max(self.avg_day_temperature_past, self.avg_day_temperature_today)
-        outdoor_plant_energy += ChargingHelper.findValueFromMap(ref_temp, OUTDOOR_WATERING_MAP)
+        outdoor_plant_energy = ChargingHelper.findValueFromMap(ref_temp, OUTDOOR_WATERING_MAP)
 
-        # DEBUG
-        msg = "🏠 Base {}kWh 🔥 Heating {}kWh 💨 Cooling {}kWh 🪴 Indoor {}kWh 🌳 Outdoor {}kWh".format(FormatHelper.format(MAX_CONSUMPTION_PER_DAY, 2), FormatHelper.format(house_heating, 2), FormatHelper.format(house_cooling, 2), FormatHelper.format(indoor_plant_energy, 2), FormatHelper.format(outdoor_plant_energy, 2))
+        # Water heating if current ww temperature not more then 5° above target ww temperature
+        top_energy = (250.0 * max(Registry.getItemState("pGF_Utilityroom_Heatpump_WW_Warmwassertemperatur").doubleValue() - self.target_ww_temperature, 0)) / 860
+        hotwater_buffer = top_energy / HEATING_WW_JAZ
 
-        total_consumption = MAX_CONSUMPTION_PER_DAY + house_heating + house_cooling + indoor_plant_energy + outdoor_plant_energy
+        middle_energy = (200.0 * max(Registry.getItemState("pGF_Utilityroom_Heatpump_WP_Weichentemperatur").doubleValue() - self.target_hk_temperature, 0)) / 860
+        bottom_energy = (200.0 * max(Registry.getItemState("pGF_Utilityroom_Heatpump_Solar_Temperature_Storage").doubleValue() - self.target_hk_temperature, 0)) / 860
+        heating_buffer = (middle_energy + bottom_energy) / HEATING_JAZ
 
-        # Consumption until calculation slot end
-        consumtion_until_calculation_slot_end = 0
+        #print("BUFFER WW", hotwater_buffer, "HK", heating_buffer)
 
-        day_consumption_per_hour = house_heating / 20 + house_cooling / 24 + ( indoor_plant_energy + outdoor_plant_energy ) / 18 # heating only during 20 hours, cooling during 24 hours, and the rest only during 18 hours
-        sleep_consumption_per_hour = house_heating / 20 + house_cooling / 24
+        ##############################################################################################################
+        # !!! Demand until slot end
 
-        wakeup = calculation_slot_end.replace(hour=7,minute=0,second=0,microsecond=0)
-        _sleep = calculation_slot_end.replace(hour=23,minute=0,second=0,microsecond=0) - timedelta(days=1)
-        _max_sleep_duration = (wakeup - _sleep).total_seconds() / 60 / 60
-        sleep_duration_in_hours = min((wakeup - now).total_seconds() / 60 / 60, _max_sleep_duration) if wakeup > now else 0
+        # 03:00 => 20:00
+        _ww_duration_total, _ww_duration_left = self._getDurationLeft(now, now.replace(hour=3,minute=0,second=0,microsecond=0), now.replace(hour=20,minute=0,second=0,microsecond=0), calculation_slot_end)
+        _hotwater_heating_until_slot_end = hotwater_heating_until_slot_end = (HEATING_WW_ENERGY / _ww_duration_total) * _ww_duration_left
+        if hotwater_buffer > hotwater_heating_until_slot_end:
+            hotwater_buffer -= hotwater_heating_until_slot_end
+            hotwater_heating_until_slot_end = 0
+        else:
+            hotwater_heating_until_slot_end -= hotwater_buffer
+            hotwater_buffer = 0
+        hotwater_offset = _hotwater_heating_until_slot_end - hotwater_heating_until_slot_end
 
-        if wakeup > calculation_slot_end:
-            # if still sleeping, remove  time already passed today morning
-            if now < wakeup - timedelta(days=1):
-                sleep_duration_in_hours -= (now - (calculation_slot_end - timedelta(days=1))).total_seconds() / 60 / 60
-            # remove today morning sleeping completly
-            else:
-                sleep_duration_in_hours -= (wakeup - calculation_slot_end).total_seconds() / 60 / 60
-        consumtion_until_calculation_slot_end += sleep_duration_in_hours * (BASE_NIGHT_CONSUMPTION_PER_HOUR + sleep_consumption_per_hour)
+        # 03:00 => 23:00
+        _hk_duration_total, _hk_duration_left = self._getDurationLeft(now, now.replace(hour=3,minute=0,second=0,microsecond=0), now.replace(hour=23,minute=0,second=0,microsecond=0), calculation_slot_end)
+        _house_heating, _frost_guard_heating = self._getExpectedHeatingDemand(self.avg_current_temperature)
+        _house_heating_until_slot_end = house_heating_until_slot_end = (_house_heating / _hk_duration_total) * _hk_duration_left
+        if heating_buffer > house_heating_until_slot_end:
+            heating_buffer -= house_heating_until_slot_end
+            house_heating_until_slot_end = 0
+        else:
+            house_heating_until_slot_end -= heating_buffer
+            heating_buffer = 0
+        heating_offset = _house_heating_until_slot_end - house_heating_until_slot_end
 
-        _duration_until_calculation_slot_end_in_hours = (calculation_slot_end - now).total_seconds() / 60 / 60
-        consumtion_until_calculation_slot_end += (_duration_until_calculation_slot_end_in_hours - sleep_duration_in_hours) * (BASE_DAY_CONSUMPTION_PER_HOUR + day_consumption_per_hour)
+        #print("BUFFER WW", hotwater_buffer, "HK", heating_buffer)
 
-        return total_consumption, consumtion_until_calculation_slot_end, msg
+        _duration_left = (calculation_slot_end - now).total_seconds() / 60 / 60
+        frostguard_heating_until_slot_end = (_frost_guard_heating / 24) * _duration_left
+        house_cooling_until_slot_end = (house_cooling / 24) * _duration_left
+
+        # 23:00 => 07:00
+        _sleep_duration_total, _sleep_duration_left = self._getDurationLeft(now, now.replace(hour=23,minute=0,second=0,microsecond=0), now.replace(hour=7,minute=0,second=0,microsecond=0), calculation_slot_end)
+
+        # full day and night
+        _day_duration = _duration_left - _sleep_duration_left
+        indoor_plant_consumption_until_slot_end = _day_duration * (indoor_plant_energy / (24 - _sleep_duration_total))
+        outdoor_plant_consumption_until_slot_end = _day_duration * (outdoor_plant_energy / (24 - _sleep_duration_total))
+        base_consumption_until_slot_end = (_day_duration * BASE_DAY_CONSUMPTION_PER_HOUR) + (_sleep_duration_left * BASE_NIGHT_CONSUMPTION_PER_HOUR)
+
+        # total until slot end
+        consumtion_until_calculation_slot_end = base_consumption_until_slot_end + hotwater_heating_until_slot_end + house_heating_until_slot_end + house_cooling_until_slot_end + frostguard_heating_until_slot_end + indoor_plant_consumption_until_slot_end + outdoor_plant_consumption_until_slot_end
+
+        hotwater_msg = "{}{}".format(FormatHelper.format(hotwater_heating_until_slot_end, 2), "(+{})".format(FormatHelper.format(hotwater_offset, 2)) if hotwater_offset > 0 else "")
+        heating_msg = "{}{}".format(FormatHelper.format(house_heating_until_slot_end, 2), "(+{})".format(FormatHelper.format(heating_offset, 2)) if heating_offset > 0 else "")
+        slot_end_msg = "🏠 Base {}kWh 💧 Water {}kWh 🔥 Heating {}kWh 💨 Cooling {}kWh 🪴 Indoor {}kWh 🌳 Outdoor {}kWh".format(FormatHelper.format(base_consumption_until_slot_end, 2), hotwater_msg, heating_msg, FormatHelper.format(house_cooling_until_slot_end, 2), FormatHelper.format(indoor_plant_consumption_until_slot_end, 2), FormatHelper.format(outdoor_plant_consumption_until_slot_end + frostguard_heating_until_slot_end, 2))
+
+        #print(hotwater_heating_until_slot_end, house_heating_until_slot_end, frostguard_heating_until_slot_end, house_cooling_until_slot_end, days_consumption_until_slot_end, night_consumption_until_slot_end)
+        #print(consumtion_until_calculation_slot_end)
+        #print(heating_buffer, hotwater_buffer)
+
+        ##############################################################################################################
+        # !!! Demand for tomorrow
+
+        _hotwater_heating = HEATING_WW_ENERGY
+        _hotwater_heating -= hotwater_buffer
+
+        _house_heating, _frost_guard_heating = self._getExpectedHeatingDemand(self.avg_expected_temperature)
+        _house_heating -= heating_buffer
+
+        total_consumption = MAX_CONSUMPTION_PER_DAY + _hotwater_heating + _house_heating + house_cooling + _frost_guard_heating + indoor_plant_energy + outdoor_plant_energy
+
+        hotwater_msg = "{}{}".format(FormatHelper.format(_hotwater_heating, 2), "(+{})".format(FormatHelper.format(hotwater_buffer, 2)) if hotwater_buffer > 0 else "")
+        heating_msg = "{}{}".format(FormatHelper.format(_house_heating, 2), "(+{})".format(FormatHelper.format(heating_buffer, 2)) if heating_buffer > 0 else "")
+        total_msg = "🏠 Base {}kWh 💧 Water {}kWh 🔥 Heating {}kWh 💨 Cooling {}kWh 🪴 Indoor {}kWh 🌳 Outdoor {}kWh".format(FormatHelper.format(MAX_CONSUMPTION_PER_DAY, 2), hotwater_msg, heating_msg, FormatHelper.format(house_cooling, 2), FormatHelper.format(indoor_plant_energy, 2), FormatHelper.format(outdoor_plant_energy + _frost_guard_heating, 2))
+
+        return total_consumption, total_msg, consumtion_until_calculation_slot_end, slot_end_msg
 
     def getStorageChargingPower(self, battery_soc):
         battery_percent = int(round(battery_soc * 100 / STORAGE_MAX_CAPACITY, 0))
@@ -665,8 +753,11 @@ class StoragePower:
         return value * 100 / STORAGE_MAX_CAPACITY
 
     def calculateStorageChargeLevel(self, now):
+        sunrise = Registry.getItemState("pOutdoor_Astro_Sunrise_Time").getZonedDateTime()
+        sunset = Registry.getItemState("pOutdoor_Astro_Sunset_Time").getZonedDateTime()
+
         # *** INIT Timeranges, Vars and Cache ***
-        self.initStorageCache(now)
+        self.initStorageCache(now, sunrise)
 
         debug_log_infos = []
 
@@ -676,9 +767,6 @@ class StoragePower:
         grid_charge_state_msg = max_solar_charge_info = "wrong time"
         grid_charge_next_state_msg = grid_charge_details_msg = None
 
-        sunrise = Registry.getItemState("pOutdoor_Astro_Sunrise_Time").getZonedDateTime()
-        sunset = Registry.getItemState("pOutdoor_Astro_Sunset_Time").getZonedDateTime()
-
         stock_price = Registry.getItem("pGF_Utilityroom_Electricity_Stock_Price").getPersistence("jdbc").persistedState(now).getState().doubleValue()
         battery_price = Registry.getItemState("pGF_Utilityroom_Electricity_Storage_Price").doubleValue()
 
@@ -687,7 +775,7 @@ class StoragePower:
         current_battery_soc = Registry.getItemState("pGF_Garage_Solar_Storage_EnergySoc").doubleValue()
         current_battery_percent = Registry.getItemState("pGF_Garage_Solar_Storage_EssSoc").intValue()
 
-        today_consumption = Registry.getItemState("pGF_Utilityroom_Electricity_State_Daily_Consumption").doubleValue()
+        #today_consumption = Registry.getItemState("pGF_Utilityroom_Electricity_State_Daily_Consumption").doubleValue()
         today_production = Registry.getItemState("pGF_Utilityroom_Electricity_State_Daily_Production").doubleValue()
 
         # NO GRID available
@@ -702,14 +790,13 @@ class StoragePower:
             calculation_slot_is_today_morning = now < sunrise
             calculation_slot_end = sunrise if calculation_slot_is_today_morning else sunrise + timedelta(days=1)
 
-            expected_total_demand, expected_consumtion_until_calculation_slot_end, expected_total_demand_msg = self.getExpectedTotalDemand(now, calculation_slot_end)
+            expected_total_demand, expected_total_demand_msg, expected_consumtion_until_calculation_slot_end, expected_consumtion_until_calculation_slot_end_msg = self.getExpectedDemand(now, calculation_slot_end)
 
             # *** GET EXPECTED SOLAR ***
             expected_total_solar_production, expected_consumed_solar_production, expected_chargeable_solar_production = self.getSolarForecast(now, FORECAST_INDEX_TODAY if calculation_slot_is_today_morning else FORECAST_INDEX_TOMORROW, debug_log_infos)
 
             expected_solar_msg = "Solar production {}kWh • Direct consumption {}kWh • Chargeable {}kWh".format(FormatHelper.format(expected_total_solar_production, 2), FormatHelper.format(expected_consumed_solar_production, 2), FormatHelper.format(expected_chargeable_solar_production, 2))
 
-            # => FIXME worst remaining (today_remaining_solar_production) like getSolarForecast
             # today worst can be affected by 50% of tomorrow
             today_remaining_solar_production = sum(slot["total"] for slot in self.expected_solar_productions[FORECAST_INDEX_TODAY].values() if slot["timestamp"] >= now)
             _today_total_solar_production = sum(slot["total"] for slot in self.expected_solar_productions[FORECAST_INDEX_TODAY].values())
@@ -719,7 +806,6 @@ class StoragePower:
             # It is allowed to fall below the emergency energy level in the morning of a sunny day. This can occur after several days of poor sunshine.
             # 1. only if we have enough expected solar soon
             # 2. only if the battery is already very empty
-            # => FIXME worst remaining (today_remaining_solar_production)
             if current_battery_soc <= emergency_battery_soc and today_remaining_solar_production > expected_total_demand * SOLAR_MAX_SAFETY_TRESHOLD:
                 debug_log_infos.append("Reduced emergency allowed")
                 emergency_battery_soc = STORAGE_EMERGENCY_ENERGY_SOC / 2
@@ -754,18 +840,20 @@ class StoragePower:
             self.logger.info("        : 🏠 Total demand {}kWh 🔋 Min Battery {}kWh ({:.0f}%)".format(FormatHelper.format(expected_total_demand, 2), FormatHelper.format(min_battery_soc, 2), _min_battery_percent))
             self.logger.info("        : --")
 
-            self.logger.info("Today   : 🔋 Battery {}kWh ({:.0f}%) • {}kWh ({}€/kWh) • {}kWh (0,00€/kWh) 💰 Spot price {}€/kWh".format(FormatHelper.format(current_battery_soc, 2), current_battery_percent, FormatHelper.format(grid_battery_soc, 2), FormatHelper.format(battery_price, 2), FormatHelper.format(solar_battery_soc, 2), FormatHelper.format(stock_price, 2)))
+            # *** BOOST/REDUCE GRID TARGET, TAKING CARE OF EXPECTED DEMAND AND REMAINING SOLAR PRODUCTION *****
+            self.logger.info("Today   : {}".format(expected_consumtion_until_calculation_slot_end_msg))
             self.logger.info("        : 🌞 {}".format(current_solar_msg))
-            self.logger.info("        : 🏠 Consumption {}kWh".format(FormatHelper.format(today_consumption, 2)))
+            self.logger.info("        : 🔋 Battery {}kWh ({:.0f}%) • {}kWh ({}€/kWh) • {}kWh (0,00€/kWh) 💰 Spot price {}€/kWh".format(FormatHelper.format(current_battery_soc, 2), current_battery_percent, FormatHelper.format(grid_battery_soc, 2), FormatHelper.format(battery_price, 2), FormatHelper.format(solar_battery_soc, 2), FormatHelper.format(stock_price, 2)))
+            #self.logger.info("        : 🏠 Consumption {}kWh".format(FormatHelper.format(today_consumption, 2)))
             self.logger.info("        : --")
+
+            _maximumSinceOneWeekState = Registry.getItem("pGF_Garage_Solar_Storage_EssSoc").getPersistence("jdbc").maximumSince(sunrise - timedelta(days=6))
+            _forceFullStorageCharge = _maximumSinceOneWeekState.getState().intValue() != 100 or now.date() == _maximumSinceOneWeekState.getTimestamp().date()
 
             if now >= sunrise:
                 # *** DURING THE DAY, CALCULATE MAX SOLAR CHARGE LEVEL ***************
                 # >>> INFO: goal is to limit solar charge energy
                 if now < sunset:
-                    _maximumSinceOneWeekState = Registry.getItem("pGF_Garage_Solar_Storage_EssSoc").getPersistence("jdbc").maximumSince(sunrise - timedelta(days=6))
-                    _forceFullStorageCharge = _maximumSinceOneWeekState.getState().intValue() != 100 or now.date() == _maximumSinceOneWeekState.getTimestamp().date()
-
                     min_safety_expected_total_demand = expected_total_demand * SOLAR_MIN_SAFETY_TRESHOLD
                     max_safety_expected_total_demand = expected_total_demand * SOLAR_MAX_SAFETY_TRESHOLD
 
@@ -811,6 +899,10 @@ class StoragePower:
             else:
                 remaining_solar_production_until_calculation_slot_end = 0
 
+                #if _forceFullStorageCharge:
+                #    debug_log_infos.append("Grid target {:.0f}% => 100% • weekly full charge").format(self.socToPersent(min_battery_soc))
+                #    min_battery_soc = STORAGE_MAX_CAPACITY
+
             # *** REDUCE GRID TARGET, TAKING CARE OF EXPECTED SOLAR PRODUCTION ***
             # >>> INFO: if there is expected chargeable solar, it is priorized to give enough battery space (this prevents grid charge and "MAX SOLAR CHARGE" logic will take over)
             if min_battery_soc + expected_chargeable_solar_production > STORAGE_MAX_CAPACITY:
@@ -819,7 +911,6 @@ class StoragePower:
                 min_battery_soc = _min_battery_soc
             # ********************************************************************
 
-            # *** BOOST/REDUCE GRID TARGET, TAKING CARE OF EXPECTED DEMAND AND REMAINING SOLAR PRODUCTION *****
             demand_missing = expected_consumtion_until_calculation_slot_end - remaining_solar_production_until_calculation_slot_end
             _min_battery_soc = min(max(min_battery_soc + demand_missing, emergency_battery_soc), STORAGE_MAX_CAPACITY)
             _remaining_solar_info_msg = " - remaining solar [{}kWh]".format(FormatHelper.format(remaining_solar_production_until_calculation_slot_end, 2)) if remaining_solar_production_until_calculation_slot_end > 0 else ""

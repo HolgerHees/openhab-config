@@ -217,7 +217,7 @@ Number:Energy       pGF_Utilityroom_Heatpump_Solar_Energy_Current          "Ertr
 //Number:VolumetricFlowRate pGF_Utilityroom_Heatpump_Solar_Flow_Test         "Solar Flow [%.1f l/h]"                  <selftemperature> {channel="mqtt:topic:mosquitto:ebus:flow" }
 
 Number:Power        pGF_Utilityroom_Heatpump_Solar_Power                   "Leistung Aktuell [%d %unit%]"   <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History) [ "Power" ]
-Number:Energy       pGF_Utilityroom_Heatpump_Solar_Energy_Total            "Ertrag Gesamt [%.1f %unit%]"      <selftemperature> ( eGF_Utilityroom_Heatpump_Solar)  [ "Energy" ]
+Number:Energy       pGF_Utilityroom_Heatpump_Solar_Energy_Total            "Ertrag Gesamt [%.1f %unit%]"      <selftemperature> ( eGF_Utilityroom_Heatpump_Solar,gPersistance_Chart,gPersistance_History)  [ "Energy" ]
 Number:Energy       pGF_Utilityroom_Heatpump_Solar_Energy_Daily            "Ertrag Heute [%.1f %unit%]"       <selftemperature> ( eGF_Utilityroom_Heatpump_Solar)  [ "Energy" ]
 Number:Energy       pGF_Utilityroom_Heatpump_Solar_Energy_Annual           "Jahresertrag [%.1f %unit%]"       <selftemperature> ( eGF_Utilityroom_Heatpump_Solar)  [ "Energy" ]
 Number:Energy       pGF_Utilityroom_Heatpump_Solar_Energy_Annual_Forecast  "Jahresertrag (Forecast) [%.1f %unit%]"       <selftemperature> ( eGF_Utilityroom_Heatpump_Solar)  [ "Energy" ]

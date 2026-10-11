@@ -184,28 +184,28 @@ class Sunprotection:
 )
 class TerraceAutoSunprotection:
     def execute(self, module, input):
-        if not FlagHelper.hasFlag( FlagHelper.AUTO_ROLLERSHUTTER_SHADING, Registry.getItemState("pOther_Manual_State_Auto_Rollershutter").intValue() ):
-            return
-
-        if Registry.getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == SunProtectionHelper.STATE_TERRACE_MAYBE_CLOSED:
-            pass
-        elif Registry.getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == SunProtectionHelper.STATE_TERRACE_CLOSED:
-            # DOWN only if automatic is enabled and (people are present or where present changed recently or terrace door is open)
-            if (
-                 Registry.getItemState("pOther_Presence_State").intValue() not in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]
-                 or
-                 Registry.getItem("pOther_Presence_State").getLastStateChange() > datetime.now().astimezone() - timedelta(minutes=120)
-                 or
-                 Registry.getItemState("pGF_Livingroom_Openingcontact_Window_Terrace_State") == scope.OPEN
-               ):
-                #self.logger.info("down")
-                Registry.getItem("pOutdoor_Terrace_Shading_Left_Control").sendCommandIfDifferent(scope.DOWN)
-                Registry.getItem("pOutdoor_Terrace_Shading_Right_Control").sendCommandIfDifferent(scope.DOWN)
-        else:
+        if Registry.getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == SunProtectionHelper.STATE_TERRACE_OPEN:
             #self.logger.info("up")
             # UP always when sun protection time is over
             Registry.getItem("pOutdoor_Terrace_Shading_Left_Control").sendCommandIfDifferent(scope.UP)
             Registry.getItem("pOutdoor_Terrace_Shading_Right_Control").sendCommandIfDifferent(scope.UP)
+        else:
+            if not FlagHelper.hasFlag( FlagHelper.AUTO_ROLLERSHUTTER_SHADING, Registry.getItemState("pOther_Manual_State_Auto_Rollershutter").intValue() ):
+                return
 
+            if Registry.getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == SunProtectionHelper.STATE_TERRACE_MAYBE_CLOSED:
+                pass
+            elif Registry.getItemState("pOther_Automatic_State_Sunprotection_Terrace").intValue() == SunProtectionHelper.STATE_TERRACE_CLOSED:
+                # DOWN only if automatic is enabled and (people are present or where present changed recently or terrace door is open)
+                if (
+                     Registry.getItemState("pOther_Presence_State").intValue() not in [PresenceHelper.STATE_AWAY,PresenceHelper.STATE_MAYBE_PRESENT]
+                     or
+                     Registry.getItem("pOther_Presence_State").getLastStateChange() > datetime.now().astimezone() - timedelta(minutes=120)
+                     or
+                     Registry.getItemState("pGF_Livingroom_Openingcontact_Window_Terrace_State") == scope.OPEN
+                   ):
+                    #self.logger.info("down")
+                    Registry.getItem("pOutdoor_Terrace_Shading_Left_Control").sendCommandIfDifferent(scope.DOWN)
+                    Registry.getItem("pOutdoor_Terrace_Shading_Right_Control").sendCommandIfDifferent(scope.DOWN)
 #sendCommand("pOther_Automatic_State_Sunprotection_Terrace", 0)
 

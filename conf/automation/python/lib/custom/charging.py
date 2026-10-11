@@ -123,6 +123,9 @@ class ChargingHelper:
                 charging_power = charging_callback(current_energy_soc + ( active_slot["charging_power"] / 4 if active_slot is not None else 0 ))
                 next_slot["charging_power"] = override_power if override_power is not None and max_price == next_slot["price"] and charging_power > override_power else charging_power
 
+            #for slot in remaining_slots:
+            #    print(slot)
+
             #print(remaining_slots_charged_energy, missing_energy)
             #charging_power = charging_callback(current_energy_soc)
             #energy = 0.0
@@ -147,7 +150,7 @@ class ChargingHelper:
 
         if target_energy_soc <= current_energy_soc:
             state_msg = "not needed"
-        elif self.date_map is None or self.date_map[-1]["end"] < end_time:
+        elif self.date_map is None: # or self.date_map[-1]["end"] < end_time:
             state_msg = "prices are not available"
         else:
             active_slot, next_slot, details_msg = self.calculateRemainingSlots(start_time, end_time, current_time, current_energy_soc, target_energy_soc, min_charging_power, max_charging_power, charging_callback)

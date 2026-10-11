@@ -191,8 +191,8 @@ String        pGF_Utilityroom_Electricity_State_Comfoair_Annual_Consumption_Msg 
 
 Number:Power  pGF_Utilityroom_Electricity_State_Comfoair_ActivePower       "Verbrauch [%.0f W]"   <selfenergy>       (pGF_Utilityroom_Electricity_State) ["Power"]
 
-Number pGF_Utilityroom_Electricity_State_Autarky                           "Autarkie [%d %%]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
-Number pGF_Utilityroom_Electricity_State_Ratio                             "Eigenverbrauch [%d %%]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number pGF_Utilityroom_Electricity_State_Autarky                           "Autarkie [%.0f %%]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
+Number pGF_Utilityroom_Electricity_State_Ratio                             "Eigenverbrauch [%.0f %%]"     <selfenergy_solar> (pGF_Utilityroom_Electricity_State) ["Point"]
 
 String pGF_Utilityroom_Electricity_State_Demand_Msg                        "Bezug [%s]" <selfenergy_grid_in> (pGF_Utilityroom_Electricity_State) ["Point"]
 String pGF_Utilityroom_Electricity_State_Supply_Msg                        "Einspeisung [%s]" <selfenergy_grid_out> (pGF_Utilityroom_Electricity_State) ["Point"]

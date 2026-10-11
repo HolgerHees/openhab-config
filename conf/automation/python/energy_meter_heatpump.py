@@ -26,12 +26,13 @@ start_electricity_meter_offset = 0
 )
 class MeterConsumption:
     def execute(self, module, input):
-        diff = input['event'].getOldItemState().doubleValue() - input["event"].getItemState().doubleValue()
+        if input['event'].getType() != "TimerEvent":
+            diff = input['event'].getOldItemState().doubleValue() - input["event"].getItemState().doubleValue()
 
-        # pGF_Utilityroom_Electricity_Heatpump_Electric_Meter_Consumption sometimes flapping
-        if diff > 0 and diff < 0.002:
-            self.logger.error("DEBUG: SKIP MINOR METER DIFF")
-            return
+            # pGF_Utilityroom_Electricity_Heatpump_Electric_Meter_Consumption sometimes flapping
+            if diff > 0 and diff < 0.002:
+                #self.logger.error("DEBUG: SKIP MINOR METER DIFF")
+                return
 
         main = Registry.getItemState("pGF_Utilityroom_Electricity_Heatpump_Main_Meter_Consumption").doubleValue()
         compressor = Registry.getItemState("pGF_Utilityroom_Electricity_Heatpump_Compressor_Meter_Consumption").doubleValue()
