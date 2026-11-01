@@ -8,7 +8,7 @@ import scope
 
 @rule(
     triggers = [
-        ItemStateChangeTrigger("pOther_Manual_State_Holiday"),
+        ItemStateChangeTrigger("pOther_Manual_State_Traveling"),
         ItemStateChangeTrigger("pOther_Manual_State_Heating"),
         ItemStateChangeTrigger("pOther_Manual_State_Auto_Attic_Light"),
         ItemStateChangeTrigger("pOther_Manual_State_Auto_Christmas"),
@@ -24,7 +24,7 @@ class StateMessageAuto:
 
     def execute(self, module, input):
         active1 = []
-        active1.append(self.format("pOther_Manual_State_Holiday","u"))
+        active1.append(self.format("pOther_Manual_State_Traveling","v"))
 
         heatingMode = Registry.getItemState("pOther_Manual_State_Heating").intValue()
 

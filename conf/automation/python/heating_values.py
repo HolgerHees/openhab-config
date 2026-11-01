@@ -28,18 +28,36 @@ class ErrorMessage:
 @rule(
     triggers = [
         SystemStartlevelTrigger(80),
-        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_Auto_Mode"),
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_Mode"),
         ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_S_Betriebstatusanzeige")
     ]
 )
 class SummaryMessage:
     def execute(self, module, input):
-        mode = Registry.getItemState("pGF_Utilityroom_Heatpump_Auto_Mode")
+        mode = Registry.getItemState("pGF_Utilityroom_Heatpump_Mode")
         status = Registry.getItemState("pGF_Utilityroom_Heatpump_S_Betriebstatusanzeige")
 
         msg = "{} - {}".format(Transformation.transform("MAP", "heatpump_mode.map", mode.toString()), Transformation.transform("MAP", "heatpump_betriebstatusanzeige.map", status.toString()))
 
         Registry.getItem("pGF_Utilityroom_Heatpump_Summary_Message").postUpdateIfDifferent(msg)
+
+@rule(
+    triggers = [
+        SystemStartlevelTrigger(80),
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_WP_Leistungsanforderung"),
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_WP_Sole_Eintritt"),
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_WP_Sole_Austritt")
+    ]
+)
+class HeatpumpSummaryMessage:
+    def execute(self, module, input):
+        power = Registry.getItemState("pGF_Utilityroom_Heatpump_WP_Leistungsanforderung").intValue()
+        in_temperature = Registry.getItemState("pGF_Utilityroom_Heatpump_WP_Sole_Eintritt").doubleValue()
+        out_temperature = Registry.getItemState("pGF_Utilityroom_Heatpump_WP_Sole_Austritt").doubleValue()
+
+        msg = "{} %, → {} °C, ← {} °C".format(power, in_temperature, out_temperature) if power > 0 else "OFF"
+
+        Registry.getItem("pGF_Utilityroom_Heatpump_WP_Summary_Message").postUpdateIfDifferent(msg)
 
 @rule(
     triggers = [
@@ -60,7 +78,14 @@ class HeatpumpState:
             elif wp_status == 19:
                 hw_status = scope.ON
 
-        if wp_status == 19 and Registry.getItemState("pGF_Utilityroom_Heatpump_HK2_Vorlaufsolltemperatur").doubleValue() > 20.0:
+        # 4 Handbetrieb
+        # 5 Schornsteinfeger
+        # 15 Taktsperre
+        # 19 Frostschutz
+        # 19 Heizen
+        # 35 Absenk
+        # 43 Ölrückführung
+        if wp_status in [4,5,15,18,19,35,43] and Registry.getItemState("pGF_Utilityroom_Heatpump_HK2_Vorlaufsolltemperatur").doubleValue() > 20.0:
             #temperature_pipe_out = Registry.getItemState("pGF_Utilityroom_Heatpump_HK2_Temperature_Pipe_Out").doubleValue()
             #temperature_pipe_in = Registry.getItemState("pGF_Utilityroom_Heatpump_HK2_Temperature_Pipe_In").doubleValue()
             #if temperature_pipe_out - temperature_pipe_in > 1.0:
@@ -72,22 +97,57 @@ class HeatpumpState:
 
 @rule(
     triggers = [
-        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_HW_State"),
-        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_WW_State"),
+        SystemStartlevelTrigger(80),
         ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_WP_Vorlauftemperatur"),
-        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_WP_Ruecklauftemperatur")
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_WP_Ruecklauftemperatur"),
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_WW_State"),
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_HW_State")
     ]
 )
-class HeatpumpEnergy:
+class HeatpumpEnergyState:
     def execute(self, module, input):
         hw_active = Registry.getItemState("pGF_Utilityroom_Heatpump_HW_State") == scope.ON
         ww_active = Registry.getItemState("pGF_Utilityroom_Heatpump_WW_State") == scope.ON
 
-        out_temp = Registry.getItemState("pGF_Utilityroom_Heatpump_WP_Vorlauftemperatur").doubleValue()
-        in_temp = Registry.getItemState("pGF_Utilityroom_Heatpump_WP_Ruecklauftemperatur").doubleValue()
-        volumenstrom = 2.0 # 2.0 m³ => 80% TODO
+        in_temperature = Registry.getItemState("pGF_Utilityroom_Heatpump_WP_Vorlauftemperatur").doubleValue()
+        out_temperature = Registry.getItemState("pGF_Utilityroom_Heatpump_WP_Ruecklauftemperatur").doubleValue()
 
-        energy_in_kw = volumenstrom * max(out_temp - in_temp, 0) * 1.162
+        volumenstrom = 0
+
+        # 0.7 => 42%
+        # 0.8 => 43 - 45%
+
+        # 0.9 => 46 - 48%
+        # 1.0 => 49 - 50%
+        # 1.1 => 51 - 53% ???
+        # 1.2 => 54 - 56% ???
+        # 1.3 => 57 - 59% ???
+        # 1.4 => 60 - 63% ???
+        ### 1.5 => 65% ???
+        # 1.4 => 65%
+        # 1.4 => 66%
+        # 1.5 => 67%
+        # 1.5 => 68%
+        # 1.5 => 69%
+        # 1.6 => 70%
+        # 1.7 => 75% ???
+        # 1.8 m³ => 80% TODO => eventuell 2.0
+
+        if ww_active:
+            volumenstrom = 1.5
+            msg = "ON, → {} °C, ← {} °C".format(in_temperature, out_temperature)
+            Registry.getItem("pGF_Utilityroom_Heatpump_WW_State_Info").postUpdateIfDifferent(msg)
+        else:
+            Registry.getItem("pGF_Utilityroom_Heatpump_WW_State_Info").postUpdateIfDifferent("OFF")
+
+        if hw_active:
+            volumenstrom = 0.8 # heizkreis gemessen max 0.723
+            msg = "ON, → {} °C, ← {} °C".format(in_temperature, out_temperature)
+            Registry.getItem("pGF_Utilityroom_Heatpump_HW_State_Info").postUpdateIfDifferent(msg)
+        else:
+            Registry.getItem("pGF_Utilityroom_Heatpump_HW_State_Info").postUpdateIfDifferent("OFF")
+
+        energy_in_kw = volumenstrom * max(in_temperature - out_temperature, 0) * 1.162
 
         Registry.getItem("pGF_Utilityroom_Heatpump_HW_Energy").postUpdateIfDifferent(energy_in_kw if hw_active else 0)
         Registry.getItem("pGF_Utilityroom_Heatpump_WW_Energy").postUpdateIfDifferent(energy_in_kw if ww_active else 0)
@@ -135,19 +195,6 @@ class HeatpumpVorlaufInfo:
         vorlauf_soll_wp = Registry.getItemState("pGF_Utilityroom_Heatpump_HK2_Vorlaufsolltemperatur").doubleValue()
 
         Registry.getItem("pGF_Utilityroom_Heatpump_HK2_Vorlauf_Info").postUpdateIfDifferent("{}/{} ({}) °C".format(FormatHelper.format(vorlauf_sensor, 1), FormatHelper.format(vorlauf_ist_wp, 1), FormatHelper.format(vorlauf_soll_wp, 1)))
-
-@rule(
-    triggers = [
-        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_WW_Warmwassertemperatur"),
-        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_WW_Warmwassersolltemperatur")
-    ]
-)
-class HeatpumpWarmwasserInfo:
-    def execute(self, module, input):
-        ist_wp = Registry.getItemState("pGF_Utilityroom_Heatpump_WW_Warmwassertemperatur").doubleValue()
-        soll_wp = Registry.getItemState("pGF_Utilityroom_Heatpump_WW_Warmwassersolltemperatur").doubleValue()
-
-        Registry.getItem("pGF_Utilityroom_Heatpump_WW_Info").postUpdateIfDifferent("{} ({}) °C".format(FormatHelper.format(ist_wp, 1), FormatHelper.format(soll_wp, 1)))
 
 #now = datetime.now().astimezone()
 #slot_start = now.replace(year=2026, month=5, day=1, hour=0, minute=0, second=0, microsecond=0)

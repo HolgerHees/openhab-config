@@ -126,6 +126,7 @@ class SunRadiation():
 
         azimut, elevation, min_elevation, _ = SunRadiation.getSunData( reference_time )
         
+        east_multiplier = 0
         south_multiplier = 0
         west_multiplier = 0
         
@@ -135,6 +136,14 @@ class SunRadiation():
             # x^4 * -1 + 1
             
             
+            _start = 0.0 + SunRadiation.AZIMUT_GARDEN_DEVIATION
+            _end = 120.0 + SunRadiation.AZIMUT_GARDEN_DEVIATION
+            if azimut >= _start and azimut <= _end:
+                # 110° (0) => -1 (0)
+                # 250° (140) => 1 (2)
+                eastX = ( ( azimut - _start ) * 2.0 / ( _end - _start ) ) - 1.0
+                east_multiplier = ( math.pow( eastX, 10.0 ) * -1.0 ) + 1.0
+
             _start = 110.0 + SunRadiation.AZIMUT_GARDEN_DEVIATION
             _end = 250.0 + SunRadiation.AZIMUT_GARDEN_DEVIATION
             if azimut >= _start and azimut <= _end:
@@ -169,10 +178,12 @@ class SunRadiation():
         else:
             _effective_radiation = sun_radiation
 
+        _effective_east_radiation = _effective_radiation * east_multiplier
         _effective_south_radiation = _effective_radiation * south_multiplier
         _effective_west_radiation = _effective_radiation * west_multiplier
-        
+
         _active_directions = []
+        if east_multiplier > 0.0: _active_directions.append("E")
         if south_multiplier > 0.0: _active_directions.append("S")
         if west_multiplier > 0.0: _active_directions.append("W")
         activeMsg = u" • {}".format("+".join(_active_directions)) if len(_active_directions) > 0 else u""
@@ -184,7 +195,7 @@ class SunRadiation():
         
         debug_info = { "azimut": sunAzimutMsg, "elevation": sunElevationMsg, "min_elevation": min_elevationMsg, "effective_radiation": round(_effective_radiation / 60.0, 1), "active": activeMsg }
 
-        return _effective_south_radiation, _effective_west_radiation, _effective_radiation, debug_info
+        return _effective_east_radiation, _effective_south_radiation, _effective_west_radiation, _effective_radiation, debug_info
 
     @staticmethod
     def getWindowSunPowerPerHour( area, radiation ):

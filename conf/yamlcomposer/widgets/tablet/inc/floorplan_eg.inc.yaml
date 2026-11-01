@@ -150,10 +150,10 @@ slots:
           - sensorTopModifier
           - sensorTemperatureSuffix
         style:
-          font-size: 0.6em
-          left: 28.5%
+          transform: scale(0.8)
+          left: 26.5%
           position: absolute
-          top: 85%
+          top: 83%
         text: =items['pGF_Guesttoilet_Air_Sensor_Temperature_Value'].numericState.toFixed(1)
     - component: Label
       config:
@@ -162,10 +162,10 @@ slots:
           - sensorBottomModifier
           - sensorHumiditySuffix
         style:
-          font-size: 0.6em
-          left: 41.5%
+          transform: scale(0.8)
+          left: 40.5%
           position: absolute
-          top: 85%
+          top: 83%
         text: =items['pGF_Guesttoilet_Air_Sensor_Humidity_Value'].numericState.toFixed(0)
     - component: Label
       config:

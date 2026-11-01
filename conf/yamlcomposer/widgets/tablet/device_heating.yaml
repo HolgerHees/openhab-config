@@ -7,7 +7,7 @@ widgets:
     props:
       parameters:
         - context: item
-          default: pGF_Utilityroom_Heatpump_Auto_Mode
+          default: pGF_Utilityroom_Heatpump_Mode
           label: Auto Mode
           name: item_auto_mode
           required: false
@@ -51,7 +51,7 @@ widgets:
         - context: item
           default: pGF_Utilityroom_Heatpump_HW_State
           label: HK Active
-          name: item_hk_active
+          name: item_hw_active
           required: false
           type: TEXT
         - context: item
@@ -148,7 +148,7 @@ widgets:
               font-size: 0.9em
             class:
               - normalState
-              - "=(items[props.item_power_consumption].numericState > 0 && items[props.item_ww_active].state =='ON' > 0) || (items[props.item_solar_pump_state].numericState > 0 && items[props.item_solar_vorlauf_temperature].numericState > items[props.item_tank_top_temperature].numericState + 3) ? 'highlightModifier' : ''"
+              - "=(items[props.item_power_consumption].numericState > 0 && items[props.item_ww_active].state =='ON') || (items[props.item_solar_pump_state].numericState > 0 && items[props.item_solar_vorlauf_temperature].numericState > items[props.item_tank_top_temperature].numericState + 3) ? 'highlightModifier' : ''"
               - sensorTemperatureSuffix
             text: "=items[props.item_tank_top_temperature].numericState.toFixed(1)"
         - component: Label
@@ -160,7 +160,7 @@ widgets:
               font-size: 0.9em
             class:
               - normalState
-              - "=(items[props.item_power_consumption].numericState > 0 && items[props.item_hk_active].state =='ON' > 0) || (items[props.item_solar_pump_state].numericState > 0 && items[props.item_solar_vorlauf_temperature].numericState > items[props.item_tank_middle_temperature].numericState + 3) ? 'highlightModifier' : ''"
+              - "=(items[props.item_power_consumption].numericState > 0 && items[props.item_hw_active].state =='ON') || (items[props.item_solar_pump_state].numericState > 0 && items[props.item_solar_vorlauf_temperature].numericState > items[props.item_tank_middle_temperature].numericState + 3) ? 'highlightModifier' : ''"
               - sensorTemperatureSuffix
             text: "=items[props.item_tank_middle_temperature].numericState.toFixed(1)"
         - component: Label
@@ -264,7 +264,7 @@ widgets:
           config:
             style:
               right: 42px
-              bottom: 69px
+              bottom: 67px
               transform: translate(50%,0)
               visibility: "=items[props.item_power_requested].numericState > 0 ? 'visible' : 'hidden'"
             class:
@@ -293,24 +293,24 @@ widgets:
           config:
             style:
               width: 40px
-              height: 58px
+              height: 69px
               right: 37px
-              bottom: 73px
-              visibility: "=items[props.item_power_consumption].numericState > 0 && items[props.item_ww_active].state == 'ON' 0 ? 'visible' : 'hidden'"
+              bottom: 88px
+              visibility: "=items[props.item_power_consumption].numericState > 0 && items[props.item_ww_active].state =='ON' ? 'visible' : 'hidden'"
           slots:
             default:
-              - !include { file: inc/device_ventilation_curve.inc.yaml, vars: {uid: "heating_path_heatpump_ww", width: 40, height: 58, path: "M 35 58 l 0 -38 Q 35 5 20 5 l -20 0"}}
+              - !include { file: inc/device_ventilation_curve.inc.yaml, vars: {uid: "heating_path_heatpump_hk", width: 40, height: 69, path: "M 35 82 l 0 -62 Q 35 5 20 5 l -20 0"}}
         - component: div
           config:
             style:
               width: 40px
-              height: 82px
+              height: 43px
               right: 37px
-              bottom: 73px
-              visibility: "=items[props.item_power_consumption].numericState > 0 && items[props.item_hk_active].state =='ON' > 0 ? 'visible' : 'hidden'"
+              bottom: 88px
+              visibility: "=items[props.item_power_consumption].numericState > 0 && items[props.item_hw_active].state == 'ON' ? 'visible' : 'hidden'"
           slots:
             default:
-              - !include { file: inc/device_ventilation_curve.inc.yaml, vars: {uid: "heating_path_heatpump_hk", width: 40, height: 82, path: "M 35 82 l 0 -62 Q 35 5 20 5 l -20 0"}}
+              - !include { file: inc/device_ventilation_curve.inc.yaml, vars: {uid: "heating_path_heatpump_ww", width: 40, height: 43, path: "M 35 58 l 0 -38 Q 35 5 20 5 l -20 0"}}
         - component: Label
           config:
             style:
@@ -319,7 +319,7 @@ widgets:
               transform: translate(50%,0)
             class:
               - normalState
-              - "=items[props.item_power_consumption].numericState > 50 ? 'highlightModifier' : ''"
+              - "=items[props.item_power_consumption].numericState > 0 ? 'highlightModifier' : ''"
               - sensorEnergySuffix
             text: "=(items[props.item_power_consumption].numericState / 1000.0).toFixed(1)"
 

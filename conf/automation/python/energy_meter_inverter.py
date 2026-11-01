@@ -14,8 +14,8 @@ from configuration import customConfigs
 import scope
 
 
-start_electricity_meter_consumption_offset = 52934.145 # 52934.018 #52933.991 #52933.980 #52933.973 #52933.935 #52933.913 #52933.875 #52933.840 #52933.821 #52933.754 #25559.396
-start_electricity_meter_production_offset = 16261.692 #16261.303 #16261.281 #16261.268 #16261.245 #16261.244 #16260.991
+start_electricity_meter_consumption_offset = 52934.152 #52934.145 # 52934.018 #52933.991 #52933.980 #52933.973 #52933.935 #52933.913 #52933.875 #52933.840 #52933.821 #52933.754 #25559.396
+start_electricity_meter_production_offset = 16261.726 # 16261.692 #16261.303 #16261.281 #16261.268 #16261.245 #16261.244 #16260.991
 
 @rule(
     triggers = [
@@ -222,6 +222,7 @@ class StorageCalculation:
             energy_soc = Registry.getItemState("pGF_Garage_Solar_Storage_EnergySoc").floatValue()
 
         Registry.getItem("pGF_Utilityroom_Electricity_State_Battery_Msg").postUpdate(u"{} W ({} % • {} kWh)".format(power, percent, FormatHelper.format(energy_soc, 1)))
+
 
 @rule(
     runtime_measurement = False

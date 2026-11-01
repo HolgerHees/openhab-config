@@ -4,7 +4,7 @@
     <style>
       html, body { 
           height: 100%; margin: 0; overflow: hidden;
-          font-family: "Open Sans", Helvetica, Arial, sans-serif;
+          font-family: "monospace";
           font-weight: 400;
           font-size: 12px;
           background-color: white;
@@ -88,7 +88,7 @@
               else
               {
                   tableContent += "<div class=\"column\">" + parts[0] + "</div>";
-                  tableContent += "<div class=\"column\">" + parts.slice(1).join(":") + "</div>";
+                  tableContent += "<div class=\"column\">" + parts.slice(1).join(":").replaceAll(" ","&nbsp;") + "</div>";
               }
 
               tableContent += "</div>";

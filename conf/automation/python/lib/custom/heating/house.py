@@ -1,9 +1,7 @@
 class ThermalBridgeType():
-    def __init__(self, uValue=None, uOffset=None, factor=None, referenceTemperatureItem=None):
+    def __init__(self, uValue, uOffset):
         self.uValue = uValue
         self.uOffset = uOffset
-        self.factor = factor
-        self.referenceTemperatureItem = referenceTemperatureItem
         
     def getUValue(self):
         return self.uValue
@@ -11,20 +9,19 @@ class ThermalBridgeType():
     def getUOffset(self):
         return self.uOffset
 
-    def getFactor(self):
-        return self.factor
-
-    def getReferenceTemperatureItem(self):
-        return self.referenceTemperatureItem
-
 class ThermalStorageType(ThermalBridgeType):
-    def __init__(self, capacity, uValue=None, uOffset=None, factor=None, referenceTemperatureItem=None):
-        super().__init__(uValue, uOffset, factor, referenceTemperatureItem)
-        self.capacity = capacity
-        
-    def getCapacity(self):
-        return self.capacity
+    def __init__(self, uValue, uOffset, capacityInKiloJoulePerSquareMeter, uValueInner=None, uValueOuter=None):
+        super().__init__(uValue, uOffset)
+        self.uValueInner = uValueInner
+        self.uValueOuter = uValueOuter
+        self.capacityInKiloJoulePerSquareMeter = capacityInKiloJoulePerSquareMeter
        
+    def getUValueInner(self):
+        return self.uValueInner
+
+    def getUValueOuter(self):
+        return self.uValueOuter
+
 class Wall():
     def __init__(self, direction, area, type, bound= None):
         self.direction = direction
@@ -43,6 +40,12 @@ class Wall():
 
     def getBound(self):
         return self.bound
+
+    def getCapacityInWattHours(self):
+        return (self.type.capacityInKiloJoulePerSquareMeter / 3.6) * self.area
+
+    def isWindow(self):
+        return False
 
 class Door(Wall):
     def __init__(self, direction, area, type, bound= None, contactItem=None):
@@ -72,9 +75,13 @@ class Window(Door):
     def getSunProtectionItem(self):
         return self.sunProtectionItem
 
+    def isWindow(self):
+        return True
+
 class Room():
-    def __init__(self, name, additionalRadiator=False, heatingVolume=None, volume=None, walls=None, transitions=[]):
+    def __init__(self, name, ventilation=False, additionalRadiator=False, heatingVolume=None, volume=None, walls=[], transitions=[]):
         self.name = name
+        self.ventilation = ventilation
         self.additionalRadiator = additionalRadiator
         self.heatingVolume = heatingVolume
         self.volume = volume
@@ -83,6 +90,9 @@ class Room():
   
     def getName(self):
         return self.name
+
+    def hasVentilation(self):
+        return self.ventilation
 
     def hasAdditionalRadiator(self):
         return self.additionalRadiator

@@ -7,7 +7,7 @@ from shared.timer import Timer
 
 from custom.presence import PresenceHelper
 from custom.weather import WeatherHelper
-from custom.heating import HeatingHelper
+from custom.ventilation import VentilationHelper
 
 from datetime import datetime, timedelta
 import math
@@ -78,21 +78,21 @@ class StateMessage:
 @rule(
     triggers = [
         SystemStartlevelTrigger(80),
-        ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Auto_Mode"),
+        ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Mode"),
         ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Fan_Level"),
         ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Clime_Headpump_Status")
     ]
 )
 class SummaryMessage:
     def execute(self, module, input):
-        mode = Registry.getItemState("pGF_Utilityroom_Ventilation_Auto_Mode")
+        mode = Registry.getItemState("pGF_Utilityroom_Ventilation_Mode")
         fan_level = Registry.getItemState("pGF_Utilityroom_Ventilation_Fan_Level")
 
         status = Registry.getItemState("pGF_Utilityroom_Ventilation_Clime_Headpump_Status")
         power = Registry.getItemState("pGF_Utilityroom_Ventilation_Clime_Power")
         state_msg = Transformation.transform("MAP", "ventilation_clime_state.map", status.toString()) if power == scope.ON else "Ausgeschaltet"
 
-        msg = "{} - Stufe {} - {}".format("Manuel" if mode == scope.OFF else "Auto", fan_level, state_msg)
+        msg = "{} - Stufe {} - {}".format(Transformation.transform("MAP", "ventilation_mode.map", mode.toString()), fan_level, state_msg)
 
         Registry.getItem("pGF_Utilityroom_Ventilation_Summary_Message").postUpdateIfDifferent(msg)
 
@@ -291,7 +291,7 @@ class IndoorTemperatureMessage:
 #        GenericCronTrigger("*/15 * * * * ?"),
         ItemStateChangeTrigger("pOther_Presence_State"),
 
-        ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Auto_Mode", state=scope.ON),
+        ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Mode"),
         ItemCommandTrigger("pGF_Utilityroom_Ventilation_Fan_Level"),
 
         ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Clime_Season"),
@@ -304,7 +304,7 @@ class FanLevel:
         self.last_refresh = None
 
     def execute(self, module, input):
-        if Registry.getItemState("pGF_Utilityroom_Ventilation_Auto_Mode") == scope.OFF:
+        if Registry.getItemState("pGF_Utilityroom_Ventilation_Mode").intValue() == VentilationHelper.STATE_MODE_MANUAL:
             return
 
         eventSourceItem = input['event'].getItemName() if input['event'].getType() != "TimerEvent" else None
@@ -313,7 +313,7 @@ class FanLevel:
         if eventSourceItem == "pGF_Utilityroom_Ventilation_Fan_Level":
             if "FanLevelAutomatic" in input['event'].getSource():
                 return
-            Registry.getItem("pGF_Utilityroom_Ventilation_Auto_Mode").postUpdate(scope.OFF)
+            Registry.getItem("pGF_Utilityroom_Ventilation_Mode").postUpdate(VentilationHelper.STATE_MODE_MANUAL)
         else:
             outdoor_temperature = WeatherHelper.getTemperatureStableItemState(900).doubleValue()
 
@@ -340,7 +340,7 @@ class FanLevel:
                     else:
                         new_level = 2
 
-                    is_cooling = Registry.getItemState("pGF_Utilityroom_Ventilation_Clime_Season").intValue() == HeatingHelper.STATE_CLIME_SEASON_COOLING
+                    is_cooling = Registry.getItemState("pGF_Utilityroom_Ventilation_Clime_Season").intValue() == VentilationHelper.STATE_CLIME_SEASON_COOLING
                     if is_cooling:
                       # possible boost for cooling
                       hour = now.hour
@@ -356,7 +356,7 @@ class FanLevel:
                 # 1. 'event' in input.keys() is an presence or auto mode change
                 # 2. is cron triggered event
                 # => .getLastChange check to prevent level flapping on temperature changes
-                if eventSourceItem in ["pGF_Utilityroom_Ventilation_Auto_Mode","pGF_Utilityroom_Ventilation_Clime_Season","pOther_Presence_State"] or Registry.getItem("pGF_Utilityroom_Ventilation_Fan_Level").getLastStateChange() < ( now - timedelta(minutes=15) ):
+                if eventSourceItem in ["pGF_Utilityroom_Ventilation_Mode","pGF_Utilityroom_Ventilation_Clime_Season","pOther_Presence_State"] or Registry.getItem("pGF_Utilityroom_Ventilation_Fan_Level").getLastStateChange() < ( now - timedelta(minutes=15) ):
                     self.last_refresh = now
                     Registry.getItem("pGF_Utilityroom_Ventilation_Fan_Level").sendCommand(new_level, "FanLevelAutomatic")
                 else:
@@ -366,13 +366,13 @@ class FanLevel:
                     self.last_refresh = now
                     Registry.getItem("pGF_Utilityroom_Ventilation_Fan_Level").sendCommand(current_level, "FanLevelAutomatic")
 
-#Registry.getItem("pGF_Utilityroom_Ventilation_Auto_Mode").sendCommand(scope.ON, "custom_script")
+#Registry.getItem("pGF_Utilityroom_Ventilation_Mode").sendCommand(scope.ON, "custom_script")
 #Registry.getItem("pGF_Utilityroom_Ventilation_Fan_Level").sendCommand(3)
 
 @rule
 class ComfoInitializer:
     def buildTriggers(self):
-        triggers = [ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Auto_Mode", state=scope.ON), ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Clime_Season")]
+        triggers = [ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Mode"), ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Clime_Season")]
         for item in Registry.getItem("eOther_Target_Temperatures").getAllMembers():
             triggers.append(ItemStateChangeTrigger(item.getName()))
         return triggers
@@ -384,7 +384,7 @@ class ComfoInitializer:
             if temperature > max_temperature:
                 max_temperature = temperature
 
-        is_cooling = Registry.getItemState("pGF_Utilityroom_Ventilation_Clime_Season").intValue() == HeatingHelper.STATE_CLIME_SEASON_COOLING
+        is_cooling = Registry.getItemState("pGF_Utilityroom_Ventilation_Clime_Season").intValue() == VentilationHelper.STATE_CLIME_SEASON_COOLING
         season_offset = 0 if is_cooling else 2
 
         Registry.getItem("pGF_Utilityroom_Ventilation_Target_Mode").sendCommandIfDifferent(2) # manuell
@@ -398,7 +398,7 @@ class ComfoInitializer:
         ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Clime_Target_Offset")
     ]
 )
-class ComfortOffsetControl:
+class ComfoOffsetControl:
     def execute(self, module, input):
         target = Registry.getItemState("pGF_Utilityroom_Ventilation_Target_Temperature").doubleValue()
         offset = Registry.getItemState("pGF_Utilityroom_Ventilation_Clime_Target_Offset").intValue()
@@ -415,15 +415,24 @@ class ComfortOffsetControl:
 
 @rule(
     triggers = [
-        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_Auto_Mode")
+        ItemStateChangeTrigger("pGF_Utilityroom_Ventilation_Mode")
     ]
 )
 class ComfoCoolingControl:
     def execute(self, module, input):
-        season = HeatingHelper.STATE_CLIME_SEASON_COOLING if Registry.getItemState("pGF_Utilityroom_Heatpump_Auto_Mode").intValue() == HeatingHelper.STATE_MODE_COOLING else HeatingHelper.STATE_CLIME_SEASON_OFF
+        season = VentilationHelper.STATE_CLIME_SEASON_COOLING if Registry.getItemState("pGF_Utilityroom_Ventilation_Mode").intValue() == VentilationHelper.STATE_MODE_COOLING else VentilationHelper.STATE_CLIME_SEASON_OFF
         Registry.getItem("pGF_Utilityroom_Ventilation_Clime_Season").sendCommandIfDifferent(season)
 
-
+@rule(
+    triggers = [
+        ItemStateChangeTrigger("pGF_Utilityroom_Heatpump_Mode")
+    ]
+)
+class ComfoMode:
+    def execute(self, module, input):
+        if input["event"].getSource() == "org.openhab.core.automation.module.script":
+            return
+        Registry.getItem("pGF_Utilityroom_Ventilation_Mode").sendCommandIfDifferent(VentilationHelper.STATE_MODE_VENTILATING)
 
 
 

@@ -13,6 +13,8 @@ vars:
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Abstellkammer", item: "pGF_Boxroom_Air_Sensor_Message", icon: "oh:selftemperature", target: {widget: "widget:app_sensors_eg_boxroom"}}}
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Arbeitszimmer", item: "pGF_Workroom_Air_Sensor_Message", icon: "oh:selftemperature", target: {widget: "widget:app_sensors_eg_workroom"}}}
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Gäste WC", item: "pGF_Guesttoilet_Air_Sensor_Message", icon: "oh:selftemperature", target: {widget: "widget:app_sensors_eg_guestwc"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Flur unten", item: "pGF_Corridor_Air_Sensor_Message", icon: "oh:selftemperature", target: {widget: "widget:app_sensors_eg_corridor"}}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "HWR", item: "pGF_Utilityroom_Air_Sensor_Message", icon: "oh:selftemperature"}}
 
     - !include
       file: ../layout/box.inc.yaml

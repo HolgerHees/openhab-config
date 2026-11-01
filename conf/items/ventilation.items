@@ -1,6 +1,6 @@
 // **** VENTILATION ****
 Group  eGF_Utilityroom_Ventilation                              "Lüftungsanlage"                <selfinfo> (lGF_Utilityroom) ["Fan"]
-Switch pGF_Utilityroom_Ventilation_Auto_Mode                    "Modus"                         <selfautomode> (eGF_Utilityroom_Ventilation) ["Point"]
+Number pGF_Utilityroom_Ventilation_Mode                         "Modus"                         <selfautomode> (eGF_Utilityroom_Ventilation) ["Point"]
 
 String pGF_Utilityroom_Ventilation_Summary_Message              "Summery [%s]"                  <selfinfo> (eGF_Utilityroom_Ventilation) ["Point"]
 String pGF_Utilityroom_Ventilation_State_Message                "Comfo Air [%s]"                   <selfinfo> (eGF_Utilityroom_Ventilation) ["Point"]

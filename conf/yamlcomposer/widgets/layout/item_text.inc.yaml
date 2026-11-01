@@ -96,7 +96,7 @@ slots:
                     color: "=${valuecolor}"
               text: !if
                 - if: item and mappings
-                  then: "=('${mappings}'.split(',').filter((value) => value.startsWith((items['${item}'].numericState === undefined ? items['${item}'].state : items['${item}'].numericState) + '=')).map(value => value.split('=')[1])[0] || '')"
+                  then: "=('${mappings}'.split(',').filter((value) => value.startsWith((items['${item}'].numericState === undefined ? items['${item}'].state : items['${item}'].numericState) + '=')).map(value => value.split('=')[1])[0] || items['${item}'].numericState)"
                 - elseif: item
                   then: "=items['${item}'].displayState || items['${item}'].state"
                 - else: ""

@@ -87,13 +87,34 @@ things:
         config:
           ga: 1/4/4
 
+  knx:device:bridge:heatpump:
+    bridge: knx:ip:bridge
+    label: Waermepumpe
+    channels:
+      wpH1Input:
+        type: switch
+        label: Waempepumpe H1 Input
+        config:
+          ga: 0/5/10+<0/5/11
+      wpH2Input:
+        type: switch
+        label: Waempepumpe H2 Input
+        config:
+          ga: 0/5/12+<0/5/13
+      wpDE1Input:
+        type: switch
+        label: Waempepumpe DE1 Input
+        config:
+          ga: 0/5/14+<0/5/15
+      wpDE2Input:
+        type: switch
+        label: Waempepumpe DE2 Input
+        config:
+          ga: 0/5/16+<0/5/17
+
   knx:device:bridge:heating_ff:
     bridge: knx:ip:bridge
     label: Heizungskreise Erdgeschoss
-    config:
-      fetch: false
-      pingInterval: 600
-      readInterval: 0
     channels:
       livingroomCircuit:
         type: switch
@@ -159,10 +180,6 @@ things:
   knx:device:bridge:sensors_ff:
     bridge: knx:ip:bridge
     label: Sensoren Erdgeschoss
-    config:
-      fetch: false
-      pingInterval: 600
-      readInterval: 0
     channels:
       heatingPipeOut:
         type: number

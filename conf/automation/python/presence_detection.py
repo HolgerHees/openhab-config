@@ -138,51 +138,6 @@ class DoorCheck:
                 self._checkLeaving(input['event'].getItemName())
 
 @rule
-class MovingCheck:
-    def __init__(self):
-        self.timer = None
-
-    def buildTriggers(self):
-        triggers = []
-        for item in Registry.getItem("gSensor_Indoor").getAllMembers():
-            triggers.append(ItemStateChangeTrigger(item.getName()))
-        return triggers
-
-    def checkSleeping(self):
-        with Cache.getLock():
-            if Cache.getPresenceState() != PresenceHelper.STATE_MAYBE_SLEEPING:
-                self.timer = None
-                return
-
-            if Registry.getItemState("gIndoor_Lights") == scope.ON:
-                self.timer = threading.Timer(60, self.checkSleeping)
-                self.timer.start()
-            else:
-                last_update_diff = ( datetime.now().astimezone() - Registry.getItem("gIndoor_Lights").getLastStateUpdate() ).total_seconds()
-                if last_update_diff >= 600:
-                    Cache.setPresenceState(PresenceHelper.STATE_SLEEPING)
-                    self.timer = None
-                else:
-                    self.timer = threading.Timer(60, self.checkSleeping)
-                    self.timer.start()
-
-    def execute(self, module, input):
-        if self.timer != None:
-            self.timer.cancel()
-            self.timer = None
-
-        with Cache.getLock():
-            if Cache.isPossibleArriving():
-                Cache.setArriving(True)
-
-            if Cache.getPresenceState() == PresenceHelper.STATE_SLEEPING:
-                Cache.setPresenceState(PresenceHelper.STATE_MAYBE_SLEEPING)
-
-                # must be decoupled, to release lock
-                self.timer = threading.Timer(1, self.checkSleeping)
-                self.timer.start()
-
-@rule
 class KnownPersonCheck:
     def __init__(self):
         self.skippedTimer = {}
@@ -241,13 +196,56 @@ class KnownPersonCheck:
                 return
 
         self.process(item_name, related_item_name, new_item_state)
-          
+
+@rule
+class MovingCheck:
+    def __init__(self):
+        self.timer = None
+
+    def buildTriggers(self):
+        triggers = []
+        for item in Registry.getItem("gSensor_Indoor").getAllMembers():
+            triggers.append(ItemStateChangeTrigger(item.getName()))
+        return triggers
+
+    def checkSleeping(self):
+        with Cache.getLock():
+            if Cache.getPresenceState() != PresenceHelper.STATE_MAYBE_SLEEPING:
+                self.timer = None
+                return
+
+            if Registry.getItemState("gIndoor_Lights") == scope.ON:
+                self.timer = threading.Timer(60, self.checkSleeping)
+                self.timer.start()
+            else:
+                last_update_diff = ( datetime.now().astimezone() - Registry.getItem("gIndoor_Lights").getLastStateUpdate() ).total_seconds()
+                if last_update_diff >= 600:
+                    Cache.setPresenceState(PresenceHelper.STATE_SLEEPING)
+                    self.timer = None
+                else:
+                    self.timer = threading.Timer(60, self.checkSleeping)
+                    self.timer.start()
+
+    def execute(self, module, input):
+        if self.timer != None:
+            self.timer.cancel()
+            self.timer = None
+
+        with Cache.getLock():
+            if Cache.isPossibleArriving():
+                Cache.setArriving(True)
+
+            if Cache.getPresenceState() == PresenceHelper.STATE_SLEEPING:
+                Cache.setPresenceState(PresenceHelper.STATE_MAYBE_SLEEPING)
+
+                # must be decoupled, to release lock
+                self.timer = threading.Timer(1, self.checkSleeping)
+                self.timer.start()
     
 @rule(
     triggers = [
-        #ItemStateChangeTrigger("pGF_Corridor_Motiondetector_State",state=scope.OPEN),
-        #ItemStateChangeTrigger("pGF_Livingroom_Motiondetector_State",state=scope.OPEN),
-        #ItemStateChangeTrigger("pFF_Corridor_Motiondetector_State",state=scope.OPEN),
+        ItemStateChangeTrigger("pGF_Livingroom_SkyQ_Key_POWER",state=scope.ON),
+        ItemStateChangeTrigger("pGF_Kitchen_Coffeemaker_Power_State",state=scope.ON),
         ItemStateChangeTrigger("gGF_Lights",state=scope.ON),
         ItemStateChangeTrigger("gGF_Shutters",state=scope.UP),
         ItemStateChangeTrigger("gGF_Shutters",state="0")
@@ -289,11 +287,11 @@ class Wakeup:
         with Cache.getLock():
             if Cache.getPresenceState() in [PresenceHelper.STATE_MAYBE_SLEEPING,PresenceHelper.STATE_SLEEPING]:
                 # sometimes the "gGF_Lights" state switches back and forth for a couple of milliseconds when set "gGF_Lights" state to OFF
-                if input['event'].getItemName() == "gGF_Shutters":
-                    self.wakeup()
-                else:
+                if input['event'].getItemName() == "gGF_Lights":
                     self.timer = threading.Timer(30, self.delayedWakeup, args = [ 0 ])
                     self.timer.start()
+                else:
+                    self.wakeup()
 
 
 @rule(

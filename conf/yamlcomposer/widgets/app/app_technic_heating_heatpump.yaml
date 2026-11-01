@@ -7,10 +7,29 @@ vars:
     - !include
       file: ../layout/box.inc.yaml
       vars:
+        title: Control
+        slots:
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "WW Reduziert", item: "pGF_Utilityroom_Heatpump_WW_Reduced"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "HK Reduziert", item: "pGF_Utilityroom_Heatpump_HK_Reduced"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "HK Blocked", item: "pGF_Utilityroom_Heatpump_HK_Blocked"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "HK Heizen Blocked", item: "pGF_Utilityroom_Heatpump_HK_Heating_Blocked"}}
+
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "WW Reduziert", item: "pGF_Utilityroom_Heatpump_WW_Reduced"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "HK Reduziert", item: "pGF_Utilityroom_Heatpump_HK_Reduced"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "HK Blocked", item: "pGF_Utilityroom_Heatpump_HK_Blocked"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "HK Heizen Blocked", item: "pGF_Utilityroom_Heatpump_HK_Heating_Blocked"}}
+
+    - !include
+      file: ../layout/box.inc.yaml
+      vars:
+        title: Gerät
         slots:
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Betrieb", item: "pGF_Utilityroom_Heatpump_WP_Betrieb"}}
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Störmeldung", item: "pGF_Utilityroom_Heatpump_WP_Stoermeldung"}}
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Leistungsanforderung", item: "pGF_Utilityroom_Heatpump_WP_Leistungsanforderung", icon: "oh:selfruntime"}}
+
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Sole Eintritt", item: "pGF_Utilityroom_Heatpump_WP_Sole_Eintritt", icon: "oh:selftemperature"}}
+          - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Sole Austritt", item: "pGF_Utilityroom_Heatpump_WP_Sole_Austritt", icon: "oh:selftemperature"}}
 
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Vorlauf (zum Speicher)", item: "pGF_Utilityroom_Heatpump_WP_Vorlauftemperatur", icon: "oh:selftemperature"}}
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Rücklauf (vom Speicher)", item: "pGF_Utilityroom_Heatpump_WP_Ruecklauftemperatur", icon: "oh:selftemperature"}}

@@ -52,6 +52,12 @@ things:
         config:
           stateTransformation: "JSONPATH($..[?(@.address=='_sum/EssCapacity')].value)∩PY(|int(input)/1000.0)"
           mode: READONLY
+      ess-emergency:
+        type: number
+        label: Ess Capacity
+        config:
+          stateTransformation: "JSONPATH($..[?(@.address=='ctrlEmergencyCapacityReserve0/_PropertyReserveSoc')].value)"
+          mode: READONLY
       min-cell-voltage:
         type: number
         label: Min Cell Voltage

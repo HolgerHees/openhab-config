@@ -9,7 +9,7 @@ vars:
       vars:
         title: Übersicht
         slots:
-          - !include { file: ../layout/item_buttons.inc.yaml, vars: {title: "Modus", item: "pGF_Utilityroom_Ventilation_Auto_Mode", icon: "oh:selfautomode", mappings: "ON=Auto,OFF=Manuell"}}
+          - !include { file: ../layout/item_buttons.inc.yaml, vars: {title: "Modus", item: "pGF_Utilityroom_Ventilation_Mode", icon: "oh:selfautomode",  mappings: "2=Lüften,1=Kühlen,0=Manuell"}}
           - !include { file: ../layout/item_buttons.inc.yaml, vars: {title: "Stufe", item: "pGF_Utilityroom_Ventilation_Fan_Level", icon: "oh:selfairing", mappings: "0=A,1=1,2=2,3=3"}}
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Ziel", item: "pGF_Utilityroom_Ventilation_Target_Temperature_Message", icon: "oh:selftemperature"}}
           - !include { file: ../layout/item_text.inc.yaml, vars: {title: "Kühlung", item: "pGF_Utilityroom_Ventilation_Cooling_Temperature_Message", icon: "oh:selftemperature"}}

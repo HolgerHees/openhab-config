@@ -986,14 +986,14 @@ sitemap haus label="Main Menu"
                 }
                 Group item=pGF_Utilityroom_Heatpump_Summary_Message label="Heizung [%s]" icon="selfheating"{
                     Frame label="Laufzeitdaten" {
-                        Switch item=pGF_Utilityroom_Heatpump_Auto_Mode label="Modus" mappings=[2="Auto", 1="Kühlen", 0="Manuell"]
+                        Switch item=pGF_Utilityroom_Heatpump_Mode label="Modus" mappings=[2="Auto", 1="Kühlen", 0="Manuell"]
                         Selection item=pOther_Manual_State_Heating label="Heizungsreduktion" mappings=[0="Normal", 1="-1", 2="-2", 3="-3", 4="-4", 5="-5"]
 
-                        Switch item=pGF_Utilityroom_Heatpump_S_Systembetriebsart label="Systembetriebsart" mappings=[1="Heizen",3="Sommer",4="Standby",5="2. WEZ"]  visibility=[pGF_Utilityroom_Heatpump_Auto_Mode==0]
-                        Text item=pGF_Utilityroom_Heatpump_S_Systembetriebsart visibility=[pGF_Utilityroom_Heatpump_Auto_Mode==1]
+                        Switch item=pGF_Utilityroom_Heatpump_S_Systembetriebsart label="Systembetriebsart" mappings=[1="Heizen",3="Sommer",4="Standby",5="2. WEZ"]  visibility=[pGF_Utilityroom_Heatpump_Mode==0]
+                        Text item=pGF_Utilityroom_Heatpump_S_Systembetriebsart visibility=[pGF_Utilityroom_Heatpump_Mode==1]
 
-                        Switch item=pGF_Utilityroom_Heatpump_HK2_Betriebsart label="Betriebsart" mappings=[1="Komfort",3="Absenkbetrieb"]  visibility=[pGF_Utilityroom_Heatpump_Auto_Mode==0]
-                        Text item=pGF_Utilityroom_Heatpump_HK2_Betriebsart visibility=[pGF_Utilityroom_Heatpump_Auto_Mode==1]
+                        Switch item=pGF_Utilityroom_Heatpump_HK2_Betriebsart label="Betriebsart" mappings=[1="Komfort",3="Absenkbetrieb"]  visibility=[pGF_Utilityroom_Heatpump_Mode==0]
+                        Text item=pGF_Utilityroom_Heatpump_HK2_Betriebsart visibility=[pGF_Utilityroom_Heatpump_Mode==1]
 
                         Text item=pGF_Utilityroom_Heatpump_S_Betriebstatusanzeige
                         Text item=pGF_Utilityroom_Heatpump_S_Fehlerfrei valuecolor=[==1="#6bc305",!=1="#d72a2a"] {

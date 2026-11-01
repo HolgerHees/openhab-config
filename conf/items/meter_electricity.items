@@ -52,6 +52,7 @@ Number:ElectricCurrent     pGF_Garage_Solar_Inverter_ChargerWestCurrent         
 Number                     pGF_Garage_Solar_Storage_EssSoc                         "Ladestand [%d %%]"      <batterylevel>              (eGF_Garage_Solar,gPersistance_Chart,gPersistance_History) ["Measurement"] {channel="http:url:fenecon-slow:ess-soc"}
 Number:Energy              pGF_Garage_Solar_Storage_Capacity                       "Kapazität [%.1f kWh]"   <selfenergy>                (eGF_Garage_Solar) ["Current"]  {channel="http:url:fenecon-slow:ess-capacity"}
 Number:Energy              pGF_Garage_Solar_Storage_EnergySoc                      "Ladestand [%.1f kWh]"   <selfenergy>                (eGF_Garage_Solar) ["Current"]
+Number                     pGF_Garage_Solar_Storage_EssEmergencyReserve            "Notstromreserve [%d %%]" <batterylevel>              (eGF_Garage_Solar,gPersistance_Chart,gPersistance_History) ["Point"] {channel="http:url:fenecon-slow:ess-emergency"}
 
 Number:Power               pGF_Garage_Solar_Storage_ActivePowerEqual               "Inverter (ActivePowerEqual) [MAP(solar_energy_control.map):%d W]" <selfenergy> (eGF_Garage_Solar) ["Power"]  {channel="http:url:fenecon-control:active-power-equals"}
 Number:Power               pGF_Garage_Solar_Storage_ActivePowerLessOrEqual         "Inverter (ActivePowerLessOrEqual) [MAP(solar_energy_control.map):%d W]" <selfenergy> (eGF_Garage_Solar) ["Power"]  {channel="http:url:fenecon-control:active-power-less-or-equals"}

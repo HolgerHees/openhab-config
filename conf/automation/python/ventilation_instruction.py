@@ -76,10 +76,8 @@ class Notification:
           
     def process(self,recipients, flags):
         now = datetime.now().astimezone()
-        gardenTemp0, _, gardenTemp0Max = ToolboxHelper.getStableMinMaxState("pOutdoor_WeatherStation_Temperature", 900)
-        gardenTemp0 = gardenTemp0.doubleValue()
-        gardenTemp0Max = gardenTemp0Max.doubleValue()
-
+        gardenTemp0 = ToolboxHelper.getStableState("pOutdoor_WeatherStation_Temperature", 900).doubleValue()
+        gardenTemp0Max = ToolboxHelper.getMaximumSince("pOutdoor_WeatherStation_Temperature", 900).doubleValue()
         gardenTemp15  = ToolboxHelper.getStableState("pOutdoor_WeatherStation_Temperature", 1800, now - timedelta(minutes=15)).doubleValue()
         gardenTemp45  = ToolboxHelper.getStableState("pOutdoor_WeatherStation_Temperature", 1800, now - timedelta(minutes=45)).doubleValue()
 

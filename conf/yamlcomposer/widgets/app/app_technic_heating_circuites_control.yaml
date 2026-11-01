@@ -17,5 +17,5 @@ vars:
           - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Sportzimmer", item: "pFF_Fitnessroom_Heating_Circuit"}}
           - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Schminkzimmer", item: "pFF_Makeuproom_Heating_Circuit"}}
           - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Schlafzimmer", item: "pFF_Bedroom_Heating_Circuit"}}
-          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Badezimmer Kreis", item: "pFF_Bathroom_Heating_Circuit"}}
-          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Badezimmer HK", item: "pGF_Livingroom_Heating_Circuit"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Badezimmer", item: "pFF_Bathroom_Heating_Circuit"}}
+          - !include { file: ../layout/item_toggle.inc.yaml, vars: {title: "Badezimmer HK", item: "pFF_Bathroom_Heating_HK"}}

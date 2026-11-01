@@ -156,7 +156,9 @@ class HeatpumpStatsThermalProduction:
             thermal_value       = total_production,
             thermal_item        = "pGF_Utilityroom_Heatpump_Statistik_Total_Production",
             electric_item       = "pGF_Utilityroom_Electricity_State_Heatpump_Total_Consumption",
-            jaz_item            = "pGF_Utilityroom_Heatpump_Statistik_JAZ"
+            jaz_item            = "pGF_Utilityroom_Heatpump_Statistik_JAZ",
+            cop_item            = "pGF_Utilityroom_Heatpump_Statistik_COP",
+            efficiency_message_item = "pGF_Utilityroom_Heatpump_Statistik_Efficiency_Msg"
         )
 
         total_heating_production = EnergyHelper.calculateStats(
@@ -176,7 +178,9 @@ class HeatpumpStatsThermalProduction:
             thermal_value       = total_heating_production,
             thermal_item        = "pGF_Utilityroom_Heatpump_Statistik_Heizen_Total_Production",
             electric_item       = "pGF_Utilityroom_Electricity_State_Heatpump_Heating_Total_Consumption",
-            jaz_item            = "pGF_Utilityroom_Heatpump_Statistik_Heizen_JAZ"
+            jaz_item            = "pGF_Utilityroom_Heatpump_Statistik_Heizen_JAZ",
+            cop_item            = "pGF_Utilityroom_Heatpump_Statistik_Heizen_COP",
+            efficiency_message_item = "pGF_Utilityroom_Heatpump_Statistik_Heizen_Efficiency_Msg"
         )
 
         total_ww_production = EnergyHelper.calculateStats(
@@ -196,7 +200,9 @@ class HeatpumpStatsThermalProduction:
             thermal_value       = total_ww_production,
             thermal_item        = "pGF_Utilityroom_Heatpump_Statistik_WW_Total_Production",
             electric_item       = "pGF_Utilityroom_Electricity_State_Heatpump_Water_Total_Consumption",
-            jaz_item            = "pGF_Utilityroom_Heatpump_Statistik_WW_JAZ"
+            jaz_item            = "pGF_Utilityroom_Heatpump_Statistik_WW_JAZ",
+            cop_item            = "pGF_Utilityroom_Heatpump_Statistik_WW_COP",
+            efficiency_message_item = "pGF_Utilityroom_Heatpump_Statistik_WW_Efficiency_Msg"
         )
 
         hh_production = Registry.getItemState("pGF_Utilityroom_Heatpump_Statistik_Heizen_Daily_Production").doubleValue()

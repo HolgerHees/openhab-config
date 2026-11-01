@@ -79,8 +79,10 @@ class EnergyHelper:
         return total_new
 
     @staticmethod
-    def calculateJAZ(logger, thermal_value, thermal_item, electric_item, jaz_item):
+    def calculateJAZ(logger, thermal_value, thermal_item, electric_item, jaz_item, cop_item, efficiency_message_item):
         end_datetime = datetime.now().astimezone()
+
+        # yearly
         start_datetime = end_datetime.replace(month=9, day=1, hour=0, minute=0, second=0, microsecond=0) if end_datetime.year == 2026 else end_datetime.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
 
         total_thermal_consumption_end = thermal_value #Registry.getItemState(thermal_item).doubleValue()
@@ -91,9 +93,24 @@ class EnergyHelper:
         total_electrial_consumption_start = ToolboxHelper.getPersistedState(electric_item, start_datetime).doubleValue()
         electrial_consumption = total_electrial_consumption_end - total_electrial_consumption_start
 
-        Registry.getItem(jaz_item).postUpdateIfDifferent(thermal_consumption / electrial_consumption if electrial_consumption > 0 else 0)
+        jaz_value = round(thermal_consumption / electrial_consumption, 2) if electrial_consumption > 0 else 0
+        Registry.getItem(jaz_item).postUpdateIfDifferent(jaz_value)
 
+        # daily
+        start_datetime = end_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
 
+        total_thermal_consumption_end = thermal_value #Registry.getItemState(thermal_item).doubleValue()
+        total_thermal_consumption_start = ToolboxHelper.getPersistedState(thermal_item, start_datetime).doubleValue()
+        thermal_consumption = total_thermal_consumption_end - total_thermal_consumption_start
+
+        total_electrial_consumption_end = Registry.getItemState(electric_item).doubleValue()
+        total_electrial_consumption_start = ToolboxHelper.getPersistedState(electric_item, start_datetime).doubleValue()
+        electrial_consumption = total_electrial_consumption_end - total_electrial_consumption_start
+
+        cop_value = round(thermal_consumption / electrial_consumption, 2) if electrial_consumption > 0 else 0
+        Registry.getItem(cop_item).postUpdateIfDifferent(cop_value)
+
+        Registry.getItem(efficiency_message_item).postUpdateIfDifferent("{} / {}".format(cop_value, jaz_value))
 #start_of_the_day = datetime.now().astimezone().replace(hour=0, minute=0, second=0, microsecond=0)
 #Registry.getItem("pGF_Utilityroom_Electricity_State_Heatpump_Total_Consumption").getPersistence("jdbc").persist(start_of_the_day, 0)
 
